@@ -1,0 +1,25 @@
+@import "bootstrap/scss/bootstrap";
+
+.container-padding {
+    padding: 40px 12px;
+}
+
+.custom-btn {
+    border-radius: 0.375rem;
+    &.primary {
+        background-color: #396fba;
+    }
+    &.secondary {
+        background-color: #f47c21;
+    }
+}
+
+.app-title {
+    color: #396fba;
+    font-size: 3rem;
+    font-weight: 600;
+}
+
+.primary--text {
+    color: #396fba;
+}
