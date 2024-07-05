@@ -8,31 +8,37 @@
                         <img src="~/assets/images/illustrations/404.svg" alt="welcome-header-image" />
                     </div>
                 </div>
-                <div class="col col-6">
+                <div class="col col-6 landingkey-features__box">
                     <div class="col-row">
                         <div class="rounder-icon">
                             <UIcon name="i-heroicons-check-16-solid" /> 
                         </div>
-                        <span class="landingkey-features__text">
-                            Supporting community-driven benchmarking
-                        </span>
+                        <div class="landingkey-features__text">
+                            <span>
+                                Supporting community-driven benchmarking
+                            </span>
+                        </div>
                     </div>
                     <div class="col-row">
                         <div class="rounder-icon">
                             <UIcon name="i-heroicons-check-16-solid" />
                         </div>
-                        <span class="landingkey-features__text">
-                            Monitoring of software quality in life sciences
-                        </span>
+                        <div class="landingkey-features__text">
+                            <span>
+                                Monitoring of software quality in life sciences
+                            </span>
+                        </div>
                     </div>
                     <div class="col-row">
                         <div class="rounder-icon">
                             <UIcon name="i-heroicons-check-16-solid" />
                         </div>
-                        <span class="landingkey-features__text">
-                            Contributing towards the adoption of best practices for research
-                            software development
-                        </span>
+                        <div class="landingkey-features__text">
+                            <span>
+                                Contributing towards the adoption of best practices for research
+                                software development
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -49,6 +55,7 @@
     align-items: center;
     cursor: pointer;
     position: relative;
+    padding-bottom: 40px;
     .rounder-icon {
         border-radius: 50%;
         background-color: #f47c21;
@@ -58,6 +65,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        margin-right: 10px;
         span {
             color: white;
             font-size: 25px;
@@ -70,25 +78,27 @@
     &:not(:first-child){
         margin-top: 20px;
     }
-    &::after {
-        .landingkey-features__text {
-            content: '';
-            position: absolute;
-            width: 100%;
-            transform: scaleX(0);
-            height: 2px;
-            bottom: 0;
-            left: 0;
-            background-color: #0087ca;
-            transform-origin: bottom right;
-            transition: transform 0.25s ease-out;
+
+    .landingkey-features__text {
+        span {
+            padding-left: 0PX;
+            transition: background-size 1s ease;
+            width: calc(100% + 20px); 
+            padding-bottom: 2px;
+            background-image: linear-gradient(transparent calc(100% - 2px), #f47c21 2px);
+            background-repeat: no-repeat;
+            background-size: 0% 100%;
+        }
+        &:hover {
+            span {
+                background-size: 100% 100%;
+            }
         }
     }
-    &:hover::after {
-        .landingkey-features__text {
-            transform: scaleX(1);
-            transform-origin: bottom left;
-        }
-    }
+}
+.landingkey-features__box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 </style>
