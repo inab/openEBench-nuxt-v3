@@ -16,6 +16,7 @@
                     searchable-placeholder="Search a event..."
                     v-model="eventSelected"
                     :options="eventsArray"
+                    @change="handleChangeEvent"
                 />
             </div>
         </div>
@@ -29,13 +30,22 @@
 
 <script setup lang="ts">
 import pluralize from 'pluralize';
+import { useCommunity } from '@/stores/community'
 
 const props = defineProps<{
-    currentEvent: Object,
     events: []
 }>();
 
-let eventSelected = computed(() => props.currentEvent.name)
+const communityStore = useCommunity()
+
+let currentEvent = computed(() => communityStore.getCurrentEvent)
 let eventsArray = props.events.map((item: any) => item.name)
+let eventSelected = ref(currentEvent.value.name)
+console.log("eventSelected; " , eventSelected)
+
+function handleChangeEvent() {
+    let event = props.events.find((item) => item.name == eventSelected.value)
+    communityStore.setCurrentEvent(event)
+}
 
 </script>

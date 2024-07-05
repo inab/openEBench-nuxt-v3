@@ -1,8 +1,6 @@
 import { defineStore } from 'pinia'
 
 // OpenEBench API
-const { $graphql } = useNuxtApp()
-
 export const useCommunity = defineStore('community', {
     state: () => ({ 
         communityData: {}, 
@@ -118,9 +116,7 @@ export const useCommunity = defineStore('community', {
             // Community References
             this.setCommunityReferences(responseData.data.getCommunities[0].references)
 
-            console.log(this.communityData)
             return  this.communityData
-            
         },
 
         // Setting events
@@ -134,7 +130,7 @@ export const useCommunity = defineStore('community', {
 				}
 				return 0;
 			});
-            this.currentEvent = this.events[0]
+            this.setCurrentEvent(this.events[0])
         },
 
         // Setting datasets
@@ -157,6 +153,11 @@ export const useCommunity = defineStore('community', {
 					};
 				})
 		    : [];
+        },
+
+        setCurrentEvent(event) {
+            console.log("current event has change: ", event)
+            this.currentEvent = event
         },
 
         // Format community data

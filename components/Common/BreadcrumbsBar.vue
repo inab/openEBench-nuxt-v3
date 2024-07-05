@@ -1,5 +1,5 @@
 <template>
-    <div class="" v-if="breadcrumbs.length>0">
+    <div class="" v-if="breadcrumbs.length>0 && breadcrumbs.length==1 && breadcrumbs[0].label!='index'">
         This is breadcrumb
         <ul>
             <li v-for="(crumb, index) in breadcrumbs" :key="index">

@@ -21,6 +21,7 @@
     "@pinia/nuxt": "^0.5.1",
     "bootstrap": "^5.3.3",
     "data-urls": "^5.0.0",
+    "lodash.debounce": "^4.0.8",
     "nuxt": "^3.12.2",
     "pinia": "^2.1.7",
     "pluralize": "^8.0.0",

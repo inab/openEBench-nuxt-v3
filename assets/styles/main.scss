@@ -1,25 +1,48 @@
 @import "bootstrap/scss/bootstrap";
 
-.container-padding {
-    padding: 40px 12px;
-}
+$colorPrimary: #0b579f;
+$colorSecondary: #f47c21;
 
+.container-padding {
+    padding: 40px 25px;
+}
 .custom-btn {
-    border-radius: 0.375rem;
+    border-radius: 20px;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
     &.primary {
-        background-color: #396fba;
+        background-color: $colorPrimary;
     }
     &.secondary {
-        background-color: #f47c21;
+        background-color: $colorSecondary;
+    }
+    &:after {
+        content: '»';
+        position: absolute;
+        opacity: 0;  
+        top: 1px;
+        transition: 0.5s;
+    }
+      
+    // &:hover{
+    //     padding-right: 24px;
+    //     padding-left: 8px;
+    // }
+      
+    &:hover:after {
+        opacity: 1;
+        right: 40px;
+        font-size: 30px;
     }
 }
 
 .app-title {
-    color: #396fba;
+    color: #0b579f;
     font-size: 3rem;
     font-weight: 600;
 }
 
 .primary--text {
-    color: #396fba;
+    color: #0b579f;
 }

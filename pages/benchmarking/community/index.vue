@@ -31,6 +31,7 @@
 							<CommunityEvent
 								:currentEvent="currentEvent"
 								:events="eventsObj"
+								:communityId="communityId"
 							/>
 						</div>
 					</template>
@@ -39,7 +40,10 @@
 							<h1 class="text-h4">{{ item.label }}</h1>
 						</div>
 						<div class="p-4">
-
+							<CommunityDataset
+								:datasets="datasetsObj"
+								:communityId="communityId"
+							/>
 						</div>
 					</template>
 					<template #tools="{ item }">
@@ -47,7 +51,10 @@
 							<h1 class="text-h4">{{ item.label }}</h1>
 						</div>
 						<div class="p-4">
-
+							<CommunityTools
+								:tools="toolsObj"
+								:communityId="communityId"
+							/>
 						</div>
 					</template>
 				</UTabs>
@@ -60,26 +67,27 @@
 	import { ref } from 'vue'
 	import CommunityInfo from '@/components/Community/CommunityInfo.vue'
 	import CommunityEvent from '@/components/Community/CommunityEvent/CommunityEvent.vue'
+	import CommunityDataset from '@/components/Community/CommunityDataset/CommunityDataset.vue'
+	import CommunityTools from '@/components/Community/CommunityTools/CommunityTools.vue'
 	import { useCommunity } from '@/stores/community'
 
 	const communityReferences: Ref<any> = ref(null);
     const route = useRoute()
-	let communityId = route.params.community
+	let communityId: string = route.params.community
 	const communityStore = useCommunity()
 	const community: Ref<any> = ref(null);
 
-	//const community = computed(() => communityStore.requestCommunityData(communityId))
 	const { data, pending }: { data: any, pending: boolean } = await useAsyncData('community', 
 		() => communityStore.requestCommunityData(communityId))
-		
+
 	community.value = data.value ?? null;
+
+	console.log(community.value)
 
 	const datasetsObj = communityStore.getDatasets
 	const toolsObj = communityStore.getTools
 	const eventsObj: [] = communityStore.getEvents
 	let currentEvent = computed(() => communityStore.getCurrentEvent)
-
-
 	const tabsItems = [{
 		label: 'Results',
 		icon: 'i-heroicons-squares-2x2-16-solid',

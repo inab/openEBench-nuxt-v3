@@ -3,19 +3,22 @@
         <CommunityEventSelector
             :currentEvent="currentEvent"
             :events="events"
+
         />
-        <CommunityEventTable
+        <CommunityEventTableContent
             :event="currentEvent"
+            :communityId="communityId"
         />
     </div>
 </template>
 
 <script setup lang="ts">
 	import CommunityEventSelector from '@/components/Community/CommunityEvent/CommunityEventSelector.vue'
-    import CommunityEventTable from '@/components/Community/CommunityEvent/CommunityEventTable.vue'
+    import CommunityEventTableContent from '~/components/Community/CommunityEvent/CommunityEventTableContent.vue'
 
     const props = defineProps<{
         currentEvent: Object,
-        events: []
+        events: [],
+        communityId: string
     }>();
 </script>
