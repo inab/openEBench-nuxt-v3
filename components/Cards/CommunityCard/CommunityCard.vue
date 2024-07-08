@@ -12,7 +12,9 @@ console.log(props.community);
 <template>
     <div class="max-w-sm rounded overflow-hidden shadow-lg">
         {{ community.referenceTools }}
-        <img class="w-full" :src="community.logo" alt="Sunset in the mountains">
+        <img class="w-full" :src="community.logo" 
+            :alt="`community ${community.name}`"
+            :title="`${community.acronym}`">
         <div class="px-6 py-4">
             <div class="font-bold text-xl mb-2">
                 {{ community.acronym }}

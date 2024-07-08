@@ -1,7 +1,7 @@
 <script setup lang="ts">
 useHead
 ({
-  title: 'openEBench',
+  title: 'OpenEBench',
   meta: [
     { name: 'description',
     content: 'My amazing site.' }

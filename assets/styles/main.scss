@@ -27,10 +27,19 @@ $colorSecondary: #f47c21;
         transition: 0.5s;
     }
 
-    &:hover:after {
+    &:hove:after {
         opacity: 1;
         right: 40px;
         font-size: 30px;
+    }
+    &.btn-empty-filled {
+        background-color: white;
+        color: $colorPrimary;
+        border: 1px solid $colorPrimary;
+        &:hover {
+            background-color: $colorPrimary;
+            color: white;
+        }
     }
 }
 

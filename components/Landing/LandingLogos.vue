@@ -2,9 +2,9 @@
     <div class="landing-logos">
         <div class="container">
             <div class="landing-logos__title">
-                Our partners 
+                <h2 class="text-h4 mb-15">Our partners </h2>
             </div>
-            <Carousel :items-to-show="2.5"  :autoplay="2000" :wrap-around="true">
+            <Carousel :itemsToShow="2.95" :wrapAround="true" :transition="500" :autoplay="2000">
                 <Slide v-for="(slide, index) in sliderImages" :key="index" class="landing-logos__box">
                     <div class="carousel__item">
                         <img :src=slide.src />
@@ -23,7 +23,7 @@
 <script setup lang="ts">
 import { Carousel, Navigation, Slide } from 'vue3-carousel'
 import Img1 from '~/assets/images/partners/elixir.png';
-import Img2 from '~/assets/images/partners/eucanimage.svg';
+import Img2 from '~/assets/images/partners/eucanimage.png';
 import Img3 from '~/assets/images/partners/eucancan.png';
 import Img4 from '~/assets/images/partners/permedcoe.png';
 import Img5 from '~/assets/images/partners/ipc.png';
@@ -70,6 +70,7 @@ const sliderImages = [
 
 .landing-logos {
     padding-bottom: 50px;
+    padding-top: 70px;
     &__box {
         display: flex;
         justify-content: center;
@@ -81,6 +82,47 @@ const sliderImages = [
             object-fit: contain;
         }
     }
+    &__title {
+        padding-bottom: 30px;
+    }
 }
-
+.carousel__slide {
+    padding: 5px;
+  }
+  
+  .carousel__viewport {
+    perspective: 2000px;
+  }
+  
+  .carousel__track {
+    transform-style: preserve-3d;
+  }
+  
+  .carousel__slide--sliding {
+    transition: 0.5s;
+  }
+  
+  .carousel__slide {
+    opacity: 0.9;
+    transform: rotateY(-20deg) scale(0.8);
+  }
+  
+  .carousel__slide--active ~ .carousel__slide {
+    transform: rotateY(20deg) scale(0.8);
+  }
+  
+  .carousel__slide--prev {
+    opacity: 1;
+    transform: rotateY(-10deg) scale(0.80);
+  }
+  
+  .carousel__slide--next {
+    opacity: 1;
+    transform: rotateY(10deg) scale(0.80);
+  }
+  
+  .carousel__slide--active {
+    opacity: 1;
+    transform: rotateY(0) scale(1.1);
+  }
 </style>

@@ -4,7 +4,8 @@
             <h2 class="text-h4 mb-15">What does OpenEBench offer?</h2>
             <div class="row">
                 <div class="col col-6">
-                    <div class="welcome-header-image">
+                    <div class="welcome-header-image" data-aos="fade-up"
+                    data-aos-duration="3000">
                         <img src="~/assets/images/illustrations/404.svg" alt="welcome-header-image" />
                     </div>
                 </div>
@@ -46,14 +47,17 @@
     </div>
 </template>
 <script setup lang="ts">
+import AOS from 'aos';
+AOS.init();
 </script>
 
 <style scoped lang="scss">
 .landingkey-features {
     padding-top: 40px;
+    padding-bottom: 80px;
     .col-row {
         display: flex;
-        font-size: 20px;
+        font-size: 18px;
         align-items: center;
         cursor: pointer;
         position: relative;
@@ -83,6 +87,7 @@
         }
     
         .landingkey-features__text {
+            text-align: left;
             span {
                 padding-left: 0PX;
                 transition: background-size 1s ease;
@@ -103,7 +108,9 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
+        
     }
+
 }
 
 </style>

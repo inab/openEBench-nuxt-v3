@@ -19,6 +19,7 @@
     "@nuxt/image": "^1.7.0",
     "@nuxt/ui": "^2.17.0",
     "@pinia/nuxt": "^0.5.1",
+    "aos": "^2.3.4",
     "bootstrap": "^5.3.3",
     "data-urls": "^5.0.0",
     "gsap": "^3.12.5",

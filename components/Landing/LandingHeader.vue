@@ -104,6 +104,7 @@
         }
     }
     .welcome-header-box {
+        padding-bottom: 50px;
         h1 {
             font-weight: 600;
             font-size: 3rem !important;

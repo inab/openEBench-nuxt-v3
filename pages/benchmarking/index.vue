@@ -1,9 +1,24 @@
 <template>
-    <div class="container">
+    <div class="benchmarking-communities container">
         <div class="app-title">
-            Benchmarking Communities
+            <h2>Benchmarking Communities</h2>
         </div>
-        <div class="benchmarking-communities">
+        <div class="benchmarking-communities__header">
+            <div class="row">
+                <div class="col-6">
+                    <img src="~/assets/images/illustrations/lab_community.png" alt="welcome-header-image" />
+                </div>
+                <div class="col-6">
+                    <div class="">
+                        Unbiased and objective evaluations of bioinformatics resources are challenging to set up and can only be effective when built and implemented around community driven efforts. Thus, in OpenEBench we gather several community initiatives which establish standards and automated services to facilitate scientific benchmarking.
+                    </div>
+                    <div class="">
+                        These efforts provide a way for software developers to implement more efficient methods, tools and web services by comparing their performance on previously agreed datasets and metrics with other similar resources and, more importantly, help end-users that tend to have difficulties in choosing the right tool for the problem at hand, and are not necessarily aware of the latest developments in each of the fields of the bioinformatics methods they need to use.
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="benchmarking-communities__container">
             <div class="grid grid-cols-4 gap-4" v-if="pending">
                 <div class="" v-for="(c, i) in Array.from({length: 8}, (x, i) => i)"
                     :key="i">

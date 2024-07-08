@@ -2,26 +2,33 @@
     <div class="landing-feature-tease">
         <div class="container">
             <h2 class="text-h4 mb-15">What can you do in OpenEBench?</h2>
-            <div class="row">
-                <div class="col col-3">
+            <div class="row landing-feature-tease__container">
+                <div class="col col-3 landing-feature-tease__col"
+                    data-aos="fade-up"
+                    data-aos-duration="2000">
                     <div class="landing-feature-tease__box">
                         <div class="landing-feature-tease__box__image">
                             <div class="landing-feature-tease__box__image__1" title="Scientific Benchmarking">
                             </div>
                         </div>
                     </div>
-                    <div class="landing-feature-tease__title">
-                        Benchmarks
+                    <div class="landing-feature-tease__text-container-box">
+                        <div class="landing-feature-tease__title">
+                            Benchmarks
+                        </div>
+                        <p class="landing-feature-tease__body body-1">
+                            Explore existing community-driven scientific benchmark results for Life Sciences software
+                        </p>
+                        <NuxtLink to="/benchmarking" class="custom-btn primary btn-empty-filled landing-feature-btn"
+                            title="Go to Scientific Benchmarking">
+                            Explore
+                        </NuxtLink>
                     </div>
-                    <p class="landing-feature-tease__body body-1">
-                        Explore existing community-driven scientific benchmark results for Life Sciences software
-                    </p>
-                    <NuxtLink to="/benchmarking" class="custom-btn primary landing-feature-btn"
-                        title="Go to Scientific Benchmarking">
-                        Explore
-                    </NuxtLink>
                 </div>
-                <div class="col col-3">
+                <div class="col col-3 landing-feature-tease__col"
+                    data-aos="fade-up"
+                    data-aos-duration="3000"
+                    data-aos-delay="300">
                     <div class="landing-feature-tease__box">
                         <div class="landing-feature-tease__box__image">
                             <div class="landing-feature-tease__box__image__2" title="Scientific Benchmarking">
@@ -29,51 +36,63 @@
                             </div>
                         </div>
                     </div>
-                    <div class="landing-feature-tease__title">
-                        Tools & Metrics
+                    <div class="landing-feature-tease__text-container-box">
+                        <div class="landing-feature-tease__title">
+                            Tools & Metrics
+                        </div>
+                        <p class="landing-feature-tease__body body-1">
+                            Individually browse technical metrics for popular research software in Life Sciences
+                        </p>
+                        <NuxtLink to="/benchmarking" class="custom-btn primary btn-empty-filled landing-feature-btn"
+                            title="Go to Scientific Benchmarking">
+                            Explore
+                        </NuxtLink>
                     </div>
-                    <p class="landing-feature-tease__body body-1">
-                        Individually browse technical metrics for popular research software in Life Sciences
-                    </p>
-                    <NuxtLink to="/benchmarking" class="custom-btn primary landing-feature-btn"
-                        title="Go to Scientific Benchmarking">
-                        Explore
-                    </NuxtLink>
                 </div>
-                <div class="col col-3">
+                <div class="col col-3 landing-feature-tease__col"
+                    data-aos="fade-up"
+                    data-aos-duration="3000"
+                    data-aos-delay="400">
                     <div class="landing-feature-tease__box">
                         <div class="landing-feature-tease__box__image">
                             <div class="landing-feature-tease__box__image__3" title="Scientific Benchmarking">
                             </div>
                         </div>
                     </div>
-                    <div class="landing-feature-tease__title">
-                        Tools Observatory
+                    <div class="landing-feature-tease__text-container-box">
+                        <div class="landing-feature-tease__title">
+                            Tools Observatory
+                        </div>
+                        <p class="landing-feature-tease__body body-1">
+                            Quantitative monitoring of the technical quality of software in Life Sciences
+                        </p>
+                        <NuxtLink to="/benchmarking" class="custom-btn primary btn-empty-filled landing-feature-btn"
+                            title="Go to Scientific Benchmarking">
+                            Explore
+                        </NuxtLink>
                     </div>
-                    <p class="landing-feature-tease__body body-1">
-                        Quantitative monitoring of the technical quality of software in Life Sciences
-                    </p>
-                    <NuxtLink to="/benchmarking" class="custom-btn primary landing-feature-btn"
-                        title="Go to Scientific Benchmarking">
-                        Explore
-                    </NuxtLink>
                 </div>
-                <div class="col col-3">
+                <div class="col col-3 landing-feature-tease__col"
+                    data-aos="fade-up"
+                    data-aos-duration="3000"
+                    data-aos-delay="500">
                     <div class="landing-feature-tease__box">
                         <div class="landing-feature-tease__box__image">
                             <div class="landing-feature-tease__box__image__4" title="Scientific Benchmarking"></div>
                         </div>
                     </div>
-                    <div class="landing-feature-tease__title">
-                        Project Spaces
+                    <div class="landing-feature-tease__text-container-box">
+                        <div class="landing-feature-tease__title">
+                            Project Spaces
+                        </div>
+                        <p class="landing-feature-tease__body body-1">
+                            Community spaces for projects to collaborate on software in life sciences
+                        </p>
+                        <NuxtLink to="/benchmarking" class="custom-btn primary btn-empty-filled landing-feature-btn"
+                            title="Go to Scientific Benchmarking">
+                            Explore
+                        </NuxtLink>
                     </div>
-                    <p class="landing-feature-tease__body body-1">
-                        Community spaces for projects to collaborate on software in life sciences
-                    </p>
-                    <NuxtLink to="/benchmarking" class="custom-btn primary landing-feature-btn"
-                        title="Go to Scientific Benchmarking">
-                        Explore
-                    </NuxtLink>
                 </div>
             </div>
         </div>
@@ -81,12 +100,14 @@
 </template>
 
 <script setup lang="ts">
+import AOS from 'aos';
+AOS.init();
 </script>
 
 <style scoped lang="scss">
 .landing-feature-tease {
-    padding-top: 40px;
-    padding-bottom: 60px;
+    padding-top: 60px;
+    padding-bottom: 80px;
     background-color: #fafafa;
     &__box {
         display: flex;
@@ -153,18 +174,44 @@
         }
     }
     &__title {
-        font-size: 20px;
+        font-size: 18px;
         font-weight: 600;
         padding-bottom: 10px;
+        padding-top: 10px;
         text-align: center;
     }
     &__body {
         text-align: center;
+        padding-bottom: 17px;
+        font-size: 15px;
+    }
+    &__col {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 0 10px;
+    }
+    &__container {
+        padding-top: 40px;
+    }
+    &__text-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        flex: 1;
+    }
+    &__text-container-box {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        flex: 1;
         padding-bottom: 20px;
     }
     .landing-feature-btn {
         width: 100%;
         text-align: center;
+        padding-bottom: 5px;
     }
+
 }
 </style>
