@@ -49,56 +49,61 @@
 </script>
 
 <style scoped lang="scss">
-.col-row {
-    display: flex;
-    font-size: 25px;
-    align-items: center;
-    cursor: pointer;
-    position: relative;
-    padding-bottom: 40px;
-    .rounder-icon {
-        border-radius: 50%;
-        background-color: #f47c21;
-        height: 35px;
-        width: 35px;
-        min-width: 35px;
+.landingkey-features {
+    padding-top: 40px;
+    .col-row {
         display: flex;
-        justify-content: center;
+        font-size: 20px;
         align-items: center;
-        margin-right: 10px;
-        span {
-            color: white;
-            font-size: 25px;
-            font-weight: 600;
-        }
-    }
-    span {
-        padding-left: 20px;
-    }
-    &:not(:first-child){
-        margin-top: 20px;
-    }
-
-    .landingkey-features__text {
-        span {
-            padding-left: 0PX;
-            transition: background-size 1s ease;
-            width: calc(100% + 20px); 
-            padding-bottom: 2px;
-            background-image: linear-gradient(transparent calc(100% - 2px), #f47c21 2px);
-            background-repeat: no-repeat;
-            background-size: 0% 100%;
-        }
-        &:hover {
+        cursor: pointer;
+        position: relative;
+        padding-bottom: 20px;
+        text-align: center;
+        .rounder-icon {
+            border-radius: 50%;
+            background-color: #f47c21;
+            height: 35px;
+            width: 35px;
+            min-width: 35px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 10px;
             span {
-                background-size: 100% 100%;
+                color: white;
+                font-size: 25px;
+                font-weight: 600;
+            }
+        }
+        span {
+            padding-left: 20px;
+        }
+        &:not(:first-child){
+            margin-top: 20px;
+        }
+    
+        .landingkey-features__text {
+            span {
+                padding-left: 0PX;
+                transition: background-size 1s ease;
+                width: calc(100% + 20px); 
+                padding-bottom: 2px;
+                background-image: linear-gradient(transparent calc(100% - 2px), #f47c21 2px);
+                background-repeat: no-repeat;
+                background-size: 0% 100%;
+            }
+            &:hover {
+                span {
+                    background-size: 100% 100%;
+                }
             }
         }
     }
+    &__box {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
 }
-.landingkey-features__box {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
+
 </style>

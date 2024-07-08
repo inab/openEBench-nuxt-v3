@@ -80,6 +80,7 @@
             height: 100%;
             -webkit-mask: url('~/static/icons/benchmark.svg') no-repeat center;
             mask: url('~/static/icons/benchmark.svg') no-repeat center;
+            transition: transform .7s ease-in-out;
             &:hover {
                 background-color: #0b579f;
             }
@@ -89,8 +90,10 @@
             height: 100%;
             -webkit-mask: url('~/static/icons/observatory.svg') no-repeat center;
             mask: url('~/static/icons/observatory.svg') no-repeat center;
+            transition: transform .7s ease-in-out;
             &:hover {
                 background-color: #f47c21;
+                
             }
         }
     }

@@ -28,8 +28,6 @@ export const useCommunity = defineStore('community', {
 
     actions: {
         async requestCommunityData(id) {
-
-            console.log('Requesting community data...')
             const responseData = await useNuxtApp().$graphql('/graphql',
                 {
                     method: 'POST',
@@ -156,7 +154,6 @@ export const useCommunity = defineStore('community', {
         },
 
         setCurrentEvent(event) {
-            console.log("current event has change: ", event)
             this.currentEvent = event
         },
 

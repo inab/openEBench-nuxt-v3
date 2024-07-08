@@ -11,8 +11,10 @@ $colorSecondary: #f47c21;
     display: inline-block;
     position: relative;
     transition: 0.5s;
+    text-decoration: none;
     &.primary {
         background-color: $colorPrimary;
+        color: white;
     }
     &.secondary {
         background-color: $colorSecondary;
@@ -24,12 +26,7 @@ $colorSecondary: #f47c21;
         top: 1px;
         transition: 0.5s;
     }
-      
-    // &:hover{
-    //     padding-right: 24px;
-    //     padding-left: 8px;
-    // }
-      
+
     &:hover:after {
         opacity: 1;
         right: 40px;

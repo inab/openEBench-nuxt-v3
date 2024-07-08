@@ -25,11 +25,23 @@ export default defineNuxtConfig({
 
   plugins: [
 		'~/plugins/useGraphql',
+    '~/plugins/useObservatory',
+    '~/plugins/useApi',
 	],
+
+  imports: {
+    dirs: [
+      // Scan top-level modules
+      'composables',
+      // ... or scan modules nested one level deep with a specific name and file extension
+      'composables/*/index.{ts,js,mjs,mts}',
+      // ... or scan all modules within given directory
+      'composables/**'
+    ]
+  },
 
   runtimeConfig: {
     public: {
-      apiSecret: '123',
       ENVIRONMENT: process.env.ENVIRONMENT || 'dev-openebench',
       OEB_LEGACY_ANGULAR_URI: process.env.OEB_LEGACY_ANGULAR_URI || 'https://legacy.dev-openebench.bsc.es/',
       VRE_URI: process.env.VRE_URI || 'https://dev-openebench.bsc.es/vre/home/',
@@ -38,7 +50,7 @@ export default defineNuxtConfig({
       BENCH_EVENT_API_URL: process.env.BENCH_EVENT_API_URL || 'https://dev-openebench.bsc.es/rest/bench_event_api',
       OBSERVATORY_API_URL: process.env.OBSERVATORY_API_URL || 'https://observatory.openebench.bsc.es/api',
       GITHUBAPP_API_URL: process.env.GITHUBAPP_API_URL || 'https://observatory.openebench.bsc.es/githubapp/api',
-      axios: {
+      MONITORING: {
         // See https://github.com/nuxt-community/axios-module#options
         baseURL:
           process.env.REST_API_URL || 'https://dev-openebench.bsc.es/monitor/rest/',
