@@ -73,11 +73,11 @@ import { labelToName, decode } from 'whatwg-encoding'
 
 const { $graphql } = useNuxtApp()
 const communities: Ref<any> = ref(null);
- const HEADER_ITEM = [{
+const HEADER_ITEM = [{
     label: "Benchmarking Communities",
     defaultOpen: true,
     slot: 'benchmarking'
- }]
+}]
 
 const { data, pending }: { data: any, pending: boolean } = await useAsyncData('communities', () => $graphql('/graphql',
 {
@@ -112,6 +112,7 @@ const { data, pending }: { data: any, pending: boolean } = await useAsyncData('c
     )
 }
 ))
+console.log(pending.value)
 communities.value = filterCommunities(formatData(data.value.data.getCommunities ?? null));
 
 function formatData(communities: any) {

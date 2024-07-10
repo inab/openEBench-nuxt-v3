@@ -10,10 +10,11 @@
 		<div v-else>
 			<CommunityInfo
 				:community="community"
-				:community-references="communityReferences"
+				:communityReferences="communityReferences"
 			/>
 			<div class="community-tabs md:flex">
-				<UTabs :items="tabsItems" class="w-full">
+				<UTabs :items="tabsItems" class="w-full"
+				:ui="{ list: { tab: { active: 'text-primaryOeb-50' } } }">
 					<template #default="{ item, index, selected }">
 					<div class="flex items-center gap-2 relative truncate">
 						<UIcon :name="item.icon" class="w-4 h-4 flex-shrink-0" />
@@ -24,10 +25,7 @@
 					</div>
 					</template>
 					<template #results="{ item }">
-						<div class="p-4">
-							<h1 class="text-h4">{{ item.label }}</h1>
-						</div>
-						<div class="p-4">
+						<div class="p-4 custom-tab">
 							<CommunityEvent
 								:currentEvent="currentEvent"
 								:events="eventsObj"
@@ -36,7 +34,7 @@
 						</div>
 					</template>
 					<template #datasets="{ item }">
-						<div class="p-4">
+						<div class="p-4 custom-tab">
 							<h1 class="text-h4">{{ item.label }}</h1>
 						</div>
 						<div class="p-4">
@@ -47,7 +45,7 @@
 						</div>
 					</template>
 					<template #tools="{ item }">
-						<div class="p-4">
+						<div class="p-4 custom-tab">
 							<h1 class="text-h4">{{ item.label }}</h1>
 						</div>
 						<div class="p-4">
@@ -71,23 +69,23 @@
 	import CommunityTools from '@/components/Community/CommunityTools/CommunityTools.vue'
 	import { useCommunity } from '@/stores/community'
 
-	const communityReferences: Ref<any> = ref(null);
     const route = useRoute()
-	let communityId: string = route.params.community
+	
 	const communityStore = useCommunity()
 	const community: Ref<any> = ref(null);
-
+	const communityId: string = route.params.community
 	const { data, pending }: { data: any, pending: boolean } = await useAsyncData('community', 
 		() => communityStore.requestCommunityData(communityId))
 
 	community.value = data.value ?? null;
 
-	console.log(community.value)
-
 	const datasetsObj = communityStore.getDatasets
 	const toolsObj = communityStore.getTools
 	const eventsObj: [] = communityStore.getEvents
+	const communityReferences = communityStore.getCommunityReferences
 	let currentEvent = computed(() => communityStore.getCurrentEvent)
+
+
 	const tabsItems = [{
 		label: 'Results',
 		icon: 'i-heroicons-squares-2x2-16-solid',
@@ -108,5 +106,9 @@
 .community-tabs ul {
     margin: 0;
     padding: 0;
+}
+.custom-tab {
+	border: 2px solid rgba(243, 244, 246);
+	border-radius: 0.5rem;
 }
 </style>

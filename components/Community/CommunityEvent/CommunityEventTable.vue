@@ -4,18 +4,37 @@
             <UInput v-model="search" placeholder="Search ..." />
         </div>
         <UTable
-            loading
             :loading-state="{ icon: 'i-heroicons-arrow-path-20-solid', label: 'Loading...' }"
             :progress="{ color: 'primary', animation: 'carousel' }"
             :rows="rows"
             :columns="columns"
             v-model="selected"
+            :ui="{
+                tr: {
+                    base: '',
+                    selected: 'bg-cool-200 dark:bg-gray-800/50',
+                    active: 'hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer',
+                },
+                th: {
+                    base: 'text-left rtl:text-right',
+                    padding: 'px-2.5 py-2.5',
+                    color: 'text-gray-900 dark:text-white',
+                    font: 'font-semibold',
+                    size: 'text-sm',
+                  },
+                  td: {
+                    base: 'whitespace-nowrap',
+                    padding: 'px-3 py-3',
+                    color: 'text-gray-500 dark:text-gray-400',
+                    font: '',
+                    size: 'text-sm',
+                  },
+            }"
         >
             <template #name-data="{ row }">
                 <span :class="[selected.find(eventsFormated => eventsFormated._id === row.id) && 'text-primary-500 dark:text-primary-400']">
                     {{ row.name }}
                 </span>
-               
             </template>
             <template #_id-data="{ row }">
                 <NuxtLink :to="`${community}/${row._id}`" class="text-primary-500 dark:text-primary-400">
@@ -50,16 +69,16 @@ let selected = ref([])
 
 const columns = [
     {
-        key: "name",
-        label: "Name"
-    },
-    {
         key: "_id",
         label: "Acronym"
     },
     {
         key: "participant",
         label: "Participant"
+    },
+    {
+        key: "name",
+        label: "Name"
     }
 ]
 

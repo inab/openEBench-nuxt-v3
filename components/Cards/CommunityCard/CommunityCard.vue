@@ -41,15 +41,16 @@
                     </NuxtLink>
                 </button>
                 <UDropdown :items="itemsCommunityLinks" :popper="{ arrow: true }"
-                :ui="{ item: { disabled: 'cursor-text select-text' } }"
-                class="community-card__item__dropdown">
+                    :ui="{ item: { disabled: 'cursor-text select-text' } }"
+                    class="community-card__item__dropdown">
                     <font-awesome-icon :icon="['fas', 'ellipsis-vertical']" />
-                    <template #item="{ item }">
-                        <NuxtLink :to="item.href" target="_blank">
+                    
+                    <!-- <template #item="{ item }">
+                        <a :href="item.uri" target="_blank">
                             <span class="">{{ item.label }}</span>
                             <UIcon :name="item.icon" class="flex-shrink-0 h-4 w-4 text-gray-400 dark:text-gray-500 ms-auto" />
-                        </NuxtLink>
-                    </template>
+                        </a> 
+                    </template> -->
                 </UDropdown>
             </div>
         </div>
@@ -65,7 +66,6 @@ const props = defineProps<{
     to: string;
 }>();
 
-console.log(props.community.links)
 
 let itemsCommunityLinks = props.community.links.filter((item: any) => {
     if(item.comment == '@logo') { return; }
@@ -78,6 +78,7 @@ let itemsCommunityLinks = props.community.links.filter((item: any) => {
         }
     ]
 })
+
 </script>
 
 <style scoped lang="scss">

@@ -5,7 +5,7 @@ export default <Partial<Config>>{
     theme: {
         extend: {
             colors: {
-                customPrimary: {
+                primaryOeb: {
                     50: '#0b579f',
                     100: '#0b579f',
                     200: '#0b579f',
@@ -18,7 +18,7 @@ export default <Partial<Config>>{
                     900: '#0b579f',
                     950: '#0b579f',
                 },
-                customSecondary: {
+                secondaryOeb: {
                     50: '#f47c21',
                     100: '#f47c21',
                     200: '#f47c21',
