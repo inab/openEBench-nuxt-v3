@@ -25,7 +25,7 @@
             {{ currentEvent.challenges.length }}
             {{ pluralize('Challenges', currentEvent.challenges.length) }}
         </div>
-        <div class="col-12">
+        <div class="col-12" v-if="currentEvent.url">
             <span>
                 <a :href="currentEvent.url" target="_blank">
                     <UIcon name="i-heroicons-link"></UIcon>

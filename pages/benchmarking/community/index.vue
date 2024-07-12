@@ -70,7 +70,6 @@
 	import { useCommunity } from '@/stores/community'
 
     const route = useRoute()
-	
 	const communityStore = useCommunity()
 	const community: Ref<any> = ref(null);
 	const communityId: string = route.params.community

@@ -20,7 +20,7 @@
                         />
                       </template>
                     </UButton>
-                  </template>
+                </template>
                 <template #benchmarking>
                     <div class="benchmarking-communities__header">
                         <div class="row">
@@ -55,9 +55,16 @@
                 <div class="community-card" v-for="(community, index) in communities"
                     :key="index">
                     <CommunityCard
-                        :community="community"
+                        :_id="community._id"
+                        :acronym="community.acronym"
+                        :name="community.name"
+                        :logo="community.logo"
+                        :links="community.links"
+                        :status="community.status"
+                        :benchmarking-events="community.benchmarkingEvents"
+                        :summary="community.summary"
                         :reference-tools="[]"
-						:to="'/benchmarking/' + community._id"
+                        :to="'/benchmarking/' + community._id"
                     />
                 </div>
             </div>
@@ -112,7 +119,6 @@ const { data, pending }: { data: any, pending: boolean } = await useAsyncData('c
     )
 }
 ))
-console.log(pending.value)
 communities.value = filterCommunities(formatData(data.value.data.getCommunities ?? null));
 
 function formatData(communities: any) {

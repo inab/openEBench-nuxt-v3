@@ -12,7 +12,7 @@
             }"
         >
             <template #name-data="{ row }">
-                <NuxtLink :to="`/tool/${row.name}`" 
+                <NuxtLink :to="`/tool/${row.registry_rool_id ? row.registry_tool_id.split(':')[1] : ''}`"
                     class="text-blue-600 dark:text-blue-400">
                     {{ row.name }}
                 </NuxtLink>
@@ -53,4 +53,6 @@
     const rows = computed(() => {
         return props.tools.slice((page.value - 1) * pageCount, (page.value) * pageCount)
     })
+
+    console.log(rows.value)
 </script>

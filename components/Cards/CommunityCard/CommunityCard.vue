@@ -1,37 +1,37 @@
 <template>
     <div class="community-card__item max-w-sm rounded overflow-hidden shadow-lg">
-        {{ community.referenceTools }}
+        {{ referenceTools }}
         <div class="community-card__item__image">
             <NuxtLink :to="to">
                 <div class="community-card__item__image__box"
-                :style="{ backgroundImage: 'url(' + community.logo + ')' }">
+                :style="{ backgroundImage: 'url(' + logo + ')' }">
                 </div>
             </NuxtLink>
         </div>
         <div class="community-card__item__acronym font-bold text-xl">
-            {{ community.acronym }}
+            {{ acronym }}
         </div>
         <div class="community-card__item__body">
             <div class="px-6 py-4">
                 <p class="text-gray-700 text-base">
-                    {{ community.name }}
+                    {{ name }}
                 </p>
             </div>
             <div class="px-6 pt-4 pb-2">
-                <div v-if="community.benchmarkingEvents.length > 0"
+                <div v-if="benchmarkingEvents && benchmarkingEvents.length > 0"
                     class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
                     <font-awesome-icon :icon="['far', 'calendar-check']" />
-                    {{ community.benchmarkingEvents.length }}
-                    {{ pluralize('Events', community.benchmarkingEvents.length) }}
+                    {{ benchmarkingEvents.length }}
+                    {{ pluralize('Events', benchmarkingEvents.length) }}
                 </div>
                 <div class="inline-block bg-green-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-                    <div class="text-xs font-normal leading-none max-w-full flex-initial">{{ community.status }}</div>
+                    <div class="text-xs font-normal leading-none max-w-full flex-initial">{{ status }}</div>
                 </div>
                 <div v-if="referenceTools.length > 0"
                     class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
                     <font-awesome-icon :icon="['fas', 'gear']" />
-                    {{ community.benchmarkingEvents.length }}
-                    {{ pluralize('Events', community.benchmarkingEvents.length) }}
+                    {{ benchmarkingEvents.length }}
+                    {{ pluralize('Events', benchmarkingEvents.length) }}
                 </div>
             </div>
             <div class="community-card__item__footer">
@@ -58,26 +58,38 @@
 </template>
 
 <script setup lang="ts">
+import { defineProps } from 'vue';
 import pluralize from 'pluralize';
 
 const props = defineProps<{
-    community: any,
-    referenceTools: any[],
-    to: string;
+    _id: String,
+    acronym:String,
+    name: String,
+    logo: String,
+    links: any[] | undefined,
+    status: String,
+    benchmarkingEvents: Array<any>,
+    referenceTools: Array<any>,
+    summary: String,
+    to: String
 }>();
 
+console.log(props)
 
-let itemsCommunityLinks = props.community.links.filter((item: any) => {
-    if(item.comment == '@logo') { return; }
-    return [
-        {
-            label: item.label,
-            href: item.uri,
-            icon: 'i-heroicons-link',
-            target: '_blank'
-        }
-    ]
-})
+let itemsCommunityLinks: null = null
+if(props.links) {
+    itemsCommunityLinks = props.links.filter((item: any) => {
+        if(item.comment == '@logo') { return; }
+        return [
+            {
+                label: item.label,
+                href: item.uri,
+                icon: 'i-heroicons-link',
+                target: '_blank'
+            }
+        ]
+    })
+}
 
 </script>
 

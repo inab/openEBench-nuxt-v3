@@ -10,7 +10,7 @@ useHead
 </script>
 
 <template>
-  <div>
+  <div class="h-100">
     <NuxtLayout />
     <NuxtPage/>
   </div>
