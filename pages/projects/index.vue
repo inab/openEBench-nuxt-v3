@@ -94,8 +94,21 @@ async function getCommunities() {
             {
                 query: `
                 {
-                        getCommunities {
+                    getCommunities {
                         _id
+                        name
+                        acronym
+                        description
+                        status
+                        keywords
+                        links {
+                            uri
+                            comment
+                            label
+                        }
+                        benchmarkingEvents {
+                            _id
+                        }
                         _metadata
                         }
                     }
@@ -104,7 +117,16 @@ async function getCommunities() {
         )
     }));
 
-    const communitiesData = (communities.value as any).data.getCommunities.map((community) => {
+    projects.value = filterCommunities(formatData(communities.value.data.getCommunities ?? null));
+}
+
+function formatData(communities: any) {
+    return communities.map((community: any) => {
+        community.links.forEach((link: { comment: string; uri: any; }) => {
+            if (link.comment === '@logo') {
+                community.logo = link.uri;
+            }
+        });
         community._metadata = JSON.parse(community._metadata);
         if (community._metadata && 'project:summary' in community._metadata) {
             const dataURL = parseDataURL(community._metadata['project:summary']);
@@ -115,15 +137,14 @@ async function getCommunities() {
 
             community.summary = decodedSummary;
             community._metadata['project:summary'] = decodedSummary;
-        } else {
-            community.summary = null;
         }
+        if (community.status === 'abandoned') community.status = 'inactive';
         return community;
-    });
+    })
+}
 
-    projects.value = communitiesData.filter((item: any) => 
-        item._metadata ? item._metadata.project_spaces : false
-    );
+function filterCommunities(communities: any) {
+    return communities.filter((community: any) => community._metadata ? community._metadata.project_spaces : false);
 }
 </script>
 

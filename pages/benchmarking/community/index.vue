@@ -14,17 +14,17 @@
 			/>
 			<div class="community-tabs md:flex">
 				<UTabs :items="tabsItems" class="w-full"
-				:ui="{ list: { tab: { active: 'text-primaryOeb-50' } } }">
+				:ui="{ list: { tab: { active: 'text-primaryOeb-500' } } }">
 					<template #default="{ item, index, selected }">
-					<div class="flex items-center gap-2 relative truncate">
-						<UIcon :name="item.icon" class="w-4 h-4 flex-shrink-0" />
-						<span class="">{{ item.label }}</span>
-						<UBadge color="gray" variant="solid" :ui="{ rounded: 'rounded-full' }" v-if="item.label=='Datasets' && datasetsObj.length>0">{{ datasetsObj.length }}</UBadge>
-						<UBadge color="gray" variant="solid" :ui="{ rounded: 'rounded-full' }" v-if="item.label=='Tools' && toolsObj.length>0">{{ toolsObj.length }}</UBadge>				
-						<span v-if="selected" class="absolute -right-4 w-2 h-2 rounded-full bg-primary-500 dark:bg-primary-400" />
-					</div>
+						<div class="flex items-center gap-2 relative truncate">
+							<UIcon :name="item.icon" class="w-4 h-4 flex-shrink-0" />
+							<span class="">{{ item.label }}</span>
+							<UBadge color="gray" variant="solid" :ui="{ rounded: 'rounded-full' }" v-if="item.label=='Datasets' && datasetsObj.length>0">{{ datasetsObj.length }}</UBadge>
+							<UBadge color="gray" variant="solid" :ui="{ rounded: 'rounded-full' }" v-if="item.label=='Tools' && toolsObj.length>0">{{ toolsObj.length }}</UBadge>				
+							<span v-if="selected" class="absolute -right-4 w-2 h-2 rounded-full bg-primary-500 dark:bg-primary-400" />
+						</div>
 					</template>
-					<template #results="{ item }">
+					<template #results>
 						<div class="p-4 custom-tab">
 							<CommunityEvent
 								:currentEvent="currentEvent"
@@ -33,26 +33,33 @@
 							/>
 						</div>
 					</template>
-					<template #datasets="{ item }">
+					<template #datasets v-if="datasetsObj && datasetsObj.length>0">
 						<div class="p-4 custom-tab">
-							<h1 class="text-h4">{{ item.label }}</h1>
-						</div>
-						<div class="p-4">
-							<CommunityDataset
-								:datasets="datasetsObj"
-								:communityId="communityId"
-							/>
+							<div class="p-4">
+								<CommunityDataset
+									:datasets="datasetsObj"
+									:communityId="communityId"
+								/>
+							</div>
 						</div>
 					</template>
-					<template #tools="{ item }">
+					<template #tools v-if="toolsObj && toolsObj.length>0">
 						<div class="p-4 custom-tab">
-							<h1 class="text-h4">{{ item.label }}</h1>
+							<div class="p-4">
+								<CommunityTools
+									:tools="toolsObj"
+									:communityId="communityId"
+								/>
+							</div>
 						</div>
-						<div class="p-4">
-							<CommunityTools
-								:tools="toolsObj"
-								:communityId="communityId"
-							/>
+					</template>
+					<template #summary v-if="eventData && eventData.summary">
+						<div class="p-4 custom-tab">
+							<div class="p-4">
+								<CommunityEventSummary
+									:markdown="eventData">
+								</CommunityEventSummary>
+							</div>
 						</div>
 					</template>
 				</UTabs>
@@ -67,6 +74,7 @@
 	import CommunityEvent from '@/components/Community/CommunityEvent/CommunityEvent.vue'
 	import CommunityDataset from '@/components/Community/CommunityDataset/CommunityDataset.vue'
 	import CommunityTools from '@/components/Community/CommunityTools/CommunityTools.vue'
+	import CommunityEventSummary from '@/components/Community/CommunityEvent/CommunityEventSummary.vue'
 	import { useCommunity } from '@/stores/community'
 
     const route = useRoute()
@@ -75,7 +83,6 @@
 	const communityId: string = route.params.community
 	const { data, pending }: { data: any, pending: boolean } = await useAsyncData('community', 
 		() => communityStore.requestCommunityData(communityId))
-
 	community.value = data.value ?? null;
 
 	const datasetsObj = communityStore.getDatasets
@@ -83,7 +90,7 @@
 	const eventsObj: [] = communityStore.getEvents
 	const communityReferences = communityStore.getCommunityReferences
 	let currentEvent = computed(() => communityStore.getCurrentEvent)
-
+	const eventData = computed(() => communityStore.getCommunityData)
 
 	const tabsItems = [{
 		label: 'Results',
@@ -99,6 +106,19 @@
 		slot: 'tools'
 	}]
 
+	if(!datasetsObj || datasetsObj.length == 0) {
+		tabsItems.splice(1)
+	}
+	if(!toolsObj || toolsObj.length == 0) {
+		tabsItems.splice(1)
+	}
+	if(eventData.value && (eventData.value as { summary?: any }).summary) {
+		tabsItems.push({
+			label: 'Summary',
+			icon: 'i-heroicons-squares-2x2-16-solid',
+			slot: 'summary'
+		})
+	}
 </script>
 
 <style lang="scss" scoped>

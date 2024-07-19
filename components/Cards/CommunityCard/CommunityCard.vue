@@ -1,6 +1,5 @@
 <template>
     <div class="community-card__item max-w-sm rounded overflow-hidden shadow-lg">
-        {{ referenceTools }}
         <div class="community-card__item__image">
             <NuxtLink :to="to">
                 <div class="community-card__item__image__box"
@@ -74,7 +73,6 @@ const props = defineProps<{
     to: String
 }>();
 
-console.log(props)
 
 let itemsCommunityLinks: null = null
 if(props.links) {
@@ -100,6 +98,7 @@ if(props.links) {
         flex-direction: column;
         justify-content: start;
         height: 100%;
+        cursor: pointer;
         &:hover {
             transform: scale(1.05);
         }

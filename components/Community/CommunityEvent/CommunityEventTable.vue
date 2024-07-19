@@ -1,5 +1,5 @@
 <template>
-    <div class="">
+    <div class="community-event-table">
         <div class="flex px-3 py-3.5 border-b border-gray-200 dark:border-gray-700">
             <UInput v-model="search" placeholder="Search ..." />
         </div>

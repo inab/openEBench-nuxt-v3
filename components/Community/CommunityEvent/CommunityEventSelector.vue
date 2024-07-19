@@ -37,21 +37,25 @@
 </template>
 
 <script setup lang="ts">
+import { defineProps, computed, ref } from 'vue';
 import pluralize from 'pluralize';
 import { useCommunity } from '@/stores/community'
 
 const props = defineProps<{
-    events: []
+    events: {
+        type: Array<any>,
+        required: false
+    }
 }>();
 
 const communityStore = useCommunity()
 
 let currentEvent = computed(() => communityStore.getCurrentEvent)
 let eventsArray = props.events.map((item: any) => item.name)
-let eventSelected = ref(currentEvent.value.name)
+let eventSelected = ref(currentEvent.value ? currentEvent.value.name : null)
 
 function handleChangeEvent() {
-    let event = props.events.find((item) => item.name == eventSelected.value)
+    let event = props.events.find((item: any) => item.name == eventSelected.value)
     communityStore.setCurrentEvent(event)
 }
 

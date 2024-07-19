@@ -4,7 +4,10 @@ import { customRoutes } from "./router.options";
 
 export default defineNuxtConfig({
   devtools: {
-    enabled: true
+    enabled: true,
+    timeline: {
+      enabled: true
+    }
   },
 
   css: [
@@ -21,6 +24,10 @@ export default defineNuxtConfig({
       charset: 'utf-8',
       viewport: 'width=device-width, initial-scale=1',
       title: 'OpenEBench',
+    },
+    pageTransition: {
+      name: 'page',
+      mode: 'out-in'
     }
   },
 
@@ -72,13 +79,17 @@ export default defineNuxtConfig({
 
   vite: {
     server: {
+      hmr: {
+        clientPort: 3003,
+        host: '0.0.0.0',
+      },
       watch: {
-        usePolling: true,
+        usePolling: true
       },
     },
     css: {
         preprocessorOptions: {
-            sass: {
+            scss: {
                 additionalData: '@import "@/assets/styles/_variables.scss";',
             },
         },
@@ -91,3 +102,9 @@ export default defineNuxtConfig({
 
   modules: ["@nuxt/image", "@nuxt/ui", '@pinia/nuxt']
 })
+
+/*
+  devServer: {
+    port: 3003,
+  },
+  */

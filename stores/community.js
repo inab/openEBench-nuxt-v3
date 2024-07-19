@@ -1,4 +1,6 @@
 import { defineStore } from 'pinia'
+import parseDataURL from 'data-urls'
+import { labelToName, decode } from 'whatwg-encoding'
 
 // OpenEBench API
 export const useCommunity = defineStore('community', {
@@ -128,7 +130,7 @@ export const useCommunity = defineStore('community', {
 				}
 				return 0;
 			});
-            this.setCurrentEvent(this.events[0])
+            this.setCurrentEvent(this.events[0]??null)
         },
 
         // Setting datasets
@@ -166,20 +168,20 @@ export const useCommunity = defineStore('community', {
 			});
 
 			data._metadata = JSON.parse(data._metadata);
-
 			if (data._metadata && 'project:summary' in data._metadata) {
 				const dataURL = parseDataURL(data._metadata['project:summary']);
+                
 				const encodingName = labelToName(
 					dataURL.mimeType.parameters.get('charset') || 'utf-8'
 				);
 				const decodedSummary = decode(dataURL.body, encodingName);
-
 				data.summary = decodedSummary;
 				data._metadata['project:summary'] = decodedSummary;
-			}
+			} else {
+                data.summary = null;
+            }
 
 			if (data.status === 'abandoned') data.status = 'inactive';
-
 			return data;
         },
     }

@@ -54,5 +54,4 @@
         return props.tools.slice((page.value - 1) * pageCount, (page.value) * pageCount)
     })
 
-    console.log(rows.value)
 </script>
