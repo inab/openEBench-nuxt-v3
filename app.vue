@@ -4,7 +4,7 @@ useHead
   title: 'OpenEBench',
   meta: [
     { name: 'description',
-    content: 'My amazing site.' }
+    content: 'OpenEBench' }
   ],
 })
 </script>
@@ -12,6 +12,14 @@ useHead
 <template>
   <div class="h-100">
     <NuxtLayout />
-    <NuxtPage/>
+    <div class="main">
+      <NuxtPage />
+    </div>
   </div>
 </template>
+
+<style>
+  .main {
+    padding-top: 60px;
+  }
+</style>

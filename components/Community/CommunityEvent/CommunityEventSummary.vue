@@ -16,7 +16,6 @@ const props = defineProps<{
 }>()
 
 let markdownString: ComputedRef<string | null> = computed(() => props.markdown.summary ?? null)
-console.log(typeof props.markdown)
 
 const markup = computed (() => DOMPurify.sanitize(marked(markdownString.value ?? '')))
 </script>

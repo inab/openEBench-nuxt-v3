@@ -8,6 +8,7 @@ export default <Partial<Config>>{
                 primaryOeb: {
                     50: '#e6eef5',
                     100: '#c6d8e9',
+                    150: '#b0d9ff',
                     200: '#98b8d7',
                     300: '#6a98c4',
                     400: '#3d79b3',

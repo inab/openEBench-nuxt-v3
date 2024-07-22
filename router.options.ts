@@ -15,5 +15,10 @@ export const customRoutes = [
         name: 'scientific-community-challenge',
         path: '/benchmarking/:community/:challenge',
         file: resolve(__dirname, 'pages/benchmarking/community/challenge')
+    },
+    {
+        name: 'scientific-community-challenge-participants',
+        path: '/benchmarking/:community/:id/participants',
+        file: resolve(__dirname, 'pages/benchmarking/community/challenge/participants')
     }
 ];

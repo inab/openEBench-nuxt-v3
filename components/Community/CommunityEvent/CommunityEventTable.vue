@@ -5,15 +5,13 @@
         </div>
         <UTable
             :loading-state="{ icon: 'i-heroicons-arrow-path-20-solid', label: 'Loading...' }"
-            :progress="{ color: 'primary', animation: 'carousel' }"
-            :rows="rows"
+            :rows="filteredRows"
             :columns="columns"
             v-model="selected"
+            @select="select"
             :ui="{
                 tr: {
                     base: '',
-                    selected: 'bg-cool-200 dark:bg-gray-800/50',
-                    active: 'hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer',
                 },
                 th: {
                     base: 'text-left rtl:text-right',
@@ -21,51 +19,55 @@
                     color: 'text-gray-900 dark:text-white',
                     font: 'font-semibold',
                     size: 'text-sm',
-                  },
-                  td: {
+                },
+                td: {
                     base: 'whitespace-nowrap',
                     padding: 'px-3 py-3',
-                    color: 'text-gray-500 dark:text-gray-400',
                     font: '',
                     size: 'text-sm',
-                  },
+                },
             }"
         >
             <template #name-data="{ row }">
-                <span :class="[selected.find(eventsFormated => eventsFormated._id === row.id) && 'text-primary-500 dark:text-primary-400']">
+                <span :class="[selected.find(eventsFormated => eventsFormated._id === row._id) && 'text-primaryOeb-500 dark:text-primary-400']">
                     {{ row.name }}
                 </span>
             </template>
+        
             <template #_id-data="{ row }">
                 <NuxtLink :to="`${community}/${row._id}`" class="text-primary-500 dark:text-primary-400">
                     {{  row.acronym }}
                 </NuxtLink>
             </template>
             <template #participant-data="{ row }">
-                <NuxtLink :to="`${community}/${row._id}/participant`" class="text-primary-500 dark:text-primary-400">
+                <NuxtLink :to="`${community}/${row._id}/participants`" class="text-primary-500 dark:text-primary-400">
                     Participant
                 </NuxtLink>
             </template>
         </UTable>
         <div class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700">
-            <UPagination v-model="page" :page-count="pageCount" :total="eventChallenges.length" />
+            <UPagination v-model="page" :page-count="pageCount" :total="totalPages" />
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, defineEmits, watch } from 'vue'
 
 const props = defineProps<{
-    eventChallenges: Object,
-    communityId: string
+    eventChallenges: Array<any>,
+    communityId: string,
+    filterArray: Array<any>,
 }>()
+
+const emit = defineEmits(['handleChangeChallengers'])
 
 let community = computed(() => props.communityId)
 let page = ref(1)
 const pageCount = 10
 let search = ref('')
-let selected = ref([])
+let totalPages = ref(0)
+let selected = ref<any[]>([])
 
 const columns = [
     {
@@ -82,7 +84,39 @@ const columns = [
     }
 ]
 
-const rows = computed(() => {
-  return props.eventChallenges.slice((page.value - 1) * pageCount, (page.value) * pageCount)
+const filteredRows = computed(() => {
+    if (!search.value) {
+        totalPages.value = props.eventChallenges.length
+    return props.eventChallenges.slice((page.value - 1) * pageCount, (page.value) * pageCount)
+    }
+
+    let filteredSearcher = props.eventChallenges.filter((challenge: any) => {
+        return Object.values(challenge).some((value) => {
+            return String(value).toLowerCase().includes(search.value.toLowerCase())
+        })
+    })
+    totalPages.value = filteredSearcher.length
+    return filteredSearcher.slice((page.value - 1) * pageCount, (page.value) * pageCount)
+})
+
+function select (row: any) {
+    const index = selected.value.findIndex((item: any) => item._id === row._id)
+    if (index === -1) {
+        selected.value.push(row)
+    } else {
+        selected.value.splice(index, 1)
+    }
+}
+
+// Use watch, normal Obj bind, does not work
+watch(selected, () => {
+    emit('handleChangeChallengers', selected.value)
 })
 </script>
+
+<style>
+.form-checkbox:checked,
+.form-checkbox:indeterminate {
+    background-color: currentColor !important;
+}
+</style>

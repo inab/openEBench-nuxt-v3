@@ -48,8 +48,9 @@ const props = defineProps<{
     }
 }>();
 
+const route = useRoute()
+const router = useRouter()
 const communityStore = useCommunity()
-
 let currentEvent = computed(() => communityStore.getCurrentEvent)
 let eventsArray = props.events.map((item: any) => item.name)
 let eventSelected = ref(currentEvent.value ? currentEvent.value.name : null)
@@ -57,6 +58,12 @@ let eventSelected = ref(currentEvent.value ? currentEvent.value.name : null)
 function handleChangeEvent() {
     let event = props.events.find((item: any) => item.name == eventSelected.value)
     communityStore.setCurrentEvent(event)
+    if(event) {
+        router.push({ 
+            path: `/benchmarking/${route.params.community}`,
+            query: { event: event._id}
+        })
+    }
 }
 
 </script>

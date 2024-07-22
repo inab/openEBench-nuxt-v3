@@ -29,7 +29,7 @@ export const useCommunity = defineStore('community', {
     },
 
     actions: {
-        async requestCommunityData(id) {
+        async requestCommunityData(id, event) {
             const responseData = await useNuxtApp().$graphql('/graphql',
                 {
                     method: 'POST',
@@ -107,6 +107,12 @@ export const useCommunity = defineStore('community', {
             // Events
             this.setEvents(responseData.data.getBenchmarkingEvents)
 
+            let defaultEvent = this.events[0]??null
+            if(event) {
+                defaultEvent = responseData.data.getBenchmarkingEvents.filter(e => e._id == event)[0]
+            }
+            this.setCurrentEvent(defaultEvent)
+            
             // Datasets
             this.setDatasets(responseData.data.getDatasets)
 
@@ -130,7 +136,6 @@ export const useCommunity = defineStore('community', {
 				}
 				return 0;
 			});
-            this.setCurrentEvent(this.events[0]??null)
         },
 
         // Setting datasets

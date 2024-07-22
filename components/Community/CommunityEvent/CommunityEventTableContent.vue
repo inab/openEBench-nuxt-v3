@@ -30,10 +30,13 @@
                 needed.
             </p>
         </div>
+        {{ selectedIds }}
         <div class="">
             <CommunityEventTable
                 :eventChallenges="event.challenges"
                 :communityId="communityId"
+                :filterArray="selectedIds"
+                @handleChangeChallengers="handleChangeChallengers"
             />
         </div>
     </div>
@@ -54,6 +57,10 @@
     
     let selected: Array<any> = ref([])
     let selectedIds = computed(() => selected.value.map((item) => item._id))
+
+    function handleChangeChallengers(currentSelected) {
+        selected.value = currentSelected
+    }
 </script>
 
 <style scoped lang="scss">

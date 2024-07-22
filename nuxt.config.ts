@@ -23,6 +23,7 @@ export default defineNuxtConfig({
     head: {
       charset: 'utf-8',
       viewport: 'width=device-width, initial-scale=1',
+      link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
       title: 'OpenEBench',
     },
     pageTransition: {
@@ -59,7 +60,6 @@ export default defineNuxtConfig({
       OBSERVATORY_API_URL: process.env.OBSERVATORY_API_URL || 'https://observatory.openebench.bsc.es/api',
       GITHUBAPP_API_URL: process.env.GITHUBAPP_API_URL || 'https://observatory.openebench.bsc.es/githubapp/api',
       MONITORING: {
-        // See https://github.com/nuxt-community/axios-module#options
         baseURL:
           process.env.REST_API_URL || 'https://dev-openebench.bsc.es/monitor/rest/',
       },
@@ -67,6 +67,10 @@ export default defineNuxtConfig({
       KEYCLOAK_REALM: process.env.KEYCLOAK_REALM || 'openebench',
       KEYCLOAK_CLIENT_ID: process.env.KEYCLOAK_CLIENT_ID || 'oeb-frontend',
     },
+  },
+
+  routeRules: {
+    '/benchmarking/:community': { ssr: false }
   },
 
   hooks: {
@@ -102,9 +106,3 @@ export default defineNuxtConfig({
 
   modules: ["@nuxt/image", "@nuxt/ui", '@pinia/nuxt']
 })
-
-/*
-  devServer: {
-    port: 3003,
-  },
-  */

@@ -20,7 +20,7 @@
                             Explore existing community-driven scientific benchmark results for Life Sciences software
                         </p>
                         <NuxtLink to="/benchmarking" class="custom-btn primary btn-empty-filled landing-feature-btn"
-                            title="Go to Scientific Benchmarking">
+                            title="Go to Benchmarks">
                             Explore
                         </NuxtLink>
                     </div>
@@ -43,8 +43,8 @@
                         <p class="landing-feature-tease__body body-1">
                             Individually browse technical metrics for popular research software in Life Sciences
                         </p>
-                        <NuxtLink to="/benchmarking" class="custom-btn primary btn-empty-filled landing-feature-btn"
-                            title="Go to Scientific Benchmarking">
+                        <NuxtLink to="/tool" class="custom-btn primary btn-empty-filled landing-feature-btn"
+                            title="Go to Tools & Metrics">
                             Explore
                         </NuxtLink>
                     </div>
@@ -66,8 +66,8 @@
                         <p class="landing-feature-tease__body body-1">
                             Quantitative monitoring of the technical quality of software in Life Sciences
                         </p>
-                        <NuxtLink to="/benchmarking" class="custom-btn primary btn-empty-filled landing-feature-btn"
-                            title="Go to Scientific Benchmarking">
+                        <NuxtLink to="/observatory" class="custom-btn primary btn-empty-filled landing-feature-btn"
+                            title="Go to Tools Observatory">
                             Explore
                         </NuxtLink>
                     </div>
@@ -88,8 +88,8 @@
                         <p class="landing-feature-tease__body body-1">
                             Community spaces for projects to collaborate on software in life sciences
                         </p>
-                        <NuxtLink to="/benchmarking" class="custom-btn primary btn-empty-filled landing-feature-btn"
-                            title="Go to Scientific Benchmarking">
+                        <NuxtLink to="/projects" class="custom-btn primary btn-empty-filled landing-feature-btn"
+                            title="Go to Project Spaces">
                             Explore
                         </NuxtLink>
                     </div>

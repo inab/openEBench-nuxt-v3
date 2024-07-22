@@ -41,8 +41,8 @@
             </UAccordion>
         </div>
         <div class="benchmarking-communities__container">
-            <div class="grid grid-cols-4 gap-4" v-if="pending">
-                <div class="" v-for="(c, i) in Array.from({length: 8}, (x, i) => i)"
+            <div class="grid grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-4" v-if="status === 'pending'">
+                <div class="community-card flex flex-col" v-for="(c, i) in Array.from({length: 8}, (x, i) => i)"
                     :key="i">
                     <USkeleton class="h-12 w-12" :ui="{ rounded: 'rounded-full' }" />
                     <div class="space-y-2">
@@ -51,8 +51,8 @@
                     </div>
                 </div>
             </div>
-            <div class="grid grid-cols-4 gap-4" v-else>
-                <div class="community-card" v-for="(community, index) in communities"
+            <div class="grid grid-cols-4 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-4 auto-cols-max" v-else>
+                <div class="community-card h-100" v-for="(community, index) in communities"
                     :key="index">
                     <CommunityCard
                         :_id="community._id"
@@ -75,78 +75,18 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import CommunityCard from '@/components/Cards/CommunityCard/CommunityCard.vue'
-import parseDataURL from 'data-urls'
-import { labelToName, decode } from 'whatwg-encoding'
 
-const { $graphql } = useNuxtApp()
-const communities: Ref<any> = ref(null);
+import { useCommunities } from '@/stores/communities'
+
+const communitiesStore = useCommunities()
+
 const HEADER_ITEM = [{
     label: "Benchmarking Communities",
     defaultOpen: true,
     slot: 'benchmarking'
 }]
 
-const { data, pending }: { data: any, pending: boolean } = await useAsyncData('communities', () => $graphql('/graphql',
-{
-    method: 'POST',
-    headers: {
-        "Accept": "text/plain, */*",
-    },
-    body: JSON.stringify(
-        {
-            query: `
-                {
-                getCommunities {
-                    _id
-                    name
-                    acronym
-                    description
-                    status
-                    keywords
-                    links {
-                        uri
-                        comment
-                        label
-                    }
-                    benchmarkingEvents {
-                        _id
-                    }
-                    _metadata
-                }
-            }
-        `,
-        }
-    )
-}
-))
-communities.value = filterCommunities(formatData(data.value.data.getCommunities ?? null));
-
-function formatData(communities: any) {
-    return communities.map((community: any) => {
-        community.links.forEach((link: { comment: string; uri: any; }) => {
-            if (link.comment === '@logo') {
-                community.logo = link.uri;
-            }
-        });
-        community._metadata = JSON.parse(community._metadata);
-        if (community._metadata && 'project:summary' in community._metadata) {
-            const dataURL = parseDataURL(community._metadata['project:summary']);
-            const encodingName = labelToName(
-                dataURL.mimeType.parameters.get('charset') || 'utf-8'
-            );
-            const decodedSummary = decode(dataURL.body, encodingName);
-
-            community.summary = decodedSummary;
-            community._metadata['project:summary'] = decodedSummary;
-        }
-        if (community.status === 'abandoned') community.status = 'inactive';
-        return community;
-    })
-}
-
-function filterCommunities(communities: any) {
-    return communities.filter((community: any) => community._metadata ? !community._metadata.project_spaces : true);
-}
+const { data: communities, status} = await useAsyncData(() => communitiesStore.requestCommunitiesData())
 </script>
 <style scoped lang="scss">
 .benchmarking-communities {
