@@ -1,6 +1,6 @@
 <template>
   <div>
-    <footer class="primary py-4 mt-5">
+    <footer class="primary pt-5 pb-3 mt-8">
     <div class="container-fluid">
       <div class="row">
 
@@ -14,7 +14,7 @@
         <div class="col-md-6 col-12 p-4">
           <div class="row justify-space-around">
             <div v-for="(footer, index) in footers" :key="index" class="col-md-3">
-              <h6 class="mb-4 ">{{ footer.headline }}</h6>
+              <h5 class="mb-4 ">{{ footer.headline }}</h5>
               <ul class="list-unstyled">
                 <li v-for="(link, m) in footer.links" :key="m">
                   <nuxt-link v-if="link.to" :to="link.to" class="text-white links-header">
@@ -22,7 +22,7 @@
                   </nuxt-link>
                   <a v-if="link.href" :href="link.href" target="_blank" class="text-white links-header">
                     {{ link.title }}
-                    <i class="mdi mdi-open-in-new"></i>
+                    <font-awesome-icon :icon="['fas', 'arrow-up-right-from-square']" size="xs" class="mx-2" />
                   </a>
                 </li>
               </ul>
@@ -44,7 +44,7 @@
 
           <div class="row mt-2">
             <div class="col col-9">
-              <p><small> OpenEBench receives funding from different EC funding Research &
+              <p class="text-sm-left"><small> OpenEBench receives funding from different EC funding Research &
 							  Innovation programmes.<br />
 							  <a
                   href="/collaboration"
