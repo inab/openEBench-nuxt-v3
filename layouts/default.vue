@@ -1,10 +1,14 @@
 <template>
-    <HeaderMenu />
-    <BreadcrumbsBar />
+    <div>
+        <HeaderMenu />
+        <NuxtPage />
+        <TheFooter />
+    </div>
+  
 </template>
 
-<script setup lang="ts">
+<script>
 import HeaderMenu from "~/components/Header/HeaderMenu.vue"
 import BreadcrumbsBar from "~/components/Common/BreadcrumbsBar.vue"
-
+import TheFooter from "~/components/TheFooter.vue"
 </script>
