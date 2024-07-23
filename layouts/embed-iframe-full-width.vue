@@ -1,7 +1,7 @@
 <template>
 	<div class="embed-iframe-full-width">
 		<HeaderMenu />
-    	<BreadcrumbsBar />
+    <BreadcrumbsBar />
 	</div>
 	
 </template>
