@@ -1,6 +1,6 @@
 <template>
   <div>
-    <footer class="primary pt-5 pb-3 mt-8">
+    <footer class="footer pt-5 pb-3">
     <div class="container-fluid">
       <div class="row">
 
@@ -99,12 +99,6 @@ export default {
     ],
   }),
   computed: {
-    isMobile() {
-      return this.$vuetify.breakpoint.smAndDown;
-    },
-    isDesktop() {
-      return this.$vuetify.breakpoint.mdAndUp;
-    },
     currentYear() {
       return new Date().getFullYear();
     },
@@ -114,7 +108,8 @@ export default {
 
 <style scoped>
 
-.primary {
+.footer {
+  margin-top: 80px !important;
 	background-color: #0B579F;
 	color: white;
 }
