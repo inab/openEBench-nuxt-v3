@@ -1,51 +1,78 @@
 <template>
-    <div class="challenge-participant-metrics">
+    <div>
         <UTable
+            :rows="rows"
             :columns="headers"
-            :rows="items"
+            :sort="sort"
+            class="w-full"
+            sort-asc-icon="i-heroicons-arrow-up-20-solid"
+            sort-desc-icon="i-heroicons-arrow-down-20-solid"
+            :ui="{
+                tr: {
+                    base: 'hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer'
+                },
+                td: { base: 'max-w-[0] truncate' }
+            }"
         >
-            <template #participant-data="{ row }">
-                <!-- {{  row.participant_label }} -->
-                {{  row }}
-            </template>
-        </UTable> 
+        </UTable>
+        <div class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700">
+            <UPagination v-model="page" :page-count="pageCount" :total="items.length" />
+        </div>
     </div>
-</template>
-
+  </template>
+  
 <script setup lang="ts">
+    import { ref, computed } from 'vue';
+  
+    const props = defineProps<{
+        metricsTable: any
+    }>();
 
-const props = defineProps<{
-    metricsTable: Object
-}>()
+    const sort = ref({
+        column: 'participant_label',
+        direction: 'asc'
+    })
 
-const headers = props.metricsTable.metrics.map((metric: Object, metricsI: number) => {
-    return {
-        label: metric.metrics_label,
-        key: `metricsValues[${metricsI}].value`,
-    };
-});
-
-headers.unshift({
-    label: 'Participant',
-    key: 'participant',
-});
-
-console.log(headers)
-
-let items = props.metricsTable.participants.map(
-    (participant: Object, participantI: number) => {
+    const headers = props.metricsTable.metrics.map((metric: Object, metricsI: number) => {
         return {
-            _id: participant._id,
-            participant_label: participant.participant_label,
-            metricsValues: props.metricsTable.dataMatrix[participantI],
+                label: metric.metrics_label,
+                key: `metricsValues_${metricsI}`,
         };
-    }
-);
+    });
 
-items.map((item) => {
-    console.log(item)
-})
+    headers.unshift({
+        label: 'Participant',
+        key: 'participant_label',
+        sortable: true
+    });
 
-console.log(items)
+    let items = props.metricsTable.participants.map(
+        (participant: Object, participantI: number) => {
+            return {
+                _id: participant._id,
+                participant_label: participant.participant_label,
+                metricsValues: props.metricsTable.dataMatrix[participantI],
+            };
+        }
+    );
+    items = items.map((item: Object) => {
+        return {
+            ...item,
+            ...item.metricsValues.reduce((acc: Object, metric: Object, metricI: number) => {
+                return {
+                    ...acc,
+                    [`metricsValues_${metricI}`]: metric.value,
+                };
+            }, {}),
+        };
+    });
 
-</script>
+    items = items.map(({metricsValues, ...keepAttrs}) => keepAttrs)
+
+    const page = ref(1);
+    const pageCount = 10;
+
+  const rows = computed(() => {
+    return items.slice((page.value - 1) * pageCount, (page.value) * pageCount)
+    })
+  </script>

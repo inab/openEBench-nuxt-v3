@@ -29,6 +29,7 @@
     "nuxt": "^3.12.2",
     "pinia": "^2.1.7",
     "pluralize": "^8.0.0",
+    "vite-svg-loader": "^5.1.0",
     "vue": "latest",
     "vue3-carousel": "^0.3.3",
     "vue3-observe-visibility": "^1.0.1",

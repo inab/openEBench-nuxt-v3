@@ -21,6 +21,51 @@
                         :metricsTable="metricsTable"
                     />
                 </div>
+                <div class="" v-if="status.pending">
+                    <USkeleton class="h-12 w-12" :ui="{ rounded: 'rounded-full' }" />
+                </div>
+                <div class="" v-else>
+                    <h2 class="text-h6 mt-8">
+                        Choose one of the {{ participants.length }} participants whose metrics
+                        you want to visualize in the radar plot:
+                    </h2>
+                    <div class="" v-if="metricsTable.participants.length > 15">
+                        <div class="row row-metrics">
+                            <div class="col-4" v-for="item in itemsRows"
+                                @click="handleChangeSelected(item.id)">
+                                <div class="metrics-item bg-stone-100" :class="[item.id==selectedParticipant?'selected':'']">
+                                    {{  item.participant_label }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap justify-between items-center">
+                            <div>
+                                <span class="text-sm leading-5">
+                                    Showing
+                                    <span class="font-medium">{{ pageFrom }}</span>
+                                    to
+                                    <span class="font-medium">{{ pageTo }}</span>
+                                    of
+                                    <span class="font-medium">{{ pageTotal }}</span>
+                                    results
+                                </span>
+                            </div>
+                            <UPagination v-model="page" :page-count="pageCount" :total="itemsTable.length" />
+                        </div>
+
+                        <div class="chart-image text--secondary mt-6 mx-10"
+							align="center"
+							color="rgba(0, 0, 0, 0.6)">
+                            <NuxtImg
+                                src="/empty-state.svg"  />
+							<h2>No chart available.</h2>
+							<p class="text-h6">
+								No visual representation implemented yet. Check back soon!
+							</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -29,15 +74,9 @@
 <script setup lang="ts">
     import { ref } from 'vue'
     import ChallengeParticipantMetricsTable from '@/components/Challenges/ChallengeParticipantMetricsTable.vue';
-    import { challengeAPI } from "~/api/challengeAPI";
-    import  ChallengeObj  from "~/models/ChallengeObj";
+    import { challengeAPI } from "@/api/challengeAPI";
+    import  ChallengeObj  from "@/models/ChallengeObj";
 
-    const PARTICIPANT_ID_KEY = 'level_2:participant_id';
-    const EXCLUDE_PARTICIPANT_KEY = 'level_2:exclude_participant';
-    const CHALLENGE_LABEL_KEY = 'level_2:challenge_id';
-    const METRIC_ID_KEY = 'level_2:metric_id';
-
-    const { $graphql } = useNuxtApp()
     const route = useRoute()
     const challengeId = route.params.id
 
@@ -47,6 +86,10 @@
     let challenge: any = ref(null)
 
     let status = { pending: false} // TODo
+    let page = ref(1)
+    let pageCount = ref(15)
+   
+    let selectedParticipant = ref('')
 
     let responseData = await challengeAPI(challengeId)
 
@@ -58,8 +101,27 @@
     datasets.value = challengeObj.getDatasets()
     participants.value = Object.keys(participants.value).map(function(k){ return participants.value[k] });
 
-    let metricsTable = getMetricsTable()
-    console.log(metricsTable)
+    let metricsTable: { participants: any; metrics: any[]; dataMatrix: any; length: number } = getMetricsTable()
+
+    let itemsTable = metricsTable.participants.map(
+        (participant: Object, participantI: number) => {
+            return {
+                id: participant._id,
+                participant_label: participant.participant_label,
+            };
+        }
+    );
+    let itemsRows = computed(() => {
+        return itemsTable.slice((page.value - 1) * pageCount.value, page.value * pageCount.value);
+    });
+
+    if(metricsTable.participants.length > 0) {
+        selectedParticipant.value = metricsTable.participants[0]._id
+    }
+
+    const pageTotal = computed(() => metricsTable.participants.length)
+    const pageFrom = computed(() => (page.value - 1) * pageCount.value + 1)
+    const pageTo = computed(() => Math.min(page.value * pageCount.value, pageTotal.value))
 
     function getMetricsTable() {
         // Gather the metrics
@@ -143,4 +205,26 @@
             dataMatrix,
         };
     }
+
+    function handleChangeSelected(id: string) {
+        selectedParticipant.value = id
+    }
 </script>
+
+<style scoped lang="scss">
+.row-metrics {
+    padding-bottom: 15px;
+    .metrics-item {
+        border-radius: 16px;
+        padding: 5px 15px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        &.selected {
+            background-color: theme('colors.primary.100');
+        }
+    }
+}
+.chart-image img {
+    max-height: 300px;
+}
+</style>

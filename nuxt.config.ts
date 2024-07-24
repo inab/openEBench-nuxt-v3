@@ -1,6 +1,5 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
-
 import { customRoutes } from "./router.options";
+import svgLoader from 'vite-svg-loader'
 
 export default defineNuxtConfig({
   devtools: {
@@ -24,7 +23,6 @@ export default defineNuxtConfig({
       charset: 'utf-8',
       viewport: 'width=device-width, initial-scale=1',
       link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
-      title: 'OpenEBench',
     },
     pageTransition: {
       name: 'page',
@@ -98,6 +96,9 @@ export default defineNuxtConfig({
             },
         },
     },
+    plugins: [
+      svgLoader(),
+    ],
   },
 
   devServer: {
