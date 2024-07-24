@@ -51,9 +51,8 @@
                     </div>
                 </div>
             </div>
-            <div class="grid grid-cols-4 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-4 auto-cols-max" v-else>
-                <div class="community-card h-100" v-for="(community, index) in communities"
-                    :key="index">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-cols-max">
+                <div class="community-card h-100" v-for="(community, index) in communities" :key="index">
                     <CommunityCard
                         :_id="community._id"
                         :acronym="community.acronym"
