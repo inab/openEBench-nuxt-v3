@@ -1,7 +1,7 @@
 <template>
     <div class="container">
     <div class="w-100">
-        <h2 class="text-primaryOeb-500">Legal Notice</h2>
+        <h2 class="text-primaryOeb-500 mb-4">Legal Notice</h2>
         <p class="leading-7 mt-3">
             Access to the portal of Barcelona Supercomputing Center – Centro Nacional
 			de Supercomputación, hereinafter BSC-CNS, and the information relating to
@@ -94,9 +94,3 @@
 <script setup lang="ts">
 </script>
 
-<style scoped>
-.p{
-    font-size: 0.875rem;
-    line-height: 1.5rem;
-}
-</style>
