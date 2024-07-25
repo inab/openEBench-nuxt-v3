@@ -1,5 +1,5 @@
 <template>
-  <footer class="footer pt-5 pb-3">
+  <footer class="footer pt-5 pb-4">
     <div class="container-fluid">
       <div class="row">
         <!-- Col 1 -->
