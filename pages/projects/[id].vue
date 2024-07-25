@@ -42,9 +42,6 @@
 						</div>
 					</template>
 					<template #datasets="{ item }">
-						<div class="p-4 custom-tab">
-							<h1 class="text-h4">{{ item.label }}</h1>
-						</div>
 						<div class="p-4">
 							<CommunityDataset
 								:datasets="datasetsObj"
@@ -53,9 +50,6 @@
 						</div>
 					</template>
 					<template #tools="{ item }">
-						<div class="p-4 custom-tab">
-							<h1 class="text-h4">{{ item.label }}</h1>
-						</div>
 						<div class="p-4">
 							<CommunityTools
 								:tools="toolsObj"

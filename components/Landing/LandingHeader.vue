@@ -40,7 +40,7 @@
                     </div>
                     <div class="col-5">
                         <div class="welcome-header-image">
-                            <img src="~/assets/images/illustrations/chart-person.svg" alt="welcome-header-image" />
+                            <NuxtImg src="/images/illustrations/chart-person.svg" alt="welcome-header-image" />
                         </div>
                     </div>
                 </div>

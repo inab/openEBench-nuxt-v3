@@ -44,10 +44,10 @@
                                 </ul>
                             </li>
                             <li class="relative parent">
-                                <a href="#" class="nav-link flex justify-between md:inline-flex items-center hover:bg-gray-50 space-x-2">
+                                <div href="#" class="nav-link flex justify-between md:inline-flex items-center hover:bg-gray-50 space-x-2">
                                     <span>About</span>
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 fill-current pt-1" viewBox="0 0 24 24"><path d="M0 7.33l2.829-2.83 9.175 9.339 9.167-9.339 2.829 2.83-11.996 12.17z"/></svg>
-                                </a>
+                                </div>
                                 <ul class="child transition duration-300 md:absolute top-full left-0 md:w-48 bg-white md:shadow-lg md:rounded-b">
                                     <li>
                                         <ul>
@@ -86,12 +86,12 @@ import subMenuEntriesAbout from './HeaderMenu/subMenuEntriesAbout';
 
 <style scoped lang="scss">
     .navbar {
-        height: 65px;
+        /*height: 65px; */
         font-size: 18px;
         border-bottom: 1px solid rgb(229, 231, 235);
         position: fixed;
         top: 0;
-        overflow: hidden;
+        /*overflow: hidden; */
         z-index: 2;
         .navbar-brand {
             height: 65px;
@@ -165,6 +165,37 @@ import subMenuEntriesAbout from './HeaderMenu/subMenuEntriesAbout';
       .header-links li:not(.active):hover span::before {
         background-color: #ccc;
       }
+      
+      .child {
+        opacity:0;
+        height:0;
+        overflow:hidden;
+        transform: translateY(-10%);
+        padding-left: 0px;
+        ul {
+            padding-left: 15px;
+            li {
+                padding-bottom: 15px;
+                &:hover {
+                    color: theme('colors.primary.500');
+                    a {
+                        color: theme('colors.primary.500');
+                    }
+                }
+            }
+        }
+    }
+        
+
+      .parent:hover .child {
+        opacity:1;
+        height:auto;
+        overflow:auto;
+        transform: translateY(0);
+    }
+   
+
+    /*:-moz-any-link
 
       @media only screen and (min-width: 768px){
         .parent:hover .child {
@@ -180,5 +211,7 @@ import subMenuEntriesAbout from './HeaderMenu/subMenuEntriesAbout';
             transform: translateY(-10%);
         }
     }
+
+    */
     
 </style>

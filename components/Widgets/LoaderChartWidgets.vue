@@ -1,7 +1,13 @@
 <template>
     <div class="">
-        This is a loader chart widget
+        <!-- <LoaderWidgets
+			v-if="preparedData"
+			:data-chart="preparedData"
+		></LoaderWidgets> -->
+        {{  preparedData }}
     </div>
 </template>
-<script setup lang="ts">
+<script>
+//import LoaderWidgets from '@inb/oeb-widgets/components/LoaderWidgets.vue';
+
 </script>

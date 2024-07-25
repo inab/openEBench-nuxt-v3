@@ -4,15 +4,17 @@ import { labelToName, decode } from 'whatwg-encoding'
 
 export const useCommunities = defineStore('communities' , {
     state: () => ({
-        communities: Object
+        communities: Object,
+        projects: Object
     }),
 
     getters: {
-        getCommunities: (state) => state.state
+        getCommunities: (state) => state.communities,
+        getProjects: (state) => state.projects
     },
 
     actions: {
-        async requestCommunitiesData() {
+        async requestCommunitiesData(type) {
             const responseData = await useNuxtApp().$graphql('/graphql',
                 {
                     method: 'POST',
@@ -46,8 +48,15 @@ export const useCommunities = defineStore('communities' , {
                 }
             )
             let data = responseData.data.getCommunities
+            let dataFormatted = this.formatData(data ?? null)
 
-            this.communities = this.filterCommunities(this.formatData(data ?? null))
+            this.communities = this.filterCommunities(dataFormatted)
+            this.projects = this.filterProjects(dataFormatted)
+
+            if(type && type === 'projects') {
+                return this.projects
+            }
+
             return this.communities
         },
 
@@ -76,6 +85,10 @@ export const useCommunities = defineStore('communities' , {
 
         filterCommunities(data) {
             return data.filter((community) => community._metadata ? !community._metadata.project_spaces : true);
+        },
+
+        filterProjects(data) {
+            return data.filter((community) => community._metadata ? community._metadata.project_spaces : false);
         }
     }
 })

@@ -30,7 +30,6 @@
                 needed.
             </p>
         </div>
-        {{ selectedIds }}
         <div class="">
             <CommunityEventTable
                 :eventChallenges="event.challenges"

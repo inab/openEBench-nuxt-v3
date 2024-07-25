@@ -6,7 +6,7 @@
                 <div class="col col-6">
                     <div class="welcome-header-image" data-aos="fade-up"
                     data-aos-duration="3000">
-                        <img src="~/assets/images/illustrations/404.svg" alt="welcome-header-image" />
+                        <NuxtImg src="/images/illustrations/404.svg" alt="welcome-header-image" />
                     </div>
                 </div>
                 <div class="col col-6 landingkey-features__box">
