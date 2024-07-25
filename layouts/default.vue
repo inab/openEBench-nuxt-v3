@@ -6,9 +6,9 @@
         <NuxtPage />
         <TheFooter />
         <div>
-            <footer class="text-center my-1">
+            <footer class="footer2 text-center py-1">
                 Made with <font-awesome-icon :icon="['fas', 'heart']" style="color: #dc2626;" />
-			    in Barcelona.
+                in Barcelona.
             </footer>
         </div>
     </div>
@@ -26,4 +26,15 @@ useHead({
     ]
 })
 </script>
+
+<style scoped>
+.footer2 {
+   position:fixed;
+   left:0px;
+   bottom:0px;
+   height:35px;
+   width:100%;
+   background-color: #F5F5F5;
+}
+</style>
 
