@@ -71,8 +71,8 @@
 </template>
 
 <script>
-import logo from '~/static/images/opeb_logo_white_minimal.png';
-import euFlag from '~/static/images/eu.svg';
+import logo from '~/assets/images/opeb_logo_white_minimal.png';
+import euFlag from '~/assets/images/eu.svg';
 import footerEntries from '~/components/footerEntries';
 import subMenuEntriesObservatory from '~/components/Header/HeaderMenu/subMenuEntriesObservatory.js';
 import subMenuEntriesAbout from '~/components/Header/HeaderMenu/subMenuEntriesAbout';
