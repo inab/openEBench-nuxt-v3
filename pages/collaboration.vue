@@ -147,8 +147,3 @@ import Img5 from '~/assets/collaboration/baiha.png';
 
 <style scoped>
 </style>
-<template>
-    <div class="collaboration">
-        This is collaboration
-    </div>
-</template>
