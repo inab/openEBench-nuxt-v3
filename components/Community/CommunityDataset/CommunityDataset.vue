@@ -1,8 +1,11 @@
 <template>
     <div>
+        <div class="flex px-3 py-3.5 border-b border-gray-200 dark:border-gray-700">
+            <UInput v-model="search" placeholder="Search..." />
+        </div>
         <UTable
             :columns="columns"
-            :rows="rows"
+            :rows="filteredRows"
             :ui="{
                 tr: {
                     base: '',
@@ -39,6 +42,8 @@
 
     let page = ref(1)
     const pageCount = 15
+    let totalPages = ref(0)
+    const search = ref('')
 
     const columns = [
         {
@@ -65,9 +70,19 @@
         });
     });
 
-    const rows = computed(() => {
-        return datasets.value.slice((page.value - 1) * pageCount, (page.value) * pageCount)
+    const filteredRows = computed(() => {
+        if (!search.value) {
+            totalPages.value = props.datasets.length
+            return props.datasets.slice((page.value - 1) * pageCount, (page.value) * pageCount)
+        }
+        
+        let filteredSearcher = props.datasets.filter((challenge: any) => {
+            return Object.values(challenge).some((value) => {
+                return String(value).toLowerCase().includes(search.value.toLowerCase())
+            })
+        })
+        totalPages.value = filteredSearcher.length
+        return filteredSearcher.slice((page.value - 1) * pageCount, (page.value) * pageCount)
     })
 
-    
 </script>

@@ -75,9 +75,7 @@
     participants.value = challengeObj.getParticipants()
     metrics.value = challengeObj.getMetrics()
     datasets.value = challengeObj.getDatasets()
-
-    console.log(challenge.value)
-
+    
     let tab = ref(0)
 
 </script>

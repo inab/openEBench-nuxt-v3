@@ -31,8 +31,7 @@
                     </h2>
                     <div class="" v-if="metricsTable.participants.length > 15">
                         <div class="row row-metrics">
-                            <div class="col-4" v-for="item in itemsRows"
-                                @click="handleChangeSelected(item.id)">
+                            </div>
                                 <div class="metrics-item bg-stone-100" :class="[item.id==selectedParticipant?'selected':'']">
                                     {{  item.participant_label }}
                                 </div>
@@ -64,8 +63,9 @@
 								No visual representation implemented yet. Check back soon!
 							</p>
                         </div>
-                    </div>
-                </div>
+            </div>
+            <div class="" v-else>
+                <noDataAvailable item="participants and metrics" />
             </div>
         </div>
     </div>
@@ -76,6 +76,7 @@
     import ChallengeParticipantMetricsTable from '@/components/Challenges/ChallengeParticipantMetricsTable.vue';
     import { challengeAPI } from "@/api/challengeAPI";
     import  ChallengeObj  from "@/models/ChallengeObj";
+    import noDataAvailable from '@/layouts/noDataAvailable.vue';
 
     const route = useRoute()
     const challengeId = route.params.id

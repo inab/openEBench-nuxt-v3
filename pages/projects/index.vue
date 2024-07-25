@@ -33,7 +33,7 @@
             </UAccordion>
         </div>
         <div class="projects__container">
-            <div class="grid grid-cols-4 gap-4" v-if="pending">
+            <div class="grid grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-4" v-if="status.pending">
                 <div class="" v-for="(c, i) in Array.from({length: 8}, (x, i) => i)"
                     :key="i">
                     <USkeleton class="h-12 w-12" :ui="{ rounded: 'rounded-full' }" />
@@ -43,7 +43,7 @@
                     </div>
                 </div>
             </div>
-            <div class="grid grid-cols-4 gap-4" v-else>
+            <div class="grid grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-4" v-else>
                 <div class="community-card" v-for="(project, index) in projects"
                     :key="index">
                     <CommunityCard
@@ -65,13 +65,13 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
 import parseDataURL from 'data-urls'
 import { labelToName, decode } from 'whatwg-encoding'
 import CommunityCard from '@/components/Cards/CommunityCard/CommunityCard.vue'
-import { ref } from 'vue';
+import { useCommunities } from '@/stores/communities'
 
-const { $graphql } = useNuxtApp()
-const projects: Ref<any> = ref(null)
+const communitiesStore = useCommunities()
 
 const HEADER_ITEM = [{
     label: "Project Spaces",
@@ -79,73 +79,9 @@ const HEADER_ITEM = [{
     slot: 'projects'
 }]
 
-onMounted(async () => {
-    await getCommunities()
-})
 
-async function getCommunities() {
-    const { data: communities, pending }: { data: any, pending: boolean } = await useAsyncData('communities', () => $graphql('/graphql',
-    {
-        method: 'POST',
-        headers: {
-            "Accept": "text/plain, */*",
-        },
-        body: JSON.stringify(
-            {
-                query: `
-                {
-                    getCommunities {
-                        _id
-                        name
-                        acronym
-                        description
-                        status
-                        keywords
-                        links {
-                            uri
-                            comment
-                            label
-                        }
-                        benchmarkingEvents {
-                            _id
-                        }
-                        _metadata
-                        }
-                    }
-                `,
-            }
-        )
-    }));
+const { data: projects, status} = await useAsyncData(() => communitiesStore.requestCommunitiesData('projects'))
 
-    projects.value = filterCommunities(formatData(communities.value.data.getCommunities ?? null));
-}
-
-function formatData(communities: any) {
-    return communities.map((community: any) => {
-        community.links.forEach((link: { comment: string; uri: any; }) => {
-            if (link.comment === '@logo') {
-                community.logo = link.uri;
-            }
-        });
-        community._metadata = JSON.parse(community._metadata);
-        if (community._metadata && 'project:summary' in community._metadata) {
-            const dataURL = parseDataURL(community._metadata['project:summary']);
-            const encodingName = labelToName(
-                dataURL.mimeType.parameters.get('charset') || 'utf-8'
-            );
-            const decodedSummary = decode(dataURL.body, encodingName);
-
-            community.summary = decodedSummary;
-            community._metadata['project:summary'] = decodedSummary;
-        }
-        if (community.status === 'abandoned') community.status = 'inactive';
-        return community;
-    })
-}
-
-function filterCommunities(communities: any) {
-    return communities.filter((community: any) => community._metadata ? community._metadata.project_spaces : false);
-}
 </script>
 
 <style scoped lang="scss">
