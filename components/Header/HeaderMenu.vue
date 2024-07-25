@@ -171,6 +171,19 @@ import subMenuEntriesAbout from './HeaderMenu/subMenuEntriesAbout';
         height:0;
         overflow:hidden;
         transform: translateY(-10%);
+        padding-left: 0px;
+        ul {
+            padding-left: 15px;
+            li {
+                padding-bottom: 15px;
+                &:hover {
+                    color: theme('colors.primary.500');
+                    a {
+                        color: theme('colors.primary.500');
+                    }
+                }
+            }
+        }
     }
         
 
