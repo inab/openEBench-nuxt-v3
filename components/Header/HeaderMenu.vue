@@ -1,76 +1,89 @@
 <template>
     <div class="navbar w-full p-0">
-        <div class="bg-white w-full ">
-            <div class="mx-auto px-4">
-                <div class="flex items-center justify-between">
+        <div class="bg-white w-full h-100">
+            <div class="mx-auto">
+                <div class="flex items-center nav-wrapper px-4">
                     <div class="text-lg font-bold md:py-0">
                         <NuxtLink to="/" class="navbar-brand">
                             <img src="/static/images/opeb_logo.gif" alt="OpenEBench" width="80" class="navbar-logo d-inline-block align-top" />
                         </NuxtLink>
                     </div>
-                    <div class="hidden sm:flex sm:items-center">
-                        <ul class="ml-auto mb-0 md:flex absolute md:relative top-full left-0 right-0">
-                            <li>
-                                <NuxtLink to="/benchmarking" class="nav-link flex md:inline-flex items-center hover:bg-gray-50">
-                                    <span>Benchmarking</span>
-                                </NuxtLink>
-                            </li>
-                            <li>
-                                <NuxtLink to="/projects" class="nav-link flex md:inline-flex items-center hover:bg-gray-50">
-                                    <span>Projects</span>
-                                </NuxtLink>
-                            </li>
-                            <li>
-                                <NuxtLink to="/tool" class="nav-link flex md:inline-flex items-center hover:bg-gray-50">
-                                    <span>Tools</span>
-                                </NuxtLink>
-                            </li>
-                            <li class="relative parent">
-                                <a href="#" class="nav-link flex justify-between md:inline-flex items-center hover:bg-gray-50 space-x-2">
-                                    <span>Observatory</span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 fill-current pt-1" viewBox="0 0 24 24"><path d="M0 7.33l2.829-2.83 9.175 9.339 9.167-9.339 2.829 2.83-11.996 12.17z"/></svg>
-                                </a>
-                                <ul class="child transition duration-300 md:absolute top-full left-0 md:w-48 bg-white md:shadow-lg md:rounded-b">
+                    <nav>
+                        <div class="nav-mobile">
+                            <button class="navbar-burger flex items-center text-blue-600 p-3" id="navbar-toggle"
+                            :class="[toggleMenu?'active':'collapsing']"
+                            @click="handleToggleMenu">
+                                <span></span>
+                            </button>
+                        </div>
+                        <div class="nav-list w-100" 
+                        v-if="((toggleMenu && isMobile) || !isMobile)">
+                            <div class="nav-list-items top-full">
+                                <ul class="nav-list-items-ul w-100">
                                     <li>
-                                        <ul>
-                                            <li v-for="(item, index) in subMenuEntriesObservatory"
-                                                :key="index">
-                                                <NuxtLink :to="item.to">
-                                                    {{ item.title }}
-                                                </NuxtLink>
+                                        <NuxtLink to="/benchmarking" class="nav-link flex md:inline-flex items-center hover:bg-gray-50">
+                                            <span>Benchmarking</span>
+                                        </NuxtLink>
+                                    </li>
+                                    <li>
+                                        <NuxtLink to="/projects" class="nav-link flex md:inline-flex items-center hover:bg-gray-50">
+                                            <span>Projects</span>
+                                        </NuxtLink>
+                                    </li>
+                                    <li>
+                                        <NuxtLink to="/tool" class="nav-link flex md:inline-flex items-center hover:bg-gray-50">
+                                            <span>Tools</span>
+                                        </NuxtLink>
+                                    </li>
+                                    <li class="relative parent">
+                                        <div class="nav-link flex justify-between md:inline-flex items-center hover:bg-gray-50 space-x-2">
+                                            <span>Observatory</span>
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 fill-current pt-1" viewBox="0 0 24 24"><path d="M0 7.33l2.829-2.83 9.175 9.339 9.167-9.339 2.829 2.83-11.996 12.17z"/></svg>
+                                        </div>
+                                        <ul class="child transition duration-300 md:absolute top-full left-0 md:w-48 bg-white md:shadow-lg md:rounded-b">
+                                            <li>
+                                                <ul>
+                                                    <li v-for="(item, index) in subMenuEntriesObservatory"
+                                                        :key="index">
+                                                        <NuxtLink :to="item.to">
+                                                            {{ item.title }}
+                                                        </NuxtLink>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li class="relative parent">
+                                        <div href="#" class="nav-link flex justify-between md:inline-flex items-center hover:bg-gray-50 space-x-2">
+                                            <span>About</span>
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 fill-current pt-1" viewBox="0 0 24 24"><path d="M0 7.33l2.829-2.83 9.175 9.339 9.167-9.339 2.829 2.83-11.996 12.17z"/></svg>
+                                        </div>
+                                        <ul class="child transition duration-300 md:absolute top-full left-0 md:w-48 bg-white md:shadow-lg md:rounded-b">
+                                            <li>
+                                                <ul>
+                                                    <li v-for="(item, index) in subMenuEntriesAbout"
+                                                        :key="index">
+                                                        <NuxtLink :to="item.to">
+                                                            {{ item.title }}
+                                                        </NuxtLink>
+                                                    </li>
+                                                </ul>
                                             </li>
                                         </ul>
                                     </li>
                                 </ul>
-                            </li>
-                            <li class="relative parent">
-                                <div href="#" class="nav-link flex justify-between md:inline-flex items-center hover:bg-gray-50 space-x-2">
-                                    <span>About</span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 fill-current pt-1" viewBox="0 0 24 24"><path d="M0 7.33l2.829-2.83 9.175 9.339 9.167-9.339 2.829 2.83-11.996 12.17z"/></svg>
-                                </div>
-                                <ul class="child transition duration-300 md:absolute top-full left-0 md:w-48 bg-white md:shadow-lg md:rounded-b">
-                                    <li>
-                                        <ul>
-                                            <li v-for="(item, index) in subMenuEntriesAbout"
-                                                :key="index">
-                                                <NuxtLink :to="item.to">
-                                                    {{ item.title }}
-                                                </NuxtLink>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="hidden sm:flex sm:items-center">
-                        <NuxtLink to="home" class="text-gray-800 text-sm font-semibold hover:text-purple-600 mr-4">
-                            Login
-                        </NuxtLink>
-                        <NuxtLink to="home" class="text-gray-800 text-sm font-semibold border px-4 py-2 rounded-lg hover:text-purple-600 hover:border-purple-600">
-                            Benchmark your tool
-                        </NuxtLink>
-                    </div>
+                            </div>
+                            
+                            <div class="nav-list-items-direct top-full hidden sm:flex">
+                                <NuxtLink to="home" class="text-gray-800 text-sm font-semibold hover:text-purple-600 mr-4">
+                                    Login
+                                </NuxtLink>
+                                <NuxtLink to="home" class="text-gray-800 text-sm font-semibold border px-4 py-2 rounded-lg hover:text-purple-600 hover:border-purple-600">
+                                    Benchmark your tool
+                                </NuxtLink>
+                            </div>
+                        </div>
+                    </nav>
                 </div>
             </div>
         </div>
@@ -78,20 +91,37 @@
 </template>
 
 <script setup lang="ts">
+import { ref, watch } from 'vue';
 import menuEntries from '~/components/Header/HeaderMenu/menuEntries';
 import subMenuEntriesObservatory from './HeaderMenu/subMenuEntriesObservatory';
 import subMenuEntriesAbout from './HeaderMenu/subMenuEntriesAbout';
+
+const { $viewport } = useNuxtApp()
+let toggleMenu = ref(false);
+let isMobile = ref(false);
+
+const handleToggleMenu = () => {
+    toggleMenu.value = !toggleMenu.value;
+}
+
+watch($viewport.breakpoint as string, (newBreakpoint: string, oldBreakpoint: string) => { 
+    if(newBreakpoint == 'tablet' || newBreakpoint == 'mobileWide') {
+        isMobile.value = true;
+    } else {
+        isMobile.value = false;
+    }
+    console.log("Is mobile: ", isMobile.value)
+})
 </script>
 
 
 <style scoped lang="scss">
     .navbar {
-        /*height: 65px; */
+        height: 65px; 
         font-size: 18px;
         border-bottom: 1px solid rgb(229, 231, 235);
         position: fixed;
         top: 0;
-        /*overflow: hidden; */
         z-index: 2;
         .navbar-brand {
             height: 65px;
@@ -105,6 +135,8 @@ import subMenuEntriesAbout from './HeaderMenu/subMenuEntriesAbout';
             font-weight: 500;
             padding: 22px 10px 15px;
             display: flex;
+            color: rgba(0, 0, 0, 0.65);
+            cursor: pointer;
             &:hover {
                 color: #0b579f;
             }
@@ -134,6 +166,15 @@ import subMenuEntriesAbout from './HeaderMenu/subMenuEntriesAbout';
             font-weight: 500;
         }
     }
+    .nav-mobile {
+        display: none;
+        position: absolute;
+        top: 0;
+        right: 0;
+        background: transparent;
+        height: 55px;
+        width: 70px;
+    }
 
     .header-menu-right {
         display: flex;
@@ -145,9 +186,9 @@ import subMenuEntriesAbout from './HeaderMenu/subMenuEntriesAbout';
     .header-links li span {
         position: relative;
         z-index: 0;
-      }
+    }
     
-      .header-links li span::before {
+    .header-links li span::before {
         content: '';
         position: absolute;
         z-index: -1;
@@ -156,17 +197,17 @@ import subMenuEntriesAbout from './HeaderMenu/subMenuEntriesAbout';
         right: -4px;
         display: block;
         height: 6px;
-      }
+    }
     
-      .header-links li.active span::before {
+    .header-links li.active span::before {
         background-color: #fcae04;
-      }
-    
-      .header-links li:not(.active):hover span::before {
+    }
+
+    .header-links li:not(.active):hover span::before {
         background-color: #ccc;
-      }
-      
-      .child {
+    }
+
+    .child {
         opacity:0;
         height:0;
         overflow:hidden;
@@ -185,33 +226,176 @@ import subMenuEntriesAbout from './HeaderMenu/subMenuEntriesAbout';
             }
         }
     }
-        
 
-      .parent:hover .child {
+    .parent:hover .child {
         opacity:1;
         height:auto;
         overflow:auto;
         transform: translateY(0);
     }
-   
 
-    /*:-moz-any-link
-
-      @media only screen and (min-width: 768px){
-        .parent:hover .child {
-            opacity:1;
-            height:auto;
-            overflow:none;
-            transform: translateY(0);
-        }
-        .child {
-            opacity:0;
-            height:0;
-            overflow:hidden;
-            transform: translateY(-10%);
-        }
+    #navbar-toggle {
+        position: absolute;
+        left: 18px;
+        top: 15px;
+        cursor: pointer;
+        padding: 10px 35px 16px 0px;
+   }
+    #navbar-toggle span, #navbar-toggle span:before, #navbar-toggle span:after {
+        cursor: pointer;
+        border-radius: 1px;
+        height: 3px;
+        width: 30px;
+        background: theme('colors.primary.500');;
+        position: absolute;
+        display: block;
+        content: '';
+        transition: all 300ms ease-in-out;
+    }
+    #navbar-toggle span:before {
+        top: -10px;
+    }
+    #navbar-toggle span:after {
+        bottom: -10px;
+    }
+    #navbar-toggle.active span {
+        background-color: transparent;
+    }
+    #navbar-toggle.active span:before, #navbar-toggle.active span:after {
+        top: 0;
+    }
+    #navbar-toggle.active span:before {
+        transform: rotate(45deg);
+    }
+    #navbar-toggle.active span:after {
+        transform: rotate(-45deg);
+    }
+    nav {
+        flex-grow: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .nav-list {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .nav-list-items {
+        display: flex;
+        flex-grow: 1;
+    }
+    .nav-list-items-ul {
+        display: flex;
+        justify-content: center;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    .nav-list-items-direct {
+        display: flex;
+        align-items: center;
+        justify-content: end;
     }
 
-    */
-    
+    @media only screen and (min-width: 950px) {
+        .nav-list {
+            display: flex;
+        }
+        
+    }
+
+    @media only screen and (max-width: 1000px) {
+        .nav-wrapper  {
+            background-color: white;
+        }
+        .nav-list {
+            display: block;
+            background-color: white;
+        }
+        .navbar-brand {
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: transparent;
+            height: 55px;
+            width: 70px;
+        }
+        .nav-mobile {
+            display: block;
+        }
+        .nav-list-items {
+            display: block;
+        }
+        .nav-list-items-ul {
+            display: block;
+        }
+        nav {
+            width: 100%;
+            padding: 55px 0 15px;
+            flex-grow:1;
+        }
+        nav ul {
+            display: none;
+        }
+        nav ul li {
+            float: none;
+        }
+        nav ul li a {
+            padding: 15px;
+            line-height: 20px;
+        }
+        nav ul li ul li a {
+            padding-left: 30px;
+        }
+        .navbar-dropdown {
+            position: static;
+        }
+        #navbar-toggle.active span::before {
+            transform: rotate(45deg);
+        }
+        #navbar-toggle.active span::after {
+            transform: rotate(-45deg);
+        }
+        #navbar-toggle {
+            position: absolute;
+            left: 0px;
+            top: 15px;
+            cursor: pointer;
+            padding: 10px 35px 16px 0px;
+            width: 45px;
+       }
+        #navbar-toggle span, #navbar-toggle span:before, #navbar-toggle span:after {
+            cursor: pointer;
+            border-radius: 1px;
+            height: 3px;
+            width: 90px;
+            background: #0b579f;
+            position: absolute;
+            display: block;
+            content: '';
+            transition: all 300ms ease-in-out;
+       }
+        #navbar-toggle span:before {
+            top: -10px;
+       }
+        #navbar-toggle span:after {
+            bottom: -10px;
+       }
+        #navbar-toggle.active span {
+            background-color: transparent;
+       }
+        #navbar-toggle.active span:before, #navbar-toggle.active span:after {
+            top: 0;
+       }
+        #navbar-toggle.active span:before {
+            transform: rotate(45deg);
+            width: 30px;
+       }
+        #navbar-toggle.active span:after {
+            transform: rotate(-45deg);
+            width: 30px;
+       }
+        
+    }
 </style>

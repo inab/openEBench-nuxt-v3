@@ -49,7 +49,7 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script>
 </script>
 
 <style scoped lang="scss">

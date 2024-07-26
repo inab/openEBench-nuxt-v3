@@ -3,10 +3,30 @@ import svgLoader from 'vite-svg-loader'
 
 export default defineNuxtConfig({
   devtools: {
-    enabled: true,
-    timeline: {
-      enabled: true
-    }
+    enabled: true
+  },
+  vite: {
+    server: {
+      port: 3001,
+      watch: {
+        usePolling: true,
+        interval: 100,
+      },
+    },
+    css: {
+        preprocessorOptions: {
+            scss: {
+                additionalData: '@import "@/assets/styles/_variables.scss";',
+            },
+        },
+    },
+    plugins: [
+      svgLoader(),
+    ],
+  },
+
+  devServer: {
+    port: 3001,
   },
 
   css: [
@@ -33,19 +53,8 @@ export default defineNuxtConfig({
   plugins: [
 		'~/plugins/useGraphql',
     '~/plugins/useObservatory',
-    '~/plugins/useApi',
-	],
-
-  imports: {
-    dirs: [
-      // Scan top-level modules
-      'composables',
-      // ... or scan modules nested one level deep with a specific name and file extension
-      'composables/*/index.{ts,js,mjs,mts}',
-      // ... or scan all modules within given directory
-      'composables/**'
-    ]
-  },
+    '~/plugins/useApi'
+  ],
 
   runtimeConfig: {
     public: {
@@ -67,10 +76,6 @@ export default defineNuxtConfig({
     },
   },
 
-  routeRules: {
-    '/benchmarking/:community': { ssr: false }
-  },
-
   hooks: {
     "pages:extend": (pages) => {
       customRoutes.forEach((customRoute) => {
@@ -79,31 +84,23 @@ export default defineNuxtConfig({
     }
   },
 
-  vite: {
-    server: {
-      hmr: {
-        clientPort: 3003,
-        host: '0.0.0.0',
-      },
-      watch: {
-        usePolling: true
-      },
-    },
-    css: {
-        preprocessorOptions: {
-            scss: {
-                additionalData: '@import "@/assets/styles/_variables.scss";',
-            },
-        },
-    },
-    plugins: [
-      svgLoader(),
-    ],
-  },
+  modules: [
+    "@nuxt/image", 
+    "@nuxt/ui", 
+    '@pinia/nuxt', 
+    "nuxt-viewport"
+  ],
+  viewport: {
+    breakpoints: {
+        desktop: 1024,
+        desktopMedium: 1280,
+        desktopWide: 1600,
 
-  devServer: {
-    port: 3003,
-  },
+        mobile: 320,
+        mobileMedium: 375,
+        mobileWide: 425,
 
-  modules: ["@nuxt/image", "@nuxt/ui", '@pinia/nuxt']
+        tablet: 768,
+      }
+  },
 })
