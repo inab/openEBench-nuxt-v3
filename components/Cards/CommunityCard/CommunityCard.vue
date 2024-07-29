@@ -47,7 +47,6 @@
                         :ui="{ item: { disabled: 'cursor-text select-text' } }"
                         class="community-card__item__dropdown">
                         <font-awesome-icon :icon="['fas', 'ellipsis-vertical']" />
-                        
                         <template #item="{ item }">
                             <a :href="item.uri" target="_blank">
                                 <span class="">{{ item.label }}</span>

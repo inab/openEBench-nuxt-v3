@@ -12,6 +12,11 @@ export const customRoutes = [
         file: resolve(__dirname, 'pages/benchmarking/community')
     },
     {
+        name: 'benchmarking-community-event',
+        path: '/benchmarking/:community/events',
+        file: resolve(__dirname, 'pages/benchmarking/community/events')
+    },
+    {
         name: 'scientific-community-challenge',
         path: '/benchmarking/:community/:challenge',
         file: resolve(__dirname, 'pages/benchmarking/community/challenge')

@@ -1,6 +1,8 @@
 <template>
 	<div class="benchmarking-community">
-		<div class="container mx-auto">
+		<BreadcrumbsBar 
+			:breadcrumbsArray = routeArray />
+		<div class="mx-auto container">
 			<div v-if="pending">
 				<USkeleton class="h-12 w-12" :ui="{ rounded: 'rounded-full' }" />
 				<div class="space-y-2">
@@ -77,6 +79,7 @@
 	import CommunityDataset from '@/components/Community/CommunityDataset/CommunityDataset.vue'
 	import CommunityTools from '@/components/Community/CommunityTools/CommunityTools.vue'
 	import CommunityEventSummary from '@/components/Community/CommunityEvent/CommunityEventSummary.vue'
+	import BreadcrumbsBar from '@/components/Common/BreadcrumbsBar.vue';
 	import { useCommunity } from '@/stores/community'
 
     const route = useRoute()
@@ -122,6 +125,17 @@
 			icon: 'i-heroicons-squares-2x2-16-solid',
 			slot: 'summary'
 		})
+	}
+
+	let routeArray: Array = [
+		{ label: 'Benchmarking Communities', isActualRoute: false, route: '/benchmarking' },
+		{ label: community.value?.acronym + " " + "Events", isActualRoute: true }
+	]
+
+	if(event) {
+		routeArray[1].isActualRoute = false
+		routeArray[1].route = '/benchmarking/'+ communityId + '/events'
+		routeArray.push({ label: currentEvent.value?.name, isActualRoute: true })
 	}
 </script>
 

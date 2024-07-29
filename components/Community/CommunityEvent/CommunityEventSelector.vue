@@ -61,8 +61,10 @@ function handleChangeEvent() {
     if(event) {
         router.push({ 
             path: `/benchmarking/${route.params.community}`,
-            query: { event: event._id}
+            query: { event: event._id },
+            replace: true
         })
+        .then(() => { router.go(0) })
     }
 }
 

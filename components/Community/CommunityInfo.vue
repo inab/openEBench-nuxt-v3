@@ -16,8 +16,8 @@
                         class="border-b border-gray-200 dark:border-gray-700 community-info__header__collapse__btn" 
                         :ui="{ rounded: 'rounded-none' }">              
                         <div class="truncate primary">
-                          <div class="text-left">{{ item.label }}</div>
-                          <div class="text-left">{{ community.name }}</div>
+                          <div class="text-left community-info__title">{{ item.label }}</div>
+                          <div class="text-left community-info__subtitle">{{ community.name }}</div>
                         </div>
                         <template #trailing>
                           <UIcon
@@ -31,7 +31,7 @@
                 <template #acronym>
                     <div class="community-info__header__body">
                         <div class="row">
-                            <div class="col-4">
+                            <div class="col-4 community-info__header__body__left">
                                 <img :src=community.logo alt="welcome-header-image" />
                             </div>
                             <div class="col-8 community-info__header__body__right">
@@ -45,16 +45,24 @@
                                 <div v-if="communityReferences && communityReferences.length>0" class="community-info__header__body__right__row">
                                     <div class="w-100 d-flex">
                                         <span class="font-semibold">References:</span>
-                                        <div v-for="(reference, index) in communityReferences" :key="index">
-                                            <a :href="reference.href" target="_blank">{{ reference.doi }}</a>
+                                        <div v-for="(reference, index) in communityReferences" :key="index"
+                                            class="community-info__header__link text-primaryOeb-500">
+                                            <a :href="reference.href" target="_blank">
+                                                <span title="Go to Reference">
+                                                    {{ reference.doi }}
+                                                </span>
+                                            </a> 
                                         </div>
                                     </div>
                                 </div>
                                 <div v-if="communityLinks && communityLinks.length>0" class="community-info__header__body__right__row">
                                     <div class="w-100 d-flex">
                                         <span class="font-semibold">Links:</span>
-                                        <div v-for="(link, index) in communityLinks" :key="index">
-                                            <a :href="link.uri" target="_blank">{{ link.label }}</a>
+                                        <div v-for="(link, index) in communityLinks" :key="index"
+                                            class="community-info__header__link text-primaryOeb-500">
+                                            <span :title="`Go to ${link.label}`">
+                                                <a :href="link.uri" target="_blank">{{ link.label }}</a>
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -65,7 +73,6 @@
             </UAccordion>
         </div>
     </div>
-
 </template>
 
 <script setup lang="ts">
@@ -99,9 +106,6 @@ let communityLinks = computed(() => {
         }
     });
 })
-
-
-const expand = ref(false);
 </script>
 
 <style scoped lang="scss">
@@ -113,7 +117,9 @@ const expand = ref(false);
             &:hover {
                 background-color: rgba(248 250 252);
             }
-        
+        }
+        &__link {
+            padding-right: 10px;
         }
     }
     .community-info__header__body {
@@ -135,6 +141,27 @@ const expand = ref(false);
                     }
                 }
             }
+        }
+        &__left {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            img {
+                width: 100%;
+                max-width: 400px;
+            }
+        }
+    }
+    .community-info {
+        &__title {
+            font-size: 25px;
+            font-weight: 600;
+            padding-bottom: 5px;
+        }
+        &__subtitle {
+            font-size: 16px;
+            font-weight: 400;
+            padding-bottom: 5px;
         }
     }
 }

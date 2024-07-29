@@ -3,7 +3,7 @@
         <div class="bg-white w-full h-100">
             <div class="mx-auto">
                 <div class="flex items-center nav-wrapper px-4">
-                    <div class="text-lg font-bold md:py-0">
+                    <div class="text-lg font-bold">
                         <NuxtLink to="/" class="navbar-brand">
                             <img src="/static/images/opeb_logo.gif" alt="OpenEBench" width="80" class="navbar-logo d-inline-block align-top" />
                         </NuxtLink>
@@ -21,17 +21,20 @@
                             <div class="nav-list-items top-full">
                                 <ul class="nav-list-items-ul w-100">
                                     <li>
-                                        <NuxtLink to="/benchmarking" class="nav-link flex md:inline-flex items-center hover:bg-gray-50">
+                                        <NuxtLink to="/benchmarking" class="nav-link flex md:inline-flex items-center hover:bg-gray-50"
+                                        @click="closeMenu">
                                             <span>Benchmarking</span>
                                         </NuxtLink>
                                     </li>
                                     <li>
-                                        <NuxtLink to="/projects" class="nav-link flex md:inline-flex items-center hover:bg-gray-50">
+                                        <NuxtLink to="/projects" class="nav-link flex md:inline-flex items-center hover:bg-gray-50"
+                                        @click="closeMenu">
                                             <span>Projects</span>
                                         </NuxtLink>
                                     </li>
                                     <li>
-                                        <NuxtLink to="/tool" class="nav-link flex md:inline-flex items-center hover:bg-gray-50">
+                                        <NuxtLink to="/tool" class="nav-link flex md:inline-flex items-center hover:bg-gray-50"
+                                        @click="closeMenu">
                                             <span>Tools</span>
                                         </NuxtLink>
                                     </li>
@@ -73,12 +76,13 @@
                                     </li>
                                 </ul>
                             </div>
-                            
                             <div class="nav-list-items-direct top-full hidden sm:flex">
-                                <NuxtLink to="home" class="text-gray-800 text-sm font-semibold hover:text-purple-600 mr-4">
+                                <NuxtLink to="home" class="text-gray-800 text-sm font-semibold hover:text-purple-600 mr-4"
+                                @click="closeMenu">
                                     Login
                                 </NuxtLink>
-                                <NuxtLink to="home" class="text-gray-800 text-sm font-semibold border px-4 py-2 rounded-lg hover:text-purple-600 hover:border-purple-600">
+                                <NuxtLink to="home" class="text-gray-800 text-sm font-semibold border px-4 py-2 rounded-lg hover:text-purple-600 hover:border-purple-600"
+                                @click="closeMenu">
                                     Benchmark your tool
                                 </NuxtLink>
                             </div>
@@ -110,8 +114,11 @@ watch($viewport.breakpoint as string, (newBreakpoint: string, oldBreakpoint: str
     } else {
         isMobile.value = false;
     }
-    console.log("Is mobile: ", isMobile.value)
 })
+
+function closeMenu() {
+    toggleMenu.value = false;
+}
 </script>
 
 
@@ -126,7 +133,6 @@ watch($viewport.breakpoint as string, (newBreakpoint: string, oldBreakpoint: str
         .navbar-brand {
             height: 65px;
             img {
-                padding: 0px 10px;
                 width: 85px;
             }
         }
@@ -316,7 +322,6 @@ watch($viewport.breakpoint as string, (newBreakpoint: string, oldBreakpoint: str
         .navbar-brand {
             position: absolute;
             top: 0;
-            left: 0;
             background: transparent;
             height: 55px;
             width: 70px;

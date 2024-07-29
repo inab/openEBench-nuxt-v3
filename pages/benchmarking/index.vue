@@ -1,6 +1,8 @@
 <template>
-    <div class="benchmarking-communities container">
-        <div class="w-100">
+ 
+    <div class="benchmarking-communities">
+        <BreadcrumbsBar />
+        <div class="w-100 container">
             <UAccordion :items="HEADER_ITEM">
                 <template #item="{ item }">
                     <p class="italic text-gray-900 dark:text-white text-center">
@@ -24,7 +26,7 @@
                 <template #benchmarking>
                     <div class="benchmarking-communities__header">
                         <div class="row">
-                            <div class="col-6">
+                            <div class="col-6 benchmarking-communities__header__left">
                                 <img src="~/assets/images/illustrations/lab_community.png" alt="welcome-header-image" />
                             </div>
                             <div class="col-6 benchmarking-communities__header__right">
@@ -40,7 +42,7 @@
                 </template>
             </UAccordion>
         </div>
-        <div class="benchmarking-communities__container">
+        <div class="benchmarking-communities__container container">
             <div class="grid grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-4" v-if="status === 'pending'">
                 <div class="community-card flex flex-col" v-for="(c, i) in Array.from({length: 8}, (x, i) => i)"
                     :key="i">
@@ -74,6 +76,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import CommunityCard from '@/components/Cards/CommunityCard/CommunityCard.vue'
+import BreadcrumbsBar from '@/components/Common/BreadcrumbsBar.vue';
 
 import { useCommunities } from '@/stores/communities'
 
@@ -102,6 +105,15 @@ const { data: communities, status} = await useAsyncData(() => communitiesStore.r
                     padding-bottom: 0;
                     flex: 1;
                 }
+            }
+        }
+        &__left {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            img {
+                width: 100%;
+                max-width: 400px;
             }
         }
     }

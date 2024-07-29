@@ -22,7 +22,7 @@
     import CommunityEventTableContent from '@/components/Community/CommunityEvent/CommunityEventTableContent.vue'
     import CommunityEmpty from '@/components/Community/CommunityEvent/CommunityEmpty.vue'
 
-    const props = defineProps<{
+    defineProps<{
         currentEvent: Object,
         events: [],
         communityId: string
