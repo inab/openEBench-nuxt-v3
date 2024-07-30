@@ -37,7 +37,7 @@ const community: Ref<any> = ref(null);
 const communityId: string = route.params.community
 
 if(communityStore.id && communityStore.id != communityId) {
-    communityStore.value = communityStore.getCommunityData
+    community.value = communityStore.getCommunityData
 } else {
     const { data, status }: { data: any, pending: boolean } = await useAsyncData('community', 
 		() => communityStore.requestCommunityData(communityId, event))

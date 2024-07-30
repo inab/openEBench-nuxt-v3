@@ -10,11 +10,11 @@
                         <UIcon name="i-heroicons-chevron-right-20-solid" />
                     </div>
                     <div :class="[crumb.isActualRoute?'text-slate-300':'text-primaryOeb-400']">
-                        <template v-if="crumb.route">
-                            <NuxtLink :to="crumb.route">{{ getCustomTitle(crumb.label) }}</NuxtLink>
+                        <template v-if="crumb.route" >
+                            <NuxtLink :to="crumb.route" class="breadcrum-title">{{ getCustomTitle(crumb.label) }}</NuxtLink>
                         </template>
                         <template v-else>
-                            {{ getCustomTitle(crumb.label) }}
+                            <span class="breadcrum-title">{{ getCustomTitle(crumb.label) }}</span>
                         </template>
                     </div>
                 </div>
@@ -112,7 +112,9 @@ function getCustomTitle(route: string) {
                 }
             }
         }
-        
+        .breadcrum-title {
+            text-transform: capitalize;
+        }
     }
 }
 </style>

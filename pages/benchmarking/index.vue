@@ -1,5 +1,4 @@
 <template>
- 
     <div class="benchmarking-communities">
         <BreadcrumbsBar />
         <div class="w-100 container">
@@ -81,6 +80,7 @@ import BreadcrumbsBar from '@/components/Common/BreadcrumbsBar.vue';
 import { useCommunities } from '@/stores/communities'
 
 const communitiesStore = useCommunities()
+const communities: Ref<any> = ref(null);
 
 const HEADER_ITEM = [{
     label: "Benchmarking Communities",
@@ -88,7 +88,13 @@ const HEADER_ITEM = [{
     slot: 'benchmarking'
 }]
 
-const { data: communities, status} = await useAsyncData(() => communitiesStore.requestCommunitiesData())
+if(communitiesStore.getCommunities && Object.keys(communitiesStore.getCommunities).length>0) {
+    communities.value = communitiesStore.getCommunities
+} else {
+    const { data, status} = await useAsyncData(() => communitiesStore.requestCommunitiesData())
+    communities.value = data.value ?? null;
+}
+
 </script>
 <style scoped lang="scss">
 .benchmarking-communities {

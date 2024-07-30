@@ -76,6 +76,34 @@ export default defineNuxtConfig({
     },
   },
 
+  auth: {
+    isEnabled: true,
+    provider: {
+      type: 'authjs',
+      defaultProvider: 'keycloak',
+      property: 'access_token',
+      name: 'Authorization',
+      maxAge: 1800, 
+      responseType: 'code',
+      responseMode: 'fragment',
+      grantType: 'authorization_code',
+      clientId: process.env.KEYCLOAK_CLIENT_ID || 'oeb-frontend',
+      scope: ['openid'],
+      codeChallengeMethod: 'S256',
+      addDefaultCallbackUrl: 'https://inb.bsc.es/auth/realms/openebench/protocol/openid-connect/auth?',
+      authorization: {
+        url: 'https://inb.bsc.es/auth/realms/openebench/protocol/openid-connect/auth?',
+        response_type: 'code',
+      },
+      endpoints: {
+        authorization: {
+          path: 'https://inb.bsc.es/auth/realms/openebench/protocol/openid-connect/auth?',
+        },
+      }
+    },
+    globalAppMiddleware: false
+  },
+
   hooks: {
     "pages:extend": (pages) => {
       customRoutes.forEach((customRoute) => {
@@ -85,11 +113,13 @@ export default defineNuxtConfig({
   },
 
   modules: [
-    "@nuxt/image", 
-    "@nuxt/ui", 
-    '@pinia/nuxt', 
-    "nuxt-viewport"
+    "@nuxt/image",
+    "@nuxt/ui",
+    '@pinia/nuxt',
+    "nuxt-viewport",
+    "@sidebase/nuxt-auth"
   ],
+
   viewport: {
     breakpoints: {
         desktop: 1024,

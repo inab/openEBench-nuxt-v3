@@ -77,14 +77,15 @@
                                 </ul>
                             </div>
                             <div class="nav-list-items-direct top-full hidden sm:flex">
-                                <NuxtLink to="home" class="text-gray-800 text-sm font-semibold hover:text-purple-600 mr-4"
-                                @click="closeMenu">
+                                <button @click="handleLogin" 
+                                class="text-gray-800 text-sm font-semibold hover:text-purple-600 mr-4"
+                                >
                                     Login
-                                </NuxtLink>
-                                <NuxtLink to="home" class="text-gray-800 text-sm font-semibold border px-4 py-2 rounded-lg hover:text-purple-600 hover:border-purple-600"
+                                </button>
+                                <a :href="runtimeConfig.public.VRE_URI" target="_blank" class="text-gray-800 text-sm font-semibold border px-4 py-2 rounded-lg hover:text-purple-600 hover:border-purple-600"
                                 @click="closeMenu">
                                     Benchmark your tool
-                                </NuxtLink>
+                                </a>
                             </div>
                         </div>
                     </nav>
@@ -100,12 +101,31 @@ import menuEntries from '~/components/Header/HeaderMenu/menuEntries';
 import subMenuEntriesObservatory from './HeaderMenu/subMenuEntriesObservatory';
 import subMenuEntriesAbout from './HeaderMenu/subMenuEntriesAbout';
 
+definePageMeta({
+    auth: {
+        unauthenticatedOnly: true,
+        navigateAuthenticatedTo: '/'
+    }
+})
+
+
+const { signIn, getProviders, status, data } = useAuth()
+const providers = await getProviders()
+const runtimeConfig = useRuntimeConfig();
+
 const { $viewport } = useNuxtApp()
 let toggleMenu = ref(false);
 let isMobile = ref(false);
 
 const handleToggleMenu = () => {
     toggleMenu.value = !toggleMenu.value;
+}
+
+function handleLogin() {
+    console.log(status)
+    console.log(data)
+    console.log(providers)
+    signIn('keycloak',  { callbackUrl: 'http://localhost:3000/bar' })
 }
 
 watch($viewport.breakpoint as string, (newBreakpoint: string, oldBreakpoint: string) => { 

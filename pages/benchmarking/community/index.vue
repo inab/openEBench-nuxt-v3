@@ -88,10 +88,14 @@
 	const communityId: string = route.params.community
 	const event: string = route.query.event
 
-	const { data, pending }: { data: any, pending: boolean } = await useAsyncData('community', 
-		() => communityStore.requestCommunityData(communityId, event))
-	community.value = data.value ?? null;
-
+	if(communityStore.communityId && communityStore.communityId != communityId) {
+		community.value = communityStore.getCommunityData
+	} else {
+		const { data, pending }: { data: any, pending: boolean } = await useAsyncData('community', 
+			() => communityStore.requestCommunityData(communityId, event))
+		community.value = data.value ?? null;
+	}
+	
 	const datasetsObj = communityStore.getDatasets
 	const toolsObj = communityStore.getTools
 	const eventsObj: [] = communityStore.getEvents
