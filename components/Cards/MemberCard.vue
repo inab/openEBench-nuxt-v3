@@ -2,8 +2,8 @@
 <div class="mx-auto my-4 main-card"
     :max-width="374"
     @mouseover="toggleHovered(true)"
-	@mouseleave="toggleHovered(false)"
-	@click="handleClickOutside"
+	  @mouseleave="toggleHovered(false)"
+	  @click="handleClickOutside"
     >
 
     <!-- CHIPS -->
