@@ -33,7 +33,7 @@
       </p>
 
       <!-- Leaders -->
-      <h2 class="section-title-border mt-5 mb-5">Leaders</h2>
+      <h2 class="section-title-border text-2xl font-normal mt-5 mb-5">Leaders</h2>
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 auto-cols-max">
         <div class="h-100" v-for="(leader, index) in sortedByName(leaders)" :key="index">
           <MemberCard :member="leader" :institution-mapping="institutionMapping" />
@@ -41,7 +41,7 @@
       </div>
 
       <!-- Members -->
-      <h2 class="section-title-border mt-3 mb-5">Group Members</h2>
+      <h2 class="section-title-border text-2xl font-normal mt-3 mb-5">Group Members</h2>
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 auto-cols-max">
         <div class="h-100" v-for="(teammate, index) in sortedByName(teammates)" :key="index">
           <MemberCard :member="teammate" :institution-mapping="institutionMapping" />
@@ -62,7 +62,8 @@
 
       <!-- Alumni -->
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 auto-cols-max">
-        <div class="h-100">
+        <div class="h-100" v-for="(alumni, index) in sortedByName(alumnis)" :key="index">
+          <AlumniCard :alumni="alumni"/>
 
         </div>
       </div>
@@ -75,7 +76,7 @@
 <script setup lang="ts">
 import membersData from '~/static/members/membersPage.json'
 import MemberCard from '@/components/Cards/MemberCard.vue';
-
+import AlumniCard from '@/components/Cards/AlumniCard.vue';
 
 const members = ref([]);
 const institutionMapping = ref({});
@@ -124,8 +125,5 @@ onMounted(() => {
 	margin-bottom: 40px;
 	padding-bottom: 15px;
 	color: #0b579f;
-	font-weight: 400;
-	font-size: 27px;
-  line-height: 72px;
 }
 </style>
