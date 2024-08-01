@@ -1,16 +1,22 @@
 <template>
     <div class="tool h-100">
-        <iframe
-            :src=iframeSRC
-            width="100%"
-            height="100%"
-            frameborder="0"
-        >
-        </iframe>
+        <BreadcrumbsBar 
+            :breadcrumbsArray = routeArray />
+        <div class="container">
+            <iframe
+                :src=iframeSRC
+                width="100%"
+                height="100%"
+                frameborder="0"
+            >
+            </iframe>
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
+import BreadcrumbsBar from '@/components/Common/BreadcrumbsBar.vue';
+
 const route = useRoute()
 const runtimeConfig = useRuntimeConfig()
 const hostname = runtimeConfig.public.OEB_LEGACY_ANGULAR_URI
@@ -20,6 +26,11 @@ const iframeSRC = `${hostname}tool?search=${query}`
 definePageMeta({
     layout: "embed-iframe-full-width",
 })
+
+let routeArray: Array = [
+  { label: 'Tool', isActualRoute: true }
+]
+
 </script>
 
 <style scoped lang="scss">
