@@ -1,65 +1,69 @@
 <template>
+  <div class="collaboration">
+    <BreadcrumbsBar 
+			:breadcrumbsArray = routeArray />
     <div class="container">
-        <h2 class="text-primaryOeb-500 mb-4">OpenEBench Collaborations</h2>
+      <h2 class="text-primaryOeb-500 mb-4">OpenEBench Collaborations</h2>
 
-        <p class="text-sm leading-6 mt-3">
-            Collaborations are at the heart of OpenEBench. OpenEBench has been
-			designed as a space to foster collaborations within and across
-			communities, taking ELIXIR as the overall framework. ELIXIR is the
-			pan-European Research Infrastructure for managing research data and other
-			digital assets in the Life Sciences domain.
-        </p>
+      <p class="text-sm leading-6 mt-3">
+          Collaborations are at the heart of OpenEBench. OpenEBench has been
+    designed as a space to foster collaborations within and across
+    communities, taking ELIXIR as the overall framework. ELIXIR is the
+    pan-European Research Infrastructure for managing research data and other
+    digital assets in the Life Sciences domain.
+      </p>
 
-        <p class="text-sm leading-6 mt-3">
-            Collaborations are essential to ensure that OpenEBench is fit for its
-			purpose and responds to users' current needs. It is also a mechanism to
-			contribute towards the platform's sustainability. Participation in EU and
-			nationally funded projects is one of the existing collaboration
-			mechanisms. Participating in funded projects allows us to prioritise
-			specific developments to strengthen, extend and add new features to the
-			platform that a specific project will utilise. Notably, these developments
-			are made available to everyone across OpenEBench, fostering a continuous
-			innovation cycle.
-        </p>
+      <p class="text-sm leading-6 mt-3">
+          Collaborations are essential to ensure that OpenEBench is fit for its
+    purpose and responds to users' current needs. It is also a mechanism to
+    contribute towards the platform's sustainability. Participation in EU and
+    nationally funded projects is one of the existing collaboration
+    mechanisms. Participating in funded projects allows us to prioritise
+    specific developments to strengthen, extend and add new features to the
+    platform that a specific project will utilise. Notably, these developments
+    are made available to everyone across OpenEBench, fostering a continuous
+    innovation cycle.
+      </p>
 
-        <p class="text-sm leading-6 mt-3">
-            Beyond funded projects, OpenEBench also works with scientific communities
-			willing to sustain their benchmarking efforts in the long run, as well as
-			individuals interested in contributing to specific platform components.
-        </p>
+      <p class="text-sm leading-6 mt-3">
+          Beyond funded projects, OpenEBench also works with scientific communities
+    willing to sustain their benchmarking efforts in the long run, as well as
+    individuals interested in contributing to specific platform components.
+      </p>
 
-  
-		<!-- Funding Section -->
-		<h3 class="section-title-border text-2xl font-normal mt-5 mb-2">Fundings</h3>
-        <div class="row mt-5">
-            <div class="col-12 col-sm-6 col-md-4 d-flex justify-content-center" v-for="(collaborator, index) in fundingCollaborators"
-            :key="index">
-                <CollaboratorsCard :title="collaborator.title"
-					:href="collaborator.href"
-					:src="collaborator.src">
-                </CollaboratorsCard>
 
-            </div>
-        </div>
+  <!-- Funding Section -->
+  <h3 class="section-title-border text-2xl font-normal mt-5 mb-2">Fundings</h3>
+      <div class="row mt-5">
+          <div class="col-12 col-sm-6 col-md-4 d-flex justify-content-center" v-for="(collaborator, index) in fundingCollaborators"
+          :key="index">
+              <CollaboratorsCard :title="collaborator.title"
+        :href="collaborator.href"
+        :src="collaborator.src">
+              </CollaboratorsCard>
 
-		<!-- Collaborators Section -->
-		<h3 class="section-title-border text-2xl font-normal mt-5 mb-2">Collaborators</h3>
-        <div class="row mt-5">
-            <div class="col-12 col-sm-6 col-md-4" v-for="(collaborator, index) in otherCollaborators"
-            :key="index">
-                <CollaboratorsCard :title="collaborator.title"
-					:href="collaborator.href"
-					:src="collaborator.src">
-                </CollaboratorsCard>
+          </div>
+      </div>
 
-            </div>
-        </div>
+      <!-- Collaborators Section -->
+      <h3 class="section-title-border text-2xl font-normal mt-5 mb-2">Collaborators</h3>
+      <div class="row mt-5">
+          <div class="col-12 col-sm-6 col-md-4" v-for="(collaborator, index) in otherCollaborators"
+          :key="index">
+              <CollaboratorsCard :title="collaborator.title"
+        :href="collaborator.href"
+        :src="collaborator.src">
+              </CollaboratorsCard>
+
+          </div>
+      </div>
     </div>
-
+  </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onBeforeMount } from 'vue';
+import BreadcrumbsBar from '@/components/Common/BreadcrumbsBar.vue';
 import CollaboratorsCard from '@/components/Cards/CollaboratorsCard.vue';
 import Img1 from '~/assets/collaboration/eucaim.png';
 import Img2 from '~/assets/collaboration/EUCANImage.png';
@@ -136,6 +140,10 @@ import Img5 from '~/assets/collaboration/baiha.png';
     return sortedCollaborators.value.filter((collaborator) => collaborator.type === 'collaborator');
   });
   
+  let routeArray: Array = [
+    { label: 'About', isActualRoute: true },
+    { label: 'Collaborations', isActualRoute: true }
+  ]
 </script>
 
 

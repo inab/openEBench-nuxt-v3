@@ -1,13 +1,13 @@
 <template>
     <div class="benchmarking-challenge container">
-        <div class="benchmarking-challenge__title">
+        <div class="benchmarking-challenge__title text-primaryOeb-500">
             {{ challenge.acronym }} ( {{ challenge._id }})
         </div>
         <div class="benchmarking-challenge__subtitle">
             {{ challenge.name }}
         </div>
         <div class="benchmarking-challenge__body">
-            <div class="benchmarking-challenge__body_dec" v-for="(item, index) in datasets" :key="index">
+            <div class="benchmarking-challenge__body_dec text-gray-500 text-sm" v-for="(item, index) in datasets" :key="index">
                 <div v-if="index == tab && item">
                     <ChartDescriptionCard
                         :type="item.datalink.inline_data.visualization.type"
@@ -15,8 +15,8 @@
                     />
                 </div>
             </div>
-            <div class="benchmarking-challenge__body__content">
-                <h2 class="text-h6 mt-8">
+            <div class="benchmarking-challenge__body__content text-sm">
+                <h2 class="benchmarking-challenge__body__content__title text-h6 mt-8">
                     Choose the metrics you want to visualize in the diagram:
                 </h2>
                 <div class="benchmarking-challenge__body__content__chips">
@@ -81,6 +81,31 @@
 </script>
 
 <style scoped lang="scss">
+.benchmarking-challenge {
+    &__title {
+        font-size: 35px;
+        font-weight: 600;
+        padding-bottom: 5px;
+        line-height: 2.5rem;
+        letter-spacing: 0.0073529412em !important; 
+    }
+    &__subtitle {
+        font-size: 18px;
+        font-weight: 400;
+        padding-bottom: 5px;
+        color: black;
+    }
+    &__body {
+        padding-top: 30px;
+        &__content {
+            &__title {
+                font-size: 18px;
+                font-weight: 400;
+                padding-bottom: 5px;
+                color: black;
+            }
+        }
+    }
     .benchmarking-challenge__body__content__chips {
         white-space: normal;
         flex-wrap: wrap;
@@ -90,4 +115,5 @@
         flex: 1 0 auto;
         gap: 10px;
     }
+}
 </style>
