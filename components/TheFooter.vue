@@ -47,7 +47,7 @@
               <font-awesome-icon :icon="['far', 'envelope']" size="lg" style="color: #FFFFFF;" />
             </a>
             <a href="https://x.com/openebench" target="_blank" aria-label="Link to X Profile of OpenEBench" class="btn rounded-circle p-2 btn-f">
-              <img src="/static/icons/twitter-x-64.png" alt="X icon" class="img-fluid" style="max-width: 18px; max-height: 18px;" />
+              <img src="/assets/icons/twitter-x-64.png" alt="X icon" class="img-fluid" style="max-width: 18px; max-height: 18px;" />
             </a>
           </div>
 
