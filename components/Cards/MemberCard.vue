@@ -1,5 +1,6 @@
 <template>
-<div class="mx-auto my-4 main-card"
+<div class="d-flex justify-content-center mx-auto">
+<div class="my-4 main-card card"
     :max-width="374"
     @mouseover="toggleHovered(true)"
 	  @mouseleave="toggleHovered(false)"
@@ -86,11 +87,8 @@
       </div>
     </div>
 
-
-
 </div>
-
-
+</div>
 </template>
 
 <script setup lang="ts">
@@ -190,7 +188,9 @@ function handleClickOutside() {
     max-width: 345px;
     min-height: 250px;
     transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-    box-shadow: 0 1px 6px 1px rgba(0, 0, 0, 0.1); /* Initial shadow */
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, .2),
+    0 2px 2px 0 rgba(0, 0, 0, .14),
+    0 1px 5px 0 rgba(0, 0, 0, .12);
     cursor: default;
 }
 
@@ -325,6 +325,7 @@ function handleClickOutside() {
   background-color: #0b579f;
   color: white;
   border-top-left-radius: 80px;
+  border-bottom-right-radius: 5px;
   cursor: pointer;
   display: flex;
   justify-content: center;
@@ -386,6 +387,34 @@ function handleClickOutside() {
   right: 10px;
   cursor: pointer;
   color: rgb(212, 212, 212);
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 1024px) and (orientation: portrait),
+	(max-width: 1366px) and (orientation: landscape) {
+
+  .chips-container {
+		top: 10px;
+		opacity: 1;
+	}
+
+  /* Main card styles */
+.main-card {
+    position: relative;
+    border: none;
+    min-width: 305px;
+    max-width: 315px;
+    min-height: 250px;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, .2),
+    0 2px 2px 0 rgba(0, 0, 0, .14),
+    0 1px 5px 0 rgba(0, 0, 0, .12);
+    cursor: default;
+}
+
+  .main-card .grayscale-image {
+		filter: none;
+	}
 }
 
 </style>
