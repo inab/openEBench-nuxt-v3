@@ -47,7 +47,7 @@
               <font-awesome-icon :icon="['far', 'envelope']" size="lg" style="color: #FFFFFF;" />
             </a>
             <a href="https://x.com/openebench" target="_blank" aria-label="Link to X Profile of OpenEBench" class="btn rounded-circle p-2 btn-f">
-              <img src="/static/icons/twitter-x-64.png" alt="X icon" class="img-fluid" style="max-width: 18px; max-height: 18px;" />
+              <img src="/assets/icons/twitter-x-64.png" alt="X icon" class="img-fluid" style="max-width: 18px; max-height: 18px;" />
             </a>
           </div>
 
@@ -72,7 +72,7 @@
 
 <script>
 import logo from '~/assets/images/opeb_logo_white_minimal.png';
-import euFlag from '~/assets/images/eu.svg';
+import euFlag from '/images/illustrations/eu.svg';
 import footerEntries from '~/components/footerEntries';
 import subMenuEntriesObservatory from '~/components/Header/HeaderMenu/subMenuEntriesObservatory.js';
 import subMenuEntriesAbout from '~/components/Header/HeaderMenu/subMenuEntriesAbout';
