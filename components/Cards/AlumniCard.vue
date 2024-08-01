@@ -1,31 +1,26 @@
 <template>
-    <div class="alumni-card card"
-         @mouseover="isHovered = true"
-         @mouseleave="isHovered = false">
-  
-      <div class="fixed-height">
-        <h5 class="name px-3 mt-3">{{ alumni.name }}</h5>
-        <div class="px-3 pb-3 subtitle subtitle-container">
-          {{ formattedYears }}
-          <div class="worked-on" @click="toggleExpand">
-            <span class="worked-on-text"
-                  :class="{ 'fade-in': isHovered }">
-              worked on
-            </span>
-            <span class="arrow-icon">
-              <font-awesome-icon :icon="showRoles ? ['fas', 'chevron-up'] : ['fas', 'chevron-down']" />
-            </span>
-          </div>
-        </div>
-        <div class="expanded-container">
-          <div class="expanded-content" :class="{ 'expand': showRoles, 'collapse': !showRoles }">
-            <hr class="mx-3 mt-1">
-            <p class="roles-text px-3">{{ sortedandFormattedRoles }}</p>
-          </div>
-        </div>
+  <div class="alumni-card card" @mouseover="isHovered = true" @mouseleave="isHovered = false">
+    <h5 class="name px-3 mt-3">{{ alumni.name }}</h5>
+    <div class="px-3 pb-3 subtitle subtitle-container">
+      {{ formattedYears }}
+      <div class="worked-on" @click="toggleExpand">
+        <span class="worked-on-text"
+              :class="{ 'fade-in': isHovered }">
+          worked on
+        </span>
+        <span class="arrow-icon">
+          <font-awesome-icon :icon="showRoles ? ['fas', 'chevron-up'] : ['fas', 'chevron-down']" />
+        </span>
       </div>
     </div>
-  </template>
+    <div class="expanded-container">
+      <div class="expanded-content" :class="{ 'expand': showRoles, 'collapse': !showRoles }">
+        <hr class="mx-3 mt-1">
+        <p class="roles-text px-3">{{ sortedandFormattedRoles }}</p>
+      </div>
+    </div>
+  </div>
+</template>
   
   
 
@@ -64,6 +59,14 @@ function toggleExpand() {
 </script>
 
 <style scoped>
+.alumni-card{
+  border: none;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  box-shadow: 0 3px 1px -2px rgba(0, 0, 0, .2),
+  0 2px 2px 0 rgba(0, 0, 0, .14),
+  0 1px 5px 0 rgba(0, 0, 0, .12);
+}
+
 .alumni-card:hover {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
   transition: box-shadow 0.3s ease-in-out;
