@@ -64,14 +64,13 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 auto-cols-max">
         <div class="h-100" v-for="(alumni, index) in sortedByName(alumnis)" :key="index">
           <AlumniCard :alumni="alumni"/>
-
         </div>
       </div>
       <br>
       <hr class="mt-5">
 
       <!-- Roles Legend Expansion Panel -->
-      <div class="accordion roles-legend" id="accordionExample">
+      <div class="accordion roles-legend mt-4" id="accordionExample">
         <div class="accordion-item">
           <h2 class="accordion-header" id="headingTwo">
             <button class="accordion-button custom-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
