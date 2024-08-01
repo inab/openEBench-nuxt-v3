@@ -72,6 +72,7 @@ import { useCommunities } from '@/stores/communities'
 
 const communitiesStore = useCommunities()
 const projects: Ref<any> = ref(null);
+let status = ref({ pending: false })
 
 const HEADER_ITEM = [{
     label: "Project Spaces",
@@ -81,9 +82,11 @@ const HEADER_ITEM = [{
 
 if(communitiesStore.getProjects && Object.keys(communitiesStore.getProjects).length>0) {
     projects.value = communitiesStore.getProjects
+    status.value = { pending: false }
 } else {
     const { data, status} = await useAsyncData(() => communitiesStore.requestCommunitiesData('projects'))
     projects.value = data.value ?? null
+    status.value = status
 }
 
 </script>

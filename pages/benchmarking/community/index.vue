@@ -149,7 +149,7 @@
     padding: 0;
 }
 .custom-tab {
-	border: 2px solid rgba(243, 244, 246);
+	border: 1px solid rgba(243, 244, 246);
 	border-radius: 0.5rem;
 }
 </style>

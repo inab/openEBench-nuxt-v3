@@ -12,35 +12,37 @@
                     </p>
                 </template>
                 <template #default="{ item, open }">
-                    <UButton color="primary" variant="ghost" 
-                        class="border-b border-gray-200 dark:border-gray-700 community-info__header__collapse__btn" 
-                        :ui="{ rounded: 'rounded-none' }">              
+                    <UButton color="primary" variant="ghost"
+                        class="border-b border-slate-50 dark:border-gray-700 community-info__header__collapse__btn"
+                        :ui="{ rounded: 'rounded-none' }">
                         <div class="truncate primary">
-                          <div class="text-left community-info__title">{{ item.label }}</div>
-                          <div class="text-left community-info__subtitle">{{ community.name }}</div>
+                            <div class="text-left community-info__title">
+                                {{ item.label }}
+                                <div class="community-info__title__icon">
+                                    <UIcon
+                                        name="i-heroicons-chevron-right-20-solid"
+                                        class="transform transition-transform duration-200"
+                                        :class="[open && 'rotate-90']"
+                                    />
+                                </div>
+                            </div>
+                            <div class="text-left community-info__subtitle">{{ community.name }}</div>
                         </div>
-                        <template #trailing>
-                          <UIcon
-                            name="i-heroicons-chevron-right-20-solid"
-                            class="w-5 h-5 ms-auto transform transition-transform duration-200"
-                            :class="[open && 'rotate-90']"
-                          />
-                        </template>
-                      </UButton>
+                    </UButton>
                 </template>
                 <template #acronym>
                     <div class="community-info__header__body">
                         <div class="row">
-                            <div class="col-4 community-info__header__body__left">
+                            <div class="col-2 community-info__header__body__left">
                                 <img :src=community.logo alt="welcome-header-image" />
                             </div>
-                            <div class="col-8 community-info__header__body__right">
+                            <div class="col-10 community-info__header__body__right">
                                 <div class="w-100 community-info__header__body__right__row">
                                     {{ community.description}}
                                 </div>
                                 <div v-if="community.keywords" class="community-info__header__body__right__row">
                                     <span class="font-semibold">Keywords:</span>
-                                    <span>{{ community.keywords.join(', ') }}</span>
+                                    <span class="font-bold">{{ community.keywords.join(', ') }}</span>
                                 </div>
                                 <div v-if="communityReferences && communityReferences.length>0" class="community-info__header__body__right__row">
                                     <div class="w-100 d-flex">
@@ -115,7 +117,7 @@ let communityLinks = computed(() => {
         &__collapse__btn {
             padding: 0;
             &:hover {
-                background-color: rgba(248 250 252);
+                background-color: white;
             }
         }
         &__link {
@@ -124,7 +126,7 @@ let communityLinks = computed(() => {
     }
     .community-info__header__body {
         padding-bottom: 20px;
-        padding-top: 40px;
+        padding-top: 10px;
         &__right {
             &__row {
                 padding-top: 10px;
@@ -154,14 +156,22 @@ let communityLinks = computed(() => {
     }
     .community-info {
         &__title {
-            font-size: 25px;
+            font-size: 35px;
             font-weight: 600;
             padding-bottom: 5px;
+            line-height: 2.5rem;
+            letter-spacing: .0073529412em !important;
+            display: flex;
+            &__icon {
+                margin-left: 10px;
+                margin-top: 5px;
+            }
         }
         &__subtitle {
             font-size: 16px;
             font-weight: 400;
             padding-bottom: 5px;
+            color: black;
         }
     }
 }

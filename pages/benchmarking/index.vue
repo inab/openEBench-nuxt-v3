@@ -9,17 +9,17 @@
                     </p>
                 </template>
                 <template #default="{ item, open }">
-                    <UButton color="primary" variant="ghost" class="border-b border-gray-200 dark:border-gray-700 community-collapse-btn" :ui="{ rounded: 'rounded-none' }">              
-                      <div class="truncate primary">
-                        <h2>{{ item.label }}</h2>
-                    </div>
-                      <template #trailing>
-                        <UIcon
-                          name="i-heroicons-chevron-right-20-solid"
-                          class="w-5 h-5 ms-auto transform transition-transform duration-200"
-                          :class="[open && 'rotate-90']"
+                    <UButton color="primary" variant="ghost" class="border-b border-slate-50 dark:border-gray-700 community-collapse-btn" :ui="{ rounded: 'rounded-none' }">              
+                        <div class="truncate primary">
+                            <h2>{{ item.label }}</h2>
+                        </div>
+                        <template #trailing>
+                            <UIcon
+                            name="i-heroicons-chevron-right-20-solid"
+                            class="transform transition-transform duration-200"
+                            :class="[open && 'rotate-90']"
                         />
-                      </template>
+                        </template>
                     </UButton>
                 </template>
                 <template #benchmarking>
@@ -119,14 +119,17 @@ if(communitiesStore.getCommunities && Object.keys(communitiesStore.getCommunitie
             align-items: center;
             img {
                 width: 100%;
-                max-width: 400px;
+                max-width: 450px;
             }
         }
     }
     .community-collapse-btn {
         padding: 0;
         &:hover {
-            background-color: rgba(248 250 252);
+            background-color: white;
+        }
+        span {
+            font-size: 30px;
         }
     }
     &__container {

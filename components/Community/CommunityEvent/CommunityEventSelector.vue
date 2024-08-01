@@ -84,7 +84,7 @@ function handleChangeEvent() {
 }
 .primary-label {
     color: #0b579f;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
 }
 </style>
