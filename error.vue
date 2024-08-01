@@ -1,9 +1,29 @@
 <template>
-    <div>
+  <div class="container min-vh-80 d-flex justify-content-center align-items-center">
+    <div class="row  shadow p-3 mb-5 bg-white rounded m-5">
+
+      <div class="col-12 col-sm-12 col-md-6">
+        <h1 class="text-primaryOeb-500">{{ error?.statusCode }}</h1>
+        <h2>Whoops!</h2>
+        <p v-if="error?.statusCode === 404">
+          {{ pageNotFound }}
+        </p>
+        <p v-else>
+          {{ otherError }}
+        </p>
+        <br>
+        <UButton @click="handleError">Go back home</UButton>
+      </div>
+
+
+      <div class="col-12 col-sm-12 col-md-6">
         <NuxtImg src="/images/illustrations/404.svg"
         sizes="100vw sm:50vw md:400px" />
-        <UButton @click="handleError">Go back home</UButton>
+      </div>
+      
     </div>
+  </div>
+    
 </template>
 
 <script setup lang="ts">
@@ -13,5 +33,14 @@ defineProps({
   error: Object as () => NuxtError
 })
 
+const otherError = 'An error occurred'
+const pageNotFound = 'Sorry to say, but it looks like this page does not exist.'
+
 const handleError = () => clearError({ redirect: '/' })
 </script>
+
+<style>
+.min-vh-80 {
+    min-height: 80vh;
+}
+</style>

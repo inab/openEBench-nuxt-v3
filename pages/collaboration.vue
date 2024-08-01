@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <h2 class="text-primaryOeb-500 mb-4">Collaboration</h2>
+        <h2 class="text-primaryOeb-500 mb-4">OpenEBench Collaborations</h2>
 
         <p class="text-sm leading-6 mt-3">
             Collaborations are at the heart of OpenEBench. OpenEBench has been
@@ -28,12 +28,9 @@
 			individuals interested in contributing to specific platform components.
         </p>
 
-    <div class="container">
-
-
+  
 		<!-- Funding Section -->
-		<h3 class="text-primaryOeb-500 text-2xl font-normal mt-5 mb-2">Fundings</h3>
-        <hr>
+		<h3 class="section-title-border text-2xl font-normal mt-5 mb-2">Fundings</h3>
         <div class="row mt-5">
             <div class="col-12 col-sm-6 col-md-4 d-flex justify-content-center" v-for="(collaborator, index) in fundingCollaborators"
             :key="index">
@@ -46,8 +43,7 @@
         </div>
 
 		<!-- Collaborators Section -->
-		<h3 class="text-primaryOeb-500 text-2xl font-normal mt-5 mb-2">Collaborators</h3>
-        <hr>
+		<h3 class="section-title-border text-2xl font-normal mt-5 mb-2">Collaborators</h3>
         <div class="row mt-5">
             <div class="col-12 col-sm-6 col-md-4" v-for="(collaborator, index) in otherCollaborators"
             :key="index">
@@ -58,8 +54,6 @@
 
             </div>
         </div>
-    </div>
-
     </div>
 
 </template>
@@ -146,4 +140,10 @@ import Img5 from '~/assets/collaboration/baiha.png';
 
 
 <style scoped>
+.section-title-border {
+	border-bottom: 2px solid black;
+	margin-bottom: 30px;
+	padding-bottom: 15px;
+	color: #0b579f;
+}
 </style>
