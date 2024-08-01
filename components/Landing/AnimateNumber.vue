@@ -1,7 +1,7 @@
 <template>
     <div class="landing-animate-number w-100 h-100">
         <div class="">
-            <div v-observe-visibility="visibilityChanged" 
+            <div
             :class="`${'counter'} ${'counter'}-${type}`"
             ref="numberCounter">
                 <span class="counter-value">{{ displayValue }}</span>
@@ -13,7 +13,8 @@
 
 <script setup lang="ts">
 import gsap from 'gsap';
-import { ObserveVisibility as vObserveVisibility } from 'vue3-observe-visibility'
+//import VueObserveVisibility from 'vue3-observe-visibility'
+//import ObserveVisibility  from 'vue3-observe-visibility'
 import { ref, watch } from 'vue'
 
 const tl = gsap.timeline({ repeat: 0 });

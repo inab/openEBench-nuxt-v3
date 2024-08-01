@@ -59,8 +59,6 @@ services:
       - node-modules-volume:/app/node_modules
       - dist-volume:/app/dist
     ports:
-      - '3003:3003'
+      - 3001:3001
     environment:
       - CHOKIDAR_USEPOLLING=true
-
-      #'24678:24678'

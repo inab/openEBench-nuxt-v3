@@ -1,53 +1,78 @@
 <template>
     <div class="community-event-table">
-        <div class="flex px-3 py-3.5 border-b border-gray-200 dark:border-gray-700">
-            <UInput v-model="search" placeholder="Search ..." />
+        <div class="community-event-table__border px-3 py-3.5 relative not-prose bg-white overflow-hidden">
+            <div class="flex px-1 py-3.5">
+                <UInput
+                    color="white"
+                    variant="outline"
+                    icon="i-heroicons-magnifying-glass"
+                    v-model="search"
+                    placeholder="Search ..."
+                    class="input-search"
+                />
+            </div>
+            <UTable
+                :loading-state="{ icon: 'i-heroicons-arrow-path-20-solid', label: 'Loading...' }"
+                :rows="filteredRows"
+                :columns="columns"
+                v-model="selected"
+                @select="select"
+                :ui="{
+                    tr: {
+                        base: '',
+                    },
+                    th: {
+                        base: 'text-left rtl:text-right',
+                        padding: 'px-2.5 py-2.5',
+                        color: 'text-gray-900 dark:text-white',
+                        font: 'font-semibold',
+                        size: 'text-sm',
+                    },
+                    td: {
+                        base: 'whitespace-nowrap',
+                        padding: 'px-3 py-3',
+                        font: '',
+                        size: 'text-sm',
+                    },
+                }"
+            >
+                <template #name-data="{ row }">
+                    <span :class="[selected.find(eventsFormated => eventsFormated._id === row._id) && 'text-primaryOeb-500 dark:text-primary-400']">
+                        {{ row.name }}
+                    </span>
+                </template>
+                <template #_id-data="{ row }">
+                    <NuxtLink
+                        class="text-primary-500 dark:text-primary-400"
+                        title="Go to challenge"
+                        :to="`${community}/${row._id}`">
+                        {{  row.acronym }}
+                    </NuxtLink>
+                </template>
+                <template #participant-data="{ row }">
+                    <NuxtLink
+                        class="text-primary-500 dark:text-primary-400"
+                        title="Go to participant"
+                        :to="`${community}/${row._id}/participants`"
+                        >
+                        Participant
+                    </NuxtLink>
+                </template>
+            </UTable>
+            <div class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700">
+                <UPagination v-model="page" :page-count="pageCount" :total="totalPages"
+                :ui="{
+                    wrapper: 'flex items-center gap-1',
+                    rounded: '!rounded-full min-w-[32px] justify-center',
+                    default: {
+                      activeButton: {
+                        variant: 'outline'
+                      }
+                    }
+                  }" />
+            </div>
         </div>
-        <UTable
-            :loading-state="{ icon: 'i-heroicons-arrow-path-20-solid', label: 'Loading...' }"
-            :rows="filteredRows"
-            :columns="columns"
-            v-model="selected"
-            @select="select"
-            :ui="{
-                tr: {
-                    base: '',
-                },
-                th: {
-                    base: 'text-left rtl:text-right',
-                    padding: 'px-2.5 py-2.5',
-                    color: 'text-gray-900 dark:text-white',
-                    font: 'font-semibold',
-                    size: 'text-sm',
-                },
-                td: {
-                    base: 'whitespace-nowrap',
-                    padding: 'px-3 py-3',
-                    font: '',
-                    size: 'text-sm',
-                },
-            }"
-        >
-            <template #name-data="{ row }">
-                <span :class="[selected.find(eventsFormated => eventsFormated._id === row._id) && 'text-primaryOeb-500 dark:text-primary-400']">
-                    {{ row.name }}
-                </span>
-            </template>
         
-            <template #_id-data="{ row }">
-                <NuxtLink :to="`${community}/${row._id}`" class="text-primary-500 dark:text-primary-400">
-                    {{  row.acronym }}
-                </NuxtLink>
-            </template>
-            <template #participant-data="{ row }">
-                <NuxtLink :to="`${community}/${row._id}/participants`" class="text-primary-500 dark:text-primary-400">
-                    Participant
-                </NuxtLink>
-            </template>
-        </UTable>
-        <div class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700">
-            <UPagination v-model="page" :page-count="pageCount" :total="totalPages" />
-        </div>
     </div>
 </template>
 
@@ -114,9 +139,43 @@ watch(selected, () => {
 })
 </script>
 
-<style>
+<style scoped lang="scss">
+.community-event-table {
+    border: none;
+    &__border {
+        border-radius: 0.5rem;
+        border: 1px solid theme('colors.slate.100');
+    }
+    .input-search {
+        input {
+            box-shadow: none !important;
+            :focus {
+                border: 1px solid theme('colors.primary.500');
+            }
+        }
+    }
+        
+    table {
+        a {
+            color: theme('colors.primary.500');
+            text-decoration: none;
+            &:hover {
+                color: theme('colors.primary.400');
+            }
+        }
+    }
+}
 .form-checkbox:checked,
 .form-checkbox:indeterminate {
     background-color: currentColor !important;
+}
+</style>
+<style lang="scss">
+.input-search input {
+    box-shadow: rgb(255, 255, 255) 0px 0px 0px 0px inset, rgb(209, 213, 219) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px !important; 
+}
+.input-search input:focus {
+    border: 1px solid theme('colors.primary.500') !important;
+    box-shadow: none !important;
 }
 </style>

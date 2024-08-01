@@ -5,6 +5,7 @@ import { labelToName, decode } from 'whatwg-encoding'
 // OpenEBench API
 export const useCommunity = defineStore('community', {
     state: () => ({ 
+        communityId: null,
         communityData: {}, 
         currentEvent: Object,
         communityReferences: null,
@@ -101,6 +102,8 @@ export const useCommunity = defineStore('community', {
                 }
             )
 
+            this.communityId = id
+            
             // Community
             this.communityData = this.formatCommunityData(responseData.data.getCommunities[0])
 

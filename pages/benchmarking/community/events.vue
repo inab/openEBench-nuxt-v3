@@ -1,101 +1,53 @@
 <template>
-<div> In Events </div>
-
+    <div class="benchmarking-community-events">
+        <BreadcrumbsBar 
+            :breadcrumbsArray = routeArray />
+        <div class="mx-auto container">
+            <div v-if="status && status.pending">
+                <USkeleton class="h-12 w-12" :ui="{ rounded: 'rounded-full' }" />
+                <div class="space-y-2">
+                    <USkeleton class="h-4 w-[250px]" />
+                    <USkeleton class="h-4 w-[200px]" />
+                </div>
+            </div>
+            <div v-else>
+                <CommunityInfo
+					:community="community"
+					:communityReferences="communityReferences"
+				/>
+                <CommunityEventsList
+                    :events="eventsObj"
+                    :communityId="communityId"
+                />
+            </div>
+        </div>
+    </div>
 </template>
 
 <script setup lang="ts">
-const { $graphql } = useNuxtApp()
+import { ref } from 'vue'
+import BreadcrumbsBar from '@/components/Common/BreadcrumbsBar.vue';
+import CommunityInfo from '@/components/Community/CommunityInfo.vue';
+import CommunityEventsList from '@/components/Community/CommunityEventsList/CommunityEventsList.vue';
+import { useCommunity } from '@/stores/community'
 
-const communities: Ref<any> = ref(null);
+const route = useRoute()
+const communityStore = useCommunity()
+const community: Ref<any> = ref(null);
+const communityId: string = route.params.community
 
-const { data, pending }: { data: any, pending: boolean } = await useAsyncData('communities', () => $graphql('/graphql',
-{
-    method: 'POST',
-    headers: {
-        "Accept": "text/plain, */*",
-    },
-    body: JSON.stringify(
-        {
-            query: `
-                query ($id: String!) {
-                    getChallenges(challengeFilters: { id: $id }) {
-                        _id
-                        name
-                        acronym
-                        metrics_categories {
-                            metrics {
-                                metrics_id
-                                tool_id
-                            }
-                        }
-                        participant_datasets: datasets(datasetFilters: {type: "participant"}) {
-                            _id
-                            orig_id
-                            datalink {
-                                inline_data
-                                schema_url
-                                uri
-                                schema_uri
-                            }
-
-                            depends_on {
-                                tool_id
-                                metrics_id
-                                rel_dataset_ids {
-                                    dataset_id
-                                }
-                            }
-                            _metadata
-                        }
-                        assessment_datasets: datasets(datasetFilters: {type: "assessment"}) {
-                            _id
-                            orig_id
-                            datalink {
-                                inline_data
-                                schema_url
-                                uri
-                                schema_uri
-                            }
-                            dates {
-                                modification
-                            }
-                            depends_on {
-                                tool_id
-                                metrics_id
-                                rel_dataset_ids {
-                                    dataset_id
-                                }
-                            }
-                            _metadata
-                        }
-                    }
-
-                    getDatasets(
-                        datasetFilters: { challenge_id: $id, type: "aggregation" }
-                    ) {
-                        datalink {
-                            inline_data
-                        }
-                        dates {
-                            modification
-                        }
-                        _id
-                    }
-
-                    getMetrics {
-                        _id
-                        title
-                        orig_id
-                        representation_hints
-                        _metadata
-                    }
-                }
-            `,
-            variables: {
-                id: params.id,
-            },
-        }
-    )
+if(communityStore.id && communityStore.id != communityId) {
+    community.value = communityStore.getCommunityData
+} else {
+    const { data, status }: { data: any, pending: boolean } = await useAsyncData('community', 
+		() => communityStore.requestCommunityData(communityId, event))
+	community.value = data.value ?? null;
 }
-))
+const eventsObj: [] = communityStore.getEvents
+const communityReferences = communityStore.getCommunityReferences
+
+let routeArray: Array = [
+    { label: 'Benchmarking Communities', isActualRoute: false, route: '/benchmarking' },
+    { label: community.value?.acronym + " " + "Events", isActualRoute: true }
+]
 </script>

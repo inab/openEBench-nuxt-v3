@@ -1,6 +1,7 @@
 <template>
-    <div class="benchmarking-communities container">
-        <div class="w-100">
+    <div class="benchmarking-communities">
+        <BreadcrumbsBar />
+        <div class="w-100 container">
             <UAccordion :items="HEADER_ITEM">
                 <template #item="{ item }">
                     <p class="italic text-gray-900 dark:text-white text-center">
@@ -8,23 +9,23 @@
                     </p>
                 </template>
                 <template #default="{ item, open }">
-                    <UButton color="primary" variant="ghost" class="border-b border-gray-200 dark:border-gray-700 community-collapse-btn" :ui="{ rounded: 'rounded-none' }">              
-                      <div class="truncate primary">
-                        <h2>{{ item.label }}</h2>
-                    </div>
-                      <template #trailing>
-                        <UIcon
-                          name="i-heroicons-chevron-right-20-solid"
-                          class="w-5 h-5 ms-auto transform transition-transform duration-200"
-                          :class="[open && 'rotate-90']"
+                    <UButton color="primary" variant="ghost" class="border-b border-slate-50 dark:border-gray-700 community-collapse-btn" :ui="{ rounded: 'rounded-none' }">              
+                        <div class="truncate primary">
+                            <h2>{{ item.label }}</h2>
+                        </div>
+                        <template #trailing>
+                            <UIcon
+                            name="i-heroicons-chevron-right-20-solid"
+                            class="transform transition-transform duration-200"
+                            :class="[open && 'rotate-90']"
                         />
-                      </template>
+                        </template>
                     </UButton>
                 </template>
                 <template #benchmarking>
                     <div class="benchmarking-communities__header">
                         <div class="row">
-                            <div class="col-6">
+                            <div class="col-6 benchmarking-communities__header__left">
                                 <img src="~/assets/images/illustrations/lab_community.png" alt="welcome-header-image" />
                             </div>
                             <div class="col-6 benchmarking-communities__header__right">
@@ -40,7 +41,7 @@
                 </template>
             </UAccordion>
         </div>
-        <div class="benchmarking-communities__container">
+        <div class="benchmarking-communities__container container">
             <div class="grid grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-4" v-if="status === 'pending'">
                 <div class="community-card flex flex-col" v-for="(c, i) in Array.from({length: 8}, (x, i) => i)"
                     :key="i">
@@ -74,10 +75,12 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import CommunityCard from '@/components/Cards/CommunityCard/CommunityCard.vue'
+import BreadcrumbsBar from '@/components/Common/BreadcrumbsBar.vue';
 
 import { useCommunities } from '@/stores/communities'
 
 const communitiesStore = useCommunities()
+const communities: Ref<any> = ref(null);
 
 const HEADER_ITEM = [{
     label: "Benchmarking Communities",
@@ -85,7 +88,13 @@ const HEADER_ITEM = [{
     slot: 'benchmarking'
 }]
 
-const { data: communities, status} = await useAsyncData(() => communitiesStore.requestCommunitiesData())
+if(communitiesStore.getCommunities && Object.keys(communitiesStore.getCommunities).length>0) {
+    communities.value = communitiesStore.getCommunities
+} else {
+    const { data, status} = await useAsyncData(() => communitiesStore.requestCommunitiesData())
+    communities.value = data.value ?? null;
+}
+
 </script>
 <style scoped lang="scss">
 .benchmarking-communities {
@@ -104,11 +113,23 @@ const { data: communities, status} = await useAsyncData(() => communitiesStore.r
                 }
             }
         }
+        &__left {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            img {
+                width: 100%;
+                max-width: 450px;
+            }
+        }
     }
     .community-collapse-btn {
         padding: 0;
         &:hover {
-            background-color: rgba(248 250 252);
+            background-color: white;
+        }
+        span {
+            font-size: 30px;
         }
     }
     &__container {

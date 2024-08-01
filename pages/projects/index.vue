@@ -1,6 +1,7 @@
 <template>
-    <div class="projects container">
-        <div class="w-100">
+    <div class="projects">
+        <BreadcrumbsBar />
+        <div class="w-100 container">
             <UAccordion :items="HEADER_ITEM">
                 <template #default="{ item, open }">
                     <UButton color="primary" variant="ghost" class="border-b border-gray-200 dark:border-gray-700 community-collapse-btn" :ui="{ rounded: 'rounded-none' }">              
@@ -32,7 +33,7 @@
                 </template>
             </UAccordion>
         </div>
-        <div class="projects__container">
+        <div class="projects__container container">
             <div class="grid grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-4" v-if="status.pending">
                 <div class="" v-for="(c, i) in Array.from({length: 8}, (x, i) => i)"
                     :key="i">
@@ -65,13 +66,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import parseDataURL from 'data-urls'
-import { labelToName, decode } from 'whatwg-encoding'
 import CommunityCard from '@/components/Cards/CommunityCard/CommunityCard.vue'
+import BreadcrumbsBar from '@/components/Common/BreadcrumbsBar.vue';
 import { useCommunities } from '@/stores/communities'
 
 const communitiesStore = useCommunities()
+const projects: Ref<any> = ref(null);
+let status = ref({ pending: false })
 
 const HEADER_ITEM = [{
     label: "Project Spaces",
@@ -79,8 +80,14 @@ const HEADER_ITEM = [{
     slot: 'projects'
 }]
 
-
-const { data: projects, status} = await useAsyncData(() => communitiesStore.requestCommunitiesData('projects'))
+if(communitiesStore.getProjects && Object.keys(communitiesStore.getProjects).length>0) {
+    projects.value = communitiesStore.getProjects
+    status.value = { pending: false }
+} else {
+    const { data, status} = await useAsyncData(() => communitiesStore.requestCommunitiesData('projects'))
+    projects.value = data.value ?? null
+    status.value = status
+}
 
 </script>
 

@@ -6,6 +6,9 @@
       content: 'OpenEBench' }
     ],
   })
+  definePageMeta({
+    layout: false,
+  })
 </script>
 <template>
   <div class="h-100">

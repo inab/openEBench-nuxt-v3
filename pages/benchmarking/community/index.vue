@@ -1,6 +1,8 @@
 <template>
 	<div class="benchmarking-community">
-		<div class="container mx-auto">
+		<BreadcrumbsBar 
+			:breadcrumbsArray = routeArray />
+		<div class="mx-auto container">
 			<div v-if="pending">
 				<USkeleton class="h-12 w-12" :ui="{ rounded: 'rounded-full' }" />
 				<div class="space-y-2">
@@ -77,6 +79,7 @@
 	import CommunityDataset from '@/components/Community/CommunityDataset/CommunityDataset.vue'
 	import CommunityTools from '@/components/Community/CommunityTools/CommunityTools.vue'
 	import CommunityEventSummary from '@/components/Community/CommunityEvent/CommunityEventSummary.vue'
+	import BreadcrumbsBar from '@/components/Common/BreadcrumbsBar.vue';
 	import { useCommunity } from '@/stores/community'
 
     const route = useRoute()
@@ -85,10 +88,14 @@
 	const communityId: string = route.params.community
 	const event: string = route.query.event
 
-	const { data, pending }: { data: any, pending: boolean } = await useAsyncData('community', 
-		() => communityStore.requestCommunityData(communityId, event))
-	community.value = data.value ?? null;
-
+	if(communityStore.communityId && communityStore.communityId != communityId) {
+		community.value = communityStore.getCommunityData
+	} else {
+		const { data, pending }: { data: any, pending: boolean } = await useAsyncData('community', 
+			() => communityStore.requestCommunityData(communityId, event))
+		community.value = data.value ?? null;
+	}
+	
 	const datasetsObj = communityStore.getDatasets
 	const toolsObj = communityStore.getTools
 	const eventsObj: [] = communityStore.getEvents
@@ -123,6 +130,17 @@
 			slot: 'summary'
 		})
 	}
+
+	let routeArray: Array = [
+		{ label: 'Benchmarking Communities', isActualRoute: false, route: '/benchmarking' },
+		{ label: community.value?.acronym + " " + "Events", isActualRoute: true }
+	]
+
+	if(event) {
+		routeArray[1].isActualRoute = false
+		routeArray[1].route = '/benchmarking/'+ communityId + '/events'
+		routeArray.push({ label: currentEvent.value?.name, isActualRoute: true })
+	}
 </script>
 
 <style lang="scss" scoped>
@@ -131,7 +149,7 @@
     padding: 0;
 }
 .custom-tab {
-	border: 2px solid rgba(243, 244, 246);
+	border: 1px solid rgba(243, 244, 246);
 	border-radius: 0.5rem;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
     <div class="community-event-table-content w-100">
-        <p class="text-body-2 text--secondary d-flex align-center text-stone-500">
+        <p class="text-body-2 text--secondary d-flex align-center text-stone-500 text-comment">
             <span>
                 <UIcon name="i-heroicons-information-circle" scale="2"></UIcon>
             </span>
@@ -9,20 +9,19 @@
             participants using a predefined collection of reference datasets and
             assessment metrics.
         </p>
-        <div class="">
-            <CommunityEventClassification 
+        <div class="community-event-table-content__row">
+            <CommunityEventClassification
                 :id="event._id"
                 :key="event._id"
                 :filterArray="selectedIds"
             />
         </div>
-        <div class="">
+        <div class="community-event-table-content__row">
             <h2 class="">Challenges</h2>
-            <p class="text-body-2 text--secondary d-flex align-center">
+            <p class="text-body-2 text--secondary d-flex align-center text-stone-500">
                 <span>
                     <UIcon name="i-heroicons-information-circle" scale="2" />
                 </span>
-                
                 Challenges are a set of tests which the community uses to benchmark
                 participating tools. Each of the categories in which a benchmarking event
                 is divided. In its simplest form, one challenge comprises one reference
@@ -30,7 +29,7 @@
                 needed.
             </p>
         </div>
-        <div class="">
+        <div class="community-event-table-content__row">
             <CommunityEventTable
                 :eventChallenges="event.challenges"
                 :communityId="communityId"
@@ -46,7 +45,7 @@
     import CommunityEventClassification from '@/components/Community/CommunityEvent/CommunityEventClassification.vue'
     import CommunityEventTable from '@/components/Community/CommunityEvent//CommunityEventTable.vue';
 
-    const props = defineProps<{
+    defineProps<{
         event: Object,
         communityId: string
     }>()
@@ -68,6 +67,15 @@
         margin-right: 10px;
         width: 20px;
         font-size: 22px;
+    }
+    .text-comment {
+        font-size: 14px;
+    }
+    &__row {
+        font-size: 14px;
+        h2 {
+            font-size: 18px;
+        }
     }
 }
 </style>

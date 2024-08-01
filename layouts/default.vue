@@ -1,8 +1,7 @@
 <template>
     <div>
         <HeaderMenu />
-        <div class="py-5 my-3"></div>
-        <BreadcrumbsBar />
+        <div class="py-4 my-3"></div>
         <NuxtPage />
         <TheFooter />
         <div>
