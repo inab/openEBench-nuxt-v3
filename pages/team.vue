@@ -67,8 +67,37 @@
 
         </div>
       </div>
-      
-      
+      <br>
+      <hr class="mt-5">
+
+      <!-- Roles Legend Expansion Panel -->
+      <div class="accordion roles-legend" id="accordionExample">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingTwo">
+            <button class="accordion-button custom-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+              Roles Legend
+            </button>
+          </h2>
+          <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+              <table class="table custom-table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                  </tr>
+                </thead>
+                <tbody class="text-sm">
+                  <tr v-for="(role, index) in rolesLegend" :key="index">
+                    <td><strong>{{ role.name }}</strong></td>
+                    <td>{{ role.description }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -85,7 +114,6 @@ const show = ref(false);
 const rolesLegend = ref([]);
 
 // Computed properties
-
 const leaders = computed(() => {
   return members.value.filter((member) =>
     member.roles.includes('Leadership')
@@ -115,8 +143,6 @@ onMounted(() => {
   rolesLegend.value.sort((a, b) => a.name.localeCompare(b.name));
 });
 
-
-
 </script>
 
 <style scoped>
@@ -125,5 +151,80 @@ onMounted(() => {
 	margin-bottom: 40px;
 	padding-bottom: 15px;
 	color: #0b579f;
+}
+.roles-legend{
+  border: none;
+  border-radius: 5px;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  box-shadow: 0 3px 1px -2px rgba(0, 0, 0, .2),
+  0 2px 2px 0 rgba(0, 0, 0, .14),
+  0 1px 5px 0 rgba(0, 0, 0, .12);
+}
+
+.custom-table th {
+  color: gray !important;
+  font-size: small;
+  line-height: 21px;
+  padding-left: 20px !important;
+
+}
+
+.custom-table td {
+  padding: 2px;
+  padding-left: 20px !important;
+  line-height: 21px;
+}
+
+.collapse.show {
+  visibility: visible;
+}
+
+.custom-button {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  box-shadow: none;
+  color: inherit;
+}
+
+.custom-button:not(.collapsed) {
+  background-color: transparent;
+  border: none;
+  color: inherit;
+  box-shadow: none;
+}
+
+.custom-button:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.accordion-button:focus {
+  box-shadow: none;
+}
+
+.accordion-button::after {
+  background-image: none;
+}
+
+.accordion-button {
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+  color: inherit;
+}
+
+.accordion-button.collapsed {
+  color: inherit;
+}
+
+.accordion-button:not(.collapsed) {
+  color: inherit;
+  background-color: #F0F0F0;
+  box-shadow: none;
+}
+
+.accordion-item {
+  border: none;
 }
 </style>
