@@ -174,9 +174,6 @@ const handleToggleMenu = () => {
 };
 
 function handleLogin() {
-  console.log(status);
-  console.log(data);
-  console.log(providers);
   signIn("keycloak", { callbackUrl: "http://localhost:3000/bar" });
 }
 

@@ -37,7 +37,6 @@ export default NuxtAuthHandler({
   ],
   callbacks: {
     async signIn({ user, account, profile, email, credentials }) {
-      console.log("signInsignIn");
       return true;
     },
     async redirect({ url, baseUrl }) {

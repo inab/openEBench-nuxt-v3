@@ -95,6 +95,7 @@ async function getCommunities() {
     item._metadata ? !item._metadata.project_spaces : true,
   ).length;
 
+
   projectsCount.value = communitiesData.filter((item) =>
     item._metadata ? item._metadata.project_spaces : false,
   ).length;
