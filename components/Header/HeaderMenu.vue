@@ -6,7 +6,7 @@
           <div class="text-lg font-bold">
             <NuxtLink to="/" class="navbar-brand">
               <img
-                src="/static/images/opeb_logo.gif"
+                src="/assets/images/opeb_logo.gif"
                 alt="OpenEBench"
                 width="80"
                 class="navbar-logo d-inline-block align-top"

@@ -89,7 +89,7 @@
               class="btn rounded-circle p-2 btn-f"
             >
               <img
-                src="/static/icons/twitter-x-64.png"
+                src="/assets/icons/twitter-x-64.png"
                 alt="X icon"
                 class="img-fluid"
                 style="max-width: 18px; max-height: 18px"

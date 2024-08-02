@@ -93,8 +93,8 @@
   &__image {
     background-color: white;
     height: 100%;
-    -webkit-mask: url("~/static/icons/benchmark.svg") no-repeat center;
-    mask: url("~/static/icons/benchmark.svg") no-repeat center;
+    -webkit-mask: url("~/assets/icons/benchmark.svg") no-repeat center;
+    mask: url("~/assets/icons/benchmark.svg") no-repeat center;
     transition: transform 0.7s ease-in-out;
     &:hover {
       background-color: #0b579f;
@@ -103,8 +103,8 @@
   &__image_secondary {
     background-color: white;
     height: 100%;
-    -webkit-mask: url("~/static/icons/observatory.svg") no-repeat center;
-    mask: url("~/static/icons/observatory.svg") no-repeat center;
+    -webkit-mask: url("~/assets/icons/observatory.svg") no-repeat center;
+    mask: url("~/assets/icons/observatory.svg") no-repeat center;
     transition: transform 0.7s ease-in-out;
     &:hover {
       background-color: #f47c21;
