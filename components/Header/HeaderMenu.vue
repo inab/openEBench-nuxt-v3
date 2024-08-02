@@ -40,12 +40,12 @@
                                     <li class="relative parent">
                                         <div class="nav-link flex justify-between md:inline-flex items-center hover:bg-gray-50 space-x-2">
                                             <span>Observatory</span>
-                                            <font-awesome-icon :icon="['fas', 'chevron-down']" size="xs" />
+                                            <font-awesome-icon :icon="['fas', 'chevron-down']" size="sm" />
                                         </div>
-                                        <ul class="child transition duration-300 md:absolute top-full left-0 md:w-48 bg-white md:shadow-lg md:rounded-b">
+                                        <ul class="child transition duration-300 md:absolute top-full left-0 md:w-40 bg-white md:shadow-lg md:rounded-b">
                                             <li>
-                                                <ul>
-                                                    <li v-for="(item, index) in subMenuEntriesObservatory"
+                                                <ul class="my-2">
+                                                    <li v-for="(item, index) in subMenuEntriesObservatory" class="hover:bg-gray-100 ps-3 text-sm"
                                                         :key="index">
                                                         <NuxtLink :to="item.to">
                                                             {{ item.title }}
@@ -56,14 +56,14 @@
                                         </ul>
                                     </li>
                                     <li class="relative parent">
-                                        <div class="nav-link flex justify-between md:inline-flex items-center hover:bg-gray-50 space-x-2">
+                                        <div class="nav-link flex justify-between md:inline-flex items-center hover:bg-gray-50 space-x-3">
                                             <span>About</span>
-                                            <font-awesome-icon :icon="['fas', 'chevron-down']" size="xs" />
+                                            <font-awesome-icon :icon="['fas', 'chevron-down']" size="sm"/>
                                         </div>
-                                        <ul class="child transition duration-300 md:absolute top-full left-0 md:w-48 bg-white md:shadow-lg md:rounded-b">
+                                        <ul class="child transition duration-300 md:absolute top-full left-0 md:w-28 bg-white md:shadow-lg md:rounded-b">
                                             <li>
-                                                <ul>
-                                                    <li v-for="(item, index) in subMenuEntriesAbout"
+                                                <ul class="my-2">
+                                                    <li v-for="(item, index) in subMenuEntriesAbout" class="hover:bg-gray-100 ps-3 text-sm "
                                                         :key="index">
                                                         <NuxtLink :to="item.to">
                                                             {{ item.title }}
@@ -155,6 +155,10 @@ function closeMenu() {
     z-index: 2;
     width: 100%;
     background-color: white;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, .2), 
+    0 4px 5px 0 rgba(0, 0, 0, .14), 
+    0 1px 10px 0 rgba(0, 0, 0, .12);
 
     .navbar-brand {
         height: 65px;
@@ -166,7 +170,7 @@ function closeMenu() {
     .nav-link {
         font-size: 18px;
         font-weight: 500;
-        padding: 22px 10px 15px;
+        padding: 22px 16px 15px 16px;
         display: flex;
         color: rgba(0, 0, 0, 0.65);
         cursor: pointer;
@@ -225,20 +229,20 @@ function closeMenu() {
         padding-left: 0px;
 
         ul {
-            padding-left: 15px;
-
+            padding-left: 0px;
             li {
-                padding-bottom: 15px;
-
-                &:hover {
-                    color: theme('colors.primary.500');
-
-                    a {
-                        color: theme('colors.primary.500');
-                    }
+                padding-top: 10px;
+                padding-bottom: 10px;
+                a {
+                    text-decoration: none !important;
+                    color: rgb(0, 0, 0);
                 }
             }
         }
+    }
+
+    .optionsHeader{
+        text-decoration: none !important;
     }
 
     .parent:hover .child {
