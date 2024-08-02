@@ -40,7 +40,7 @@
                                     <li class="relative parent">
                                         <div class="nav-link flex justify-between md:inline-flex items-center hover:bg-gray-50 space-x-2">
                                             <span>Observatory</span>
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 fill-current pt-1" viewBox="0 0 24 24"><path d="M0 7.33l2.829-2.83 9.175 9.339 9.167-9.339 2.829 2.83-11.996 12.17z"/></svg>
+                                            <font-awesome-icon :icon="['fas', 'chevron-down']" size="xs" />
                                         </div>
                                         <ul class="child transition duration-300 md:absolute top-full left-0 md:w-48 bg-white md:shadow-lg md:rounded-b">
                                             <li>
@@ -58,7 +58,7 @@
                                     <li class="relative parent">
                                         <div class="nav-link flex justify-between md:inline-flex items-center hover:bg-gray-50 space-x-2">
                                             <span>About</span>
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 fill-current pt-1" viewBox="0 0 24 24"><path d="M0 7.33l2.829-2.83 9.175 9.339 9.167-9.339 2.829 2.83-11.996 12.17z"/></svg>
+                                            <font-awesome-icon :icon="['fas', 'chevron-down']" size="xs" />
                                         </div>
                                         <ul class="child transition duration-300 md:absolute top-full left-0 md:w-48 bg-white md:shadow-lg md:rounded-b">
                                             <li>
@@ -76,12 +76,16 @@
                                 </ul>
                             </div>
                             <div class="nav-list-items-direct top-full hidden sm:flex">
-                                <button @click="handleLogin" class="text-gray-800 text-sm font-semibold hover:text-purple-600 mr-4">
-                                    Login
+                                <button class="text-primaryOeb-500 border-1 border-primaryOeb-800 hover:bg-gray-50 font-medium rounded-md text-sm px-3 py-2 me-2">
+                                    <a :href="runtimeConfig.public.VRE_URI" target="_blank" @click="closeMenu" class="text-primaryOeb-500" style="text-decoration: none;">
+                                        Benchmark your tool
+                                    </a>
                                 </button>
-                                <a :href="runtimeConfig.public.VRE_URI" target="_blank" class="text-gray-800 text-sm font-semibold border px-4 py-2 rounded-lg hover:text-purple-600 hover:border-purple-600" @click="closeMenu">
-                                    Benchmark your tool
-                                </a>
+                                <button @click="handleLogin" class="ripple text-white bg-primaryOeb-500 hover:bg-primaryOeb-400 font-medium rounded-md text-sm px-3 py-2">
+                                    <font-awesome-icon :icon="['fas', 'arrow-right-to-bracket']" size="sm" class="mr-2" />
+                                    Login
+                                    <span class="ripple-effect"></span>
+                                </button>
                             </div>
                         </div>
                         <!-- Overlay div -->
@@ -339,7 +343,8 @@ function closeMenu() {
         justify-content: end !important;
         position: absolute;
         right: 20px;
-        top: 0px;
+        top: 50%;
+        transform: translateY(-50%);
 
         @media only screen and (max-width: 950px) {
             position: static;
