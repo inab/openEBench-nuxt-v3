@@ -2,13 +2,12 @@
   <div class="community-empty">
     <div class="community-empty__image">
       <div class="community-empty__image__content">
-        <img
-          src="~/assets/images/illustrations/empty-state.svg"
+        <NuxtImg
+          src="/images/illustrations/empty-state.svg"
           alt="community-empty"
         />
       </div>
     </div>
-    {{ item }}
     <div class="community-empty_body">
       <h2 class="mt-10 text-h4 text--secondary text-center">
         No benchmarking results yet...

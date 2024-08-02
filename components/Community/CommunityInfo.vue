@@ -164,10 +164,10 @@ const communityLinks = computed(() => {
         }
         a {
           text-decoration: none;
-          color: v-bind(--color-gray-500);
+          color: theme("colors.gray.500");
           font-weight: 600;
           &:hover {
-            color: v-bind(--color-primary-50);
+            color: theme("colors.primary.300");
           }
         }
       }

@@ -1,16 +1,44 @@
 <template>
-  <div>
-    <div class="flex px-3 py-3.5 border-b border-gray-200 dark:border-gray-700">
-      <UInput v-model="search" placeholder="Search..." />
+  <div class="community-dataset">
+    <div class="pb-3 flex align-items-baseline">
+      <span
+        class="community-dataset__title text-lg text-o dark:text-gray-400 text-primaryOeb-500"
+      >
+        Find the datasets available for this community
+      </span>
+    </div>
+    <div
+      v-if="filteredRows.length > 0"
+      class="flex justify-content-end py-2.5 border-b border-gray-200 dark:border-gray-700"
+    >
+      <UInput
+        v-model="search"
+        color="white"
+        variant="outline"
+        icon="i-heroicons-magnifying-glass"
+        placeholder="Search ..."
+        class="input-search"
+      />
     </div>
     <UTable
       :columns="columns"
       :rows="filteredRows"
       :ui="{
         tr: {
-          base: '',
-          selected: 'bg-gray-50 dark:bg-gray-800/50',
-          active: 'hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer',
+          base: 'hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer',
+        },
+        th: {
+          base: 'text-left rtl:text-right',
+          padding: 'px-2.5 py-2.5',
+          color: 'text-gray-900 dark:text-white',
+          font: 'font-semibold',
+          size: 'text-sm',
+        },
+        td: {
+          base: 'whitespace-nowrap',
+          padding: 'px-3 py-3',
+          font: '',
+          size: 'text-sm',
         },
       }"
     >
@@ -21,17 +49,39 @@
         <span>{{ row.type }}</span>
       </template>
       <template #download-data="{ row }">
-        <a v-if="row.download" :href="row.download" target="_blank">Download</a>
+        <a v-if="row.datalink.uri" :href="row.datalink.uri" target="_blank"
+          >Download
+        </a>
         <span v-else>Not available</span>
       </template>
     </UTable>
     <div
-      class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700"
-    >
+      v-if="filteredRows.length > 0"
+      class="flex flex-wrap justify-between items-center pt-2">
+      <div>
+        <span class="text-sm leading-5">
+          Showing
+          <span class="font-medium">{{ pageFrom }}</span>
+          to
+          <span class="font-medium">{{ pageTo }}</span>
+          of
+          <span class="font-medium">{{ totalPages }}</span>
+          results
+        </span>
+      </div>
       <UPagination
         v-model="page"
         :page-count="pageCount"
         :total="datasets.length"
+        :ui="{
+          wrapper: 'flex items-center',
+          default: {
+            activeButton: {
+              base: 'bg-primary-500 dark:bg-primary-400',
+              color: 'text-white',
+            },
+          },
+        }"
       />
     </div>
   </div>
@@ -41,14 +91,18 @@
 import { ref } from "vue";
 
 const props = defineProps<{
-  datasets: Object;
+  datasets: object[];
   communityId: string;
 }>();
 
 const page = ref(1);
-const pageCount = 15;
-const totalPages = ref(0);
+const pageCount = ref(10);
 const search = ref("");
+const pageFrom = computed(() => (page.value - 1) * pageCount.value + 1);
+const pageTo = computed(() =>
+  Math.min(page.value * pageCount.value, totalPages.value),
+);
+let _total = 0;
 
 const columns = [
   {
@@ -66,6 +120,7 @@ const columns = [
 ];
 
 const datasets = computed(() => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return props.datasets.map((dataset: any) => {
     return {
       name: dataset.name,
@@ -77,10 +132,10 @@ const datasets = computed(() => {
 
 const filteredRows = computed(() => {
   if (!search.value) {
-    totalPages.value = props.datasets.length;
+    _total = props.datasets.length;
     return props.datasets.slice(
-      (page.value - 1) * pageCount,
-      page.value * pageCount,
+      (page.value - 1) * pageCount.value,
+      page.value * pageCount.value,
     );
   }
 
@@ -89,10 +144,30 @@ const filteredRows = computed(() => {
       return String(value).toLowerCase().includes(search.value.toLowerCase());
     });
   });
-  totalPages.value = filteredSearcher.length;
+  _total = filteredSearcher.length;
   return filteredSearcher.slice(
-    (page.value - 1) * pageCount,
-    page.value * pageCount,
+    (page.value - 1) * pageCount.value,
+    page.value * pageCount.value,
   );
 });
+
+const totalPages = computed(() => {
+  return _total;
+});
 </script>
+<style scoped lang="scss">
+.community-dataset {
+  &__title {
+    font-weight: 600;
+  }
+}
+table {
+  a {
+    color: theme("colors.primary.500");
+    text-decoration: none;
+    &:hover {
+      color: theme("colors.primary.400");
+    }
+  }
+}
+</style>

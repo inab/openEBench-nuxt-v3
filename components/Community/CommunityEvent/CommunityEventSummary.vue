@@ -26,10 +26,10 @@ const markup = computed(() =>
 
 <style lang="scss">
 .community-event-summary {
-  padding-top: 20px;
+  padding-top: 5px;
   &__markup {
     h1 {
-      padding-top: 50px;
+      padding-top: 0;
       color: #396fba;
     }
     a {

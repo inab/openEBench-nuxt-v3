@@ -54,7 +54,7 @@
               </div>
             </template>
             <template v-if="datasetsObj && datasetsObj.length > 0" #datasets>
-              <div class="p-4 custom-tab">
+              <div class="custom-tab">
                 <div class="p-4">
                   <CommunityDataset
                     :datasets="datasetsObj"
@@ -64,7 +64,7 @@
               </div>
             </template>
             <template v-if="toolsObj && toolsObj.length > 0" #tools>
-              <div class="p-4 custom-tab">
+              <div class="custom-tab">
                 <div class="p-4">
                   <CommunityTools
                     :tools="toolsObj"
@@ -74,7 +74,7 @@
               </div>
             </template>
             <template v-if="eventData && eventData.summary" #summary>
-              <div class="p-4 custom-tab">
+              <div class="custom-tab">
                 <div class="p-4">
                   <CommunityEventSummary :markdown="eventData">
                   </CommunityEventSummary>

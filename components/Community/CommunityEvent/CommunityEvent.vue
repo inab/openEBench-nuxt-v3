@@ -20,7 +20,7 @@ import CommunityEmpty from "@/components/Community/CommunityEvent/CommunityEmpty
 
 defineProps<{
   currentEvent: Object;
-  events: [];
+  events: Array<any>;
   communityId: string;
 }>();
 </script>

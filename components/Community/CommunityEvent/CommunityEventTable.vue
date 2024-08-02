@@ -3,7 +3,7 @@
     <div
       class="community-event-table__border px-3 py-3.5 relative not-prose bg-white overflow-hidden"
     >
-      <div class="flex px-1 py-3.5">
+      <div class="justify-content-end flex py-3.5">
         <UInput
           v-model="search"
           color="white"
@@ -71,19 +71,28 @@
           </NuxtLink>
         </template>
       </UTable>
-      <div
-        class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700"
-      >
+      <div class="flex flex-wrap justify-between items-center pt-2">
+        <div>
+          <span class="text-sm leading-5">
+            Showing
+            <span class="font-medium">{{ pageFrom }}</span>
+            to
+            <span class="font-medium">{{ pageTo }}</span>
+            of
+            <span class="font-medium">{{ totalPages }}</span>
+            results
+          </span>
+        </div>
         <UPagination
           v-model="page"
           :page-count="pageCount"
           :total="totalPages"
           :ui="{
-            wrapper: 'flex items-center gap-1',
-            rounded: '!rounded-full min-w-[32px] justify-center',
+            wrapper: 'flex items-center',
             default: {
               activeButton: {
-                variant: 'outline',
+                base: 'bg-primary-500 dark:bg-primary-400',
+                color: 'text-white',
               },
             },
           }"
@@ -106,10 +115,14 @@ const emit = defineEmits(["handleChangeChallengers"]);
 
 const community = computed(() => props.communityId);
 const page = ref(1);
-const pageCount = 10;
+const pageCount = ref(10);
 const search = ref("");
-const totalPages = ref(0);
+const pageFrom = computed(() => (page.value - 1) * pageCount.value + 1);
+const pageTo = computed(() =>
+  Math.min(page.value * pageCount.value, totalPages.value),
+);
 const selected = ref<any[]>([]);
+let _total = 0;
 
 const columns = [
   {
@@ -128,10 +141,10 @@ const columns = [
 
 const filteredRows = computed(() => {
   if (!search.value) {
-    totalPages.value = props.eventChallenges.length;
+    _total = props.eventChallenges.length;
     return props.eventChallenges.slice(
-      (page.value - 1) * pageCount,
-      page.value * pageCount,
+      (page.value - 1) * pageCount.value,
+      page.value * pageCount.value,
     );
   }
 
@@ -140,11 +153,15 @@ const filteredRows = computed(() => {
       return String(value).toLowerCase().includes(search.value.toLowerCase());
     });
   });
-  totalPages.value = filteredSearcher.length;
+  _total = filteredSearcher.length;
   return filteredSearcher.slice(
-    (page.value - 1) * pageCount,
-    page.value * pageCount,
+    (page.value - 1) * pageCount.value,
+    page.value * pageCount.value,
   );
+});
+
+const totalPages = computed(() => {
+  return _total;
 });
 
 function select(row: any) {
@@ -165,10 +182,6 @@ watch(selected, () => {
 <style scoped lang="scss">
 .community-event-table {
   border: none;
-  &__border {
-    border-radius: 0.5rem;
-    border: 1px solid theme("colors.slate.100");
-  }
   .input-search {
     input {
       box-shadow: none !important;

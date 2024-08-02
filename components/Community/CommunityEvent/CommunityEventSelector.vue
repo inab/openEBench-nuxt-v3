@@ -1,7 +1,7 @@
 <template>
   <div class="community-event-selector row">
     <div class="col-8">
-      <div class="">
+      <div class="community-event-selector__item">
         <USelectMenu
           v-model="eventSelected"
           searchable
@@ -85,12 +85,25 @@ function handleChangeEvent() {
   }
   a {
     text-decoration: none;
-    color: v-bind(--color-gray-500);
+    color: #6a98c4;
+  }
+  &__item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    button {
+      box-shadow: none !important;
+    }
   }
 }
 .primary-label {
   color: #0b579f;
   font-size: 16px;
   font-weight: 600;
+}
+</style>
+<style>
+.community-event-selector__item button {
+  box-shadow: none !important;
 }
 </style>

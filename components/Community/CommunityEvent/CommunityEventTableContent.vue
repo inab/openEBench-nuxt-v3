@@ -18,7 +18,7 @@
         :filter-array="selectedIds"
       />
     </div>
-    <div class="community-event-table-content__row">
+    <div class="pt-3 community-event-table-content__row">
       <h2 class="">Challenges</h2>
       <p class="text-body-2 text--secondary d-flex align-center text-stone-500">
         <span>
