@@ -76,8 +76,9 @@
                                 </ul>
                             </div>
                             <div class="nav-list-items-direct top-full hidden sm:flex">
-                                <button class="text-primaryOeb-500 border-1 border-primaryOeb-800 hover:bg-gray-50 font-medium rounded-md text-sm px-3 py-2 me-2">
+                                <button class="text-primaryOeb-500 border-1 border-primaryOeb-800 hover:bg-primaryOeb-50 font-medium rounded-md text-sm px-3 py-2 me-2">
                                     <a :href="runtimeConfig.public.VRE_URI" target="_blank" @click="closeMenu" class="text-primaryOeb-500" style="text-decoration: none;">
+                                        <font-awesome-icon :icon="['fas', 'arrow-up-right-from-square']" size="sm" class="mr-2"/>
                                         Benchmark your tool
                                     </a>
                                 </button>
