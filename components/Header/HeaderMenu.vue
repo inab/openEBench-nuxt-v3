@@ -45,7 +45,7 @@
                                         <ul class="child transition duration-300 md:absolute top-full left-0 md:w-40 bg-white md:shadow-lg md:rounded-b">
                                             <li>
                                                 <ul class="my-2">
-                                                    <li v-for="(item, index) in subMenuEntriesObservatory" class="hover:bg-gray-100 ps-3 text-sm"
+                                                    <li v-for="(item, index) in subMenuEntriesObservatory" class="hover:bg-gray-100 ps-3 text-sm" @click="closeMenu"
                                                         :key="index">
                                                         <NuxtLink :to="item.to">
                                                             {{ item.title }}
@@ -63,7 +63,7 @@
                                         <ul class="child transition duration-300 md:absolute top-full left-0 md:w-28 bg-white md:shadow-lg md:rounded-b">
                                             <li>
                                                 <ul class="my-2">
-                                                    <li v-for="(item, index) in subMenuEntriesAbout" class="hover:bg-gray-100 ps-3 text-sm "
+                                                    <li v-for="(item, index) in subMenuEntriesAbout" class="hover:bg-gray-100 ps-3 text-sm " @click="closeMenu"
                                                         :key="index">
                                                         <NuxtLink :to="item.to">
                                                             {{ item.title }}
@@ -115,11 +115,22 @@ definePageMeta({
 const { signIn, getProviders, status, data } = useAuth()
 const providers = await getProviders()
 const runtimeConfig = useRuntimeConfig();
-
 const { $viewport } = useNuxtApp()
 let toggleMenu = ref(false);
 let isMobile = ref(false);
 
+
+// Breakpoints
+watch($viewport.breakpoint as string, (newBreakpoint: string, oldBreakpoint: string) => { 
+    if(newBreakpoint == 'tablet' || newBreakpoint == 'mobileWide') {
+        isMobile.value = true;
+    } else {
+        isMobile.value = false;
+    }
+})
+
+
+// Functions
 const handleToggleMenu = () => {
     toggleMenu.value = !toggleMenu.value;
 }
@@ -130,14 +141,6 @@ function handleLogin() {
     console.log(providers)
     signIn('keycloak',  { callbackUrl: 'http://localhost:3000/bar' })
 }
-
-watch($viewport.breakpoint as string, (newBreakpoint: string, oldBreakpoint: string) => { 
-    if(newBreakpoint == 'tablet' || newBreakpoint == 'mobileWide') {
-        isMobile.value = true;
-    } else {
-        isMobile.value = false;
-    }
-})
 
 function closeMenu() {
     toggleMenu.value = false;
@@ -354,10 +357,12 @@ function closeMenu() {
         @media only screen and (max-width: 950px) {
             position: static;
             justify-content: start !important;
-            margin-top: 20px;
+            align-items: start;
+            margin-top: 50px;
             width: 100%;
             padding: 10px;
             flex-direction: column;
+            gap: 10px;
             // border-top: 1px solid #e5e7eb;
         }
     }
@@ -466,7 +471,7 @@ function closeMenu() {
     }
 
     nav ul {
-        display: none;
+        display: block;
     }
 
     nav ul li {
