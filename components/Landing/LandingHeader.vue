@@ -4,15 +4,18 @@
             <div class="container container-padding">
                 <div class="row">
                     <h1 class="text-h3 mb-4 primary--text">Welcome to OpenEBench</h1>
-                    <div class="col-7 welcome-left">
+                    <div class="col-lg-7 welcome-left mb-4 mb-lg-0">
                         <div class="w-100">
                             <h2 class="text-subtitle-1 mb-5">
                                 The ELIXIR gateway to benchmarking communities, software monitoring,
                                 and quality metrics for life sciences tools and workflows.
                             </h2>
+                            <div class="d-block d-lg-none welcome-header-image mb-4">
+                                <NuxtImg src="/images/illustrations/chart-person.svg" alt="welcome-header-image" />
+                            </div>
                         </div>
-                        <div class="row">
-                            <div class="col col-6 ">
+                        <div class="row justify-content-center text-center">
+                            <div class="col-md-6 mb-4 mb-md-0 d-flex flex-column align-items-center gap-4">
                                 <div class="welcome-avatar">
                                     <div class="welcome-avatar__image secondary" title="Scientific Benchmarking"></div>
                                 </div>
@@ -24,7 +27,7 @@
                                     Scientific Benchmarking
                                 </NuxtLink>
                             </div>
-                            <div class="col col-6">
+                            <div class="col-md-6 d-flex flex-column align-items-center gap-4">
                                 <div class="welcome-avatar secondary">
                                     <div class="welcome-avatar__image_secondary" title="Tools Observatory"></div>
                                 </div>
@@ -38,7 +41,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-5">
+                    <div class="col-lg-5 col-12 d-none d-lg-flex justify-content-center mt-4 mt-lg-0">
                         <div class="welcome-header-image">
                             <NuxtImg src="/images/illustrations/chart-person.svg" alt="welcome-header-image" />
                         </div>
@@ -93,7 +96,6 @@
             transition: transform .7s ease-in-out;
             &:hover {
                 background-color: #f47c21;
-                
             }
         }
     }
@@ -101,6 +103,11 @@
         img {
             width: 100%;
             max-height: 350px;
+        }
+    }
+    @media (max-width: 768px) {
+        .welcome-header-image img {
+            max-height: 250px;
         }
     }
     .welcome-header-box {

@@ -1,38 +1,37 @@
 <template>
     <div class="langing-numbers">
         <div class="container h-100">
-            <div class="row h-100">
-                <div class="col col-3 h-100">
+            <div class="row h-100 align-items-center">
+                <div class="col-12 col-sm-6 col-lg-3 mb-3 mb-lg-0 h-100">
                     <AnimateNumber 
                     type="Communities"
                     :value="communitiesCount" />
                 </div>
-                <div class="col col-3 h-100">
+                <div class="col-12 col-sm-6 col-lg-3 mb-3 mb-lg-0 h-100">
                     <AnimateNumber 
                     type="Tools"
                     :value="toolsCount" />
                 </div>
-                <div class="col col-3 h-100">
+                <div class="col-12 col-sm-6 col-lg-3 mb-3 mb-lg-0 h-100">
                     <AnimateNumber 
                     type="Resources"
                     :value="resourcesCount" />
                 </div>
-                <div class="col col-3 h-100">
+                <div class="col-12 col-sm-6 col-lg-3 mb-3 mb-lg-0 h-100">
                     <AnimateNumber 
                     type="Project"
                     :value="projectsCount" />
                 </div>
             </div>
-            
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import parseDataURL from 'data-urls'
-import { labelToName, decode } from 'whatwg-encoding'
+import parseDataURL from 'data-urls';
+import { labelToName, decode } from 'whatwg-encoding';
 import customApi from '~/composables/useAPI';
-import AnimateNumber from '~/components/Landing/AnimateNumber.vue'
+import AnimateNumber from '~/components/Landing/AnimateNumber.vue';
 
 interface RuntimeConfigMonitoring {
   public: {
@@ -43,42 +42,39 @@ interface RuntimeConfigMonitoring {
 }
 
 const runtimeConfig = useRuntimeConfig() as unknown as RuntimeConfigMonitoring;
-const URL_AGGREAGATE = runtimeConfig.public.MONITORING.baseURL + 'aggregate'
+const URL_AGGREAGATE = runtimeConfig.public.MONITORING.baseURL + 'aggregate';
 
 const communitiesCount: Ref<any> = ref(null);
-const resourcesCount: Ref<any> = ref(null)
-const projectsCount: Ref<any> = ref(null)
-const toolsCount = ref(0)
+const resourcesCount: Ref<any> = ref(null);
+const projectsCount: Ref<any> = ref(null);
+const toolsCount = ref(0);
 
 const { $api } = useNuxtApp();
-const { $graphql } = useNuxtApp()
-const { $observatory } = useNuxtApp()
+const { $graphql } = useNuxtApp();
+const { $observatory } = useNuxtApp();
 
 onMounted(async () => {
-    await getCommunities()
-    await getToolsCount()
-    await getResourcesCount()
-})
+    await getCommunities();
+    await getToolsCount();
+    await getResourcesCount();
+});
 
 async function getCommunities() {
-    const { data: communities, pending }: { data: any, pending: boolean } = await useAsyncData('communities', () => $graphql('/graphql',
-    {
+    const { data: communities, pending }: { data: any, pending: boolean } = await useAsyncData('communities', () => $graphql('/graphql', {
         method: 'POST',
         headers: {
             "Accept": "text/plain, */*",
         },
-        body: JSON.stringify(
-            {
-                query: `
+        body: JSON.stringify({
+            query: `
                 {
-                        getCommunities {
-                        _id
-                        _metadata
-                        }
+                    getCommunities {
+                    _id
+                    _metadata
                     }
-                `,
-            }
-        )
+                }
+            `,
+        })
     }));
 
     const communitiesData = (communities.value as any).data.getCommunities.map((community) => {
@@ -107,15 +103,14 @@ async function getCommunities() {
     ).length;
 }
 
-
 async function getToolsCount() {
-    const {customApi: tools} = await customApi(URL_AGGREAGATE, {
+    const { customApi: tools } = await customApi(URL_AGGREAGATE, {
         method: 'HEAD',
         ...{ params: { limit: 1 } },
     });
 
-    let toolsHeader:RegExpMatchArray = (tools.headers.get('content-range')?.match(/(\d+)-(\d+|\*)\/(\d+|\*)/) || []) as RegExpMatchArray;
-    toolsCount.value =  parseInt(toolsHeader[3])
+    let toolsHeader: RegExpMatchArray = (tools.headers.get('content-range')?.match(/(\d+)-(\d+|\*)\/(\d+|\*)/) || []) as RegExpMatchArray;
+    toolsCount.value = parseInt(toolsHeader[3]);
 }
 
 async function getResourcesCount() {
@@ -125,14 +120,25 @@ async function getResourcesCount() {
 
     resourcesCount.value = resources.value[0].data;
 }
-
-
 </script>
 
 <style scoped lang="scss">
 .langing-numbers {
-    height: 170px;
+    min-height: 170px;
     color: white;
-    background-image: url('~/assets/images/backgrounds/material2_parallax.webp')
+    background-image: url('~/assets/images/backgrounds/material2_parallax.webp');
+
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .col {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
 }
 </style>

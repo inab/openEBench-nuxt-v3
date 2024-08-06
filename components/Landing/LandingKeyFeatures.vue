@@ -3,13 +3,12 @@
         <div class="container">
             <h2 class="text-h4 mb-15">What does OpenEBench offer?</h2>
             <div class="row">
-                <div class="col col-6">
-                    <div class="welcome-header-image" data-aos="fade-up"
-                    data-aos-duration="3000">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <div class="welcome-header-image" data-aos="fade-up" data-aos-duration="3000">
                         <NuxtImg src="/images/illustrations/404.svg" alt="welcome-header-image" />
                     </div>
                 </div>
-                <div class="col col-6 landingkey-features__box">
+                <div class="col-lg-6 landingkey-features__box gap-3">
                     <div class="col-row">
                         <div class="rounder-icon">
                             <UIcon name="i-heroicons-check-16-solid" /> 
@@ -46,6 +45,7 @@
         </div>
     </div>
 </template>
+
 <script setup lang="ts">
 import AOS from 'aos';
 AOS.init();
@@ -55,6 +55,7 @@ AOS.init();
 .landingkey-features {
     padding-top: 40px;
     padding-bottom: 80px;
+
     .col-row {
         display: flex;
         font-size: 18px;
@@ -63,6 +64,7 @@ AOS.init();
         position: relative;
         padding-bottom: 20px;
         text-align: center;
+        
         .rounder-icon {
             border-radius: 50%;
             background-color: #f47c21;
@@ -73,23 +75,27 @@ AOS.init();
             justify-content: center;
             align-items: center;
             margin-right: 10px;
+            
             span {
                 color: white;
                 font-size: 25px;
                 font-weight: 600;
             }
         }
+
         span {
             padding-left: 20px;
         }
-        &:not(:first-child){
+
+        &:not(:first-child) {
             margin-top: 20px;
         }
     
         .landingkey-features__text {
             text-align: left;
+
             span {
-                padding-left: 0PX;
+                padding-left: 0px;
                 transition: background-size 1s ease;
                 width: calc(100% + 20px); 
                 padding-bottom: 2px;
@@ -97,6 +103,7 @@ AOS.init();
                 background-repeat: no-repeat;
                 background-size: 0% 100%;
             }
+
             &:hover {
                 span {
                     background-size: 100% 100%;
@@ -104,13 +111,25 @@ AOS.init();
             }
         }
     }
+
     &__box {
         display: flex;
         flex-direction: column;
         justify-content: center;
-        
     }
-
 }
 
+.welcome-header-image img {
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .col-row {
+        text-align: left;
+    }
+
+    .welcome-header-image img {
+        max-height: 250px;
+    }
+}
 </style>
