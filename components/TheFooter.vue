@@ -14,8 +14,19 @@
             <div v-for="(footer, index) in footers" :key="index" class="col-md-3 col-12 mb-2">
               <!-- Button for mobile to toggle collapse -->
               <h5 class="d-md-none">
-                <button class="btn btn-link text-white" type="button" :data-bs-toggle="isMobile ? 'collapse' : ''" :data-bs-target="'#collapse-' + index" aria-expanded="false" :aria-controls="'collapse-' + index">
+                <button
+                  class="btn btn-link text-white"
+                  type="button"
+                  :data-bs-toggle="'collapse'"
+                  :data-bs-target="'#collapse-' + index"
+                  aria-expanded="openIndex === index"
+                  :aria-controls="'collapse-' + index"
+                  @click="toggleCollapse(index)"
+                >
                   {{ footer.headline }}
+                  <span class="arrow-icon">
+                    <font-awesome-icon :icon="openIndex === index ? ['fas', 'chevron-up'] : ['fas', 'chevron-down']" />
+                  </span>
                 </button>
               </h5>
 
@@ -24,7 +35,7 @@
 
               <!-- Collapsible content -->
               <div :id="'collapse-' + index" class="collapse" :class="{ show: !isMobile }">
-                <ul class="list-unstyled">
+                <ul :class="{ 'list-unstyled': !isMobile }">
                   <li v-for="(link, m) in footer.links" :key="m">
                     <nuxt-link v-if="link.to" :to="link.to" class="text-white links-header">
                       {{ link.title }}
@@ -95,7 +106,9 @@ export default {
       },
     ],
     isMobile: false, // Estado inicial
+    openIndex: null
   }),
+
   computed: {
     currentYear() {
       return new Date().getFullYear();
@@ -111,7 +124,11 @@ export default {
   methods: {
     checkWindowSize() {
       this.isMobile = window.innerWidth < 768; // Bootstrap's default mobile breakpoint
-    }
+    },
+    toggleCollapse(index) {
+      // Alterna el índice de colapso entre el actual y null
+      this.openIndex = this.openIndex === index ? null : index;
+    },
   }
 };
 </script>
@@ -152,5 +169,12 @@ export default {
 
 .collapse.show {
   visibility: visible;
+}
+
+.arrow-icon {
+  color: white;
+  font-size: 10px;
+  margin-left: 5px;
+  margin-top: 25px;
 }
 </style>
