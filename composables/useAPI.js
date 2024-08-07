@@ -1,10 +1,9 @@
 const useAPI = async (url, fetchData) => {
-
   const customApi = await fetch(url, fetchData);
 
   return {
-    customApi
-  }
-}
+    customApi,
+  };
+};
 
 export default useAPI;

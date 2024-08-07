@@ -47,7 +47,7 @@
 </template>
 
 <script setup lang="ts">
-import AOS from 'aos';
+import AOS from "aos";
 AOS.init();
 </script>
 

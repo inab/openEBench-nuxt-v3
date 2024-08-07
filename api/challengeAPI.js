@@ -1,13 +1,11 @@
 export async function challengeAPI(challengeID) {
-    return  await useNuxtApp().$graphql('/graphql',
-        {
-            method: 'POST',
-            headers: {
-                "Accept": "text/plain, */*",
-            },
-            body: JSON.stringify(
-                {
-                    query: `
+  return await useNuxtApp().$graphql("/graphql", {
+    method: "POST",
+    headers: {
+      Accept: "text/plain, */*",
+    },
+    body: JSON.stringify({
+      query: `
 					query ($id: String!) {
 						getChallenges(challengeFilters: { id: $id }) {
 							_id
@@ -82,13 +80,11 @@ export async function challengeAPI(challengeID) {
 						}
 					}
 				`,
-                    variables: {
-                        id: challengeID,
-                    },
-                }
-            )
-        }
-    )
-};
+      variables: {
+        id: challengeID,
+      },
+    }),
+  });
+}
 
 export default challengeAPI;

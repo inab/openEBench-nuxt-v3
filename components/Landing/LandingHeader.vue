@@ -49,26 +49,25 @@
     </div>
 </template>
 
-<script setup>
-</script>
+<script setup></script>
 
 <style scoped lang="scss">
-    .welcome-avatar {
-        border-radius: 50%;
-        background-color: #0b579f;
-        height: 60px;
-        width: 60px;
-        padding: 5px;
-        cursor: pointer;
-        transition: 0.5s;
+.welcome-avatar {
+  border-radius: 50%;
+  background-color: #0b579f;
+  height: 60px;
+  width: 60px;
+  padding: 5px;
+  cursor: pointer;
+  transition: 0.5s;
 
-        &:hover {
-            border: 1px solid #0b579f;
-            background-color: white;
-        }
-        &.secondary {
-            background-color: #f47c21;
-            transition: 0.5s;
+  &:hover {
+    border: 1px solid #0b579f;
+    background-color: white;
+  }
+  &.secondary {
+    background-color: #f47c21;
+    transition: 0.5s;
 
             &:hover {
                 border: 1px solid #f47c21;

@@ -99,21 +99,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
-import menuEntries from '~/components/Header/HeaderMenu/menuEntries';
-import subMenuEntriesObservatory from './HeaderMenu/subMenuEntriesObservatory';
-import subMenuEntriesAbout from './HeaderMenu/subMenuEntriesAbout';
+import { ref, watch } from "vue";
+import menuEntries from "~/components/Header/HeaderMenu/menuEntries";
+import subMenuEntriesObservatory from "./HeaderMenu/subMenuEntriesObservatory";
+import subMenuEntriesAbout from "./HeaderMenu/subMenuEntriesAbout";
 
 definePageMeta({
-    auth: {
-        unauthenticatedOnly: true,
-        navigateAuthenticatedTo: '/'
-    }
-})
+  auth: {
+    unauthenticatedOnly: true,
+    navigateAuthenticatedTo: "/",
+  },
+});
 
-
-const { signIn, getProviders, status, data } = useAuth()
-const providers = await getProviders()
+const { signIn, getProviders, status, data } = useAuth();
+const providers = await getProviders();
 const runtimeConfig = useRuntimeConfig();
 const { $viewport } = useNuxtApp()
 let toggleMenu = ref(false);
@@ -132,21 +131,17 @@ watch($viewport.breakpoint as string, (newBreakpoint: string, oldBreakpoint: str
 
 // Functions
 const handleToggleMenu = () => {
-    toggleMenu.value = !toggleMenu.value;
-}
+  toggleMenu.value = !toggleMenu.value;
+};
 
 function handleLogin() {
-    console.log(status)
-    console.log(data)
-    console.log(providers)
-    signIn('keycloak',  { callbackUrl: 'http://localhost:3000/bar' })
+  signIn("keycloak", { callbackUrl: "http://localhost:3000/bar" });
 }
 
 function closeMenu() {
-    toggleMenu.value = false;
+  toggleMenu.value = false;
 }
 </script>
-
 
 <style scoped lang="scss">
 .navbar {
@@ -220,9 +215,9 @@ function closeMenu() {
         background-color: #fcae04;
     }
 
-    .header-links li:not(.active):hover span::before {
-        background-color: #ccc;
-    }
+.header-links li:not(.active):hover span::before {
+  background-color: #ccc;
+}
 
     .child {
         opacity: 0;
