@@ -1,9 +1,9 @@
 <template>
     <div class="w-100 landingkey-features">
         <div class="container">
-            <h2 class="text-h4 mb-15">What does OpenEBench offer?</h2>
+            <h2 class="text-h4 mb-4">What does OpenEBench offer?</h2>
             <div class="row">
-                <div class="col-lg-6 mb-4 mb-lg-0">
+                <div class="col-lg-5 d-none d-lg-block">
                     <div class="welcome-header-image" data-aos="fade-up" data-aos-duration="3000">
                         <NuxtImg src="/images/illustrations/404.svg" alt="welcome-header-image" />
                     </div>

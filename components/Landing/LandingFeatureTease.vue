@@ -3,7 +3,7 @@
         <div class="container">
             <h2 class="text-h4 mb-15">What can you do in OpenEBench?</h2>
             <div class="row landing-feature-tease__container">
-                <div class="col-12 col-md-6 col-lg-3 landing-feature-tease__col" data-aos="fade-up" data-aos-duration="2000">
+                <div class="col-12 col-md-6 col-lg-3 landing-feature-tease__col" data-aos="fade-up" data-aos-duration="1000">
                     <div class="landing-feature-tease__box">
                         <div class="landing-feature-tease__box__image">
                             <div class="landing-feature-tease__box__image__1" title="Scientific Benchmarking"></div>
@@ -19,7 +19,7 @@
                         </NuxtLink>
                     </div>
                 </div>
-                <div class="col-12 col-md-6 col-lg-3 landing-feature-tease__col" data-aos="fade-up" data-aos-duration="3000" data-aos-delay="300">
+                <div class="col-12 col-md-6 col-lg-3 landing-feature-tease__col" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="300">
                     <div class="landing-feature-tease__box">
                         <div class="landing-feature-tease__box__image">
                             <div class="landing-feature-tease__box__image__2" title="Scientific Benchmarking">
@@ -37,7 +37,7 @@
                         </NuxtLink>
                     </div>
                 </div>
-                <div class="col-12 col-md-6 col-lg-3 landing-feature-tease__col" data-aos="fade-up" data-aos-duration="3000" data-aos-delay="400">
+                <div class="col-12 col-md-6 col-lg-3 landing-feature-tease__col" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="400">
                     <div class="landing-feature-tease__box">
                         <div class="landing-feature-tease__box__image">
                             <div class="landing-feature-tease__box__image__3" title="Scientific Benchmarking"></div>
@@ -53,7 +53,7 @@
                         </NuxtLink>
                     </div>
                 </div>
-                <div class="col-12 col-md-6 col-lg-3 landing-feature-tease__col" data-aos="fade-up" data-aos-duration="3000" data-aos-delay="500">
+                <div class="col-12 col-md-6 col-lg-3 landing-feature-tease__col" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="500">
                     <div class="landing-feature-tease__box">
                         <div class="landing-feature-tease__box__image">
                             <div class="landing-feature-tease__box__image__4" title="Scientific Benchmarking"></div>

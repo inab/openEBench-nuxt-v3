@@ -10,9 +10,6 @@
                                 The ELIXIR gateway to benchmarking communities, software monitoring,
                                 and quality metrics for life sciences tools and workflows.
                             </h2>
-                            <div class="d-block d-lg-none welcome-header-image mb-4">
-                                <NuxtImg src="/images/illustrations/chart-person.svg" alt="welcome-header-image" />
-                            </div>
                         </div>
                         <div class="row justify-content-center text-center">
                             <div class="col-md-6 mb-4 mb-md-0 d-flex flex-column align-items-center gap-4">
@@ -41,7 +38,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-5 col-12 d-none d-lg-flex justify-content-center mt-4 mt-lg-0">
+                    <div class="col-lg-5 d-none d-lg-block">
                         <div class="welcome-header-image">
                             <NuxtImg src="/images/illustrations/chart-person.svg" alt="welcome-header-image" />
                         </div>
@@ -103,11 +100,6 @@
         img {
             width: 100%;
             max-height: 350px;
-        }
-    }
-    @media (max-width: 768px) {
-        .welcome-header-image img {
-            max-height: 250px;
         }
     }
     .welcome-header-box {
