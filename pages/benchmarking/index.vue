@@ -15,7 +15,7 @@
             class="border-b border-slate-50 dark:border-gray-700 community-collapse-btn"
             :ui="{ rounded: 'rounded-none' }"
           >
-            <div class="truncate primary">
+            <div class="primary label-btn">
               <h2>{{ item.label }}</h2>
             </div>
             <template #trailing>
@@ -30,14 +30,14 @@
         <template #benchmarking>
           <div class="benchmarking-communities__header">
             <div class="row">
-              <div class="col-6 benchmarking-communities__header__left">
+              <div class="col-md-6 d-none d-lg-block benchmarking-communities__header__left">
                 <img
                   src="~/assets/images/illustrations/lab_community.png"
                   alt="welcome-header-image"
                 />
               </div>
-              <div class="col-6 benchmarking-communities__header__right">
-                <div class="benchmarking-communities__header__right__row">
+              <div class="col-md-6 benchmarking-communities__header__right">
+                <div class="benchmarking-communities__header__right__row ">
                   Unbiased and objective evaluations of bioinformatics resources
                   are challenging to set up and can only be effective when built
                   and implemented around community driven efforts. Thus, in
@@ -142,7 +142,7 @@ if (
       display: flex;
       flex-direction: column;
       &__row {
-        padding-top: 60px;
+        padding-top: 50px;
         padding-bottom: 30px;
         &:last-child {
           padding-top: 0;
@@ -172,6 +172,9 @@ if (
   }
   &__container {
     padding-top: 40px;
+  }
+  .label-btn{
+    white-space: nowrap;
   }
 }
 </style>
