@@ -44,9 +44,8 @@
                                             <font-awesome-icon :icon="['fas', 'chevron-down']" size="sm" />
                                         </a>
                                         <ul class="dropdown-menu shadow-xl" aria-labelledby="observatoryDropdown">
-                                            <li v-for="(item, index) in subMenuEntriesObservatory" :key="index" @click="closeMenu" 
-                                            class="hover:bg-gray-100 text-sm py-2">
-                                                <NuxtLink :to="item.to">
+                                            <li v-for="(item, index) in subMenuEntriesObservatory" :key="index" class="hover:bg-gray-100 text-sm py-2">
+                                                <NuxtLink :to="item.to" class="flex items-center w-full h-full" @click="closeMenu">
                                                 {{ item.title }}
                                                 </NuxtLink>
                                             </li>
