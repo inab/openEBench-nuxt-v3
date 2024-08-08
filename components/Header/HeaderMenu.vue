@@ -65,10 +65,9 @@
                                             <font-awesome-icon :icon="['fas', 'chevron-down']" size="sm" />
                                         </a>
                                         <ul class="dropdown-menu submenu-about shadow-xl md:rounded-b" aria-labelledby="aboutDropdown">
-                                            <li v-for="(item, index) in subMenuEntriesAbout" :key="index" @click="closeMenu" 
-                                            class="hover:bg-gray-100 text-sm py-2">
-                                                <NuxtLink :to="item.to">
-                                                {{ item.title }}
+                                            <li v-for="(item, index) in subMenuEntriesAbout" :key="index" class="hover:bg-gray-100 text-sm py-2">
+                                                <NuxtLink :to="item.to" class="flex items-center w-full h-full" @click="closeMenu">
+                                                    {{ item.title }}
                                                 </NuxtLink>
                                             </li>
                                         </ul>
