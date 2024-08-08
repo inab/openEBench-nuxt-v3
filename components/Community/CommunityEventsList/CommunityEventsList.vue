@@ -5,12 +5,12 @@
     </template>
     <template v-else>
       <div class="community-events-list__header">
-        <h2>Please choose an event:</h2>
+        <h3>Please choose an event:</h3>
         <div class="community-events-list__header__subtitle">
           <p
             class="text-body-2 text--secondary d-flex align-center text-stone-500"
           >
-            <span>
+            <span class="mt-1 me-3">
               <UIcon name="i-heroicons-information-circle" scale="2"></UIcon>
             </span>
             An Event corresponds to a time-bound contest where a tool, pipeline,
