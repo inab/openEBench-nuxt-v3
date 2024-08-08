@@ -10,6 +10,7 @@
         </div>
       </div>
       <div v-else>
+        <p>fvghjvghkjg</p>
         <CommunityInfo
           :community="community"
           :community-references="communityReferences"
@@ -162,11 +163,10 @@ const routeArray: Array = [
   { label: community.value?.acronym + " " + "Events", isActualRoute: true },
 ];
 
-if (event) {
-  routeArray[1].isActualRoute = false;
-  routeArray[1].route = "/benchmarking/" + communityId + "/events";
-  routeArray.push({ label: currentEvent.value?.name, isActualRoute: true });
-}
+routeArray[1].isActualRoute = false;
+routeArray[1].route = "/benchmarking/" + communityId + "/events";
+routeArray.push({ label: currentEvent.value?.name, isActualRoute: true });
+
 </script>
 
 <style lang="scss" scoped>
