@@ -129,7 +129,7 @@ const tabsItems = [
   },
   {
     label: "Datasets",
-    icon: "i-heroicons-folder-open",
+    icon: "i-heroicons-folder-open-16-solid",
     slot: "datasets",
   },
   {
