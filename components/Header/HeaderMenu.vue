@@ -52,6 +52,13 @@
                                             </li>
                                         </ul>
                                     </li>
+                                    <li>
+                                        <NuxtLink to="https://openebench.readthedocs.io/en/latest/introduction/1_overview.html" target="blanck" 
+                                        class="nav-link flex md:inline-flex items-center hover:bg-gray-50 space-x-2" @click="closeMenu">
+                                            <span>Docs</span>
+                                            <font-awesome-icon :icon="['fas', 'arrow-up-right-from-square']" size="xs"/>
+                                        </NuxtLink>
+                                    </li>
                                     <li class="nav-item dropdown">
                                         <a class="nav-link dropdown-toggle flex justify-between md:inline-flex items-center hover:bg-gray-50 space-x-2" href="#" id="aboutDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                             <span>About</span>
