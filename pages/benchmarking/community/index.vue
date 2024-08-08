@@ -10,7 +10,6 @@
         </div>
       </div>
       <div v-else>
-        <p>fvghjvghkjg</p>
         <CommunityInfo
           :community="community"
           :community-references="communityReferences"
@@ -105,7 +104,7 @@ const community: Ref<any> = ref(null);
 const communityId: string = route.params.community;
 const event: string = route.query.event;
 
-if (communityStore.communityId && communityStore.communityId != communityId) {
+if (communityStore.communityId === communityId) {
   community.value = communityStore.getCommunityData;
 } else {
   const { data, pending }: { data: any; pending: boolean } = await useAsyncData(
