@@ -3,7 +3,7 @@
     <template v-if="event && event._id">
       <NuxtLink :to="'/benchmarking/' + communityId + '?event=' + event._id">
         <div class="event-card__box">
-          <div class="event-card__box__header text-primaryOeb-500">
+          <div class="event-card__box__header text-primaryOeb-500 font-medium">
             {{ event.name }}
           </div>
           <div class="event-card__box__content text-zinc-400">
@@ -44,8 +44,8 @@ const props = defineProps<{
       transform: scale(1.05);
     }
     &__content {
-      font-size: 12px;
-      padding-top: 15px;
+      font-size: 14px;
+      padding-top: 25px;
     }
   }
   a {
