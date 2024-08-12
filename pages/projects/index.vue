@@ -10,7 +10,7 @@
             class="border-b border-gray-200 dark:border-gray-700 community-collapse-btn"
             :ui="{ rounded: 'rounded-none' }"
           >
-            <div class="truncate primary">
+            <div class="primary">
               <h2>{{ item.label }}</h2>
             </div>
             <template #trailing>
@@ -25,17 +25,18 @@
         <template #projects>
           <div class="projects__header">
             <div class="row">
-              <div class="col-6">
+              <div class="col-lg-6 d-none d-lg-block">
                 <img
                   src="~/assets/images/illustrations/lab_community.png"
                   alt="welcome-header-image"
+                  class="img-fluid"
                 />
               </div>
-              <div class="col-6 projects__header__right">
+              <div class="col-12 col-lg-6 projects__header__right">
                 <div class="projects__header__right__row">
                   Project spaces enable research communities to collaborate on
                   software in life sciences. They offer extendable spaces to
-                  collaboratively improve methods, tools and web services by
+                  collaboratively improve methods, tools, and web services by
                   comparing their performance on previously agreed datasets and
                   metrics with other similar resources.
                 </div>
@@ -48,25 +49,25 @@
     <div class="projects__container container">
       <div
         v-if="status.pending"
-        class="grid grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-4"
+        class="row g-4"
       >
         <div
           v-for="(c, i) in Array.from({ length: 8 }, (x, i) => i)"
           :key="i"
-          class=""
+          class="col-sm-6 col-md-4 col-lg-3"
         >
           <USkeleton class="h-12 w-12" :ui="{ rounded: 'rounded-full' }" />
           <div class="space-y-2">
-            <USkeleton class="h-4 w-[250px]" />
-            <USkeleton class="h-4 w-[200px]" />
+            <USkeleton class="h-4 w-100" />
+            <USkeleton class="h-4 w-75" />
           </div>
         </div>
       </div>
-      <div v-else class="grid grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-4">
+      <div v-else class="row g-4">
         <div
           v-for="(project, index) in projects"
           :key="index"
-          class="community-card"
+          class="col-sm-6 col-md-4 col-lg-3"
         >
           <CommunityCard
             :id="project._id"
