@@ -12,7 +12,7 @@
           <UButton
             color="primary"
             variant="ghost"
-            class="border-b border-slate-50 dark:border-gray-700 community-collapse-btn"
+            class="border-b border-slate-200 dark:border-gray-700 community-collapse-btn"
             :ui="{ rounded: 'rounded-none' }"
           >
             <div class="primary label-btn">
@@ -64,27 +64,25 @@
     <div class="benchmarking-communities__container container">
       <div
         v-if="status === 'pending'"
-        class="grid grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-4"
+        class="row g-4"
       >
         <div
           v-for="(c, i) in Array.from({ length: 8 }, (x, i) => i)"
           :key="i"
-          class="community-card flex flex-col"
+          class="col-sm-6 col-md-4 col-lg-3"
         >
           <USkeleton class="h-12 w-12" :ui="{ rounded: 'rounded-full' }" />
           <div class="space-y-2">
-            <USkeleton class="h-4 w-[250px]" />
-            <USkeleton class="h-4 w-[200px]" />
+            <USkeleton class="h-4 w-100" />
+            <USkeleton class="h-4 w-75" />
           </div>
         </div>
       </div>
-      <div
-        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-cols-max"
-      >
+      <div class="row g-4">
         <div
           v-for="(community, index) in communities"
           :key="index"
-          class="community-card h-100"
+          class="col-sm-6 col-md-4 col-lg-3"
         >
           <CommunityCard
             :_id="community._id"
@@ -142,7 +140,7 @@ if (
       display: flex;
       flex-direction: column;
       &__row {
-        padding-top: 50px;
+        padding-top: 30px;
         padding-bottom: 30px;
         &:last-child {
           padding-top: 0;
@@ -156,13 +154,15 @@ if (
       justify-content: center;
       align-items: center;
       img {
-        width: 100%;
-        max-width: 450px;
+        margin: auto;
+        width: 90%;
       }
     }
   }
   .community-collapse-btn {
     padding: 0;
+    display: flex;
+    justify-content: space-between;
     &:hover {
       background-color: white;
     }
