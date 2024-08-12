@@ -40,10 +40,12 @@
         <template #acronym>
           <div class="community-info__header__body">
             <div class="row">
-              <div class="col-2 community-info__header__body__left">
+              <!-- Col for Image: Hidden on small screens -->
+              <div class="col-2 d-none d-md-flex community-info__header__body__left">
                 <img :src="community.logo" alt="welcome-header-image" />
               </div>
-              <div class="col-10 community-info__header__body__right">
+              <!-- Col for Text: Full width on small screens, majority width on larger screens -->
+              <div class="col-12 col-md-10 community-info__header__body__right">
                 <div class="w-100 community-info__header__body__right__row">
                   {{ community.description }}
                 </div>
@@ -102,7 +104,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed } from "vue";
 
 const props = defineProps<{
   community: any;
@@ -117,16 +119,6 @@ const HEADER_ITEM = [
     slot: "acronym",
   },
 ];
-
-const communityLogo = computed(() => {
-  return props.community.links.forEach(
-    (link: { comment: string; uri: any }) => {
-      if (link.comment === "@logo") {
-        return link.uri;
-      }
-    },
-  );
-});
 
 const communityLinks = computed(() => {
   if (!props.community.links) return [];
