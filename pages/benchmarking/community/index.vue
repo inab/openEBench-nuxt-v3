@@ -104,7 +104,7 @@ const community: Ref<any> = ref(null);
 const communityId: string = route.params.community;
 const event: string = route.query.event;
 
-if (communityStore.communityId && communityStore.communityId != communityId) {
+if (communityStore.communityId === communityId) {
   community.value = communityStore.getCommunityData;
 } else {
   const { data, pending }: { data: any; pending: boolean } = await useAsyncData(
@@ -162,11 +162,10 @@ const routeArray: Array = [
   { label: community.value?.acronym + " " + "Events", isActualRoute: true },
 ];
 
-if (event) {
-  routeArray[1].isActualRoute = false;
-  routeArray[1].route = "/benchmarking/" + communityId + "/events";
-  routeArray.push({ label: currentEvent.value?.name, isActualRoute: true });
-}
+routeArray[1].isActualRoute = false;
+routeArray[1].route = "/benchmarking/" + communityId + "/events";
+routeArray.push({ label: currentEvent.value?.name, isActualRoute: true });
+
 </script>
 
 <style lang="scss" scoped>

@@ -7,16 +7,16 @@
           <UButton
             color="primary"
             variant="ghost"
-            class="border-b border-gray-200 dark:border-gray-700 community-collapse-btn"
+            class="border-b border-slate-200 dark:border-gray-700 projects-collapse-btn"
             :ui="{ rounded: 'rounded-none' }"
           >
-            <div class="truncate primary">
+            <div class="primary label-btn">
               <h2>{{ item.label }}</h2>
             </div>
             <template #trailing>
               <UIcon
                 name="i-heroicons-chevron-right-20-solid"
-                class="w-5 h-5 ms-auto transform transition-transform duration-200"
+                class="transform transition-transform duration-200"
                 :class="[open && 'rotate-90']"
               />
             </template>
@@ -25,17 +25,18 @@
         <template #projects>
           <div class="projects__header">
             <div class="row">
-              <div class="col-6">
+              <div class="col-md-6 d-none d-lg-block projects__header__left">
                 <img
                   src="~/assets/images/illustrations/lab_community.png"
                   alt="welcome-header-image"
+                  class="img-fluid"
                 />
               </div>
-              <div class="col-6 projects__header__right">
+              <div class="col-md-6 projects__header__right">
                 <div class="projects__header__right__row">
                   Project spaces enable research communities to collaborate on
                   software in life sciences. They offer extendable spaces to
-                  collaboratively improve methods, tools and web services by
+                  collaboratively improve methods, tools, and web services by
                   comparing their performance on previously agreed datasets and
                   metrics with other similar resources.
                 </div>
@@ -48,25 +49,25 @@
     <div class="projects__container container">
       <div
         v-if="status.pending"
-        class="grid grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-4"
+        class="row g-4"
       >
         <div
           v-for="(c, i) in Array.from({ length: 8 }, (x, i) => i)"
           :key="i"
-          class=""
+          class="col-sm-6 col-md-4 col-lg-3"
         >
           <USkeleton class="h-12 w-12" :ui="{ rounded: 'rounded-full' }" />
           <div class="space-y-2">
-            <USkeleton class="h-4 w-[250px]" />
-            <USkeleton class="h-4 w-[200px]" />
+            <USkeleton class="h-4 w-100" />
+            <USkeleton class="h-4 w-75" />
           </div>
         </div>
       </div>
-      <div v-else class="grid grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-4">
+      <div v-else class="row g-4">
         <div
           v-for="(project, index) in projects"
           :key="index"
-          class="community-card"
+          class="col-sm-6 col-md-4 col-lg-3"
         >
           <CommunityCard
             :id="project._id"
@@ -123,24 +124,45 @@ if (
   font-size: 16px;
   &__header {
     &__right {
-      height: 100%;
       display: flex;
-      flex-direction: column;
       align-items: center;
       &__row {
-        padding-top: 60px;
+        padding-top: 50px;
         padding-bottom: 30px;
+        &:last-child {
+          padding-top: 0;
+          padding-bottom: 0;
+          flex: 1;
+        }
       }
     }
+    &__left {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      img {
+        margin: auto;
+        width: 90%;
+      }
+    }
+    
   }
-  .community-collapse-btn {
+  .projects-collapse-btn {
     padding: 0;
+    display: flex;
+    justify-content: space-between;
     &:hover {
-      background-color: rgba(248 250 252);
+      background-color: white;
+    }
+    span {
+      font-size: 30px;
     }
   }
   &__container {
     padding-top: 40px;
+  }
+  .label-btn{
+    white-space: nowrap;
   }
 }
 </style>
