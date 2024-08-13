@@ -18,23 +18,24 @@
           communities.
         </p>
         <!-- Cite Us -->
-        
-          <div >
-            <h3 class="section-title-border text-2xl font-normal mt-4 mb-4">Cite Us</h3>
 
-            <p class="text-sm">
-              If you use resources from OpenEBench in your research, please cite us as
-              follows:
-            </p>
-            <p class="text-sm">
-              OpenEBench: A benchmarking infrastructure for bioinformatics methods,
-              tools, and web services. Part of the ELIXIR Tools platform. Developed by
-              the Barcelona Supercomputing Center (BSC) in collaboration with partners
-              within ELIXIR and beyond. Available at:
-              <a href="https://openebench.bsc.es">https://openebench.bsc.es.</a>
-            </p>
-          </div>
-        
+        <div>
+          <h3 class="section-title-border text-2xl font-normal mt-4">Cite Us</h3>
+          <hr class="mb-4" />
+
+          <p class="text-sm">
+            If you use resources from OpenEBench in your research, please cite us as
+            follows:
+          </p>
+          <p class="text-sm">
+            OpenEBench: A benchmarking infrastructure for bioinformatics methods,
+            tools, and web services. Part of the ELIXIR Tools platform. Developed by
+            the Barcelona Supercomputing Center (BSC) in collaboration with partners
+            within ELIXIR and beyond. Available at:
+            <a href="https://openebench.bsc.es">https://openebench.bsc.es.</a>
+          </p>
+        </div>
+
 
         <br />
 
@@ -105,9 +106,7 @@ const tabsItems: { label: string, icon: string, slot: string }[] = [
 }
 
 .section-title-border {
-  border-bottom: 2px solid #F3F4F6;
-  margin-bottom: 40px;
-  padding-bottom: 15px;
+  padding-bottom: 5px;
   color: #0b579f;
 }
 </style>
