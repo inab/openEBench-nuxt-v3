@@ -21,25 +21,29 @@
                                 <ul class="nav-list-items-ul w-100">
                                     <li>
                                         <NuxtLink to="/benchmarking" class="nav-link flex md:inline-flex items-center hover:bg-gray-50"
+                                        :class="{ active: isActive('/benchmarking') }"
                                         @click="closeMenu">
                                             <span>Benchmarking</span>
                                         </NuxtLink>
                                     </li>
                                     <li>
                                         <NuxtLink to="/projects" class="nav-link flex md:inline-flex items-center hover:bg-gray-50"
+                                        :class="{ active: isActive('/projects') }"
                                         @click="closeMenu">
                                             <span>Projects</span>
                                         </NuxtLink>
                                     </li>
                                     <li>
                                         <NuxtLink to="/tool" class="nav-link flex md:inline-flex items-center hover:bg-gray-50"
+                                        :class="{ active: isActive('/tool') }"
                                         @click="closeMenu">
                                             <span>Tools</span>
                                         </NuxtLink>
                                     </li>
-                                    <!-- Dropdown -->
+                                    <!-- Dropdown para Observatory -->
                                     <li class="nav-item dropdown">
-                                        <a class="nav-link dropdown-toggle flex justify-between md:inline-flex items-center hover:bg-gray-50 space-x-2" href="#" id="observatoryDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <a class="nav-link dropdown-toggle flex justify-between md:inline-flex items-center hover:bg-gray-50 space-x-2" href="#" id="observatoryDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"
+                                           :class="{ active: isActiveObservatory }">
                                             <span>Observatory</span>
                                             <font-awesome-icon :icon="['fas', 'chevron-down']" size="sm" />
                                         </a>
@@ -58,8 +62,10 @@
                                             <font-awesome-icon :icon="['fas', 'arrow-up-right-from-square']" size="xs"/>
                                         </NuxtLink>
                                     </li>
+                                    <!-- Dropdown para About -->
                                     <li class="nav-item dropdown">
-                                        <a class="nav-link dropdown-toggle flex justify-between md:inline-flex items-center hover:bg-gray-50 space-x-2" href="#" id="aboutDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <a class="nav-link dropdown-toggle flex justify-between md:inline-flex items-center hover:bg-gray-50 space-x-2" href="#" id="aboutDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"
+                                           :class="{ active: isActiveAbout }">
                                             <span>About</span>
                                             <font-awesome-icon :icon="['fas', 'chevron-down']" size="sm" />
                                         </a>
@@ -97,7 +103,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { ref, watch, computed } from "vue";
+import { useRoute } from 'vue-router';
 import menuEntries from "~/components/Header/HeaderMenu/menuEntries";
 import subMenuEntriesObservatory from "./HeaderMenu/subMenuEntriesObservatory";
 import subMenuEntriesAbout from "./HeaderMenu/subMenuEntriesAbout";
@@ -112,10 +119,10 @@ definePageMeta({
 const { signIn, getProviders, status, data } = useAuth();
 const providers = await getProviders();
 const runtimeConfig = useRuntimeConfig();
-const { $viewport } = useNuxtApp()
+const { $viewport } = useNuxtApp();
 let toggleMenu = ref(false);
 let isMobile = ref(false);
-
+const route = useRoute();
 
 // Breakpoints
 watch($viewport.breakpoint as string, (newBreakpoint: string, oldBreakpoint: string) => { 
@@ -124,13 +131,25 @@ watch($viewport.breakpoint as string, (newBreakpoint: string, oldBreakpoint: str
     } else {
         isMobile.value = false;
     }
-})
-
+});
 
 // Functions
 const handleToggleMenu = () => {
   toggleMenu.value = !toggleMenu.value;
 };
+
+const isActive = (path: string) => {
+    return route.path === path || route.path.startsWith(path);
+};
+
+const isActiveObservatory = computed(() => {
+    return route.path.startsWith('/observatory');
+});
+
+const isActiveAbout = computed(() => {
+    const aboutPaths = ['/publications', '/collaboration', '/team'];
+    return aboutPaths.includes(route.path);
+});
 
 function handleLogin() {
   signIn("keycloak", { callbackUrl: "http://localhost:3000/bar" });
@@ -140,6 +159,7 @@ function closeMenu() {
   toggleMenu.value = false;
 }
 </script>
+
 
 <style scoped lang="scss">
 .navbar {
@@ -173,6 +193,9 @@ function closeMenu() {
         &:hover {
             color: #0b579f;
         }
+        &.active {
+            color: #0b579f;
+        }
     }
 
     .nav-mobile {
@@ -188,8 +211,9 @@ function closeMenu() {
     nav {
         flex-grow: 1;
         display: flex;
-        justify-content: center;
+        justify-content: start;
         align-items: center;
+        margin-left: 30px;
     }
 
     .nav-list {
@@ -351,7 +375,6 @@ function closeMenu() {
     }
 
     nav ul li a {
-        padding: 15px;
         line-height: 20px;
     }
 
