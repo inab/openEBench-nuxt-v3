@@ -40,7 +40,7 @@
         <br />
 
         <div class="community-tabs md:flex">
-          <UTabs :items="tabsItems" class="w-full" :ui="{ list: { tab: { active: 'text-primaryOeb-500' } } }">
+          <UTabs :items="tabsItems" class="w-full" :ui="{ list: { tab: { active: 'text-primary-500' } } }">
             <template #default="{ item, index, selected }">
               <div class="flex items-center gap-2 relative truncate">
                 <UIcon :name="item.icon" class="w-4 h-4 flex-shrink-0" />
@@ -49,16 +49,16 @@
                   class="absolute -right-4 w-2 h-2 rounded-full bg-primary-500 dark:bg-primary-400" />
               </div>
             </template>
+
             <template #papers>
               <div class="p-4 custom-tab">
-                Here will be the papers
+                Papers content
               </div>
             </template>
+
             <template #posters>
-              <div class="custom-tab">
-                <div class="p-4">
-                  Here will be the posters
-                </div>
+              <div class="p-4 custom-tab">
+                Posters content
               </div>
             </template>
           </UTabs>
@@ -68,30 +68,19 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref } from 'vue'
 import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
-
-const route = useRoute();
-
 
 const routeArray: { label: string, isActualRoute: boolean }[] = [
   { label: "About", isActualRoute: true },
   { label: "Publications", isActualRoute: true },
 ];
-const tabsItems: { label: string, icon: string, slot: string }[] = [
-  {
-    label: "Manuscripts",
-    icon: "i-heroicons-document-duplicate-16-solid",
-    slot: "papers",
-  },
-  {
-    label: "Posters",
-    icon: "i-heroicons-document-chart-bar-16-solid",
-    slot: "posters",
-  },
-];
 
 
+const tabsItems = [
+  { label: 'Papers', icon: 'i-heroicons-document', slot: "papers"},
+  { label: 'Posters', icon: 'i-heroicons-photograph', slot: "posters" },
+]
 </script>
 
 <style lang="scss" scoped>
