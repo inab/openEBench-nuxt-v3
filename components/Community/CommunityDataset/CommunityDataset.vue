@@ -57,7 +57,8 @@
     </UTable>
     <div
       v-if="filteredRows.length > 0"
-      class="flex flex-wrap justify-between items-center pt-2">
+      class="flex flex-wrap justify-between items-center pt-2"
+    >
       <div>
         <span class="text-sm leading-5">
           Showing

@@ -47,10 +47,7 @@
       </UAccordion>
     </div>
     <div class="projects__container container">
-      <div
-        v-if="status.pending"
-        class="row g-4"
-      >
+      <div v-if="status.pending" class="row g-4">
         <div
           v-for="(c, i) in Array.from({ length: 8 }, (x, i) => i)"
           :key="i"
@@ -145,7 +142,6 @@ if (
         width: 90%;
       }
     }
-    
   }
   .projects-collapse-btn {
     padding: 0;
@@ -161,7 +157,7 @@ if (
   &__container {
     padding-top: 40px;
   }
-  .label-btn{
+  .label-btn {
     white-space: nowrap;
   }
 }

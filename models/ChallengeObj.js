@@ -114,9 +114,15 @@ class ChallengeObj {
     return challengeObj;
   }
 
-  getParticipants() {
+  getParticipants(data = null) {
     let participantsArray = {};
-    this.data.getChallenges[0].participant_datasets.forEach((participant) => {
+    let dataObj = {};
+    if (data) {
+      dataObj = data;
+    } else {
+      dataObj = this.data;
+    }
+    dataObj.getChallenges[0].participant_datasets.forEach((participant) => {
       if (
         participant._metadata &&
         participant._metadata[EXCLUDE_PARTICIPANT_KEY]
@@ -154,7 +160,7 @@ class ChallengeObj {
       participant.participant_label = parLabel;
     });
 
-    this.data.getChallenges[0].assessment_datasets.forEach((assessment) => {
+    dataObj.getChallenges[0].assessment_datasets.forEach((assessment) => {
       assessment.depends_on.rel_dataset_ids.forEach((participantRef) => {
         if (participantRef.dataset_id in participantsArray) {
           participantsArray[participantRef.dataset_id].assessments.push(

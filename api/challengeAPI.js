@@ -86,5 +86,28 @@ export async function challengeAPI(challengeID) {
     }),
   });
 }
+export async function getGraphData(dataset) {
+  let response =
+    dataset.datalink.inline_data.visualization.type === "bar-plot" ||
+    dataset.datalink.inline_data.visualization.type === "box-plot"
+      ? await useNuxtApp().$graphql(
+          `/widget/${dataset.datalink.inline_data.visualization.type}/${dataset._id}${
+            dataset.datalink.inline_data.visualization.type === "box-plot"
+              ? "?log2=true"
+              : ""
+          }`,
+          {
+            method: "GET",
+            headers: {
+              Accept: "text/plain, */*",
+            },
+          },
+        )
+      : [];
+  return response;
+}
 
-export default challengeAPI;
+export default {
+  challengeAPI,
+  getGraphData,
+};

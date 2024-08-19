@@ -35,9 +35,20 @@
               {{ item.participant_label }}
             </div>
           </div>
+          <div v-else class="">
+            <div
+              v-for="item in itemsRows"
+              :key="item.id"
+              class="metrics-item bg-stone-100"
+              :class="[item.id == selectedParticipant ? 'selected' : '']"
+              @click="handleChangeSelected(item.id)"
+            >
+              {{ item.participant_label }}
+            </div>
+          </div>
         </div>
 
-        <div class="flex flex-wrap justify-between items-center">
+        <!-- <div class="flex flex-wrap justify-between items-center">
           <div>
             <span class="text-sm leading-5">
               Showing
@@ -54,18 +65,19 @@
             :page-count="pageCount"
             :total="itemsTable.length"
           />
-        </div>
+        </div> -->
 
         <div
           class="chart-image text--secondary mt-6 mx-10"
           align="center"
           color="rgba(0, 0, 0, 0.6)"
         >
-          <NuxtImg src="/empty-state.svg" />
-          <h2>No chart available.</h2>
-          <p class="text-h6">
-            No visual representation implemented yet. Check back soon!
-          </p>
+          <CustomTabs :data="items" :metrics="metrics" />
+
+          <!-- <LoaderChartWidgets
+            :data="preparedData"
+            :type="type"
+          ></LoaderChartWidgets> -->
         </div>
       </div>
       <div v-else class="">
@@ -81,6 +93,10 @@ import ChallengeParticipantMetricsTable from "@/components/Challenges/ChallengeP
 import { challengeAPI } from "@/api/challengeAPI";
 import ChallengeObj from "@/models/ChallengeObj";
 import noDataAvailable from "@/layouts/noDataAvailable.vue";
+import LoaderChartWidgets from "@/components/Widgets/LoaderChartWidgets.vue";
+
+const METRIC_ID_KEY = "level_2:metric_id";
+const PARTICIPANT_ID_KEY = "level_2:participant_id";
 
 const route = useRoute();
 const challengeId = route.params.id;
@@ -90,23 +106,97 @@ const participants: any = ref(null);
 const metrics = ref(null);
 const challenge: any = ref(null);
 
+const preparedData = ref(null);
+const type = ref("bar-plot");
+const isLoadingGraph = ref(true);
+
 const status = { pending: false }; // TODo
 const page = ref(1);
 const pageCount = ref(15);
 
 const selectedParticipant = ref("");
 
+const itemSelected = ref(null);
+
+const items = [];
+const tab = ref(0);
+
 const responseData = await challengeAPI(challengeId);
 
-const challengeObj = new ChallengeObj(challengeId, responseData.data);
-challengeObj.formatData();
-challenge.value = challengeObj.getChallenge();
-participants.value = challengeObj.getParticipants();
-metrics.value = challengeObj.getMetrics();
-datasets.value = challengeObj.getDatasets();
-participants.value = Object.keys(participants.value).map(function (k) {
-  return participants.value[k];
+// const challengeObj = new ChallengeObj(challengeId, responseData.data);
+// challengeObj.formatData();
+// challenge.value = challengeObj.getChallenge();
+// participants.value = challengeObj.getParticipants();
+// metrics.value = challengeObj.getMetrics();
+// datasets.value = challengeObj.getDatasets();
+// participants.value = Object.keys(participants.value).map(function (k) {
+//   return participants.value[k];
+// });
+
+await challengeAPI(challengeId).then((response: any) => {
+  const challengeObj = new ChallengeObj(challengeId, response.data);
+  challengeObj.formatData();
+  challenge.value = challengeObj.getChallenge();
+  metrics.value = challengeObj.getMetrics();
+  datasets.value = challengeObj.getDatasets();
+  participants.value = challengeObj.getParticipants();
+
+  for (const [_key, value]: any of Object.entries(datasets.value)) {
+    const label =
+      value.datalink.inline_data.visualization.type == "box-plot"
+        ? value.datalink.inline_data.visualization.available_metrics[0]
+        : value.datalink.inline_data.visualization.type == "2D-plot"
+          ? value.datalink.inline_data.visualization.x_axis +
+            " + " +
+            value.datalink.inline_data.visualization.y_axis
+          : value.datalink.inline_data.visualization.metric;
+
+    const item: any = {
+      key: value?._id,
+      data: value,
+      label: label,
+    };
+    items.push(item);
+  }
+
+  console.log(items);
+
+  itemSelected.value = items[0];
 });
+
+// if(participants.value[0].assessments) {
+//   let assessment = participants.value[0].assessments;
+//   let dataObj = {}
+//   dataObj = {
+//         _id: challenge.value._id,
+//         name: challenge.value.participant_datasets[0].participant_label,
+//         dates: { "modification": datasets.value[0].dates.modification, "creation": datasets.value[0].dates.creation },
+//         inline_data: {
+//             challenge_participants:[],
+//             visualization:{}
+//         }
+//     }
+//     let participantData = []
+//   assessment.forEach(participant => {
+//       const preparedParticipant = {
+//           id: participant._id,
+//           label: participant._metadata[METRIC_ID_KEY],
+//           value: participant.datalink.inline_data.value,
+//           error: participant.datalink.inline_data.error
+//       };
+//       participantData.push(preparedParticipant);
+//   });
+//   dataObj.inline_data.challenge_participants = participantData;
+
+//     // Process visualization data for RadarPlot
+//     //const visualization = data.visualization;
+//     dataObj.inline_data.visualization = {
+//         type: "radar-plot",
+//         dates: assessment[0].dates,
+//         schema_url: assessment[0].datalink.schema_url,
+//     };
+//     preparedData.value = dataObj;
+// }
 
 const metricsTable: {
   participants: any;
