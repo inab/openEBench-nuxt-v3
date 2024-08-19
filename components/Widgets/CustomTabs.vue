@@ -15,7 +15,7 @@
               }"
               @click="selected = item"
             >
-              {{ item.label }}
+              {{ item.label ? item.label : item.data.name }}
             </button>
           </li>
         </ul>
@@ -43,7 +43,7 @@ const props = defineProps<{
   metrics: any[];
 }>();
 
-const selected = ref(props.data[0]);
+const selected = ref(props.data[0] ? props.data[0] : null);
 </script>
 
 <style lang="scss" scoped>

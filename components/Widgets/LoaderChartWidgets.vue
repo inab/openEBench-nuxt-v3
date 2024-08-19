@@ -1,13 +1,5 @@
 <template>
   <div class="">
-    <!-- <LoaderWidgets
-			v-if="preparedData"
-			:data-chart="preparedData"
-		></LoaderWidgets> -->
-    <!-- <widget-element
-      :data=preparedData
-      :type=type>
-    </widget-element> -->
     <div v-if="isLoadingGraph" class="text-center">
       <div class="spinner-border text-primary" role="status">
         <span class="visually-hidden">Loading...</span>
@@ -19,10 +11,7 @@
   </div>
 </template>
 <script setup lang="ts">
-//import LoaderWidgets from '@inb/oeb-widgets/components/LoaderWidgets.vue';
 import { ref } from "vue";
-//import '@/components/test/oeb-graph/dist/oe-widget-graph.js';
-//import { WidgetElement } from '@inb/oeb-widgets-graphs';
 
 const isLoadingGraph = ref(true);
 onMounted(async () => {
@@ -47,6 +36,7 @@ function getPreparedData() {
   const visualization = props.data.datalink
     ? props.data.datalink.inline_data.visualization
     : props.data.inline_data.visualization;
+
   const graphType = visualization.type;
   let prepared = {
     inline_data: {
@@ -151,15 +141,17 @@ function getPreparedData() {
     };
   } else if (graphType === "radar-plot") {
     // Process challenge_participants data for RadarPlot
-    props.data.inline_data.challenge_participants.forEach((participant) => {
+    for (const [_key, value] of Object.entries(
+      props.data.inline_data.challenge_participants,
+    )) {
       const preparedParticipant = {
-        id: participant._id,
-        label: participant.label,
-        value: participant.value,
-        error: participant.error,
+        id: value._id,
+        label: value.label,
+        value: value.value,
+        error: value.error,
       };
       prepared.inline_data.challenge_participants.push(preparedParticipant);
-    });
+    }
     // Process visualization data for RadarPlot
     const visualization = props.data.inline_data.visualization;
     prepared.inline_data.visualization = {

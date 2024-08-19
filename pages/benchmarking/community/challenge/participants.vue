@@ -26,58 +26,14 @@
             Choose one of the {{ participants.length }} participants whose
             metrics you want to visualize in the radar plot:
           </h2>
-          <div v-if="metricsTable.participants.length > 15" class="">
-            <div class="row row-metrics"></div>
-            <div
-              class="metrics-item bg-stone-100"
-              :class="[item.id == selectedParticipant ? 'selected' : '']"
-            >
-              {{ item.participant_label }}
-            </div>
-          </div>
-          <div v-else class="">
-            <div
-              v-for="item in itemsRows"
-              :key="item.id"
-              class="metrics-item bg-stone-100"
-              :class="[item.id == selectedParticipant ? 'selected' : '']"
-              @click="handleChangeSelected(item.id)"
-            >
-              {{ item.participant_label }}
-            </div>
-          </div>
         </div>
 
-        <!-- <div class="flex flex-wrap justify-between items-center">
-          <div>
-            <span class="text-sm leading-5">
-              Showing
-              <span class="font-medium">{{ pageFrom }}</span>
-              to
-              <span class="font-medium">{{ pageTo }}</span>
-              of
-              <span class="font-medium">{{ pageTotal }}</span>
-              results
-            </span>
-          </div>
-          <UPagination
-            v-model="page"
-            :page-count="pageCount"
-            :total="itemsTable.length"
-          />
-        </div> -->
-
         <div
-          class="chart-image text--secondary mt-6 mx-10"
+          class="chart-image text--secondary"
           align="center"
           color="rgba(0, 0, 0, 0.6)"
         >
           <CustomTabs :data="items" :metrics="metrics" />
-
-          <!-- <LoaderChartWidgets
-            :data="preparedData"
-            :type="type"
-          ></LoaderChartWidgets> -->
         </div>
       </div>
       <div v-else class="">
@@ -93,7 +49,7 @@ import ChallengeParticipantMetricsTable from "@/components/Challenges/ChallengeP
 import { challengeAPI } from "@/api/challengeAPI";
 import ChallengeObj from "@/models/ChallengeObj";
 import noDataAvailable from "@/layouts/noDataAvailable.vue";
-import LoaderChartWidgets from "@/components/Widgets/LoaderChartWidgets.vue";
+import CustomTabs from "@/components/Widgets/CustomTabs.vue";
 
 const METRIC_ID_KEY = "level_2:metric_id";
 const PARTICIPANT_ID_KEY = "level_2:participant_id";
@@ -106,10 +62,6 @@ const participants: any = ref(null);
 const metrics = ref(null);
 const challenge: any = ref(null);
 
-const preparedData = ref(null);
-const type = ref("bar-plot");
-const isLoadingGraph = ref(true);
-
 const status = { pending: false }; // TODo
 const page = ref(1);
 const pageCount = ref(15);
@@ -119,19 +71,17 @@ const selectedParticipant = ref("");
 const itemSelected = ref(null);
 
 const items = [];
-const tab = ref(0);
 
-const responseData = await challengeAPI(challengeId);
-
-// const challengeObj = new ChallengeObj(challengeId, responseData.data);
-// challengeObj.formatData();
-// challenge.value = challengeObj.getChallenge();
-// participants.value = challengeObj.getParticipants();
-// metrics.value = challengeObj.getMetrics();
-// datasets.value = challengeObj.getDatasets();
-// participants.value = Object.keys(participants.value).map(function (k) {
-//   return participants.value[k];
-// });
+let itemObj = {
+  _id: "",
+  name: "",
+  dates: "",
+  dataset_contact_ids: "",
+  inline_data: {
+    challenge_participants: [],
+    visualization: {},
+  },
+};
 
 await challengeAPI(challengeId).then((response: any) => {
   const challengeObj = new ChallengeObj(challengeId, response.data);
@@ -140,63 +90,41 @@ await challengeAPI(challengeId).then((response: any) => {
   metrics.value = challengeObj.getMetrics();
   datasets.value = challengeObj.getDatasets();
   participants.value = challengeObj.getParticipants();
+  participants.value = Object.values(participants.value);
 
-  for (const [_key, value]: any of Object.entries(datasets.value)) {
-    const label =
-      value.datalink.inline_data.visualization.type == "box-plot"
-        ? value.datalink.inline_data.visualization.available_metrics[0]
-        : value.datalink.inline_data.visualization.type == "2D-plot"
-          ? value.datalink.inline_data.visualization.x_axis +
-            " + " +
-            value.datalink.inline_data.visualization.y_axis
-          : value.datalink.inline_data.visualization.metric;
+  const charData = participants.value[0].assessments[0].dates;
 
-    const item: any = {
-      key: value?._id,
-      data: value,
-      label: label,
-    };
-    items.push(item);
+  itemObj = {
+    _id: participants.value[0]._id,
+    name: participants.value[0].participant_label,
+    dates: charData,
+    dataset_contact_ids: "",
+    inline_data: {
+      challenge_participants: [],
+      visualization: {
+        type: "radar-plot",
+        schema_url: participants.value[0].datalink.uri,
+        dates: charData,
+      },
+    },
+  };
+
+  for (const [_key, value]: any of Object.entries(participants.value)) {
+    value.assessments.forEach((assessment: any) => {
+      const item = {
+        key: value._id,
+        value: assessment.datalink.inline_data.value,
+        error: assessment.datalink.inline_data.error,
+        label: assessment._metadata[METRIC_ID_KEY],
+      };
+      itemObj.data.inline_data.challenge_participants.push(item);
+    });
   }
 
-  console.log(items);
+  items.push(itemObj);
 
   itemSelected.value = items[0];
 });
-
-// if(participants.value[0].assessments) {
-//   let assessment = participants.value[0].assessments;
-//   let dataObj = {}
-//   dataObj = {
-//         _id: challenge.value._id,
-//         name: challenge.value.participant_datasets[0].participant_label,
-//         dates: { "modification": datasets.value[0].dates.modification, "creation": datasets.value[0].dates.creation },
-//         inline_data: {
-//             challenge_participants:[],
-//             visualization:{}
-//         }
-//     }
-//     let participantData = []
-//   assessment.forEach(participant => {
-//       const preparedParticipant = {
-//           id: participant._id,
-//           label: participant._metadata[METRIC_ID_KEY],
-//           value: participant.datalink.inline_data.value,
-//           error: participant.datalink.inline_data.error
-//       };
-//       participantData.push(preparedParticipant);
-//   });
-//   dataObj.inline_data.challenge_participants = participantData;
-
-//     // Process visualization data for RadarPlot
-//     //const visualization = data.visualization;
-//     dataObj.inline_data.visualization = {
-//         type: "radar-plot",
-//         dates: assessment[0].dates,
-//         schema_url: assessment[0].datalink.schema_url,
-//     };
-//     preparedData.value = dataObj;
-// }
 
 const metricsTable: {
   participants: any;
@@ -205,35 +133,25 @@ const metricsTable: {
   length: number;
 } = getMetricsTable();
 
-const itemsTable = metricsTable.participants.map(
-  (participant: Object, participantI: number) => {
-    return {
-      id: participant._id,
-      participant_label: participant.participant_label,
-    };
-  },
-);
-const itemsRows = computed(() => {
-  return itemsTable.slice(
-    (page.value - 1) * pageCount.value,
-    page.value * pageCount.value,
+const itemsTable = () => {
+  return metricsTable.participants.map(
+    (participant: Object, participantI: number) => {
+      return {
+        id: participant._id,
+        participant_label: participant.participant_label,
+      };
+    },
   );
-});
+};
 
 if (metricsTable.participants.length > 0) {
   selectedParticipant.value = metricsTable.participants[0]._id;
 }
 
-const pageTotal = computed(() => metricsTable.participants.length);
-const pageFrom = computed(() => (page.value - 1) * pageCount.value + 1);
-const pageTo = computed(() =>
-  Math.min(page.value * pageCount.value, pageTotal.value),
-);
-
 function getMetricsTable() {
   // Gather the metrics
   const metricsIdsDict = {};
-  participants.value.forEach((participant: any) => {
+  for (const [_key, participant] of Object.entries(participants.value)) {
     participant.assessments.forEach((assessment: any) => {
       if (
         typeof assessment.depends_on.metrics_id !== "string" &&
@@ -260,8 +178,9 @@ function getMetricsTable() {
         participant._id
       ] = assessment.datalink.inline_data;
     });
-  });
-  participants.value.forEach((participant: any) => {
+  }
+
+  for (const [_key, participant] of Object.entries(participants.value)) {
     participant.assessments.forEach((assessment: any) => {
       if (
         typeof assessment.depends_on.metrics_id !== "string" &&
@@ -288,14 +207,17 @@ function getMetricsTable() {
         participant._id
       ] = assessment.datalink.inline_data;
     });
-  });
+  }
+
   // And their metadata
   metrics.value.forEach((metric) => {
     if (metric._id in metricsIdsDict) {
       metricsIdsDict[metric._id].metric = metric;
     }
   });
+
   const sortedMetricsIds = Object.keys(metricsIdsDict).sort();
+
   const dataMatrix = participants.value.map((participant: any) => {
     return sortedMetricsIds.map((metricsId: any) => {
       if (
@@ -308,6 +230,7 @@ function getMetricsTable() {
       return metricsIdsDict[metricsId].participants[participant._id];
     });
   });
+
   return {
     participants: participants.value,
     metrics: sortedMetricsIds.map((mI) => metricsIdsDict[mI].metric),
