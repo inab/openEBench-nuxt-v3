@@ -21,11 +21,11 @@
         <div>
           <h3 class="section-title-border text-2xl font-normal mt-4">Cite Us</h3>
           <hr class="mb-4" />
-          <p class="citeus" >
+          <p class="citeus">
             If you use resources from OpenEBench in your research, please cite us as
             follows:
           </p>
-          <p class="citeus" >
+          <p class="citeus">
             OpenEBench: A benchmarking infrastructure for bioinformatics methods,
             tools, and web services. Part of the ELIXIR Tools platform. Developed by
             the Barcelona Supercomputing Center (BSC) in collaboration with partners
@@ -61,24 +61,15 @@
                 </ul>
               </div>
               <div class="content-wrapper border-content">
-                <transition name="slide-fade">
-                  <div v-if="selectedPapersOption === 'core'" class="content-display">
-                    <div v-if="loading" class="loader-container">
-                      <img src="~/assets/images/201805.OpenEBench.logo.Animated.0050secs.gif" alt="Loader GIF" class="loader">
 
-                    </div>
-                    <Manuscript v-else :papers="papers.core" class="manuscripts-container" />
-                  </div>
-                </transition>
-                <transition name="slide-fade">
-                  <div v-if="selectedPapersOption === 'collaborations'" class="content-display">
-                    <div v-if="loading" class="loader-container">
-                      <img src="~/assets/images/201805.OpenEBench.logo.Animated.0050secs.gif" alt="Loader GIF" class="loader">
-
-                    </div>
-                    <Manuscript v-else :papers="papers.collaboration" class="manuscripts-container" />
-                  </div>
-                </transition>
+                <div v-if="selectedPapersOption === 'core'" class="content-display">
+                  <Manuscript :loading="loading" @update-loading="loading = $event" :papers="papers.core"
+                    class="manuscripts-container" />
+                </div>
+                <div v-if="selectedPapersOption === 'collaborations'" class="content-display">
+                  <Manuscript :loading="loading" @update-loading="loading = $event" :papers="papers.collaboration"
+                    class="manuscripts-container" />
+                </div>
               </div>
             </template>
 
@@ -168,8 +159,8 @@ function handleTabSelection(selected: string) {
 // Get the dois of the papers
 const papers = ref<{ core: Paper[]; collaboration: Paper[] }>({
   core: [
-    { doi: '10.1101/181677' },
-    { doi: '10.1101/2022.05.04.490563' },
+  { doi: '10.1101/181677' },
+  { doi: '10.1101/2022.05.04.490563' },
   ],
   collaboration: [
     { doi: '10.1101/2023.07.25.550582' },
@@ -178,61 +169,9 @@ const papers = ref<{ core: Paper[]; collaboration: Paper[] }>({
     { doi: '10.1093/bioinformatics/btx542' },
   ],
 });
-// Fetch paper information from the CrossRef API
-async function fetchPaperInfo(doi: string): Promise<Paper | null> {
-  try {
-    const response = await fetch(`https://api.crossref.org/works/${doi}`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch paper information');
-    }
-    const data = await response.json();
-    if (data && data.message) {
-      const { title, author, published } = data.message;
-      const publicationDate = published && published['date-parts'] && published['date-parts'][0].join('-');
-
-      // Ensure DOI is included in the returned object
-      return {
-        doi, // Ensure DOI is part of the returned object
-        title: title && title[0],
-        authors: author && author.map((a: any) => `${a.given} ${a.family}`).join(', '),
-        publicationDate: publicationDate || 'Unknown',
-      };
-    } else {
-      throw new Error('Invalid response format');
-    }
-  } catch (error) {
-    console.error('Error fetching paper information:', error);
-    return null;
-  }
-}
-
-async function fetchAllPaperDetails() {
-  loading.value = true;
-  try {
-    for (const group in papers.value) {
-      const paperGroup = papers.value[group as keyof typeof papers.value];
-      for (let i = 0; i < paperGroup.length; i++) {
-        const paper = paperGroup[i];
-        const details = await fetchPaperInfo(paper.doi);
-        if (details) {
-          // Keep the original DOI when merging details
-          paperGroup[i] = { ...details, doi: paper.doi };
-        }
-      }
-      // Sort papers by publication date after fetching all details
-      paperGroup.sort(
-        (a, b) => new Date(b.publicationDate || '').getTime() - new Date(a.publicationDate || '').getTime()
-      );
-    }
-  } finally {
-    loading.value = false;
-  }
-}
 
 onMounted(async () => {
   handleTabSelection(selectedTab.value);
-  await fetchAllPaperDetails();
-  loading.value = false;
 });
 
 
@@ -291,54 +230,34 @@ onMounted(async () => {
   text-align: center;
 }
 
-.slide-fade-enter-active,
-.slide-fade-leave-active {
-  transition: opacity 0.5s ease, transform 0.5s ease;
-}
 
-.slide-fade-enter,
-.slide-fade-leave-to {
-  opacity: 0;
-  transform: translateY(10px);
-}
 
 .manuscripts-container,
 .posters-container {
   width: 100%;
 }
 
-.loader-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 200px;
-}
 
 .paper-container {
-	display: flex;
-	flex-wrap: wrap;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .paper {
-	width: 100%;
-	padding: 10px;
-	box-sizing: border-box;
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
 }
 
-.loader {
-	width: 160px;
-	height: 100px;
+.citeus {
+  color: rgba(0, 0, 0, .6);
 }
 
-.citeus{
-  color: rgba(0,0,0,.6);
-}
-
-.citeus a{
+.citeus a {
   color: #0B579F;
 }
 
-.citeus a:hover{
+.citeus a:hover {
   color: #6a98c4;
 }
 </style>

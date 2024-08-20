@@ -1,6 +1,10 @@
 <template>
     <div class="no-border">
-        <div class="paper-container mt-8">
+        <div v-if="loading" class="loader-container">
+            <img src="~/assets/images/201805.OpenEBench.logo.Animated.0050secs.gif" alt="Loader GIF" class="loader">
+
+        </div>
+        <div v-else class="paper-container mt-8">
             <div v-for="(paper, index) in papers" :key="paper.doi" class="paper">
                 <!-- Link -->
                 <h5>
@@ -26,15 +30,16 @@
             </div>
         </div>
 
-        <div v-if="papers.length === 0" class="no-papers mt-5 text-center">
-            <i class="bi bi-file-earmark-excel-fill text-primary text-4xl"></i>
-            <p>No papers available.</p>
+        <div v-if="papers.length === 0" class="no-papers text-center">
+            <NuxtImg src="/images/illustrations/empty-state.svg" alt="working" />
+            <span>There are no papers available.<br />We are working on it!</span>
+
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps } from 'vue';
+import { ref, defineProps, defineEmits } from 'vue';
 
 // Types
 interface Paper {
@@ -47,7 +52,10 @@ interface Paper {
 // Props
 const props = defineProps<{
     papers: Paper[];
+    loading: boolean;
 }>();
+
+const emit = defineEmits(['update-loading']);
 
 // State
 const showAllAuthors = ref<boolean[]>([]);
@@ -76,6 +84,59 @@ function formatDate(dateString: string): string {
     const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
     return new Date(dateString).toLocaleDateString('en-US', options);
 }
+
+// Fetch paper information from the CrossRef API
+async function fetchPaperInfo(doi: string): Promise<Paper | null> {
+    try {
+        const response = await fetch(`https://api.crossref.org/works/${doi}`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch paper information');
+        }
+        const data = await response.json();
+        if (data && data.message) {
+            const { title, author, published } = data.message;
+            const publicationDate = published && published['date-parts'] && published['date-parts'][0].join('-');
+
+            // Ensure DOI is included in the returned object
+            return {
+                doi, // Ensure DOI is part of the returned object
+                title: title && title[0],
+                authors: author && author.map((a: any) => `${a.given} ${a.family}`).join(', '),
+                publicationDate: publicationDate || 'Unknown',
+            };
+        } else {
+            throw new Error('Invalid response format');
+        }
+    } catch (error) {
+        console.error('Error fetching paper information:', error);
+        return null;
+    }
+}
+
+async function fetchAllPaperDetails() {
+    emit('update-loading', true);
+    try {
+        for (let i = 0; i < props.papers.length; i++) {
+            const paper = props.papers[i];
+            const details = await fetchPaperInfo(paper.doi);
+            if (details) {
+                // Keep the original DOI when merging details
+                props.papers[i] = { ...details, doi: paper.doi };
+            }
+        }
+        // Sort papers by publication date after fetching all details
+        props.papers.sort(
+            (a, b) => new Date(b.publicationDate || '').getTime() - new Date(a.publicationDate || '').getTime()
+        );
+    } finally {
+        emit('update-loading', false);
+    }
+}
+
+onMounted(async () => {
+    await fetchAllPaperDetails();
+    emit('update-loading', false);
+});
 
 </script>
 
@@ -119,4 +180,22 @@ h5 a {
 h5 a:hover {
     color: #6a98c4;
 }
+
+.loader-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+}
+
+.loader {
+    width: 160px;
+    height: 100px;
+}
+
+img {
+    height: 300px;
+}
+
+
 </style>
