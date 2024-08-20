@@ -19,7 +19,7 @@
               <!-- Button for mobile to toggle collapse -->
               <h5 class="d-md-none">
                 <button
-                  class="btn btn-link text-white"
+                  class="btn btn-link text-white d-flex align-items-center"
                   type="button"
                   :data-bs-toggle="'collapse'"
                   :data-bs-target="'#collapse-' + index"
@@ -27,16 +27,11 @@
                   :aria-controls="'collapse-' + index"
                   @click="toggleCollapse(index)"
                 >
-                  {{ footer.headline }}
-                  <span class="arrow-icon">
-                    <font-awesome-icon
-                      :icon="
-                        openIndex === index
-                          ? ['fas', 'chevron-up']
-                          : ['fas', 'chevron-down']
-                      "
-                    />
-                  </span>
+                  {{ footer.headline }}<UIcon
+                    name="i-heroicons-chevron-right-20-solid"
+                    class="transform transition-transform duration-200 ms-1"
+                    :class="[openIndex === index && 'rotate-90']"
+                  />
                 </button>
               </h5>
 
@@ -234,10 +229,4 @@ export default {
   visibility: visible;
 }
 
-.arrow-icon {
-  color: white;
-  font-size: 10px;
-  margin-left: 5px;
-  margin-top: 25px;
-}
 </style>
