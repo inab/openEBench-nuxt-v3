@@ -17,21 +17,21 @@
           <UButton
             color="primary"
             variant="ghost"
-            class="border-b border-slate-50 dark:border-gray-700 community-info__header__collapse__btn"
+            class="dark:border-gray-700 community-info__header__collapse__btn"
             :ui="{ rounded: 'rounded-none' }"
           >
-            <div class="truncate primary">
-              <div class="text-left community-info__title">
-                {{ item.label }}
-                <div class="community-info__title__icon">
-                  <UIcon
-                    name="i-heroicons-chevron-right-20-solid"
-                    class="transform transition-transform duration-200"
-                    :class="[open && 'rotate-90']"
-                  />
-                </div>
+            <div class="primary label-btn">
+              <div class="border-b border-slate-200">
+                <h2 class="text-left community-info__title">{{ item.label }}
+                <UIcon
+                  name="i-heroicons-chevron-right-20-solid"
+                  class="transform transition-transform duration-200 mt-2 community-info__title__icon"
+                  :class="[open && 'rotate-90']"
+                />
+                </h2>
               </div>
-              <div class="text-left community-info__subtitle">
+              
+              <div class="text-left community-info__subtitle mt-2">
                 {{ community.name }}
               </div>
             </div>
@@ -135,6 +135,8 @@ const communityLinks = computed(() => {
 <style scoped lang="scss">
 .community-info {
   padding-bottom: 40px;
+  width: 100%;
+
   .community-info__header {
     &__collapse__btn {
       padding: 0;
@@ -178,15 +180,12 @@ const communityLinks = computed(() => {
   }
   .community-info {
     &__title {
-      font-size: 35px;
-      font-weight: 600;
-      padding-bottom: 5px;
-      line-height: 2.5rem;
-      letter-spacing: 0.0073529412em !important;
       display: flex;
+      justify-content: space-between;
+      align-items: center;
       &__icon {
-        margin-left: 10px;
-        margin-top: 5px;
+        font-size: 30px;
+        line-height: 20px;
       }
     }
     &__subtitle {
@@ -195,6 +194,10 @@ const communityLinks = computed(() => {
       padding-bottom: 5px;
       color: black;
     }
+  }
+  .label-btn {
+    white-space: nowrap;
+    width: 100%;
   }
 }
 </style>
