@@ -1,11 +1,14 @@
 <template>
-  <div class="">
+  <div class="loader-chart-widget">
     <div v-if="isLoadingGraph" class="text-center">
       <div class="spinner-border text-primary" role="status">
         <span class="visually-hidden">Loading...</span>
       </div>
     </div>
     <div v-else>
+      <div v-if="schemaUrl" class="schema-url text-primaryOeb-500">
+        {{ data.name }}: <a :href="schemaUrl" target="_blank">Schema URL</a>
+      </div>
       <widget-element :data="preparedData" :type="type"></widget-element>
     </div>
   </div>
@@ -20,22 +23,30 @@ onMounted(async () => {
   });
 });
 
-const data = ref([{ value: 10 }]);
-
 const props = defineProps<{
   data: any;
   metrics: any[];
 }>();
 
+const dataGraph = computed(() => props.data);
 const preparedData: string = ref(null);
 const type: string = ref("");
+
+const schemaUrl = computed(() =>
+  dataGraph.value.inline_data &&
+  dataGraph.value.inline_data.visualization &&
+  dataGraph.value.inline_data.visualization.schema_url
+    ? dataGraph.value.inline_data.visualization.schema_url
+    : null,
+);
 
 getPreparedData();
 
 function getPreparedData() {
-  const visualization = props.data.datalink
-    ? props.data.datalink.inline_data.visualization
-    : props.data.inline_data.visualization;
+  const visualization =
+    typeof dataGraph.value.data !== "undefined"
+      ? dataGraph.value.data.datalink.inline_data.visualization
+      : dataGraph.value.inline_data.visualization;
 
   const graphType = visualization.type;
   let prepared = {
@@ -44,11 +55,12 @@ function getPreparedData() {
       visualization: {},
     },
   };
+
   if (graphType == "radar-plot") {
     prepared = {
-      _id: props.data._id,
-      name: props.data.name,
-      dates: props.data.dates,
+      _id: dataGraph.value._id,
+      name: dataGraph.value.name,
+      dates: dataGraph.value.dates,
       inline_data: {
         challenge_participants: [],
         visualization: {},
@@ -56,9 +68,9 @@ function getPreparedData() {
     };
   } else {
     prepared = {
-      _id: props.data._id,
-      dates: props.data.dates,
-      dataset_contact_ids: props.data.dataset_contact_ids,
+      _id: dataGraph.value.data._id,
+      dates: dataGraph.value.data.dates,
+      dataset_contact_ids: dataGraph.value.data.dataset_contact_ids,
       inline_data: {
         challenge_participants: [],
         visualization: {},
@@ -68,7 +80,7 @@ function getPreparedData() {
 
   if (graphType === "bar-plot") {
     // Process challenge_participants data for BarPlot
-    props.data.datalink.inline_data.challenge_participants.forEach(
+    dataGraph.value.data.datalink.inline_data.challenge_participants.forEach(
       (participant: any) => {
         const preparedParticipant = {
           tool_id: participant.toolname,
@@ -79,14 +91,15 @@ function getPreparedData() {
       },
     );
     // Process visualization data for BarPlot
-    const visualization = props.data.datalink.inline_data.visualization;
+    const visualization =
+      dataGraph.value.data.datalink.inline_data.visualization;
     prepared.inline_data.visualization = {
       metric: visualization.metric,
       type: visualization.type,
     };
   } else if (graphType === "2D-plot") {
     // Process challenge_participants data for ScatterPlot
-    props.data.datalink.inline_data.challenge_participants.forEach(
+    dataGraph.value.data.datalink.inline_data.challenge_participants.forEach(
       (participant: any) => {
         const preparedParticipant = {
           tool_id: participant.tool_id,
@@ -99,7 +112,8 @@ function getPreparedData() {
       },
     );
     // Process visualization data for ScatterPlot
-    const visualization = props.data.datalink.inline_data.visualization;
+    const visualization =
+      dataGraph.value.data.datalink.inline_data.visualization;
     const optimization = visualization.optimization
       ? visualization.optimization
       : null;
@@ -126,7 +140,7 @@ function getPreparedData() {
     };
   } else if (graphType === "box-plot") {
     // Process challenge_participants data for BoxPlot
-    props.data.datalink.inline_data.challenge_participants.forEach(
+    dataGraph.value.data.datalink.inline_data.challenge_participants.forEach(
       (participant) => {
         const part = { ...participant };
         const preparedParticipant = { ...part };
@@ -134,7 +148,7 @@ function getPreparedData() {
       },
     );
     // Process visualization data for BoxPlot
-    const visualization = props.data.datalink.inline_data.visualization;
+    const visualization = dataGraph.value.data.datalink.inline_data.visualization;
     prepared.inline_data.visualization = {
       available_metrics: visualization.available_metrics,
       type: visualization.type,
@@ -142,7 +156,7 @@ function getPreparedData() {
   } else if (graphType === "radar-plot") {
     // Process challenge_participants data for RadarPlot
     for (const [_key, value] of Object.entries(
-      props.data.inline_data.challenge_participants,
+      dataGraph.value.inline_data.challenge_participants,
     )) {
       const preparedParticipant = {
         id: value._id,
@@ -153,7 +167,7 @@ function getPreparedData() {
       prepared.inline_data.challenge_participants.push(preparedParticipant);
     }
     // Process visualization data for RadarPlot
-    const visualization = props.data.inline_data.visualization;
+    const visualization = dataGraph.value.inline_data.visualization;
     prepared.inline_data.visualization = {
       type: visualization.type,
       dates: visualization.dates,
@@ -177,3 +191,22 @@ function getMetricsNames(metricX: string, metricY: string) {
   return metricNames;
 }
 </script>
+
+<style lang="scss" scoped>
+.loader-chart-widget {
+  .schema-url {
+    font-size: 15px;
+    font-weight: 600;
+    padding-top: 30px;
+    padding-left: 8px;
+    text-align: left;
+    a {
+      color: theme("colors.primary.500");
+      text-decoration: none;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+</style>

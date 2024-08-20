@@ -15,7 +15,8 @@
               }"
               @click="selected = item"
             >
-              {{ item.label ? item.label : item.data.name }}
+        
+              {{ item.label ? item.label : item.name }}
             </button>
           </li>
         </ul>
@@ -28,7 +29,7 @@
         :class="[item.key == selected.key ? 'visible' : 'no-visible']"
       >
         <div>
-          <LoaderChartWidgets :data="item.data" :metrics="props.metrics" />
+          <LoaderChartWidgets :data="item" :metrics="props.metrics" />
         </div>
       </div>
     </div>
