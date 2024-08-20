@@ -61,7 +61,7 @@
                   <li class="nav-item dropdown">
                     <a
                       id="observatoryDropdown"
-                      class="nav-link dropdown-toggle flex justify-between md:inline-flex items-center hover:bg-gray-50 space-x-1"
+                      class="nav-link dropdown-toggle md:inline-flex items-center hover:bg-gray-50 space-x-1"
                       href="#"
                       role="button"
                       data-bs-toggle="dropdown"
@@ -112,7 +112,7 @@
                   <li class="nav-item dropdown">
                     <a
                       id="aboutDropdown"
-                      class="nav-link dropdown-toggle flex justify-between md:inline-flex items-center hover:bg-gray-50 space-x-1"
+                      class="nav-link dropdown-toggle md:inline-flex items-center hover:bg-gray-50 space-x-1"
                       href="#"
                       role="button"
                       data-bs-toggle="dropdown"
