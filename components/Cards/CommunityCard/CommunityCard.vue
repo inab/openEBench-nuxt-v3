@@ -53,8 +53,10 @@
         </div>
         <!-- Current Event -->
         <div class="community-card__item__body__footer">
-          <button class="text-primaryOeb-500 hover:bg-primaryOeb-50 rounded p-2">
-            <NuxtLink :to="to" class="text-primaryOeb-500 ">
+          <button
+            class="text-primaryOeb-500 hover:bg-primaryOeb-50 rounded p-2"
+          >
+            <NuxtLink :to="to" class="text-primaryOeb-500">
               Current Event
             </NuxtLink>
           </button>
@@ -62,9 +64,9 @@
           <!-- Dropdown -->
           <div class="dropdown community-card__item__dropdown">
             <button
+              id="dropdownMenuButton"
               class="text-gray-800 rounded-full w-10 h-10 flex items-center justify-center hover:bg-gray-100 text-decoration-none"
               type="button"
-              id="dropdownMenuButton"
               data-bs-toggle="dropdown"
               aria-expanded="false"
             >
@@ -72,9 +74,9 @@
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
               <li v-for="item in itemsCommunityLinks" :key="item.label">
-                <a 
-                  :href="item.uri" 
-                  class="dropdown-item" 
+                <a
+                  :href="item.uri"
+                  class="dropdown-item"
                   target="_blank"
                   @click.stop
                 >
@@ -86,7 +88,6 @@
                 </a>
               </li>
             </ul>
-
           </div>
         </div>
       </div>
@@ -239,7 +240,7 @@ const statusChipColor = computed(() => {
     min-width: 110px;
     margin: 40px !important;
     transform: translateX(-100%) !important;
-    pointer-events: auto; 
+    pointer-events: auto;
   }
   .dropdown-item {
     text-transform: capitalize;

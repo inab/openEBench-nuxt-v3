@@ -30,14 +30,16 @@
         <template #benchmarking>
           <div class="benchmarking-communities__header">
             <div class="row">
-              <div class="col-md-6 d-none d-lg-block benchmarking-communities__header__left">
+              <div
+                class="col-md-6 d-none d-lg-block benchmarking-communities__header__left"
+              >
                 <img
                   src="~/assets/images/illustrations/lab_community.png"
                   alt="welcome-header-image"
                 />
               </div>
               <div class="col-md-6 benchmarking-communities__header__right">
-                <div class="benchmarking-communities__header__right__row ">
+                <div class="benchmarking-communities__header__right__row">
                   Unbiased and objective evaluations of bioinformatics resources
                   are challenging to set up and can only be effective when built
                   and implemented around community driven efforts. Thus, in
@@ -62,10 +64,7 @@
       </UAccordion>
     </div>
     <div class="benchmarking-communities__container container">
-      <div
-        v-if="status === 'pending'"
-        class="row g-4"
-      >
+      <div v-if="status === 'pending'" class="row g-4">
         <div
           v-for="(c, i) in Array.from({ length: 8 }, (x, i) => i)"
           :key="i"
@@ -173,7 +172,7 @@ if (
   &__container {
     padding-top: 40px;
   }
-  .label-btn{
+  .label-btn {
     white-space: nowrap;
   }
 }

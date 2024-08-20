@@ -4,51 +4,51 @@ $colorPrimary: #0b579f;
 $colorSecondary: #f47c21;
 
 .container-padding {
-    padding: 40px 25px;
+  padding: 40px 25px;
 }
 .custom-btn {
-    border-radius: 20px;
-    display: inline-block;
-    position: relative;
+  border-radius: 20px;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+  text-decoration: none;
+  &.primary {
+    background-color: $colorPrimary;
+    color: white;
+  }
+  &.secondary {
+    background-color: $colorSecondary;
+  }
+  &:after {
+    content: "»";
+    position: absolute;
+    opacity: 0;
+    top: 1px;
     transition: 0.5s;
-    text-decoration: none;
-    &.primary {
-        background-color: $colorPrimary;
-        color: white;
-    }
-    &.secondary {
-        background-color: $colorSecondary;
-    }
-    &:after {
-        content: '»';
-        position: absolute;
-        opacity: 0;  
-        top: 1px;
-        transition: 0.5s;
-    }
+  }
 
-    &:hove:after {
-        opacity: 1;
-        right: 40px;
-        font-size: 30px;
+  &:hove:after {
+    opacity: 1;
+    right: 40px;
+    font-size: 30px;
+  }
+  &.btn-empty-filled {
+    background-color: white;
+    color: $colorPrimary;
+    border: 1px solid $colorPrimary;
+    &:hover {
+      background-color: $colorPrimary;
+      color: white;
     }
-    &.btn-empty-filled {
-        background-color: white;
-        color: $colorPrimary;
-        border: 1px solid $colorPrimary;
-        &:hover {
-            background-color: $colorPrimary;
-            color: white;
-        }
-    }
+  }
 }
 
 .app-title {
-    color: #0b579f;
-    font-size: 3rem;
-    font-weight: 600;
+  color: #0b579f;
+  font-size: 3rem;
+  font-weight: 600;
 }
 
 .primary--text {
-    color: #0b579f;
+  color: #0b579f;
 }

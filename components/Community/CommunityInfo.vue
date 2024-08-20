@@ -41,7 +41,9 @@
           <div class="community-info__header__body">
             <div class="row">
               <!-- Col for Image: Hidden on small screens -->
-              <div class="col-2 d-none d-md-flex community-info__header__body__left">
+              <div
+                class="col-2 d-none d-md-flex community-info__header__body__left"
+              >
                 <img :src="community.logo" alt="welcome-header-image" />
               </div>
               <!-- Col for Text: Full width on small screens, majority width on larger screens -->
