@@ -61,7 +61,7 @@
                   <li class="nav-item dropdown">
                     <a
                       id="observatoryDropdown"
-                      class="nav-link dropdown-toggle flex justify-between md:inline-flex items-center hover:bg-gray-50 space-x-2"
+                      class="nav-link dropdown-toggle md:inline-flex items-center hover:bg-gray-50 space-x-1"
                       href="#"
                       role="button"
                       data-bs-toggle="dropdown"
@@ -69,13 +69,14 @@
                       :class="{ active: isActiveObservatory }"
                     >
                       <span>Observatory</span>
-                      <font-awesome-icon
-                        :icon="['fas', 'chevron-down']"
-                        size="sm"
+                      <UIcon
+                        name="i-heroicons-chevron-right-20-solid"
+                        class="transform transition-transform duration-200 text-2xl"
+                        :class="{'rotate-90': dropdownStates.observatory}"
                       />
                     </a>
                     <ul
-                      class="dropdown-menu shadow-xl"
+                      class="dropdown-menu submenu-observatory shadow-xl"
                       aria-labelledby="observatoryDropdown"
                     >
                       <li
@@ -111,7 +112,7 @@
                   <li class="nav-item dropdown">
                     <a
                       id="aboutDropdown"
-                      class="nav-link dropdown-toggle flex justify-between md:inline-flex items-center hover:bg-gray-50 space-x-2"
+                      class="nav-link dropdown-toggle md:inline-flex items-center hover:bg-gray-50 space-x-1"
                       href="#"
                       role="button"
                       data-bs-toggle="dropdown"
@@ -119,9 +120,10 @@
                       :class="{ active: isActiveAbout }"
                     >
                       <span>About</span>
-                      <font-awesome-icon
-                        :icon="['fas', 'chevron-down']"
-                        size="sm"
+                      <UIcon
+                        name="i-heroicons-chevron-right-20-solid"
+                        class="transform transition-transform duration-200 text-2xl"
+                        :class="{'rotate-90': dropdownStates.about}"
                       />
                     </a>
                     <ul
@@ -212,6 +214,10 @@ const { $viewport } = useNuxtApp();
 const toggleMenu = ref(false);
 const isMobile = ref(false);
 const route = useRoute();
+const dropdownStates = ref({
+  about: false,
+  observatory: false,
+});
 
 // Breakpoints
 watch(
@@ -224,6 +230,24 @@ watch(
     }
   },
 );
+
+onMounted(() => {
+  // Configura eventos para cada dropdown
+  setupDropdown('aboutDropdown', 'about');
+  setupDropdown('observatoryDropdown', 'observatory');
+});
+
+function setupDropdown(dropdownId, stateKey) {
+  const dropdownElement = document.getElementById(dropdownId);
+
+  dropdownElement.addEventListener('show.bs.dropdown', () => {
+    dropdownStates.value[stateKey] = true;
+  });
+
+  dropdownElement.addEventListener('hide.bs.dropdown', () => {
+    dropdownStates.value[stateKey] = false;
+  });
+}
 
 // Functions
 const handleToggleMenu = () => {
@@ -397,8 +421,12 @@ function closeMenu() {
     border-radius: 0px 0px 5px 5px;
   }
 
+  .submenu-observatory {
+    min-width: 165px;
+  }
+
   .submenu-about {
-    min-width: 110px;
+    min-width: 112px;
   }
 
   .dropdown-toggle::after {
