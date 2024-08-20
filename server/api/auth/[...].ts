@@ -1,46 +1,38 @@
-import { NuxtAuthHandler } from "#auth";
-import KeycloakProvider from "next-auth/providers/keycloak";
-
+import { NuxtAuthHandler } from '#auth';
+import KeycloakProvider from 'next-auth/providers/keycloak';
 const runtimeConfig = useRuntimeConfig();
 
-function getSignInUrl() {
-  const baseUrl = `${runtimeConfig.public.KEYCLOAK_HOST}/auth/realms/${runtimeConfig.public.KEYCLOAK_REALM}/protocol/openid-connect/auth?`;
-  const urlParams = new URLSearchParams({
-    protocol: "oauth2",
-    response_type: "code",
-    access_type: "",
-    client_id: runtimeConfig.public.KEYCLOAK_CLIENT_ID,
-    redirect_uri: "",
-    scope: "openid",
-    code_challenge_method: "S256",
-    response_mode: "fragment",
-  });
-  return `${baseUrl}${urlParams.toString()}`;
+// Función para generar un valor de estado aleatorio
+function generateRandomState() {
+  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+}
+
+// Función para generar el code_challenge
+async function generateCodeChallenge() {
+  // Aquí deberías implementar la lógica para generar el code_challenge.
+  // Esto puede involucrar el uso de una función hash (como SHA-256) en un code_verifier.
+  return 'TMEQMp8fAEtUtHpQQzEJLVN6baChwwZLDm47NssuYEw'; // Ejemplo
 }
 
 export default NuxtAuthHandler({
-  pages: {
-    signIn: getSignInUrl(),
-  },
   providers: [
     KeycloakProvider.default({
       clientId: runtimeConfig.public.KEYCLOAK_CLIENT_ID,
-      authorization: {
-        url: "https://inb.bsc.es/auth/realms/openebench/protocol/openid-connect/auth?",
-        params: {
-          prompt: "consent",
-          access_type: "offline",
-          response_type: "code",
-        },
-      },
+      issuer: runtimeConfig.public.KEYCLOAK_REALM,
     }),
   ],
-  callbacks: {
-    async signIn({ user, account, profile, email, credentials }) {
-      return true;
-    },
-    async redirect({ url, baseUrl }) {
-      return baseUrl;
-    },
+  pages: {
+    signIn: '/api/auth/custom-signin',  // Personaliza la página de inicio de sesión si lo deseas
+    signOut: '/custom-logout', // Personaliza la página de cierre de sesión si lo deseas
+    error: '/auth/error', // Página personalizada de error
+    verifyRequest: '/auth/verify-request', // Página de solicitud de verificación (para el login con email)
+    newUser: '/auth/new-user' // Página personalizada para nuevos usuarios
   },
+  callbacks: {
+    async redirect({ url, baseUrl }) {
+      // Si se especifica una URL de callback explícita, úsala.
+      // Si no, redirige al home
+      return url.startsWith(baseUrl) ? url : baseUrl;
+    }
+  }
 });

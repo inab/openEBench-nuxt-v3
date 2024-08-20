@@ -198,13 +198,6 @@ import menuEntries from "~/components/Header/HeaderMenu/menuEntries";
 import subMenuEntriesObservatory from "./HeaderMenu/subMenuEntriesObservatory";
 import subMenuEntriesAbout from "./HeaderMenu/subMenuEntriesAbout";
 
-definePageMeta({
-  auth: {
-    unauthenticatedOnly: true,
-    navigateAuthenticatedTo: "/",
-  },
-});
-
 const { signIn, getProviders, status, data } = useAuth();
 const providers = await getProviders();
 const runtimeConfig = useRuntimeConfig();
@@ -244,7 +237,7 @@ const isActiveAbout = computed(() => {
 });
 
 function handleLogin() {
-  signIn("keycloak", { callbackUrl: "http://localhost:3000/bar" });
+  signIn('keycloak', { callbackUrl: 'https://inb.bsc.es/auth' });
 }
 
 function closeMenu() {
