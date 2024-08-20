@@ -2,7 +2,7 @@
   <div class="h-100">
     <NuxtLink
       :to="to"
-      class="community-card__item max-w-sm rounded overflow-hidden text-zinc-700"
+      class="community-card__item max-w-sm rounded overflow-visible text-zinc-700"
     >
       <div class="community-card__item__image">
         <div
@@ -51,29 +51,44 @@
             {{ pluralize("Events", benchmarkingEvents.length) }}
           </div>
         </div>
+        <!-- Current Event -->
         <div class="community-card__item__body__footer">
-          <button class="text-primaryOeb-500">
+          <button
+            class="text-primaryOeb-500 hover:bg-primaryOeb-50 rounded p-2"
+          >
             <NuxtLink :to="to" class="text-primaryOeb-500">
               Current Event
             </NuxtLink>
           </button>
-          <UDropdown
-            :items="itemsCommunityLinks"
-            :popper="{ arrow: true }"
-            :ui="{ item: { disabled: 'cursor-text select-text' } }"
-            class="community-card__item__dropdown"
-          >
-            <font-awesome-icon :icon="['fas', 'ellipsis-vertical']" />
-            <template #item="{ item }">
-              <a :href="item.uri" target="_blank">
-                <span class="">{{ item.label }}</span>
-                <UIcon
-                  :name="item.icon"
-                  class="flex-shrink-0 h-4 w-4 text-gray-400 dark:text-gray-500 ms-auto"
-                />
-              </a>
-            </template>
-          </UDropdown>
+
+          <!-- Dropdown -->
+          <div class="dropdown community-card__item__dropdown">
+            <button
+              id="dropdownMenuButton"
+              class="text-gray-800 rounded-full w-10 h-10 flex items-center justify-center hover:bg-gray-100 text-decoration-none"
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <font-awesome-icon :icon="['fas', 'ellipsis-vertical']" />
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <li v-for="item in itemsCommunityLinks" :key="item.label">
+                <a
+                  :href="item.uri"
+                  class="dropdown-item"
+                  target="_blank"
+                  @click.stop
+                >
+                  <span>{{ item.label }}</span>
+                  <UIcon
+                    name="i-heroicons-arrow-top-right-on-square"
+                    class="flex-shrink-0 h-4 w-4 text-gray-800 dark:text-gray-500 ms-2"
+                  />
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </NuxtLink>
@@ -207,9 +222,6 @@ const statusChipColor = computed(() => {
       display: flex;
       justify-content: space-between;
       align-items: end;
-      button {
-        padding: 0px;
-      }
       a {
         text-decoration: none;
         text-transform: uppercase;
@@ -217,10 +229,23 @@ const statusChipColor = computed(() => {
       }
     }
   }
-  &__dropdown {
-    a {
-      text-decoration: none;
-    }
+}
+.community-card__item__dropdown {
+  position: relative;
+  .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1050;
+    min-width: 110px;
+    margin: 40px !important;
+    transform: translateX(-100%) !important;
+    pointer-events: auto;
+  }
+  .dropdown-item {
+    text-transform: capitalize;
+    display: flex !important;
+    align-items: center !important;
   }
 }
 </style>

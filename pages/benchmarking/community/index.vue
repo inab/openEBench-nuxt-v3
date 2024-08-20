@@ -165,7 +165,6 @@ const routeArray: Array = [
 routeArray[1].isActualRoute = false;
 routeArray[1].route = "/benchmarking/" + communityId + "/events";
 routeArray.push({ label: currentEvent.value?.name, isActualRoute: true });
-
 </script>
 
 <style lang="scss" scoped>

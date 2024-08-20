@@ -78,7 +78,8 @@
               color: 'text-white',
             },
           },
-        }" />
+        }"
+      />
     </div>
   </div>
 </template>

@@ -23,39 +23,8 @@
         <h2 class="benchmarking-challenge__body__content__title text-h6 mt-8">
           Choose the metrics you want to visualize in the diagram:
         </h2>
-        <div class="benchmarking-challenge__body__content__chips">
-          <CustomChip
-            v-for="(item, index) in datasets"
-            :key="item._id"
-            :selected="index == tab"
-          >
-            <span
-              v-if="item.datalink.inline_data.visualization.type == 'box-plot'"
-            >
-              {{ item.datalink.inline_data.visualization.available_metrics[0] }}
-            </span>
-            <span v-else>
-              {{
-                item.datalink.inline_data.visualization.type == "2D-plot"
-                  ? item.datalink.inline_data.visualization.x_axis +
-                    " + " +
-                    item.datalink.inline_data.visualization.y_axis
-                  : item.datalink.inline_data.visualization.metric
-              }}
-            </span>
-          </CustomChip>
-        </div>
         <div class="benchmarking-challenge__body__content__graphs">
-          <div
-            v-for="(item, index) in datasets"
-            :key="item._id"
-            class="benchmarking-challenge__body__content__graphs__items"
-          >
-            <LoaderChartWidgets
-              :data="item"
-              :metrics="metrics"
-            ></LoaderChartWidgets>
-          </div>
+          <CustomTabs :data="items" :metrics="metrics" />
         </div>
       </div>
     </div>
@@ -64,30 +33,59 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { challengeAPI } from "@/api/challengeAPI";
+import { challengeAPI, getGraphData } from "@/api/challengeAPI";
 import ChallengeObj from "@/models/ChallengeObj";
 import ChartDescriptionCard from "@/components/Cards/ChartDescriptionCard.vue";
-import CustomChip from "@/components/Common/CustomChip.vue";
-import LoaderChartWidgets from "@/components/Widgets/LoaderChartWidgets.vue";
+import CustomTabs from "@/components/Widgets/CustomTabs.vue";
 
 const route = useRoute();
 const challengeId = route.params.challenge;
 
 const datasets = ref(Array);
-const participants: any = ref(null);
+const participants = ref(Array);
 const metrics = ref(null);
 const challenge: any = ref(null);
-
-const responseData = await challengeAPI(challengeId);
-
-const challengeObj = new ChallengeObj(challengeId, responseData.data);
-challengeObj.formatData();
-challenge.value = challengeObj.getChallenge();
-participants.value = challengeObj.getParticipants();
-metrics.value = challengeObj.getMetrics();
-datasets.value = challengeObj.getDatasets();
-
 const tab = ref(0);
+
+const itemSelected = ref(null);
+const items = ref([]);
+
+await challengeAPI(challengeId).then(async (response: any) => {
+  const challengeObj = new ChallengeObj(challengeId, response.data);
+  challengeObj.formatData();
+  challenge.value = challengeObj.getChallenge();
+  metrics.value = challengeObj.getMetrics();
+  datasets.value = challengeObj.getDatasets();
+  participants.value = challengeObj.getParticipants();
+
+  for (const [_key, value] of Object.entries(datasets.value)) {
+    const graphData = await getGraphData(value).then((response: any) => {
+      return response;
+    });
+    if (graphData && graphData.length > 0) {
+      value.datalink.inline_data.challenge_participants = graphData;
+    }
+    const label =
+      (value as any).datalink.inline_data.visualization.type == "box-plot"
+        ? (value as any).datalink.inline_data.visualization.available_metrics[0]
+        : (value as any).datalink.inline_data.visualization.type == "2D-plot"
+          ? (value as any).datalink.inline_data.visualization.x_axis +
+            " + " +
+            (value as any).datalink.inline_data.visualization.y_axis
+          : (value as any).datalink.inline_data.visualization.metric;
+
+    const newData = value;
+
+    const item: any = {
+      key: value?._id,
+      data: newData,
+      label: label,
+    };
+    items.value.push(item);
+  }
+
+  itemSelected.value = items.value[0];
+});
 </script>
 
 <style scoped lang="scss">

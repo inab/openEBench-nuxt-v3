@@ -7,16 +7,16 @@
           <UButton
             color="primary"
             variant="ghost"
-            class="border-b border-gray-200 dark:border-gray-700 community-collapse-btn"
+            class="border-b border-slate-200 dark:border-gray-700 projects-collapse-btn"
             :ui="{ rounded: 'rounded-none' }"
           >
-            <div class="primary">
+            <div class="primary label-btn">
               <h2>{{ item.label }}</h2>
             </div>
             <template #trailing>
               <UIcon
                 name="i-heroicons-chevron-right-20-solid"
-                class="w-5 h-5 ms-auto transform transition-transform duration-200"
+                class="transform transition-transform duration-200"
                 :class="[open && 'rotate-90']"
               />
             </template>
@@ -25,14 +25,14 @@
         <template #projects>
           <div class="projects__header">
             <div class="row">
-              <div class="col-lg-6 d-none d-lg-block">
+              <div class="col-md-6 d-none d-lg-block projects__header__left">
                 <img
                   src="~/assets/images/illustrations/lab_community.png"
                   alt="welcome-header-image"
                   class="img-fluid"
                 />
               </div>
-              <div class="col-12 col-lg-6 projects__header__right">
+              <div class="col-md-6 projects__header__right">
                 <div class="projects__header__right__row">
                   Project spaces enable research communities to collaborate on
                   software in life sciences. They offer extendable spaces to
@@ -47,10 +47,7 @@
       </UAccordion>
     </div>
     <div class="projects__container container">
-      <div
-        v-if="status.pending"
-        class="row g-4"
-      >
+      <div v-if="status.pending" class="row g-4">
         <div
           v-for="(c, i) in Array.from({ length: 8 }, (x, i) => i)"
           :key="i"
@@ -124,24 +121,44 @@ if (
   font-size: 16px;
   &__header {
     &__right {
-      height: 100%;
       display: flex;
-      flex-direction: column;
       align-items: center;
       &__row {
-        padding-top: 60px;
+        padding-top: 50px;
         padding-bottom: 30px;
+        &:last-child {
+          padding-top: 0;
+          padding-bottom: 0;
+          flex: 1;
+        }
+      }
+    }
+    &__left {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      img {
+        margin: auto;
+        width: 90%;
       }
     }
   }
-  .community-collapse-btn {
+  .projects-collapse-btn {
     padding: 0;
+    display: flex;
+    justify-content: space-between;
     &:hover {
-      background-color: rgba(248 250 252);
+      background-color: white;
+    }
+    span {
+      font-size: 30px;
     }
   }
   &__container {
     padding-top: 40px;
+  }
+  .label-btn {
+    white-space: nowrap;
   }
 }
 </style>
