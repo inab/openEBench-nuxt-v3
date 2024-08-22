@@ -166,7 +166,11 @@ export const useCommunity = defineStore("community", {
     },
 
     setCurrentEvent(event) {
-      this.currentEvent = event;
+      if (!event && this.getEvents.length > 0) {
+        this.currentEvent = this.getEvents[0];
+      } else {
+        this.currentEvent = event;
+      }
     },
 
     // Format community data
