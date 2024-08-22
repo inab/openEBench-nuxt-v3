@@ -2,6 +2,7 @@
   <div class="event-card">
     <template v-if="event && event._id">
       <NuxtLink :to="'/benchmarking/' + communityId + '?event=' + event._id">
+        <!-- un div con un onclick y setear el currentevent,  -->
         <div class="event-card__box">
           <div class="event-card__box__header text-primaryOeb-500 font-medium">
             {{ event.name }}
@@ -25,6 +26,8 @@ const props = defineProps<{
   event?: Object;
   communityId: string;
 }>();
+
+
 </script>
 
 <style scoped lang="scss">

@@ -165,6 +165,22 @@ const routeArray: Array = [
 routeArray[1].isActualRoute = false;
 routeArray[1].route = "/benchmarking/" + communityId + "/events";
 routeArray.push({ label: currentEvent.value?.name, isActualRoute: true });
+
+watch(
+  () => route.query.event,
+  async (newEventId) => {
+    if (newEventId) {
+      const newEvent = eventsObj.find(event => event._id === newEventId);
+      if (newEvent) {
+        communityStore.setCurrentEvent(newEvent);
+      } else {
+        await communityStore.requestCommunityData(communityId, newEventId);
+      }
+    }
+  },
+  { immediate: true }
+);
+
 </script>
 
 <style lang="scss" scoped>
