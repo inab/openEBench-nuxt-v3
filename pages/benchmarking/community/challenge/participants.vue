@@ -1,18 +1,21 @@
 <template>
   <div class="benchmarking-participant">
+    <BreadcrumbsBar :breadcrumbs-array="routeArray" />
     <div class="container">
+      <div class="benchmarking-participant__title text-primaryOeb-500">
+        {{ challenge.acronym }} ( {{ challenge._id }})
+      </div>
+      <div class="benchmarking-challenge__subtitle">
+        {{ challenge.name }}
+      </div>
       <div
         v-if="status.pending"
         class="benchmarking-participant__skeleton"
       ></div>
-      <div v-else class="benchmarking-participant__content">
-        <h1 class="">{{ challenge.challenge_label }} ({{ challenge._id }})</h1>
-        <h2 class="">{{ challenge.name }}</h2>
-        <p class="text--secondary">
-          List of tools participating in the challenge, together with a summary
-          of the metrics obtained.
-        </p>
-      </div>
+      <p class="text--secondary">
+        List of tools participating in the challenge, together with a summary of
+        the metrics obtained.
+      </p>
       <div v-if="participants?.length > 0" class="">
         <div v-if="status.pending" class=""></div>
         <div v-else class="">
@@ -27,17 +30,16 @@
             metrics you want to visualize in the radar plot:
           </h2>
         </div>
-
-        <div
-          class="chart-image text--secondary"
-          align="center"
-          color="rgba(0, 0, 0, 0.6)"
-        >
-          <CustomTabs :data="items" :metrics="metrics" />
-        </div>
       </div>
       <div v-else class="">
         <noDataAvailable item="participants and metrics" />
+      </div>
+      <div
+        class="chart-image text--secondary"
+        align="center"
+        color="rgba(0, 0, 0, 0.6)"
+      >
+        <CustomTabs :data="itemsObjList" :metrics="metrics" />
       </div>
     </div>
   </div>
@@ -50,11 +52,12 @@ import { challengeAPI } from "@/api/challengeAPI";
 import ChallengeObj from "@/models/ChallengeObj";
 import noDataAvailable from "@/layouts/noDataAvailable.vue";
 import CustomTabs from "@/components/Widgets/CustomTabs.vue";
+import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
 
 const METRIC_ID_KEY = "level_2:metric_id";
-const PARTICIPANT_ID_KEY = "level_2:participant_id";
 
 const route = useRoute();
+const communityId: string = route.params.community;
 const challengeId = route.params.id;
 
 const datasets = ref(Array);
@@ -73,15 +76,19 @@ const itemSelected = ref(null);
 const items = [];
 
 let itemObj = {
-  _id: "",
-  name: "",
-  dates: "",
-  dataset_contact_ids: "",
-  inline_data: {
-    challenge_participants: [],
-    visualization: {},
+  data: {
+    _id: "",
+    name: "",
+    dates: "",
+    dataset_contact_ids: "",
+    inline_data: {
+      challenge_participants: [],
+      visualization: {},
+    },
   },
 };
+
+const itemsObjList = [];
 
 await challengeAPI(challengeId).then((response: any) => {
   const challengeObj = new ChallengeObj(challengeId, response.data);
@@ -92,38 +99,39 @@ await challengeAPI(challengeId).then((response: any) => {
   participants.value = challengeObj.getParticipants();
   participants.value = Object.values(participants.value);
 
-  const charData = participants.value[0].assessments[0].dates;
+  if (participants.value.length > 0) {
+    const charData = participants.value[0].assessments[0].dates;
 
-  itemObj = {
-    _id: participants.value[0]._id,
-    name: participants.value[0].participant_label,
-    dates: charData,
-    dataset_contact_ids: "",
-    inline_data: {
-      challenge_participants: [],
-      visualization: {
-        type: "radar-plot",
-        schema_url: participants.value[0].datalink.uri,
-        dates: charData,
-      },
-    },
-  };
-
-  for (const [_key, value]: any of Object.entries(participants.value)) {
-    value.assessments.forEach((assessment: any) => {
-      const item = {
+    for (const [_key, value]: any of Object.entries(participants.value)) {
+      itemObj = {
+        _id: value._id,
         key: value._id,
-        value: assessment.datalink.inline_data.value,
-        error: assessment.datalink.inline_data.error,
-        label: assessment._metadata[METRIC_ID_KEY],
+        name: value.participant_label,
+        dates: charData,
+        dataset_contact_ids: "",
+        inline_data: {
+          challenge_participants: [],
+          visualization: {
+            type: "radar-plot",
+            schema_url: value.datalink.uri,
+            dates: charData,
+          },
+        },
       };
-      itemObj.data.inline_data.challenge_participants.push(item);
-    });
+      value.assessments.forEach((assessment: any) => {
+        const item = {
+          key: value._id,
+          value: assessment.datalink.inline_data.value,
+          error: assessment.datalink.inline_data.error,
+          label: assessment._metadata ? assessment._metadata[METRIC_ID_KEY] : '',
+        };
+        itemObj.inline_data.challenge_participants.push(item);
+      });
+      itemsObjList.push(itemObj);
+    }
+
+    itemSelected.value = itemsObjList[0];
   }
-
-  items.push(itemObj);
-
-  itemSelected.value = items[0];
 });
 
 const metricsTable: {
@@ -238,9 +246,22 @@ function getMetricsTable() {
   };
 }
 
-function handleChangeSelected(id: string) {
-  selectedParticipant.value = id;
-}
+const routeArray: Array = [
+  {
+    label: "Benchmarking Communities",
+    isActualRoute: false,
+    route: "/benchmarking",
+  },
+  {
+    label: challenge.value.acronym,
+    route: "/benchmarking/" + communityId,
+    isActualRoute: false,
+  },
+  {
+    label: "Participant ",
+    isActualRoute: true,
+  },
+];
 </script>
 
 <style scoped lang="scss">
@@ -258,5 +279,20 @@ function handleChangeSelected(id: string) {
 }
 .chart-image img {
   max-height: 300px;
+}
+.benchmarking-participant {
+  &__title {
+    font-size: 35px;
+    font-weight: 600;
+    padding-bottom: 5px;
+    line-height: 2.5rem;
+    letter-spacing: 0.0073529412em !important;
+  }
+  &__subtitle {
+    font-size: 18px;
+    font-weight: 400;
+    padding-bottom: 5px;
+    color: black;
+  }
 }
 </style>
