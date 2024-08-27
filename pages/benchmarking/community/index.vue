@@ -118,7 +118,19 @@ const datasetsObj = communityStore.getDatasets;
 const toolsObj = communityStore.getTools;
 const eventsObj: [] = communityStore.getEvents;
 const communityReferences = communityStore.getCommunityReferences;
-const currentEvent = computed(() => communityStore.getCurrentEvent);
+
+const currentEvent = computed(() => {
+  const selectedEvent = communityStore.getCurrentEvent;
+
+  // If no event is selected, select the first available event.
+  if (!selectedEvent && eventsObj.length > 0) {
+    const firstEvent = eventsObj[0];
+    communityStore.setCurrentEvent(firstEvent);
+    return firstEvent;
+  }
+  return selectedEvent;
+});
+
 const eventData = computed(() => communityStore.getCommunityData);
 
 const tabsItems = [
@@ -165,6 +177,26 @@ const routeArray: Array = [
 routeArray[1].isActualRoute = false;
 routeArray[1].route = "/benchmarking/" + communityId + "/events";
 routeArray.push({ label: currentEvent.value?.name, isActualRoute: true });
+
+watch(
+  () => route.query.event,
+  async (newEventId) => {
+    if (newEventId) {
+      const newEvent = eventsObj.find(event => event._id === newEventId);
+      if (newEvent) {
+        communityStore.setCurrentEvent(newEvent);
+      } else {
+        // If the event is not found in the current list, makes a request to get the event data.
+        await communityStore.requestCommunityData(communityId, newEventId);
+      }
+    } else {
+      // If no event is selected, make sure `currentEvent` is null.
+      communityStore.setCurrentEvent(null);
+    }
+  },
+  { immediate: true }
+);
+
 </script>
 
 <style lang="scss" scoped>
