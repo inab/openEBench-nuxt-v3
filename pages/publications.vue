@@ -88,12 +88,12 @@
               <div class="content-wrapper border-content">
                 <transition name="slide-fade">
                   <div v-if="selectedPostersOption === 'about'" class="content-display">
-                    About OEB content
+                    <PosterCard :loading="loading" :posters="posters.OEB"/>
                   </div>
                 </transition>
                 <transition name="slide-fade">
                   <div v-if="selectedPostersOption === 'mentions'" class="content-display">
-                    Mentions content
+                    <PosterCard :loading="loading" :posters="posters.MENTION"/>
                   </div>
                 </transition>
               </div>
@@ -108,6 +108,8 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import Manuscript from '@/components/Cards/ManuscriptCard.vue'
+import PosterCard from '@/components/Cards/PosterCard.vue';
+import PostersData from '@/static/posters/posters.json';
 import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
 
 interface Paper {
@@ -116,8 +118,26 @@ interface Paper {
   authors?: string;
   publicationDate?: string;
 }
-// Loading conts
+
+interface Poster {
+  title: string;
+  date: string;
+  authors: string[];
+  presented_loc: string;
+  link: string;
+  citation: string;
+  poster: string;
+  abstract: string;
+}
+
+interface PostersData {
+  OEB: Poster[];
+  MENTION: Poster[];
+}
+
 const loading = ref<boolean>(true);
+
+const posters = ref<PostersData>(PostersData);
 
 // Route definitions
 const routeArray: { label: string, isActualRoute: boolean }[] = [
@@ -159,8 +179,8 @@ function handleTabSelection(selected: string) {
 // Get the dois of the papers
 const papers = ref<{ core: Paper[]; collaboration: Paper[] }>({
   core: [
-  { doi: '10.1101/181677' },
-  { doi: '10.1101/2022.05.04.490563' },
+    { doi: '10.1101/181677' },
+    { doi: '10.1101/2022.05.04.490563' },
   ],
   collaboration: [
     { doi: '10.1101/2023.07.25.550582' },
@@ -170,7 +190,10 @@ const papers = ref<{ core: Paper[]; collaboration: Paper[] }>({
   ],
 });
 
+
+
 onMounted(async () => {
+  // Handle tab selection
   handleTabSelection(selectedTab.value);
 });
 
