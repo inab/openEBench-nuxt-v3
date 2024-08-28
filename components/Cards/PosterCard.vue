@@ -3,6 +3,7 @@
     <!-- Loader -->
     <div v-if="loading" class="loader-container">
       <img src="~/assets/images/201805.OpenEBench.logo.Animated.0050secs.gif" alt="Loader GIF" class="loader">
+
     </div>
 
     <!-- No Posters Available -->
@@ -12,7 +13,7 @@
     </div>
 
     <!-- Posters Section -->
-    <div v-if="!loading && paginatedPosters.length > 0" class="card border-0 ">
+    <div v-if="!loading && paginatedPosters.length > 0" class="card border-0">
       <div v-if="selectedPoster" class="mt-2">
         <div class="back-button-container">
           <button class="back-button" @click="selectedPoster = null">Back to posters</button>
@@ -20,13 +21,11 @@
 
         <div class="selected-poster-details">
           <embed :src="getPosterPath(selectedPoster.poster)" type="application/pdf" class="poster-embed" />
-          <h3 class="poster-title mt-4  ">
+          <h3 class="poster-title mt-4">
             <a :href="selectedPoster.link" target="_blank" class="poster-link">
               {{ selectedPoster.title }}
               <font-awesome-icon :icon="['fas', 'arrow-up-right-from-square']" size="xs" class="mx-2" />
-
             </a>
-
           </h3>
           <br />
           <p v-if="selectedPoster.authors && selectedPoster.authors.length > 0">
@@ -36,19 +35,16 @@
               <span v-if="index < selectedPoster.authors.length - 1">, </span>
             </span>
           </p>
-          <p>
-            Published in {{ formatDate(selectedPoster.date) }} {{ selectedPoster.publication_loc }}
-          </p>
+          <p>Published in {{ formatDate(selectedPoster.date) }} {{ selectedPoster.publication_loc }}</p>
           <p>
             <b>Abstract:</b><br />
             <span v-html="sanitizeHtml(getFormattedAbstract(selectedPoster.abstract, showFullAbstract))"></span>
             <span v-if="shouldShowExpandIcon(selectedPoster.abstract)" class="cursor-pointer text-primary ml-2"
               @click="toggleShowFullAbstract">
-              <UIcon :name="showFullAbstract ? 'i-heroicons-minus-16-solid' : 'i-heroicons-plus-16-solid'" c />
-
+              <UIcon :name="showFullAbstract ? 'i-heroicons-minus-16-solid' : 'i-heroicons-plus-16-solid'" />
             </span>
           </p>
-          <p><b>How to cite this poster:</b> <br />{{ selectedPoster.citation }}</p>
+          <p><b>How to cite this poster:</b><br />{{ selectedPoster.citation }}</p>
           <p>Presented at {{ selectedPoster.presented_loc }}</p>
         </div>
       </div>
@@ -114,27 +110,30 @@ interface Poster {
 // Define props with a proper type for posters
 const props = defineProps<{
   posters: Poster[];
-  loading: boolean;
 }>();
 
-const loading = ref(true);
 const selectedPoster = ref<Poster | null>(null);
 const localPosters = ref<Poster[]>([]);
 const showFullAbstract = ref(false);
 const currentPage = ref(1);
 const postersPerPage = ref(10);
+const loading = ref(true);
 
 const basePath = '/posters/';
 
+
+
 onMounted(async () => {
-  localPosters.value = props.posters;
-  await posterDetails();
+  // Simulate loading delay
+  loading.value = true;
   await new Promise((resolve) => setTimeout(resolve, 2000));
+  // Load data
+  localPosters.value = props.posters;
   loading.value = false;
+
 });
 
 const sortedPosters = computed(() => {
-  console.log(localPosters.value.length);
   return [...localPosters.value].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 });
 
@@ -180,26 +179,6 @@ function toggleShowFullAbstract() {
 
 function sanitizeHtml(htmlContent: string) {
   return DOMPurify.sanitize(htmlContent);
-}
-
-async function posterDetails() {
-  for (const poster of localPosters.value) {
-    const metadataPath = `/posters/${poster.poster.replace('.pdf', '.json')}`; // Assuming metadata is in .json file
-
-    try {
-      const response = await fetch(metadataPath);
-      if (!response.ok) continue;
-
-      const jsonData = await response.json();
-      poster.abstract = jsonData.abstract;
-      poster.publication_loc = jsonData.publication_loc ?? '';
-      poster.link = jsonData.link ?? '';
-      poster.presented_loc = jsonData.presented_loc ?? '';
-      poster.publicationDate = jsonData.publicationDate ?? '';
-    } catch (error) {
-      console.error(`Error loading JSON for poster ${metadataPath}:`, error);
-    }
-  }
 }
 
 function formatDate(dateString: string): string {

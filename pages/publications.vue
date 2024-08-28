@@ -63,11 +63,11 @@
               <div class="content-wrapper border-content">
 
                 <div v-if="selectedPapersOption === 'core'" class="content-display">
-                  <Manuscript :loading="loading" @update-loading="loading = $event" :papers="papers.core"
+                  <Manuscript  :papers="papers.core"
                     class="manuscripts-container" />
                 </div>
                 <div v-if="selectedPapersOption === 'collaborations'" class="content-display">
-                  <Manuscript :loading="loading" @update-loading="loading = $event" :papers="papers.collaboration"
+                  <Manuscript  :papers="papers.collaboration"
                     class="manuscripts-container" />
                 </div>
               </div>
@@ -88,12 +88,12 @@
               <div class="content-wrapper border-content">
                 <transition name="slide-fade">
                   <div v-if="selectedPostersOption === 'about'" class="content-display">
-                    <PosterCard :loading="loading" :posters="posters.OEB"/>
+                    <PosterCard :posters="posters.OEB"/>
                   </div>
                 </transition>
                 <transition name="slide-fade">
                   <div v-if="selectedPostersOption === 'mentions'" class="content-display">
-                    <PosterCard :loading="loading" :posters="posters.MENTION"/>
+                    <PosterCard :posters="posters.MENTION"/>
                   </div>
                 </transition>
               </div>
@@ -134,8 +134,6 @@ interface PostersData {
   OEB: Poster[];
   MENTION: Poster[];
 }
-
-const loading = ref<boolean>(true);
 
 const posters = ref<PostersData>(PostersData);
 
@@ -193,7 +191,6 @@ const papers = ref<{ core: Paper[]; collaboration: Paper[] }>({
 
 
 onMounted(async () => {
-  // Handle tab selection
   handleTabSelection(selectedTab.value);
 });
 

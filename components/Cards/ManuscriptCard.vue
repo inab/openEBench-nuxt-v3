@@ -52,10 +52,9 @@ interface Paper {
 // Props
 const props = defineProps<{
     papers: Paper[];
-    loading: boolean;
 }>();
 
-const emit = defineEmits(['update-loading']);
+const loading = ref(true);
 
 // State
 const showAllAuthors = ref<boolean[]>([]);
@@ -114,7 +113,7 @@ async function fetchPaperInfo(doi: string): Promise<Paper | null> {
 }
 
 async function fetchAllPaperDetails() {
-    emit('update-loading', true);
+   loading.value = true;
     try {
         for (let i = 0; i < props.papers.length; i++) {
             const paper = props.papers[i];
@@ -129,13 +128,14 @@ async function fetchAllPaperDetails() {
             (a, b) => new Date(b.publicationDate || '').getTime() - new Date(a.publicationDate || '').getTime()
         );
     } finally {
-        emit('update-loading', false);
+        loading.value = false;
     }
 }
 
 onMounted(async () => {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     await fetchAllPaperDetails();
-    emit('update-loading', false);
+    loading.value = false;
 });
 
 </script>
