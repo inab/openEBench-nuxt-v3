@@ -89,7 +89,7 @@
         </div>
 
         <!-- Pagination using Nuxt UI -->
-        <div v-if="pageCount > 1" class="mt-5">
+        <div v-if="pageCount > 1" class="pagination-container">
           <UPagination :active-button="{ variant: 'outline' }" :inactive-button="{ color: 'gray' }"
             :model-value="currentPage" :total="sortedPosters.length" @update:model-value="changePage" />
         </div>
@@ -213,17 +213,24 @@ function changePage(page: number) {
   height: 100px;
 }
 
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
 .chip {
-	height: 35px;
-	text-align: center;
-	justify-content: center;
-	display: flex;
-	justify-content: center;
-	gap: 10px;
-	a:hover {
-		display: block;
-		height: 28px;
-	}
+  height: 35px;
+  text-align: center;
+  justify-content: center;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+
+  a:hover {
+    display: block;
+    height: 28px;
+  }
 }
 
 .card {
@@ -235,9 +242,7 @@ function changePage(page: number) {
 
 .card-img-top {
   height: 200px;
-  /* Adjust height as needed */
   object-fit: cover;
-  /* Ensure the image fits well */
 }
 
 .card-body {
@@ -245,21 +250,19 @@ function changePage(page: number) {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  /* Center the title vertically */
   padding-bottom: 0;
-  /* No padding at the bottom */
 }
 
 .card-title {
   font-size: 18px;
   margin: 8px 0;
   text-align: center;
-  color: #0B579F ;
+  color: #0B579F;
   text-decoration: underline;
 }
 
-.card-title:hover{
-  color: #3a6286 ;
+.card-title:hover {
+  color: #3a6286;
   text-decoration: underline;
 }
 
@@ -277,10 +280,10 @@ function changePage(page: number) {
 }
 
 .logo {
-	width: 25px;
-	height: 25px;
-	border-radius: 50%;
-	opacity: 0.7;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  opacity: 0.7;
 }
 
 .card-date {
@@ -309,10 +312,10 @@ function changePage(page: number) {
 }
 
 .logo:hover {
-	width: 28px;
-	height: 28px;
-	box-shadow: 0 4px 20px rgba(0, 0, 0, 20%);
-	transition: box-shadow 0.3s ease-in-out;
+  width: 28px;
+  height: 28px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 20%);
+  transition: box-shadow 0.3s ease-in-out;
 }
 
 .back-button-container {
