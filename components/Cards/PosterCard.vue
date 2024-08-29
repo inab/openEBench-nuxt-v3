@@ -58,25 +58,34 @@
 
         <div class="row">
           <div v-for="poster in paginatedPosters" :key="poster.title" class="col-12 col-md-6 mb-4">
-            <div class="card h-100 shadow-sm">
-              <embed :src="getPosterPath(poster.poster)" type="application/pdf" class="card-img-top"
-                style="height: 200px;" />
-              <div class="card-body">
-                <h5 class="card-title cursor-pointer" @click="selectPoster(poster)">
+            <div class="card h-100 shadow-sm d-flex flex-column">
+              <!-- Thumbnail -->
+              <embed :src="getPosterPath(poster.poster)" type="application/pdf" class="card-img-top" />
+
+              <div class="card-body d-flex flex-column justify-content-between">
+                <!-- Title -->
+                <h5 class="card-title cursor-pointer text-center" @click="selectPoster(poster)">
                   <span v-html="sanitizeHtml(formattedTitle(poster.title))"></span>
                 </h5>
-                <div class="d-flex justify-content-between align-items-center mt-2">
+              </div>
+
+              <!-- Buttons (CC & DOI) and Date at the Bottom -->
+              <div class="card-footer mt-auto d-flex flex-column align-items-center">
+                <div class="mx-2 chip">
                   <a class="chip-icon" target="_blank" href="https://creativecommons.org/licenses/by/4.0/deed.en">
                     <img src="@/static/posters/cc.png" alt="CC" class="logo chip-with-logo" />
                   </a>
                   <a target="_blank" :href="poster.link" class="chip-icon">
-                    <img src="@/static/posters/doi.svg" alt="DOI" class="logo chip-with-logo" />
+                    <img src="@/static/posters/doi.svg" alt="CC" class="logo chip-with-logo" />
                   </a>
                 </div>
-                <p class="card-text text-muted mt-3">{{ formatDate(poster.date) }}</p>
+                <p class="card-date text-muted text-center m-0">
+                  {{ formatDate(poster.date) }}
+                </p>
               </div>
             </div>
           </div>
+
         </div>
 
         <!-- Pagination using Nuxt UI -->
@@ -204,18 +213,106 @@ function changePage(page: number) {
   height: 100px;
 }
 
+.chip {
+	height: 35px;
+	text-align: center;
+	justify-content: center;
+	display: flex;
+	justify-content: center;
+	gap: 10px;
+	a:hover {
+		display: block;
+		height: 28px;
+	}
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.card-img-top {
+  height: 200px;
+  /* Adjust height as needed */
+  object-fit: cover;
+  /* Ensure the image fits well */
+}
+
+.card-body {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* Center the title vertically */
+  padding-bottom: 0;
+  /* No padding at the bottom */
+}
+
+.card-title {
+  font-size: 18px;
+  margin: 8px 0;
+  text-align: center;
+  color: #0B579F ;
+  text-decoration: underline;
+}
+
+.card-title:hover{
+  color: #3a6286 ;
+  text-decoration: underline;
+}
+
+.card-footer {
+  background-color: #f8f9fa;
+  padding: 10px 0;
+  margin-top: auto;
+  width: 100%;
+}
+
+.chip-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .logo {
-  width: 25px;
-  height: 25px;
-  border-radius: 50%;
-  opacity: 0.7;
+	width: 25px;
+	height: 25px;
+	border-radius: 50%;
+	opacity: 0.7;
+}
+
+.card-date {
+  font-size: 14px;
+  padding: 5px 0;
+  margin: 0;
+}
+
+.bg-light {
+  background-color: #f8f9fa;
+}
+
+.p-2 {
+  padding: 0.5rem;
+}
+
+.text-center {
+  text-align: center;
+}
+
+
+.card-text.text-muted {
+  margin-top: auto;
+  font-size: 14px;
+  background-color: #f8f9fa;
 }
 
 .logo:hover {
-  width: 28px;
-  height: 28px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-  transition: box-shadow 0.3s ease-in-out;
+	width: 28px;
+	height: 28px;
+	box-shadow: 0 4px 20px rgba(0, 0, 0, 20%);
+	transition: box-shadow 0.3s ease-in-out;
 }
 
 .back-button-container {
