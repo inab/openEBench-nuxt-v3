@@ -45,7 +45,9 @@
   },
   "devDependencies": {
     "@nuxt/eslint": "^0.4.0",
+    "@types/data-urls": "^3.0.4",
     "@types/dompurify": "^3.0.5",
+    "@types/whatwg-encoding": "^2.0.3",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
