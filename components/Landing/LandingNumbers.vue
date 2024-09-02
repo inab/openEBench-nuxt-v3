@@ -3,16 +3,16 @@
     <div class="container h-100">
       <div class="row h-100 align-items-center">
         <div class="col-12 col-sm-6 col-lg-3 mb-3 mb-lg-0 h-100">
-          <AnimateNumber type="Communities" :value="communitiesCount" />
+          <AnimateNumber description="Communities" :number="communitiesCount" />
         </div>
         <div class="col-12 col-sm-6 col-lg-3 mb-3 mb-lg-0 h-100">
-          <AnimateNumber type="Tools" :value="toolsCount" />
+          <AnimateNumber description="Tools" :number="toolsCount" />
         </div>
         <div class="col-12 col-sm-6 col-lg-3 mb-3 mb-lg-0 h-100">
-          <AnimateNumber type="Resources" :value="resourcesCount" />
+          <AnimateNumber description="Resources" :number="resourcesCount" />
         </div>
         <div class="col-12 col-sm-6 col-lg-3 mb-3 mb-lg-0 h-100">
-          <AnimateNumber type="Project" :value="projectsCount" />
+          <AnimateNumber description="Project" :number="projectsCount" />
         </div>
       </div>
     </div>

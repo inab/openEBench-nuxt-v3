@@ -1,89 +1,67 @@
 <template>
-  <div class="landing-animate-number w-100 h-100">
-    <div class="">
-      <div
-        ref="numberCounter"
-        v-observe-visibility="visibilityChanged"
-        :class="`${'counter'} ${'counter'}-${type}`"
-      >
-        <span class="counter-value">{{ displayValue }}</span>
-      </div>
-      <div class="counter-text">{{ counterText }}</div>
-    </div>
+  <div ref="numberSection" class="d-flex flex-column align-items-center">
+    <h1 class="display-4">{{ animatedNumber }}</h1>
+    <p  class="description-text fw-medium">{{ description }}</p>
   </div>
 </template>
 
 <script setup lang="ts">
-import gsap from "gsap";
-import { ref, watch } from "vue";
+import { ref, onMounted, watch } from 'vue'
+import { gsap } from 'gsap'
 
-const tl = gsap.timeline({ repeat: 0 });
 
-const props = defineProps({
-  value: {
-    type: Number,
-    required: true,
-  },
-  type: {
-    type: String,
-    default: "linear",
-  },
-});
+const props = defineProps<{
+  number: number | null;
+  description: string;
+}>()
 
-const numberProps = computed(() => props.value);
-const counterText = props.type == "Project" ? "Project Spaces" : props.type;
-const displayValue = ref(0);
-const tweenValue = ref(0); //  ??
-const isVisibled = ref(false);
-const inputValue = ref(0);
-const start = 0;
-const className = `${"counter"}-${props.type}`;
+const animatedNumber = ref(0)
+const numberSection = ref<HTMLElement | null>(null)
 
-watch(inputValue, () => {
-  tl.fromTo(
-    "." + className,
-    {
-      innerText: start,
-      scale: 1,
-    },
-    {
-      innerText: numberProps.value,
-      snap: { innerText: 1 },
-      duration: 5,
-      ease: "linear",
-    },
-  );
-});
-
-function visibilityChanged(isVisible: boolean, entry: any) {
-  if (!isVisibled.value && isVisible) {
-    isVisibled.value = isVisible;
-    inputValue.value = numberProps.value;
-  } else {
-    isVisibled.value = false;
-    inputValue.value = 0;
+const animateNumber = () => {
+  if (props.number !== null) {
+    gsap.to(animatedNumber, {
+      duration: 2,
+      // We animate the number from 0 to the final value
+      value: props.number,
+      onUpdate: function() {
+        // Update animatedNumber value to the current animated value
+        animatedNumber.value = Math.ceil(this.targets()[0].value)
+      },
+      ease: 'power3.out',
+    })
   }
 }
+
+onMounted(() => {
+  if (numberSection.value) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && props.number !== null) {
+          animateNumber()
+          observer.disconnect()
+        }
+      })
+    }, { threshold: 0.5 }) // Trigger when 50% of the element is visible
+
+    observer.observe(numberSection.value)
+  }
+})
+
+// Watch the number prop to ensure animation happens when it becomes available
+watch(() => props.number, (newValue) => {
+  if (newValue !== null && numberSection.value) {
+    animateNumber()
+  }
+})
 </script>
 
-<style scoped lang="scss">
-.landing-animate-number {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  .counter {
-    font-size: 50px;
-    text-align: center;
-    width: 100%;
-    .counter-value {
-      font-size: 30px;
-    }
-  }
-  .counter-text {
-    font-size: 20px;
-    text-align: center;
-    font-weight: 500;
-    letter-spacing: 0.0125em !important;
-  }
+<style scoped>
+.number-section {
+  margin-top: 50px;
+}
+
+.description-text {
+  font-size: 20px;
 }
 </style>
