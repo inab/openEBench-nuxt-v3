@@ -164,18 +164,101 @@
                     Benchmark your tool
                   </a>
                 </button>
-                <button
-                  class="ripple text-white bg-primaryOeb-500 hover:bg-primaryOeb-400 font-medium rounded-md text-sm px-3 py-2"
-                  @click="handleLogin"
-                >
-                  <font-awesome-icon
-                    :icon="['fas', 'arrow-right-to-bracket']"
-                    size="sm"
-                    class="mr-2"
-                  />
-                  Login
-                  <span class="ripple-effect"></span>
-                </button>
+
+                <template v-if="data">
+                  <div class="nav-item dropdown-login dropdown">
+                    <a
+                      id="loginDropdown"
+                      color="white"
+                      class="text-primaryOeb-500 border-1 border-primaryOeb-800 hover:bg-primaryOeb-50 font-medium rounded-md text-sm px-3 py-2 me-2"
+                      trailing-icon="i-heroicons-chevron-down-20-solid"
+                      href="#"
+                      role="button"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      <UIcon
+                        name="i-heroicons-user-circle-solid"
+                        class="w-5 h-5"
+                      />
+                      <span>{{ getUserNameIcon() }}</span>
+                      <span>
+                        <font-awesome-icon
+                          :icon="['fas', 'chevron-down']"
+                          size="sm"
+                        />
+                      </span>
+                    </a>
+                    <ul
+                      class="dropdown-menu submenu-login shadow-xl md:rounded-b w-100"
+                      aria-labelledby="loginDropdown"
+                    >
+                      <li
+                        v-for="(item, index) in logInItems"
+                        :key="index"
+                        class="p-1 hover:bg-gray-100 text-sm py-2 divide-gray-200"
+                        :class="[item.slot ? 'item-border' : '']"
+                      >
+                        <template v-if="item.slot && item.slot == 'account'">
+                          <div
+                            class="menu-item-header text-left disabled opacity-50"
+                          >
+                            <div>Signed in as</div>
+                            <div
+                              class="truncate font-medium text-gray-900 dark:text-white"
+                            >
+                              {{ item.label }}
+                            </div>
+                          </div>
+                        </template>
+                        <template v-else>
+                          <template v-if="item.href">
+                            <NuxtLink
+                              :to="item.href"
+                              class="flex items-center w-full h-full"
+                              @click="closeMenu"
+                            >
+                              <div class="menu-login-item w-100">
+                                <span class="truncate">{{ item.label }}</span>
+                                <UIcon
+                                  :name="item.icon"
+                                  class="flex-shrink-0 h-4 w-4 text-gray-400 dark:text-gray-500 ms-auto"
+                                />
+                                <span class="ripple-effect"></span>
+                              </div>
+                            </NuxtLink>
+                          </template>
+                          <template v-else>
+                            <div
+                              class="menu-login-item"
+                              @click="item.click ? item.click() : ''"
+                            >
+                              <span class="truncate">{{ item.label }}</span>
+                              <UIcon
+                                :name="item.icon"
+                                class="flex-shrink-0 h-4 w-4 text-gray-400 dark:text-gray-500 ms-auto"
+                              />
+                            </div>
+                          </template>
+                        </template>
+                      </li>
+                    </ul>
+                  </div>
+                </template>
+                <template v-else>
+                  <button
+                    class="ripple text-white bg-primaryOeb-500 hover:bg-primaryOeb-400 font-medium rounded-md text-sm px-3 py-2"
+                    @click="handleLogin"
+                  >
+                    <font-awesome-icon
+                      :icon="['fas', 'arrow-right-to-bracket']"
+                      size="sm"
+                      class="mr-2"
+                    />
+                    Login
+                    <span class="ripple-effect"></span>
+                  </button>
+                </template>
               </div>
             </div>
             <!-- Overlay div -->
@@ -198,13 +281,46 @@ import menuEntries from "~/components/Header/HeaderMenu/menuEntries";
 import subMenuEntriesObservatory from "./HeaderMenu/subMenuEntriesObservatory";
 import subMenuEntriesAbout from "./HeaderMenu/subMenuEntriesAbout";
 
-const { signIn, getProviders, status, data } = useAuth();
+const {
+  status,
+  data,
+  lastRefreshedAt,
+  getCsrfToken,
+  getProviders,
+  getSession,
+  signIn,
+  signOut,
+} = useAuth();
+
 const providers = await getProviders();
 const runtimeConfig = useRuntimeConfig();
 const { $viewport } = useNuxtApp();
 const toggleMenu = ref(false);
 const isMobile = ref(false);
 const route = useRoute();
+
+const logInItems = ref([]);
+
+if (data.value) {
+  logInItems.value.push({
+    label: data.value.user.email,
+    slot: "account",
+    disabled: true,
+  });
+  logInItems.value.push({
+    label: "Profile",
+    icon: "i-heroicons-user-20-solid",
+    href: "/dashboard",
+  });
+  logInItems.value.push({
+    label: "Logout",
+    slot: "logout",
+    icon: "i-heroicons-arrow-left-on-rectangle",
+    click: () => {
+      handleLogout();
+    },
+  });
+}
 
 // Breakpoints
 watch(
@@ -218,7 +334,6 @@ watch(
   },
 );
 
-// Functions
 const handleToggleMenu = () => {
   toggleMenu.value = !toggleMenu.value;
 };
@@ -237,7 +352,20 @@ const isActiveAbout = computed(() => {
 });
 
 function handleLogin() {
-  signIn('keycloak', { callbackUrl: 'https://inb.bsc.es/auth' });
+  signIn("keycloak", { callbackUrl: "/login" });
+}
+
+function handleLogout() {
+  const keycloackLogoutUrl = `${runtimeConfig.public.KEYCLOAK_HOST}/auth/realms/${runtimeConfig.public.KEYCLOAK_REALM}/protocol/openid-connect/logout`;
+  window.location.href = `${keycloackLogoutUrl}?post_logout_redirect_uri=http://localhost:3001/&id_token_hint=${data?.value.token}`;
+  signOut();
+}
+
+function getUserNameIcon() {
+  if (data?.value?.user?.name) {
+    return data.value.user.name;
+  }
+  return "";
 }
 
 function closeMenu() {
@@ -402,6 +530,47 @@ function closeMenu() {
     padding-left: 10px;
     text-decoration: none !important;
     color: rgba(0, 0, 0, 0.87);
+  }
+
+  .dropdown-login #loginDropdown {
+    display: flex;
+    gap: 5px;
+    text-decoration: none;
+  }
+
+  .dropdown-login .menu-login-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px;
+    cursor: pointer;
+  }
+
+  .dropdown-menu.submenu-login .item-border {
+    border-color: rgb(226 232 240);
+  }
+
+  .dropdown-menu a {
+    text-decoration: none;
+    color: rgb(33, 37, 41);
+  }
+  .dropdown-menu li:hover {
+    color: theme('colors.primaryOeb.500');
+    a {
+      color: theme('colors.primaryOeb.500');
+    }
+  }
+
+  .dropdown-menu.submenu-login .item-border:first-child {
+    border-bottom: 1px solid rgb(226 232 240);
+  }
+
+  .dropdown-menu.submenu-login .item-border:last-child {
+    border-top: 1px solid rgb(226 232 240);
+  }
+
+  .dropdown-login .menu-item-header {
+    padding: 0 10px;
   }
 
   // ipad

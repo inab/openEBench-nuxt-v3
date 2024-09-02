@@ -16,4 +16,5 @@ import LandingKeyFeatures from "@/components/Landing/LandingKeyFeatures.vue";
 import LandingFeatureTease from "~/components/Landing/LandingFeatureTease.vue";
 import LandingNumbers from "~/components/Landing/LandingNumbers.vue";
 import LandingLogos from "~/components/Landing/LandingLogos.vue";
+
 </script>
