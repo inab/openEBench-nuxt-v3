@@ -294,17 +294,6 @@ const {
   signOut,
 } = useAuth();
 
-const {
-  status,
-  data,
-  lastRefreshedAt,
-  getCsrfToken,
-  getProviders,
-  getSession,
-  signIn,
-  signOut,
-} = useAuth();
-
 const providers = await getProviders();
 const runtimeConfig = useRuntimeConfig();
 const { $viewport } = useNuxtApp();
@@ -383,20 +372,6 @@ const isActiveAbout = computed(() => {
 });
 
 function handleLogin() {
-  signIn("keycloak", { callbackUrl: "/login" });
-}
-
-function handleLogout() {
-  const keycloackLogoutUrl = `${runtimeConfig.public.KEYCLOAK_HOST}/auth/realms/${runtimeConfig.public.KEYCLOAK_REALM}/protocol/openid-connect/logout`;
-  window.location.href = `${keycloackLogoutUrl}?post_logout_redirect_uri=http://localhost:3001/&id_token_hint=${data?.value.token}`;
-  signOut();
-}
-
-function getUserNameIcon() {
-  if (data?.value?.user?.name) {
-    return data.value.user.name;
-  }
-  return "";
   signIn("keycloak", { callbackUrl: "/login" });
 }
 
