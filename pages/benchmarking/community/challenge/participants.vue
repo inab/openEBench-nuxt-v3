@@ -123,7 +123,7 @@ await challengeAPI(challengeId).then((response: any) => {
           key: value._id,
           value: assessment.datalink.inline_data.value,
           error: assessment.datalink.inline_data.error,
-          label: assessment._metadata[METRIC_ID_KEY],
+          label: assessment._metadata ? assessment._metadata[METRIC_ID_KEY] : '',
         };
         itemObj.inline_data.challenge_participants.push(item);
       });
@@ -262,10 +262,6 @@ const routeArray: Array = [
     isActualRoute: true,
   },
 ];
-
-// routeArray[1].isActualRoute = false;
-// routeArray[1].route = "/benchmarking/" + challenge.value.acronym + "/events";
-//routeArray.push({ label: currentEvent.value?.name, isActualRoute: true });
 </script>
 
 <style scoped lang="scss">

@@ -7,8 +7,7 @@
 			"institution": ["INB/ELIXIR-ES", "BSC-CNS"],
 			"roles": ["Web Front-end", "Data Visualization"],
 			"orcid": "https://orcid.org/0009-0008-7213-9577",
-			"github": "https://github.com/Androidbeingx ",
-			"show": false
+			"github": "https://github.com/Androidbeingx "
 		},
 		{
 			"image": "/avalle.jpeg",
@@ -17,8 +16,7 @@
 			"institution": ["INB/ELIXIR-ES", "BSC-CNS"],
 			"roles": ["Web Front-end", "Data Visualization"],
 			"orcid": "https://orcid.org/0009-0009-6247-4475",
-			"github": "https://github.com/AniValle",
-			"show": false
+			"github": "https://github.com/AniValle"
 		},
 		{
 			"image": "/user.png",
@@ -33,8 +31,7 @@
 				"Data Modelization"
 			],
 			"orcid": "https://orcid.org/0000-0001-8324-2897",
-			"github": "https://github.com/evamart ",
-			"show": false
+			"github": "https://github.com/evamart "
 		},
 		{
 			"image": "/aredondo.jpeg",
@@ -48,8 +45,7 @@
 				"Scientific Benchmarking"
 			],
 			"orcid": "https://orcid.org/0000-0003-0020-759X",
-			"github": "https://github.com/abredondo",
-			"show": false
+			"github": "https://github.com/abredondo"
 		},
 		{
 			"image": "/scapella.jpeg",
@@ -67,8 +63,7 @@
 				"Technical Monitoring"
 			],
 			"orcid": "https://orcid.org/0000-0002-0309-604X ",
-			"github": "https://github.com/scapella",
-			"show": false
+			"github": "https://github.com/scapella"
 		},
 		{
 			"image": "/laura-portell.jpg",
@@ -77,8 +72,7 @@
 			"institution": ["INB/ELIXIR-ES", "BSC-CNS"],
 			"roles": ["Community Engagement", "Back-office"],
 			"orcid": "https://orcid.org/0000-0003-0390-3208",
-			"github": "https://github.com/lauportell",
-			"show": false
+			"github": "https://github.com/lauportell"
 		},
 		{
 			"image": "/avalenci.jpeg",
@@ -87,8 +81,7 @@
 			"institution": ["INB/ELIXIR-ES", "BSC-CNS", "ICREA"],
 			"roles": ["Leadership"],
 			"orcid": "https://orcid.org/0000-0002-8937-6789",
-			"github": null,
-			"show": false
+			"github": null
 		},
 		{
 			"image": "/carles-hernandez.png",
@@ -104,8 +97,7 @@
 				"Data Visualization"
 			],
 			"orcid": "https://orcid.org/0000-0002-8029-7160",
-			"github": "https://github.com/carleshf/",
-			"show": false
+			"github": "https://github.com/carleshf/"
 		},
 		{
 			"image": "/jm-fernandez.jpg",
@@ -125,8 +117,7 @@
 				"Back-office"
 			],
 			"orcid": "https://orcid.org/0000-0002-4806-5140",
-			"github": "https://github.com/jmfernandez",
-			"show": false
+			"github": "https://github.com/jmfernandez"
 		},
 		{
 			"image": "/laia-codo.jpg",
@@ -141,8 +132,7 @@
 				"Back-office"
 			],
 			"orcid": "https://orcid.org/0000-0002-6797-8746",
-			"github": "https://github.com/lcodo",
-			"show": false
+			"github": "https://github.com/lcodo"
 		},
 		{
 			"image": "/jl-gelpi.jpg",
@@ -157,8 +147,7 @@
 				"Back-office"
 			],
 			"orcid": "https://orcid.org/0000-0002-0566-7723",
-			"github": "https://github.com/jlgelpi",
-			"show": false
+			"github": "https://github.com/jlgelpi"
 		},
 		{
 			"image": "/dmitry.jpeg",
@@ -173,8 +162,7 @@
 				"Security"
 			],
 			"orcid": "https://orcid.org/0000-0001-6415-0532",
-			"github": "https://github.com/redmitry",
-			"show": false
+			"github": "https://github.com/redmitry"
 		},
 		{
 			"image": "/user.png",
@@ -183,8 +171,7 @@
 			"institution": ["INB/ELIXIR-ES", "BSC-CNS"],
 			"roles": ["Web Front-end", "Data Visualization"],
 			"orcid": "https://orcid.org/0009-0004-2668-9077",
-			"github": "https://github.com/JessicaFM",
-			"show": false
+			"github": "https://github.com/JessicaFM"
 		}
 	],
 	"Alumni": [
