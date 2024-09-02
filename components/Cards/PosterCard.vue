@@ -145,8 +145,8 @@
                   </a>
                   <a target="_blank" :href="poster.link" class="chip-icon">
                     <img
-                      src="@/static/posters/doi.svg"
-                      alt="CC"
+                      src="@/static/posters/doi.png"
+                      alt="doi"
                       class="logo chip-with-logo"
                     />
                   </a>
