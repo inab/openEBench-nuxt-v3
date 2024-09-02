@@ -22,8 +22,23 @@
 </template>
 <script setup lang="ts">
 import pluralize from "pluralize";
+
+interface Challenge {
+  _id: string;
+  name: string;
+  acronym: string;
+  url: string;
+  __typename: string;
+}
+
+interface Event {
+  _id: string;
+  name: string;
+  challenges: Challenge[];
+}
+
 const props = defineProps<{
-  event?: Object;
+  event?: Event;
   communityId: string;
 }>();
 
@@ -33,6 +48,7 @@ const props = defineProps<{
 <style scoped lang="scss">
 .event-card {
   padding-bottom: 25px;
+
   &__box {
     transition: transform 0.2s;
     padding: 15px 10px;
@@ -43,14 +59,17 @@ const props = defineProps<{
     text-decoration: none;
     cursor: pointer;
     box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
+
     &:hover {
       transform: scale(1.05);
     }
+
     &__content {
       font-size: 14px;
       padding-top: 25px;
     }
   }
+
   a {
     text-decoration: none;
   }

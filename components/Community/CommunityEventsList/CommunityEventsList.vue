@@ -5,7 +5,7 @@
     </template>
     <template v-else>
       <div class="community-events-list__header">
-        <h3>Please choose an event:</h3>
+        <h3 class="mb-4">Please choose an event:</h3>
         <div class="community-events-list__header__subtitle">
           <p
             class="text-body-2 text--secondary d-flex align-items-center text-stone-500"
@@ -20,7 +20,7 @@
           </p>
         </div>
       </div>
-      <div class="row">
+      <div class="row mt-5">
         <EventCard
           v-for="event in props.events"
           :key="event._id"
@@ -36,8 +36,30 @@
 <script setup lang="ts">
 import EventCard from "@/components/Cards/EventCard/EventCard.vue";
 
+interface Challenge {
+  _id: string;
+  name: string;
+  acronym: string;
+  url: string;
+  __typename: string;
+}
+
+interface Dates {
+  creation: string;
+  __typename: string;
+}
+
+interface Event {
+  _id: string;
+  dates: Dates;
+  name: string;
+  url: string;
+  challenges: Challenge[];
+  __typename: string;
+}
+
 const props = defineProps<{
-  events?: Object[];
+  events?: Event[];
   communityId: string;
 }>();
 </script>
