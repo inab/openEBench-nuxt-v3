@@ -123,7 +123,9 @@ await challengeAPI(challengeId).then((response: any) => {
           key: value._id,
           value: assessment.datalink.inline_data.value,
           error: assessment.datalink.inline_data.error,
-          label: assessment._metadata ? assessment._metadata[METRIC_ID_KEY] : '',
+          label: assessment._metadata
+            ? assessment._metadata[METRIC_ID_KEY]
+            : "",
         };
         itemObj.inline_data.challenge_participants.push(item);
       });

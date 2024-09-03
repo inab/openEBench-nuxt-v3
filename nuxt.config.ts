@@ -80,39 +80,22 @@ export default defineNuxtConfig({
           process.env.REST_API_URL ||
           "https://dev-openebench.bsc.es/monitor/rest/",
       },
-      KEYCLOAK_HOST: process.env.KEYCLOAK_HOST || "https://inb.bsc.es/auth",
+      KEYCLOAK_HOST: process.env.KEYCLOAK_HOST || "https://inb.bsc.es/",
       KEYCLOAK_REALM: process.env.KEYCLOAK_REALM || "openebench",
       KEYCLOAK_CLIENT_ID: process.env.KEYCLOAK_CLIENT_ID || "oeb-frontend",
+      BASE_URL: process.env.APP_BASE_URL || "https://openebench.bsc.es",
     },
   },
 
   auth: {
-    isEnabled: true,
+    globalAppMiddleware: false,
     provider: {
       type: "authjs",
-      defaultProvider: "keycloak",
-      property: "access_token",
-      name: "Authorization",
-      maxAge: 1800,
-      responseType: "code",
-      responseMode: "fragment",
-      grantType: "authorization_code",
-      clientId: process.env.KEYCLOAK_CLIENT_ID || "oeb-frontend",
-      scope: ["openid"],
-      codeChallengeMethod: "S256",
-      addDefaultCallbackUrl:
-        "https://inb.bsc.es/auth/realms/openebench/protocol/openid-connect/auth?",
-      authorization: {
-        url: "https://inb.bsc.es/auth/realms/openebench/protocol/openid-connect/auth?",
-        response_type: "code",
-      },
-      endpoints: {
-        authorization: {
-          path: "https://inb.bsc.es/auth/realms/openebench/protocol/openid-connect/auth?",
-        },
-      },
     },
-    globalAppMiddleware: false,
+    redirect: {
+      login: "/login", // Redirige a la página de login si no está autenticado
+      home: "/", // Página de inicio después del login
+    },
   },
 
   hooks: {

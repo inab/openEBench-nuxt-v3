@@ -37,6 +37,7 @@
     "pinia": "^2.1.7",
     "pluralize": "^8.0.0",
     "unicorn-magic": "^0.3.0",
+    "valibot": "^0.41.0",
     "vite-svg-loader": "^5.1.0",
     "vue": "latest",
     "vue-observe-visibility": "^2.0.0-alpha.1",

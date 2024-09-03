@@ -41,8 +41,6 @@ const props = defineProps<{
   event?: Event;
   communityId: string;
 }>();
-
-
 </script>
 
 <style scoped lang="scss">

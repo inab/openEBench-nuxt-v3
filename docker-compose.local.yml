@@ -6,8 +6,8 @@ services:
   npm_ci_deps:
     build:
       context: .
-      dockerfile: Dockerfile.devci
-    image: openebench-nuxt3:devci
+      dockerfile: Dockerfile.localci
+    image: openebench-nuxt3:localci
     user: ${DEV_UID:-0}:${DEV_GID:-0}
     command: npm ci
     volumes:
@@ -32,8 +32,8 @@ services:
   nuxt:
     build:
       context: .
-      dockerfile: Dockerfile.devci
-    image: openebench-nuxt3:devci
+      dockerfile: Dockerfile.localci
+    image: openebench-nuxt3:localci
     user: ${DEV_UID:-0}:${DEV_GID:-0}
     depends_on:
       npm_ci_deps:

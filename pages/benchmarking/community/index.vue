@@ -182,7 +182,7 @@ watch(
   () => route.query.event,
   async (newEventId) => {
     if (newEventId) {
-      const newEvent = eventsObj.find(event => event._id === newEventId);
+      const newEvent = eventsObj.find((event) => event._id === newEventId);
       if (newEvent) {
         communityStore.setCurrentEvent(newEvent);
       } else {
@@ -194,9 +194,8 @@ watch(
       communityStore.setCurrentEvent(null);
     }
   },
-  { immediate: true }
+  { immediate: true },
 );
-
 </script>
 
 <style lang="scss" scoped>
