@@ -1,5 +1,2 @@
-<template>
-    SignIn
-</template>
-<script setup>
-</script>
+<template>SignIn</template>
+<script setup></script>

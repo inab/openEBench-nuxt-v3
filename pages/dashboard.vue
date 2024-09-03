@@ -108,9 +108,9 @@ const fetchUserInfo = async () => {
   }
 };
 
-async function onSubmit (event: FormSubmitEvent<Schema>) {
+async function onSubmit(event: FormSubmitEvent<Schema>) {
   // Do something with event.data
-  console.log(event.data)
+  console.log(event.data);
 }
 
 // Llama a la función para obtener la información del usuario cuando el componente se monta

@@ -22,15 +22,16 @@
           >
             <div class="primary label-btn">
               <div class="border-b border-slate-200">
-                <h2 class="text-left community-info__title">{{ item.label }}
-                <UIcon
-                  name="i-heroicons-chevron-right-20-solid"
-                  class="transform transition-transform duration-200 mt-2 community-info__title__icon"
-                  :class="[open && 'rotate-90']"
-                />
+                <h2 class="text-left community-info__title">
+                  {{ item.label }}
+                  <UIcon
+                    name="i-heroicons-chevron-right-20-solid"
+                    class="transform transition-transform duration-200 mt-2 community-info__title__icon"
+                    :class="[open && 'rotate-90']"
+                  />
                 </h2>
               </div>
-              
+
               <div class="text-left community-info__subtitle mt-2">
                 {{ community.name }}
               </div>

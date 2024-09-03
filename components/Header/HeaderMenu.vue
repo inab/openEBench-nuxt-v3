@@ -72,7 +72,7 @@
                       <UIcon
                         name="i-heroicons-chevron-right-20-solid"
                         class="transform transition-transform duration-200 text-2xl"
-                        :class="{'rotate-90': dropdownStates.observatory}"
+                        :class="{ 'rotate-90': dropdownStates.observatory }"
                       />
                     </a>
                     <ul
@@ -123,7 +123,7 @@
                       <UIcon
                         name="i-heroicons-chevron-right-20-solid"
                         class="transform transition-transform duration-200 text-2xl"
-                        :class="{'rotate-90': dropdownStates.about}"
+                        :class="{ 'rotate-90': dropdownStates.about }"
                       />
                     </a>
                     <ul
@@ -172,7 +172,7 @@
                     <a
                       id="loginDropdown"
                       color="white"
-                      class="text-primaryOeb-500 border-1 border-primaryOeb-800 hover:bg-primaryOeb-50 font-medium rounded-md text-sm px-3 py-2 me-2"
+                      class="nav-link dropdown-toggle md:inline-flex items-center space-x-1 text-primaryOeb-500 hover:bg-primaryOeb-50"
                       trailing-icon="i-heroicons-chevron-down-20-solid"
                       href="#"
                       role="button"
@@ -184,12 +184,10 @@
                         class="w-5 h-5"
                       />
                       <span>{{ getUserNameIcon() }}</span>
-                      <span>
-                        <font-awesome-icon
-                          :icon="['fas', 'chevron-down']"
-                          size="sm"
-                        />
-                      </span>
+                      <UIcon
+                        name="i-heroicons-chevron-right-20-solid"
+                        class="transform transition-transform duration-200 text-2xl chevron-menu"
+                      />
                     </a>
                     <ul
                       class="dropdown-menu submenu-login shadow-xl md:rounded-b w-100"
@@ -294,7 +292,6 @@ const {
   signOut,
 } = useAuth();
 
-const providers = await getProviders();
 const runtimeConfig = useRuntimeConfig();
 const { $viewport } = useNuxtApp();
 const toggleMenu = ref(false);
@@ -302,6 +299,11 @@ const isMobile = ref(false);
 const route = useRoute();
 
 const logInItems = ref([]);
+
+const dropdownStates = ref({
+  about: false,
+  observatory: false,
+});
 
 if (data.value) {
   logInItems.value.push({
@@ -338,18 +340,18 @@ watch(
 
 onMounted(() => {
   // Configura eventos para cada dropdown
-  setupDropdown('aboutDropdown', 'about');
-  setupDropdown('observatoryDropdown', 'observatory');
+  setupDropdown("aboutDropdown", "about");
+  setupDropdown("observatoryDropdown", "observatory");
 });
 
 function setupDropdown(dropdownId, stateKey) {
   const dropdownElement = document.getElementById(dropdownId);
 
-  dropdownElement.addEventListener('show.bs.dropdown', () => {
+  dropdownElement.addEventListener("show.bs.dropdown", () => {
     dropdownStates.value[stateKey] = true;
   });
 
-  dropdownElement.addEventListener('hide.bs.dropdown', () => {
+  dropdownElement.addEventListener("hide.bs.dropdown", () => {
     dropdownStates.value[stateKey] = false;
   });
 }
@@ -377,7 +379,7 @@ function handleLogin() {
 
 function handleLogout() {
   const keycloackLogoutUrl = `${runtimeConfig.public.KEYCLOAK_HOST}/auth/realms/${runtimeConfig.public.KEYCLOAK_REALM}/protocol/openid-connect/logout`;
-  window.location.href = `${keycloackLogoutUrl}?post_logout_redirect_uri=http://localhost:3001/&id_token_hint=${data?.value.token}`;
+  window.location.href = `${keycloackLogoutUrl}?post_logout_redirect_uri=${runtimeConfig.public.BASE_URL}/&id_token_hint=${data?.value.token}`;
   signOut();
 }
 
@@ -473,23 +475,12 @@ function closeMenu() {
   }
 
   .nav-list-items-direct {
-    display: flex !important;
+    display: flex;
     align-items: center;
     justify-content: end !important;
-    position: absolute;
-    right: 20px;
-    top: 50%;
-    transform: translateY(-50%);
 
-    @media only screen and (max-width: 950px) {
-      position: static;
-      justify-content: start !important;
-      align-items: start;
-      margin-top: 50px;
-      width: 100%;
-      padding: 10px;
-      flex-direction: column;
-      gap: 10px;
+    @media only screen and (max-width: 1150px) {
+      display: block;
     }
   }
 
@@ -562,6 +553,18 @@ function closeMenu() {
     text-decoration: none;
   }
 
+  .dropdown-login #loginDropdown {
+    .chevron-menu {
+      transition: transform 0.3s ease-in-out;
+    }
+  }
+
+  .dropdown-login #loginDropdown.show {
+    .chevron-menu {
+      transform: rotate(90deg);
+    }
+  }
+
   .dropdown-login .menu-login-item {
     display: flex;
     justify-content: space-between;
@@ -579,9 +582,9 @@ function closeMenu() {
     color: rgb(33, 37, 41);
   }
   .dropdown-menu li:hover {
-    color: theme('colors.primaryOeb.500');
+    color: theme("colors.primaryOeb.500");
     a {
-      color: theme('colors.primaryOeb.500');
+      color: theme("colors.primaryOeb.500");
     }
   }
 
@@ -620,9 +623,9 @@ function closeMenu() {
     color: rgb(33, 37, 41);
   }
   .dropdown-menu li:hover {
-    color: theme('colors.primaryOeb.500');
+    color: theme("colors.primaryOeb.500");
     a {
-      color: theme('colors.primaryOeb.500');
+      color: theme("colors.primaryOeb.500");
     }
   }
 
@@ -639,7 +642,7 @@ function closeMenu() {
   }
 
   // ipad
-  @media only screen and (min-width: 950px) {
+  @media only screen and (min-width: 1150px) {
     .nav-list {
       display: flex;
     }
@@ -650,7 +653,7 @@ function closeMenu() {
 
     .nav-offcanvas {
       position: static;
-      width: auto;
+      width: 100%;
       height: auto;
       display: flex;
       flex-direction: row;
@@ -669,7 +672,7 @@ function closeMenu() {
   }
 
   // Movil
-  @media only screen and (max-width: 950px) {
+  @media only screen and (max-width: 1150px) {
     .nav-wrapper {
       background-color: white;
     }
@@ -757,6 +760,18 @@ function closeMenu() {
     #navbar-toggle.active span:after {
       transform: rotate(-45deg);
       width: 30px;
+    }
+
+    .nav-list-items-direct {
+      padding: 0;
+      .dropdown-login {
+        width: 100%;
+      }
+    }
+
+    .dropdown-login .menu-item-header,
+    .dropdown-login .menu-login-item {
+      padding-left: 50px;
     }
   }
 }

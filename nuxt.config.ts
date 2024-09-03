@@ -83,17 +83,18 @@ export default defineNuxtConfig({
       KEYCLOAK_HOST: process.env.KEYCLOAK_HOST || "https://inb.bsc.es/",
       KEYCLOAK_REALM: process.env.KEYCLOAK_REALM || "openebench",
       KEYCLOAK_CLIENT_ID: process.env.KEYCLOAK_CLIENT_ID || "oeb-frontend",
+      BASE_URL: process.env.APP_BASE_URL || "https://openebench.bsc.es",
     },
   },
 
   auth: {
     globalAppMiddleware: false,
     provider: {
-      type: 'authjs'
+      type: "authjs",
     },
     redirect: {
-      login: '/login', // Redirige a la página de login si no está autenticado
-      home: '/',       // Página de inicio después del login
+      login: "/login", // Redirige a la página de login si no está autenticado
+      home: "/", // Página de inicio después del login
     },
   },
 

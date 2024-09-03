@@ -27,7 +27,8 @@
                   :aria-controls="'collapse-' + index"
                   @click="toggleCollapse(index)"
                 >
-                  {{ footer.headline }}<UIcon
+                  {{ footer.headline
+                  }}<UIcon
                     name="i-heroicons-chevron-right-20-solid"
                     class="transform transition-transform duration-200 ms-1"
                     :class="[openIndex === index && 'rotate-90']"
@@ -228,5 +229,4 @@ export default {
 .collapse.show {
   visibility: visible;
 }
-
 </style>

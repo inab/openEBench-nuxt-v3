@@ -148,7 +148,8 @@ function getPreparedData() {
       },
     );
     // Process visualization data for BoxPlot
-    const visualization = dataGraph.value.data.datalink.inline_data.visualization;
+    const visualization =
+      dataGraph.value.data.datalink.inline_data.visualization;
     prepared.inline_data.visualization = {
       available_metrics: visualization.available_metrics,
       type: visualization.type,
