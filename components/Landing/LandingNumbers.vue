@@ -81,9 +81,10 @@ async function getCommunities() {
 
         // Check if dataURL is not null before proceeding
         if (dataURL) {
-          const encodingName = labelToName(
-            dataURL.mimeType.parameters.get("charset") || "utf-8",
-          ) || "utf-8"; // Provide a fallback if encodingName is null
+          const encodingName =
+            labelToName(
+              dataURL.mimeType.parameters.get("charset") || "utf-8",
+            ) || "utf-8"; // Provide a fallback if encodingName is null
 
           const decodedSummary = decode(dataURL.body, encodingName);
           community.summary = decodedSummary;
@@ -98,8 +99,9 @@ async function getCommunities() {
     },
   );
 
-  communitiesCount.value = communitiesData.filter((item: Record<string, any>) =>
-    item._metadata ? !item._metadata.project_spaces : true,
+  communitiesCount.value = communitiesData.filter(
+    (item: Record<string, any>) =>
+      item._metadata ? !item._metadata.project_spaces : true,
   ).length;
 
   projectsCount.value = communitiesData.filter((item: Record<string, any>) =>

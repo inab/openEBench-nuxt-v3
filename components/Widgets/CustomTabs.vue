@@ -15,7 +15,6 @@
               }"
               @click="selected = item"
             >
-        
               {{ item.label ? item.label : item.name }}
             </button>
           </li>
