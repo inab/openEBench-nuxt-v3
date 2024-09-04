@@ -54,6 +54,9 @@ export default NuxtAuthHandler({
         token.accessToken = account.access_token;
         token.id_token = account.id_token;
         token.preferred_username = account.preferred_username;
+        token.resource_access = account.resource_access;
+        console.log("account: ", account);
+        console.log("token: ", token);
       }
       return token;
     },
@@ -61,6 +64,8 @@ export default NuxtAuthHandler({
       session.accessToken = token.accessToken;
       session.token = token.id_token;
       session.preferred_username = token.preferred_username;
+      session.resource_access = token.resource_access;
+      console.log("session: ", session);
       return session;
     },
   },

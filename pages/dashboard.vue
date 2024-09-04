@@ -58,6 +58,8 @@ import type { FormSubmitEvent } from "#ui/types";
 const { status, data } = useAuth();
 const userInfo = ref(null);
 
+console.log(data.value)
+
 const state = reactive({
   username: undefined,
   name: undefined,

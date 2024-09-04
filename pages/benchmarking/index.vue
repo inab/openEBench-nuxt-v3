@@ -105,7 +105,6 @@
 import { ref } from "vue";
 import CommunityCard from "@/components/Cards/CommunityCard/CommunityCard.vue";
 import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
-
 import { useCommunities } from "@/stores/communities";
 
 const communitiesStore = useCommunities();
@@ -127,17 +126,16 @@ const fetchCommunitiesData = async () => {
       statusRef.value = "success";
     } else {
       const data = await communitiesStore.requestCommunitiesData();
-
       communities.value = data || communitiesStore.getCommunities;
       statusRef.value = "success";
     }
   } catch (error) {
-    console.error("Error fetching communities data:", error);
     statusRef.value = "error";
   }
 };
 
 onMounted(fetchCommunitiesData);
+
 </script>
 <style scoped lang="scss">
 .benchmarking-communities {

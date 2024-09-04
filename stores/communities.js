@@ -20,7 +20,7 @@ export const useCommunities = defineStore("communities", {
         throw new Error('$graphql is not available in the current context');
       }
 
-      const responseData = $graphql("/graphql", {
+      return await $graphql("/graphql", {
         method: "POST",
         headers: {
           Accept: "text/plain, */*",
@@ -47,18 +47,20 @@ export const useCommunities = defineStore("communities", {
                                 }
                             }`,
         }),
+      }).then((returnData) => {
+        let data = returnData.data.getCommunities;
+        let dataFormatted = this.formatData(data ?? null);
+        this.communities = this.filterCommunities(dataFormatted);
+        this.projects = this.filterProjects(dataFormatted);
+
+        if (type && type === "projects") {
+          return this.projects;
+        }
+
+        return this.communities;
+      }).catch((error) => {
+        console.error('Error:', error);
       });
-      let data = responseData.data.getCommunities;
-      let dataFormatted = this.formatData(data ?? null);
-
-      this.communities = this.filterCommunities(dataFormatted);
-      this.projects = this.filterProjects(dataFormatted);
-
-      if (type && type === "projects") {
-        return this.projects;
-      }
-
-      return this.communities;
     },
 
     formatData(data) {
