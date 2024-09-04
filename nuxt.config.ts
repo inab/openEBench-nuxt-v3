@@ -111,8 +111,10 @@ export default defineNuxtConfig({
     "@nuxt/ui",
     "@pinia/nuxt",
     "nuxt-viewport",
-    "@sidebase/nuxt-auth",
     "@nuxt/eslint",
+    "@nuxt/test-utils/module",
+    "vue3-carousel-nuxt",
+    "@sidebase/nuxt-auth",
   ],
 
   eslint: {

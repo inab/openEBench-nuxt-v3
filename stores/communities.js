@@ -4,8 +4,8 @@ import { labelToName, decode } from "whatwg-encoding";
 
 export const useCommunities = defineStore("communities", {
   state: () => ({
-    communities: Object,
-    projects: Object,
+    communities: [],
+    projects: [],
   }),
 
   getters: {
@@ -15,7 +15,12 @@ export const useCommunities = defineStore("communities", {
 
   actions: {
     async requestCommunitiesData(type) {
-      const responseData = await useNuxtApp().$graphql("/graphql", {
+      const { $graphql } = useNuxtApp();
+      if (!$graphql) {
+        throw new Error('$graphql is not available in the current context');
+      }
+
+      const responseData = $graphql("/graphql", {
         method: "POST",
         headers: {
           Accept: "text/plain, */*",
