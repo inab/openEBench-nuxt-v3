@@ -2,7 +2,7 @@
   <div class="benchmarking-community">
     <BreadcrumbsBar :breadcrumbs-array="routeArray" />
     <div class="mx-auto container">
-      <div v-if="pending">
+      <div v-if="isPending">
         <USkeleton class="h-12 w-12" :ui="{ rounded: 'rounded-full' }" />
         <div class="space-y-2">
           <USkeleton class="h-4 w-[250px]" />
@@ -10,65 +10,36 @@
         </div>
       </div>
       <div v-else>
-        <CommunityInfo
-          :community="community"
-          :community-references="communityReferences"
-        />
+        <CommunityInfo :community="community" :community-references="communityReferences" />
         <div class="community-tabs md:flex">
-          <UTabs
-            :items="tabsItems"
-            class="w-full"
-            :ui="{ list: { tab: { active: 'text-primaryOeb-500' } } }"
-          >
+          <UTabs :items="tabsItems" class="w-full" :ui="{ list: { tab: { active: 'text-primaryOeb-500' } } }">
             <template #default="{ item, index, selected }">
               <div class="flex items-center gap-2 relative truncate">
                 <span class="">{{ item.label }}</span>
-                <UBadge
-                  v-if="item.label == 'Datasets' && datasetsObj.length > 0"
-                  color="gray"
-                  variant="solid"
-                  :ui="{ rounded: 'rounded-full' }"
-                  >{{ datasetsObj.length }}</UBadge
-                >
-                <UBadge
-                  v-if="item.label == 'Tools' && toolsObj.length > 0"
-                  color="gray"
-                  variant="solid"
-                  :ui="{ rounded: 'rounded-full' }"
-                  >{{ toolsObj.length }}</UBadge
-                >
-                <span
-                  v-if="selected"
-                  class="absolute -right-4 w-2 h-2 rounded-full bg-primary-500 dark:bg-primary-400"
-                />
+                <UBadge v-if="item.label == 'Datasets' && datasetsObj.length > 0" color="gray" variant="solid"
+                  :ui="{ rounded: 'rounded-full' }">{{ datasetsObj.length }}</UBadge>
+                <UBadge v-if="item.label == 'Tools' && toolsObj.length > 0" color="gray" variant="solid"
+                  :ui="{ rounded: 'rounded-full' }">{{ toolsObj.length }}</UBadge>
+                <span v-if="selected"
+                  class="absolute -right-4 w-2 h-2 rounded-full bg-primary-500 dark:bg-primary-400" />
               </div>
             </template>
             <template #results>
               <div class="p-4 custom-tab">
-                <CommunityEvent
-                  :current-event="currentEvent"
-                  :events="eventsObj"
-                  :community-id="communityId"
-                />
+                <CommunityEvent :current-event="currentEvent" :events="eventsObj" :community-id="communityId" />
               </div>
             </template>
             <template v-if="datasetsObj && datasetsObj.length > 0" #datasets>
               <div class="custom-tab">
                 <div class="p-4">
-                  <CommunityDataset
-                    :datasets="datasetsObj"
-                    :community-id="communityId"
-                  />
+                  <CommunityDataset :datasets="datasetsObj" :community-id="communityId" />
                 </div>
               </div>
             </template>
             <template v-if="toolsObj && toolsObj.length > 0" #tools>
               <div class="custom-tab">
                 <div class="p-4">
-                  <CommunityTools
-                    :tools="toolsObj"
-                    :community-id="communityId"
-                  />
+                  <CommunityTools :tools="toolsObj" :community-id="communityId" />
                 </div>
               </div>
             </template>
@@ -99,6 +70,7 @@ import { useCommunity } from "@/stores/community";
 
 const route = useRoute();
 const communityStore = useCommunity();
+const isPending = ref(false);
 const community: Ref<any> = ref(null);
 const communityId: string = route.params.community;
 const event: string = route.query.event;
@@ -106,20 +78,23 @@ const event: string = route.query.event;
 if (communityStore.communityId === communityId) {
   community.value = communityStore.getCommunityData;
 } else {
-  const { data, pending }: { data: any; pending: boolean } = await useAsyncData(
+  const { data, pending }: { data: any; pending: Ref<boolean> } = await useAsyncData(
     "community",
     () => communityStore.requestCommunityData(communityId, event),
   );
   community.value = data.value ?? null;
+  isPending.value = pending.value;
 }
 
 const datasetsObj = communityStore.getDatasets;
 const toolsObj = communityStore.getTools;
-const eventsObj: [] = communityStore.getEvents;
+const eventsObj: any[] = communityStore.getEvents;
+
 const communityReferences = communityStore.getCommunityReferences;
 
 const currentEvent = computed(() => {
   const selectedEvent = communityStore.getCurrentEvent;
+
 
   // If no event is selected, select the first available event.
   if (!selectedEvent && eventsObj.length > 0) {
@@ -164,18 +139,24 @@ if (eventData.value && (eventData.value as { summary?: any }).summary) {
   });
 }
 
-const routeArray: Array = [
+const routeArray = computed(() => [
   {
     label: "Benchmarking Communities",
     isActualRoute: false,
     route: "/benchmarking",
   },
-  { label: community.value?.acronym + " " + "Events", isActualRoute: true },
-];
+  {
+    label: community.value?.acronym + " " + "Events",
+    isActualRoute: false,
+    route: "/benchmarking/" + communityId + "/events",
+  },
+  {
+    label: currentEvent.value?.name,
+    isActualRoute: true,
+  },
+]);
 
-routeArray[1].isActualRoute = false;
-routeArray[1].route = "/benchmarking/" + communityId + "/events";
-routeArray.push({ label: currentEvent.value?.name, isActualRoute: true });
+
 
 watch(
   () => route.query.event,
@@ -202,6 +183,7 @@ watch(
   margin: 0;
   padding: 0;
 }
+
 .custom-tab {
   border: 1px solid rgba(243, 244, 246);
   border-radius: 0.5rem;
