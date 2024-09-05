@@ -49,11 +49,12 @@ export default NuxtAuthHandler({
     async redirect({ baseUrl }) {
       return baseUrl;
     },
-    async jwt({ token, account }) {
+    async jwt({ token, account, profile }) {
       if (account) {
         token.accessToken = account.access_token;
         token.id_token = account.id_token;
         token.preferred_username = account.preferred_username;
+        token.resource_access = profile.resource_access;
       }
       return token;
     },
@@ -61,6 +62,7 @@ export default NuxtAuthHandler({
       session.accessToken = token.accessToken;
       session.token = token.id_token;
       session.preferred_username = token.preferred_username;
+      session.resource_access = token.resource_access;
       return session;
     },
   },
