@@ -1,49 +1,34 @@
 <!-- pages/dashboard.vue -->
 <template>
   <div class="dashboard">
+    <BreadcrumbsBar />
     <div class="w-100 container">
       <div>
-        <div v-if="userInfo">
-          <div class="dashboard__title">
-            <h2 class="text-primaryOeb-500">User Info</h2>
-          </div>
-          <div class="col-4">
-            <img
-              v-if="userInfo.picture"
-              :src="userInfo.picture"
-              alt="User profile picture"
-              class="rounded-full w-24 h-24"
-            />
-          </div>
-          <UForm
-            :schema="v.safeParser(schema)"
-            :state="state"
-            class="space-y-4 row"
-            @submit="onSubmit"
-          >
-            <UFormGroup label="User name" name="username" class="col-4 mt-0">
-              <UInput v-model="state.username" />
-            </UFormGroup>
+        <div v-if="status == 'authenticated'">
+          {{  userStore.getUserCommunitiesRoles }}
 
-            <UFormGroup label="Name" name="name" class="col-4 mt-0">
-              <UInput v-model="state.name" />
-            </UFormGroup>
-
-            <UFormGroup label="Surname" name="surname" class="col-4 mt-0">
-              <UInput v-model="state.surname" />
-            </UFormGroup>
-
-            <UFormGroup label="Email" name="email" class="col-4">
-              <UInput v-model="state.email" />
-            </UFormGroup>
-
-            <div class="">
-              <UButton type="submit"> Submit </UButton>
+          <div class="">
+            <div class="text-primaryOeb-500 border-slate-200 border-b mb-3">
+              <h2>Dashboard</h2>
             </div>
-          </UForm>
+            <div class="dashboard__description text-gray-500">
+              It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. 
+            </div>
+          </div>
+          <div class="dashboard-tabs">
+            <UTabs 
+            :items="items"
+            :ui="{ wrapper: 'items-center gap-4'}">
+              <template #communities="{ item }">
+                <div v-if="item.key === 'communities'">
+                  <Communities />
+                </div>
+              </template>
+            </UTabs>
+          </div>
         </div>
-        <div v-else>
-          <p>Cargando información del usuario...</p>
+        <div class="" v-else>
+          Not authenticated
         </div>
       </div>
     </div>
@@ -51,72 +36,44 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
-import * as v from "valibot";
-import type { FormSubmitEvent } from "#ui/types";
+import { ref } from "vue";
+import { useUser } from "@/stores/user";
+import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
+import Communities from "@/components/Dashboard/Communities.vue";
 
+const runtimeConfig = useRuntimeConfig();
 const { status, data } = useAuth();
-const userInfo = ref(null);
-
+const userStore = useUser();
+const items = [{
+  key: 'communities',
+  slot: 'communities',
+  label: 'Communities',
+  icon: 'i-heroicons-arrow-down-tray',
+}, {
+  key: "all_tools",
+  slot: "all_tools",
+  label: 'All tools',
+  icon: 'i-heroicons-eye-dropper'
+}]
+const token = data?.value.accessToken;
+const privileges = ref(null)
 console.log(data.value)
+console.log("token: ", token)
 
-const state = reactive({
-  username: undefined,
-  name: undefined,
-  supername: undefined,
-  email: undefined,
+// TO update
+await fetch(
+  `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}/query/privileges`,
+  {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    method: "GET",
+  },
+).then((response) => response.json())
+.then((data) => {
+  console.log("data: ", data)
+  userStore.setUserCommunitiesRoles(data)
 });
-
-const schema = v.object({
-  username: v.pipe(v.string()),
-  name: v.pipe(v.string()),
-  surname: v.pipe(v.string()),
-  email: v.pipe(v.string(), v.email("Invalid email")),
-});
-
-type Schema = v.InferOutput<typeof schema>;
-
-const fetchUserInfo = async () => {
-  if (status.value === "authenticated") {
-    try {
-      const token = data?.value.accessToken;
-
-      const response = await fetch(
-        "https://inb.bsc.es/auth/realms/openebench/protocol/openid-connect/userinfo",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          method: "GET",
-        },
-      );
-
-      if (response.ok) {
-        userInfo.value = await response.json();
-        state.name = userInfo.value.given_name;
-        state.surname = userInfo.value.family_name;
-        state.email = userInfo.value.email;
-        state.username = userInfo.value.preferred_username;
-      } else {
-        console.error(
-          "Error al obtener la información del usuario:",
-          response.status,
-          await response.text(),
-        );
-      }
-    } catch (error) {
-      console.error("Error en la solicitud de información de usuario:", error);
-    }
-  }
-};
-
-async function onSubmit(event: FormSubmitEvent<Schema>) {
-  // Do something with event.data
-  console.log(event.data);
-}
-
-// Llama a la función para obtener la información del usuario cuando el componente se monta
-onMounted(fetchUserInfo);
 </script>
 
 <style lang="scss" scoped>
@@ -131,6 +88,9 @@ onMounted(fetchUserInfo);
       border-color: rgb(226, 232, 240, 1);
       border-bottom-width: 1px;
     }
+  }
+  .dashboard-tabs {
+    padding-top: 40px;
   }
 }
 </style>

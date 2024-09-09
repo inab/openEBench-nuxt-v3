@@ -15,7 +15,7 @@ export const useUser = defineStore('user', {
 
         getUserRoles: (state) => state.userRoles,
 
-        getUserCommunitiesRoles: (state) => state.userInfo.communitiesRoles,
+        getUserCommunitiesRoles: (state) => state.communitiesRoles,
 
         getUserCommunities: (state) => state.userCommunities,
 
@@ -34,7 +34,7 @@ export const useUser = defineStore('user', {
         },
 
         setUserCommunitiesRoles(communitiesRoles) {
-            this.communitiesRoles = communitiesRoles;
+            this.communitiesRoles = communitiesRoles.roles;
         },
 
         setUserCommunities(userCommunities) {

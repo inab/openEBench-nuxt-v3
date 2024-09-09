@@ -283,12 +283,7 @@ import subMenuEntriesAbout from "./HeaderMenu/subMenuEntriesAbout";
 //import { useUser } from '@/stores/user';
 
 const {
-  status,
   data,
-  lastRefreshedAt,
-  getCsrfToken,
-  getProviders,
-  getSession,
   signIn,
   signOut,
 } = useAuth();
@@ -315,6 +310,11 @@ if (data.value) {
   logInItems.value.push({
     label: "Profile",
     icon: "i-heroicons-user-20-solid",
+    href: "/dashboard",
+  });
+  logInItems.value.push({
+    label: "Dashboard",
+    icon: "i-heroicons-presentation-chart-line-16-solid",
     href: "/dashboard",
   });
   logInItems.value.push({

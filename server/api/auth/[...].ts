@@ -4,13 +4,14 @@ import KeycloakProvider from "next-auth/providers/keycloak";
 const runtimeConfig = useRuntimeConfig();
 
 const refreshAccessToken = async (token: JWT) => {
-  console.log("refreshing token ...");
+  console.log("7 - refreshing token ...");
   try {
-    if (Date.now() > token.refreshTokenExpired) throw Error;
+    //if (Date.now() > token.refreshTokenExpired) throw Error;
     const details = {
       client_id: runtimeConfig.public.KEYCLOAK_CLIENT_ID,
       client_secret: "",
-      grant_type: ['authorization_code'],
+      authorization_code: token.accessToken,
+      grant_type: 'refresh_token',
       refresh_token: token.refreshToken,
     };
     const formBody: string[] = [];
@@ -30,16 +31,17 @@ const refreshAccessToken = async (token: JWT) => {
     });
     const refreshedTokens = await response.json();
 
+    console.log("response: ", response);
+
     console.log("token refreshed ...")
+    console.log("refreshedTokens: ", refreshedTokens);
 
     if (!response.ok) throw refreshedTokens;
     return {
       ...token,
       accessToken: refreshedTokens.access_token,
-      accessTokenExpired: Date.now() + (refreshedTokens.expires_at - 15) * 1000,
-      refreshToken: refreshedTokens.refresh_token ?? token.refreshToken,
-      refreshTokenExpired:
-        Date.now() + (refreshedTokens.refresh_expires_in - 15) * 1000,
+      accessTokenExpires: Date.now() + refreshedTokens.expires_in * 1000,
+      refreshToken: refreshedTokens.refresh_token ?? token.refreshToken, // Si no hay nuevo refresh token, usar el antiguo
     };
   } catch (error) {
     return {
@@ -86,8 +88,17 @@ export default NuxtAuthHandler({
       },
       session: {
         jwt: true,
-        maxAge: 60 * 60 * 24 * 7,
-      }
+        maxAge: 30 * 60,
+      },
+      cookies: {
+        sessionToken: {
+          name: `__Secure-next-auth.session-token`,
+          options: {
+            httpOnly: true,
+            sameSite: 'lax',
+          },
+        },
+      },
     }),
   ],
   events: {
@@ -103,40 +114,22 @@ export default NuxtAuthHandler({
       return baseUrl;
     },
     async jwt({ token, user, account, profile }) {
-      // Initial sign in
       if (account && user) {
-        console.log("initial sigin in");
-        // Add access_token, refresh_token and expirations to the token right after signin
+        console.log("jwt account: ", account);
         token.accessToken = account.access_token;
         token.id_token = account.id_token;
-        token.refreshToken = account.refreshToken;
-        token.accessTokenExpired =
-          Date.now() + (account.expires_at - 15);
-        token.refreshTokenExpired =
-          Date.now() + (account.refresh_expires_in - 15);
-        token.user = user;
+        token.accessTokenExpires = Date.now() + account.expires_in * 1000; // Guardar tiempo de expiración
+        token.refreshToken = account.refresh_token; // Guardar el refresh token
+      }
+
+      // Si el token ha expirado, intenta renovarlo
+      if (Date.now() < token.accessTokenExpires) {
         return token;
       }
 
-      console.log("account: ", account);
-      // Return previous token if the access token has not expired yet
-      if (Date.now() < token.accessTokenExpired) {
-        console.log("token not expired yet");
-        return token;
-      }
-
-      return refreshAccessToken(token);
-
-      // if (account) {
-      //   token.accessToken = account.access_token;
-      //   token.id_token = account.id_token;
-      //   token.preferred_username = account.preferred_username;
-      //   token.resource_access = profile.resource_access;
-      // }
-      // if (typeof user !== typeof undefined){
-      //   token.user = user;
-      // }
-      //return token;
+      // Renueva el token de acceso
+      const refreshedToken = await refreshAccessToken(token);
+      return refreshedToken;
     },
     async session({ session, token }) {
       console.log("calling new session");

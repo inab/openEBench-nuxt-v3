@@ -57,6 +57,7 @@
   
   const { status, data } = useAuth();
   const userInfo = ref(null);
+  const runtimeConfig = useRuntimeConfig();
   
   const state = reactive({
     username: undefined,
@@ -78,9 +79,9 @@
     if (status.value === "authenticated") {
       try {
         const token = data?.value.accessToken;
-  
+        
         const response = await fetch(
-          "https://inb.bsc.es/auth/realms/openebench/protocol/openid-connect/userinfo",
+          `${runtimeConfig.public.KEYCLOAK_HOST}/auth/realms/${runtimeConfig.public.KEYCLOAK_REALM}/protocol/openid-connect/userinfo`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
