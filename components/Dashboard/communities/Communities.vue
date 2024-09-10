@@ -1,10 +1,7 @@
 <template>
-    <div class="user_communities">
-        <div class="user_communities__body">
-            <div class="user_communities__body__table">
-                <!-- Filters -->
-                 {{  todoStatus }}
-                 {{  selectedStatus }}
+    <div class="user-communities">
+        <div class="user-communities__body">
+            <div class="user-communities__body__table">
                 <div class="flex items-center justify-between gap-3 py-3">
                     <UInput
                         v-model="search"
@@ -17,9 +14,18 @@
                         multiple
                         placeholder="Status"
                         class="w-40">
-                        <template #label>
-                            <span v-if="selectedStatus.length === 0">{{ selectedStatus.map((item: Array<{ value: string, label: string }>) => item.value).join(', ') }}</span>
-                            <span v-else>Select status</span>
+                        <template v-if="selectedStatus.length">
+                            <div v-for="status, index in selectedStatus" 
+                                :key="index"
+                                class="custom-badget filter-badget" 
+                                :class="CommunityStatusColors[status?.value]">
+                                {{ status.label }}
+                            </div>
+                        </template>
+                        <span v-else>Select status</span>
+                        <template #option="{ option: status }">
+                            <span :class="[CommunityStatusColors[status?.value], 'inline-block h-2 w-2 flex-shrink-0 rounded-full']" aria-hidden="true" />
+                            <span class="truncate">{{ status.label }}</span>
                         </template>
                     </USelectMenu>
                 </div>
@@ -46,7 +52,7 @@
                         },
                     }">
                     <template #logos-data="{ row }">
-                        <div class="user_communities__body__table__logo">
+                        <div class="user-communities__body__table__logo">
                             <img :src="row.logo" alt="Community logo" class="" />
                         </div>
                     </template>
@@ -113,10 +119,10 @@
                             </div>
                         </div>
                     </template>
-                    <template #events-data>
-                        <button title="View community events" class="user_communities__events">
+                    <template #events-data="{ row }">
+                        <NuxtLink :to="`/dashboard/community/${row._id}`" title="View community events" class="user-communities__events">
                             <font-awesome-icon :icon="['fas', 'circle-arrow-right']" />
-                        </button>
+                        </NuxtLink>
                     </template>
                 </UTable>
                 <div
@@ -287,7 +293,7 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-.user_communities {
+.user-communities {
     &__body {
         padding: 1rem;
         &__table {
@@ -309,6 +315,9 @@ onMounted(() => {
         border-radius: 9999px;
         font-size: 0.75rem;
         line-height: 1;
+        &.filter-badget {
+            margin-right: 0.5rem;
+        }
     }
     .btn-event {
         padding: 5px;

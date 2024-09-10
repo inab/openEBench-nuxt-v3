@@ -310,7 +310,7 @@ if (data.value) {
   logInItems.value.push({
     label: "Profile",
     icon: "i-heroicons-user-20-solid",
-    href: "/dashboard",
+    href: "/profile",
   });
   logInItems.value.push({
     label: "Dashboard",

@@ -38,7 +38,7 @@
 import { ref } from "vue";
 import { useUser } from "@/stores/user";
 import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
-import Communities from "@/components/Dashboard/Communities.vue";
+import Communities from "@/components/Dashboard/communities/Communities.vue";
 
 const runtimeConfig = useRuntimeConfig();
 const { status, data } = useAuth();
@@ -55,9 +55,6 @@ const items = [{
   icon: 'i-heroicons-eye-dropper'
 }]
 const token = data?.value.accessToken;
-const privileges = ref(null)
-console.log(data.value)
-console.log("token: ", token)
 
 // TO update
 await fetch(
@@ -70,7 +67,6 @@ await fetch(
   },
 ).then((response) => response.json())
 .then((data) => {
-  console.log("data: ", data)
   userStore.setUserCommunitiesRoles(data)
 });
 </script>

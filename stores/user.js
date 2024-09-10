@@ -50,7 +50,6 @@ export const useUser = defineStore('user', {
         },
 
         async fetchCommunities(token) {
-            console.log(token)
             return await fetch("https://dev-openebench.bsc.es/api/scientific/staged/Community",
                 {
                 headers: {
@@ -62,7 +61,6 @@ export const useUser = defineStore('user', {
             )
             .then((response) => response.json())
             .then((data) => {
-                console.log("data: ", data)
                 this.setUserCommunities(data)
                 return data;
             })
@@ -81,7 +79,6 @@ export const useUser = defineStore('user', {
                 },
             ).then((response) => response.json())
             .then((data) => {
-                console.log("data: ", data)
                 this.setUserCommunitiesEvents(data)
             });
         },
@@ -98,7 +95,6 @@ export const useUser = defineStore('user', {
                 },
             ).then((response) => response.json())
             .then((data) => {
-                console.log("data: ", data)
                 this.setUserCommunitiesChallenges(data)
             });
         },

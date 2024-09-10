@@ -29,4 +29,9 @@ export const customRoutes = [
       "pages/benchmarking/community/challenge/participants",
     ),
   },
+  {
+    name: "dashboard",
+    path: "/dashboard",
+    file: resolve(__dirname, "pages/dashboard"),
+  }
 ];
