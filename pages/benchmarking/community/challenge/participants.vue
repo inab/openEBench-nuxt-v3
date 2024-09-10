@@ -57,8 +57,12 @@ import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
 const METRIC_ID_KEY = "level_2:metric_id";
 
 const route = useRoute();
-const communityId: string = route.params.community;
 const challengeId = route.params.id;
+const isPending = ref(false);
+const communityStore = useCommunity();
+const communityId: string = route.params.community;
+const community: Ref<any> = ref(null);
+const eventsObj: any[] = communityStore.getEvents;
 
 const datasets = ref(Array);
 const participants: any = ref(null);
@@ -248,22 +252,57 @@ function getMetricsTable() {
   };
 }
 
-const routeArray: Array = [
+if (communityStore.communityId === communityId) {
+  community.value = communityStore.getCommunityData;
+} else {
+  const { data, pending }: { data: any; pending: Ref<boolean> } = await useAsyncData(
+    "community",
+    () => communityStore.requestCommunityData(communityId, event),
+  );
+  community.value = data.value ?? null;
+  isPending.value = pending.value;
+}
+
+const currentEvent = computed(() => {
+  const selectedEvent = communityStore.getCurrentEvent;
+
+
+  // If no event is selected, select the first available event.
+  if (!selectedEvent && eventsObj.length > 0) {
+    const firstEvent = eventsObj[0];
+    communityStore.setCurrentEvent(firstEvent);
+    return firstEvent;
+  }
+  return selectedEvent;
+});
+
+const routeArray: Array<{ label: string; isActualRoute: boolean; route?: string }> = [
   {
     label: "Benchmarking Communities",
     isActualRoute: false,
     route: "/benchmarking",
   },
   {
-    label: challenge.value.acronym,
-    route: "/benchmarking/" + communityId,
+    label: community.value?.acronym + " " + "Events",
     isActualRoute: false,
+    route: "/benchmarking/" + communityId + "/events",
   },
   {
-    label: "Participant ",
+    label: currentEvent.value?.name,
+    isActualRoute: false,
+    route: "/benchmarking/" + communityId + "?event=" + currentEvent.value._id
+  },
+  {
+    label: "Challenge " + challenge.value.acronym + ' '+ challengeId,
+    isActualRoute: false,
+    route: "/benchmarking/" + communityId + "/" + challengeId
+  },
+  {
+    label: "Participants",
     isActualRoute: true,
   },
 ];
+
 </script>
 
 <style scoped lang="scss">
