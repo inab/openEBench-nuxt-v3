@@ -3,16 +3,16 @@
     <div class="container h-100">
       <div class="row h-100 align-items-center">
         <div class="col-12 col-sm-6 col-lg-3 mb-3 mb-lg-0 h-100">
-          <AnimateNumber type="Communities" :value="communitiesCount" />
+          <AnimateNumber description="Communities" :number="communitiesCount" />
         </div>
         <div class="col-12 col-sm-6 col-lg-3 mb-3 mb-lg-0 h-100">
-          <AnimateNumber type="Tools" :value="toolsCount" />
+          <AnimateNumber description="Tools" :number="toolsCount" />
         </div>
         <div class="col-12 col-sm-6 col-lg-3 mb-3 mb-lg-0 h-100">
-          <AnimateNumber type="Resources" :value="resourcesCount" />
+          <AnimateNumber description="Resources" :number="resourcesCount" />
         </div>
         <div class="col-12 col-sm-6 col-lg-3 mb-3 mb-lg-0 h-100">
-          <AnimateNumber type="Project" :value="projectsCount" />
+          <AnimateNumber description="Project" :number="projectsCount" />
         </div>
       </div>
     </div>
@@ -52,7 +52,7 @@ onMounted(async () => {
 });
 
 async function getCommunities() {
-  const { data: communities, pending }: { data: any; pending: boolean } =
+  const { data: communities, pending }: { data: any; pending: Ref<boolean> } =
     await useAsyncData("communities", () =>
       $graphql("/graphql", {
         method: "POST",
@@ -73,17 +73,25 @@ async function getCommunities() {
     );
 
   const communitiesData = (communities.value as any).data.getCommunities.map(
-    (community) => {
+    (community: Record<string, any>) => {
       community._metadata = JSON.parse(community._metadata);
+
       if (community._metadata && "project:summary" in community._metadata) {
         const dataURL = parseDataURL(community._metadata["project:summary"]);
-        const encodingName = labelToName(
-          dataURL.mimeType.parameters.get("charset") || "utf-8",
-        );
-        const decodedSummary = decode(dataURL.body, encodingName);
 
-        community.summary = decodedSummary;
-        community._metadata["project:summary"] = decodedSummary;
+        // Check if dataURL is not null before proceeding
+        if (dataURL) {
+          const encodingName =
+            labelToName(
+              dataURL.mimeType.parameters.get("charset") || "utf-8",
+            ) || "utf-8"; // Provide a fallback if encodingName is null
+
+          const decodedSummary = decode(dataURL.body, encodingName);
+          community.summary = decodedSummary;
+          community._metadata["project:summary"] = decodedSummary;
+        } else {
+          community.summary = null;
+        }
       } else {
         community.summary = null;
       }
@@ -91,11 +99,12 @@ async function getCommunities() {
     },
   );
 
-  communitiesCount.value = communitiesData.filter((item) =>
-    item._metadata ? !item._metadata.project_spaces : true,
+  communitiesCount.value = communitiesData.filter(
+    (item: Record<string, any>) =>
+      item._metadata ? !item._metadata.project_spaces : true,
   ).length;
 
-  projectsCount.value = communitiesData.filter((item) =>
+  projectsCount.value = communitiesData.filter((item: Record<string, any>) =>
     item._metadata ? item._metadata.project_spaces : false,
   ).length;
 }
@@ -113,7 +122,7 @@ async function getToolsCount() {
 }
 
 async function getResourcesCount() {
-  const { data: resources, pending }: { data: any; pending: boolean } =
+  const { data: resources, pending }: { data: any; pending: Ref<boolean> } =
     await useAsyncData("resources", () =>
       $observatory("/api/stats/tools/count_total", {
         method: "GET",
@@ -129,11 +138,23 @@ async function getResourcesCount() {
   min-height: 170px;
   color: white;
   background-image: url("~/assets/images/backgrounds/material2_parallax.webp");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed; /* Parallax effect */
+  display: flex;
+  align-items: center;
+
+  .container {
+    height: 100%;
+  }
 
   .row {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
+    justify-content: center;
+    height: 100%;
   }
 
   .col {
@@ -141,6 +162,7 @@ async function getResourcesCount() {
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    height: 100%;
   }
 }
 </style>

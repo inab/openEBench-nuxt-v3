@@ -1,5 +1,5 @@
 <template>
-  <div class="h-100">
+  <div class="h-100 community-card">
     <NuxtLink
       :to="to"
       class="community-card__item max-w-sm rounded overflow-visible text-zinc-700"
@@ -96,7 +96,6 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from "vue";
 import pluralize from "pluralize";
 
 const props = defineProps<{

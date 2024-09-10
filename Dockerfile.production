@@ -3,6 +3,7 @@ FROM node:20 as node
 WORKDIR /app
 #define env vars
 ARG ENVIRONMENT=openebench
+ARG APP_BASE_URL=https://openebench.bsc.es/
 ARG OEB_LEGACY_ANGULAR_URI=https://legacy.openebench.bsc.es/
 ARG VRE_URI=https://openebench.bsc.es/vre/home/
 ARG OBSERVATORY_URI=https://observatory.openebench.bsc.es
@@ -26,6 +27,7 @@ ENV KEYCLOAK_REALM $KEYCLOAK_REALM
 ENV KEYCLOAK_CLIENT_ID $KEYCLOAK_CLIENT_ID
 ENV OBSERVATORY_API_URL $OBSERVATORY_API_URL
 ENV GITHUBAPP_API_URL $GITHUBAPP_API_URL
+ENV APP_BASE_URL $APP_BASE_URL
 ENV NODE_OPTIONS --openssl-legacy-provider
 COPY . .
 RUN npm ci

@@ -1,89 +1,87 @@
 <template>
-  <div class="landing-animate-number w-100 h-100">
-    <div class="">
-      <div
-        ref="numberCounter"
-        v-observe-visibility="visibilityChanged"
-        :class="`${'counter'} ${'counter'}-${type}`"
-      >
-        <span class="counter-value">{{ displayValue }}</span>
-      </div>
-      <div class="counter-text">{{ counterText }}</div>
-    </div>
+  <div ref="numberSection" class="d-flex flex-column align-items-center">
+    <h1 class="display-4 thicker-number">{{ animatedNumber }}</h1>
+    <p class="description-text fw-medium">{{ description }}</p>
   </div>
 </template>
 
 <script setup lang="ts">
-import gsap from "gsap";
-import { ref, watch } from "vue";
+import { ref, onMounted, onUnmounted } from 'vue'
+import { useRoute } from 'vue-router'
+import { gsap } from 'gsap'
 
-const tl = gsap.timeline({ repeat: 0 });
+const props = defineProps<{
+  number: number | null;
+  description: string;
+}>()
 
-const props = defineProps({
-  value: {
-    type: Number,
-    required: true,
-  },
-  type: {
-    type: String,
-    default: "linear",
-  },
-});
+const animatedNumber = ref(0)
+const numberSection = ref<HTMLElement | null>(null)
+const route = useRoute()
+let checkInterval: number | null = null
 
-const numberProps = computed(() => props.value);
-const counterText = props.type == "Project" ? "Project Spaces" : props.type;
-const displayValue = ref(0);
-const tweenValue = ref(0); //  ??
-const isVisibled = ref(false);
-const inputValue = ref(0);
-const start = 0;
-const className = `${"counter"}-${props.type}`;
-
-watch(inputValue, () => {
-  tl.fromTo(
-    "." + className,
-    {
-      innerText: start,
-      scale: 1,
-    },
-    {
-      innerText: numberProps.value,
-      snap: { innerText: 1 },
-      duration: 5,
-      ease: "linear",
-    },
-  );
-});
-
-function visibilityChanged(isVisible: boolean, entry: any) {
-  if (!isVisibled.value && isVisible) {
-    isVisibled.value = isVisible;
-    inputValue.value = numberProps.value;
-  } else {
-    isVisibled.value = false;
-    inputValue.value = 0;
+// Function to animate the number
+const animateNumber = () => {
+  if (props.number !== null) {
+    gsap.to(animatedNumber, {
+      duration: 2,
+      value: props.number,
+      onUpdate: function () {
+        animatedNumber.value = Math.ceil(this.targets()[0].value)
+      },
+      ease: 'power3.out',
+    })
   }
 }
-</script>
 
-<style scoped lang="scss">
-.landing-animate-number {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  .counter {
-    font-size: 50px;
-    text-align: center;
-    width: 100%;
-    .counter-value {
-      font-size: 30px;
+// Function to check if the element is in the viewport
+const checkIfInView = () => {
+  if (numberSection.value) {
+    const rect = numberSection.value.getBoundingClientRect()
+    const inViewport = rect.top >= 0 && rect.bottom <= (window.innerHeight || document.documentElement.clientHeight)
+    if (inViewport) {
+      animateNumber()
     }
   }
-  .counter-text {
-    font-size: 20px;
-    text-align: center;
-    font-weight: 500;
-    letter-spacing: 0.0125em !important;
+}
+
+// Function to check the current roue (back browser button check)
+const checkRouteAndViewport = () => {
+  if (route.path === '/') {
+    checkIfInView()
   }
+}
+
+onMounted(() => {
+  // Perform an immediate check when the component mounts
+  checkRouteAndViewport()
+
+  // Set an interval to check the route and viewport every 250ms (check the back button of browser)
+  checkInterval = window.setInterval(() => {
+    checkRouteAndViewport()
+  }, 250)
+})
+
+onUnmounted(() => {
+  if (checkInterval !== null) {
+    clearInterval(checkInterval)
+  }
+})
+
+</script>
+
+<style scoped>
+.number-section {
+  margin-top: 50px;
+}
+
+.thicker-number {
+  font-weight: 300;
+  text-shadow: 0.5px 0.5px 0 #000000;
+}
+
+.description-text {
+  font-size: 20px;
+  text-shadow: 0.5px 0.5px 0 #000000;
 }
 </style>

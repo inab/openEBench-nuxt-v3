@@ -11,7 +11,9 @@
           @change="handleChangeEvent"
         >
           <template #label>
-            <span class="h-2 w-2 rounded-full bg-primary-500 dark:bg-primary-400" />
+            <span
+              class="h-2 w-2 rounded-full bg-primary-500 dark:bg-primary-400"
+            />
             <span class="primary-label truncate">{{ currentEvent.name }}</span>
           </template>
           <template #option="{ option: event }">
@@ -37,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, computed, ref } from "vue";
+import { computed, ref } from "vue";
 import pluralize from "pluralize";
 import { useCommunity } from "@/stores/community";
 
@@ -68,7 +70,10 @@ async function handleChangeEvent() {
     });
 
     // Updates the data of the selected event.
-    await communityStore.requestCommunityData(route.params.community, event._id);
+    await communityStore.requestCommunityData(
+      route.params.community,
+      event._id,
+    );
   }
 }
 </script>

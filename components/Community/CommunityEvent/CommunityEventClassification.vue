@@ -14,7 +14,7 @@
 <script setup lang="ts">
 import debounce from "lodash.debounce";
 import { run_summary_table } from "@inb/oeb-classification-table";
-import { defineProps, watch, onMounted } from "vue";
+import { watch, onMounted } from "vue";
 
 const props = defineProps<{
   id: number;

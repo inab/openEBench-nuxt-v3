@@ -29,7 +29,6 @@
 </template>
 
 <script setup lang="ts">
-import { Carousel, Navigation, Slide } from "vue3-carousel";
 import Img1 from "~/assets/images/partners/elixir.png";
 import Img2 from "~/assets/images/partners/eucanimage.png";
 import Img3 from "~/assets/images/partners/eucancan.png";

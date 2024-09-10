@@ -108,7 +108,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps } from "vue";
+import { ref } from "vue";
 
 import imgOrcid from "/images/illustrations/orcid.svg";
 

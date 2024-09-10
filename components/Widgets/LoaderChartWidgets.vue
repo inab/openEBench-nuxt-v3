@@ -1,9 +1,7 @@
 <template>
   <div class="loader-chart-widget">
-    <div v-if="isLoadingGraph" class="text-center">
-      <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">Loading...</span>
-      </div>
+    <div v-if="isLoadingGraph" class="loader-container mt-5">
+      <img src="~/assets/images/201805.OpenEBench.logo.Animated.0050secs.gif" alt="Loader GIF" class="loader" />
     </div>
     <div v-else>
       <div v-if="schemaUrl" class="schema-url text-primaryOeb-500">
@@ -34,8 +32,8 @@ const type: string = ref("");
 
 const schemaUrl = computed(() =>
   dataGraph.value.inline_data &&
-  dataGraph.value.inline_data.visualization &&
-  dataGraph.value.inline_data.visualization.schema_url
+    dataGraph.value.inline_data.visualization &&
+    dataGraph.value.inline_data.visualization.schema_url
     ? dataGraph.value.inline_data.visualization.schema_url
     : null,
 );
@@ -148,7 +146,8 @@ function getPreparedData() {
       },
     );
     // Process visualization data for BoxPlot
-    const visualization = dataGraph.value.data.datalink.inline_data.visualization;
+    const visualization =
+      dataGraph.value.data.datalink.inline_data.visualization;
     prepared.inline_data.visualization = {
       available_metrics: visualization.available_metrics,
       type: visualization.type,
@@ -193,6 +192,18 @@ function getMetricsNames(metricX: string, metricY: string) {
 </script>
 
 <style lang="scss" scoped>
+
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+}
+
+.loader {
+  width: 160px;
+  height: 100px;
+}
 .loader-chart-widget {
   .schema-url {
     font-size: 15px;
@@ -200,9 +211,11 @@ function getMetricsNames(metricX: string, metricY: string) {
     padding-top: 30px;
     padding-left: 8px;
     text-align: left;
+
     a {
       color: theme("colors.primary.500");
       text-decoration: none;
+
       &:hover {
         text-decoration: underline;
       }

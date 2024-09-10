@@ -1,17 +1,30 @@
 <template>
   <div class="landing-searcher">
     <div class="container">
-      <UInput
+      <UInput 
         v-model="searchValue"
         name="searchValue"
         placeholder="Search for individual tools."
-        icon="i-heroicons-magnifying-glass-20-solid"
         autocomplete="off"
         size="xl"
-        :ui="{ icon: { trailing: { pointer: '' } } }"
+        @keydown.enter="handleSubmit"
+        :ui="{ icon: { trailing: { pointer: '' }, leading: {pointer: ''} } }"
       >
+        <!-- Prepend slot for the left icon (Magnifying glass) -->
+        <template #leading>
+          <UButton 
+            class="left-icon"
+            color="gray"
+            variant="link"
+            icon="i-heroicons-magnifying-glass-20-solid"
+            :padded="false"
+            @click="handleSubmit"
+          />
+        </template>
+
+        <!-- Trailing slot for the right icon (Clear button) -->
         <template #trailing>
-          <UButton
+          <UButton 
             v-show="searchValue !== ''"
             color="gray"
             variant="link"
@@ -24,15 +37,32 @@
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
 import { ref } from "vue";
+import { useRouter } from "nuxt/app";
 
 const searchValue = ref("");
+const router = useRouter();
+
+function handleSubmit() {
+  if (searchValue.value.trim() !== "") {
+    router.push({
+      path: '/tool',
+      query: { search: searchValue.value },
+    });
+  }
+}
 </script>
 
 <style lang="scss" scoped>
 .landing-searcher {
   background-color: #0b579f;
   padding: 30px 0px;
+}
+
+.left-icon {
+  margin-right: 8px; /* Adjust spacing as needed */
+  cursor: pointer; /* Ensure the icon shows as clickable */
 }
 </style>

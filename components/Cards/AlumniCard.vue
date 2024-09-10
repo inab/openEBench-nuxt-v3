@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, defineProps } from "vue";
+import { ref, computed } from "vue";
 
 // PROPS
 const props = defineProps<{
@@ -107,7 +107,7 @@ function toggleExpand() {
   font-size: 12px;
   font-weight: 300;
   text-transform: lowercase;
-  margin-right: 4px;
+  margin-right: 8px;
   opacity: 0;
   transition: opacity 0.3s ease-in-out;
 }
