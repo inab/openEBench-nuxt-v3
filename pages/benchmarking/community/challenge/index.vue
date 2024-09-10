@@ -1,26 +1,28 @@
 <template>
-  <BreadcrumbsBar :breadcrumbs-array="routeArray" />
-  <div class="benchmarking-challenge container">
-    <div class="benchmarking-challenge__title text-primaryOeb-500">
-      {{ challenge.acronym }} ( {{ challenge._id }})
-    </div>
-    <div class="benchmarking-challenge__subtitle">
-      {{ challenge.name }}
-    </div>
-    <div class="benchmarking-challenge__body">
-      <div v-for="(item, index) in datasets" :key="index"
-        class="benchmarking-challenge__body_dec text-gray-500 text-sm">
-        <div v-if="index == tab && item">
-          <ChartDescriptionCard :type="item.datalink.inline_data.visualization.type"
-            :label="challenge.challenge_label" />
-        </div>
+  <div class="benchmarking-challenge">
+    <BreadcrumbsBar :breadcrumbs-array="routeArray" />
+    <div class="benchmarking-challenge container">
+      <div class="benchmarking-challenge__title text-primaryOeb-500">
+        {{ challenge.acronym }} ( {{ challenge._id }})
       </div>
-      <div class="benchmarking-challenge__body__content text-sm">
-        <h2 class="benchmarking-challenge__body__content__title text-h6 mt-8">
-          Choose the metrics you want to visualize in the diagram:
-        </h2>
-        <div class="benchmarking-challenge__body__content__graphs">
-          <CustomTabs :data="items" :metrics="metrics" />
+      <div class="benchmarking-challenge__subtitle">
+        {{ challenge.name }}
+      </div>
+      <div class="benchmarking-challenge__body">
+        <div v-for="(item, index) in datasets" :key="index"
+          class="benchmarking-challenge__body_dec text-gray-500 text-sm">
+          <div v-if="index == tab && item">
+            <ChartDescriptionCard :type="item.datalink.inline_data.visualization.type"
+              :label="challenge.challenge_label" />
+          </div>
+        </div>
+        <div class="benchmarking-challenge__body__content text-sm">
+          <h2 class="benchmarking-challenge__body__content__title text-h6 mt-8">
+            Choose the metrics you want to visualize in the diagram:
+          </h2>
+          <div class="benchmarking-challenge__body__content__graphs">
+            <CustomTabs :data="items" :metrics="metrics" />
+          </div>
         </div>
       </div>
     </div>
@@ -34,6 +36,7 @@ import ChallengeObj from "@/models/ChallengeObj";
 import ChartDescriptionCard from "@/components/Cards/ChartDescriptionCard.vue";
 import CustomTabs from "@/components/Widgets/CustomTabs.vue";
 import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
+import { useCommunity } from "@/stores/community";
 
 const route = useRoute();
 const isPending = ref(false);
@@ -51,8 +54,6 @@ const tab = ref(0);
 
 const itemSelected = ref(null);
 const items = ref([]);
-
-
 
 await challengeAPI(challengeId).then(async (response: any) => {
   const challengeObj = new ChallengeObj(challengeId, response.data);
