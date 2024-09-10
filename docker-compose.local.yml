@@ -21,7 +21,6 @@ services:
       - ./stores:/app/stores:ro
       - ./stories:/app/stories:ro
       - ./test:/app/test:ro
-      - ./jest.config.js:/app/jest.config.js:ro
       - ./nuxt.config.js:/app/nuxt.config.js:ro
       - ./package.json:/app/package.json:ro
       - ./package-lock.json:/app/package-lock.json

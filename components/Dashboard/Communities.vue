@@ -2,7 +2,28 @@
     <div class="user_communities">
         <div class="user_communities__body">
             <div class="user_communities__body__table">
-                <UTable  
+                <!-- Filters -->
+                 {{  todoStatus }}
+                 {{  selectedStatus }}
+                <div class="flex items-center justify-between gap-3 py-3">
+                    <UInput
+                        v-model="search"
+                        icon="i-heroicons-magnifying-glass-20-solid"
+                        placeholder="Search..."
+                    />
+                    <USelectMenu
+                        v-model="selectedStatus"
+                        :options="todoStatus"
+                        multiple
+                        placeholder="Status"
+                        class="w-40">
+                        <template #label>
+                            <span v-if="selectedStatus.length === 0">{{ selectedStatus.map((item: Array<{ value: string, label: string }>) => item.value).join(', ') }}</span>
+                            <span v-else>Select status</span>
+                        </template>
+                    </USelectMenu>
+                </div>
+                <UTable
                     :columns="columns"
                     :loading="loadingTable"
                     :rows="filteredRows"
@@ -40,46 +61,41 @@
                         </NuxtLink>
                     </template>
                     <template #actions-data="{ row }">
-                        <div v-if="row.privileges === 'Owner'">
+                        <div v-if="row.privileges === 'Owner' && row.actions.community">
                             <template v-if="row.actions.community.read">
-                                <button title="View community">
+                                <button title="View community" class="btn-event">
                                     <font-awesome-icon :icon="['fas', 'eye']" />
                                 </button>
                             </template>
-                            <template v-if="row.actions.community.create">
-                                <button>
-                                    <font-awesome-icon :icon="['fas', 'plus']" />
-                                </button>
-                            </template>
                             <template v-if="row.actions.community.update">
-                                <button title="Update community">
+                                <button title="Edit community" class="btn-event">
                                     <font-awesome-icon :icon="['fas', 'pencil']" />
                                 </button>
                             </template>
                             <template v-if="row.actions.community.delete">
-                                <button>
+                                <button title="Delete community" class="btn-event">
                                     <font-awesome-icon :icon="['fas', 'trash']" />
                                 </button>
                             </template>
                         </div>
-                        <div v-else-if="row.privileges=== 'Manager'">
+                        <div v-else-if="row.privileges=== 'Manager' && row.actions.community">
                             <template v-if="row.actions.community.read">
-                                <button>
+                                <button title="View community" class="btn-event">
                                     <font-awesome-icon :icon="['fas', 'eye']" />
                                 </button>
                             </template>
                             <template v-if="row.actions.community.create">
-                                <button>
+                                <button title="Create community" class="btn-event">
                                     <font-awesome-icon :icon="['fas', 'plus']" />
                                 </button>
                             </template>
                             <template v-if="row.actions.community.update">
-                                <button>
+                                <button title="Edit community" class="btn-event">
                                     <font-awesome-icon :icon="['fas', 'pencil']" />
                                 </button>
                             </template>
                             <template v-if="row.actions.community.delete">
-                                <button>
+                                <button title="Delete community" class="btn-event">
                                     <font-awesome-icon :icon="['fas', 'trash']" />
                                 </button>
                             </template>
@@ -91,14 +107,14 @@
                         </div>
                     </template>
                     <template #status-data="{ row }">
-                        <div class="inline-block rounded-full text-primaryOeb-950 custom-badget font-semibold text-gray-700" :class="communityStatusColors[row.status]">
+                        <div class="inline-block rounded-full text-primaryOeb-950 custom-badget font-semibold text-gray-700" :class="CommunityStatusColors[row.status]">
                             <div class="text-xs font-normal leading-none max-w-full flex-initial font-semibold" :title="`${'Status'} ${row.status}`">
                                 {{ row.status }}
                             </div>
                         </div>
                     </template>
-                    <template #events-data="{ row }">
-                        <button title="View community events">
+                    <template #events-data>
+                        <button title="View community events" class="user_communities__events">
                             <font-awesome-icon :icon="['fas', 'circle-arrow-right']" />
                         </button>
                     </template>
@@ -142,8 +158,8 @@
 import { ref, onMounted, computed } from "vue";
 import { useUser } from "@/stores/user";
 import { privileges } from '@/constants/privileges'
-import { communityStatusColors } from '@/constants/app_colors.js'
-import { Community, CommunityColumnsDashboard } from "@/types/communities";
+import { CommunityStatusColors, CommunityStatusLabels } from '@/constants/community_const'
+import { Community, CommunityColumnsDashboard, CommunityStatus } from "@/types/communities";
 
 const runtimeConfig = useRuntimeConfig();
 const { data } = useAuth();
@@ -159,12 +175,14 @@ const pageFrom = computed(() => (Number(page.value) - 1) * Number(pageCount.valu
 const pageTo = computed(() =>
   Math.min(Number(page.value) * Number(pageCount.value), Number(totalPages.value)),
 );
-const search = ref("");
-
+const search = ref<string>("");
+const selectedStatus = ref(<Array<CommunityStatus>>[]);
+const todoStatus = ref<Array<{ value: string, label: string }>>(CommunityStatusLabels);
+    todoStatus.value.unshift({ value: "", label: "All" });
 const columns: Array<CommunityColumnsDashboard> = [{
     key: 'logos',
 },{
-    key: 'community_name',
+    key: 'name',
     label: 'NAME'
 },{
     key: "community_contact",
@@ -250,23 +268,22 @@ function setCommunityPrivileges() {
             if (userPrivileges.length > 0) {
                 userPrivileges.forEach((privilege) => {
                     if (privilege['owner'] === community._id) {
-                        community.actions.push(privileges.owner);
+                        community.actions = privileges.owner;
                         community.privileges = 'Owner';
                     } else if(privilege['manager'] === community._id) {
-                        community.actions.push(privileges.manager);
+                        community.actions = privileges.manager;
                         community.privileges = 'Manager';
                     }
                 });
             }
         }
     });
-
-    console.log("communitiesData: ", communitiesData.value)
 }
 
 onMounted(() => {
   fetchUserCommunities(token);
 });
+
 </script>
 
 <style lang="scss" scoped>
@@ -284,14 +301,18 @@ onMounted(() => {
             }
         }
     }
-}
-</style>
-
-<style lang="scss" scoped>
-.custom-badget {
-    padding: 0.25rem 0.5rem;
-    border-radius: 9999px;
-    font-size: 0.75rem;
-    line-height: 1;
+    &__events {
+        font-size: 18px;
+    }
+    .custom-badget {
+        padding: 0.45rem 0.5rem 0.6rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        line-height: 1;
+    }
+    .btn-event {
+        padding: 5px;
+        font-size: 16px;
+    }
 }
 </style>

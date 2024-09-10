@@ -1,5 +1,10 @@
 export interface CommunityStatus {
-    status: string;
+    status: [
+        active?: string,
+        archived?: string,
+        pending?: string,
+        suspended?: string
+    ];
 }
 
 export interface CommunityPrivilegeActions {

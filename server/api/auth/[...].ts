@@ -88,7 +88,7 @@ export default NuxtAuthHandler({
       },
       session: {
         jwt: true,
-        maxAge: 30 * 60,
+        maxAge: (30 * 60) + 10,
       },
       cookies: {
         sessionToken: {

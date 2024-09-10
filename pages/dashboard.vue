@@ -1,4 +1,3 @@
-<!-- pages/dashboard.vue -->
 <template>
   <div class="dashboard">
     <BreadcrumbsBar />
@@ -48,7 +47,7 @@ const items = [{
   key: 'communities',
   slot: 'communities',
   label: 'Communities',
-  icon: 'i-heroicons-arrow-down-tray',
+  icon: 'i-heroicons-table-cells-16-solid',
 }, {
   key: "all_tools",
   slot: "all_tools",
