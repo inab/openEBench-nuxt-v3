@@ -2,8 +2,8 @@
   <div class="navbar w-full p-0">
     <div class="bg-white w-full h-100">
       <div class="mx-auto">
-        <div class="flex items-center nav-wrapper px-4">
-          <div class="text-lg font-bold">
+        <div class="flex items-center nav-wrapper px-3">
+          <div class="text-lg font-bold flex-grow-0">
             <NuxtLink to="/" class="navbar-brand">
               <img
                 src="/assets/images/opeb_logo.gif"
@@ -149,7 +149,8 @@
               </div>
               <div class="nav-list-items-direct top-full hidden sm:flex">
                 <button
-                  class="text-primaryOeb-500 border-1 border-primaryOeb-800 hover:bg-primaryOeb-50 font-medium rounded-md text-sm px-3 py-2 me-2"
+                  id="btn-benchmark"
+                  class="text-primaryOeb-500 border-1 border-primaryOeb-800 hover:bg-primaryOeb-50 font-medium rounded-md text-sm px-2.5 py-2 me-2"
                 >
                   <a
                     :href="runtimeConfig.public.VRE_URI"
@@ -161,18 +162,18 @@
                     <font-awesome-icon
                       :icon="['fas', 'arrow-up-right-from-square']"
                       size="sm"
-                      class="mr-2"
+                      class="mr-1"
                     />
                     Benchmark your tool
                   </a>
                 </button>
 
                 <template v-if="data">
-                  <div class="nav-item dropdown-login dropdown">
+                  <div id="profile" class="nav-item dropdown-login dropdown" >
                     <a
                       id="loginDropdown"
                       color="white"
-                      class="nav-link dropdown-toggle md:inline-flex items-center space-x-1 text-primaryOeb-500 hover:bg-primaryOeb-50"
+                      class="nav-link dropdown-toggle md:inline-flex items-center space-x-0 text-primaryOeb-500 hover:bg-primaryOeb-50"
                       trailing-icon="i-heroicons-chevron-down-20-solid"
                       href="#"
                       role="button"
@@ -246,14 +247,14 @@
                   </div>
                 </template>
                 <template v-else>
-                  <button
-                    class="ripple text-white bg-primaryOeb-500 hover:bg-primaryOeb-400 font-medium rounded-md text-sm px-3 py-2"
+                  <button id="btn-login"
+                    class="ripple text-white bg-primaryOeb-500 hover:bg-primaryOeb-400 font-medium rounded-md text-sm px-2.5 py-2"
                     @click="handleLogin"
                   >
                     <font-awesome-icon
                       :icon="['fas', 'arrow-right-to-bracket']"
                       size="sm"
-                      class="mr-2"
+                      class="mr-1"
                     />
                     Login
                     <span class="ripple-effect"></span>
@@ -478,9 +479,11 @@ function closeMenu() {
     display: flex;
     align-items: center;
     justify-content: end !important;
-
-    @media only screen and (max-width: 1150px) {
-      display: block;
+    
+    @media only screen and (max-width: 1181px) {
+      display: flex;
+      flex-direction: column;
+      align-items: baseline;
     }
   }
 
@@ -489,10 +492,13 @@ function closeMenu() {
     top: 0;
     left: -300px;
     width: 300px;
-    height: 100%;
+    height: 100vh; // Asegúrate de que ocupe toda la altura
     background-color: white;
     transition: left 0.3s ease-in-out;
     z-index: 2;
+    overflow-y: auto; // Habilitar scroll vertical
+    max-height: 100vh; // Limitar la altura al 100% de la ventana
+    padding-bottom: 20px;
   }
 
   .nav-offcanvas.show {
@@ -642,7 +648,7 @@ function closeMenu() {
   }
 
   // ipad
-  @media only screen and (min-width: 1150px) {
+  @media only screen and (min-width: 1181px) {
     .nav-list {
       display: flex;
     }
@@ -672,7 +678,7 @@ function closeMenu() {
   }
 
   // Movil
-  @media only screen and (max-width: 1150px) {
+  @media only screen and (max-width: 1181px) {
     .nav-wrapper {
       background-color: white;
     }
@@ -692,6 +698,16 @@ function closeMenu() {
 
     .nav-mobile {
       display: block;
+    }
+
+    #btn-benchmark{
+      margin-left: 16px;
+    }
+    #profile{
+      left: -16px;
+    }
+    #btn-login {
+      margin-top: 16px;
     }
 
     // Options
