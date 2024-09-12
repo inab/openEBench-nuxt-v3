@@ -23,6 +23,7 @@ import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
 import CommunityInfo from "@/components/Community/CommunityInfo.vue";
 import CommunityEventsList from "@/components/Community/CommunityEventsList/CommunityEventsList.vue";
 import { useCommunity } from "@/stores/community";
+import noDataAvailable from "@/layouts/noDataAvailable.vue";
 
 interface Link {
   uri: string;
@@ -58,7 +59,7 @@ const community_Id = Array.isArray(route.params.community)
   ? route.params.community[0]
   : route.params.community;
 
-if (communityStore.communityId && communityStore.communityId != community_Id) {
+if (communityStore.communityId && communityStore.communityId == community_Id) {
   community.value = communityStore.getCommunityData;
 } else {
   const { data, pending }: { data: any, pending: Ref<boolean> } = await useAsyncData(
