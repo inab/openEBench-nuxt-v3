@@ -280,7 +280,6 @@ import { useRoute } from "vue-router";
 import menuEntries from "~/components/Header/HeaderMenu/menuEntries";
 import subMenuEntriesObservatory from "./HeaderMenu/subMenuEntriesObservatory";
 import subMenuEntriesAbout from "./HeaderMenu/subMenuEntriesAbout";
-//import { useUser } from '@/stores/user';
 
 const {
   data,

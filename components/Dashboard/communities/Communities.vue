@@ -3,17 +3,12 @@
         <div class="user-communities__body">
             <div class="user-communities__body__table">
                 <div class="flex items-center justify-between gap-3 py-3">
-                    <UInput
-                        v-model="search"
-                        icon="i-heroicons-magnifying-glass-20-solid"
-                        placeholder="Search..."
-                    />
                     <USelectMenu
                         v-model="selectedStatus"
                         :options="todoStatus"
                         multiple
                         placeholder="Status"
-                        class="w-40">
+                        class="w-40 input-selector">
                         <template v-if="selectedStatus.length">
                             <div v-for="status, index in selectedStatus" 
                                 :key="index"
@@ -28,10 +23,18 @@
                             <span class="truncate">{{ status.label }}</span>
                         </template>
                     </USelectMenu>
+                    <UInput
+                        v-model="search"
+                        color="white"
+                        variant="outline"
+                        icon="i-heroicons-magnifying-glass-20-solid"
+                        placeholder="Search ..."
+                        class="input-search"
+                    />
                 </div>
                 <UTable
                     :columns="columns"
-                    :loading="loadingTable"
+                    :loading="isLoadingData"
                     :rows="filteredRows"
                     :ui="{
                         tr: {
@@ -56,6 +59,7 @@
                             <img :src="row.logo" alt="Community logo" class="" />
                         </div>
                     </template>
+                
                     <template #community_name-data="{ row }">
                         <NuxtLink 
                         :to="row.to"
@@ -66,52 +70,74 @@
                             </div>
                         </NuxtLink>
                     </template>
+                    
                     <template #actions-data="{ row }">
-                        <div v-if="row.privileges === 'Owner' && row.actions.community">
-                            <template v-if="row.actions.community.read">
-                                <button title="View community" class="btn-event">
-                                    <font-awesome-icon :icon="['fas', 'eye']" />
-                                </button>
-                            </template>
-                            <template v-if="row.actions.community.update">
-                                <button title="Edit community" class="btn-event">
-                                    <font-awesome-icon :icon="['fas', 'pencil']" />
-                                </button>
-                            </template>
-                            <template v-if="row.actions.community.delete">
-                                <button title="Delete community" class="btn-event">
-                                    <font-awesome-icon :icon="['fas', 'trash']" />
-                                </button>
-                            </template>
-                        </div>
-                        <div v-else-if="row.privileges=== 'Manager' && row.actions.community">
-                            <template v-if="row.actions.community.read">
-                                <button title="View community" class="btn-event">
-                                    <font-awesome-icon :icon="['fas', 'eye']" />
-                                </button>
-                            </template>
-                            <template v-if="row.actions.community.create">
-                                <button title="Create community" class="btn-event">
-                                    <font-awesome-icon :icon="['fas', 'plus']" />
-                                </button>
-                            </template>
-                            <template v-if="row.actions.community.update">
-                                <button title="Edit community" class="btn-event">
-                                    <font-awesome-icon :icon="['fas', 'pencil']" />
-                                </button>
-                            </template>
-                            <template v-if="row.actions.community.delete">
-                                <button title="Delete community" class="btn-event">
-                                    <font-awesome-icon :icon="['fas', 'trash']" />
-                                </button>
-                            </template>
+                        <div v-if="row.actions">
+                            <div v-if="row.privileges === 'Owner' && row.actions.community">
+                                <template v-if="row.actions.community.read">
+                                    <button title="View community" class="btn-event">
+                                        <NuxtLink :to="`/dashboard/community/${row._id}`">
+                                            <font-awesome-icon :icon="['fas', 'eye']" />
+                                        </NuxtLink>
+                                    </button>
+                                </template>
+                                <template v-if="row.actions.community.update">
+                                    <button title="Edit community" class="btn-event">
+                                        <NuxtLink :to="`/dashboard/community/${row._id}`">
+                                            <font-awesome-icon :icon="['fas', 'pencil']" />
+                                        </NuxtLink>
+                                    </button>
+                                </template>
+                                <template v-if="row.actions.community.delete">
+                                    <button title="Delete community" class="btn-event">
+                                        <font-awesome-icon :icon="['fas', 'trash']" />
+                                    </button>
+                                </template>
+                            </div>
+                            <div v-else-if="row.privileges=== 'Manager' && row.actions.community">
+                                <template v-if="row.actions.community.read">
+                                    <button title="View community" class="btn-event">
+                                        <NuxtLink :to="`/dashboard/community/${row._id}`">
+                                            <font-awesome-icon :icon="['fas', 'eye']" />
+                                        </NuxtLink>
+                                    </button>
+                                </template>
+                                <template v-if="row.actions.community.create">
+                                    <button title="Create community" class="btn-event">
+                                        <NuxtLink :to="`/dashboard/community/${row._id}`">
+                                            <font-awesome-icon :icon="['fas', 'plus']" />
+                                        </NuxtLink>
+                                    </button>
+                                </template>
+                                <template v-if="row.actions.community.update">
+                                    <button title="Edit community" class="btn-event">
+                                        <NuxtLink :to="`/dashboard/community/${row._id}/edit`">
+                                            <font-awesome-icon :icon="['fas', 'pencil']" />
+                                        </NuxtLink>
+                                    </button>
+                                </template>
+                                <template v-if="row.actions.community.delete">
+                                    <button title="Delete community" class="btn-event">
+                                        <font-awesome-icon :icon="['fas', 'trash']" />
+                                    </button>
+                                </template>
+                            </div>
+                            <div v-else-if="row.privileges=== 'anyone' && row.actions.community">
+                                <template v-if="row.actions.community.read">
+                                    <button title="View community" class="btn-event">
+                                        <NuxtLink :to="`/dashboard/community/${row._id}/edit`">
+                                            <font-awesome-icon :icon="['fas', 'eye']" />
+                                        </NuxtLink>
+                                    </button>
+                                </template>
+                            </div>
                         </div>
                         <div v-else>
-                            <template>
-                                -
-                            </template>
+                            <div>-</div>
                         </div>
+                        
                     </template>
+                    
                     <template #status-data="{ row }">
                         <div class="inline-block rounded-full text-primaryOeb-950 custom-badget font-semibold text-gray-700" :class="CommunityStatusColors[row.status]">
                             <div class="text-xs font-normal leading-none max-w-full flex-initial font-semibold" :title="`${'Status'} ${row.status}`">
@@ -123,7 +149,8 @@
                         <NuxtLink :to="`/dashboard/community/${row._id}`" title="View community events" class="user-communities__events">
                             <font-awesome-icon :icon="['fas', 'circle-arrow-right']" />
                         </NuxtLink>
-                    </template>
+                    </template> 
+                
                 </UTable>
                 <div
                     v-if="filteredRows.length > 0"
@@ -154,27 +181,25 @@
                             },
                         }"
                         />
-                    </div>
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from "vue";
-import { useUser } from "@/stores/user";
-import { privileges } from '@/constants/privileges'
+import { ref, computed } from "vue";
+import { storeToRefs } from "pinia";
+import { useUser } from "@/stores/user.ts";
 import { CommunityStatusColors, CommunityStatusLabels } from '@/constants/community_const'
 import { Community, CommunityColumnsDashboard, CommunityStatus } from "@/types/communities";
 
-const runtimeConfig = useRuntimeConfig();
-const { data } = useAuth();
+const props = defineProps<{
+    isLoadingData: any;
+}>();
+
 const userStore = useUser();
-const communitiesData = ref<Array<Community>>([]);
-const userPrivileges: Array<any> = userStore.getUserCommunitiesRoles;
-const token: string = data?.value.accessToken;
-const loadingTable = ref<boolean>(true);
-const formatedCommunitiesData = ref<Array<Community>>([]);
+const communitiesData = computed(() => userStore.getUserCommunities);
 const page = ref<Number>(1);
 const pageCount = ref<Number>(10);
 const pageFrom = computed(() => (Number(page.value) - 1) * Number(pageCount.value) + 1);
@@ -202,10 +227,19 @@ const columns: Array<CommunityColumnsDashboard> = [{
 }, {
     key: 'events',
     label: 'EVENTS'
-}]
+}];
+
+
+
+
 
 let _total = 0;
+
 const filteredRows = computed(() => {
+    console.log(communitiesData.value)
+    if(communitiesData.value.length === 0) {
+        return [];
+    }
     if (!search.value) {
         _total = communitiesData.value.length;
         return communitiesData.value.slice(
@@ -227,67 +261,11 @@ const filteredRows = computed(() => {
         Number(page.value) * Number(pageCount.value),
     );
 });
+console.log(filteredRows.value)
+
 
 const totalPages = computed(() => {
     return _total;
-});
-
-const fetchUserCommunities = async (token: string): Promise<void> => {
-    try {
-        if (userStore.getUserCommunities && Object.keys(userStore.getUserCommunities).length > 0) {
-            communitiesData.value = userStore.getUserCommunities;
-        } else {
-            communitiesData.value = await userStore.fetchCommunities(token);
-        }
-        loadingTable.value = false;
-        communitiesData.value = formatCommunityData();
-        formatedCommunitiesData.value = communitiesData.value;
-        setCommunityPrivileges()
-    } catch (error) {
-        console.error("Error fetching communities data:", error);
-    }
-}
-
-function formatCommunityData() {
-    return communitiesData.value.map((community: Community) => {
-        return {
-            _id: community._id,
-            name: community.acronym,
-            logo: community.links.filter((link: any) => link.comment === "@logo")[0].uri,
-            links: community.links,
-            status: community.status,
-            community_contact: community.community_contact_ids.map((contact: string) => {
-                return contact.replace(/\./g, " ");
-            }).join(", "),
-            to: `${runtimeConfig.public.BASE_URL}/benchmarking/${community._id}`,
-            privileges: community.privileges,
-            actions: community.actions || [],
-        }
-    });
-}
-
-function setCommunityPrivileges() {
-    communitiesData.value.forEach((community: Community) => {
-        community.actions = [];
-        community.privileges = "None";
-        if(userPrivileges.length > 0) {
-            if (userPrivileges.length > 0) {
-                userPrivileges.forEach((privilege) => {
-                    if (privilege['owner'] === community._id) {
-                        community.actions = privileges.owner;
-                        community.privileges = 'Owner';
-                    } else if(privilege['manager'] === community._id) {
-                        community.actions = privileges.manager;
-                        community.privileges = 'Manager';
-                    }
-                });
-            }
-        }
-    });
-}
-
-onMounted(() => {
-  fetchUserCommunities(token);
 });
 
 </script>
@@ -322,6 +300,22 @@ onMounted(() => {
     .btn-event {
         padding: 5px;
         font-size: 16px;
+    }
+    .input-search {
+        input {
+            box-shadow: none !important;
+            :focus {
+                border: 1px solid theme("colors.primary.500");
+            }
+        }
+    }
+    .input-selector {
+        input {
+            box-shadow: none !important;
+            :focus {
+                border: 1px solid theme("colors.primary.500");
+            }
+        }
     }
 }
 </style>

@@ -30,8 +30,8 @@ export const customRoutes = [
     ),
   },
   {
-    name: "dashboard",
-    path: "/dashboard",
-    file: resolve(__dirname, "pages/dashboard"),
+    name: "dashboard-community",
+    path: "/dashboard/community/:id/edit",
+    file: resolve(__dirname, "pages/dashboard/community/[id].vue"),
   }
 ];

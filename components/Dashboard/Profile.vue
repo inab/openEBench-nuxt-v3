@@ -5,7 +5,7 @@
         <div>
           <div v-if="userInfo">
             <div class="dashboard__title">
-              <h2 class="text-primaryOeb-500">User Info</h2>
+              <h2 class="text-primaryOeb-500">Profile</h2>
             </div>
             <div class="col-4">
               <img
@@ -22,28 +22,62 @@
               @submit="onSubmit"
             >
               <UFormGroup label="User name" name="username" class="col-4 mt-0">
-                <UInput v-model="state.username" />
+                <UInput v-model="state.username"
+                  disabled
+                  color="gray" variant="outline"
+                  class="custom-input"
+                  placeholder="User Name" />
               </UFormGroup>
   
               <UFormGroup label="Name" name="name" class="col-4 mt-0">
-                <UInput v-model="state.name" />
+                <UInput v-model="state.name"
+                  class="custom-input"
+                  placeholder="Name" />
               </UFormGroup>
   
               <UFormGroup label="Surname" name="surname" class="col-4 mt-0">
-                <UInput v-model="state.surname" />
+                <UInput v-model="state.surname"
+                  class="custom-input"
+                  placeholder="Surname" />
               </UFormGroup>
   
               <UFormGroup label="Email" name="email" class="col-4">
-                <UInput v-model="state.email" />
+                <UInput v-model="state.email" disabled
+                  class="custom-input"
+                  color="gray" variant="outline"
+                  placeholder="Email" />
               </UFormGroup>
-  
-              <div class="">
-                <UButton type="submit"> Submit </UButton>
+
+              <div class="pt-4">
+                <CustomSubtitle
+                  text="Roles"
+                  />
               </div>
+              <UFormGroup label="Roles" name="roles" class="col-12" v-if="state.roles">
+                <USelectMenu
+                  v-model="state.roles"
+                  :options="state.roles"
+                  multiple
+                  placeholder="Status"
+                  class="">
+                  <template v-if="state.roles.length">
+                    <div v-for="rol, index in state.roles" 
+                        :key="index"
+                        class="custom-badget filter-badget">
+                        {{ rol }}
+                    </div>
+                  </template>
+                </USelectMenu>
+              </UFormGroup>
+              
+              <div class="">
+                <UButton type="submit" disabled> Submit </UButton>
+              </div>
+
             </UForm>
           </div>
           <div v-else>
-            <p>Cargando información del usuario...</p>
+            <p>Loading user info ...</p>
           </div>
         </div>
       </div>
@@ -52,6 +86,7 @@
   
   <script setup lang="ts">
   import { ref, onMounted } from "vue";
+  import CustomSubtitle from "@/components/Common/CustomSubtitle.vue";
   import * as v from "valibot";
   import type { FormSubmitEvent } from "#ui/types";
   
@@ -64,14 +99,17 @@
     name: undefined,
     supername: undefined,
     email: undefined,
+    roles: undefined,
   });
   
   const schema = v.object({
     username: v.pipe(v.string()),
     name: v.pipe(v.string()),
     surname: v.pipe(v.string()),
-    email: v.pipe(v.string(), v.email("Invalid email")),
+    email: v.pipe(v.string(), v.email()),
   });
+
+  const selectedRoles = ref([])
   
   type Schema = v.InferOutput<typeof schema>;
   
@@ -96,6 +134,8 @@
           state.surname = userInfo.value.family_name;
           state.email = userInfo.value.email;
           state.username = userInfo.value.preferred_username;
+          state.roles = userInfo.value.resource_access?.account?.roles;
+          console.log(userInfo.value.resource_access)
         } else {
           console.error(
             "Error al obtener la información del usuario:",
@@ -129,6 +169,16 @@
       h2 {
         border-color: rgb(226, 232, 240, 1);
         border-bottom-width: 1px;
+      }
+    }
+    .custom-badget {
+      padding: 0.45rem 0.8rem 0.6rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      line-height: 1;
+      &.filter-badget {
+        margin-right: 0.5rem;
+        background-color: #e9ecef;
       }
     }
   }

@@ -15,12 +15,15 @@ const refreshAccessToken = async (token: JWT) => {
       refresh_token: token.refreshToken,
     };
     const formBody: string[] = [];
+
     Object.entries(details).forEach(([key, value]: [string, any]) => {
       const encodedKey = encodeURIComponent(key);
       const encodedValue = encodeURIComponent(value);
       formBody.push(encodedKey + '=' + encodedValue);
     });
+
     const formData = formBody.join('&');
+
     const url = `${runtimeConfig.public.KEYCLOAK_HOST}/auth/realms/${runtimeConfig.public.KEYCLOAK_REALM}/protocol/openid-connect/token`;
     const response = await fetch(url, {
       method: 'POST',
@@ -29,18 +32,19 @@ const refreshAccessToken = async (token: JWT) => {
       },
       body: formData,
     });
+
     const refreshedTokens = await response.json();
 
-    console.log("response: ", response);
+    // console.log("response: ", response);
 
-    console.log("token refreshed ...")
-    console.log("refreshedTokens: ", refreshedTokens);
+    // console.log("token refreshed ...")
+    // console.log("refreshedTokens: ", refreshedTokens);
 
     if (!response.ok) throw refreshedTokens;
     return {
       ...token,
       accessToken: refreshedTokens.access_token,
-      accessTokenExpires: Date.now() + refreshedTokens.expires_in * 1000,
+      accessTokenExpires: Date.now() + refreshedTokens.expires_at * 1000,
       refreshToken: refreshedTokens.refresh_token ?? token.refreshToken, // Si no hay nuevo refresh token, usar el antiguo
     };
   } catch (error) {
@@ -65,7 +69,7 @@ export default NuxtAuthHandler({
           type: "oauth2",
           version: "2.0",
           response_type: "code",
-          scope: "openid email orcid profile",
+          scope: "openid email orcid profile offline_access",
           response_mode: "query",
           state: "state",
           grand_type: "authorization_code",
@@ -115,30 +119,34 @@ export default NuxtAuthHandler({
     },
     async jwt({ token, user, account, profile }) {
       if (account && user) {
-        console.log("jwt account: ", account);
         token.accessToken = account.access_token;
         token.id_token = account.id_token;
-        token.accessTokenExpires = Date.now() + account.expires_in * 1000; // Guardar tiempo de expiración
+        token['oeb:roles'] = user['oeb:roles'] || account['oeb:roles']; // Guarda el campo "oeb:roles" en el token        token.accessTokenExpires = Date.now() + account.expires_in * 1000; // Guardar tiempo de expiración
         token.refreshToken = account.refresh_token; // Guardar el refresh token
+        const decodedAccessToken = JSON.parse(atob(account.access_token.split('.')[1]));
+        if (decodedAccessToken['oeb:roles']) {
+          token['oeb:roles'] = decodedAccessToken['oeb:roles'];
+        }
       }
 
-      // Si el token ha expirado, intenta renovarlo
+      if (user) {
+        token['oeb:roles'] = user['oeb:roles'] ?? token['oeb:roles'];
+      }
+
       if (Date.now() < token.accessTokenExpires) {
         return token;
       }
 
-      // Renueva el token de acceso
       const refreshedToken = await refreshAccessToken(token);
       return refreshedToken;
     },
     async session({ session, token }) {
-      console.log("calling new session");
-      console.log("token: ", token);
-      console.log("session: ", session);
       session.accessToken = token.accessToken;
       session.token = token.id_token;
       session.preferred_username = token.preferred_username;
       session.resource_access = token.resource_access;
+      session.oeb_roles = token['oeb:roles']
+      session.user['oeb:roles'] = token['oeb:roles']; // Pasa el campo "oeb:roles" a la sesión      console.log("new session: ", session);
       return session;
     },
   },

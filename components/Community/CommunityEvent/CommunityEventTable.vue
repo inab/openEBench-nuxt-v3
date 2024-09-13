@@ -206,15 +206,3 @@ watch(selected, () => {
   background-color: currentColor !important;
 }
 </style>
-<style lang="scss">
-.input-search input {
-  box-shadow:
-    rgb(255, 255, 255) 0px 0px 0px 0px inset,
-    rgb(209, 213, 219) 0px 0px 0px 1px inset,
-    rgba(0, 0, 0, 0.05) 0px 1px 2px 0px !important;
-}
-.input-search input:focus {
-  border: 1px solid theme("colors.primary.500") !important;
-  box-shadow: none !important;
-}
-</style>

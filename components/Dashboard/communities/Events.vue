@@ -12,7 +12,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
-import { useUser } from "@/stores/user";
+import { useUser } from "@/stores/user.ts";
 import { privileges } from '@/constants/privileges'
 
 const runtimeConfig = useRuntimeConfig();

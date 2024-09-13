@@ -58,7 +58,7 @@ const community_Id = Array.isArray(route.params.community)
   ? route.params.community[0]
   : route.params.community;
 
-if (communityStore.communityId && communityStore.communityId != community_Id) {
+if (communityStore.communityId && communityStore.communityId == community_Id) {
   community.value = communityStore.getCommunityData;
 } else {
   const { data, pending }: { data: any, pending: Ref<boolean> } = await useAsyncData(

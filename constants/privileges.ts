@@ -21,7 +21,7 @@ export const privileges: CommunityPrivileges = {
             read: true,
         },
     },
-    member: {
+    manager: {
         community: {
             create: false,
             update: false,
@@ -61,4 +61,24 @@ export const privileges: CommunityPrivileges = {
             read: true,
         },
     },
+    anyone: {
+        community: {
+            create: false,
+            update: false,
+            delete: false,
+            read: true,
+        },
+        event: {
+            create: false,
+            update: false,
+            delete: false,
+            read: true,
+        },
+        challenge: {
+            create: false,
+            update: false,
+            delete: false,
+            read: true,
+        },
+    }
 };
