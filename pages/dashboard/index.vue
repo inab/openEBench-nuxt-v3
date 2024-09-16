@@ -55,14 +55,27 @@
 import { computed } from "vue";
 import { useUser } from "@/stores/user.ts";
 
-const { data } = useAuth();
-const userStore = useUser();
-const userName = computed(() => data.value.user.name);
-const privileges: Array<string> = computed(() => userStore.getUserCommunitiesRoles);
+definePageMeta({
+  middleware: 'auth',
+  auth: {
+    authenticatedOnly: true, // Solo permite acceso a usuarios autenticados
+    navigateUnauthenticatedTo: '/login-required' // Redirige a los no autenticados
+  }
+})
 
-if(privileges.value.length == 0) {
-  userStore.setUserCommunitiesRoles(data.value.oeb_roles)
+const { data, status } = useAuth();
+const userStore = useUser();
+
+
+if (status.value == 'authenticated') {
+  const userName = computed(() => data.value.user.name);
+  const privileges: Array<string> = computed(() => userStore.getUserCommunitiesRoles);
+
+  if(privileges.value.length == 0) {
+    userStore.setUserCommunitiesRoles(data.value.oeb_roles)
+  }
 }
+
 </script>
 
 <style lang="scss" scoped>

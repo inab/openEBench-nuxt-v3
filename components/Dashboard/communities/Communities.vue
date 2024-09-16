@@ -3,43 +3,21 @@
         <div class="user-communities__body">
             <div class="user-communities__body__table">
                 <div class="flex items-center justify-between gap-3 py-3">
-                    <USelectMenu
-                        v-model="selectedStatus"
-                        :options="todoStatus"
-                        multiple
-                        placeholder="Status"
-                        class="w-40 input-selector"
-                        @change="changeFilterSelector"
-                        :ui="{
-                            background: 'bg-white dark:bg-gray-800',
-                            shadow: 'shadow-lg',
-                            rounded: 'rounded-md',
-                            padding: 'p-1',
-                            icon: {
-                                base: 'flex-shrink-0 h-5 w-5',
-                                active: 'text-gray-900 dark:text-white',
-                                inactive: 'text-gray-400 dark:text-gray-500',
-                            },
-                            default: {
-                                selectedIcon: 'i-heroicons-check-20-solid',
-                                clearSearchOnClose: false,
-                                showCreateOptionWhen: 'empty',
-                            },
-                        }">
-                        <template v-if="selectedStatus.length">
-                            <div v-for="status, index in selectedStatus" 
-                                :key="index"
-                                class="custom-badget filter-badget" 
-                                :class="CommunityStatusColors[status?.value]">
-                                {{ status.label }}
-                            </div>
-                        </template>
-                        <span v-else>Select status</span>
-                        <template #option="{ option: status }">
-                            <span :class="[CommunityStatusColors[status?.value], 'inline-block h-2 w-2 flex-shrink-0 rounded-full']" aria-hidden="true" />
-                            <span class="truncate">{{ status.label }}</span>
-                        </template>
-                    </USelectMenu>
+                    <div class="col-5">
+                        <multiselect 
+                            v-model="selectedStatus" 
+                            :options="todoStatus" 
+                            :multiple="true" 
+                            :close-on-select="true" 
+                            :clear-on-select="true"
+                            :preserve-search="false" 
+                            placeholder="Select status" 
+                            :preselect-first="false"
+                            :searchable="false"
+                            label="label" 
+                            track-by="label">
+                        </multiselect>
+                    </div>
                     <UInput
                         v-model="search"
                         color="primary"
@@ -209,6 +187,7 @@ import { ref, computed } from "vue";
 import { useUser } from "@/stores/user.ts";
 import { CommunityStatusColors, CommunityStatusLabels } from '@/constants/community_const'
 import { CommunityColumnsDashboard, CommunityStatus } from "@/types/communities";
+import Multiselect from 'vue-multiselect';
 
 defineProps<{
     isLoadingData: any;
@@ -225,7 +204,6 @@ const pageTo = computed(() =>
 const search = ref<string>("");
 const selectedStatus = ref(<Array<CommunityStatus>>[]);
 const todoStatus = ref<Array<{ value: string, label: string }>>(CommunityStatusLabels);
-    todoStatus.value.unshift({ value: "", label: "All" });
 
 const columns: Array<CommunityColumnsDashboard> = [{
     key: 'logos',
@@ -292,7 +270,6 @@ const totalPages = computed(() => {
 });
 
 </script>
-
 <style lang="scss" scoped>
 .user-communities {
     &__body {
@@ -367,5 +344,52 @@ const totalPages = computed(() => {
             margin-bottom: 5px;
         }
     }
+}
+.multiselect {
+    padding-left: 0px;
+}
+.multiselect,
+.multiselect__tags {
+    min-height: 32px;
+    padding: 0px 00px 0 8px;
+}
+.multiselect__tags {
+    border: none;
+    box-shadow: rgb(255, 255, 255) 0px 0px 0px 0px inset, rgb(209, 213, 219) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px !important;
+}
+.multiselect__select {
+    height: 32px;
+    right: 2px;
+    top: 3px;
+}
+.multiselect__tag {
+    background-color: #e9ecef;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    line-height: 1;
+    text-align: center;
+    margin-right: 0.5rem;
+    margin-top: 5px;
+    color: theme("colors.primary.500");
+    padding: 4px 26px 4px 10px;
+}
+.multiselect__placeholder {
+    margin-bottom: 2px;
+    padding-top: 5px;
+}
+.multiselect__tag-icon {
+    top: -2px;
+}
+.multiselect__tag-icon::after {    
+    color: black;
+}
+.multiselect__option--highlight {
+    background-color: theme("colors.primary.500");
+}
+.multiselect__option--highlight::after {
+    background-color: theme("colors.primary.500");
+}
+.multiselect--active .multiselect__placeholder {
+    display: block;
 }
 </style>

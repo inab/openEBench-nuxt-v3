@@ -32,6 +32,7 @@ export default defineNuxtConfig({
     "bootstrap/dist/css/bootstrap.min.css",
     "@fortawesome/fontawesome-svg-core/styles.css",
     "aos/dist/aos.css",
+    "vue-multiselect/dist/vue-multiselect.min.css"
   ],
 
   ssr: false,
