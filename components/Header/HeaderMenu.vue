@@ -3,7 +3,7 @@
     <div class="bg-white w-full h-100">
       <div class="mx-auto">
         <div class="flex items-center nav-wrapper px-3">
-          <div class="text-lg font-bold flex-grow-0">
+          <div class="text-lg font-bold">
             <NuxtLink to="/" class="navbar-brand">
               <img
                 src="/assets/images/opeb_logo.gif"
@@ -159,12 +159,12 @@
                     style="text-decoration: none"
                     @click="closeMenu"
                   >
+                    Benchmark your tool
                     <font-awesome-icon
                       :icon="['fas', 'arrow-up-right-from-square']"
                       size="sm"
-                      class="mr-1"
+                      class="ml-1"
                     />
-                    Benchmark your tool
                   </a>
                 </button>
 
@@ -492,13 +492,9 @@ function closeMenu() {
     top: 0;
     left: -300px;
     width: 300px;
-    height: 100vh; // Asegúrate de que ocupe toda la altura
     background-color: white;
     transition: left 0.3s ease-in-out;
     z-index: 2;
-    overflow-y: auto; // Habilitar scroll vertical
-    max-height: 100vh; // Limitar la altura al 100% de la ventana
-    padding-bottom: 20px;
   }
 
   .nav-offcanvas.show {
@@ -681,6 +677,20 @@ function closeMenu() {
   @media only screen and (max-width: 1181px) {
     .nav-wrapper {
       background-color: white;
+    }
+
+    .nav-offcanvas {
+      position: fixed;
+      top: 0;
+      left: -300px;
+      width: 300px;
+      height: 100vh;
+      background-color: white;
+      transition: left 0.3s ease-in-out;
+      z-index: 2;
+      overflow-y: auto;
+      max-height: 100vh;
+      padding-bottom: 20px;
     }
 
     .nav-list {

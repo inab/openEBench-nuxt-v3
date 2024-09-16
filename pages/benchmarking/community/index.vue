@@ -75,7 +75,7 @@ const community: Ref<any> = ref(null);
 const communityId: string = route.params.community;
 const event: string = route.query.event;
 
-if (communityStore.communityId === communityId) {
+if (communityStore.communityId && communityStore.communityId == communityId) {
   community.value = communityStore.getCommunityData;
 } else {
   const { data, pending }: { data: any; pending: Ref<boolean> } = await useAsyncData(
