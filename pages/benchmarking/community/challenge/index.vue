@@ -5,6 +5,7 @@
       <div class="benchmarking-challenge__title text-primaryOeb-500">
         {{ challenge.acronym }} ( {{ challenge._id }})
       </div>
+      <hr />
       <div class="benchmarking-challenge__subtitle">
         {{ challenge.name }}
       </div>
@@ -17,10 +18,10 @@
           </div>
         </div>
         <div class="benchmarking-challenge__body__content text-sm">
-          <h2 class="benchmarking-challenge__body__content__title text-h6 mt-8">
+          <h2 class="benchmarking-challenge__body__content__title text-h6 mt-8 mb-2">
             Choose the metrics you want to visualize in the diagram:
           </h2>
-          <div class="benchmarking-challenge__body__content__graphs">
+          <div class="benchmarking-challenge__body__content__graphs m">
             <CustomTabs :data="items" :metrics="metrics" />
           </div>
         </div>
@@ -145,10 +146,10 @@ const routeArray: Array<{ label: string; isActualRoute: boolean; route?: string 
 <style scoped lang="scss">
 .benchmarking-challenge {
   &__title {
-    font-size: 35px;
-    font-weight: 600;
+    font-size: 32px;
+    font-weight: 500;
     padding-bottom: 5px;
-    line-height: 2.5rem;
+    line-height: 1.5rem;
     letter-spacing: 0.0073529412em !important;
   }
 
@@ -181,5 +182,9 @@ const routeArray: Array<{ label: string; isActualRoute: boolean; route?: string 
     flex: 1 0 auto;
     gap: 10px;
   }
+}
+
+hr{
+  opacity: 0.1;
 }
 </style>
