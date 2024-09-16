@@ -135,7 +135,6 @@
           state.email = userInfo.value.email;
           state.username = userInfo.value.preferred_username;
           state.roles = userInfo.value.resource_access?.account?.roles;
-          console.log(userInfo.value.resource_access)
         } else {
           console.error(
             "Error al obtener la información del usuario:",
@@ -152,6 +151,7 @@
   async function onSubmit(event: FormSubmitEvent<Schema>) {
     // Do something with event.data
     console.log(event.data);
+    /* TODO */
   }
   
   // Llama a la función para obtener la información del usuario cuando el componente se monta

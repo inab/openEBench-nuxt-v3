@@ -8,7 +8,24 @@
                         :options="todoStatus"
                         multiple
                         placeholder="Status"
-                        class="w-40 input-selector">
+                        class="w-40 input-selector"
+                        @change="changeFilterSelector"
+                        :ui="{
+                            background: 'bg-white dark:bg-gray-800',
+                            shadow: 'shadow-lg',
+                            rounded: 'rounded-md',
+                            padding: 'p-1',
+                            icon: {
+                                base: 'flex-shrink-0 h-5 w-5',
+                                active: 'text-gray-900 dark:text-white',
+                                inactive: 'text-gray-400 dark:text-gray-500',
+                            },
+                            default: {
+                                selectedIcon: 'i-heroicons-check-20-solid',
+                                clearSearchOnClose: false,
+                                showCreateOptionWhen: 'empty',
+                            },
+                        }">
                         <template v-if="selectedStatus.length">
                             <div v-for="status, index in selectedStatus" 
                                 :key="index"
@@ -25,7 +42,7 @@
                     </USelectMenu>
                     <UInput
                         v-model="search"
-                        color="white"
+                        color="primary"
                         variant="outline"
                         icon="i-heroicons-magnifying-glass-20-solid"
                         placeholder="Search ..."
@@ -76,7 +93,7 @@
                             <div v-if="row.privileges === 'Owner' && row.actions.community">
                                 <template v-if="row.actions.community.read">
                                     <button title="View community" class="btn-event">
-                                        <NuxtLink :to="`/dashboard/community/${row._id}`">
+                                        <NuxtLink :to="`/dashboard/community/${row._id}?view`">
                                             <font-awesome-icon :icon="['fas', 'eye']" />
                                         </NuxtLink>
                                     </button>
@@ -97,7 +114,7 @@
                             <div v-else-if="row.privileges=== 'Manager' && row.actions.community">
                                 <template v-if="row.actions.community.read">
                                     <button title="View community" class="btn-event">
-                                        <NuxtLink :to="`/dashboard/community/${row._id}`">
+                                        <NuxtLink :to="`/dashboard/community/${row._id}?view`">
                                             <font-awesome-icon :icon="['fas', 'eye']" />
                                         </NuxtLink>
                                     </button>
@@ -163,14 +180,14 @@
                         to
                         <span class="font-medium">{{ pageTo }}</span>
                         of
-                        <span class="font-medium">{{ communitiesData.length }}</span>
+                        <span class="font-medium">{{ _total }}</span>
                         results
                         </span>
                     </div>
                     <UPagination 
                         v-model="page" 
                         :page-count="pageCount" 
-                        :total="communitiesData.length" 
+                        :total="_total" 
                         :ui="{
                             wrapper: 'flex items-center',
                             default: {
@@ -189,12 +206,11 @@
 
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import { storeToRefs } from "pinia";
 import { useUser } from "@/stores/user.ts";
 import { CommunityStatusColors, CommunityStatusLabels } from '@/constants/community_const'
-import { Community, CommunityColumnsDashboard, CommunityStatus } from "@/types/communities";
+import { CommunityColumnsDashboard, CommunityStatus } from "@/types/communities";
 
-const props = defineProps<{
+defineProps<{
     isLoadingData: any;
 }>();
 
@@ -210,6 +226,7 @@ const search = ref<string>("");
 const selectedStatus = ref(<Array<CommunityStatus>>[]);
 const todoStatus = ref<Array<{ value: string, label: string }>>(CommunityStatusLabels);
     todoStatus.value.unshift({ value: "", label: "All" });
+
 const columns: Array<CommunityColumnsDashboard> = [{
     key: 'logos',
 },{
@@ -229,19 +246,15 @@ const columns: Array<CommunityColumnsDashboard> = [{
     label: 'EVENTS'
 }];
 
-
-
-
-
-let _total = 0;
+let _total = ref(0);
 
 const filteredRows = computed(() => {
-    console.log(communitiesData.value)
+    console.log("ref")
     if(communitiesData.value.length === 0) {
         return [];
     }
-    if (!search.value) {
-        _total = communitiesData.value.length;
+    if (!search.value && selectedStatus.value.length === 0) {
+        _total.value = communitiesData.value.length;
         return communitiesData.value.slice(
         (Number(page.value) - 1) * Number(pageCount.value),
         Number(page.value) * Number(pageCount.value),
@@ -249,23 +262,34 @@ const filteredRows = computed(() => {
     }
 
     const filteredSearcher = communitiesData.value.filter((challenge: any) => {
-        return Object.values(challenge).some((value) => {
-        return String(value).toLowerCase().includes(search.value.toLowerCase());
+        return Object.values(challenge).some((ch) => {
+            if(selectedStatus.value.length > 0) {
+                return selectedStatus.value.some((status) => {
+                    if(search.value) {
+                        return status.value === challenge.status && String(ch).toLowerCase().includes(search.value.toLowerCase());
+                    }
+                    if (status.value === 'all') {
+                        return String(ch).toLowerCase().includes(search.value.toLowerCase());
+                    }
+                    return status.value === challenge.status ;
+            });
+            } else {
+                return String(ch).toLowerCase().includes(search.value.toLowerCase());
+            }
         });
     });
 
-    _total = filteredSearcher.length;
+    _total.value = filteredSearcher.length;
 
     return filteredSearcher.slice(
         (Number(page.value) - 1) * Number(pageCount.value),
         Number(page.value) * Number(pageCount.value),
     );
 });
-console.log(filteredRows.value)
 
 
 const totalPages = computed(() => {
-    return _total;
+    return Math.ceil(Number(_total.value) / Number(pageCount.value));
 });
 
 </script>
@@ -293,6 +317,7 @@ const totalPages = computed(() => {
         border-radius: 9999px;
         font-size: 0.75rem;
         line-height: 1;
+        text-align: center;
         &.filter-badget {
             margin-right: 0.5rem;
         }
@@ -309,12 +334,38 @@ const totalPages = computed(() => {
             }
         }
     }
-    .input-selector {
-        input {
-            box-shadow: none !important;
-            :focus {
-                border: 1px solid theme("colors.primary.500");
-            }
+    
+}
+.input-selector {
+    padding: 5px 10px !important;
+    input {
+        box-shadow: none !important;
+        :focus {
+            border: 1px solid theme("colors.primary.500");
+        }
+    }
+    button {
+        color: #0b579f !important;
+    }
+}
+</style>
+
+<style lang="scss">
+.input-selector {
+    padding: 5px 10px !important;
+    box-shadow: rgb(255, 255, 255) 0px 0px 0px 0px inset, rgb(209, 213, 219) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px !important;
+    display: block;
+    border-radius: 6px;
+    button {
+        color: #0b579f !important;
+    }
+    :focus {
+        border: 1px solid theme("colors.primary.500");
+    }
+    div:first-child {
+        display: block;
+        .custom-badget {
+            margin-bottom: 5px;
         }
     }
 }

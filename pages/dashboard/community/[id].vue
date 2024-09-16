@@ -1,13 +1,15 @@
 <template>
     <div class="user-communities-edit">
+        <BreadcrumbsBar :breadcrumbs-array="routeArray" />
         <div class="user-communities-edit__body">
-            {{ userStore.getUserCommunitiesRoles }}
-            {{ communityPrivileges}}
+            <!-- {{ userStore.getUserCommunitiesRoles }}
+            {{ communityPrivileges}} -->
             <div class="user-communities-edit__body__table">
                 <CommunityEdit
                     :loading-data="loadingData"
                     :community-obj="communityData"
                     :commmunity-privileges="communityPrivileges"
+                    :isView="isView ? true : false"
                 />
             </div>
         </div>
@@ -16,6 +18,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
+import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
 import CommunityEdit from "@/components/Dashboard/communities/CommunityEdit.vue";
 import { useUser } from "@/stores/user.ts";
 import { privileges } from '@/constants/privileges';
@@ -27,6 +30,16 @@ const communityId: string = route.params.id;
 const loadingData = ref<boolean>(true);
 const token: string = data?.value.accessToken;
 const userStore = useUser();
+const routeName = ref<string>("");
+
+console.log(route.query)
+
+const isView = computed(() => {
+    return ('view' in route.query) ? true : false;
+});
+
+console.log(route.query.view)
+console.log("is view", isView.value)
 
 const userPrivileges: Array<string> = computed(() => userStore.getUserCommunitiesRoles);
 if(userPrivileges.value.length == 0) {
@@ -40,6 +53,21 @@ const communityPrivileges = computed(() => {
     });
     return privilege ? privileges[privilege.role].community : privileges.anyone.community;
 });
+
+const routeArray: Array = ref([
+  { label: "Dashboard", 
+    isActualRoute: false,
+    route: "/dashboard",
+  },
+  { label: "Communities", 
+    isActualRoute: false,
+    route: "/dashboard/communities",
+  },
+  {
+    label: computed(() => routeName.value),
+    isActualRoute: true,
+  }
+]);
 
 const fetchUserCommunity = async (token: string): Promise<void> => {
     try {
@@ -56,6 +84,7 @@ const fetchUserCommunity = async (token: string): Promise<void> => {
             .then((data) => {
                 loadingData.value = false;
                 communityData.value = data;
+                routeName.value = `Community ${communityData.value?.acronym}`
             });
     } catch (error) {
         console.error("Error fetching communities data:", error);

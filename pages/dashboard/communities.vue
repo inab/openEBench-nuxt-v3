@@ -92,50 +92,6 @@ const fetchUserCommunities = async (token: string): Promise<void> => {
   }
 }
 
-function formatCommunityData() {
-  return communitiesData.value.map((community: Community) => {
-    return {
-      _id: community._id,
-      name: community.acronym,
-      logo: community.links.filter((link: any) => link.comment === "@logo")[0].uri,
-      links: community.links,
-      status: community.status,
-      community_contact: community.community_contact_ids.map((contact: string) => {
-          return contact.replace(/\./g, " ");
-      }).join(", "),
-      to: `${runtimeConfig.public.BASE_URL}/benchmarking/${community._id}`,
-      privileges: community.privileges,
-      actions: community.actions || [],
-    }
-  });
-}
-
-function setCommunityPrivileges(data: Community[]): Community[] {
-  data.forEach((community: Community) => {
-    community.actions = [];
-    community.privileges = "None";
-    if (userPrivileges.value.length > 0) {
-      userPrivileges.value.some((value: { role: string; community: string }) => {
-        if (value.role === 'owner' && value.community === community._id) {
-          community.actions = privileges.owner;
-          community.privileges = 'Owner';
-          return true; // Stop iteration
-        } else if (value.role === 'manager' && value.community === community._id) {
-          community.actions = privileges.manager;
-          community.privileges = 'Manager';
-          return true; // Stop iteration
-        } else {
-          community.actions = privileges.anyone;
-          community.privileges = 'anyone';
-          return false; // Continue iteration
-        }
-      });
-    }
-  });
-
-  return data; // Return the modified data array
-}
-
 onMounted(() => {
   fetchUserCommunities(token);
 });

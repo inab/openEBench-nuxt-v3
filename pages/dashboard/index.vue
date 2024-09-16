@@ -63,7 +63,6 @@ const privileges: Array<string> = computed(() => userStore.getUserCommunitiesRol
 if(privileges.value.length == 0) {
   userStore.setUserCommunitiesRoles(data.value.oeb_roles)
 }
-console.log(privileges)
 </script>
 
 <style lang="scss" scoped>
