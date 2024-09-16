@@ -31,15 +31,9 @@ const loadingData = ref<boolean>(true);
 const token: string = data?.value.accessToken;
 const userStore = useUser();
 const routeName = ref<string>("");
-
-console.log(route.query)
-
 const isView = computed(() => {
     return ('view' in route.query) ? true : false;
 });
-
-console.log(route.query.view)
-console.log("is view", isView.value)
 
 const userPrivileges: Array<string> = computed(() => userStore.getUserCommunitiesRoles);
 if(userPrivileges.value.length == 0) {

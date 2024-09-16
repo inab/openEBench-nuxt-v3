@@ -249,7 +249,6 @@ const columns: Array<CommunityColumnsDashboard> = [{
 let _total = ref(0);
 
 const filteredRows = computed(() => {
-    console.log("ref")
     if(communitiesData.value.length === 0) {
         return [];
     }
