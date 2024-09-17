@@ -35,11 +35,6 @@ const refreshAccessToken = async (token: JWT) => {
 
     const refreshedTokens = await response.json();
 
-    // console.log("response: ", response);
-
-    // console.log("token refreshed ...")
-    // console.log("refreshedTokens: ", refreshedTokens);
-
     if (!response.ok) throw refreshedTokens;
     return {
       ...token,

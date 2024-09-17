@@ -2,7 +2,7 @@
     <div class="dashboard-community-edit">
         <div class="w-100 container">
             <div class="dashboard-community-edit__title">
-                <h2 class="text-primaryOeb-500">Edit Community : <i>{{ communityObj.acronym }}</i></h2>
+                <h2 class="text-primaryOeb-500">Edit Community : <i>{{ id }}</i></h2>
             </div>
             <div class="" v-if="loadingData">
                 <div class="space-y-2">
@@ -129,7 +129,8 @@
                                     Cancel
                                 </UButton>
                                 <UButton type="submit"
-                                    :disabled="!commmunityPrivileges.update">
+                                    :disabled="!commmunityPrivileges.update || isView"
+                                    v-if="commmunityPrivileges.update && !isView">
                                     Submit
                                 </UButton>
                             </div>
@@ -157,6 +158,7 @@ const { data } = useAuth();
 const token: string = data?.value.accessToken;
 
 const props = defineProps<{
+    id: string,
     communityObj: Community,
     loadingData: boolean,
     commmunityPrivileges: CommunityPrivilegeActions,
@@ -294,6 +296,11 @@ async function updateCommunity() {
             .form-group {
                 padding-bottom: 20px;
             }
+        }
+        .form-footer {
+            display: flex;
+            justify-content: end;
+            gap: 10px;
         }
     }
 </style>

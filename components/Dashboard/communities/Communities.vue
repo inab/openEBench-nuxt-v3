@@ -5,17 +5,38 @@
                 <div class="flex items-center justify-between gap-3 py-3">
                     <div class="col-5">
                         <multiselect 
-                            v-model="selectedStatus" 
-                            :options="todoStatus" 
-                            :multiple="true" 
-                            :close-on-select="true" 
+                            v-model="selectedStatus"
+                            :options="todoStatus"
+                            :multiple="true"
+                            :close-on-select="true"
                             :clear-on-select="true"
-                            :preserve-search="false" 
-                            placeholder="Select status" 
+                            :preserve-search="false"
+                            placeholder="Select status"
                             :preselect-first="false"
                             :searchable="false"
-                            label="label" 
+                            :taggable="true"
+                            @tag="addTag"
+                            label="label"
                             track-by="label">
+                            <template #selection="{ values, search, isOpen }">
+                                <div v-for="value in values" :key="value.value" class="selector-label" :class="CommunityStatusColors[value.value]">
+                                    <span>{{ value.label }}</span>
+                                    <i 
+                                        tabindex="1" 
+                                        class="multiselect__tag-icon"
+                                        @click="removeTag(value)"
+                                        />
+                                </div>
+                            </template>
+                            <template #option="props">
+                                <span class="d-flex">
+                                    <span
+                                        class="h-2 w-2 rounded-full rounded-options" 
+                                        :class="CommunityStatusColors[props.option?.value]">
+                                    </span>
+                                    <span>{{ props.option.label }}</span>
+                                </span>
+                            </template>
                         </multiselect>
                     </div>
                     <UInput
@@ -141,7 +162,7 @@
                         </div>
                     </template>
                     <template #events-data="{ row }">
-                        <NuxtLink :to="`/dashboard/community/${row._id}`" title="View community events" class="user-communities__events">
+                        <NuxtLink :to="`/dashboard/community/${row._id}/events`" title="View community events" class="user-communities__events">
                             <font-awesome-icon :icon="['fas', 'circle-arrow-right']" />
                         </NuxtLink>
                     </template> 
@@ -269,6 +290,21 @@ const totalPages = computed(() => {
     return Math.ceil(Number(_total.value) / Number(pageCount.value));
 });
 
+function addTag(newTag: string) {
+    const tag = {
+        label: newTag,
+        value: newTag.substring(0, 2) + Math.floor((Math.random() * 10000000))
+    }
+    todoStatus.options.push(tag)
+    todoStatus.value.push(tag)
+}
+
+function removeTag(tagName: string) {
+    selectedStatus.value = selectedStatus.value.filter((tag) => {
+        return  tagName.value != tag.value
+    });
+}
+
 </script>
 <style lang="scss" scoped>
 .user-communities {
@@ -351,11 +387,16 @@ const totalPages = computed(() => {
 .multiselect,
 .multiselect__tags {
     min-height: 32px;
-    padding: 0px 00px 0 8px;
+    padding: 0px 00px 0 0px;
 }
 .multiselect__tags {
     border: none;
     box-shadow: rgb(255, 255, 255) 0px 0px 0px 0px inset, rgb(209, 213, 219) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px !important;
+    display: flex;
+    gap: 10px;
+    padding: 5px;
+    align-items: center;
+    height: 32px;
 }
 .multiselect__select {
     height: 32px;
@@ -372,10 +413,12 @@ const totalPages = computed(() => {
     margin-top: 5px;
     color: theme("colors.primary.500");
     padding: 4px 26px 4px 10px;
+    min-height: 32px;
 }
 .multiselect__placeholder {
     margin-bottom: 2px;
     padding-top: 5px;
+    padding-left: 10px;
 }
 .multiselect__tag-icon {
     top: -2px;
@@ -391,5 +434,26 @@ const totalPages = computed(() => {
 }
 .multiselect--active .multiselect__placeholder {
     display: block;
+}
+.multiselect__tag-icon {
+    position: relative;
+}
+.selector-label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 23px;
+    width: auto;
+    padding: 2px 7px;
+    border-radius: 5px;
+    span {
+        padding: 0px;
+    }
+}
+.rounded-options {
+    display: flex;
+    width: 10px;
+    height: 10px;
+    margin-right: 10px;
 }
 </style>

@@ -6,6 +6,7 @@
             {{ communityPrivileges}} -->
             <div class="user-communities-edit__body__table">
                 <CommunityEdit
+                    :id="communityId"
                     :loading-data="loadingData"
                     :community-obj="communityData"
                     :commmunity-privileges="communityPrivileges"
@@ -22,6 +23,14 @@ import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
 import CommunityEdit from "@/components/Dashboard/communities/CommunityEdit.vue";
 import { useUser } from "@/stores/user.ts";
 import { privileges } from '@/constants/privileges';
+
+definePageMeta({
+    middleware: 'auth',
+    auth: {
+        authenticatedOnly: true,
+        navigateUnauthenticatedTo: '/login-required'
+    }
+})
 
 const runtimeConfig = useRuntimeConfig();
 const { data } = useAuth();
@@ -59,7 +68,7 @@ const routeArray: Array = ref([
   },
   {
     label: computed(() => routeName.value),
-    isActualRoute: true,
+    isActualRoute: false,
   }
 ]);
 
@@ -87,6 +96,7 @@ const fetchUserCommunity = async (token: string): Promise<void> => {
 
 if(userStore.getUserCommunitiesRoles.length == 0) {
         userStore.fetchUserPrivileges(token).then(() => {
+            // TDOO: Add the user privileges to the store
     });
 }
 
