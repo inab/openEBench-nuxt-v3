@@ -5,14 +5,13 @@
       <div class="benchmarking-participant__title text-primaryOeb-500">
         {{ challenge.acronym }} ( {{ challenge._id }})
       </div>
+      <hr />
       <div class="benchmarking-challenge__subtitle">
-        {{ challenge.name }}
+        <i>{{ challenge.name }}</i>
       </div>
-      <div
-        v-if="status.pending"
-        class="benchmarking-participant__skeleton"
-      ></div>
-      <p class="text--secondary">
+
+      <div v-if="status.pending" class="benchmarking-participant__skeleton"></div>
+      <p class="text">
         List of tools participating in the challenge, together with a summary of
         the metrics obtained.
       </p>
@@ -25,7 +24,7 @@
           <USkeleton class="h-12 w-12" :ui="{ rounded: 'rounded-full' }" />
         </div>
         <div v-else class="">
-          <h2 class="text-h6 mt-8">
+          <h2 class="choosetext">
             Choose one of the {{ participants.length }} participants whose
             metrics you want to visualize in the radar plot:
           </h2>
@@ -34,11 +33,7 @@
       <div v-else class="">
         <noDataAvailable item="participants and metrics" />
       </div>
-      <div
-        class="chart-image text--secondary"
-        align="center"
-        color="rgba(0, 0, 0, 0.6)"
-      >
+      <div class="chart-image text--secondary" align="center" color="rgba(0, 0, 0, 0.6)">
         <CustomTabs :data="itemsObjList" :metrics="metrics" />
       </div>
     </div>
@@ -293,7 +288,7 @@ const routeArray: Array<{ label: string; isActualRoute: boolean; route?: string 
     route: "/benchmarking/" + communityId + "?event=" + currentEvent.value._id
   },
   {
-    label: "Challenge " + challenge.value.acronym + ' '+ challengeId,
+    label: "Challenge " + challenge.value.acronym + ' ' + challengeId,
     isActualRoute: false,
     route: "/benchmarking/" + communityId + "/" + challengeId
   },
@@ -308,32 +303,51 @@ const routeArray: Array<{ label: string; isActualRoute: boolean; route?: string 
 <style scoped lang="scss">
 .row-metrics {
   padding-bottom: 15px;
+
   .metrics-item {
     border-radius: 16px;
     padding: 5px 15px;
     margin-bottom: 10px;
     cursor: pointer;
+
     &.selected {
       background-color: theme("colors.primary.100");
     }
   }
 }
+
 .chart-image img {
   max-height: 300px;
 }
+
 .benchmarking-participant {
   &__title {
-    font-size: 35px;
-    font-weight: 600;
-    padding-bottom: 5px;
-    line-height: 2.5rem;
+    font-size: 32px;
+    font-weight: 500;
+    line-height: 1.5rem;
     letter-spacing: 0.0073529412em !important;
   }
+
   &__subtitle {
     font-size: 18px;
     font-weight: 400;
     padding-bottom: 5px;
     color: black;
   }
+}
+
+.text {
+  color: gray;
+  padding-top: 10px;
+}
+
+.choosetext {
+  font-size: 20px;
+  line-height: 32px;
+  margin-top: 25px;
+}
+
+hr{
+  opacity: 0.1;
 }
 </style>

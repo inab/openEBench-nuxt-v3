@@ -79,14 +79,14 @@
             to
             <span class="font-medium">{{ pageTo }}</span>
             of
-            <span class="font-medium">{{ totalPages }}</span>
+            <span class="font-medium">{{ _total }}</span>
             results
           </span>
         </div>
         <UPagination
           v-model="page"
           :page-count="pageCount"
-          :total="totalPages"
+          :total="_total"
           :ui="{
             wrapper: 'flex items-center',
             default: {
@@ -103,7 +103,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import _ from "@/server/api/auth/[...]";
+import { ref, watch, computed } from "vue";
 
 const props = defineProps<{
   eventChallenges: Array<any>;
@@ -114,15 +115,15 @@ const props = defineProps<{
 const emit = defineEmits(["handleChangeChallengers"]);
 
 const community = computed(() => props.communityId);
-const page = ref(1);
-const pageCount = ref(10);
-const search = ref("");
-const pageFrom = computed(() => (page.value - 1) * pageCount.value + 1);
+const page = ref<Number>(1);
+const pageCount = ref<Number>(10);
+const search = ref<string>("");
+const pageFrom = computed(() => (Number(page.value) - 1) * Number(pageCount.value) + 1);
 const pageTo = computed(() =>
-  Math.min(page.value * pageCount.value, totalPages.value),
+  Math.min(Number(page.value) * Number(pageCount.value), Number(totalPages.value)),
 );
 const selected = ref<any[]>([]);
-let _total = 0;
+let _total = ref(0);
 
 const columns = [
   {
@@ -141,10 +142,10 @@ const columns = [
 
 const filteredRows = computed(() => {
   if (!search.value) {
-    _total = props.eventChallenges.length;
+    _total.value = props.eventChallenges.length;
     return props.eventChallenges.slice(
-      (page.value - 1) * pageCount.value,
-      page.value * pageCount.value,
+      (Number(page.value) - 1) * Number(pageCount.value),
+      Number(page.value) * Number(pageCount.value),
     );
   }
 
@@ -153,15 +154,17 @@ const filteredRows = computed(() => {
       return String(value).toLowerCase().includes(search.value.toLowerCase());
     });
   });
-  _total = filteredSearcher.length;
+
+  _total.value = filteredSearcher.length;
+
   return filteredSearcher.slice(
-    (page.value - 1) * pageCount.value,
-    page.value * pageCount.value,
+    (Number(page.value) - 1) * Number(pageCount.value),
+    Number(page.value) * Number(pageCount.value),
   );
 });
 
 const totalPages = computed(() => {
-  return _total;
+  return Math.ceil(Number(_total.value) / Number(pageCount.value));
 });
 
 function select(row: any) {
@@ -204,17 +207,5 @@ watch(selected, () => {
 .form-checkbox:checked,
 .form-checkbox:indeterminate {
   background-color: currentColor !important;
-}
-</style>
-<style lang="scss">
-.input-search input {
-  box-shadow:
-    rgb(255, 255, 255) 0px 0px 0px 0px inset,
-    rgb(209, 213, 219) 0px 0px 0px 1px inset,
-    rgba(0, 0, 0, 0.05) 0px 1px 2px 0px !important;
-}
-.input-search input:focus {
-  border: 1px solid theme("colors.primary.500") !important;
-  box-shadow: none !important;
 }
 </style>
