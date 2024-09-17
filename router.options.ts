@@ -29,4 +29,9 @@ export const customRoutes = [
       "pages/benchmarking/community/challenge/participants",
     ),
   },
+  {
+    name: "dashboard-community",
+    path: "/dashboard/community/:id/edit",
+    file: resolve(__dirname, "pages/dashboard/community/[id].vue"),
+  }
 ];

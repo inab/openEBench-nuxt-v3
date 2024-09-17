@@ -32,6 +32,7 @@ export default defineNuxtConfig({
     "bootstrap/dist/css/bootstrap.min.css",
     "@fortawesome/fontawesome-svg-core/styles.css",
     "aos/dist/aos.css",
+    "vue-multiselect/dist/vue-multiselect.min.css"
   ],
 
   ssr: false,
@@ -66,6 +67,7 @@ export default defineNuxtConfig({
       SCIENTIFIC_SERVICE_URL:
         process.env.NUXT_SCIENTIFIC_SERVICE_URL ||
         "https://dev-openebench.bsc.es/api/scientific",
+      SCIENTIFIC_SERVICE_URL_API: process.env.SCIENTIFIC_SERVICE_URL_API || "https://dev-openebench.bsc.es/api/scientific",
       BENCH_EVENT_API_URL:
         process.env.BENCH_EVENT_API_URL ||
         "https://dev-openebench.bsc.es/rest/bench_event_api",
@@ -115,6 +117,10 @@ export default defineNuxtConfig({
     "@nuxt/test-utils/module",
     "vue3-carousel-nuxt",
     "@sidebase/nuxt-auth",
+  ],
+
+  buildModules: [
+    '@nuxt/typescript-build'
   ],
 
   eslint: {

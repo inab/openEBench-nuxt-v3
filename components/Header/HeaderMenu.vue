@@ -283,12 +283,7 @@ import subMenuEntriesObservatory from "./HeaderMenu/subMenuEntriesObservatory";
 import subMenuEntriesAbout from "./HeaderMenu/subMenuEntriesAbout";
 
 const {
-  status,
   data,
-  lastRefreshedAt,
-  getCsrfToken,
-  getProviders,
-  getSession,
   signIn,
   signOut,
 } = useAuth();
@@ -315,6 +310,11 @@ if (data.value) {
   logInItems.value.push({
     label: "Profile",
     icon: "i-heroicons-user-20-solid",
+    href: "/profile",
+  });
+  logInItems.value.push({
+    label: "Dashboard",
+    icon: "i-heroicons-presentation-chart-line-16-solid",
     href: "/dashboard",
   });
   logInItems.value.push({
