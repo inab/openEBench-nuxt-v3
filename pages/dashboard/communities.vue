@@ -41,14 +41,18 @@ import { ref, computed, onMounted } from 'vue';
 import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
 import { useUser } from "@/stores/user.ts";
 import Communities from '@/components/Dashboard/communities/Communities.vue';
-import { privileges } from '@/constants/privileges';
+
+definePageMeta({
+  middleware: 'auth',
+  auth: {
+    authenticatedOnly: true,
+    navigateUnauthenticatedTo: '/login-required'
+  }
+})
 
 const userStore = useUser();
 const { data, status } = useAuth();
 const isLoadingData = ref(true);
-const runtimeConfig = useRuntimeConfig();
-const communitiesData = computed(() => userStore.getUserCommunities);
-const userPrivileges: Array<string> = computed(() => userStore.getUserCommunitiesRoles);
 const token: string = data?.value.accessToken;
 
 const items = [{
