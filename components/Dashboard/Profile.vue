@@ -70,7 +70,7 @@
                 </USelectMenu>
               </UFormGroup>
               
-              <div class="">
+              <div class="d-flex justify-content-end">
                 <UButton type="submit" disabled> Submit </UButton>
               </div>
 
