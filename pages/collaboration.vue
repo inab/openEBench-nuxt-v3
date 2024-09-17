@@ -32,39 +32,22 @@
       </p>
 
       <!-- Funding Section -->
-      <h3 class="section-title-border text-2xl font-normal mt-5 mb-2">
-        Fundings
-      </h3>
+      <h2 class="section-title-border text-2xl font-normal mt-5">Fundings</h2>
+      <hr class="mb-4" />
       <div class="row mt-5">
-        <div
-          v-for="(collaborator, index) in fundingCollaborators"
-          :key="index"
-          class="col-12 col-sm-6 col-md-4 d-flex justify-content-center"
-        >
-          <CollaboratorsCard
-            :title="collaborator.title"
-            :href="collaborator.href"
-            :src="collaborator.src"
-          >
+        <div v-for="(collaborator, index) in fundingCollaborators" :key="index"
+          class="col-12 col-sm-6 col-md-4 d-flex justify-content-center">
+          <CollaboratorsCard :title="collaborator.title" :href="collaborator.href" :src="collaborator.src">
           </CollaboratorsCard>
         </div>
       </div>
 
       <!-- Collaborators Section -->
-      <h3 class="section-title-border text-2xl font-normal mt-5 mb-2">
-        Collaborators
-      </h3>
+      <h2 class="section-title-border text-2xl font-normal mt-5">Collaborators</h2>
+      <hr class="mb-4" />
       <div class="row mt-5">
-        <div
-          v-for="(collaborator, index) in otherCollaborators"
-          :key="index"
-          class="col-12 col-sm-6 col-md-4"
-        >
-          <CollaboratorsCard
-            :title="collaborator.title"
-            :href="collaborator.href"
-            :src="collaborator.src"
-          >
+        <div v-for="(collaborator, index) in otherCollaborators" :key="index" class="col-12 col-sm-6 col-md-4">
+          <CollaboratorsCard :title="collaborator.title" :href="collaborator.href" :src="collaborator.src">
           </CollaboratorsCard>
         </div>
       </div>
@@ -157,7 +140,7 @@ const otherCollaborators = computed(() => {
   );
 });
 
-const routeArray: Array = [
+const routeArray: { label: string; isActualRoute: boolean }[] = [
   { label: "About", isActualRoute: true },
   { label: "Collaborations", isActualRoute: true },
 ];
@@ -165,9 +148,7 @@ const routeArray: Array = [
 
 <style scoped>
 .section-title-border {
-  border-bottom: 2px solid black;
-  margin-bottom: 30px;
-  padding-bottom: 15px;
+  padding-bottom: 5px;
   color: #0b579f;
 }
 </style>
