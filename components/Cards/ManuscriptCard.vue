@@ -194,10 +194,12 @@ onMounted(async () => {
 
 h5 a {
   color: #0b579f;
+  text-decoration: none;
 }
 
 h5 a:hover {
   color: #6a98c4;
+  text-decoration: underline;
 }
 
 .loader-container {

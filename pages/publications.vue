@@ -309,9 +309,11 @@ onMounted(async () => {
 
 .citeus a {
   color: #0b579f;
+  text-decoration: none;
 }
 
 .citeus a:hover {
   color: #6a98c4;
+  text-decoration: underline;
 }
 </style>
