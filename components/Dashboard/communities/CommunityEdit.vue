@@ -17,7 +17,6 @@
                             <div class="col-8">
                                 <div class="form-group">
                                     <label for="acronym">Acronym</label>
-                                    is view{{ isView }}
                                     <input type="text" class="form-control" id="acronym" v-model="communityData.acronym"
                                         :disabled="!commmunityPrivileges.update || isView" />
                                 </div>
@@ -25,20 +24,22 @@
                             <div class="col-4">
                                 <div class="form-group">
                                     <label for="status">Status</label>
-                                    {{  selectedStatus }}
                                     <USelectMenu  
-                                        v-model="selectedStatus" 
+                                        v-model="localStatus.value" 
                                         :options="CommunityStatusLabels"
                                         :disabled="!commmunityPrivileges.update || isView" 
-                                        :color="commmunityPrivileges.update?'white':'gray'">
+                                        :color="commmunityPrivileges.update?'white':'gray'"
+                                        @change="onChangeStatus">
                                         <template #label>
-                                            <span :class="[CommunityStatusColors[selectedStatus.toLowerCase()], 'inline-block h-2 w-2 flex-shrink-0 rounded-full']" aria-hidden="true" />
-                                            <span class="truncate">{{ selectedStatus }}</span>
+                                            <span 
+                                                :class="`status-${ localStatus.value }__option inline-block h-2 w-2 flex-shrink-0 rounded-full`" 
+                                                aria-hidden="true" />
+                                            <span class="truncate">{{ localStatus.label }}</span>
                                         </template>
                                         <template #option="{ option: item }">
                                             <span
                                                 class="h-2 w-2 rounded-full" 
-                                                :class="CommunityStatusColors[item?.value]"></span>
+                                                :class="`status-${ item?.value }__option`"></span>
                                             <span>{{ item.label }}</span>
                                         </template>
                                     </USelectMenu>
@@ -66,14 +67,34 @@
                             text="Data"
                         />
                         <div class="row">
-                            <div class="col-12">
+                            <div class="col-6">
                                 <div class="form-group">
-                                    <label for="contacts">Links</label>
-                                    <div class="w-100 d-flex">
-                                        <div v-for="link in links" :key="link">
-                                            <NuxtLink :to="link" target="_blank">
-                                                {{ link }}
-                                            </NuxtLink>
+                                    <div class="w-100">
+                                        <label for="contacts"
+                                            class="form-group-row">
+                                            <span class="label-text text-gray-500">
+                                                Links
+                                            </span>
+                                            <button class="btn-form-add btn-primary"
+                                                @click="onAddElement(localLinks)"
+                                                :disabled="!commmunityPrivileges.update || isView || checkEmptyLinks">
+                                                <font-awesome-icon :icon="['fas', 'plus']" />
+                                            </button>
+                                        </label>
+                                    </div>
+                                    <div class="w-100 row">
+                                        <div v-for="(link, index) in localLinks" :key="link"
+                                            class="col-12 d-flex pl-0">
+                                            <div class="input-wrapper big d-flex">
+                                                <span>{{ index + 1}}.</span>
+                                                <input type="text" class="form-control" 
+                                                    id="link" 
+                                                    v-model="localLinks[index]" 
+                                                    :disabled="!commmunityPrivileges.update || isView" />
+                                                <button class="btn-delete-input">
+                                                    <font-awesome-icon :icon="['far', 'trash-can']" />
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -95,30 +116,70 @@
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="provenance">Schema</label>
+                                    <label for="schema">Schema</label>
                                     <div class="w-100 d-flex">
-                                        <NuxtLink :to="communityData._schema" target="_blank">
-                                            {{ communityData._schema }}
-                                        </NuxtLink>
+                                        <input type="text" class="form-control" 
+                                            id="schema" 
+                                            v-model="communityData._schema" />
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12">
+                            <div class="col-6">
                                 <div class="form-group">
-                                    <label for="contacts">Contacts</label>
-                                    <div class="w-100 d-flex">
-                                        <div v-for="contact in communityContacts" class="contact-wrapper">
-                                            <div class="custom-badget filter-badget"  variant="solid">{{ contact }}</div>
+                                    <div class="w-100">
+                                        <label for="contacts"
+                                            class="form-group-row">
+                                            <span class="label-text text-gray-500">
+                                                Contacts
+                                            </span>
+                                            <button class="btn-form-add btn-primary"
+                                                @click="onAddElement(localContacts)"
+                                                :disabled="!commmunityPrivileges.update || isView || cheEmptyContacts">
+                                                <font-awesome-icon :icon="['fas', 'plus']" />
+                                            </button>
+                                        </label>
+                                    </div>
+                                    <div class="w-100 row">
+                                        <div v-for="(contact, index) in localContacts" :key="index" 
+                                            class="col-6 pt-0">
+                                            <div class="input-wrapper">
+                                                <input type="text" class="form-control" 
+                                                    v-model="localContacts[index]" 
+                                                    :disabled="!commmunityPrivileges.update || isView" />
+                                                <button class="btn-delete-input">
+                                                    <font-awesome-icon :icon="['far', 'trash-can']" />
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-group">
-                                    <label for="contacts">Keywords</label>
-                                    <div class="w-100 d-flex">
-                                        <div v-for="keys in communityData.keywords" class="contact-wrapper">
-                                            <div class="custom-badget filter-badget" variant="solid">{{ keys }}</div>
+                                    <div class="w-100">
+                                        <label for="contacts"
+                                            class="form-group-row">
+                                            <span class="label-text text-gray-500">
+                                                Keywords
+                                            </span>
+                                            <button class="btn-form-add btn-primary"
+                                                @click="onAddElement(localKeywords)"
+                                                :disabled="!commmunityPrivileges.update || isView || checkEmptyKeywords">
+                                                <font-awesome-icon :icon="['fas', 'plus']" />
+                                            </button>
+                                        </label>
+                                    </div>
+                                    <div class="w-100 row">
+                                        <div v-for="(keys, index) in localKeywords" :key="index"
+                                            class="col-3 pt-0">
+                                            <div class="input-wrapper">
+                                                <input type="text" class="form-control" 
+                                                    v-model="localKeywords[index]" 
+                                                    :disabled="!commmunityPrivileges.update || isView" />
+                                                <button class="btn-delete-input">
+                                                    <font-awesome-icon :icon="['far', 'trash-can']" />
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -143,7 +204,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { Community } from "@/types/communities";
 import { CommunityStatusLabels, CommunityStatusColors } from '@/constants/community_const';
 import CustomSubtitle from "@/components/Common/CustomSubtitle.vue";
@@ -159,7 +220,7 @@ const token: string = data?.value.accessToken;
 
 const props = defineProps<{
     id: string,
-    communityObj: Community,
+    communityObj: Community | null,
     loadingData: boolean,
     commmunityPrivileges: CommunityPrivilegeActions,
     isView: boolean
@@ -173,10 +234,10 @@ const state = ref({
 });
 
 const schema = v.object({
-  acronym: v.pipe(v.string()),
-  status: v.pipe(v.string()),
-  name: v.pipe(v.string()),
-  description: v.pipe(v.string())
+    acronym: v.pipe(v.string()),
+    status: v.pipe(v.string()),
+    name: v.pipe(v.string()),
+    description: v.pipe(v.string())
 });
 
 const errors = ref<string[]>([]);
@@ -191,24 +252,46 @@ const communityData = computed(() => {
     return props.communityObj;
 });
 
-const selectedStatus = computed(() => {
-    return props.communityObj.status.charAt(0).toUpperCase() + props.communityObj.status.slice(1)
+const localStatus = ref({
+    value: "",
+    label: ""
 });
+if (props.communityObj && typeof props.communityObj.status === 'string') {
+  localStatus.value.value = props.communityObj.status.charAt(0).toUpperCase() + props.communityObj.status.slice(1);
+}
 
-const communityContacts = computed(() => {
-    return props.communityObj.community_contact_ids.map((contact: string) => {
+let localContacts = ref<string[]>([]);
+if (props.communityObj && props.communityObj.community_contact_ids) {
+    localContacts.value = props.communityObj.community_contact_ids.map((contact: string) => {
         return contact.replace(/\./g, " ");
-    })
-});
+    }) || [];
+}
 
-const links = computed(() => {
-    if(!props.communityObj || !props.communityObj.links) return [];
-    return props.communityObj.links
-        .filter((link) => {
+let localLinks = ref<string[]>([]);
+if (props.communityObj && props.communityObj.links) {
+    localLinks.value = props.communityObj.links
+        .filter((link: { comment?: string }) => {
             return !link.comment || link.comment !== '@logo';
         })
-        .map((link) => link.uri)
-        .filter((uri) => uri !== undefined);
+        .map((link: { uri: string }) => link.uri)
+        .filter((uri: string | undefined): uri is string => uri !== undefined);
+}
+
+let localKeywords = ref<string[]>([]);
+if (props.communityObj && props.communityObj.keywords) {
+    localKeywords.value = props.communityObj.keywords;
+}
+
+const checkEmptyLinks = computed(() => {
+    return localLinks.value.some((link: string) => link === '');
+});
+
+const cheEmptyContacts = computed(() => {
+    return localContacts.value.some((contact: string) => contact === '');
+});
+
+const checkEmptyKeywords = computed(() => {
+    return localKeywords.value.some((keyword: string) => keyword === '');
 });
 
 function goBack() {
@@ -235,9 +318,10 @@ async function updateCommunity() {
         description: state.value.description
     }
     
+    console.log("updating ocommunity")
     try {
         await fetch(
-            `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Community/${props.communityObj._id}?community_id=${props.communityObj._id}`,
+            `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Community/${props.communityObj._id}`,
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -250,13 +334,49 @@ async function updateCommunity() {
         )
             .then((response) => response.json())
             .then((data) => {
+                console.log("Success:", data);
                 return data;
             });
     } catch (error) {
         console.error("Error fetching communities data:", error);
     }
- }
+}
 
+function onChangeStatus(newStatus: string) {
+    localStatus.value.value = newStatus.value;
+    localStatus.value.label = newStatus.label;
+}
+
+function onAddElement(array: string[]) {
+    array.push('');
+}
+
+watch(
+    () => props.communityObj,
+    (newVal) => {
+        if (newVal && typeof newVal.status === 'string') {
+            localStatus.value.label = newVal.status.charAt(0).toUpperCase() + newVal.status.slice(1);
+            localStatus.value.value = newVal.status;
+        }
+        if (newVal && newVal.links) {
+            localLinks.value = newVal.links
+                .filter((link: { comment?: string }) => {
+                    return !link.comment || link.comment !== '@logo';
+                })
+                .map((link: { uri: string }) => link.uri)
+                .filter((uri: string | undefined): uri is string => uri !== undefined);
+        }
+        if (newVal && newVal.community_contact_ids) {
+            localContacts.value = newVal.community_contact_ids.map((contact: string) => {
+                return contact.replace(/\./g, " ");
+            }) || [];
+        }
+        if (newVal && newVal.keywords) {
+            localKeywords.value = newVal.keywords;
+        }
+    },
+    { immediate: true }
+);
 </script>
 
 <style scoped lang="scss">
@@ -279,14 +399,22 @@ async function updateCommunity() {
                 height: 250px;
             }
         }
-        .contact-wrapper {
-            margin-right: 5px;
-            margin-bottom: 5px;
-            background-color: #e9ecef;
-            padding: 0.45rem 0.8rem 0.6rem;
+        .input-wrapper {
+            background-color: rgba(233,236,239) ;
+            padding: 0.6rem 0.8rem;
             border-radius: 9999px;
             font-size: 0.75rem;
             line-height: 1;
+            input {
+                border: none;
+                background-color: rgba(255, 255, 255, .8);
+                width: 100%;
+            }
+            &.big {
+                margin-bottom: 5px;
+                width: 100%;
+            }
+
         }
         &__content {
             a {
@@ -295,6 +423,19 @@ async function updateCommunity() {
             }
             .form-group {
                 padding-bottom: 20px;
+                .row {
+                    padding: 0 25px;
+                    .col-6, .col-3 {
+                        padding: 5px;
+                    }
+                }
+            }
+            .input-wrapper {
+                padding-bottom: 10px;
+                display: flex;
+                gap: 10px;
+                justify-content: start;
+                align-items: baseline;
             }
         }
         .form-footer {
@@ -302,5 +443,18 @@ async function updateCommunity() {
             justify-content: end;
             gap: 10px;
         }
+        .form-group-row {
+            display: flex;
+            justify-content: space-between;
+            padding-bottom: 10px;
+            .label-text {
+                border-bottom: 1px solid #e9ecef;
+                width: 90%;
+            }
+            .btn-form-add.btn-primary  {
+                padding: 1px 6px;
+            }
+        }
+        
     }
 </style>

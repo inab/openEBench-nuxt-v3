@@ -22,7 +22,7 @@
         <div class="community-card__item__body__content__wrapper">
           <div
             v-if="benchmarkingEvents && benchmarkingEvents.length > 0"
-            class="inline-block bg-primaryOeb-150 text-primaryOeb-950 custom-badget rounded-full font-semibold text-gray-700"
+            class="inline-block bg-primaryOeb-150 text-primaryOeb-950 custom-badget btn-custom-badget rounded-full font-semibold text-gray-700"
             title="View events"
           >
             <NuxtLink :to="`${to}/events`" class="text-primaryOeb-950">
@@ -33,7 +33,7 @@
           </div>
           <div
             class="inline-block rounded-full text-primaryOeb-950 custom-badget font-semibold text-gray-700"
-            :class="statusChipColor"
+            :class="`status-${status}`"
           >
             <div
               class="text-xs font-normal leading-none max-w-full flex-initial font-semibold"
@@ -44,7 +44,7 @@
           </div>
           <div
             v-if="referenceTools.length > 0"
-            class="inline-block bg-gray-200 rounded-full text-primaryOeb-950 custom-badget font-semibold text-gray-700"
+            class="inline-block bg-gray-200 rounded-full text-primaryOeb-950 custom-badget btn-custom-badget font-semibold text-gray-700"
           >
             <font-awesome-icon :icon="['fas', 'gear']" />
             {{ benchmarkingEvents.length }}
