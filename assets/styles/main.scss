@@ -65,3 +65,94 @@ $colorSecondary: #f47c21;
   border: 1px solid theme("colors.primary.500") !important;
   box-shadow: none !important;
 }
+
+.status-active {
+  background-color: theme("colors.statusActive.50");
+  color: theme("colors.statusActive.500");
+  border: 1px solid theme("colors.statusActive.500");
+  transition: .5s;
+  cursor: pointer;
+  &:hover {
+      background-color: theme("colors.statusActive.500");
+      color: theme("colors.statusActive.50");
+  }
+  &.option-btn {
+      &:hover {
+          background-color: theme("colors.statusActive.50");
+          color: theme("colors.statusActive.500");
+      }
+  }
+  &__option {
+      background-color: theme("colors.statusActive.500");
+  }
+}
+.status-archived {
+  background-color: theme("colors.statusArchived.50");
+  color: theme("colors.statusArchived.500");
+  border: 1px solid theme("colors.statusArchived.500");
+  transition: .5s;
+  cursor: pointer;
+  &:hover {
+      background-color: theme("colors.statusArchived.500");
+      color: theme("colors.statusArchived.50");
+  }
+  &.option-btn {
+      &:hover {
+          background-color: theme("colors.statusArchived.50");
+          color: theme("colors.statusArchived.500");
+      }
+  }
+  &__option {
+      background-color: theme("colors.statusArchived.500");
+  }
+}
+.status-incubating {
+  background-color: theme("colors.statusIncubating.50");
+  color: theme("colors.statusIncubating.500");
+  border: 1px solid theme("colors.statusIncubating.500");
+  transition: .5s;
+  cursor: pointer;
+  &:hover {
+      background-color: theme("colors.statusIncubating.500");
+      color: theme("colors.statusIncubating.50");
+  }
+  &.option-btn {
+      &:hover {
+          background-color: theme("colors.statusIncubating.50");
+          color: theme("colors.statusIncubating.500");
+      }
+  }
+  &__option {
+      background-color: theme("colors.statusIncubating.500");
+  }
+}
+.btn-custom-badget {
+  background-color: theme("colors.primary.50");
+  color: theme("colors.primary.500");
+  border: 1px solid theme("colors.primary.500");
+  border-radius: 50px;
+  min-width: 80px;
+  font-size: 12px;
+  transition: .5s;
+  padding: 0.3rem;
+  &:hover {
+    background-color: theme("colors.primary.500");
+    color: theme("colors.primary.50") !important;
+    a {
+      color: theme('colors.primary.50');
+    }
+  }
+  a {
+    font-size: 12px;
+  }
+}
+
+.btn-primary {
+  background-color: theme("colors.primary.500");
+  color: white;
+  border-radius: 6px;
+  &:disabled {
+    background-color: theme("colors.primary.200");
+    color: white;
+  }
+}

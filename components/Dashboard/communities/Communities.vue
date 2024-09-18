@@ -19,7 +19,8 @@
                             label="label"
                             track-by="label">
                             <template #selection="{ values, search, isOpen }">
-                                <div v-for="value in values" :key="value.value" class="selector-label" :class="CommunityStatusColors[value.value]">
+                                <div v-for="value in values" :key="value.value" class="selector-label" 
+                                :class="`status-${ value.value } option-btn`">
                                     <span>{{ value.label }}</span>
                                     <i 
                                         tabindex="1" 
@@ -32,7 +33,7 @@
                                 <span class="d-flex">
                                     <span
                                         class="h-2 w-2 rounded-full rounded-options" 
-                                        :class="CommunityStatusColors[props.option?.value]">
+                                        :class="`status-${ props.option.value }__option`">
                                     </span>
                                     <span>{{ props.option.label }}</span>
                                 </span>
@@ -76,97 +77,78 @@
                         </div>
                     </template>
                 
-                    <template #community_name-data="{ row }">
-                        <NuxtLink 
-                        :to="row.to"
-                        class="text-primaryOeb-500"
-                        title="Go to benchmarking">
-                            <div class="d-flex f-items-center">
-                                <span>{{ row.community_name }}</span>
-                            </div>
-                        </NuxtLink>
+                    <template #name-data="{ row }">
+                        <div class="d-flex f-items-center">
+                            <span v-if="row.privileges === 'Owner' && row.actions.community"
+                                title="Community Owner"
+                                class="row-icon">
+                                <font-awesome-icon :icon="['fas', 'key']" />
+                            </span>
+                            <span v-if="row.privileges === 'Manager' && row.actions.community"
+                                title="Community Manager"
+                                class="row-icon">
+                                <font-awesome-icon :icon="['fas', 'gear']" />
+                            </span>
+                            <span>{{ row._id }} - {{ row.name }}</span>
+                        </div> 
                     </template>
-                    
                     <template #actions-data="{ row }">
                         <div v-if="row.actions">
                             <div v-if="row.privileges === 'Owner' && row.actions.community">
-                                <template v-if="row.actions.community.read">
-                                    <button title="View community" class="btn-event">
-                                        <NuxtLink :to="`/dashboard/community/${row._id}?view`">
-                                            <font-awesome-icon :icon="['fas', 'eye']" />
-                                        </NuxtLink>
-                                    </button>
-                                </template>
-                                <template v-if="row.actions.community.update">
-                                    <button title="Edit community" class="btn-event">
-                                        <NuxtLink :to="`/dashboard/community/${row._id}`">
-                                            <font-awesome-icon :icon="['fas', 'pencil']" />
-                                        </NuxtLink>
-                                    </button>
-                                </template>
+                                <button title="Edit community" class="btn-event text-neutral-300">
+                                    <NuxtLink :to="getCommunityEditLink(row)">
+                                        <font-awesome-icon :icon="['fas', 'pencil']" />
+                                    </NuxtLink>
+                                </button>
                                 <template v-if="row.actions.community.delete">
-                                    <button title="Delete community" class="btn-event">
+                                    <button title="Delete community" class="btn-event text-neutral-300">
                                         <font-awesome-icon :icon="['fas', 'trash']" />
                                     </button>
                                 </template>
                             </div>
                             <div v-else-if="row.privileges=== 'Manager' && row.actions.community">
-                                <template v-if="row.actions.community.read">
-                                    <button title="View community" class="btn-event">
-                                        <NuxtLink :to="`/dashboard/community/${row._id}?view`">
-                                            <font-awesome-icon :icon="['fas', 'eye']" />
-                                        </NuxtLink>
-                                    </button>
-                                </template>
-                                <template v-if="row.actions.community.create">
-                                    <button title="Create community" class="btn-event">
-                                        <NuxtLink :to="`/dashboard/community/${row._id}`">
-                                            <font-awesome-icon :icon="['fas', 'plus']" />
-                                        </NuxtLink>
-                                    </button>
-                                </template>
-                                <template v-if="row.actions.community.update">
-                                    <button title="Edit community" class="btn-event">
-                                        <NuxtLink :to="`/dashboard/community/${row._id}/edit`">
-                                            <font-awesome-icon :icon="['fas', 'pencil']" />
-                                        </NuxtLink>
-                                    </button>
-                                </template>
+                                <button title="Edit community" class="btn-event text-neutral-300">
+                                    <NuxtLink :to="getCommunityEditLink(row)">
+                                        <font-awesome-icon :icon="['fas', 'pencil']" />
+                                    </NuxtLink>
+                                </button>
                                 <template v-if="row.actions.community.delete">
-                                    <button title="Delete community" class="btn-event">
+                                    <button title="Delete community" class="btn-event text-neutral-300">
                                         <font-awesome-icon :icon="['fas', 'trash']" />
                                     </button>
                                 </template>
                             </div>
                             <div v-else-if="row.privileges=== 'anyone' && row.actions.community">
-                                <template v-if="row.actions.community.read">
-                                    <button title="View community" class="btn-event">
-                                        <NuxtLink :to="`/dashboard/community/${row._id}/edit`">
-                                            <font-awesome-icon :icon="['fas', 'eye']" />
-                                        </NuxtLink>
-                                    </button>
-                                </template>
+                                <button title="Edit community" class="btn-event text-neutral-300">
+                                    <NuxtLink :to="getCommunityEditLink(row)">
+                                        <font-awesome-icon :icon="['fas', 'pencil']" />
+                                    </NuxtLink>
+                                </button>
                             </div>
                         </div>
                         <div v-else>
                             <div>-</div>
                         </div>
-                        
                     </template>
-                    
                     <template #status-data="{ row }">
-                        <div class="inline-block rounded-full text-primaryOeb-950 custom-badget font-semibold text-gray-700" :class="CommunityStatusColors[row.status]">
-                            <div class="text-xs font-normal leading-none max-w-full flex-initial font-semibold" :title="`${'Status'} ${row.status}`">
+                        <div class="inline-block rounded-full custom-badget font-semibold" 
+                            :class="`status-${row.status}`"
+                            :title="`${'Status'} ${row.status}`">
+                            <div class="text-xs font-normal leading-none max-w-full flex-initial font-semibold"
+                                :title="`${'Status'} ${row.status}`">
                                 {{ row.status }}
                             </div>
                         </div>
                     </template>
                     <template #events-data="{ row }">
-                        <NuxtLink :to="`/dashboard/community/${row._id}/events`" title="View community events" class="user-communities__events">
-                            <font-awesome-icon :icon="['fas', 'circle-arrow-right']" />
-                        </NuxtLink>
-                    </template> 
-                
+                        <button class="btn-custom-badget text-sm">
+                            <NuxtLink :to="`/dashboard/community/${row._id}/events`" 
+                                title="View community events" 
+                                class="text-sm">
+                                View
+                            </NuxtLink>
+                        </button>
+                    </template>
                 </UTable>
                 <div
                     v-if="filteredRows.length > 0"
@@ -206,7 +188,7 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import { useUser } from "@/stores/user.ts";
-import { CommunityStatusColors, CommunityStatusLabels } from '@/constants/community_const'
+import { CommunityStatusColors, CommunityStatusLabels, CommunityStatusTextColors, CommunityStatusBackgroundColors } from '@/constants/community_const'
 import { CommunityColumnsDashboard, CommunityStatus } from "@/types/communities";
 import Multiselect from 'vue-multiselect';
 
@@ -226,24 +208,26 @@ const search = ref<string>("");
 const selectedStatus = ref(<Array<CommunityStatus>>[]);
 const todoStatus = ref<Array<{ value: string, label: string }>>(CommunityStatusLabels);
 
-const columns: Array<CommunityColumnsDashboard> = [{
-    key: 'logos',
-},{
-    key: 'name',
-    label: 'NAME'
-},{
-    key: "community_contact",
-    label: "CONTACTS"
-},{
-    key: 'status',
-    label: 'STATUS'
-},{
-    key: 'actions',
-    label: 'ACTIONS'
-}, {
-    key: 'events',
-    label: 'EVENTS'
-}];
+const columns: Array<CommunityColumnsDashboard> = [
+    {
+        key: 'logos',
+    },{
+        key: 'name',
+        label: 'NAME'
+    },{
+        key: "community_contact",
+        label: "CONTACTS"
+    },{
+        key: 'status',
+        label: 'STATUS'
+    },{
+        key: 'events',
+        label: 'EVENTS'
+    },{
+        key: 'actions',
+        label: 'ACTIONS'
+    }
+];
 
 let _total = ref(0);
 
@@ -305,6 +289,12 @@ function removeTag(tagName: string) {
     });
 }
 
+function getCommunityEditLink(row: any) {
+    return (row.privileges === 'Owner' 
+        && row.actions.community 
+        && row.actions.community.update) ? `/dashboard/community/${row._id}` : `/dashboard/community/${row._id}?view`;
+}
+
 </script>
 <style lang="scss" scoped>
 .user-communities {
@@ -313,7 +303,6 @@ function removeTag(tagName: string) {
         &__table {
             margin-top: 1rem;
             a {
-                color: theme('colors.primary.500');
                 text-decoration: none;
             }
             &__logo {
@@ -330,6 +319,8 @@ function removeTag(tagName: string) {
         font-size: 0.75rem;
         line-height: 1;
         text-align: center;
+        min-width: 100px;
+        text-transform: capitalize;
         &.filter-badget {
             margin-right: 0.5rem;
         }
@@ -337,6 +328,10 @@ function removeTag(tagName: string) {
     .btn-event {
         padding: 5px;
         font-size: 16px;
+        a {
+            color: theme('colors.gray.400');
+        }
+        
     }
     .input-search {
         input {
@@ -346,7 +341,6 @@ function removeTag(tagName: string) {
             }
         }
     }
-    
 }
 .input-selector {
     padding: 5px 10px !important;
@@ -359,6 +353,9 @@ function removeTag(tagName: string) {
     button {
         color: #0b579f !important;
     }
+}
+.row-icon {
+    padding-right: 10px;
 }
 </style>
 
@@ -445,7 +442,7 @@ function removeTag(tagName: string) {
     min-height: 23px;
     width: auto;
     padding: 2px 7px;
-    border-radius: 5px;
+    border-radius: 50px;
     span {
         padding: 0px;
     }
