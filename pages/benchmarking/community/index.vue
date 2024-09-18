@@ -59,7 +59,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch, computed } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import CommunityInfo from "@/components/Community/CommunityInfo.vue";
 import CommunityEvent from "@/components/Community/CommunityEvent/CommunityEvent.vue";
 import CommunityDataset from "@/components/Community/CommunityDataset/CommunityDataset.vue";
@@ -67,13 +68,33 @@ import CommunityTools from "@/components/Community/CommunityTools/CommunityTools
 import CommunityEventSummary from "@/components/Community/CommunityEvent/CommunityEventSummary.vue";
 import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
 import { useCommunity } from "@/stores/community";
+import { useCommunities } from "@/stores/communities";
 
 const route = useRoute();
+const router = useRouter();
 const communityStore = useCommunity();
+const communitiesStore = useCommunities();
+
 const isPending = ref(false);
-const community: Ref<any> = ref(null);
-const communityId: string = route.params.community;
-const event: string = route.query.event;
+const community = ref<any>(null);
+const communityId = route.params.community as string;
+const event = route.query.event as string;
+
+
+// Verifica si el communityId está presente en alguna de las comunidades
+let found = false;
+communitiesStore.communities.forEach((communityArray) => {
+  if (communityArray._id === communityId) {
+    found = true;
+  }
+});
+
+if (!found) {
+  console.log("El communityId no está presente en ninguna comunidad.");
+  router.push("/error");
+};
+
+
 
 if (communityStore.communityId && communityStore.communityId == communityId) {
   community.value = communityStore.getCommunityData;
