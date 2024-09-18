@@ -84,7 +84,7 @@ const showCopiedMessage = () => {
   copied.value = true;
   setTimeout(() => {
     copied.value = false;
-  }, 5000); // Ocultar después de 5 segundos (5000 ms)
+  }, 5000);
 };
 
 const handleCopyClick = (url: string) => {
@@ -96,8 +96,8 @@ const closeDialog = () => {
   dialogAnimation.value = 'an2';
   setTimeout(() => {
     dialog.value = false;
-    dialogAnimation.value = 'an1'; // Restablecer animación para la próxima apertura
-  }, 10); // Duración de la animación an2
+    dialogAnimation.value = 'an1'; 
+  }, 10); 
 };
 
 watch(dialog, (newValue) => {

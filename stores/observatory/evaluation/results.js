@@ -4,17 +4,17 @@ import { useNuxtApp } from 'nuxt/app';
 
 export const useResultStore = defineStore('result', {
   state: () => ({
-    _FAIRIndicatorsTool: null,
-	  _FAIRIndicatorsLogs: null,
-	  _FAIRIndicatorsControl: null,
-	  _LoadingEvaluation: false,
+    fAIRIndicatorsTool: null,
+	  fAIRIndicatorsLogs: null,
+	  fAIRIndicatorsControl: null,
+	  loadingEvaluation: false,
   }),
 
   getters: {
-    getFAIRIndicatorsTool: (state) => state._FAIRIndicatorsTool,
-    getFAIRIndicatorsLogs: (state) => state._FAIRIndicatorsLogs,
-    getFAIRIndicatorsControl: (state) => state._FAIRIndicatorsControl,
-    getLoadingEvaluation: (state) => state._LoadingEvaluation
+    getFAIRIndicatorsTool: (state) => state.fAIRIndicatorsTool,
+    getFAIRIndicatorsLogs: (state) => state.fAIRIndicatorsLogs,
+    getFAIRIndicatorsControl: (state) => state.fAIRIndicatorsControl,
+    getLoadingEvaluation: (state) => state.loadingEvaluation
   },
 
   actions: {
@@ -22,14 +22,14 @@ export const useResultStore = defineStore('result', {
       const result = payload.result;
       const logs = payload.logs;
 
-      this._FAIRIndicatorsTool = result;
-      this._FAIRIndicatorsLogs = logs;
+      this.fAIRIndicatorsTool = result;
+      this.fAIRIndicatorsLogs = logs;
     },
     setFAIRIndicatorsControl(result){
-      this._FAIRIndicatorsControl = result;
+      this.fAIRIndicatorsControl = result;
     },
     setLoading(payload){
-      this._LoadingEvaluation = payload.evaluation;
+      this.loadingEvaluation = payload.evaluation;
     },
 
     async GET_URL(URL){
@@ -90,6 +90,9 @@ export const useResultStore = defineStore('result', {
         { url: URL, data }
       )
 
+      console.log(result)
+      console.log(result.data)
+
       this.setFAIRIndicatorsToolResult(result.data)
   		console.debug(result);
       this.setLoading({ evaluation: false })
@@ -109,7 +112,7 @@ export const useResultStore = defineStore('result', {
       const result = await this.POST_DATA(payload);
   		console.debug(result);
 
-      this.setFAIRIndicatorsToolResult(result.data);
+      this.setFAIRIndicatorsToolResult(result);
       this.setLoading({ evaluation: false })
     },
 

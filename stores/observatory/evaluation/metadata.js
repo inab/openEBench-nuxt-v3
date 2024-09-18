@@ -85,17 +85,17 @@ export const useMetadataStore = defineStore('metadata', {
       const { $observatory } = useNuxtApp();
       try {
         const result = await $observatory(payload.url, {
-          method: "POST", // Método POST
-          body: payload.data,
+          method: "POST",
+          body: payload,
           headers: {
             "Content-Type": "application/json",
           },
         });
 
-        return result // Devuelve el resultado
+        return result 
       } catch (error) {
         console.error("Error in POST_URL:", error);
-        throw error; // Lanza el error para manejarlo donde se llame la acción
+        throw error;
       }
     },
 

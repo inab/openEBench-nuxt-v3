@@ -1,12 +1,25 @@
 <template>
-  <div class="row mx-0">
+  <div class="row mx-0 mt-3 ms-1">
     <UInput
       v-model="localValue"
-      :label="label"
+      placeholder=""
+      :ui="{ base: 'peer' }"
       class="border-1 rounded-md px-0 text-sm"
-      :error-messages="urlErrorMessage"
-      @input="onURLChange"
+      :class="{
+        'border-red-500 ring-red-500': urlErrorMessage, // If error → Red
+        ' focus-within:ring-primaryOeb-500 focus-within:border-primaryOeb-500 focus-within:text-primaryOeb-500': !urlErrorMessage // If NO error → Blue
+      }"
+      @update:modelValue="onURLChange"
     >
+      <!-- Floating Label -->
+      <label class="pointer-events-none absolute left-0 -top-2.5 text-(--ui-text-dimmed) text-xs px-1.5 transition-all peer-focus:-top-2.5 
+        peer-focus:text-xs peer-placeholder-shown:text-sm peer-placeholder-shown:text-(--ui-text-dimmed) peer-placeholder-shown:top-1.5"
+      >
+        <span class="inline-flex bg-white px-1" :class="{ 'text-red-500': urlErrorMessage }">
+          {{ label }}
+        </span>
+      </label>
+
       <UButton
         color="gray"
         variant="solid"
