@@ -10,8 +10,23 @@
         </div>
       </div>
       <div v-else>
-        <CommunityInfo :community="community" :community-references="communityReferences" />
-        <div class="community-tabs md:flex">
+        <CommunityInfo
+          v-if="community"
+          :community="community"
+          :community-references="communityReferences"
+        />
+        <div v-else>
+          <p v-if="!community && !isPending">
+            <noDataAvailable :description="'No community found with id ' + `'` + communityId + `'`"
+            btnPath="/benchmarking" />
+          </p>
+          <p v-else>
+            <noDataAvailable description="No information found to display."
+            btnPath="/benchmarking" />
+          </p>
+        </div>
+
+        <div class="community-tabs md:flex" v-if="community">
           <UTabs :items="tabsItems" class="w-full" :ui="{ list: { tab: { active: 'text-primaryOeb-500' } } }">
             <template #default="{ item, index, selected }">
               <div class="flex items-center gap-2 relative truncate">
@@ -60,40 +75,23 @@
 
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute} from 'vue-router';
 import CommunityInfo from "@/components/Community/CommunityInfo.vue";
 import CommunityEvent from "@/components/Community/CommunityEvent/CommunityEvent.vue";
 import CommunityDataset from "@/components/Community/CommunityDataset/CommunityDataset.vue";
 import CommunityTools from "@/components/Community/CommunityTools/CommunityTools.vue";
 import CommunityEventSummary from "@/components/Community/CommunityEvent/CommunityEventSummary.vue";
 import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
+import noDataAvailable from "@/layouts/noDataAvailable.vue";
 import { useCommunity } from "@/stores/community";
-import { useCommunities } from "@/stores/communities";
 
 const route = useRoute();
-const router = useRouter();
 const communityStore = useCommunity();
-const communitiesStore = useCommunities();
 
 const isPending = ref(false);
 const community = ref<any>(null);
 const communityId = route.params.community as string;
 const event = route.query.event as string;
-
-
-// Verifica si el communityId está presente en alguna de las comunidades
-let found = false;
-communitiesStore.communities.forEach((communityArray) => {
-  if (communityArray._id === communityId) {
-    found = true;
-  }
-});
-
-if (!found) {
-  console.log("El communityId no está presente en ninguna comunidad.");
-  router.push("/error");
-};
-
 
 
 if (communityStore.communityId && communityStore.communityId == communityId) {
@@ -160,24 +158,39 @@ if (eventData.value && (eventData.value as { summary?: any }).summary) {
   });
 }
 
-const routeArray = computed(() => [
-  {
-    label: "Benchmarking Communities",
-    isActualRoute: false,
-    route: "/benchmarking",
-  },
-  {
-    label: community.value?.acronym + " " + "Events",
-    isActualRoute: false,
-    route: "/benchmarking/" + communityId + "/events",
-  },
-  {
-    label: currentEvent.value?.name,
-    isActualRoute: true,
-  },
-]);
-
-
+const routeArray = computed(() => {
+  if (!community.value) {
+    // If the community is not found, define an alternative route
+    return [
+      {
+        label: "Benchmarking Communities",
+        isActualRoute: false,
+        route: "/benchmarking",
+      },
+      {
+        label: "Community Not Found",
+        isActualRoute: true,
+      },
+    ];
+  }
+  // Route in case of finding the community
+  return [
+    {
+      label: "Benchmarking Communities",
+      isActualRoute: false,
+      route: "/benchmarking",
+    },
+    {
+      label: community.value.acronym + " " + "Events",
+      isActualRoute: false,
+      route: "/benchmarking/" + communityId + "/events",
+    },
+    {
+      label: currentEvent.value?.name,
+      isActualRoute: true,
+    },
+  ];
+});
 
 watch(
   () => route.query.event,
@@ -197,6 +210,7 @@ watch(
   },
   { immediate: true },
 );
+
 </script>
 
 <style lang="scss" scoped>
