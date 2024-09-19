@@ -17,7 +17,7 @@
         />
         <div v-else>
           <p v-if="!community && !isPending">
-            <noDataAvailable :description="'No community found with id ' + `'` + communityId + `'`"
+            <noDataAvailable description="No community found for Id " :id="`'` + communityId + `'.`"
             btnPath="/benchmarking" />
           </p>
           <p v-else>

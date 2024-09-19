@@ -10,7 +10,22 @@
         </div>
       </div>
       <div v-else>
-        <CommunityInfo :community="community" :community-references="communityReferences" />
+        <CommunityInfo
+          v-if="community"
+          :community="community"
+          :community-references="communityReferences"
+        />
+        <div v-else>
+          <p v-if="!community && !isPending">
+            <noDataAvailable description="No events found for community with Id " :id="`'` + community_Id + `'.`"
+            btnPath="/benchmarking" />
+          </p>
+          <p v-else>
+            <noDataAvailable description="No information found to display."
+            btnPath="/benchmarking" />
+          </p>
+        </div>
+
         <CommunityEventsList :events="eventsObj" :community-id="community_Id" />
       </div>
     </div>
@@ -22,6 +37,7 @@ import { ref } from "vue";
 import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
 import CommunityInfo from "@/components/Community/CommunityInfo.vue";
 import CommunityEventsList from "@/components/Community/CommunityEventsList/CommunityEventsList.vue";
+import noDataAvailable from "@/layouts/noDataAvailable.vue";
 import { useCommunity } from "@/stores/community";
 
 interface Link {
@@ -72,12 +88,23 @@ if (communityStore.communityId && communityStore.communityId == community_Id) {
 const eventsObj = computed(() => communityStore.getEvents ?? []);
 const communityReferences = computed(() => communityStore.getCommunityReferences ?? []);
 
-const routeArray: Array<{ label: string; isActualRoute: boolean; route?: string }> = [
-  {
-    label: "Benchmarking Communities",
-    isActualRoute: false,
-    route: "/benchmarking",
-  },
-  { label: community.value?.acronym + " " + "Events", isActualRoute: true },
-];
+const routeArray: Array<{ label: string; isActualRoute: boolean; route?: string }> = !community.value
+  ? [
+      {
+        label: "Benchmarking Communities",
+        isActualRoute: false,
+        route: "/benchmarking",
+      },
+      { label: "Events Not Found", isActualRoute: true },
+    ]
+  : [
+      {
+        label: "Benchmarking Communities",
+        isActualRoute: false,
+        route: "/benchmarking",
+      },
+      { label: community.value.acronym + " Events", isActualRoute: true },
+    ];
+
+
 </script>

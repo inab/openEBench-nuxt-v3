@@ -3,7 +3,7 @@
     <div class="row col-8 shadow p-3 mb-5 bg-white rounded m-5">
       <div class="col-12 col-sm-12 col-md-6 py-5">
         <h2>Whoops!</h2>
-        <p>{{ description }}</p>
+        <p class="mt-3">{{ description}} <i>{{ id }}</i></p>
         <div v-if="btnPath != null" class="mt-5">
           <UButton @click="handleError">Benchmarking communities</UButton>
         </div>
@@ -19,9 +19,11 @@
 import { useRouter } from 'vue-router';
 const props = withDefaults(defineProps<{
   description: any;
+  id: any;
   btnPath?: any;
 }>(), {
   btnPath: null,
+  id: null,
 });
 
 const router = useRouter();
