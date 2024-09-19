@@ -21,6 +21,13 @@ export default defineNuxtConfig({
       },
     },
     plugins: [svgLoader()],
+    optimizeDeps: { 
+      include: [ "dompurify", "aos", "data-urls", "whatwg-encoding", 
+        "vue3-carousel/dist/carousel.es.js", "gsap", "vue-multiselect", "pluralize",
+        "marked", "lodash.debounce", "@inb/oeb-classification-table",
+        "@inb/oeb-widgets-graphs", "valibot" 
+      ] 
+    }
   },
 
   devServer: {
