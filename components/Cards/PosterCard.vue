@@ -337,11 +337,11 @@ function changePage(page: number) {
   margin: 8px 0;
   text-align: center;
   color: #0b579f;
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 .card-title:hover {
-  color: #3a6286;
+  color: #6a98c4;
   text-decoration: underline;
 }
 
@@ -450,6 +450,7 @@ function changePage(page: number) {
 .poster-title {
   cursor: pointer;
   color: #0b579f;
+  text-decoration: none;
   font-size: 19px;
   margin: 8px 0;
   text-align: left;
@@ -459,15 +460,16 @@ function changePage(page: number) {
 
 .poster-link {
   color: #0b579f;
-  /* Ensure link color is also the new blue */
+  text-decoration: none;
 }
 
 .text-primary {
   color: #0b579f !important;
 }
 
-.poster-title:hover {
+.poster-link:hover {
   text-decoration: underline;
+  color: #6a98c4;
 }
 
 .license-text {
