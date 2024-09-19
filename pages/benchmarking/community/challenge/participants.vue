@@ -31,7 +31,7 @@
         </div>
       </div>
       <div v-else class="">
-        <noDataAvailable item="participants and metrics" />
+        <noDataAvailable description="No participants and metrics available." />
       </div>
       <div class="chart-image text--secondary" align="center" color="rgba(0, 0, 0, 0.6)">
         <CustomTabs :data="itemsObjList" :metrics="metrics" />
