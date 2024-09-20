@@ -2,7 +2,16 @@
     <div class="dashboard-community-edit">
         <div class="w-100 container">
             <div class="dashboard-community-edit__title">
-                <h2 class="text-primaryOeb-500">Edit Community : <i>{{ id }}</i></h2>
+                <h2 class="text-primaryOeb-500 ">
+                    <span class="">Edit Community : <i>{{ id }}</i></span>
+                    <span class="">
+                        <NuxtLink class="btn-primary hover_effect"
+                            :to="'/benchmarking/' + id"
+                        >
+                        View Community
+                        </NuxtLink>
+                    </span>
+                </h2>
             </div>
             <div class="" v-if="loadingData">
                 <div class="space-y-2">
@@ -13,172 +22,187 @@
             <div class="dashboard-community-edit__content" v-else>
                 <div class="">
                     <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmitCommunity">
-                        <div class="row">
-                            <div class="col-8">
-                                <div class="form-group">
-                                    <label for="acronym">Acronym</label>
-                                    <input type="text" class="form-control" id="acronym" v-model="communityData.acronym"
-                                        :disabled="!commmunityPrivileges.update || isView" />
+                        <div class="w-100 form-card">
+                            <div class="row">
+                                <div class="col-8">
+                                    <div class="form-group">
+                                        <label for="acronym">Acronym</label>
+                                        <input type="text" class="form-control" id="acronym" v-model="communityData.acronym"
+                                            :disabled="!commmunityPrivileges.update || isView" />
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="form-group">
-                                    <label for="status">Status</label>
-                                    <USelectMenu  
-                                        v-model="localStatus.value" 
-                                        :options="CommunityStatusLabels"
-                                        :disabled="!commmunityPrivileges.update || isView" 
-                                        :color="commmunityPrivileges.update?'white':'gray'"
-                                        @change="onChangeStatus">
-                                        <template #label>
-                                            <span 
-                                                :class="`status-${ localStatus.value }__option inline-block h-2 w-2 flex-shrink-0 rounded-full`" 
-                                                aria-hidden="true" />
-                                            <span class="truncate">{{ localStatus.label }}</span>
-                                        </template>
-                                        <template #option="{ option: item }">
-                                            <span
-                                                class="h-2 w-2 rounded-full" 
-                                                :class="`status-${ item?.value }__option`"></span>
-                                            <span>{{ item.label }}</span>
-                                        </template>
-                                    </USelectMenu>
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label for="status">Status</label>
+                                        <USelectMenu  
+                                            v-model="localStatus.value" 
+                                            :options="CommunityStatusLabels"
+                                            :disabled="!commmunityPrivileges.update || isView" 
+                                            :color="commmunityPrivileges.update?'white':'gray'"
+                                            @change="onChangeStatus">
+                                            <template #label>
+                                                <span 
+                                                    :class="`status-${ localStatus.value }__option inline-block h-2 w-2 flex-shrink-0 rounded-full`" 
+                                                    aria-hidden="true" />
+                                                <span class="truncate">{{ localStatus.label }}</span>
+                                            </template>
+                                            <template #option="{ option: item }">
+                                                <span
+                                                    class="h-2 w-2 rounded-full" 
+                                                    :class="`status-${ item?.value }__option`"></span>
+                                                <span>{{ item.label }}</span>
+                                            </template>
+                                        </USelectMenu>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <label for="description">Name</label>
-                                    <input type="text" class="form-control" id="name" v-model="communityData.name" 
-                                        :disabled="!commmunityPrivileges.update || isView"
-                                    />
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="description">Name</label>
+                                        <input type="text" class="form-control" id="name" v-model="communityData.name" 
+                                            :disabled="!commmunityPrivileges.update || isView"
+                                        />
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <label for="description">Description</label>
-                                    <textarea class="form-control" id="description" rows="10" 
-                                        v-model="communityData.description"
-                                        :disabled="!commmunityPrivileges.update || isView">
-                                    </textarea>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="description">Description</label>
+                                        <textarea class="form-control" id="description" rows="10" 
+                                            v-model="communityData.description"
+                                            :disabled="!commmunityPrivileges.update || isView">
+                                        </textarea>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <CustomSubtitle
-                            text="Data"
-                        />
-                        <div class="row">
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <div class="w-100">
-                                        <label for="contacts"
-                                            class="form-group-row">
-                                            <span class="label-text text-gray-500">
-                                                Links
-                                            </span>
-                                            <button class="btn-form-add btn-primary"
-                                                @click="onAddElement(localLinks)"
-                                                :disabled="!commmunityPrivileges.update || isView || checkEmptyLinks">
-                                                <font-awesome-icon :icon="['fas', 'plus']" />
-                                            </button>
-                                        </label>
-                                    </div>
-                                    <div class="w-100 row">
-                                        <div v-for="(link, index) in localLinks" :key="link"
-                                            class="col-12 d-flex pl-0">
-                                            <div class="input-wrapper big d-flex">
-                                                <span>{{ index + 1}}.</span>
-                                                <input type="text" class="form-control" 
-                                                    id="link" 
-                                                    v-model="localLinks[index]" 
-                                                    :disabled="!commmunityPrivileges.update || isView" />
-                                                <button class="btn-delete-input">
-                                                    <font-awesome-icon :icon="['far', 'trash-can']" />
-                                                </button>
+                        <div class="w-100 form-card">
+                            <CustomSubtitle
+                                text="Data"
+                            />
+                            <div class="row form-card__row">
+                                <div class="form-card__row__box">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <div class="w-100">
+                                                <label for="contacts"
+                                                    class="form-group-row">
+                                                    <span class="label-text text-gray-500">
+                                                        Links
+                                                    </span>
+                                                    <button class="btn-form-add btn-primary"
+                                                        @click="onAddElement(localLinks)"
+                                                        :disabled="!commmunityPrivileges.update || isView || checkEmptyLinks">
+                                                        <font-awesome-icon :icon="['fas', 'plus']" />
+                                                    </button>
+                                                </label>
+                                            </div>
+                                            <div class="w-100 row no-space">
+                                                <div v-for="(link, index) in localLinks" :key="link"
+                                                    class="col-12 d-flex pl-0">
+                                                    <div class="input-wrapper big d-flex">
+                                                        <span>{{ index + 1}}.</span>
+                                                        <input type="text" class="form-control" 
+                                                            id="link" 
+                                                            v-model="localLinks[index]" 
+                                                            :disabled="!commmunityPrivileges.update || isView" />
+                                                        <button class="btn-delete-input"
+                                                            type="button"
+                                                            @click="onDeleteElement(index, localLinks)">
+                                                            <font-awesome-icon :icon="['far', 'trash-can']" />
+                                                        </button>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label for="provenance">Provenance</label>
-                                    <template v-if="communityData._provenance">
-                                        <div class="w-100 d-flex">
-                                            <a :href="`mailto:${communityData._provenance}`">{{ communityData._provenance }}</a>
-                                        </div>
-                                    </template>
-                                    <template v-else>
-                                        <div class="w-100 d-flex">
-                                            -
-                                        </div>
-                                    </template>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label for="schema">Schema</label>
-                                    <div class="w-100 d-flex">
-                                        <input type="text" class="form-control" 
-                                            id="schema" 
-                                            v-model="communityData._schema" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <div class="w-100">
-                                        <label for="contacts"
-                                            class="form-group-row">
-                                            <span class="label-text text-gray-500">
-                                                Contacts
-                                            </span>
-                                            <button class="btn-form-add btn-primary"
-                                                @click="onAddElement(localContacts)"
-                                                :disabled="!commmunityPrivileges.update || isView || cheEmptyContacts">
-                                                <font-awesome-icon :icon="['fas', 'plus']" />
-                                            </button>
-                                        </label>
-                                    </div>
-                                    <div class="w-100 row">
-                                        <div v-for="(contact, index) in localContacts" :key="index" 
-                                            class="col-6 pt-0">
-                                            <div class="input-wrapper">
+                                
+                                <div class="form-card__row__box">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="provenance">Provenance</label>
+                                            <div class="w-100 d-flex">
                                                 <input type="text" class="form-control" 
-                                                    v-model="localContacts[index]" 
-                                                    :disabled="!commmunityPrivileges.update || isView" />
-                                                <button class="btn-delete-input">
-                                                    <font-awesome-icon :icon="['far', 'trash-can']" />
-                                                </button>
+                                                    id="schema" 
+                                                    v-model="communityData._provenance" />
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <div class="w-100">
-                                        <label for="contacts"
-                                            class="form-group-row">
-                                            <span class="label-text text-gray-500">
-                                                Keywords
-                                            </span>
-                                            <button class="btn-form-add btn-primary"
-                                                @click="onAddElement(localKeywords)"
-                                                :disabled="!commmunityPrivileges.update || isView || checkEmptyKeywords">
-                                                <font-awesome-icon :icon="['fas', 'plus']" />
-                                            </button>
-                                        </label>
-                                    </div>
-                                    <div class="w-100 row">
-                                        <div v-for="(keys, index) in localKeywords" :key="index"
-                                            class="col-3 pt-0">
-                                            <div class="input-wrapper">
+                                
+                                <div class="form-card__row__box">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="schema">Schema</label>
+                                            <div class="w-100 d-flex">
                                                 <input type="text" class="form-control" 
-                                                    v-model="localKeywords[index]" 
-                                                    :disabled="!commmunityPrivileges.update || isView" />
-                                                <button class="btn-delete-input">
-                                                    <font-awesome-icon :icon="['far', 'trash-can']" />
-                                                </button>
+                                                    id="schema" 
+                                                    v-model="communityData._schema" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-card__row__box">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <div class="w-100">
+                                                <label for="contacts"
+                                                    class="form-group-row">
+                                                    <span class="label-text text-gray-500">
+                                                        Contacts
+                                                    </span>
+                                                    <button class="btn-form-add btn-primary"
+                                                        @click="onAddElement(localContacts)"
+                                                        :disabled="!commmunityPrivileges.update || isView || cheEmptyContacts">
+                                                        <font-awesome-icon :icon="['fas', 'plus']" />
+                                                    </button>
+                                                </label>
+                                            </div>
+                                            <div class="w-100 row no-space">
+                                                <div v-for="(contact, index) in localContacts" :key="index" 
+                                                    class="col-6 pt-0">
+                                                    <div class="input-wrapper">
+                                                        <input type="text" class="form-control" 
+                                                            v-model="localContacts[index]" 
+                                                            :disabled="!commmunityPrivileges.update || isView" />
+                                                        <button class="btn-delete-input">
+                                                            <font-awesome-icon :icon="['far', 'trash-can']" />
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-card__row__box">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <div class="w-100">
+                                                <label for="contacts"
+                                                    class="form-group-row">
+                                                    <span class="label-text text-gray-500">
+                                                        Keywords
+                                                    </span>
+                                                    <button class="btn-form-add btn-primary"
+                                                        @click="onAddElement(localKeywords)"
+                                                        :disabled="!commmunityPrivileges.update || isView || checkEmptyKeywords">
+                                                        <font-awesome-icon :icon="['fas', 'plus']" />
+                                                    </button>
+                                                </label>
+                                            </div>
+                                            <div class="w-100 row no-space">
+                                                <div v-for="(keys, index) in localKeywords" :key="index"
+                                                    class="col-6 pt-0">
+                                                    <div class="input-wrapper">
+                                                        <input type="text" class="form-control" 
+                                                            v-model="localKeywords[index]" 
+                                                            :disabled="!commmunityPrivileges.update || isView" />
+                                                        <button class="btn-delete-input">
+                                                            <font-awesome-icon :icon="['far', 'trash-can']" />
+                                                        </button>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -200,6 +224,26 @@
                 </div>
             </div>
         </div>
+        DialogText: {{  dialogText }}
+        <CustomDialog
+            :isDialogOpen="isDialogOpened"
+            @modal-close="dialogShow">
+            <template #header>
+                {{ dialogTitle }}
+            </template>
+            <template #content>
+                {{ dialogText }}
+            </template>
+            <template #footer>
+                <template v-if="dialogType && dialogType === 'yesno'">
+                    <button type="button" class="btn-primary" @click="isDialogOpened = false">No</button>
+                    <button type="button" class="btn-primary" @click="isDialogOpened = false">Yes</button>
+                </template>
+                <template v-else>
+                    <button type="button" class="btn-primary" @click="isDialogOpened = false">Cancel</button>
+                </template>
+            </template>
+        </CustomDialog>
     </div>
 </template>
 
@@ -212,6 +256,7 @@ import { CommunityPrivilegeActions } from '@/constants/privileges';
 import { useRouter } from "vue-router";
 import type { FormSubmitEvent } from '#ui/types'
 import * as v from "valibot";
+import CustomDialog from "@/components/Common/CustomDialog.vue";
 
 const router = useRouter();
 const runtimeConfig = useRuntimeConfig();
@@ -239,6 +284,11 @@ const schema = v.object({
     name: v.pipe(v.string()),
     description: v.pipe(v.string())
 });
+
+let dialogTitle = ref("");
+let dialogType = ref("yesno");
+let isDialogOpened = ref(false);
+let dialogText = ref("");
 
 const errors = ref<string[]>([]);
 
@@ -318,7 +368,6 @@ async function updateCommunity() {
         description: state.value.description
     }
     
-    console.log("updating ocommunity")
     try {
         await fetch(
             `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Community/${props.communityObj._id}`,
@@ -349,6 +398,21 @@ function onChangeStatus(newStatus: string) {
 
 function onAddElement(array: string[]) {
     array.push('');
+}
+
+function onDeleteElement(index: number, element: string[]) {
+    console.log(element[index]);
+    if (element[index] === '') {
+        element.splice(index, 1);
+    } else {
+        dialogText.value = "Are you sure you want to delete this element?";
+        dialogTitle.value = "Delete Element";
+        isDialogOpened.value = true;
+    }
+}
+
+function dialogShow() {
+    console.log('dialogShow!!!!');
 }
 
 watch(
@@ -387,6 +451,19 @@ watch(
             h2 {
                 border-color: rgb(226, 232, 240, 1);
                 border-bottom-width: 1px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding-bottom: 5px;
+                span {
+                    padding-bottom: 5px;
+                }
+                a {
+                    padding: 5px 10px;
+                    font-size: 14px;
+                    text-decoration: none;
+                    margin-bottom: 5px;
+                }
             }
         }
         &__skeleton {
@@ -400,7 +477,8 @@ watch(
             }
         }
         .input-wrapper {
-            background-color: rgba(233,236,239) ;
+            //background-color: rgba(233, 236, 239, .4) ;
+            background-color: theme("colors.primary.50");
             padding: 0.6rem 0.8rem;
             border-radius: 9999px;
             font-size: 0.75rem;
@@ -453,6 +531,27 @@ watch(
             }
             .btn-form-add.btn-primary  {
                 padding: 1px 6px;
+            }
+        }
+        .form-card {
+            border: 1px solid rgba(233,236,239);    
+            padding: 10px 15px;
+            border-radius: 5px;
+            background-color: rgba(233,236,239, 0.1);
+            &__row {
+                padding: 30px 15px;
+                display: grid;
+                grid-template-columns: auto auto;
+                column-gap: 10px;
+                row-gap: 20px;
+                .no-space {
+                    padding: 0;
+                }
+                &__box {
+                    padding: 10px 20px;
+                    //border: 1px solid rgba(233,236,239);
+                    box-shadow: rgba(0, 0, 0, 0.04) 0px 3px 5px;
+                }
             }
         }
         

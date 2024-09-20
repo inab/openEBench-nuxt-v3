@@ -18,6 +18,7 @@
         border-color: rgb(226, 232, 240);
         border-bottom-width: 1px;
         color: theme("colors.primary.500");
-        font-size: 18px;
+        font-size: 22px;
+        padding-bottom: 10px;
     }
 </style>

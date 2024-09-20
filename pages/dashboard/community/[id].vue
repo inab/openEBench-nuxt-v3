@@ -2,8 +2,6 @@
     <div class="user-communities-edit">
         <BreadcrumbsBar :breadcrumbs-array="routeArray" />
         <div class="user-communities-edit__body">
-            <!-- {{ userStore.getUserCommunitiesRoles }}
-            {{ communityPrivileges}} -->
             <div class="user-communities-edit__body__table">
                 <CommunityEdit
                     :id="communityId"

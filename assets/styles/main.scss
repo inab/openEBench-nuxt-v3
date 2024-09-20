@@ -155,4 +155,14 @@ $colorSecondary: #f47c21;
     background-color: theme("colors.primary.200");
     color: white;
   }
+  &.hover_effect {
+    background-color: theme("colors.primary.50");
+    color: theme("colors.primary.500");
+    border: 1px solid theme("colors.primary.500");
+    transition: .5s;
+    &:hover {
+      background-color: theme("colors.primary.500");
+      color: white;
+    }
+  }
 }

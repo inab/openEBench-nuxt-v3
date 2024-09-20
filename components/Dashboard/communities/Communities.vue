@@ -2,6 +2,14 @@
     <div class="user-communities">
         <div class="user-communities__body">
             <div class="user-communities__body__table">
+                <div class="flex justify-content-end gap-3 py-3" v-if="userStore.getUserCommunitiesRoles 
+                    && isAdmin">
+                    <NuxtLink to="/dashboard/community/add"
+                        class="btn btn-primary"
+                        title="Create new community">
+                        Create New Community
+                    </NuxtLink>
+                </div>
                 <div class="flex items-center justify-between gap-3 py-3">
                     <div class="col-5">
                         <multiselect 
@@ -145,7 +153,7 @@
                             <NuxtLink :to="`/dashboard/community/${row._id}/events`" 
                                 title="View community events" 
                                 class="text-sm">
-                                View
+                                View events
                             </NuxtLink>
                         </button>
                     </template>
@@ -207,6 +215,12 @@ const pageTo = computed(() =>
 const search = ref<string>("");
 const selectedStatus = ref(<Array<CommunityStatus>>[]);
 const todoStatus = ref<Array<{ value: string, label: string }>>(CommunityStatusLabels);
+
+const isAdmin = computed(() => {
+    return userStore.getUserCommunitiesRoles.filter((role: string) => {
+        return role.role == "admin";
+    }).length > 0;   
+});
 
 const columns: Array<CommunityColumnsDashboard> = [
     {
