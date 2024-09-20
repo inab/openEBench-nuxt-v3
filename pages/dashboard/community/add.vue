@@ -9,6 +9,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
 import CommunityAdd from "@/components/Dashboard/communities/CommunityAdd.vue";
 import { useUser } from "@/stores/user.ts";
 
@@ -42,6 +43,8 @@ const routeArray: Array = ref([
     isActualRoute: false,
   }
 ]);
+
+console.log(routeArray);
 
 </script>
 
