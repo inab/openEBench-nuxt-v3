@@ -31,12 +31,22 @@ export const customRoutes = [
   },
   {
     name: "dashboard-community",
-    path: "/dashboard/community/:id/edit",
-    file: resolve(__dirname, "pages/dashboard/community/[id].vue"),
+    path: "/dashboard/communities/:id/edit",
+    file: resolve(__dirname, "pages/dashboard/communities/[id].vue"),
+  },
+  {
+    name: "dashboard-community",
+    path: "/dashboard/communities/add",
+    file: resolve(__dirname, "pages/dashboard/communities/add.vue"),
   },
   {
     name: "dashboard-community-events",
-    path: "/dashboard/community/:id/events",
-    file: resolve(__dirname, "pages/dashboard/community/events/[id].vue"),
-  }
+    path: "/dashboard/communities/:community_id/events/:id",
+    file: resolve(__dirname, "pages/dashboard/communities/events/[id].vue"),
+  },
+  {
+    name: "dashboard-community-event-add",
+    path: "/dashboard/communities/:community_id/events/add",
+    file: resolve(__dirname, "pages/dashboard/communities/events/add.vue"),
+  },
 ];

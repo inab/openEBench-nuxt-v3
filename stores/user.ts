@@ -112,7 +112,7 @@ export const useUser = defineStore('user', {
         },
 
         async fetchCommunitiesEvents(token: string, community: string) {
-            await fetch(
+            const response = await fetch(
             `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/BenchmarkingEvent`,
                 {
                 headers: {
@@ -121,18 +121,44 @@ export const useUser = defineStore('user', {
                 },
                 method: "GET",
                 },
-            ).then((response) => response.json())
-            .then((data) => {
-                data = data.filter((event: any) => event.community_id === community);
-                data = this.formatCommunityEventData(data);
-                data = this.setCommunityEventPrivileges(data);
-                let eventData = {
-                    communityId: community,
-                    communityEvents: data
-                }
-                this.setUserCommunitiesEvents(eventData);
-                return eventData;
-            });
+            );
+            
+            let data = await response.json();
+            data = data.filter((event: any) => event.community_id === community);
+            data = this.formatCommunityEventData(data);
+            data = this.setCommunityEventPrivileges(data);
+            let eventData = {
+                communityId: community,
+                communityEvents: data
+            }
+            this.setUserCommunitiesEvents(eventData);
+            console.log("Events", eventData.communityEvents);
+            return eventData.communityEvents;
+        },
+
+        async fetchCommunitiesEventsChallenges(token: string, event: string) {
+            const response = await fetch(
+            `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Challenge`,
+                {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    Accept: "application/json",
+                },
+                method: "GET",
+                },
+            );
+            
+            let data = await response.json();
+            data = data.filter((challenge: any) => challenge.benchmarking_event_id === event);
+            data = this.formatCommunityEventData(data);
+            data = this.setCommunityEventPrivileges(data);
+            let eventData = {
+                communityId: community,
+                communityEvents: data
+            }
+            this.setUserCommunitiesEvents(eventData);
+            console.log("Events", eventData.communityEvents);
+            return eventData.communityEvents;
         },
 
         async fetchCommunitiesChallenge(token) {
@@ -197,15 +223,15 @@ export const useUser = defineStore('user', {
                     if (value.role === 'owner' && value.community === community._id) {
                         community.actions = privileges.owner;
                         community.privileges = 'Owner';
-                        return true; // Stop iteration
+                        return true;
                     } else if (value.role === 'manager' && value.community === community._id) {
                         community.actions = privileges.manager;
                         community.privileges = 'Manager';
-                        return true; // Stop iteration
+                        return true;
                     } else {
                         community.actions = privileges.anyone;
                         community.privileges = 'anyone';
-                        return false; // Continue iteration
+                        return false;
                     }
                 });
                 }
@@ -223,15 +249,15 @@ export const useUser = defineStore('user', {
                     if (value.role === 'owner' && value.community === event.community_id) {
                         event.actions = privileges.owner;
                         event.privileges = 'Owner';
-                        return true; // Stop iteration
+                        return true;
                     } else if (value.role === 'manager' && value.community === event.community_id) {
                         event.actions = privileges.manager;
                         event.privileges = 'Manager';
-                        return true; // Stop iteration
+                        return true;
                     } else {
                         event.actions = privileges.anyone;
                         event.privileges = 'anyone';
-                        return false; // Continue iteration
+                        return false;
                     }
                 });
                 }

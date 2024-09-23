@@ -140,20 +140,32 @@ $colorSecondary: #f47c21;
     color: theme("colors.primary.50") !important;
     a {
       color: theme('colors.primary.50');
+      text-decoration: none;
     }
   }
   a {
     font-size: 12px;
+    text-decoration: none;
   }
 }
 
 .btn-primary {
-  background-color: theme("colors.primary.500");
-  color: white;
-  border-radius: 6px;
+  background-color: theme("colors.primary.500") !important;
+  color: white !important;
+  border-radius: 6px !important;
   &:disabled {
-    background-color: theme("colors.primary.200");
+    background-color: theme("colors.primary.200") !important;
     color: white;
+    :hover {
+      background-color: theme("colors.primary.200") !important;
+      color: white;
+      cursor: not-allowed;
+    }
+  }
+  &:hover:enabled {
+    background-color: theme("colors.primary.50") !important;
+    color: theme("colors.primary.500") !important;
+    border: 1px solid theme("colors.primary.500") !important;
   }
   &.hover_effect {
     background-color: theme("colors.primary.50");

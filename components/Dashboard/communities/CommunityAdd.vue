@@ -14,7 +14,10 @@
                                 <div class="col-8">
                                     <div class="form-group">
                                         <label for="acronym">Acronym</label>
-                                        <input type="text" class="form-control" id="acronym" v-model="state.acronym" />
+                                        <input type="text" class="form-control custom-entry-input" 
+                                            id="acronym"
+                                            placeholder="Community acronym" 
+                                            v-model="state.acronym" />
                                     </div>
                                 </div>
                                 <div class="col-4">
@@ -42,7 +45,10 @@
                                 <div class="col-12">
                                     <div class="form-group">
                                         <label for="description">Name</label>
-                                        <input type="text" class="form-control" id="name" v-model="state.name" />
+                                        <input type="text" class="form-control custom-entry-input" 
+                                            placeholder="Community name" 
+                                            id="name" 
+                                            v-model="state.name" />
                                     </div>
                                 </div>
                                 <div class="col-12">
@@ -77,7 +83,7 @@
                                                 </label>
                                             </div>
                                             <div class="w-100 row no-space">
-                                                <div v-for="(link, index) in localLinks" :key="link"
+                                                <div v-if="localLinks.length>0" v-for="(link, index) in localLinks" :key="link"
                                                     class="col-12 d-flex pl-0">
                                                     <div class="input-wrapper big d-flex">
                                                         <span>{{ index + 1}}.</span>
@@ -91,37 +97,16 @@
                                                         </button>
                                                     </div>
                                                 </div>
+                                                <div class="col-12 pt-0" v-else>
+                                                    <div class="w-100 empty-elements text-slate-400">
+                                                        <span>There are no links associated with this community</span>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                
-                                <div class="form-card__row__box">
-                                    <div class="col-12">
-                                        <div class="form-group">
-                                            <label for="provenance">Provenance</label>
-                                            <div class="w-100 d-flex">
-                                                <input type="text" class="form-control" 
-                                                    id="schema" 
-                                                    v-model="state._provenance" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="form-card__row__box">
-                                    <div class="col-12">
-                                        <div class="form-group">
-                                            <label for="schema">Schema</label>
-                                            <div class="w-100 d-flex">
-                                                <input type="text" class="form-control" 
-                                                    id="schema" 
-                                                    v-model="state._schema" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
+
                                 <div class="form-card__row__box">
                                     <div class="col-12">
                                         <div class="form-group">
@@ -139,7 +124,7 @@
                                                 </label>
                                             </div>
                                             <div class="w-100 row no-space">
-                                                <div v-for="(contact, index) in localContacts" :key="index" 
+                                                <div v-if="localContacts.length>0" v-for="(contact, index) in localContacts" :key="index" 
                                                     class="col-6 pt-0">
                                                     <div class="input-wrapper">
                                                         <input type="text" class="form-control" 
@@ -149,6 +134,39 @@
                                                         </button>
                                                     </div>
                                                 </div>
+                                                <div class="col-12 pt-0" v-else>
+                                                    <div class="w-100 empty-elements text-slate-400">
+                                                        <span>There are no contacts associated with this community</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-card__row__box">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="provenance" class="text-gray-500">Provenance</label>
+                                            <div class="w-100 d-flex">
+                                                <input type="text" class="form-control custom-entry-input" 
+                                                    id="schema"
+                                                    placeholder="https://provenance.org/Community" 
+                                                    v-model="state._provenance" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-card__row__box">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="schema" class="text-gray-500">Schema</label>
+                                            <div class="w-100 d-flex">
+                                                <input type="text" class="form-control custom-entry-input" 
+                                                    id="schema"
+                                                    placeholder="https://schema.org/Community"
+                                                    v-model="state._schema" />
                                             </div>
                                         </div>
                                     </div>
@@ -171,7 +189,7 @@
                                                 </label>
                                             </div>
                                             <div class="w-100 row no-space">
-                                                <div v-for="(keys, index) in localKeywords" :key="index"
+                                                <div v-if="localKeywords.length>0" v-for="(keys, index) in localKeywords" :key="index"
                                                     class="col-6 pt-0">
                                                     <div class="input-wrapper">
                                                         <input type="text" class="form-control" 
@@ -179,6 +197,11 @@
                                                         <button class="btn-delete-input">
                                                             <font-awesome-icon :icon="['far', 'trash-can']" />
                                                         </button>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 pt-0" v-else>
+                                                    <div class="w-100 empty-elements text-slate-400">
+                                                        <span>There are no keywords associated with this community</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -423,6 +446,10 @@ function dialogShow() {
                         padding: 5px;
                     }
                 }
+                .empty-elements {
+                    text-align: center;
+                    font-size: 14px;
+                }
             }
             .input-wrapper {
                 padding-bottom: 10px;
@@ -447,13 +474,14 @@ function dialogShow() {
             }
             .btn-form-add.btn-primary  {
                 padding: 1px 6px;
+                height: 28px;
             }
         }
         .form-card {
-            border: 1px solid rgba(233,236,239);    
             padding: 10px 15px;
             border-radius: 5px;
-            background-color: rgba(233,236,239, 0.1);
+            background-color: rgba(233,236,239, 0.2);
+            box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
             &__row {
                 padding: 30px 15px;
                 display: grid;
@@ -465,11 +493,14 @@ function dialogShow() {
                 }
                 &__box {
                     padding: 10px 20px;
-                    //border: 1px solid rgba(233,236,239);
-                    box-shadow: rgba(0, 0, 0, 0.04) 0px 3px 5px;
+                    border: 1px solid rgba(233,236,239);
+                    background-color: white;
                 }
             }
         }
-        
+        .custom-entry-input::placeholder {
+            opacity: 0.5;
+            color: rgba(0, 0, 0, 0.3);
+        }
     }
 </style>

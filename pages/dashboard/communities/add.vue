@@ -40,7 +40,7 @@ const routeArray: Array = ref([
   },
   {
     label: "Community Add",
-    isActualRoute: false,
+    isActualRoute: true,
   }
 ]);
 

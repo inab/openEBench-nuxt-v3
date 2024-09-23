@@ -2,10 +2,10 @@
     <div class="user-communities">
         <div class="user-communities__body">
             <div class="user-communities__body__table">
-                <div class="flex justify-content-end gap-3 py-3" v-if="userStore.getUserCommunitiesRoles 
-                    && isAdmin">
-                    <NuxtLink to="/dashboard/community/add"
-                        class="btn btn-primary"
+                <div class="flex justify-content-end gap-3 py-3" v-if="userStore.getUserCommunitiesRoles">
+                    <!-- && isAdmin -->
+                    <NuxtLink to="/dashboard/communities/add"
+                        class="btn custom-btn btn-primary"
                         title="Create new community">
                         Create New Community
                     </NuxtLink>
@@ -73,7 +73,7 @@
                             size: 'text-sm',
                         },
                         td: {
-                            base: 'whitespace-nowrap',
+                            base: '',
                             padding: 'px-3 py-3',
                             font: '',
                             size: 'text-sm',
@@ -148,12 +148,12 @@
                             </div>
                         </div>
                     </template>
-                    <template #events-data="{ row }">
+                    <template #view-data="{ row }">
                         <button class="btn-custom-badget text-sm">
-                            <NuxtLink :to="`/dashboard/community/${row._id}/events`" 
+                            <NuxtLink :to="`/benchmarking/${row._id}`" 
                                 title="View community events" 
                                 class="text-sm">
-                                View events
+                                Live
                             </NuxtLink>
                         </button>
                     </template>
@@ -235,8 +235,8 @@ const columns: Array<CommunityColumnsDashboard> = [
         key: 'status',
         label: 'STATUS'
     },{
-        key: 'events',
-        label: 'EVENTS'
+        key: 'view',
+        label: 'VIEW'
     },{
         key: 'actions',
         label: 'ACTIONS'
@@ -304,9 +304,7 @@ function removeTag(tagName: string) {
 }
 
 function getCommunityEditLink(row: any) {
-    return (row.privileges === 'Owner' 
-        && row.actions.community 
-        && row.actions.community.update) ? `/dashboard/community/${row._id}` : `/dashboard/community/${row._id}?view`;
+    return `/dashboard/communities/${row._id}`;
 }
 
 </script>
