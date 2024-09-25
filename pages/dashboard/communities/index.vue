@@ -4,7 +4,7 @@
     <div class="w-100 container">
       <div>
         <div v-if="status == 'authenticated'">
-          {{  userStore.getUserCommunitiesRoles }}
+          <!-- {{  userStore.getUserCommunitiesRoles }} -->
 
           <div class="">
             <div class="text-primaryOeb-500 border-slate-200 border-b mb-3">
