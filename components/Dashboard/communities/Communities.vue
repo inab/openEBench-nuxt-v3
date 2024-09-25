@@ -2,14 +2,6 @@
     <div class="user-communities">
         <div class="user-communities__body">
             <div class="user-communities__body__table">
-                <div class="flex justify-content-end gap-3 py-3" v-if="userStore.getUserCommunitiesRoles">
-                    <!-- && isAdmin -->
-                    <NuxtLink to="/dashboard/communities/add"
-                        class="btn custom-btn btn-primary"
-                        title="Create new community">
-                        Create New Community
-                    </NuxtLink>
-                </div>
                 <div class="flex items-center justify-between gap-3 py-3">
                     <div class="col-5">
                         <multiselect 
@@ -74,7 +66,7 @@
                         },
                         td: {
                             base: '',
-                            padding: 'px-3 py-3',
+                            padding: 'px-2.5 py-2.5',
                             font: '',
                             size: 'text-sm',
                         },
@@ -136,6 +128,22 @@
                         </div>
                         <div v-else>
                             <div>-</div>
+                        </div>
+                    </template>
+                    <template #type-data="{row}">
+                        <div class="inline-block rounded-full custom-badget font-semibold">
+                            <template v-if="row._metadata && row._metadata">
+                                <font-awesome-icon :icon="['fas', 'diagram-project']" />
+                                <span>
+                                    Project
+                                </span>
+                            </template>
+                            <template v-else>
+                                <font-awesome-icon :icon="['fas', 'people-group']" />
+                                <span>
+                                    Community
+                                </span>
+                            </template>
                         </div>
                     </template>
                     <template #status-data="{ row }">
@@ -216,12 +224,6 @@ const search = ref<string>("");
 const selectedStatus = ref(<Array<CommunityStatus>>[]);
 const todoStatus = ref<Array<{ value: string, label: string }>>(CommunityStatusLabels);
 
-const isAdmin = computed(() => {
-    return userStore.getUserCommunitiesRoles.filter((role: string) => {
-        return role.role == "admin";
-    }).length > 0;   
-});
-
 const columns: Array<CommunityColumnsDashboard> = [
     {
         key: 'logos',
@@ -234,6 +236,9 @@ const columns: Array<CommunityColumnsDashboard> = [
     },{
         key: 'status',
         label: 'STATUS'
+    },{
+        key: 'type',
+        label: 'TYPE'
     },{
         key: 'view',
         label: 'VIEW'
@@ -259,6 +264,7 @@ const filteredRows = computed(() => {
 
     const filteredSearcher = communitiesData.value.filter((challenge: any) => {
         return Object.values(challenge).some((ch) => {
+            console.log(ch)
             if(selectedStatus.value.length > 0) {
                 return selectedStatus.value.some((status) => {
                     if(search.value) {

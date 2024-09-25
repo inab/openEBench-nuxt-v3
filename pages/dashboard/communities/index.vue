@@ -14,6 +14,13 @@
               It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. 
             </div>
           </div>
+          <div class="flex justify-content-end gap-3 py-3" v-if="userStore.getUserCommunitiesRoles && isAdmin"> -->
+              <NuxtLink to="/dashboard/communities/add"
+                class="btn custom-btn btn-primary"
+                title="Create new community">
+                Create New Community
+            </NuxtLink>
+          </div>
           <div class="dashboard-tabs">
             <UTabs 
             :items="items"
@@ -84,6 +91,12 @@ if(userStore.getUserCommunitiesRoles.length == 0) {
   userStore.setUserCommunitiesRoles(data.value.oeb_roles);
 }
 
+const isAdmin = computed(() => {
+    return userStore.getUserCommunitiesRoles.filter((role: string) => {
+        return role.role == "admin";
+    }).length > 0;   
+});
+
 const fetchUserCommunities = async (token: string): Promise<void> => {
     try {
       let comData = [];
@@ -93,6 +106,7 @@ const fetchUserCommunities = async (token: string): Promise<void> => {
         comData = await userStore.fetchCommunities(token);
       }
       isLoadingData.value = false;
+      console.log("Communities data:", comData);
       
   } catch (error) {
       console.error("Error fetching communities data:", error);

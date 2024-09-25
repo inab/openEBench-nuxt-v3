@@ -1,15 +1,17 @@
 import { defineEventHandler, readBody } from 'h3';
 
 export default defineEventHandler(async (event) => {
+    const runtimeConfig = useRuntimeConfig();
 
-    const { collection } = event.context.params;
-    const community_id = event.context.query.community_id;
+    console.log(event.context.query)
+    const { collection, id } = event.context.params;
+    //const community_id = event.context.query.community_id;
     const method = event.req.method; // Obtener el método HTTP
     const body = await readBody(event);
     const token = event.req.headers['authorization'];
 
     console.log('Colección:', collection);
-    console.log('ID de comunidad:', community_id);
+    console.log('ID de comunidad:', id);
     console.log('Método:', method);
     console.log('Cuerpo de la solicitud:', body);
 
@@ -17,11 +19,10 @@ export default defineEventHandler(async (event) => {
         let response;
 
         switch (method) {
-            case 'POST':
+            case 'PATCH':
 
-                console.log('POST');
-                // Validar que se proporciona un ID en el cuerpo
-                if (!body.id) {
+                console.log('PATCH');
+                if (!body._id) {
                     console.error('Error: ID faltante en el cuerpo para POST');
                     return {
                         status: 400,
@@ -29,19 +30,39 @@ export default defineEventHandler(async (event) => {
                     };
                 }
 
-                console.log('Simulando respuesta para solicitud POST...');
+                const response = await fetch(`${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/${collection}/${id}`, {
+                    method: 'PATCH',
+                    headers: {
+                      'Authorization': `Bearer ${token}`,
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(body), 
+                });
+
+                console.log('Respuesta:', response);
+                console.log(token);
+
+                if (!response.ok) {
+                    const errorData = await response.json(); 
+                    console.error('Error en la respuesta de la API:', errorData);
+                    throw new Error(`Error en la respuesta de la API: ${response.statusText}. Detalles: ${errorData.error}`);
+                }
+
+                const data = await response.json(); 
+                console.log('Respuesta ok:', data);
+
                 // Simulando una respuesta JSON para POST
                 return {
                     status: 201,
                     body: JSON.stringify({
-                        message: 'Recurso creado exitosamente',
+                        message: 'Community updated successfully',
                         data: {
                             id: body.id, // ID proporcionado
                             ...body, // Incluye el cuerpo que se envió
                         },
                     }),
                 };
-
+                break;
             case 'PUT':
                 // Lógica para manejar PUT
                 // if (!id) {

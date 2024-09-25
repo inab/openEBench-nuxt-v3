@@ -26,7 +26,7 @@
                             <UIcon :name="item.icon" class="w-4 h-4 flex-shrink-0 me-2" :class="[selected && 'text-secondaryOeb-500 dark:text-secondaryOeb-400']" />
                         </template>
                         <template #item="{ item }">
-                            <div v-if="item.key === 'summary'">
+                            <div v-if="item.key === 'main'">
                                 <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmitCommunity">
                                     <div class="w-100 form-card">
                                         <div class="row">
@@ -243,6 +243,9 @@
                                     />
                                 </div>
                             </div>
+                            <div v-if="item.key === 'summary'">
+                                This is summary
+                            </div>
                         </template>
                     </UTabs>
                 </div>
@@ -321,13 +324,9 @@ let dialogText = ref("");
 const errors = ref<string[]>([]);
 
 const items = [{
-    key: "summary",
+    key: "main",
     label: 'Community Data',
     icon: 'i-heroicons-document-chart-bar',
-}, {
-    key: "events",
-    label: 'Events',
-    icon: 'i-heroicons-calendar-date-range-16-solid',
 }]
 
 const communityData = computed(() => {
@@ -335,10 +334,29 @@ const communityData = computed(() => {
         acronym: props.communityObj?.acronym,
         status: props.communityObj?.status,
         name: props.communityObj?.name,
-        description: props.communityObj.description
+        description: props.communityObj.description,
+        _metadata: props.communityObj._metadata ?? null,
+    }
+
+    if(!props.communityObj._metadata) {
+        items.push({
+            key: "events",
+            label: 'Events',
+            icon: 'i-heroicons-calendar',
+        });
+    } else {
+        items.push({
+            key: "summary",
+            label: 'Summary',
+            icon: 'i-heroicons-squares-2x2-16-solid',
+        })
     }
     return props.communityObj;
 });
+
+console.log(props.communityObj)
+
+
 
 const localStatus = ref({
     value: "",
@@ -400,10 +418,8 @@ async function onSubmitCommunity(event: FormSubmitEvent<Schema>) {
 
 async function updateCommunity() {
     const body = {
-        acronym: state.value.acronym,
-        status: state.value.status,
-        name: state.value.name,
-        description: state.value.description
+        description: state.value.description,
+        _id: props.id,
     }
     
     try {
@@ -416,41 +432,14 @@ async function updateCommunity() {
             body: JSON.stringify(body),
             });
 
+            console.log(response);
+
             if (!response.ok) {
-            throw new Error('Error en la respuesta de la API');
+                throw new Error('Error en la respuesta de la API');
             }
 
             const data = await response.json();
             console.log('Respuesta exitosa:', data);
-
-    //     const res = await fetch(
-    //         `/api/staged/Community/${props.communityObj._id}`,
-    //         {
-    //             headers: {
-    //                 Authorization: `Bearer ${token}`,
-    //                 Accept: 'application/json',
-    //                 'Content-Type': 'application/json'
-    //             },
-    //             method: "PATCH",
-    //             body: JSON.stringify(body),
-    //         },
-    //     )
-        
-    //     if (!res.ok) {
-    //         const errorText = await res.text(); // Lee la respuesta como texto
-    //         throw new Error(`Error en la respuesta de la API: ${errorText}`);
-    //         }
-
-    //         // Verifica si el contenido es JSON
-    //         const contentType = res.headers.get('Content-Type');
-    //         let dataResponse;
-    //         if (contentType && contentType.includes('application/json')) {
-    //             dataResponse = await res.json(); // Analiza como JSON si es del tipo correcto
-    //         } else {
-    //         throw new Error('Respuesta no es JSON');
-    //         }
-
-    //         console.log('Respuesta exitosa:', dataResponse);
     } catch (error) {
         console.error("Error fetching communities data:", error);
     }
@@ -606,7 +595,7 @@ watch(
             &__row {
                 padding: 30px 15px;
                 display: grid;
-                grid-template-columns: auto auto;
+                grid-template-columns: 1fr 1fr;
                 column-gap: 10px;
                 row-gap: 20px;
                 &:last-child {

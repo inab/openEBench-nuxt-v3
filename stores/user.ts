@@ -196,6 +196,7 @@ export const useUser = defineStore('user', {
                     community_contact: community.community_contact_ids.map((contact: string) => {
                         return contact.replace(/\./g, " ");
                     }).join(", "),
+                    _metadata: community._metadata ? community._metadata : "",
                     to: `${runtimeConfig.public.BASE_URL}/benchmarking/${community._id}`,
                     privileges: community.privileges,
                     actions: community.actions || [],
