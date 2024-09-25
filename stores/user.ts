@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia'
 import { Community } from "@/types/communities";
+import { Event } from "@/types/events";
+import { Challenge } from "@/types/challenges";
 import { privileges } from '@/constants/privileges';
 
 const runtimeConfig = useRuntimeConfig();
@@ -7,7 +9,12 @@ const runtimeConfig = useRuntimeConfig();
 interface CommunityRole {
     role: string;
     community: string;
-  }
+}
+
+interface CommunityEvents {
+    communityId: string;
+    communityEvents: [];
+}
 
 export const useUser = defineStore('user', {
     state: () => ({
@@ -15,7 +22,10 @@ export const useUser = defineStore('user', {
         userRoles: [],
         communitiesRoles: [] as CommunityRole[],
         userCommunities: [],
-        userCommunitiesEvents: [],
+        userCommunitiesEvents: {
+            communityId: "",
+            communityEvents: []
+        } as CommunityEvents,
         userCommunitiesChallenges: []
     }),
 
@@ -55,8 +65,9 @@ export const useUser = defineStore('user', {
             this.userCommunities = userCommunities;
         },
 
-        setUserCommunitiesEvents(userCommunitiesEvents) {
-            this.userCommunitiesEvents = userCommunitiesEvents;
+        setUserCommunitiesEvents(userCommunitiesEvents: CommunityEvents) {        
+            this.userCommunitiesEvents.communityId = userCommunitiesEvents.communityId;
+            this.userCommunitiesEvents.communityEvents = userCommunitiesEvents.communityEvents;
         },
 
         setUserCommunitiesChallenges(userCommunitiesChallenges) {
@@ -96,15 +107,14 @@ export const useUser = defineStore('user', {
                 data = this.formatCommunityData(data);
                 data = this.setCommunityPrivileges(data);
                 this.setUserCommunities(data);
-                console.log(data);
                 return data;
             })
             .catch((error) => console.error('Error:', error));
         },
 
-        async fetchCommunitiesEvents(token) {
-            await fetch(
-            "https://dev-openebench.bsc.es/api/scientific/staged/Community",
+        async fetchCommunitiesEvents(token: string, community: string) {
+            const response = await fetch(
+            `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/BenchmarkingEvent`,
                 {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -112,15 +122,24 @@ export const useUser = defineStore('user', {
                 },
                 method: "GET",
                 },
-            ).then((response) => response.json())
-            .then((data) => {
-                this.setUserCommunitiesEvents(data)
-            });
+            );
+            
+            let data = await response.json();
+            data = data.filter((event: any) => event.community_id === community);
+            data = this.formatCommunityEventData(data);
+            data = this.setCommunityEventPrivileges(data);
+            let eventData = {
+                communityId: community,
+                communityEvents: data
+            }
+            this.setUserCommunitiesEvents(eventData);
+            console.log("Events", eventData.communityEvents);
+            return eventData.communityEvents;
         },
 
-        async fetchCommunitiesChallenge(token) {
-            await fetch(
-            "https://dev-openebench.bsc.es/api/scientific/staged/Community",
+        async fetchCommunitiesEventsChallenges(token: string, event: string) {
+            const response = await fetch(
+            `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Challenge`,
                 {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -128,56 +147,180 @@ export const useUser = defineStore('user', {
                 },
                 method: "GET",
                 },
-            ).then((response) => response.json())
-            .then((data) => {
-                this.setUserCommunitiesChallenges(data)
-            });
+            );
+            
+            let data = await response.json();
+            data = data.filter((challenge: any) => challenge.benchmarking_event_id === event);
+            data = this.formatCommunityChallengeData(data);
+            data = this.setCommunityChallengePrivileges(data);
+            let eventData = {
+                communityId: community,
+                communityEvents: data
+            }
+            this.setUserCommunitiesEvents(eventData);
+            console.log("Events", eventData.communityEvents);
+            return eventData.communityEvents;
+        },
+
+        async fetchCommunitiesChallenge(token: string, event: string) {
+            const response = await fetch(`${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Challenge`,
+                {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    Accept: "application/json",
+                },
+                method: "GET",
+                },
+            );
+
+            let data = await response.json();
+            data = data.filter((challenge: any) => challenge.benchmarking_event_id === event);
+            data = this.formatCommunityChallengeData(data);
+            data = this.setCommunityChallengePrivileges(data);
+            console.log("Challenges", data);
+            let challengeData = {
+                eventId: event,
+                eventChallenges: data
+            }
+            return challengeData.eventChallenges;
         },
 
         formatCommunityData(data) {
             return data.map((community: Community) => {
-              return {
-                _id: community._id,
-                name: community.acronym,
-                logo: community.links.filter((link: any) => link.comment === "@logo")[0].uri,
-                links: community.links,
-                status: community.status,
-                community_contact: community.community_contact_ids.map((contact: string) => {
-                    return contact.replace(/\./g, " ");
-                }).join(", "),
-                to: `${runtimeConfig.public.BASE_URL}/benchmarking/${community._id}`,
-                privileges: community.privileges,
-                actions: community.actions || [],
-              }
+                return {
+                    _id: community._id,
+                    name: community.acronym,
+                    logo: community.links.filter((link: any) => link.comment === "@logo")[0].uri,
+                    links: community.links,
+                    status: community.status,
+                    community_contact: community.community_contact_ids.map((contact: string) => {
+                        return contact.replace(/\./g, " ");
+                    }).join(", "),
+                    _metadata: community._metadata ? community._metadata : "",
+                    to: `${runtimeConfig.public.BASE_URL}/benchmarking/${community._id}`,
+                    privileges: community.privileges,
+                    actions: community.actions || [],
+                }
+            });
+        },
+
+        formatCommunityEventData(data) { 
+            return data.map((event: Event) => { 
+                return {
+                    _id: event._id,
+                    name: event.name,
+                    url: event.url,
+                    community_id: event.community_id,
+                    bench_contact: event.bench_contact_ids.map((contact: string) => {
+                        return contact.replace(/\./g, " ");
+                    }).join(", "),
+                    dates: event.dates,
+                    to: `${runtimeConfig.public.BASE_URL}/benchmarking/${event.community_id}/event/${event._id}`,
+                    privileges: event.privileges || "",
+                    actions: event.actions || [],
+                }
+            });
+        },
+
+        formatCommunityChallengeData(data) {
+            return data.map((challenge: Challenge) => { 
+                return {
+                    _id: challenge._id,
+                    name: challenge.name,
+                    acronym: challenge.acronym,
+                    _schema: challenge._schema,
+                    benchmarking_event_id: challenge.benchmarking_event_id,
+                    challenge_contact: challenge.challenge_contact_ids.map((contact: string) => {
+                        return contact.replace(/\./g, " ");
+                    }).join(", "),
+                    dates: challenge.dates,
+                    references: challenge.references,
+                    metrics_categories: challenge.metrics_categories,
+                    url: challenge.url,
+                    orig_id: challenge.orig_id,
+                    privileges: challenge.privileges || "",
+                    actions: challenge.actions || [],
+                }
             });
         },
 
         setCommunityPrivileges(data: Community[]): Community[] {
             let userPrivileges = this.getUserCommunitiesRoles;
             data.forEach((community: Community) => {
-              community.actions = [];
-              community.privileges = "None";
-              if (userPrivileges.length > 0) {
-                userPrivileges.some((value: { role: string; community: string }) => {
-                  if (value.role === 'owner' && value.community === community._id) {
-                    community.actions = privileges.owner;
-                    community.privileges = 'Owner';
-                    return true; // Stop iteration
-                  } else if (value.role === 'manager' && value.community === community._id) {
-                    community.actions = privileges.manager;
-                    community.privileges = 'Manager';
-                    return true; // Stop iteration
-                  } else {
-                    community.actions = privileges.anyone;
-                    community.privileges = 'anyone';
-                    return false; // Continue iteration
-                  }
+                community.actions = [];
+                community.privileges = "None";
+                if (userPrivileges.length > 0) {
+                    userPrivileges.some((value: { role: string; community: string }) => {
+                    if (value.role === 'owner' && value.community === community._id) {
+                        community.actions = privileges.owner;
+                        community.privileges = 'Owner';
+                        return true;
+                    } else if (value.role === 'manager' && value.community === community._id) {
+                        community.actions = privileges.manager;
+                        community.privileges = 'Manager';
+                        return true;
+                    } else {
+                        community.actions = privileges.anyone;
+                        community.privileges = 'anyone';
+                        return false;
+                    }
                 });
-              }
+                }
             });
-          
             return data; // Return the modified data array
-          }
+        },
+
+        setCommunityEventPrivileges(data: Event[]): Event[] {
+            let userPrivileges = this.getUserCommunitiesRoles;
+            data.forEach((event: Event) => {
+                event.actions = [];
+                event.privileges = "None";
+                if (userPrivileges.length > 0) {
+                    userPrivileges.some((value: { role: string; community: string }) => {
+                    if (value.role === 'owner' && value.community === event.community_id) {
+                        event.actions = privileges.owner;
+                        event.privileges = 'Owner';
+                        return true;
+                    } else if (value.role === 'manager' && value.community === event.community_id) {
+                        event.actions = privileges.manager;
+                        event.privileges = 'Manager';
+                        return true;
+                    } else {
+                        event.actions = privileges.anyone;
+                        event.privileges = 'anyone';
+                        return false;
+                    }
+                });
+                }
+            });
+            return data
+        },
+
+        setCommunityChallengePrivileges(data: Challenge[]): Challenge[] {
+            let userPrivileges = this.getUserCommunitiesRoles;
+            data.forEach((event: Event) => {
+                event.actions = [];
+                event.privileges = "None";
+                if (userPrivileges.length > 0) {
+                    userPrivileges.some((value: { role: string; community: string }) => {
+                    if (value.role === 'owner' && value.community === event.community_id) {
+                        event.actions = privileges.owner;
+                        event.privileges = 'Owner';
+                        return true;
+                    } else if (value.role === 'manager' && value.community === event.community_id) {
+                        event.actions = privileges.manager;
+                        event.privileges = 'Manager';
+                        return true;
+                    } else {
+                        event.actions = privileges.anyone;
+                        event.privileges = 'anyone';
+                        return false;
+                    }
+                });
+                }
+            });
+            return data
+        }
     },
 
 });

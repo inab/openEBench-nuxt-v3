@@ -4,7 +4,7 @@
     <div class="w-100 container">
       <div>
         <div v-if="status == 'authenticated'">
-          {{  userStore.getUserCommunitiesRoles }}
+          <!-- {{  userStore.getUserCommunitiesRoles }} -->
 
           <div class="">
             <div class="text-primaryOeb-500 border-slate-200 border-b mb-3">
@@ -14,10 +14,20 @@
               It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. 
             </div>
           </div>
+          <div class="flex justify-content-end gap-3 py-3" v-if="userStore.getUserCommunitiesRoles && isAdmin"> -->
+              <NuxtLink to="/dashboard/communities/add"
+                class="btn custom-btn btn-primary"
+                title="Create new community">
+                Create New Community
+            </NuxtLink>
+          </div>
           <div class="dashboard-tabs">
             <UTabs 
             :items="items"
             :ui="{ wrapper: 'items-center gap-4'}">
+            <template #icon="{ item, selected }">
+              <UIcon :name="item.icon" class="w-4 h-4 flex-shrink-0 me-2" :class="[selected && 'text-secondaryOeb-500 dark:text-secondaryOeb-400']" />
+            </template>
               <template #communities="{ item }">
                 <div v-if="item.key === 'communities'">
                   <Communities
@@ -37,18 +47,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
 import { useUser } from "@/stores/user.ts";
 import Communities from '@/components/Dashboard/communities/Communities.vue';
-import { privileges } from '@/constants/privileges';
+
+definePageMeta({
+  middleware: 'auth',
+  auth: {
+    authenticatedOnly: true,
+    navigateUnauthenticatedTo: '/login-required'
+  }
+})
 
 const userStore = useUser();
 const { data, status } = useAuth();
 const isLoadingData = ref(true);
-const runtimeConfig = useRuntimeConfig();
-const communitiesData = computed(() => userStore.getUserCommunities);
-const userPrivileges: Array<string> = computed(() => userStore.getUserCommunitiesRoles);
 const token: string = data?.value.accessToken;
 
 const items = [{
@@ -77,6 +91,12 @@ if(userStore.getUserCommunitiesRoles.length == 0) {
   userStore.setUserCommunitiesRoles(data.value.oeb_roles);
 }
 
+const isAdmin = computed(() => {
+    return userStore.getUserCommunitiesRoles.filter((role: string) => {
+        return role.role == "admin";
+    }).length > 0;   
+});
+
 const fetchUserCommunities = async (token: string): Promise<void> => {
     try {
       let comData = [];
@@ -86,6 +106,7 @@ const fetchUserCommunities = async (token: string): Promise<void> => {
         comData = await userStore.fetchCommunities(token);
       }
       isLoadingData.value = false;
+      console.log("Communities data:", comData);
       
   } catch (error) {
       console.error("Error fetching communities data:", error);
