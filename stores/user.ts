@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { Community } from "@/types/communities";
 import { Event } from "@/types/events";
+import { Challenge } from "@/types/challenges";
 import { privileges } from '@/constants/privileges';
 
 const runtimeConfig = useRuntimeConfig();
@@ -150,8 +151,8 @@ export const useUser = defineStore('user', {
             
             let data = await response.json();
             data = data.filter((challenge: any) => challenge.benchmarking_event_id === event);
-            data = this.formatCommunityEventData(data);
-            data = this.setCommunityEventPrivileges(data);
+            data = this.formatCommunityChallengeData(data);
+            data = this.setCommunityChallengePrivileges(data);
             let eventData = {
                 communityId: community,
                 communityEvents: data
@@ -161,9 +162,8 @@ export const useUser = defineStore('user', {
             return eventData.communityEvents;
         },
 
-        async fetchCommunitiesChallenge(token) {
-            await fetch(
-            "https://dev-openebench.bsc.es/api/scientific/staged/Community",
+        async fetchCommunitiesChallenge(token: string, event: string) {
+            const response = await fetch(`${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Challenge`,
                 {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -171,10 +171,18 @@ export const useUser = defineStore('user', {
                 },
                 method: "GET",
                 },
-            ).then((response) => response.json())
-            .then((data) => {
-                this.setUserCommunitiesChallenges(data)
-            });
+            );
+
+            let data = await response.json();
+            data = data.filter((challenge: any) => challenge.benchmarking_event_id === event);
+            data = this.formatCommunityChallengeData(data);
+            data = this.setCommunityChallengePrivileges(data);
+            console.log("Challenges", data);
+            let challengeData = {
+                eventId: event,
+                eventChallenges: data
+            }
+            return challengeData.eventChallenges;
         },
 
         formatCommunityData(data) {
@@ -213,6 +221,28 @@ export const useUser = defineStore('user', {
             });
         },
 
+        formatCommunityChallengeData(data) {
+            return data.map((challenge: Challenge) => { 
+                return {
+                    _id: challenge._id,
+                    name: challenge.name,
+                    acronym: challenge.acronym,
+                    _schema: challenge._schema,
+                    benchmarking_event_id: challenge.benchmarking_event_id,
+                    challenge_contact: challenge.challenge_contact_ids.map((contact: string) => {
+                        return contact.replace(/\./g, " ");
+                    }).join(", "),
+                    dates: challenge.dates,
+                    references: challenge.references,
+                    metrics_categories: challenge.metrics_categories,
+                    url: challenge.url,
+                    orig_id: challenge.orig_id,
+                    privileges: challenge.privileges || "",
+                    actions: challenge.actions || [],
+                }
+            });
+        },
+
         setCommunityPrivileges(data: Community[]): Community[] {
             let userPrivileges = this.getUserCommunitiesRoles;
             data.forEach((community: Community) => {
@@ -240,6 +270,32 @@ export const useUser = defineStore('user', {
         },
 
         setCommunityEventPrivileges(data: Event[]): Event[] {
+            let userPrivileges = this.getUserCommunitiesRoles;
+            data.forEach((event: Event) => {
+                event.actions = [];
+                event.privileges = "None";
+                if (userPrivileges.length > 0) {
+                    userPrivileges.some((value: { role: string; community: string }) => {
+                    if (value.role === 'owner' && value.community === event.community_id) {
+                        event.actions = privileges.owner;
+                        event.privileges = 'Owner';
+                        return true;
+                    } else if (value.role === 'manager' && value.community === event.community_id) {
+                        event.actions = privileges.manager;
+                        event.privileges = 'Manager';
+                        return true;
+                    } else {
+                        event.actions = privileges.anyone;
+                        event.privileges = 'anyone';
+                        return false;
+                    }
+                });
+                }
+            });
+            return data
+        },
+
+        setCommunityChallengePrivileges(data: Challenge[]): Challenge[] {
             let userPrivileges = this.getUserCommunitiesRoles;
             data.forEach((event: Event) => {
                 event.actions = [];

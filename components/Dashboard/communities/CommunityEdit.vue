@@ -21,7 +21,10 @@
             </div>
             <div class="dashboard-community-edit__content" v-else>
                 <div class="w-100">
-                    <UTabs :items="items" >
+                    <UTabs :items="items">
+                        <template #icon="{ item, selected }">
+                            <UIcon :name="item.icon" class="w-4 h-4 flex-shrink-0 me-2" :class="[selected && 'text-secondaryOeb-500 dark:text-secondaryOeb-400']" />
+                        </template>
                         <template #item="{ item }">
                             <div v-if="item.key === 'summary'">
                                 <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmitCommunity">
@@ -231,7 +234,6 @@
                                 </UForm>
                             </div>
                             <div v-if="item.key === 'events'">
-                                ID: {{ id }}
                                 <div>
                                     <CommunityEvents 
                                         :events="events"
@@ -330,9 +332,9 @@ const items = [{
 
 const communityData = computed(() => {
     state.value = {
-        acronym: props.communityObj.acronym,
-        status: props.communityObj.status,
-        name: props.communityObj.name,
+        acronym: props.communityObj?.acronym,
+        status: props.communityObj?.status,
+        name: props.communityObj?.name,
         description: props.communityObj.description
     }
     return props.communityObj;

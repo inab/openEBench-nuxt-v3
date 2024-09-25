@@ -1,11 +1,11 @@
 <template>
-    <div class="dashboard-community-event-edit">
+    <div class="community-event-challenge">
         <BreadcrumbsBar :breadcrumbs-array="routeArray" />
         <div class="w-100 container">
-            <div class="">
-                <div class="dashboard-community-event-edit__title">
+            <div class="w-100">
+                <div class="community-event-challenge__title">
                     <h2  class="text-primaryOeb-500 ">
-                        <span class="">Community Event : <i>{{ eventId }} </i></span>
+                        <span class="">Challenge : <i>{{ challengeId }} </i></span>
                         <span class="span-title">
                             <NuxtLink class="btn-primary hover_effect"
                                 :to="`/benchmarking/${communityId}`"
@@ -20,34 +20,30 @@
                         </span>
                     </h2>
                 </div>
-                <div class="dashboar-community-events__description text-gray-500">
+                <div class="community-event-challenge__description text-gray-500">
                     It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. 
                 </div>
             </div>
-            <div class="">
-                <CommunityEvent
-                    :id="eventId"
+            <div class="w-100">
+                <CommunityEventChallenge
+                    :id="challengeId"
                     :communityId="communityId"
-                    :eventObj="communityDataEvent"
-                    :eventPrivileges="eventPrivileges"
-                    :is-loading-data="isLoadingData"
+                    :eventId="eventId"
+                    :challengePrivileges="challengePrivileges"
+                    :challengeObj="challengeData"
                     :isView="isView"
-                    :challenges="eventChallenge"
-                    :isLoadinChallenges="isLoadinChallenges"
+                    :isLoadingData="isLoadingData"
                 />
             </div>
         </div>
     </div>
 </template>
-
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
 import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
 import { useUser } from "@/stores/user.ts";
 import { privileges } from '@/constants/privileges';
-import CommunityEvent from '@/components/Dashboard/communities/events/CommunityEvent.vue';
-import { Event } from "@/types/events";
-import { Challenge } from "@/types/challenge";
+import CommunityEventChallenge from "@/components/Dashboard/communities/events/challenges/CommunityEventChallenge.vue";
 
 definePageMeta({
     middleware: 'auth',
@@ -61,94 +57,90 @@ const userStore = useUser();
 const { data, status } = useAuth();
 const route = useRoute();
 const isLoadingData = ref(true);
-const isLoadinChallenges = ref(true);
+const userPrivileges: Array<string> = computed(() => userStore.getUserCommunitiesRoles);
 
 if (status.value !== 'authenticated') {
     await navigateTo('/login-required'); 
 }
 
 const token: string = data?.value.accessToken;
-const eventId: string = route.params.id;
+const eventId: string = route.params.event_id;
 const communityId: string = route.params.community_id;
+const challengeId: string = route.params.id;
 const routeName = ref<string>("");
 const runtimeConfig = useRuntimeConfig();
-const userPrivileges: Array<string> = computed(() => userStore.getUserCommunitiesRoles);
 
-let communityDataEvent = ref<Event>(null);
-let eventChallenge = ref<Array<Challenge>>(null);
-
+let challengeData = ref<Challenge>(null);
 
 const isView = computed(() => {
     return userPrivileges.value.filter((privilege) => privilege.event === eventId).role === "Owner";
 });
-
 if(userPrivileges.value.length == 0) {
     userStore.setUserCommunitiesRoles(data.value.oeb_roles)
 }
+
+const challengePrivileges = computed(() => {
+    const privilege = userPrivileges.value.find((privilege) => {
+        return privilege.community === communityId;
+    });
+    return privilege ? privileges[privilege.role].challenge : privileges.anyone.challenge;
+});
+
+const routeArray: Array = ref([
+    { label: "Dashboard", 
+        isActualRoute: false,
+        route: "/dashboard",
+    },
+    { label: `Community ${communityId}`,
+        isActualRoute: false,
+        route: `/dashboard/communities/${communityId}`,
+    },
+    {
+        label: `Event ${eventId}`,
+        isActualRoute: false,
+        route: `/dashboard/communities/${communityId}/events/${eventId}`,
+    },
+    {
+        label: `Challenge ${challengeId}`,
+        isActualRoute: true,
+    }
+]);
 
 const eventPrivileges = computed(() => {
     const privilege = userPrivileges.value.find((privilege) => {
         return privilege.community === communityId;
     });
-    return privilege ? privileges[privilege.role].event : privileges.anyone.event;
+    return privilege ? privileges[privilege.role].challenge : privileges.anyone.challenge;
 });
 
-const fetchUserCommunitiesEvents = async (token: string): Promise<void> => {
+const fetchUserCommunityEventChallenge = async (token: string): Promise<void> => {
     try {
-        const response = await fetch(
-            `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/BenchmarkingEvent/${eventId}`,
+        const response = await fetch(`${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Challenge/${challengeId}`,
             {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-                method: "GET",
+            headers: {
+                Authorization: `Bearer ${token}`,
+                Accept: "application/json",
+            },
+            method: "GET",
             },
         );
 
-        const data = await response.json();
-        communityDataEvent.value = data;
+        let data = await response.json();
+        console.log(data);
         isLoadingData.value = false;
-
-        const communityResponse = await fetchCommunityChallengers(token, eventId);
-        eventChallenge.value = communityResponse;
+        challengeData.value = data;
     } catch (error) {
-        console.error("Error fetching communities data: ", error);
+        console.error(error);
     }
 }
-
-const fetchCommunityChallengers = async (token: string, event: string): Promise<void> => {
-    try {
-        const eventChallengeResponse = await userStore.fetchCommunitiesChallenge(token, event);
-        const data = await eventChallengeResponse;
-        isLoadinChallenges.value = false;
-        return data;
-    } catch (error) {
-        console.error("Error fetching challenges data: ", error);
-    }
-}
-
-const routeArray: Array = ref([
-  { label: "Dashboard", 
-    isActualRoute: false,
-    route: "/dashboard",
-  },
-  { label: `Community ${communityId}`,
-    isActualRoute: false,
-    route: `/dashboard/communities/${communityId}`,
-  },
-  {
-    label: `Event ${eventId}`,
-    isActualRoute: true,
-  }
-]);
 
 onMounted(() => {
-  fetchUserCommunitiesEvents(token);
+    fetchUserCommunityEventChallenge(token);
 });
 </script>
 
 <style scoped lang="scss">
-.dashboard-community-event-edit {
+.community-event-challenge {
     &__title {
         padding-bottom: 20px;
         padding-top: 20px;

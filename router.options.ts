@@ -49,4 +49,9 @@ export const customRoutes = [
     path: "/dashboard/communities/:community_id/events/add",
     file: resolve(__dirname, "pages/dashboard/communities/events/add.vue"),
   },
+  {
+    name: "dashboard-community-event-community",
+    path: "/dashboard/communities/:community_id/events/:event_id/challenges/:id",
+    file: resolve(__dirname, "pages/dashboard/communities/events/challenges/[id].vue"),
+  },
 ];

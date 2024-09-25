@@ -9,7 +9,10 @@
             </div>
             <div class="dashboard-community-event-edit__content" v-else>
                 <div class="w-100">
-                    <UTabs :items="items" >
+                    <UTabs :items="items">
+                        <template #icon="{ item, selected }">
+                            <UIcon :name="item.icon" class="w-4 h-4 flex-shrink-0 me-2" :class="[selected && 'text-secondaryOeb-500 dark:text-secondaryOeb-400']" />
+                        </template>
                         <template #item="{ item }">
                             <div v-if="item.key === 'summary'">
                                 <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmitCommunityEvent">
@@ -95,7 +98,7 @@
                                                                     </span>
                                                                     <button class="btn-form-add btn-primary"
                                                                         @click="onAddElement(localContacts)"
-                                                                        :disabled="!eventPrivileges.update || isView || cheEmptyContacts">
+                                                                        :disabled="!eventPrivileges.update || isView || checkEmptyContacts">
                                                                         <font-awesome-icon :icon="['fas', 'plus']" />
                                                                     </button>
                                                                 </label>
@@ -140,7 +143,13 @@
                             </div>
                             <div v-if="item.key === 'challenges'">
                                 <div>
-                                    
+                                    <EventChallenges
+                                        :challenges="challenges"
+                                        :isLoadingChallenges="isLoadinChallenges"
+                                        :commmunityPrivileges="eventPrivileges"
+                                        :eventId="id"
+                                        :communityId="communityId"
+                                    />
                                 </div>
                             </div>
                         </template>
@@ -172,8 +181,10 @@
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import Event from "@/types/events";
+import { Event } from "@/types/events";
+import { Challenge } from "@/types/challenge";
 import { CommunityPrivilegeActions } from '@/constants/privileges';
+import EventChallenges from "@/components/Dashboard/communities/events/EventChallenges.vue";
 import CustomDialog from "@/components/Common/CustomDialog.vue";
 import * as v from "valibot";
 
@@ -182,10 +193,14 @@ const { data } = useAuth();
 const token: string = data?.value.accessToken;
 
 const props = defineProps<{
+    id: string,
+    communityId: string,
     eventObj: Event | null,
     isLoadingData: boolean,
     isView: boolean,
-    eventPrivileges: CommunityPrivilegeActions
+    eventPrivileges: CommunityPrivilegeActions,
+    challenges: Array<Challenge>,
+    isLoadinChallenges: boolean,
 }>();
 
 let dialogTitle = ref("");
@@ -208,32 +223,35 @@ const state = ref({
     name: '',
     community_id: '',
     bench_contact_ids: '',
-    dates: '',
+    dates: {
+        benchmark_start: "",
+        benchmark_stop: ""
+    },
     orig_id: '',
     _schema: '',
     references: [],
 });
 
 const schema = v.object({
-    _id: v.pipe(v.string()),
-    name: v.pipe(v.string()),
-    community_id: v.pipe(v.string()),
-    bench_contact_ids: v.pipe(v.string()),
-    dates: v.pipe(v.string()),
-    orig_id: v.pipe(v.string()),
-    _schema: v.pipe(v.string()),
+    _id: v.string(),
+    name: v.string(),
+    community_id: v.string(),
+    bench_contact_ids: v.string(),
+    dates: v.string(),
+    orig_id: v.string(),
+    _schema: v.string(),
 });
 
 const eventData = computed(() => {
     state.value = {
-        _id: props.eventObj?._id,
-        name: props.eventObj?.name,
-        community_id: props.eventObj?.community_id,
-        bench_contact_ids: props.eventObj?.bench_contact_ids,
-        dates: props.eventObj?.dates,
-        orig_id: props.eventObj?.orig_id,
-        _schema: props.eventObj?._schema,
-        references: props.eventObj?.references,
+        _id: String(props.eventObj?._id || ''),
+        name: props.eventObj?.name || '',
+        community_id: props.eventObj?.community_id || '',
+        bench_contact_ids: props.eventObj?.bench_contact_ids?.join(', ') || '',
+        dates: props.eventObj?.dates || { benchmark_start: "", benchmark_stop: "" },
+        orig_id: props.eventObj?.orig_id || '',
+        _schema: props.eventObj?._schema || '',
+        references: props.eventObj?.references || [],
     }
     return props.eventObj;
 });
@@ -250,8 +268,8 @@ if (props.eventObj && props.eventObj.bench_contact_ids) {
     }) || [];
 }
 
-function onAddElement(array: Ref<string[]>) {
-    array.value.push('');
+function onAddElement(array: []) {
+    array.push('');
 }
 
 function onDeleteElement(index: number, element: string[]) {
@@ -273,7 +291,7 @@ function onSubmitCommunityEvent() {
     console.log('submitting...');
 }
 
-const cheEmptyContacts = computed(() => {
+const checkEmptyContacts = computed(() => {
     return localContacts.value.some((contact: string) => contact === '');
 });
 

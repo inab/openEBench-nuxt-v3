@@ -1,7 +1,6 @@
 <template>
     <div class="dashboard-community-event-add">
         <BreadcrumbsBar :breadcrumbs-array="routeArray" />
-        {{ userPrivileges }}
         <div class="dashboard-community-event-add__body">
             <CommunityEventAdd 
                 :eventPrivileges="eventPrivileges"

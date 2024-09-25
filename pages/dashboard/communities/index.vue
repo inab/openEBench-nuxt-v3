@@ -18,6 +18,9 @@
             <UTabs 
             :items="items"
             :ui="{ wrapper: 'items-center gap-4'}">
+            <template #icon="{ item, selected }">
+              <UIcon :name="item.icon" class="w-4 h-4 flex-shrink-0 me-2" :class="[selected && 'text-secondaryOeb-500 dark:text-secondaryOeb-400']" />
+            </template>
               <template #communities="{ item }">
                 <div v-if="item.key === 'communities'">
                   <Communities
@@ -37,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
 import { useUser } from "@/stores/user.ts";
 import Communities from '@/components/Dashboard/communities/Communities.vue';
