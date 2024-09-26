@@ -18,7 +18,7 @@
         <div v-else>
           <p v-if="!community && !isPending">
             <noDataAvailable description="No community found for Id " :id="`'` + communityId + `'.`"
-            btnPath="/benchmarking" />
+            btnPath="/benchmarking" btn-text="Benchmarking communities" />
           </p>
           <p v-else>
             <noDataAvailable description="No information found to display."
@@ -75,7 +75,7 @@
 
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue';
-import { useRoute} from 'vue-router';
+import { useRoute, useRouter} from 'vue-router';
 import CommunityInfo from "@/components/Community/CommunityInfo.vue";
 import CommunityEvent from "@/components/Community/CommunityEvent/CommunityEvent.vue";
 import CommunityDataset from "@/components/Community/CommunityDataset/CommunityDataset.vue";
@@ -86,6 +86,7 @@ import noDataAvailable from "@/layouts/noDataAvailable.vue";
 import { useCommunity } from "@/stores/community";
 
 const route = useRoute();
+const router = useRouter();
 const communityStore = useCommunity();
 
 const isPending = ref(false);
@@ -113,7 +114,6 @@ const communityReferences = communityStore.getCommunityReferences;
 
 const currentEvent = computed(() => {
   const selectedEvent = communityStore.getCurrentEvent;
-
 
   // If no event is selected, select the first available event.
   if (!selectedEvent && eventsObj.length > 0) {
@@ -197,12 +197,18 @@ watch(
   async (newEventId) => {
     if (newEventId) {
       const newEvent = eventsObj.find((event) => event._id === newEventId);
+
       if (newEvent) {
         communityStore.setCurrentEvent(newEvent);
       } else {
         // If the event is not found in the current list, makes a request to get the event data.
         await communityStore.requestCommunityData(communityId, newEventId);
+        if (currentEvent.value) {
+          // Here we replace the route with the correct event ID
+          router.replace({ query: { event: currentEvent.value._id } });
+        }
       }
+
     } else {
       // If no event is selected, make sure `currentEvent` is null.
       communityStore.setCurrentEvent(null);
