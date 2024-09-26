@@ -18,11 +18,11 @@
         <div v-else>
           <p v-if="!community && !isPending">
             <noDataAvailable description="No events found for community with Id " :id="`'` + community_Id + `'.`"
-            btnPath="/benchmarking" />
+            btnPath="/benchmarking" btn-text="Benchmarking communities" />
           </p>
           <p v-else>
             <noDataAvailable description="No information found to display."
-            btnPath="/benchmarking" />
+            btnPath="/benchmarking" btn-text="Benchmarking communities" />
           </p>
         </div>
 

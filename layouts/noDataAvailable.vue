@@ -5,7 +5,7 @@
         <h2>Whoops!</h2>
         <p class="mt-3">{{ description}} <i>{{ id }}</i></p>
         <div v-if="btnPath != null" class="mt-5">
-          <UButton @click="handleError">Benchmarking communities</UButton>
+          <UButton @click="handleError">{{ btnText }}</UButton>
         </div>
       </div>
       <div class="col-12 col-sm-12 col-md-6">
@@ -21,9 +21,11 @@ const props = withDefaults(defineProps<{
   description: any;
   id: any;
   btnPath?: any;
+  btnText?: any;
 }>(), {
   btnPath: null,
   id: null,
+  btnText: null,
 });
 
 const router = useRouter();
