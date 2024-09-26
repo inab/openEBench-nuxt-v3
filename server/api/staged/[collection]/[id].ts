@@ -33,7 +33,7 @@ export default defineEventHandler(async (event) => {
                 const response = await fetch(`${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/${collection}/${id}`, {
                     method: 'PATCH',
                     headers: {
-                      'Authorization': `Bearer ${token}`,
+                      'Authorization': token,
                       'Content-Type': 'application/json',
                     },
                     body: JSON.stringify(body), 
@@ -51,7 +51,6 @@ export default defineEventHandler(async (event) => {
                 const data = await response.json(); 
                 console.log('Respuesta ok:', data);
 
-                // Simulando una respuesta JSON para POST
                 return {
                     status: 201,
                     body: JSON.stringify({

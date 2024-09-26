@@ -143,7 +143,7 @@
                             </div>
                             <div v-if="item.key === 'challenges'">
                                 <div>
-                                    <EventChallenges
+                                    <EventChallengesList
                                         :challenges="challenges"
                                         :isLoadingChallenges="isLoadinChallenges"
                                         :commmunityPrivileges="eventPrivileges"
@@ -184,7 +184,7 @@ import { computed, ref } from "vue";
 import { Event } from "@/types/events";
 import { Challenge } from "@/types/challenge";
 import { CommunityPrivilegeActions } from '@/constants/privileges';
-import EventChallenges from "@/components/Dashboard/communities/events/EventChallenges.vue";
+import EventChallengesList from "@/components/Dashboard/communities/events/EventChallengesList.vue";
 import CustomDialog from "@/components/Common/CustomDialog.vue";
 import * as v from "valibot";
 
@@ -202,6 +202,7 @@ const props = defineProps<{
     challenges: Array<Challenge>,
     isLoadinChallenges: boolean,
 }>();
+
 
 let dialogTitle = ref("");
 let dialogType = ref("yesno");

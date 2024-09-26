@@ -3,6 +3,7 @@
         <BreadcrumbsBar :breadcrumbs-array="routeArray" />
         <div class="user-communities-edit__body">
             <div class="user-communities-edit__body__table">
+                {{  privilege  }}
                 <CommunityEdit
                     :id="communityId"
                     :loading-data="loadingData"
@@ -11,6 +12,7 @@
                     :isView="isView ? true : false"
                     :events="communityEvents"
                     :isLoadingEvents="isLoadingEvents"
+                    :privilegesType="privilegesType"
                 />
             </div>
         </div>
@@ -25,6 +27,8 @@ import { useUser } from "@/stores/user.ts";
 import { privileges } from '@/constants/privileges';
 import { Community } from "@/types/communities";
 import { Event } from "@/types/events";
+import parseDataURL from "data-urls";
+import { labelToName, decode } from "whatwg-encoding";
 
 
 definePageMeta({
@@ -54,6 +58,8 @@ if(userPrivileges.value.length == 0) {
     userStore.setUserCommunitiesRoles(data.value.oeb_roles)
 }
 
+console.log(userPrivileges.value);
+
 let communityData = ref<Community>(null);
 const communityPrivileges = computed(() => {
     const privilege = userPrivileges.value.find((privilege) => {
@@ -62,14 +68,21 @@ const communityPrivileges = computed(() => {
     return privilege ? privileges[privilege.role] : privileges.anyone;
 });
 
+const privilegesType = computed(() => {
+    const privilege = userPrivileges.value.find((privilege) => {
+        return (privilege.community === communityId);
+    });
+    return privilege ? (privilege.role).charAt(0).toUpperCase() + (privilege.role).slice(1) : "None";
+});
+
 let communityEvents = ref<Array<Event>>(null);
 
 const routeArray: Array = ref([
-  { label: "Dashboard", 
+  { label: "Dashboard",
     isActualRoute: false,
     route: "/dashboard",
   },
-  { label: "Communities", 
+  { label: "Communities",
     isActualRoute: false,
     route: "/dashboard/communities",
   },
@@ -93,6 +106,13 @@ const fetchUserCommunity = async (token: string): Promise<void> => {
 
         const data = await response.json();
         loadingData.value = false;
+        if(data._metadata && data._metadata['project:summary']) {
+            const dataURL = parseDataURL(data._metadata["project:summary"]);
+            const encodingName = labelToName(dataURL.mimeType.parameters.get("charset") || "utf-8",);
+            const decodedSummary = decode(dataURL.body, encodingName);
+            data._metadata.project_summary = decodedSummary;
+        }
+
         communityData.value = data;
         routeName.value = `Community ${communityData.value?.acronym}`;
 
