@@ -28,7 +28,8 @@
 import { ref } from 'vue';
 
 const props = defineProps<{
-    isDialogOpen: boolean;
+    isDialogOpen: boolean,
+    width: string,
 }>();
 
 const emit = defineEmits(["modal-close"]);
@@ -43,7 +44,7 @@ function dialogShow() {
 </script>
 
 <style scoped lang="scss">
-.dialog-mask{
+.dialog-mask {
     position: fixed;
     z-index: 9998;
     top: 0;
@@ -51,9 +52,16 @@ function dialogShow() {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
+    .dialog-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+    }
 }
 .dialog-container {
-    width: 300px;
+    width: v-bind("width");
     margin: 150px auto;
     padding: 20px 30px;
     background-color: #fff;
@@ -75,12 +83,8 @@ function dialogShow() {
         display: flex;
         justify-content: flex-end;
         gap: 10px;
-        button {
-            padding: 5px 15px;
-            border: 1px solid #ccc;
-            border-radius: 2px;
-            background-color: #f9f9f9;
-            cursor: pointer;
+        .btn-dialog {
+            padding: 10px 20px;
         }
     }
 }

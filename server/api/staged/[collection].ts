@@ -23,40 +23,45 @@ export default defineEventHandler(async (event) => {
             let url = `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}/staged/${collection}`;
             console.log('URL:', url);
 
-            // const response = await fetch(url, {
-            //     method: 'POST',
-            //     headers: {
-            //         'Authorization': token,
-            //         'Content-Type': 'application/json',
-            //     },
-            //     body: JSON.stringify(body),
-            // });
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Authorization': token,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(body),
+            });
 
-            // console.log('Respuesta:', response);
-            // console.log(token);
+            console.log('Respuesta:', response);
+            console.log(token);
 
-            // if (!response.ok) {
-            //     const errorData = await response.json(); 
-            //     console.error('Error en la respuesta de la API:', errorData);
-            //     throw new Error(`Error en la respuesta de la API: ${response.statusText}. Detalles: ${errorData.error}`);
-            // }
+            if (!response.ok) {
+                const errorData = await response.json(); 
+                console.error('Error en la respuesta de la API:', errorData);
+                throw new Error(`Error en la respuesta de la API: ${response.statusText}. Detalles: ${errorData.error}`);
+            }
 
-            // const data = await response.json(); 
-            // console.log('Respuesta:', data);
-            // if(data[0] && data[0].errors){
-            //     console.log('Error:', data[0].errors);
-            // }
+            const data = await response.json(); 
+            console.log('Respuesta:', data);
+            console.log('Estado:', response.status);
+            if(data[0] && data[0].errors){
+                console.log('Error:', data[0].errors);
+                return {
+                    status: response.status,
+                    body: { error: data[0].errors }
+                };
+            }
 
-            // return {
-            //     status: 201,
-            //     body: JSON.stringify({
-            //         message: 'Community added successfully',
-            //         data: {
-            //             id: body.id, // ID proporcionado
-            //             ...body, // Incluye el cuerpo que se envió
-            //         },
-            //     }),
-            // };
+            return {
+                status: 200,
+                body: JSON.stringify({
+                    message: 'Community added successfully',
+                    data: {
+                        id: body.id, // ID proporcionado
+                        ...body, // Incluye el cuerpo que se envió
+                    },
+                }),
+            };
         } else {
             console.error('Error: Método no permitido');
             return {

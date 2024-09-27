@@ -3,21 +3,27 @@
         <div class="w-100 container">
             <div class="dashboard-community-edit__title">
                 <h2 class="text-primaryOeb-500 ">
-                    <span class="">Add New Community</span>
+                    <span class="">New Community</span>
                 </h2>
             </div>
             <div class="dashboard-community-edit__content">
                 <div class="">
                     <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmitCommunity">
                         <div class="w-100 form-card">
-                            <div class="row">
-                                <div class="col-8">
+                            <div class="row justify-content-between">
+                                <div class="col-4">
                                     <div class="form-group">
-                                        <label for="acronym">Acronym</label>
-                                        <input type="text" class="form-control custom-entry-input" 
-                                            id="acronym"
-                                            placeholder="Community acronym" 
-                                            v-model="state.acronym" />
+                                        <label for="id">
+                                            ID
+                                            <span class="text-red-400 required">*</span>
+                                        </label>
+                                        <div class="w-100">
+                                            <input type="text" class="form-control custom-entry-input" 
+                                                id="id"
+                                                placeholder="Community id" 
+                                                v-model="state._id" 
+                                            />
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-4">
@@ -42,15 +48,38 @@
                                         </USelectMenu>
                                     </div>
                                 </div>
-                                <div class="col-12">
+                            </div>
+                            <div class="row">
+                                <div class="col-4">
                                     <div class="form-group">
-                                        <label for="description">Name</label>
-                                        <input type="text" class="form-control custom-entry-input" 
-                                            placeholder="Community name" 
-                                            id="name" 
-                                            v-model="state.name" />
+                                        <label for="acronym">
+                                            Acronym
+                                            <span class="text-red-400 required">*</span>
+                                        </label>
+                                        <div class="w-100">
+                                            <input type="text" class="form-control custom-entry-input" 
+                                                id="acronym"
+                                                placeholder="Community acronym" 
+                                                v-model="state.acronym" />
+                                        </div>
                                     </div>
                                 </div>
+                                <div class="col-8">
+                                    <div class="form-group">
+                                        <label for="description">
+                                            Name
+                                            <span class="text-red-400 required">*</span>
+                                        </label>
+                                        <div class="w-100">
+                                            <input type="text" class="form-control custom-entry-input" 
+                                                placeholder="Community name" 
+                                                id="name" 
+                                                v-model="state.name" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
                                 <div class="col-12">
                                     <div class="form-group">
                                         <label for="description">Description</label>
@@ -72,24 +101,28 @@
                                             <div class="w-100">
                                                 <label for="contacts"
                                                     class="form-group-row">
-                                                    <span class="label-text text-gray-500">
+                                                    <span class="label-text w-100">
                                                         Links
                                                     </span>
                                                     <button class="btn-form-add btn-primary"
-                                                        @click="onAddElement(localLinks)"
+                                                        type="button"
+                                                        @click="onAddElement(localLinks, inputLinkRefs)"
                                                         :disabled="checkEmptyLinks">
                                                         <font-awesome-icon :icon="['fas', 'plus']" />
                                                     </button>
                                                 </label>
                                             </div>
                                             <div class="w-100 row no-space">
-                                                <div v-if="localLinks.length>0" v-for="(link, index) in localLinks" :key="link"
+                                                <div v-if="localLinks.length>0" v-for="(link, index) in localLinks" :key="index"
                                                     class="col-12 d-flex pl-0">
                                                     <div class="input-wrapper big d-flex">
                                                         <span>{{ index + 1}}.</span>
-                                                        <input type="text" class="form-control" 
-                                                            id="link" 
-                                                            v-model="localLinks[index]" />
+                                                        <input type="text" 
+                                                            class="form-control" 
+                                                            id="link"
+                                                            v-model="localLinks[index]" 
+                                                            ref="inputLinkRefs"
+                                                            />
                                                         <button class="btn-delete-input"
                                                             type="button"
                                                             @click="onDeleteElement(index, localLinks)">
@@ -113,23 +146,29 @@
                                             <div class="w-100">
                                                 <label for="contacts"
                                                     class="form-group-row">
-                                                    <span class="label-text text-gray-500">
+                                                    <span class="label-text w-100">
                                                         Contacts
+                                                        <span class="text-red-400 required">*</span>
                                                     </span>
                                                     <button class="btn-form-add btn-primary"
-                                                        @click="onAddElement(localContacts)"
-                                                        :disabled="cheEmptyContacts">
+                                                        @click="onAddElement(localContacts, inputContactsRefs)"
+                                                        type="button"
+                                                        :disabled="checkEmptyContacts">
                                                         <font-awesome-icon :icon="['fas', 'plus']" />
                                                     </button>
                                                 </label>
                                             </div>
                                             <div class="w-100 row no-space">
                                                 <div v-if="localContacts.length>0" v-for="(contact, index) in localContacts" :key="index" 
-                                                    class="col-6 pt-0">
-                                                    <div class="input-wrapper">
-                                                        <input type="text" class="form-control" 
+                                                    class="col-12 pt-0">
+                                                    <div class="input-wrapper big d-flex">
+                                                        <input type="text" 
+                                                            class="form-control"
+                                                            ref="inputContactsRefs"
                                                             v-model="localContacts[index]" />
-                                                        <button class="btn-delete-input">
+                                                        <button class="btn-delete-input"
+                                                            type="button"
+                                                            @click="onDeleteElement(index, localContacts)">
                                                             <font-awesome-icon :icon="['far', 'trash-can']" />
                                                         </button>
                                                     </div>
@@ -143,25 +182,13 @@
                                         </div>
                                     </div>
                                 </div>
-                                
                                 <div class="form-card__row__box">
                                     <div class="col-12">
                                         <div class="form-group">
-                                            <label for="provenance" class="text-gray-500">Provenance</label>
-                                            <div class="w-100 d-flex">
-                                                <input type="text" class="form-control custom-entry-input" 
-                                                    id="schema"
-                                                    placeholder="https://provenance.org/Community" 
-                                                    v-model="state._provenance" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="form-card__row__box">
-                                    <div class="col-12">
-                                        <div class="form-group">
-                                            <label for="schema" class="text-gray-500">Schema</label>
+                                            <label for="schema" class="w-100">
+                                                Schema
+                                                <span class="text-red-400 required">*</span>
+                                            </label>
                                             <div class="w-100 d-flex">
                                                 <input type="text" class="form-control custom-entry-input" 
                                                     id="schema"
@@ -171,18 +198,18 @@
                                         </div>
                                     </div>
                                 </div>
-                                
                                 <div class="form-card__row__box">
                                     <div class="col-12">
                                         <div class="form-group">
                                             <div class="w-100">
                                                 <label for="contacts"
                                                     class="form-group-row">
-                                                    <span class="label-text text-gray-500">
+                                                    <span class="label-text w-100">
                                                         Keywords
                                                     </span>
                                                     <button class="btn-form-add btn-primary"
-                                                        @click="onAddElement(localKeywords)"
+                                                        @click="onAddElement(localKeywords, inputKeywordsRefs)"
+                                                        type="button"
                                                         :disabled="checkEmptyKeywords">
                                                         <font-awesome-icon :icon="['fas', 'plus']" />
                                                     </button>
@@ -192,9 +219,13 @@
                                                 <div v-if="localKeywords.length>0" v-for="(keys, index) in localKeywords" :key="index"
                                                     class="col-6 pt-0">
                                                     <div class="input-wrapper">
-                                                        <input type="text" class="form-control" 
-                                                            v-model="localKeywords[index]" />
-                                                        <button class="btn-delete-input">
+                                                        <input type="text" 
+                                                            class="form-control"
+                                                            v-model="localKeywords[index]"
+                                                            ref="inputKeywordsRefs"
+                                                            />
+                                                        <button class="btn-delete-input"
+                                                            type="button">
                                                             <font-awesome-icon :icon="['far', 'trash-can']" />
                                                         </button>
                                                     </div>
@@ -207,6 +238,11 @@
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="errors" v-if="errors.length>0">
+                                <div class="alert alert-danger">
+                                    {{ getErrors }}
                                 </div>
                             </div>
                             <div class="form-footer">
@@ -225,6 +261,7 @@
         </div>
         <CustomDialog
             :isDialogOpen="isDialogOpened"
+            :width="400"
             @modal-close="dialogShow">
             <template #header>
                 {{ dialogTitle }}
@@ -234,8 +271,8 @@
             </template>
             <template #footer>
                 <template v-if="dialogType && dialogType === 'yesno'">
-                    <button type="button" class="btn-primary" @click="isDialogOpened = false">No</button>
-                    <button type="button" class="btn-primary" @click="isDialogOpened = false">Yes</button>
+                    <button type="button" class="btn-dialog bg-slate-50" @click="isDialogOpened = false">No</button>
+                    <button type="button" class="btn-dialog btn-primary btn-ok" @click="deleteElement">Yes</button>
                 </template>
                 <template v-else>
                     <button type="button" class="btn-primary" @click="isDialogOpened = false">Cancel</button>
@@ -247,47 +284,62 @@
 
 
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
+import { computed, ref, nextTick } from "vue";
 import { Community } from "@/types/communities";
 import { CommunityStatusLabels } from '@/constants/community_const';
 import { useRouter } from "vue-router";
 import CustomSubtitle from "@/components/Common/CustomSubtitle.vue";
-import type { FormSubmitEvent } from '#ui/types'
-import * as v from "valibot";
+import type { FormSubmitEvent } from '#ui/types';
+import CustomDialog from "@/components/Common/CustomDialog.vue";
+import { object, string, array, safeParse, nonEmpty } from 'valibot';
 
 const router = useRouter();
 const { data } = useAuth();
 const token: string = data?.value.accessToken;
 
 const state = ref({
+    _id: '',
     acronym: '',
     status: '',
     name: '',
     description: '',
-    _provenance: '',
-    _schema: ''
+    links: [],
+    keywords: [],
+    _schema: 'https://www.elixir-europe.org/excelerate/WP2/json-schemas/1.0/Community',
+    community_contact_ids: []
 });
 
-const schema = v.object({
-    acronym: v.pipe(v.string()),
-    status: v.pipe(v.string()),
-    name: v.pipe(v.string()),
-    description: v.pipe(v.string())
+const schema = object({
+    _id: string(),
+    acronym: string(),
+    status: string(),
+    name: string(),
+    description: string(),
+    _schema: string(),
+    links: array(),
+    keywords: array(),
+    community_contact_ids: array(string([nonEmpty('No puede estar vacío')]))
 });
-
-let dialogTitle = ref("");
-let dialogType = ref("yesno");
-let isDialogOpened = ref(false);
-let dialogText = ref("");
-
 
 const errors = ref<string[]>([]);
+const inputLinkRefs = ref<(HTMLInputElement | null)[]>([]);
+const inputContactsRefs = ref<(HTMLInputElement | null)[]>([]);
+const inputKeywordsRefs = ref<(HTMLInputElement | null)[]>([]);
 
 // Default value is active?
 const localStatus = ref({
     value: "active",
     label: "Active"
 });
+
+let dialogTitle = ref("");
+let dialogType = ref("yesno");
+let isDialogOpened = ref(false);
+let dialogText = ref("");
+let dialogElement = ref<{ element: string[]; index: number } | null>(null);
+
+state.value.status = localStatus.value.value;
+
 let localContacts = ref<string[]>([]);
 let localLinks = ref<string[]>([]);
 let localKeywords = ref<string[]>([]);
@@ -296,7 +348,7 @@ const checkEmptyLinks = computed(() => {
     return localLinks.value.some((link: string) => link === '');
 });
 
-const cheEmptyContacts = computed(() => {
+const checkEmptyContacts = computed(() => {
     return localContacts.value.some((contact: string) => contact === '');
 });
 
@@ -304,27 +356,71 @@ const checkEmptyKeywords = computed(() => {
     return localKeywords.value.some((keyword: string) => keyword === '');
 });
 
+function validateRequiredFields(data: any): string[] {
+    const requiredFields = ['_id', '_schema', 'acronym', 'status', 'community_contact_ids'];
+    const errorMessages: string[] = [];
+    
+    requiredFields.forEach(field => {
+        if (typeof data[field] === 'string' && data[field].trim() === '') {
+            errorMessages.push(`${field} cannot be empty`);
+        }
+    });
+    data.community_contact_ids.forEach((contact: string, index: number) => {
+        if (contact.trim() === '') {
+            errorMessages.push(`community_contact_ids[${index}] cannot be empty`);
+        }
+    });
+    return errorMessages;
+}
+
+function deleteEmptyElements(array: string[]) {
+    return array.filter((element: string) => element !== '');
+}
+
 async function onSubmitCommunity(event: FormSubmitEvent<Schema>) {
     event.preventDefault();
 
-    const result = v.safeParse(schema, state.value);
+    const result = safeParse(schema, state.value);
+
     if (result.success) {
-        const response = await createCommunity();
-        /* TODO */
+        const customErrors = validateRequiredFields(state.value);
+
+        if (customErrors.length > 0) {
+            errors.value = customErrors;
+        } else {
+            const response = await createCommunity();
+            console.log(response);
+        }
     } else {
         errors.value = result.error.issues.map(issue => issue.message);
     }
 }
 
+//["Salvador.Capella-Gutierrez"]
 async function createCommunity() {
+    let cleanLinks = deleteEmptyElements(localLinks.value);
+    let cleanKeywords = deleteEmptyElements(localKeywords.value);
+    let cleanContacts = deleteEmptyElements(localContacts.value);
+
     const body = [{
-        _id: "OEBC998",
-        _schema: "https://www.elixir-europe.org/excelerate/WP2/json-schemas/1.0/Community",
-        name: state.name,
-        acronym: state.acronym,
-        status: state.status,
-        community_contact_ids: ["Salvador.Capella-Gutierrez"],
-        description: state.description
+        _id: state.value._id,
+        _schema: state.value._schema,
+        name: state.value.name,
+        acronym: state.value.acronym,
+        status: state.value.status,
+        links: cleanLinks.map(element => {
+            return { 
+                uri: element,
+                label: "MainSite"
+            };
+        }),
+        keywords: cleanKeywords.map(element => {
+            return element;
+        }),
+        community_contact_ids: cleanContacts.map(element => {
+            return element;
+        }),
+        description: state.value.description
     }];
 
     try {
@@ -341,10 +437,19 @@ async function createCommunity() {
             throw new Error('Error en la respuesta de la API');
         }
 
-        console.log(response);
-
-        const data = await response.json();
-        console.log('Respuesta exitosa:', data);
+        const responseData = await response.json();
+        if(responseData.status == 200) {
+            errors.value = [];
+            router.push("/dashboard/communities");
+        } else {
+            let errorResponse = JSON.parse(responseData.body);
+            errors.value = errorResponse.error.map((error: any) => {
+                if(error.pointer) {
+                    return `${error.message}`;
+                }
+                return error.message;
+            });
+        }
     } catch (error) {
         console.error("Error fetching communities data:", error);
     }
@@ -355,24 +460,46 @@ function goBack() {
     router.push("/dashboard/communities");
 }
 
+const getErrors = computed(() => errors.value.join(", "));
+
 function onChangeStatus(newStatus: string) {
     localStatus.value.value = newStatus.value;
     localStatus.value.label = newStatus.label;
 }
 
-function onAddElement(array: string[]) {
+function onAddElement(array: string[], arrayRef?: HTMLInputElement[]) {
     array.push('');
+
+    nextTick(() => {
+        const lastElementIndex = array.length - 1;
+        const inputElement = arrayRef ? arrayRef[lastElementIndex] : null;
+        if (inputElement) {
+            inputElement.focus();
+        }
+    });
 }
 
 function onDeleteElement(index: number, element: string[]) {
-    console.log(element[index]);
+    dialogElement.value = null;
     if (element[index] === '') {
         element.splice(index, 1);
     } else {
+        dialogElement.value = {
+            element: element,
+            index: index
+        };
         dialogText.value = "Are you sure you want to delete this element?";
         dialogTitle.value = "Delete Element";
         isDialogOpened.value = true;
     }
+    inputRefs.value.splice(index, 1); // Remove the corresponding ref
+}
+
+function deleteElement() {
+    console.log("Deleting element");
+    isDialogOpened.value = false;
+    dialogElement.value?.element.splice(dialogElement.value.index, 1);
+    dialogElement.value = null;
 }
 
 function dialogShow() {
@@ -471,6 +598,7 @@ function dialogShow() {
             .label-text {
                 border-bottom: 1px solid #e9ecef;
                 width: 90%;
+                padding-bottom: 5px;
             }
             .btn-form-add.btn-primary  {
                 padding: 1px 6px;
@@ -485,7 +613,7 @@ function dialogShow() {
             &__row {
                 padding: 30px 15px;
                 display: grid;
-                grid-template-columns: auto auto;
+                grid-template-columns: 1fr 1fr;
                 column-gap: 10px;
                 row-gap: 20px;
                 .no-space {
@@ -502,5 +630,8 @@ function dialogShow() {
             opacity: 0.5;
             color: rgba(0, 0, 0, 0.3);
         }
+    }
+    .btn-dialog {
+        padding: 5px 25px;
     }
 </style>
