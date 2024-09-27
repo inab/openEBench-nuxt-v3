@@ -31,6 +31,18 @@ export default <Partial<Config>>{
           900: "#3d1f08",
           950: "#180c03",
         },
+        statusActive: {
+          50: "#e6f9f5",
+          500: "#00caa4"
+        },
+        statusArchived: {
+          50: "#f8f2e9",
+          500: "#d7a31a"
+        },
+        statusIncubating: {
+          50: "#f4f2f7",
+          500: "#7b62b8"
+        }
       },
     },
   },

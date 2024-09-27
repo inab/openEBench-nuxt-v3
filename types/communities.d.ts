@@ -30,6 +30,11 @@ export interface CommunityColumnsDashboard {
     label?: string;
 }
 
+export interface CommunityMetadata {
+    project_spaces: boolean;
+    project_summary?: string;
+}
+
 export interface Community {
     _id: number;
     acronym: string;
@@ -38,6 +43,7 @@ export interface Community {
     status: CommunityStatus;
     community_contact_ids: Array<string>;
     to: string;
+    _metadata: CommunityMetadata,
     privileges?: string;
     actions?: Array<CommunityPrivileges>;
 }
