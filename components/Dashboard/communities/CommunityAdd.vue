@@ -324,7 +324,7 @@ async function createCommunity() {
         acronym: state.acronym,
         status: state.status,
         community_contact_ids: ["Salvador.Capella-Gutierrez"],
-        description: state.description,
+        description: state.description
     }];
 
     try {

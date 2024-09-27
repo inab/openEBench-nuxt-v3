@@ -447,6 +447,7 @@ async function updateCommunity() {
     const body = {
         description: state.value.description,
         _id: props.id,
+        links: ['http://questfororthologs.org/']
     }
     
     try {
