@@ -31,7 +31,8 @@ export interface CommunityColumnsDashboard {
 }
 
 export interface CommunityMetadata {
-    project_spaces: boolean
+    project_spaces: boolean;
+    project_summary?: string;
 }
 
 export interface Community {

@@ -63,7 +63,7 @@ const routeArray: Array = ref([
     route: `/dashboard/communities/${communityId}`,
   },
   {
-    label: "Event Add",
+    label: "New event",
     isActualRoute: true,
   }
 ]);

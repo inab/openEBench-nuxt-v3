@@ -3,7 +3,7 @@
         <div class="w-100 container">
             <div class="dashboard-community-event-addt__title">
                 <h2 class="text-primaryOeb-500 ">
-                    <span class="">Add New Event</span>
+                    <span class="">New Event</span>
                 </h2>
             </div>
             <div class="dashboard-community-event-add__content">

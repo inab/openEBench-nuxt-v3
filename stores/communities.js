@@ -65,6 +65,7 @@ export const useCommunities = defineStore("communities", {
 
     formatData(data) {
       return data.map((community) => {
+        if(!community.links) { community.links = []; }
         community.links.forEach((link) => {
           if (link.comment === "@logo") {
             community.logo = link.uri;

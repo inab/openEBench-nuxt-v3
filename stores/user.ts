@@ -3,6 +3,8 @@ import { Community } from "@/types/communities";
 import { Event } from "@/types/events";
 import { Challenge } from "@/types/challenges";
 import { privileges } from '@/constants/privileges';
+import parseDataURL from "data-urls";
+import { labelToName, decode } from "whatwg-encoding";
 
 const runtimeConfig = useRuntimeConfig();
 
@@ -133,7 +135,6 @@ export const useUser = defineStore('user', {
                 communityEvents: data
             }
             this.setUserCommunitiesEvents(eventData);
-            console.log("Events", eventData.communityEvents);
             return eventData.communityEvents;
         },
 
@@ -158,7 +159,6 @@ export const useUser = defineStore('user', {
                 communityEvents: data
             }
             this.setUserCommunitiesEvents(eventData);
-            console.log("Events", eventData.communityEvents);
             return eventData.communityEvents;
         },
 
@@ -177,7 +177,6 @@ export const useUser = defineStore('user', {
             data = data.filter((challenge: any) => challenge.benchmarking_event_id === event);
             data = this.formatCommunityChallengeData(data);
             data = this.setCommunityChallengePrivileges(data);
-            console.log("Challenges", data);
             let challengeData = {
                 eventId: event,
                 eventChallenges: data
@@ -190,8 +189,10 @@ export const useUser = defineStore('user', {
                 return {
                     _id: community._id,
                     name: community.acronym,
-                    logo: community.links.filter((link: any) => link.comment === "@logo")[0].uri,
-                    links: community.links,
+                    logo: community.links 
+                        ? community.links.filter((link: any) => link.comment === "@logo")[0].uri 
+                        : "https://raw.githubusercontent.com/inab/openEBench-nuxt/refs/heads/master/static/OEB-minimal-logo-blue.svg",
+                    links: community.links ?? [],
                     status: community.status,
                     community_contact: community.community_contact_ids.map((contact: string) => {
                         return contact.replace(/\./g, " ");

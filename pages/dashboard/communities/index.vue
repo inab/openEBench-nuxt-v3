@@ -14,7 +14,7 @@
               It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. 
             </div>
           </div>
-          <div class="flex justify-content-end gap-3 py-3" v-if="userStore.getUserCommunitiesRoles && isAdmin"> -->
+          <div class="flex justify-content-end gap-3 py-3" v-if="userStore.getUserCommunitiesRoles && isAdmin">
               <NuxtLink to="/dashboard/communities/add"
                 class="btn custom-btn btn-primary"
                 title="Create new community">
@@ -70,11 +70,6 @@ const items = [{
   slot: 'communities',
   label: 'Communities',
   icon: 'i-heroicons-table-cells-16-solid',
-}, {
-  key: "all_tools",
-  slot: "all_tools",
-  label: 'All tools',
-  icon: 'i-heroicons-eye-dropper'
 }]
 
 const routeArray: Array = [

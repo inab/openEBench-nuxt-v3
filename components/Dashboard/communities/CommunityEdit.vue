@@ -30,6 +30,28 @@
                                 <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmitCommunity">
                                     <div class="w-100 form-card">
                                         <div class="row">
+                                            <div class="col-6">
+                                                <div class="form-group">
+                                                    <label for="type">Type</label>
+                                                    <input type="text"
+                                                        class="form-control"
+                                                        id="type"
+                                                        v-model="communityData.type" 
+                                                        disabled />
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="form-group">
+                                                    <label for="privileges">Privileges</label>
+                                                    <input type="text"
+                                                        class="form-control"
+                                                        id="type"
+                                                        v-model="localPrivilegesType" 
+                                                        disabled />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
                                             <div class="col-8">
                                                 <div class="form-group">
                                                     <label for="acronym">Acronym</label>
@@ -235,7 +257,7 @@
                             </div>
                             <div v-if="item.key === 'events'">
                                 <div>
-                                    <CommunityEvents 
+                                    <EventsList 
                                         :events="events"
                                         :is-loading-data="isLoadingEvents"
                                         :commmunityPrivileges="commmunityPrivileges"
@@ -244,7 +266,9 @@
                                 </div>
                             </div>
                             <div v-if="item.key === 'summary'">
-                                This is summary
+                                <CommunitySummary
+                                    :metadata="communityData._metadata"
+                                />
                             </div>
                         </template>
                     </UTabs>
@@ -275,9 +299,9 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
-import { Community } from "@/types/communities";
 import { CommunityStatusLabels, CommunityStatusColors } from '@/constants/community_const';
-import CommunityEvents from '@/components/Dashboard/communities/CommunityEvents.vue'
+import EventsList from '@/components/Dashboard/communities/EventsList.vue';
+import CommunitySummary from "@/components/Dashboard/communities/CommunitySummary.vue";
 import CustomSubtitle from "@/components/Common/CustomSubtitle.vue";
 import { CommunityPrivilegeActions } from '@/constants/privileges';
 import { useRouter } from "vue-router";
@@ -299,7 +323,8 @@ const props = defineProps<{
     commmunityPrivileges: CommunityPrivilegeActions,
     isView: boolean,
     events: Array<Event>,
-    isLoadingEvents: boolean
+    isLoadingEvents: boolean,
+    privilegesType: string,
 }>();
 
 const state = ref({
@@ -344,19 +369,21 @@ const communityData = computed(() => {
             label: 'Events',
             icon: 'i-heroicons-calendar',
         });
+        state.value.type = 'Community';
     } else {
         items.push({
             key: "summary",
             label: 'Summary',
             icon: 'i-heroicons-squares-2x2-16-solid',
-        })
+        });
+        state.value.type = 'Project';
     }
-    return props.communityObj;
+    return state.value;
 });
 
-console.log(props.communityObj)
-
-
+const localPrivilegesType = computed(() => {
+    return props.privilegesType;
+});
 
 const localStatus = ref({
     value: "",
@@ -420,6 +447,7 @@ async function updateCommunity() {
     const body = {
         description: state.value.description,
         _id: props.id,
+        links: ['http://questfororthologs.org/']
     }
     
     try {

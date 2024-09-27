@@ -94,7 +94,7 @@
                     </template>
                     <template #actions-data="{ row }">
                         <div v-if="row.actions">
-                            <div v-if="row.privileges === 'Owner' && row.actions.community">
+                            <div class="text-center" v-if="row.privileges === 'Owner' && row.actions.community">
                                 <button title="Edit community" class="btn-event text-neutral-300">
                                     <NuxtLink :to="getCommunityEditLink(row)">
                                         <font-awesome-icon :icon="['fas', 'pencil']" />
@@ -106,7 +106,7 @@
                                     </button>
                                 </template>
                             </div>
-                            <div v-else-if="row.privileges=== 'Manager' && row.actions.community">
+                            <div class="text-center" v-else-if="row.privileges=== 'Manager' && row.actions.community">
                                 <button title="Edit community" class="btn-event text-neutral-300">
                                     <NuxtLink :to="getCommunityEditLink(row)">
                                         <font-awesome-icon :icon="['fas', 'pencil']" />
@@ -118,7 +118,7 @@
                                     </button>
                                 </template>
                             </div>
-                            <div v-else-if="row.privileges=== 'anyone' && row.actions.community">
+                            <div class="text-center" v-else-if="row.privileges=== 'anyone' && row.actions.community">
                                 <button title="Edit community" class="btn-event text-neutral-300">
                                     <NuxtLink :to="getCommunityEditLink(row)">
                                         <font-awesome-icon :icon="['fas', 'pencil']" />
@@ -131,7 +131,7 @@
                         </div>
                     </template>
                     <template #type-data="{row}">
-                        <div class="inline-block rounded-full custom-badget font-semibold">
+                        <div class="inline-block rounded-full text-left">
                             <template v-if="row._metadata && row._metadata">
                                 <font-awesome-icon :icon="['fas', 'diagram-project']" />
                                 <span>
@@ -234,11 +234,11 @@ const columns: Array<CommunityColumnsDashboard> = [
         key: "community_contact",
         label: "CONTACTS"
     },{
-        key: 'status',
-        label: 'STATUS'
-    },{
         key: 'type',
         label: 'TYPE'
+    },{
+        key: 'status',
+        label: 'STATUS'
     },{
         key: 'view',
         label: 'VIEW'
@@ -348,8 +348,10 @@ function getCommunityEditLink(row: any) {
         font-size: 16px;
         a {
             color: theme('colors.gray.400');
+            &:hover {
+                color: theme('colors.secondaryOeb.500');
+            }
         }
-        
     }
     .input-search {
         input {

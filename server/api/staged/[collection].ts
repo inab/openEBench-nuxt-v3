@@ -2,6 +2,8 @@
 import { defineEventHandler, readBody } from 'h3';
 
 export default defineEventHandler(async (event) => {
+    const runtimeConfig = useRuntimeConfig();
+
     const { collection } = event.context.params; // Obtener la colección de la ruta
     const method = event.req.method; // Obtener el método HTTP
     const body = await readBody(event); // Leer el cuerpo de la solicitud
@@ -14,37 +16,47 @@ export default defineEventHandler(async (event) => {
     console.log('Cuerpo de la solicitud:', body);
     console.log('token:', token);
 
-    if (!community_id && method === 'POST') {
-        return {
-            statusCode: 400,
-            body: JSON.stringify({ error: "Falta el parámetro 'community_id' en el cuerpo de la solicitud" }),
-        };
-    }
-
     try {
         if (method === 'POST') {
             console.log('Simulando respuesta para solicitud POST...');
 
-            let url = `https://dev-openebench.bsc.es/api/scientific/staged/${collection}`;
+            let url = `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}/staged/${collection}`;
             console.log('URL:', url);
 
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Authorization': token,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(body),
-            });
+            // const response = await fetch(url, {
+            //     method: 'POST',
+            //     headers: {
+            //         'Authorization': token,
+            //         'Content-Type': 'application/json',
+            //     },
+            //     body: JSON.stringify(body),
+            // });
 
-            // Registro de la respuesta para depuración
-            console.log('Respuesta del backend:', response);
+            // console.log('Respuesta:', response);
+            // console.log(token);
 
-            // Devolución de la respuesta directamente al cliente
-            return {
-                statusCode: response.status,
-                body: JSON.stringify(response),
-            };
+            // if (!response.ok) {
+            //     const errorData = await response.json(); 
+            //     console.error('Error en la respuesta de la API:', errorData);
+            //     throw new Error(`Error en la respuesta de la API: ${response.statusText}. Detalles: ${errorData.error}`);
+            // }
+
+            // const data = await response.json(); 
+            // console.log('Respuesta:', data);
+            // if(data[0] && data[0].errors){
+            //     console.log('Error:', data[0].errors);
+            // }
+
+            // return {
+            //     status: 201,
+            //     body: JSON.stringify({
+            //         message: 'Community added successfully',
+            //         data: {
+            //             id: body.id, // ID proporcionado
+            //             ...body, // Incluye el cuerpo que se envió
+            //         },
+            //     }),
+            // };
         } else {
             console.error('Error: Método no permitido');
             return {

@@ -223,7 +223,6 @@
                 </div>
             </div>
         </div>
-        DialogText: {{  dialogText }}
         <CustomDialog
             :isDialogOpen="isDialogOpened"
             @modal-close="dialogShow">
@@ -318,15 +317,16 @@ async function onSubmitCommunity(event: FormSubmitEvent<Schema>) {
 }
 
 async function createCommunity() {
-    const body = {
-        community_id: "OEBC998",
+    const body = [{
         _id: "OEBC998",
-        acronym: "COMMUNITY OEBC998",
-        status: "active",
-        name: "COMMUNITY OEBC998 NAME",
-        description: "COMMUNITY OEBC998 DESCRIPTION",
-    }
-    
+        _schema: "https://www.elixir-europe.org/excelerate/WP2/json-schemas/1.0/Community",
+        name: state.name,
+        acronym: state.acronym,
+        status: state.status,
+        community_contact_ids: ["Salvador.Capella-Gutierrez"],
+        description: state.description
+    }];
+
     try {
         const response = await fetch(`/api/staged/Community`, {
             method: 'POST',
