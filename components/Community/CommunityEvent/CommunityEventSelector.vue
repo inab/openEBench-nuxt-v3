@@ -1,28 +1,25 @@
 <template>
   <div class="community-event-selector row">
-    <div class="col-8">
+    <div class="col-8 ps-1">
       <div class="community-event-selector__item">
-        <USelectMenu
-          v-model="eventSelected"
-          searchable
-          searchable-placeholder="Search a event..."
+        <USelectMenu 
+          v-slot="{ open }" 
+          v-model="eventSelected" 
           :options="eventsArray"
+          searchable
+          searchable-placeholder="Search a event..." 
           class="community-event-selector__select"
-          @change="handleChangeEvent"
-        >
-          <template #label>
-            <span
-              class="h-2 w-2 rounded-full bg-primary-500 dark:bg-primary-400"
-            />
-            <span class="primary-label truncate">{{ currentEvent.name }}</span>
-          </template>
-          <template #option="{ option: event }">
-            <span class="truncate">{{ event }}</span>
-          </template>
+          @change="handleChangeEvent">
+            <UButton color="white" class="flex-1 justify-between primary-label truncate">
+              <span class="h-2 w-2 rounded-full bg-primary-500 dark:bg-primary-400" />
+              {{ eventSelected }}
+
+              <UIcon name="i-heroicons-chevron-right-20-solid" class="w-5 h-5 transition-transform text-gray-400 dark:text-gray-500" :class="[open && 'transform rotate-90']" />
+            </UButton>
         </USelectMenu>
       </div>
     </div>
-    <div class="col-4 text-right primary-label">
+    <div class="col-4 pe-0 text-right primary-label">
       <UIcon name="i-heroicons-flag-solid" class=""></UIcon>
       {{ currentEvent.challenges.length }}
       {{ pluralize("Challenges", currentEvent.challenges.length) }}
@@ -88,6 +85,7 @@ async function handleChangeEvent() {
   a {
     text-decoration: none;
     color: #6a98c4;
+    font-size: 15px
   }
   &__item {
     display: flex;
@@ -100,7 +98,7 @@ async function handleChangeEvent() {
 }
 .primary-label {
   color: #0b579f;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 600;
 }
 </style>
