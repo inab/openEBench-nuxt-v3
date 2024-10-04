@@ -356,9 +356,15 @@ const schema = object({
     name: string(),
     description: string(),
     _schema: string(),
-    links: array(),
-    keywords: array(),
-    community_contact_ids: array(string([nonEmpty("Cannot be empty")])),
+    links: array(object({
+        uri: string(),
+        label: string(),
+    })),
+    keywords: array(string()),
+    community_contact_ids: array(object({
+        id: string(),
+        name: string(),
+    })),
 });
 
 const errors = ref<string[]>([]);
