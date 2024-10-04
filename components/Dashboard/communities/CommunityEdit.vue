@@ -27,36 +27,23 @@
                         </template>
                         <template #item="{ item }">
                             <div v-if="item.key === 'main'">
+                                {{schema}}
                                 <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmitCommunity">
                                     <div class="w-100 form-card">
-                                        <div class="row">
-                                            <div class="col-6">
+                                        <div class="row justify-content-between">
+                                            <div class="col-4 typeOptions">
                                                 <div class="form-group">
-                                                    <label for="type">Type</label>
-                                                    <input type="text"
-                                                        class="form-control"
-                                                        id="type"
-                                                        v-model="communityData.type" 
-                                                        disabled />
-                                                </div>
-                                            </div>
-                                            <div class="col-6">
-                                                <div class="form-group">
-                                                    <label for="privileges">Privileges</label>
-                                                    <input type="text"
-                                                        class="form-control"
-                                                        id="type"
-                                                        v-model="localPrivilegesType" 
-                                                        disabled />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-8">
-                                                <div class="form-group">
-                                                    <label for="acronym">Acronym</label>
-                                                    <input type="text" class="form-control" id="acronym" v-model="communityData.acronym"
-                                                        :disabled="!commmunityPrivileges.community.update || isView" />
+                                                    <label for="id">
+                                                        ID
+                                                        <span class="text-red-400 required">*</span>
+                                                    </label>
+                                                    <div class="w-100">
+                                                        <input type="text" class="form-control custom-entry-input" 
+                                                            id="id"
+                                                            placeholder="Community id" 
+                                                            v-model="state._id" 
+                                                        />
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="col-4">
@@ -65,8 +52,6 @@
                                                     <USelectMenu  
                                                         v-model="localStatus.value" 
                                                         :options="CommunityStatusLabels"
-                                                        :disabled="!commmunityPrivileges.community.update || isView" 
-                                                        :color="commmunityPrivileges.community.update?'white':'gray'"
                                                         @change="onChangeStatus">
                                                         <template #label>
                                                             <span 
@@ -83,9 +68,42 @@
                                                     </USelectMenu>
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <div class="form-group">
+                                                    <label for="acronym">
+                                                        Acronym
+                                                        <span class="text-red-400 required">*</span>
+                                                    </label>
+                                                    <input type="text" class="form-control" id="acronym" v-model="communityData.acronym"
+                                                        :disabled="!commmunityPrivileges.community.update || isView" />
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="form-group">
+                                                    <label for="privileges">Privileges</label>
+                                                    <input type="text"
+                                                        class="form-control"
+                                                        id="type"
+                                                        v-model="localPrivilegesType" 
+                                                        disabled />
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="form-group">
+                                                    <label for="type">Type</label>
+                                                    <USelect v-model="state.type" 
+                                                        :options="typeOptions" 
+                                                        option-attribute="label" />
+                                                </div>
+                                            </div>
                                             <div class="col-12">
                                                 <div class="form-group">
-                                                    <label for="description">Name</label>
+                                                    <label for="description">
+                                                        Name
+                                                        <span class="text-red-400 required">*</span>
+                                                    </label>
                                                     <input type="text" class="form-control" id="name" v-model="communityData.name" 
                                                         :disabled="!commmunityPrivileges.community.update || isView"
                                                     />
@@ -118,7 +136,8 @@
                                                                 </span>
                                                                 <button class="btn-form-add btn-primary"
                                                                     @click="onAddElement(localLinks)"
-                                                                    :disabled="!commmunityPrivileges.community.update || isView || checkEmptyLinks">
+                                                                    :disabled="!commmunityPrivileges.community.update || isView || checkEmptyLinks"
+                                                                    type="button">
                                                                     <font-awesome-icon :icon="['fas', 'plus']" />
                                                                 </button>
                                                             </label>
@@ -153,10 +172,12 @@
                                                                 class="form-group-row">
                                                                 <span class="label-text text-gray-500">
                                                                     Contacts
+                                                                    <span class="text-red-400 required">*</span>
                                                                 </span>
                                                                 <button class="btn-form-add btn-primary"
                                                                     @click="onAddElement(localContacts)"
-                                                                    :disabled="!commmunityPrivileges.community.update || isView || cheEmptyContacts">
+                                                                    :disabled="!commmunityPrivileges.community.update || isView || cheEmptyContacts"
+                                                                    type="button">
                                                                     <font-awesome-icon :icon="['fas', 'plus']" />
                                                                 </button>
                                                             </label>
@@ -169,6 +190,7 @@
                                                                         v-model="localContacts[index]" 
                                                                         :disabled="!commmunityPrivileges.community.update || isView" />
                                                                     <button class="btn-delete-input"
+                                                                        type="button"
                                                                         v-if="commmunityPrivileges.community.update && !isView">
                                                                         <font-awesome-icon :icon="['far', 'trash-can']" />
                                                                     </button>
@@ -178,25 +200,26 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            
                                             <div class="form-card__row__box">
                                                 <div class="col-12">
                                                     <div class="form-group">
                                                         <label for="provenance" class="w-100">Provenance</label>
                                                         <div class="w-100 d-flex">
                                                             <input type="text" class="form-control custom-entry-input" 
-                                                                id="schema" 
+                                                                id="_provenance" 
                                                                 placeholder="https://provenance.org/Community" 
                                                                 v-model="communityData._provenance" />
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            
                                             <div class="form-card__row__box">
                                                 <div class="col-12">
                                                     <div class="form-group">
-                                                        <label for="schema">Schema</label>
+                                                        <label for="schema">
+                                                            Schema
+                                                            <span class="text-red-400 required">*</span>
+                                                        </label>
                                                         <div class="w-100 d-flex">
                                                             <input type="text" class="form-control custom-entry-input" 
                                                                 id="schema"
@@ -217,6 +240,7 @@
                                                                     Keywords
                                                                 </span>
                                                                 <button class="btn-form-add btn-primary"
+                                                                    type="button"
                                                                     @click="onAddElement(localKeywords)"
                                                                     :disabled="!commmunityPrivileges.community.update || isView || checkEmptyKeywords">
                                                                     <font-awesome-icon :icon="['fas', 'plus']" />
@@ -231,6 +255,7 @@
                                                                         v-model="localKeywords[index]" 
                                                                         :disabled="!commmunityPrivileges.community.update || isView" />
                                                                     <button class="btn-delete-input"
+                                                                        type="button"
                                                                         v-if="commmunityPrivileges.community.update && !isView">
                                                                         <font-awesome-icon :icon="['far', 'trash-can']" />
                                                                     </button>
@@ -298,7 +323,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
+import { computed, ref, nextTick, onMounted, useTemplateRef } from "vue";
+import { useUser } from "@/stores/user.ts";
 import { CommunityStatusLabels, CommunityStatusColors } from '@/constants/community_const';
 import EventsList from '@/components/Dashboard/communities/EventsList.vue';
 import CommunitySummary from "@/components/Dashboard/communities/CommunitySummary.vue";
@@ -306,15 +332,16 @@ import CustomSubtitle from "@/components/Common/CustomSubtitle.vue";
 import { CommunityPrivilegeActions } from '@/constants/privileges';
 import { useRouter } from "vue-router";
 import type { FormSubmitEvent } from '#ui/types'
-import * as v from "valibot";
 import CustomDialog from "@/components/Common/CustomDialog.vue";
 import { Event } from "@/types/events";
+import { object, string, array, safeParse, nonEmpty } from 'valibot';
 
 
 const router = useRouter();
 const runtimeConfig = useRuntimeConfig();
 const { data } = useAuth();
 const token: string = data?.value.accessToken;
+const userStore = useUser();
 
 const props = defineProps<{
     id: string,
@@ -328,17 +355,28 @@ const props = defineProps<{
 }>();
 
 const state = ref({
+    _id: '',
     acronym: '',
     status: '',
     name: '',
-    description: ''
+    description: '',
+    links: [],
+    keywords: [],
+    _schema: 'https://www.elixir-europe.org/excelerate/WP2/json-schemas/1.0/Community',
+    community_contact_ids: [],
+    privileges: 'owner'
 });
 
-const schema = v.object({
-    acronym: v.pipe(v.string()),
-    status: v.pipe(v.string()),
-    name: v.pipe(v.string()),
-    description: v.pipe(v.string())
+const schema = object({
+    _id: string(),
+    acronym: string(),
+    status: string(),
+    name: string(),
+    description: string(),
+    _schema: string(),
+    links: array(),
+    keywords: array(),
+    community_contact_ids: array(string([nonEmpty('No puede estar vacío')]))
 });
 
 let dialogTitle = ref("");
@@ -347,6 +385,10 @@ let isDialogOpened = ref(false);
 let dialogText = ref("");
 
 const errors = ref<string[]>([]);
+const inputLinkRefs = ref<(HTMLInputElement | null)[]>([]);
+const inputContactsRefs = ref<(HTMLInputElement | null)[]>([]);
+const inputKeywordsRefs = ref<(HTMLInputElement | null)[]>([]);
+const itemRefs = useTemplateRef('items')
 
 const items = [{
     key: "main",
@@ -354,8 +396,14 @@ const items = [{
     icon: 'i-heroicons-document-chart-bar',
 }]
 
+const userPrivileges: Array<string> = computed(() => userStore.getUserCommunitiesRoles);
+if(userPrivileges.value.length == 0) {
+    userStore.setUserCommunitiesRoles(data.value.oeb_roles)
+}
+
 const communityData = computed(() => {
     state.value = {
+        _id: props.communityObj?._id,
         acronym: props.communityObj?.acronym,
         status: props.communityObj?.status,
         name: props.communityObj?.name,
@@ -381,6 +429,14 @@ const communityData = computed(() => {
     return state.value;
 });
 
+const typeOptions = [
+    { value: 'Community', label: 'Community' },
+    { value: 'Project', label: 'Project' }
+];
+let localContacts = ref<string[]>([]);
+let localLinks = ref<string[]>([]);
+let localKeywords = ref<string[]>([]);
+
 const localPrivilegesType = computed(() => {
     return props.privilegesType;
 });
@@ -393,14 +449,12 @@ if (props.communityObj && typeof props.communityObj.status === 'string') {
   localStatus.value.value = props.communityObj.status.charAt(0).toUpperCase() + props.communityObj.status.slice(1);
 }
 
-let localContacts = ref<string[]>([]);
 if (props.communityObj && props.communityObj.community_contact_ids) {
     localContacts.value = props.communityObj.community_contact_ids.map((contact: string) => {
         return contact.replace(/\./g, " ");
     }) || [];
 }
 
-let localLinks = ref<string[]>([]);
 if (props.communityObj && props.communityObj.links) {
     localLinks.value = props.communityObj.links
         .filter((link: { comment?: string }) => {
@@ -410,7 +464,6 @@ if (props.communityObj && props.communityObj.links) {
         .filter((uri: string | undefined): uri is string => uri !== undefined);
 }
 
-let localKeywords = ref<string[]>([]);
 if (props.communityObj && props.communityObj.keywords) {
     localKeywords.value = props.communityObj.keywords;
 }
@@ -432,12 +485,28 @@ function goBack() {
 }
 
 async function onSubmitCommunity(event: FormSubmitEvent<Schema>) {
+    console.log("submitting...");
     event.preventDefault();
 
-    const result = v.safeParse(schema, state.value);
+    console.log("submitting...");
+
+    const result = safeParse(schema, state.value);
+
+    console.log(result)
+
     if (result.success) {
-        const response = await updateCommunity();
-        /* TODO */
+        const customErrors = validateRequiredFields(state.value);
+
+        console.log("we have errors", customErrors);
+
+        if (customErrors.length > 0) {
+            errors.value = customErrors;
+        } else {
+            errors.value = [];
+ 
+            const response = await updateCommunity();
+            console.log(response);
+        }
     } else {
         errors.value = result.error.issues.map(issue => issue.message);
     }
@@ -450,27 +519,53 @@ async function updateCommunity() {
         links: ['http://questfororthologs.org/']
     }
     
-    try {
-        const response = await fetch(`/api/staged/Community/${props.communityObj._id}`, {
-            method: 'PATCH',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(body),
-            });
+    console.log("updating...")
+    console.log(body);
 
-            console.log(response);
+    // try {
+    //     const response = await fetch(`/api/staged/Community/${props.communityObj._id}`, {
+    //         method: 'PATCH',
+    //         headers: {
+    //             'Authorization': `Bearer ${token}`,
+    //             'Content-Type': 'application/json',
+    //         },
+    //         body: JSON.stringify(body),
+    //         });
 
-            if (!response.ok) {
-                throw new Error('Error en la respuesta de la API');
+    //         console.log(response);
+
+    //         if (!response.ok) {
+    //             throw new Error('Error en la respuesta de la API');
+    //         }
+
+    //         const data = await response.json();
+    //         console.log('Respuesta exitosa:', data);
+    // } catch (error) {
+    //     console.error("Error fetching communities data:", error);
+    // }
+}
+
+
+function validateRequiredFields(data: any): string[] {
+    const requiredFields = ['_id','_schema', 'acronym', 'name', 'status', 'community_contact_ids'];
+    const errorMessages: string[] = [];
+    
+    requiredFields.forEach(field => {
+        if (typeof data[field] === 'string' && data[field].trim() === '') {
+            errorMessages.push(`${field} cannot be empty`);
+        }
+    });
+
+    if(localContacts.value.length == 0) {
+        errorMessages.push(`community_contact_ids cannot be empty`);
+    } else {
+        localContacts.value.forEach((contact: string, index: number) => {
+            if (contact.trim() === '') {
+                errorMessages.push(`community_contact_ids  cannot be empty`);
             }
-
-            const data = await response.json();
-            console.log('Respuesta exitosa:', data);
-    } catch (error) {
-        console.error("Error fetching communities data:", error);
+        });
     }
+    return errorMessages;
 }
 
 function onChangeStatus(newStatus: string) {
@@ -492,6 +587,8 @@ function onDeleteElement(index: number, element: string[]) {
         isDialogOpened.value = true;
     }
 }
+
+const getErrors = computed(() => errors.value.join(", "));
 
 function dialogShow() {
     console.log('dialogShow!!!!');

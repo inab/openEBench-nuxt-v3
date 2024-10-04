@@ -48,8 +48,15 @@ const token: string = data?.value.accessToken;
 const userStore = useUser();
 const routeName = ref<string>("");
 const isLoadingEvents = ref<boolean>(true);
+const isAdmin = ref<boolean>(false);
 
 const isView = computed(() => {
+    console.log(userPrivileges.value)
+    let isAdmin = userPrivileges.value.filter((privilege) => privilege.role === "admin");
+    console.log(isAdmin);
+    if(isAdmin.length > 0) {
+        return false;
+    }
     return userPrivileges.value.filter((privilege) => privilege.community === communityId).role === "Owner";
 });
 
@@ -62,6 +69,11 @@ console.log(userPrivileges.value);
 
 let communityData = ref<Community>(null);
 const communityPrivileges = computed(() => {
+    let isAdmin = userPrivileges.value.filter((privilege) => privilege.role === "admin");
+    console.log(isAdmin);
+    if(isAdmin.length > 0) {
+        return privileges.admin;
+    }
     const privilege = userPrivileges.value.find((privilege) => {
         return privilege.community === communityId;
     });

@@ -64,6 +64,22 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label for="privileges">Privileges</label>
+                                        <USelect v-model="state.privileges" 
+                                            :options="localPrivilegesType" 
+                                            option-attribute="label" />
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label for="type">Type</label>
+                                        <USelect v-model="state.type" 
+                                            :options="typeOptions" 
+                                            option-attribute="label" />
+                                    </div>
+                                </div>
                                 <div class="col-8">
                                     <div class="form-group">
                                         <label for="description">
@@ -151,7 +167,7 @@
                                                         <span class="text-red-400 required">*</span>
                                                     </span>
                                                     <button class="btn-form-add btn-primary"
-                                                        @click="onAddElement(localContacts, inputContactsRefs)"
+                                                        @click="onAddElement(localContacts, itemRefs)"
                                                         type="button"
                                                         :disabled="checkEmptyContacts">
                                                         <font-awesome-icon :icon="['fas', 'plus']" />
@@ -159,13 +175,22 @@
                                                 </label>
                                             </div>
                                             <div class="w-100 row no-space">
-                                                <div v-if="localContacts.length>0" v-for="(contact, index) in localContacts" :key="index" 
+                                                <div v-if="localContacts.length>0" v-for="(contact, index) in localContacts" 
+                                                    :key="index"
+                                                    ref="items"
                                                     class="col-12 pt-0">
                                                     <div class="input-wrapper big d-flex">
-                                                        <input type="text" 
-                                                            class="form-control"
-                                                            ref="inputContactsRefs"
-                                                            v-model="localContacts[index]" />
+                                                        <USelectMenu 
+                                                            v-model="localContacts[index]"
+                                                            class="w-full lg:w-100"
+                                                            searchable
+                                                            selected-icon="i-heroicons-check-16-solid"
+                                                            placeholder="Select a contact"
+                                                            :options="contactsData"
+                                                            value-attribute="id"
+                                                            option-attribute="name"
+                                                            :ref="`contact_${index}`">
+                                                        </USelectMenu>
                                                         <button class="btn-delete-input"
                                                             type="button"
                                                             @click="onDeleteElement(index, localContacts)">
@@ -284,7 +309,8 @@
 
 
 <script setup lang="ts">
-import { computed, ref, nextTick } from "vue";
+import { computed, ref, nextTick, onMounted, useTemplateRef } from "vue";
+import { useUser } from "@/stores/user.ts";
 import { Community } from "@/types/communities";
 import { CommunityStatusLabels } from '@/constants/community_const';
 import { useRouter } from "vue-router";
@@ -293,9 +319,19 @@ import type { FormSubmitEvent } from '#ui/types';
 import CustomDialog from "@/components/Common/CustomDialog.vue";
 import { object, string, array, safeParse, nonEmpty } from 'valibot';
 
+const userStore = useUser();
 const router = useRouter();
 const { data } = useAuth();
 const token: string = data?.value.accessToken;
+const typeOptions = [
+    { value: 'Community', label: 'Community' },
+    { value: 'Project', label: 'Project' }
+];
+
+let localLinks = ref<string[]>([]);
+let localKeywords = ref<string[]>([]);
+let localContacts = ref<string[]>([]);
+let contactsData = ref<string[]>([]);
 
 const state = ref({
     _id: '',
@@ -306,7 +342,9 @@ const state = ref({
     links: [],
     keywords: [],
     _schema: 'https://www.elixir-europe.org/excelerate/WP2/json-schemas/1.0/Community',
-    community_contact_ids: []
+    community_contact_ids: [],
+    type: 'Community',
+    privileges: 'owner'
 });
 
 const schema = object({
@@ -325,6 +363,7 @@ const errors = ref<string[]>([]);
 const inputLinkRefs = ref<(HTMLInputElement | null)[]>([]);
 const inputContactsRefs = ref<(HTMLInputElement | null)[]>([]);
 const inputKeywordsRefs = ref<(HTMLInputElement | null)[]>([]);
+const itemRefs = useTemplateRef('items')
 
 // Default value is active?
 const localStatus = ref({
@@ -340,16 +379,26 @@ let dialogElement = ref<{ element: string[]; index: number } | null>(null);
 
 state.value.status = localStatus.value.value;
 
-let localContacts = ref<string[]>([]);
-let localLinks = ref<string[]>([]);
-let localKeywords = ref<string[]>([]);
+
+
+const localPrivilegesType = [{
+    value: "owner", label: "Owner"
+}];
 
 const checkEmptyLinks = computed(() => {
     return localLinks.value.some((link: string) => link === '');
 });
 
 const checkEmptyContacts = computed(() => {
-    return localContacts.value.some((contact: string) => contact === '');
+    if(localContacts.value.length == 0) {
+        return false; 
+    }
+
+    let filter =  localContacts.value.map((contact: string) => {
+        return contact === ''
+    });
+
+    return filter[0] ? filter[0] : false;
 });
 
 const checkEmptyKeywords = computed(() => {
@@ -357,7 +406,7 @@ const checkEmptyKeywords = computed(() => {
 });
 
 function validateRequiredFields(data: any): string[] {
-    const requiredFields = ['_id', '_schema', 'acronym', 'status', 'community_contact_ids'];
+    const requiredFields = ['_id','_schema', 'acronym', 'name', 'status', 'community_contact_ids'];
     const errorMessages: string[] = [];
     
     requiredFields.forEach(field => {
@@ -365,11 +414,16 @@ function validateRequiredFields(data: any): string[] {
             errorMessages.push(`${field} cannot be empty`);
         }
     });
-    data.community_contact_ids.forEach((contact: string, index: number) => {
-        if (contact.trim() === '') {
-            errorMessages.push(`community_contact_ids[${index}] cannot be empty`);
-        }
-    });
+
+    if(localContacts.value.length == 0) {
+        errorMessages.push(`community_contact_ids cannot be empty`);
+    } else {
+        localContacts.value.forEach((contact: string, index: number) => {
+            if (contact.trim() === '') {
+                errorMessages.push(`community_contact_ids  cannot be empty`);
+            }
+        });
+    }
     return errorMessages;
 }
 
@@ -381,13 +435,14 @@ async function onSubmitCommunity(event: FormSubmitEvent<Schema>) {
     event.preventDefault();
 
     const result = safeParse(schema, state.value);
-
     if (result.success) {
         const customErrors = validateRequiredFields(state.value);
 
         if (customErrors.length > 0) {
             errors.value = customErrors;
         } else {
+            errors.value = [];
+ 
             const response = await createCommunity();
             console.log(response);
         }
@@ -422,7 +477,7 @@ async function createCommunity() {
         }),
         description: state.value.description
     }];
-
+    
     try {
         const response = await fetch(`/api/staged/Community`, {
             method: 'POST',
@@ -469,7 +524,6 @@ function onChangeStatus(newStatus: string) {
 
 function onAddElement(array: string[], arrayRef?: HTMLInputElement[]) {
     array.push('');
-
     nextTick(() => {
         const lastElementIndex = array.length - 1;
         const inputElement = arrayRef ? arrayRef[lastElementIndex] : null;
@@ -496,7 +550,6 @@ function onDeleteElement(index: number, element: string[]) {
 }
 
 function deleteElement() {
-    console.log("Deleting element");
     isDialogOpened.value = false;
     dialogElement.value?.element.splice(dialogElement.value.index, 1);
     dialogElement.value = null;
@@ -506,6 +559,21 @@ function dialogShow() {
     console.log('dialogShow!!!!');
 }
 
+const fetchContacts = async (token: string): Promise<void> => {
+    try {
+        if(userStore.getContactsList && userStore.getContactsList.length>0) {
+            contactsData.value = userStore.getContactsList;
+        } else {
+            contactsData.value = await userStore.fetchContacts(token);
+        }
+    } catch (error) {
+        console.error("Error fetching contacts data:", error);
+    }
+}
+
+onMounted(() => {
+  fetchContacts(token);
+});
 
 </script>
 

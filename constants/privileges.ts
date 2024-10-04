@@ -80,5 +80,25 @@ export const privileges: CommunityPrivileges = {
             delete: false,
             read: true,
         },
+    },
+    admin: {
+        community: {
+            create: true,
+            update: true,
+            delete: true,
+            read: true,
+        },
+        event: {
+            create: true,
+            update: true,
+            delete: true,
+            read: true,
+        },
+        challenge: {
+            create: true,
+            update: true,
+            delete: true,
+            read: true,
+        },
     }
 };

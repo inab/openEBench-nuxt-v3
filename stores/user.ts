@@ -28,7 +28,8 @@ export const useUser = defineStore('user', {
             communityId: "",
             communityEvents: []
         } as CommunityEvents,
-        userCommunitiesChallenges: []
+        userCommunitiesChallenges: [],
+        contactsList: []
     }),
 
     getters: {
@@ -42,7 +43,9 @@ export const useUser = defineStore('user', {
 
         getUserCommunitiesEvents: (state) => state.userCommunitiesEvents,
 
-        getUserCommunitiesChallenges: (state) => state.userCommunitiesChallenges
+        getUserCommunitiesChallenges: (state) => state.userCommunitiesChallenges,
+
+        getContactsList: (state) => state.contactsList
     },
 
     actions: {
@@ -114,6 +117,26 @@ export const useUser = defineStore('user', {
             .catch((error) => console.error('Error:', error));
         },
 
+        async fetchContacts(token: string) {
+            const response = await fetch(
+                `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Contact`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        Accept: "application/json",
+                    },
+                    method: "GET",
+                },
+            );
+
+            let data = await response.json();
+            if(!data) { []; }
+            return data.map((d: any) => ({
+                id: d._id,
+                name: `${d.givenName ?  d.givenName : ''}  ${d.surname ? d.surname : ''}`,
+            }));
+        },  
+
         async fetchCommunitiesEvents(token: string, community: string) {
             const response = await fetch(
             `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/BenchmarkingEvent`,
@@ -127,6 +150,7 @@ export const useUser = defineStore('user', {
             );
             
             let data = await response.json();
+            if(!data) { return []; }
             data = data.filter((event: any) => event.community_id === community);
             data = this.formatCommunityEventData(data);
             data = this.setCommunityEventPrivileges(data);
@@ -186,13 +210,15 @@ export const useUser = defineStore('user', {
 
         formatCommunityData(data) {
             return data.map((community: Community) => {
+                let links = community.links ?? [];
+                let logo = (Array.isArray(links) && links.length>0)
+                    ? (links.find((link: any) => link.comment === "@logo")?.uri || "https://raw.githubusercontent.com/inab/openEBench-nuxt/refs/heads/master/static/OEB-minimal-logo-blue.svg")
+                    : "https://raw.githubusercontent.com/inab/openEBench-nuxt/refs/heads/master/static/OEB-minimal-logo-blue.svg";
                 return {
                     _id: community._id,
                     name: community.acronym,
-                    logo: community.links 
-                        ? community.links.filter((link: any) => link.comment === "@logo")[0].uri 
-                        : "https://raw.githubusercontent.com/inab/openEBench-nuxt/refs/heads/master/static/OEB-minimal-logo-blue.svg",
-                    links: community.links ?? [],
+                    logo: logo,
+                    links: links,
                     status: community.status,
                     community_contact: community.community_contact_ids.map((contact: string) => {
                         return contact.replace(/\./g, " ");
