@@ -27,8 +27,11 @@
                         </template>
                         <template #item="{ item }">
                             <div v-if="item.key === 'main'">
-                                {{schema}}
-                                <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmitCommunity">
+                                {{state}}
+                                {{ schema }}
+                                <UForm :schema="schema" :state="state" class="space-y-4"
+                                    @error="onError"
+                                    @submit="onSubmitCommunity">
                                     <div class="w-100 form-card">
                                         <div class="row justify-content-between">
                                             <div class="col-4 typeOptions">
@@ -175,7 +178,7 @@
                                                                     <span class="text-red-400 required">*</span>
                                                                 </span>
                                                                 <button class="btn-form-add btn-primary"
-                                                                    @click="onAddElement(localContacts)"
+                                                                    @click="onAddElement(localContacts, itemRefs)"
                                                                     :disabled="!commmunityPrivileges.community.update || isView || cheEmptyContacts"
                                                                     type="button">
                                                                     <font-awesome-icon :icon="['fas', 'plus']" />
@@ -183,17 +186,32 @@
                                                             </label>
                                                         </div>
                                                         <div class="w-100 row no-space">
-                                                            <div v-for="(contact, index) in localContacts" :key="index" 
-                                                                class="col-6 pt-0">
-                                                                <div class="input-wrapper">
-                                                                    <input type="text" class="form-control" 
-                                                                        v-model="localContacts[index]" 
-                                                                        :disabled="!commmunityPrivileges.community.update || isView" />
+                                                            <div v-if="localContacts.length>0" v-for="(contact, index) in localContacts" 
+                                                                :key="index"
+                                                                ref="itemsContact"
+                                                                class="col-12 pt-0">
+                                                                <div class="input-wrapper big d-flex">
+                                                                    <USelectMenu 
+                                                                        v-model="localContacts[index]"
+                                                                        class="w-full lg:w-100"
+                                                                        searchable
+                                                                        selected-icon="i-heroicons-check-16-solid"
+                                                                        placeholder="Select a contact"
+                                                                        :options="contactsData"
+                                                                        value-attribute="id"
+                                                                        option-attribute="name"
+                                                                        :ref="`contact_${index}`">
+                                                                    </USelectMenu>
                                                                     <button class="btn-delete-input"
                                                                         type="button"
-                                                                        v-if="commmunityPrivileges.community.update && !isView">
+                                                                        @click="onDeleteElement(index, localContacts)">
                                                                         <font-awesome-icon :icon="['far', 'trash-can']" />
                                                                     </button>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-12 pt-0" v-else>
+                                                                <div class="w-100 empty-elements text-slate-400">
+                                                                    <span>There are no contacts associated with this community</span>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -229,7 +247,6 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            
                                             <div class="form-card__row__box">
                                                 <div class="col-12">
                                                     <div class="form-group">
@@ -302,6 +319,7 @@
         </div>
         <CustomDialog
             :isDialogOpen="isDialogOpened"
+            :width="400"
             @modal-close="dialogShow">
             <template #header>
                 {{ dialogTitle }}
@@ -325,16 +343,18 @@
 <script setup lang="ts">
 import { computed, ref, nextTick, onMounted, useTemplateRef } from "vue";
 import { useUser } from "@/stores/user.ts";
+import { Community } from "@/types/communities";
 import { CommunityStatusLabels, CommunityStatusColors } from '@/constants/community_const';
 import EventsList from '@/components/Dashboard/communities/EventsList.vue';
 import CommunitySummary from "@/components/Dashboard/communities/CommunitySummary.vue";
 import CustomSubtitle from "@/components/Common/CustomSubtitle.vue";
 import { CommunityPrivilegeActions } from '@/constants/privileges';
 import { useRouter } from "vue-router";
-import type { FormSubmitEvent } from '#ui/types'
+import type { FormErrorEvent, FormSubmitEvent } from '#ui/types'
 import CustomDialog from "@/components/Common/CustomDialog.vue";
 import { Event } from "@/types/events";
 import { object, string, array, safeParse, nonEmpty } from 'valibot';
+import { o } from "vitest/dist/chunks/reporters.C_zwCd4j";
 
 
 const router = useRouter();
@@ -360,10 +380,11 @@ const state = ref({
     status: '',
     name: '',
     description: '',
-    links: [],
-    keywords: [],
-    _schema: 'https://www.elixir-europe.org/excelerate/WP2/json-schemas/1.0/Community',
-    community_contact_ids: [],
+    links: [] as string[],
+    keywords: [] as string[],
+    _schema: '',
+    community_contact_ids: [] as string[],
+    type: '',
     privileges: 'owner'
 });
 
@@ -374,9 +395,16 @@ const schema = object({
     name: string(),
     description: string(),
     _schema: string(),
-    links: array(),
-    keywords: array(),
-    community_contact_ids: array(string([nonEmpty('No puede estar vacío')]))
+    links: array(object({
+        uri: string(),
+        label: string(),
+    })),
+    keywords: array(string()),
+    type: string(),
+    community_contact_ids: array(object({
+        id: string(),
+        name: string(),
+    })),
 });
 
 let dialogTitle = ref("");
@@ -388,7 +416,7 @@ const errors = ref<string[]>([]);
 const inputLinkRefs = ref<(HTMLInputElement | null)[]>([]);
 const inputContactsRefs = ref<(HTMLInputElement | null)[]>([]);
 const inputKeywordsRefs = ref<(HTMLInputElement | null)[]>([]);
-const itemRefs = useTemplateRef('items')
+const itemRefs = useTemplateRef('itemsContact')
 
 const items = [{
     key: "main",
@@ -408,7 +436,16 @@ const communityData = computed(() => {
         status: props.communityObj?.status,
         name: props.communityObj?.name,
         description: props.communityObj.description,
-        _metadata: props.communityObj._metadata ?? null,
+        _metadata: props.communityObj._metadata ?? '',
+        _schema: "https://www.elixir-europe.org/excelerate/WP2/json-schemas/1.0/Community",
+        community_contact_ids: props.communityObj?.community_contact_ids.map((contact: string) => {
+            return {
+                id: contact,
+                name: contact
+            };
+        }) || [],
+        keywords: props.communityObj?.keywords ?? [],
+        links: props.communityObj?.links ?? [],
     }
 
     if(!props.communityObj._metadata) {
@@ -436,6 +473,7 @@ const typeOptions = [
 let localContacts = ref<string[]>([]);
 let localLinks = ref<string[]>([]);
 let localKeywords = ref<string[]>([]);
+let contactsData = ref<string[]>([]);
 
 const localPrivilegesType = computed(() => {
     return props.privilegesType;
@@ -505,22 +543,55 @@ async function onSubmitCommunity(event: FormSubmitEvent<Schema>) {
             errors.value = [];
  
             const response = await updateCommunity();
-            console.log(response);
+            //console.log(response);
         }
     } else {
         errors.value = result.error.issues.map(issue => issue.message);
     }
 }
 
+
+async function onError (event: FormErrorEvent) {
+    console.log(state.value)
+    console.log(event)
+    //console.log("onError", event.errors);
+    //const element = document.getElementById(event.errors[0].id)
+    //element?.focus()
+    //element?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+}
+
+
+function deleteEmptyElements(array: string[]) {
+    return array.filter((element: string) => element !== '');
+}
+
 async function updateCommunity() {
-    const body = {
-        description: state.value.description,
-        _id: props.id,
-        links: ['http://questfororthologs.org/']
-    }
-    
-    console.log("updating...")
-    console.log(body);
+    let cleanLinks = deleteEmptyElements(localLinks.value);
+    let cleanKeywords = deleteEmptyElements(localKeywords.value);
+    let cleanContacts = deleteEmptyElements(localContacts.value);
+
+    const body = [{
+        _id: state.value._id,
+        _schema: state.value._schema,
+        name: state.value.name,
+        acronym: state.value.acronym,
+        status: state.value.status,
+        links: cleanLinks.map(element => {
+            return { 
+                uri: element,
+                label: "MainSite"
+            };
+        }),
+        keywords: cleanKeywords.map(element => {
+            return element;
+        }),
+        community_contact_ids: cleanContacts.map(element => {
+            return element;
+        }),
+        description: state.value.description
+    }];
+
+    console.log(body)
 
     // try {
     //     const response = await fetch(`/api/staged/Community/${props.communityObj._id}`, {
@@ -573,8 +644,15 @@ function onChangeStatus(newStatus: string) {
     localStatus.value.label = newStatus.label;
 }
 
-function onAddElement(array: string[]) {
+function onAddElement(array: string[], arrayRef?: HTMLInputElement[]) {
     array.push('');
+    nextTick(() => {
+        const lastElementIndex = array.length - 1;
+        const inputElement = arrayRef ? arrayRef[lastElementIndex] : null;
+        if (inputElement) {
+            inputElement.focus();
+        }
+    });
 }
 
 function onDeleteElement(index: number, element: string[]) {
@@ -594,6 +672,22 @@ function dialogShow() {
     console.log('dialogShow!!!!');
 }
 
+const fetchContacts = async (token: string): Promise<void> => {
+    try {
+        if(userStore.getContactsList && userStore.getContactsList.length>0) {
+            contactsData.value = userStore.getContactsList;
+        } else {
+            contactsData.value = await userStore.fetchContacts(token);
+        }
+    } catch (error) {
+        console.error("Error fetching contacts data:", error);
+    }
+}
+
+onMounted(() => {
+  fetchContacts(token);
+});
+
 watch(
     () => props.communityObj,
     (newVal) => {
@@ -611,7 +705,7 @@ watch(
         }
         if (newVal && newVal.community_contact_ids) {
             localContacts.value = newVal.community_contact_ids.map((contact: string) => {
-                return contact.replace(/\./g, " ");
+                return contact;
             }) || [];
         }
         if (newVal && newVal.keywords) {

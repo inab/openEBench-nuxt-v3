@@ -43,9 +43,6 @@ const routeArray: Array = ref([
     isActualRoute: true,
   }
 ]);
-
-console.log(routeArray);
-
 </script>
 
 <style scoped lang="scss">

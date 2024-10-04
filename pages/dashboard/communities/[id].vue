@@ -51,9 +51,7 @@ const isLoadingEvents = ref<boolean>(true);
 const isAdmin = ref<boolean>(false);
 
 const isView = computed(() => {
-    console.log(userPrivileges.value)
     let isAdmin = userPrivileges.value.filter((privilege) => privilege.role === "admin");
-    console.log(isAdmin);
     if(isAdmin.length > 0) {
         return false;
     }
@@ -65,12 +63,9 @@ if(userPrivileges.value.length == 0) {
     userStore.setUserCommunitiesRoles(data.value.oeb_roles)
 }
 
-console.log(userPrivileges.value);
-
 let communityData = ref<Community>(null);
 const communityPrivileges = computed(() => {
     let isAdmin = userPrivileges.value.filter((privilege) => privilege.role === "admin");
-    console.log(isAdmin);
     if(isAdmin.length > 0) {
         return privileges.admin;
     }

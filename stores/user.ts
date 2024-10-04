@@ -133,7 +133,7 @@ export const useUser = defineStore('user', {
             if(!data) { []; }
             return data.map((d: any) => ({
                 id: d._id,
-                name: `${d.givenName ?  d.givenName : ''}  ${d.surname ? d.surname : ''}`,
+                name: d._id,
             }));
         },  
 

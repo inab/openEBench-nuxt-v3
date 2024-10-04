@@ -29,7 +29,7 @@ import { ref } from 'vue';
 
 const props = defineProps<{
     isDialogOpen: boolean,
-    width: string,
+    width: number,
 }>();
 
 const emit = defineEmits(["modal-close"]);

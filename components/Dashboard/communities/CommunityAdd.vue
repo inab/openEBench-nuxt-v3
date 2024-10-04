@@ -9,6 +9,8 @@
             <div class="dashboard-community-edit__content">
                 <div class="">
                     <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmitCommunity">
+                        {{state}}
+                                {{ schema }}
                         <div class="w-100 form-card">
                             <div class="row justify-content-between">
                                 <div class="col-4">
@@ -356,7 +358,7 @@ const schema = object({
     _schema: string(),
     links: array(),
     keywords: array(),
-    community_contact_ids: array(string([nonEmpty('No puede estar vacío')]))
+    community_contact_ids: array(string([nonEmpty("Cannot be empty")])),
 });
 
 const errors = ref<string[]>([]);
@@ -378,8 +380,6 @@ let dialogText = ref("");
 let dialogElement = ref<{ element: string[]; index: number } | null>(null);
 
 state.value.status = localStatus.value.value;
-
-
 
 const localPrivilegesType = [{
     value: "owner", label: "Owner"
@@ -477,37 +477,39 @@ async function createCommunity() {
         }),
         description: state.value.description
     }];
+
+    console.log(state.value)
     
-    try {
-        const response = await fetch(`/api/staged/Community`, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(body),
-        });
+    // try {
+    //     const response = await fetch(`/api/staged/Community`, {
+    //         method: 'POST',
+    //         headers: {
+    //             'Authorization': `Bearer ${token}`,
+    //             'Content-Type': 'application/json',
+    //         },
+    //         body: JSON.stringify(body),
+    //     });
 
-        if (!response.ok) {
-            throw new Error('Error en la respuesta de la API');
-        }
+    //     if (!response.ok) {
+    //         throw new Error('Error en la respuesta de la API');
+    //     }
 
-        const responseData = await response.json();
-        if(responseData.status == 200) {
-            errors.value = [];
-            router.push("/dashboard/communities");
-        } else {
-            let errorResponse = JSON.parse(responseData.body);
-            errors.value = errorResponse.error.map((error: any) => {
-                if(error.pointer) {
-                    return `${error.message}`;
-                }
-                return error.message;
-            });
-        }
-    } catch (error) {
-        console.error("Error fetching communities data:", error);
-    }
+    //     const responseData = await response.json();
+    //     if(responseData.status == 200) {
+    //         errors.value = [];
+    //         router.push("/dashboard/communities");
+    //     } else {
+    //         let errorResponse = JSON.parse(responseData.body);
+    //         errors.value = errorResponse.error.map((error: any) => {
+    //             if(error.pointer) {
+    //                 return `${error.message}`;
+    //             }
+    //             return error.message;
+    //         });
+    //     }
+    // } catch (error) {
+    //     console.error("Error fetching communities data:", error);
+    // }
 }
 
 

@@ -37,9 +37,12 @@ export interface CommunityMetadata {
 
 export interface Community {
     _id: number;
+    name: string,
     acronym: string;
     logo: string;
     links: Array<string>;
+    keywords: Array<string>;
+    description: string;
     status: CommunityStatus;
     community_contact_ids: Array<string>;
     to: string;
