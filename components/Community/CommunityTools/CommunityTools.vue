@@ -1,6 +1,6 @@
 <template>
   <div class="community-tools">
-    <div class="pb-3 flex align-items-baseline">
+    <div>
       <span
         class="community-tools__title text-lg text-o dark:text-gray-400 text-primaryOeb-500"
       >
@@ -9,7 +9,7 @@
     </div>
     <div
       v-if="filteredRows.length > 0"
-      class="flex justify-content-end py-3.5 border-b border-gray-200 dark:border-gray-700"
+      class="flex justify-content-end py-2.5 border-b border-gray-200 dark:border-gray-700"
     >
       <UInput
         v-model="search"
@@ -85,7 +85,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed } from "vue";
 
 const props = defineProps<{
   tools: Object;
@@ -143,6 +143,10 @@ const totalPages = computed(() => {
 <style scoped lang="scss">
 .community-tools {
   &__title {
+    display: flex;
+    align-items: center;
+    color: #0b579f;
+    font-size: 18px;
     font-weight: 600;
   }
 }

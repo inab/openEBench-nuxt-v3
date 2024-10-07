@@ -22,7 +22,6 @@
           >
             <template #default="{ item, index, selected }">
               <div class="flex items-center gap-2 relative truncate">
-                <UIcon :name="item.icon" class="w-4 h-4 flex-shrink-0" />
                 <span class="">{{ item.label }}</span>
                 <UBadge
                   v-if="item.label == 'Datasets' && datasetsObj.length > 0"

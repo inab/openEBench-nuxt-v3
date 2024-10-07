@@ -21,6 +21,13 @@ export default defineNuxtConfig({
       },
     },
     plugins: [svgLoader()],
+    optimizeDeps: { 
+      include: [ "dompurify", "aos", "data-urls", "whatwg-encoding", 
+        "vue3-carousel/dist/carousel.es.js", "gsap", "vue-multiselect", "pluralize",
+        "marked", "lodash.debounce", "@inb/oeb-classification-table",
+        "@inb/oeb-widgets-graphs", "valibot" 
+      ] 
+    }
   },
 
   devServer: {
@@ -32,6 +39,7 @@ export default defineNuxtConfig({
     "bootstrap/dist/css/bootstrap.min.css",
     "@fortawesome/fontawesome-svg-core/styles.css",
     "aos/dist/aos.css",
+    "vue-multiselect/dist/vue-multiselect.min.css"
   ],
 
   ssr: false,
@@ -66,6 +74,7 @@ export default defineNuxtConfig({
       SCIENTIFIC_SERVICE_URL:
         process.env.NUXT_SCIENTIFIC_SERVICE_URL ||
         "https://dev-openebench.bsc.es/api/scientific",
+      SCIENTIFIC_SERVICE_URL_API: process.env.SCIENTIFIC_SERVICE_URL_API || "https://dev-openebench.bsc.es/api/scientific",
       BENCH_EVENT_API_URL:
         process.env.BENCH_EVENT_API_URL ||
         "https://dev-openebench.bsc.es/rest/bench_event_api",
@@ -80,39 +89,22 @@ export default defineNuxtConfig({
           process.env.REST_API_URL ||
           "https://dev-openebench.bsc.es/monitor/rest/",
       },
-      KEYCLOAK_HOST: process.env.KEYCLOAK_HOST || "https://inb.bsc.es/auth",
+      KEYCLOAK_HOST: process.env.KEYCLOAK_HOST || "https://inb.bsc.es/",
       KEYCLOAK_REALM: process.env.KEYCLOAK_REALM || "openebench",
       KEYCLOAK_CLIENT_ID: process.env.KEYCLOAK_CLIENT_ID || "oeb-frontend",
+      BASE_URL: process.env.APP_BASE_URL || "https://openebench.bsc.es",
     },
   },
 
   auth: {
-    isEnabled: true,
+    globalAppMiddleware: false,
     provider: {
       type: "authjs",
-      defaultProvider: "keycloak",
-      property: "access_token",
-      name: "Authorization",
-      maxAge: 1800,
-      responseType: "code",
-      responseMode: "fragment",
-      grantType: "authorization_code",
-      clientId: process.env.KEYCLOAK_CLIENT_ID || "oeb-frontend",
-      scope: ["openid"],
-      codeChallengeMethod: "S256",
-      addDefaultCallbackUrl:
-        "https://inb.bsc.es/auth/realms/openebench/protocol/openid-connect/auth?",
-      authorization: {
-        url: "https://inb.bsc.es/auth/realms/openebench/protocol/openid-connect/auth?",
-        response_type: "code",
-      },
-      endpoints: {
-        authorization: {
-          path: "https://inb.bsc.es/auth/realms/openebench/protocol/openid-connect/auth?",
-        },
-      },
     },
-    globalAppMiddleware: false,
+    redirect: {
+      login: "/login", // Redirige a la página de login si no está autenticado
+      home: "/", // Página de inicio después del login
+    },
   },
 
   hooks: {
@@ -128,8 +120,14 @@ export default defineNuxtConfig({
     "@nuxt/ui",
     "@pinia/nuxt",
     "nuxt-viewport",
-    "@sidebase/nuxt-auth",
     "@nuxt/eslint",
+    "@nuxt/test-utils/module",
+    "vue3-carousel-nuxt",
+    "@sidebase/nuxt-auth",
+  ],
+
+  buildModules: [
+    '@nuxt/typescript-build'
   ],
 
   eslint: {

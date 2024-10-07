@@ -35,9 +35,7 @@
         </p>
 
         <!-- Leaders -->
-        <h2 class="section-title-border text-2xl font-normal mt-5">
-          Leaders
-        </h2>
+        <h2 class="section-title-border text-2xl font-normal mt-5">Leaders</h2>
         <hr class="mb-4" />
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 auto-cols-max">
           <div v-for="(leader, index) in sortedByName(leaders)" :key="index" class="h-100">
@@ -132,7 +130,7 @@ interface Member {
 interface Alumni {
   name: string;
   startYear: number;
-  endYear: number,
+  endYear: number;
   roles: string[];
 }
 
@@ -164,7 +162,7 @@ const teammates = computed(() => {
   return members.value.filter((member) => !member.roles.includes("Leadership"));
 });
 
-const routeArray: { label: string, isActualRoute: boolean }[] = [
+const routeArray: { label: string; isActualRoute: boolean }[] = [
   { label: "About", isActualRoute: true },
   { label: "Team", isActualRoute: true },
 ];
@@ -265,5 +263,15 @@ onMounted(() => {
 
 .accordion-item {
   border: none;
+}
+
+a {
+  color: #0b579f;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+  color: #6a98c4;
 }
 </style>

@@ -5,31 +5,34 @@
       <div class="w-100">
         <h2 class="text-primaryOeb-500 mb-4">OpenEBench Publications</h2>
 
-        <p class=" leading-6 mt-3">
-          Here, you can find different scientific contributions, e.g. peer-reviewed
-          articles, conference posters, and public pre-prints, reflecting the work
-          carried out by the OpenEBench team and the multiple collaborations with
-          the scientific communities that use and support the platform.
+        <p class="leading-6 mt-3">
+          Here, you can find different scientific contributions, e.g.
+          peer-reviewed articles, conference posters, and public pre-prints,
+          reflecting the work carried out by the OpenEBench team and the
+          multiple collaborations with the scientific communities that use and
+          support the platform.
         </p>
 
-        <p class=" leading-6 mt-3">
+        <p class="leading-6 mt-3">
           These contributions are organized into two sections to reflect whether
-          they are core to the OpenEBench activities or contribute to the different
-          communities.
+          they are core to the OpenEBench activities or contribute to the
+          different communities.
         </p>
 
         <div>
-          <h3 class="section-title-border text-2xl font-normal mt-4">Cite Us</h3>
+          <h3 class="section-title-border text-2xl font-normal mt-4">
+            Cite Us
+          </h3>
           <hr class="mb-4" />
           <p class="citeus">
-            If you use resources from OpenEBench in your research, please cite us as
-            follows:
+            If you use resources from OpenEBench in your research, please cite
+            us as follows:
           </p>
           <p class="citeus">
-            OpenEBench: A benchmarking infrastructure for bioinformatics methods,
-            tools, and web services. Part of the ELIXIR Tools platform. Developed by
-            the Barcelona Supercomputing Center (BSC) in collaboration with partners
-            within ELIXIR and beyond. Available at:
+            OpenEBench: A benchmarking infrastructure for bioinformatics
+            methods, tools, and web services. Part of the ELIXIR Tools platform.
+            Developed by the Barcelona Supercomputing Center (BSC) in
+            collaboration with partners within ELIXIR and beyond. Available at:
             <a href="https://openebench.bsc.es">https://openebench.bsc.es.</a>
           </p>
         </div>
@@ -37,38 +40,60 @@
         <br />
 
         <div class="community-tabs md:flex">
-          <UTabs :items="tabsItems" class="w-full" v-model:selected="selectedTab" @tab-selected="handleTabSelection"
-            :ui="{ list: { tab: { active: 'text-primary-500' } } }">
+          <UTabs
+            v-model:selected="selectedTab"
+            :items="tabsItems"
+            class="w-full"
+            :ui="{ list: { tab: { active: 'text-primary-500' } } }"
+            @tab-selected="handleTabSelection"
+          >
             <template #default="{ item, index, selected }">
               <div class="flex items-center gap-2 relative truncate">
-                <UIcon :name="item.icon" class="w-4 h-4 flex-shrink-0" />
                 <span class="">{{ item.label }}</span>
-                <span v-if="selected"
-                  class="absolute -right-4 w-2 h-2 rounded-full bg-primary-500 dark:bg-primary-400" />
+                <span
+                  v-if="selected"
+                  class="absolute -right-4 w-2 h-2 rounded-full bg-primary-500 dark:bg-primary-400"
+                />
               </div>
             </template>
 
             <template #papers>
               <div class="option-list">
                 <ul>
-                  <li @click="selectOption('core', 'papers')" :class="{ active: selectedPapersOption === 'core' }">
+                  <li
+                    :class="{ active: selectedPapersOption === 'core' }"
+                    @click="selectOption('core', 'papers')"
+                  >
                     Core Contributions
                   </li>
-                  <li @click="selectOption('collaborations', 'papers')"
-                    :class="{ active: selectedPapersOption === 'collaborations' }">
+                  <li
+                    :class="{
+                      active: selectedPapersOption === 'collaborations',
+                    }"
+                    @click="selectOption('collaborations', 'papers')"
+                  >
                     Collaborations
                   </li>
                 </ul>
               </div>
               <div class="content-wrapper border-content">
-
-                <div v-if="selectedPapersOption === 'core'" class="content-display">
-                  <Manuscript  :papers="papers.core"
-                    class="manuscripts-container" />
+                <div
+                  v-if="selectedPapersOption === 'core'"
+                  class="content-display"
+                >
+                  <Manuscript
+                    :papers="papers.core"
+                    class="manuscripts-container"
+                  />
                 </div>
-                <div v-if="selectedPapersOption === 'collaborations'" class="content-display">
-                  <Manuscript  :papers="papers.collaboration"
-                    class="manuscripts-container" />
+                <div
+                  v-if="selectedPapersOption === 'collaborations'"
+                  class="content-display"
+                >
+                  <Manuscript
+                    :papers="papers.collaboration"
+                    class="manuscripts-container"
+                  />
                 </div>
               </div>
             </template>
@@ -76,24 +101,35 @@
             <template #posters>
               <div class="option-list">
                 <ul>
-                  <li @click="selectOption('about', 'posters')" :class="{ active: selectedPostersOption === 'about' }">
+                  <li
+                    :class="{ active: selectedPostersOption === 'about' }"
+                    @click="selectOption('about', 'posters')"
+                  >
                     About OEB
                   </li>
-                  <li @click="selectOption('mentions', 'posters')"
-                    :class="{ active: selectedPostersOption === 'mentions' }">
+                  <li
+                    :class="{ active: selectedPostersOption === 'mentions' }"
+                    @click="selectOption('mentions', 'posters')"
+                  >
                     Mentions
                   </li>
                 </ul>
               </div>
               <div class="content-wrapper border-content">
                 <transition name="slide-fade">
-                  <div v-if="selectedPostersOption === 'about'" class="content-display">
-                    <PosterCard :posters="posters.OEB"/>
+                  <div
+                    v-if="selectedPostersOption === 'about'"
+                    class="content-display"
+                  >
+                    <PosterCard :posters="posters.OEB" />
                   </div>
                 </transition>
                 <transition name="slide-fade">
-                  <div v-if="selectedPostersOption === 'mentions'" class="content-display">
-                    <PosterCard :posters="posters.MENTION"/>
+                  <div
+                    v-if="selectedPostersOption === 'mentions'"
+                    class="content-display"
+                  >
+                    <PosterCard :posters="posters.MENTION" />
                   </div>
                 </transition>
               </div>
@@ -106,10 +142,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import Manuscript from '@/components/Cards/ManuscriptCard.vue'
-import PosterCard from '@/components/Cards/PosterCard.vue';
-import PostersData from '@/static/posters/posters.json';
+import { ref, onMounted } from "vue";
+import Manuscript from "@/components/Cards/ManuscriptCard.vue";
+import PosterCard from "@/components/Cards/PosterCard.vue";
+import PostersData from "@/static/posters/posters.json";
 import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
 
 interface Paper {
@@ -138,27 +174,35 @@ interface PostersData {
 const posters = ref<PostersData>(PostersData);
 
 // Route definitions
-const routeArray: { label: string, isActualRoute: boolean }[] = [
+const routeArray: { label: string; isActualRoute: boolean }[] = [
   { label: "About", isActualRoute: true },
   { label: "Publications", isActualRoute: true },
 ];
 
 // Define tabs items
 const tabsItems = [
-  { label: 'Papers', icon: 'i-heroicons-document-duplicate-16-solid', slot: "papers" },
-  { label: 'Posters', icon: 'i-heroicons-document-chart-bar-16-solid', slot: "posters" },
-]
+  {
+    label: "Papers",
+    icon: "i-heroicons-document-duplicate-16-solid",
+    slot: "papers",
+  },
+  {
+    label: "Posters",
+    icon: "i-heroicons-document-chart-bar-16-solid",
+    slot: "posters",
+  },
+];
 
 // Track the selected tab and selected options for both tabs
-const selectedTab = ref<string>('papers');
-const selectedPapersOption = ref<string>('core');
-const selectedPostersOption = ref<string>('about');
+const selectedTab = ref<string>("papers");
+const selectedPapersOption = ref<string>("core");
+const selectedPostersOption = ref<string>("about");
 
 // Function to set the selected option based on the tab
 function selectOption(option: string, tab: string) {
-  if (tab === 'papers') {
+  if (tab === "papers") {
     selectedPapersOption.value = option;
-  } else if (tab === 'posters') {
+  } else if (tab === "posters") {
     selectedPostersOption.value = option;
   }
 }
@@ -167,34 +211,27 @@ function selectOption(option: string, tab: string) {
 function handleTabSelection(selected: string) {
   selectedTab.value = selected;
 
-  if (selected === 'papers' && !selectedPapersOption.value) {
-    selectedPapersOption.value = 'core';
-  } else if (selected === 'posters' && !selectedPostersOption.value) {
-    selectedPostersOption.value = 'about';
+  if (selected === "papers" && !selectedPapersOption.value) {
+    selectedPapersOption.value = "core";
+  } else if (selected === "posters" && !selectedPostersOption.value) {
+    selectedPostersOption.value = "about";
   }
 }
 
 // Get the dois of the papers
 const papers = ref<{ core: Paper[]; collaboration: Paper[] }>({
-  core: [
-    { doi: '10.1101/181677' },
-    { doi: '10.1101/2022.05.04.490563' },
-  ],
+  core: [{ doi: "10.1101/181677" }, { doi: "10.1101/2022.05.04.490563" }],
   collaboration: [
-    { doi: '10.1101/2023.07.25.550582' },
-    { doi: '10.1093/nar/gkac330' },
-    { doi: '10.1093/nar/gkaa308' },
-    { doi: '10.1093/bioinformatics/btx542' },
+    { doi: "10.1101/2023.07.25.550582" },
+    { doi: "10.1093/nar/gkac330" },
+    { doi: "10.1093/nar/gkaa308" },
+    { doi: "10.1093/bioinformatics/btx542" },
   ],
 });
-
-
 
 onMounted(async () => {
   handleTabSelection(selectedTab.value);
 });
-
-
 </script>
 
 <style lang="scss" scoped>
@@ -215,7 +252,7 @@ onMounted(async () => {
 }
 
 .option-list {
-  background-color: #F3F4F6;
+  background-color: #f3f4f6;
   margin-top: -10px;
   padding: 10px;
 }
@@ -250,13 +287,10 @@ onMounted(async () => {
   text-align: center;
 }
 
-
-
 .manuscripts-container,
 .posters-container {
   width: 100%;
 }
-
 
 .paper-container {
   display: flex;
@@ -270,14 +304,16 @@ onMounted(async () => {
 }
 
 .citeus {
-  color: rgba(0, 0, 0, .6);
+  color: rgba(0, 0, 0, 0.6);
 }
 
 .citeus a {
-  color: #0B579F;
+  color: #0b579f;
+  text-decoration: none;
 }
 
 .citeus a:hover {
   color: #6a98c4;
+  text-decoration: underline;
 }
 </style>

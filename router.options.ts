@@ -29,4 +29,29 @@ export const customRoutes = [
       "pages/benchmarking/community/challenge/participants",
     ),
   },
+  {
+    name: "dashboard-community",
+    path: "/dashboard/communities/:id/edit",
+    file: resolve(__dirname, "pages/dashboard/communities/[id].vue"),
+  },
+  {
+    name: "dashboard-community",
+    path: "/dashboard/communities/add",
+    file: resolve(__dirname, "pages/dashboard/communities/add.vue"),
+  },
+  {
+    name: "dashboard-community-events",
+    path: "/dashboard/communities/:community_id/events/:id",
+    file: resolve(__dirname, "pages/dashboard/communities/events/[id].vue"),
+  },
+  {
+    name: "dashboard-community-event-add",
+    path: "/dashboard/communities/:community_id/events/add",
+    file: resolve(__dirname, "pages/dashboard/communities/events/add.vue"),
+  },
+  {
+    name: "dashboard-community-event-community",
+    path: "/dashboard/communities/:community_id/events/:event_id/challenges/:id",
+    file: resolve(__dirname, "pages/dashboard/communities/events/challenges/[id].vue"),
+  },
 ];

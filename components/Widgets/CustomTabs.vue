@@ -15,14 +15,13 @@
               }"
               @click="selected = item"
             >
-        
               {{ item.label ? item.label : item.name }}
             </button>
           </li>
         </ul>
       </div>
     </div>
-    <div class="custom-tabs-content">
+    <div class="custom-tabs-content mt-4">
       <div
         v-for="(item, index) in props.data"
         :key="index"

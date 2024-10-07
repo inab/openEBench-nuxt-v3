@@ -64,11 +64,11 @@
       </UAccordion>
     </div>
     <div class="benchmarking-communities__container container">
-      <div v-if="status === 'pending'" class="row g-4">
+      <div v-if="statusRef === 'pending'" class="row g-4 loading-skeleton">
         <div
           v-for="(c, i) in Array.from({ length: 8 }, (x, i) => i)"
           :key="i"
-          class="col-sm-6 col-md-4 col-lg-3"
+          class="col-sm-6 col-md-4 col-lg-3 card-community-skeleton"
         >
           <USkeleton class="h-12 w-12" :ui="{ rounded: 'rounded-full' }" />
           <div class="space-y-2">
@@ -77,11 +77,11 @@
           </div>
         </div>
       </div>
-      <div class="row g-4">
+      <div v-else class="row g-4">
         <div
           v-for="(community, index) in communities"
           :key="index"
-          class="col-sm-6 col-md-4 col-lg-3"
+          class="col-sm-6 col-md-4 col-lg-3 community-card-item"
         >
           <CommunityCard
             :_id="community._id"
@@ -105,11 +105,11 @@
 import { ref } from "vue";
 import CommunityCard from "@/components/Cards/CommunityCard/CommunityCard.vue";
 import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
-
 import { useCommunities } from "@/stores/communities";
 
 const communitiesStore = useCommunities();
 const communities: Ref<any> = ref(null);
+const statusRef = ref("pending");
 
 const HEADER_ITEM = [
   {
@@ -119,17 +119,23 @@ const HEADER_ITEM = [
   },
 ];
 
-if (
-  communitiesStore.getCommunities &&
-  Object.keys(communitiesStore.getCommunities).length > 0
-) {
-  communities.value = communitiesStore.getCommunities;
-} else {
-  const { data, status } = await useAsyncData(() =>
-    communitiesStore.requestCommunitiesData(),
-  );
-  communities.value = data.value ?? null;
-}
+const fetchCommunitiesData = async () => {
+  try {
+    if (communitiesStore.getCommunities && Object.keys(communitiesStore.getCommunities).length > 0) {
+      communities.value = communitiesStore.getCommunities;
+      statusRef.value = "success";
+    } else {
+      const data = await communitiesStore.requestCommunitiesData();
+      communities.value = data || communitiesStore.getCommunities;
+      statusRef.value = "success";
+    }
+  } catch (error) {
+    statusRef.value = "error";
+  }
+};
+
+onMounted(fetchCommunitiesData);
+
 </script>
 <style scoped lang="scss">
 .benchmarking-communities {

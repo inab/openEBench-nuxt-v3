@@ -2,7 +2,7 @@
   <div class="navbar w-full p-0">
     <div class="bg-white w-full h-100">
       <div class="mx-auto">
-        <div class="flex items-center nav-wrapper px-4">
+        <div class="flex items-center nav-wrapper px-3">
           <div class="text-lg font-bold">
             <NuxtLink to="/" class="navbar-brand">
               <img
@@ -72,7 +72,7 @@
                       <UIcon
                         name="i-heroicons-chevron-right-20-solid"
                         class="transform transition-transform duration-200 text-2xl"
-                        :class="{'rotate-90': dropdownStates.observatory}"
+                        :class="{ 'rotate-90': dropdownStates.observatory }"
                       />
                     </a>
                     <ul
@@ -123,7 +123,7 @@
                       <UIcon
                         name="i-heroicons-chevron-right-20-solid"
                         class="transform transition-transform duration-200 text-2xl"
-                        :class="{'rotate-90': dropdownStates.about}"
+                        :class="{ 'rotate-90': dropdownStates.about }"
                       />
                     </a>
                     <ul
@@ -149,7 +149,8 @@
               </div>
               <div class="nav-list-items-direct top-full hidden sm:flex">
                 <button
-                  class="text-primaryOeb-500 border-1 border-primaryOeb-800 hover:bg-primaryOeb-50 font-medium rounded-md text-sm px-3 py-2 me-2"
+                  id="btn-benchmark"
+                  class="text-primaryOeb-500 border-1 border-primaryOeb-800 hover:bg-primaryOeb-50 font-medium rounded-md text-sm px-2.5 py-2 me-2"
                 >
                   <a
                     :href="runtimeConfig.public.VRE_URI"
@@ -158,26 +159,107 @@
                     style="text-decoration: none"
                     @click="closeMenu"
                   >
+                    Benchmark your tool
                     <font-awesome-icon
                       :icon="['fas', 'arrow-up-right-from-square']"
                       size="sm"
-                      class="mr-2"
+                      class="ml-1"
                     />
-                    Benchmark your tool
                   </a>
                 </button>
-                <button
-                  class="ripple text-white bg-primaryOeb-500 hover:bg-primaryOeb-400 font-medium rounded-md text-sm px-3 py-2"
-                  @click="handleLogin"
-                >
-                  <font-awesome-icon
-                    :icon="['fas', 'arrow-right-to-bracket']"
-                    size="sm"
-                    class="mr-2"
-                  />
-                  Login
-                  <span class="ripple-effect"></span>
-                </button>
+
+                <template v-if="data">
+                  <div id="profile" class="nav-item dropdown-login dropdown" >
+                    <a
+                      id="loginDropdown"
+                      color="white"
+                      class="nav-link dropdown-toggle md:inline-flex items-center space-x-0 text-primaryOeb-500 hover:bg-primaryOeb-50"
+                      trailing-icon="i-heroicons-chevron-down-20-solid"
+                      href="#"
+                      role="button"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      <UIcon
+                        name="i-heroicons-user-circle-solid"
+                        class="w-5 h-5"
+                      />
+                      <span>{{ getUserNameIcon() }}</span>
+                      <UIcon
+                        name="i-heroicons-chevron-right-20-solid"
+                        class="transform transition-transform duration-200 text-2xl chevron-menu"
+                      />
+                    </a>
+                    <ul
+                      class="dropdown-menu submenu-login shadow-xl md:rounded-b w-100"
+                      aria-labelledby="loginDropdown"
+                    >
+                      <li
+                        v-for="(item, index) in logInItems"
+                        :key="index"
+                        class="p-1 hover:bg-gray-100 text-sm py-2 divide-gray-200"
+                        :class="[item.slot ? 'item-border' : '']"
+                      >
+                        <template v-if="item.slot && item.slot == 'account'">
+                          <div
+                            class="menu-item-header text-left disabled opacity-50"
+                          >
+                            <div>Signed in as</div>
+                            <div
+                              class="truncate font-medium text-gray-900 dark:text-white"
+                            >
+                              {{ item.label }}
+                            </div>
+                          </div>
+                        </template>
+                        <template v-else>
+                          <template v-if="item.href">
+                            <NuxtLink
+                              :to="item.href"
+                              class="flex items-center w-full h-full"
+                              @click="closeMenu"
+                            >
+                              <div class="menu-login-item w-100">
+                                <span class="truncate">{{ item.label }}</span>
+                                <UIcon
+                                  :name="item.icon"
+                                  class="flex-shrink-0 h-4 w-4 text-gray-400 dark:text-gray-500 ms-auto"
+                                />
+                                <span class="ripple-effect"></span>
+                              </div>
+                            </NuxtLink>
+                          </template>
+                          <template v-else>
+                            <div
+                              class="menu-login-item"
+                              @click="item.click ? item.click() : ''"
+                            >
+                              <span class="truncate">{{ item.label }}</span>
+                              <UIcon
+                                :name="item.icon"
+                                class="flex-shrink-0 h-4 w-4 text-gray-400 dark:text-gray-500 ms-auto"
+                              />
+                            </div>
+                          </template>
+                        </template>
+                      </li>
+                    </ul>
+                  </div>
+                </template>
+                <template v-else>
+                  <button id="btn-login"
+                    class="ripple text-white bg-primaryOeb-500 hover:bg-primaryOeb-400 font-medium rounded-md text-sm px-2.5 py-2"
+                    @click="handleLogin"
+                  >
+                    <font-awesome-icon
+                      :icon="['fas', 'arrow-right-to-bracket']"
+                      size="sm"
+                      class="mr-1"
+                    />
+                    Login
+                    <span class="ripple-effect"></span>
+                  </button>
+                </template>
               </div>
             </div>
             <!-- Overlay div -->
@@ -200,24 +282,50 @@ import menuEntries from "~/components/Header/HeaderMenu/menuEntries";
 import subMenuEntriesObservatory from "./HeaderMenu/subMenuEntriesObservatory";
 import subMenuEntriesAbout from "./HeaderMenu/subMenuEntriesAbout";
 
-definePageMeta({
-  auth: {
-    unauthenticatedOnly: true,
-    navigateAuthenticatedTo: "/",
-  },
-});
+const {
+  data,
+  signIn,
+  signOut,
+} = useAuth();
 
-const { signIn, getProviders, status, data } = useAuth();
-const providers = await getProviders();
 const runtimeConfig = useRuntimeConfig();
 const { $viewport } = useNuxtApp();
 const toggleMenu = ref(false);
 const isMobile = ref(false);
 const route = useRoute();
+
+const logInItems = ref([]);
+
 const dropdownStates = ref({
   about: false,
   observatory: false,
 });
+
+if (data.value) {
+  logInItems.value.push({
+    label: data.value.user.email,
+    slot: "account",
+    disabled: true,
+  });
+  logInItems.value.push({
+    label: "Profile",
+    icon: "i-heroicons-user-20-solid",
+    href: "/profile",
+  });
+  logInItems.value.push({
+    label: "Dashboard",
+    icon: "i-heroicons-presentation-chart-line-16-solid",
+    href: "/dashboard",
+  });
+  logInItems.value.push({
+    label: "Logout",
+    slot: "logout",
+    icon: "i-heroicons-arrow-left-on-rectangle",
+    click: () => {
+      handleLogout();
+    },
+  });
+}
 
 // Breakpoints
 watch(
@@ -233,23 +341,22 @@ watch(
 
 onMounted(() => {
   // Configura eventos para cada dropdown
-  setupDropdown('aboutDropdown', 'about');
-  setupDropdown('observatoryDropdown', 'observatory');
+  setupDropdown("aboutDropdown", "about");
+  setupDropdown("observatoryDropdown", "observatory");
 });
 
 function setupDropdown(dropdownId, stateKey) {
   const dropdownElement = document.getElementById(dropdownId);
 
-  dropdownElement.addEventListener('show.bs.dropdown', () => {
+  dropdownElement.addEventListener("show.bs.dropdown", () => {
     dropdownStates.value[stateKey] = true;
   });
 
-  dropdownElement.addEventListener('hide.bs.dropdown', () => {
+  dropdownElement.addEventListener("hide.bs.dropdown", () => {
     dropdownStates.value[stateKey] = false;
   });
 }
 
-// Functions
 const handleToggleMenu = () => {
   toggleMenu.value = !toggleMenu.value;
 };
@@ -268,7 +375,20 @@ const isActiveAbout = computed(() => {
 });
 
 function handleLogin() {
-  signIn("keycloak", { callbackUrl: "http://localhost:3000/bar" });
+  signIn("keycloak", { callbackUrl: "/login" });
+}
+
+function handleLogout() {
+  const keycloackLogoutUrl = `${runtimeConfig.public.KEYCLOAK_HOST}/auth/realms/${runtimeConfig.public.KEYCLOAK_REALM}/protocol/openid-connect/logout`;
+  window.location.href = `${keycloackLogoutUrl}?post_logout_redirect_uri=${runtimeConfig.public.BASE_URL}/&id_token_hint=${data?.value.token}`;
+  signOut();
+}
+
+function getUserNameIcon() {
+  if (data?.value?.user?.name) {
+    return data.value.user.name;
+  }
+  return "";
 }
 
 function closeMenu() {
@@ -356,23 +476,14 @@ function closeMenu() {
   }
 
   .nav-list-items-direct {
-    display: flex !important;
+    display: flex;
     align-items: center;
     justify-content: end !important;
-    position: absolute;
-    right: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-
-    @media only screen and (max-width: 950px) {
-      position: static;
-      justify-content: start !important;
-      align-items: start;
-      margin-top: 50px;
-      width: 100%;
-      padding: 10px;
+    
+    @media only screen and (max-width: 1181px) {
+      display: flex;
       flex-direction: column;
-      gap: 10px;
+      align-items: baseline;
     }
   }
 
@@ -381,7 +492,6 @@ function closeMenu() {
     top: 0;
     left: -300px;
     width: 300px;
-    height: 100%;
     background-color: white;
     transition: left 0.3s ease-in-out;
     z-index: 2;
@@ -439,8 +549,102 @@ function closeMenu() {
     color: rgba(0, 0, 0, 0.87);
   }
 
+  .dropdown-login #loginDropdown {
+    display: flex;
+    gap: 5px;
+    text-decoration: none;
+  }
+
+  .dropdown-login #loginDropdown {
+    .chevron-menu {
+      transition: transform 0.3s ease-in-out;
+    }
+  }
+
+  .dropdown-login #loginDropdown.show {
+    .chevron-menu {
+      transform: rotate(90deg);
+    }
+  }
+
+  .dropdown-login .menu-login-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px;
+    cursor: pointer;
+  }
+
+  .dropdown-menu.submenu-login .item-border {
+    border-color: rgb(226 232 240);
+  }
+
+  .dropdown-menu a {
+    text-decoration: none;
+    color: rgb(33, 37, 41);
+  }
+  .dropdown-menu li:hover {
+    color: theme("colors.primaryOeb.500");
+    a {
+      color: theme("colors.primaryOeb.500");
+    }
+  }
+
+  .dropdown-menu.submenu-login .item-border:first-child {
+    border-bottom: 1px solid rgb(226 232 240);
+  }
+
+  .dropdown-menu.submenu-login .item-border:last-child {
+    border-top: 1px solid rgb(226 232 240);
+  }
+
+  .dropdown-login .menu-item-header {
+    padding: 0 10px;
+  }
+
+  .dropdown-login #loginDropdown {
+    display: flex;
+    gap: 5px;
+    text-decoration: none;
+  }
+
+  .dropdown-login .menu-login-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px;
+    cursor: pointer;
+  }
+
+  .dropdown-menu.submenu-login .item-border {
+    border-color: rgb(226 232 240);
+  }
+
+  .dropdown-menu a {
+    text-decoration: none;
+    color: rgb(33, 37, 41);
+  }
+  .dropdown-menu li:hover {
+    color: theme("colors.primaryOeb.500");
+    a {
+      color: theme("colors.primaryOeb.500");
+    }
+  }
+
+  .dropdown-menu.submenu-login .item-border:first-child {
+    border-bottom: 1px solid rgb(226 232 240);
+  }
+
+  .dropdown-menu.submenu-login .item-border:last-child {
+    border-top: 1px solid rgb(226 232 240);
+  }
+
+  .dropdown-login .menu-item-header {
+    padding: 0 10px;
+  }
+
   // ipad
-  @media only screen and (min-width: 950px) {
+  @media only screen and (min-width: 1181px) {
     .nav-list {
       display: flex;
     }
@@ -451,7 +655,7 @@ function closeMenu() {
 
     .nav-offcanvas {
       position: static;
-      width: auto;
+      width: 100%;
       height: auto;
       display: flex;
       flex-direction: row;
@@ -470,9 +674,23 @@ function closeMenu() {
   }
 
   // Movil
-  @media only screen and (max-width: 950px) {
+  @media only screen and (max-width: 1181px) {
     .nav-wrapper {
       background-color: white;
+    }
+
+    .nav-offcanvas {
+      position: fixed;
+      top: 0;
+      left: -300px;
+      width: 300px;
+      height: 100vh;
+      background-color: white;
+      transition: left 0.3s ease-in-out;
+      z-index: 2;
+      overflow-y: auto;
+      max-height: 100vh;
+      padding-bottom: 20px;
     }
 
     .nav-list {
@@ -490,6 +708,16 @@ function closeMenu() {
 
     .nav-mobile {
       display: block;
+    }
+
+    #btn-benchmark{
+      margin-left: 16px;
+    }
+    #profile{
+      left: -16px;
+    }
+    #btn-login {
+      margin-top: 16px;
     }
 
     // Options
@@ -558,6 +786,18 @@ function closeMenu() {
     #navbar-toggle.active span:after {
       transform: rotate(-45deg);
       width: 30px;
+    }
+
+    .nav-list-items-direct {
+      padding: 0;
+      .dropdown-login {
+        width: 100%;
+      }
+    }
+
+    .dropdown-login .menu-item-header,
+    .dropdown-login .menu-login-item {
+      padding-left: 50px;
     }
   }
 }

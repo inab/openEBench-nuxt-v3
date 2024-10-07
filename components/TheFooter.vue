@@ -27,7 +27,8 @@
                   :aria-controls="'collapse-' + index"
                   @click="toggleCollapse(index)"
                 >
-                  {{ footer.headline }}<UIcon
+                  {{ footer.headline
+                  }}<UIcon
                     name="i-heroicons-chevron-right-20-solid"
                     class="transform transition-transform duration-200 ms-1"
                     :class="[openIndex === index && 'rotate-90']"
@@ -74,7 +75,7 @@
         </div>
 
         <!-- Col 3 -->
-        <div class="col-md-3 col-12 p-4">
+        <div class="col-md-3 col-12 p-4  col-funding">
           <div>
             <a
               href="mailto:openebench-support@bsc.es"
@@ -124,12 +125,11 @@
                 </small>
               </p>
             </div>
-            <div class="col col-3 col-logo">
+            <div class="col col-3">
               <img
                 :src="euFlag"
                 alt="EU logo"
-                class="img-fluid m-2 px-2"
-                style="max-width: 70px"
+                class="eu-logo"
               />
             </div>
           </div>
@@ -208,6 +208,10 @@ export default {
   max-width: 150px;
 }
 
+.eu-logo{
+  max-width: 100%
+}
+
 .btn-f:hover {
   background-color: rgba(197, 197, 197, 0.235);
 }
@@ -227,6 +231,37 @@ export default {
 
 .collapse.show {
   visibility: visible;
+}
+
+/* Estilos para tablets */
+@media (min-width: 768px) and (max-width: 1024px) {
+  /* Columna del listado */
+  .col-md-6 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  .col-funding, .col-logo {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  .eu-logo{
+    max-width: 60%
+  }
+
+  .footer .container-fluid {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+/* Para pantallas más pequeñas */
+@media (max-width: 768px) {
+  .col-md-6, .col-md-3 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
 }
 
 </style>

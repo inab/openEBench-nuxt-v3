@@ -4,8 +4,8 @@ import { labelToName, decode } from "whatwg-encoding";
 
 export const useCommunities = defineStore("communities", {
   state: () => ({
-    communities: Object,
-    projects: Object,
+    communities: [],
+    projects: [],
   }),
 
   getters: {
@@ -15,7 +15,12 @@ export const useCommunities = defineStore("communities", {
 
   actions: {
     async requestCommunitiesData(type) {
-      const responseData = await useNuxtApp().$graphql("/graphql", {
+      const { $graphql } = useNuxtApp();
+      if (!$graphql) {
+        throw new Error('$graphql is not available in the current context');
+      }
+
+      return await $graphql("/graphql", {
         method: "POST",
         headers: {
           Accept: "text/plain, */*",
@@ -42,22 +47,25 @@ export const useCommunities = defineStore("communities", {
                                 }
                             }`,
         }),
+      }).then((returnData) => {
+        let data = returnData.data.getCommunities;
+        let dataFormatted = this.formatData(data ?? null);
+        this.communities = this.filterCommunities(dataFormatted);
+        this.projects = this.filterProjects(dataFormatted);
+
+        if (type && type === "projects") {
+          return this.projects;
+        }
+
+        return this.communities;
+      }).catch((error) => {
+        console.error('Error:', error);
       });
-      let data = responseData.data.getCommunities;
-      let dataFormatted = this.formatData(data ?? null);
-
-      this.communities = this.filterCommunities(dataFormatted);
-      this.projects = this.filterProjects(dataFormatted);
-
-      if (type && type === "projects") {
-        return this.projects;
-      }
-
-      return this.communities;
     },
 
     formatData(data) {
       return data.map((community) => {
+        if(!community.links) { community.links = []; }
         community.links.forEach((link) => {
           if (link.comment === "@logo") {
             community.logo = link.uri;
