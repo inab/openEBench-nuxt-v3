@@ -1,6 +1,14 @@
 <template>
-    <h1>Evaluation</h1>
-</template>
+  <div>
+    <NuxtLayout :name="layout">
+      <h1>Evaluation</h1>
 
+    </NuxtLayout>
+  
+  </div>
+</template>
+  
 <script setup lang="ts">
+const layout = 'observatory'
+  
 </script>
