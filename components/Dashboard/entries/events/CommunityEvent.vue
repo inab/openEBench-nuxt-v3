@@ -184,7 +184,7 @@ import { computed, ref } from "vue";
 import { Event } from "@/types/events";
 import { Challenge } from "@/types/challenge";
 import { CommunityPrivilegeActions } from '@/constants/privileges';
-import EventChallengesList from "@/components/Dashboard/communities/events/EventChallengesList.vue";
+import EventChallengesList from "@/components/Dashboard/entries/events/EventChallengesList.vue";
 import CustomDialog from "@/components/Common/CustomDialog.vue";
 import * as v from "valibot";
 

@@ -4,38 +4,32 @@
     <div class="w-100 container">
       <div>
         <div v-if="status == 'authenticated'">
-          <!-- {{  userStore.getUserCommunitiesRoles }} -->
-
           <div class="">
             <div class="text-primaryOeb-500 border-slate-200 border-b mb-3">
-              <h2>Communities</h2>
+                <div class="flex justify-content-between gap-3" v-if="userStore.getUserCommunitiesRoles && isAdmin">
+                  <h2>Entries</h2>
+                  <NuxtLink to="/dashboard/entries/add"
+                    class="btn custom-btn btn-primary mb-2"
+                    title="Create new community">
+                    Create New Entry
+                </NuxtLink>
+              </div>
             </div>
             <div class="dashboard__description text-gray-500">
               It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. 
             </div>
           </div>
-          <div class="flex justify-content-end gap-3 py-3" v-if="userStore.getUserCommunitiesRoles && isAdmin">
-              <NuxtLink to="/dashboard/communities/add"
-                class="btn custom-btn btn-primary"
-                title="Create new community">
-                Create New Community
-            </NuxtLink>
-          </div>
           <div class="dashboard-tabs">
-            <UTabs 
-            :items="items"
-            :ui="{ wrapper: 'items-center gap-4'}">
-            <template #icon="{ item, selected }">
-              <UIcon :name="item.icon" class="w-4 h-4 flex-shrink-0 me-2" :class="[selected && 'text-secondaryOeb-500 dark:text-secondaryOeb-400']" />
-            </template>
-              <template #communities="{ item }">
-                <div v-if="item.key === 'communities'">
-                  <Communities
-                    :is-loading-data="isLoadingData"
-                    />
-                </div>
-              </template>
-            </UTabs>
+            <CustomSubtitle
+              text="Entries List"
+              size="22px"
+            />
+            <div class="dashboard__description text-gray-500">
+              It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. 
+            </div>
+            <Communities
+              :is-loading-data="isLoadingData"
+              />
           </div>
         </div>
         <div class="" v-else>
@@ -50,7 +44,8 @@
 import { ref, onMounted } from 'vue';
 import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
 import { useUser } from "@/stores/user.ts";
-import Communities from '@/components/Dashboard/communities/Communities.vue';
+import Communities from '@/components/Dashboard/entries/Communities.vue';
+import CustomSubtitle from '@/components/Common/CustomSubtitle.vue';
 
 definePageMeta({
   middleware: 'auth',
@@ -66,9 +61,9 @@ const isLoadingData = ref(true);
 const token: string = data?.value.accessToken;
 
 const items = [{
-  key: 'communities',
-  slot: 'communities',
-  label: 'Communities',
+  key: 'entries',
+  slot: 'entries',
+  label: 'Entries',
   icon: 'i-heroicons-table-cells-16-solid',
 }]
 

@@ -22,7 +22,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
 import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
-import CommunityEdit from "@/components/Dashboard/communities/CommunityEdit.vue";
+import CommunityEdit from "@/components/Dashboard/entries/CommunityEdit.vue";
 import { useUser } from "@/stores/user.ts";
 import { privileges } from '@/constants/privileges';
 import { Community } from "@/types/communities";
@@ -41,6 +41,9 @@ definePageMeta({
 
 const runtimeConfig = useRuntimeConfig();
 const { data } = useAuth();
+
+console.log("this is evebt")
+
 const route = useRoute();
 const communityId: string = route.params.id;
 const loadingData = ref<boolean>(true);
@@ -89,9 +92,9 @@ const routeArray: Array = ref([
     isActualRoute: false,
     route: "/dashboard",
   },
-  { label: "Communities",
+  { label: "entries",
     isActualRoute: false,
-    route: "/dashboard/communities",
+    route: "/dashboard/entries",
   },
   {
     label: computed(() => routeName.value),

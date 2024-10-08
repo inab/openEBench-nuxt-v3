@@ -10,7 +10,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
-import CommunityAdd from "@/components/Dashboard/communities/CommunityAdd.vue";
+import CommunityAdd from "@/components/Dashboard/entries/CommunityAdd.vue";
 import { useUser } from "@/stores/user.ts";
 
 definePageMeta({
@@ -34,12 +34,12 @@ const routeArray: Array = ref([
     isActualRoute: false,
     route: "/dashboard",
   },
-  { label: "Communities", 
+  { label: "entries", 
     isActualRoute: false,
-    route: "/dashboard/communities",
+    route: "/dashboard/entries",
   },
   {
-    label: "Community Add",
+    label: "Entry Add",
     isActualRoute: true,
   }
 ]);

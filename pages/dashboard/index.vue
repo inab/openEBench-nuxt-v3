@@ -20,7 +20,7 @@
         }">
           <template #header>
             <div class="dashboard__body__card__header">
-              Communities
+              Entries
             </div>
           </template>
       
@@ -39,7 +39,7 @@
                 </div>
                 <div class="dashboard__body__card__link">
                   <button class="ripple custom-button-primary">
-                    <NuxtLink to="/dashboard/communities" class="dashboard-link">Communities</NuxtLink>
+                    <NuxtLink to="/dashboard/entries" class="dashboard-link">Communities</NuxtLink>
                   </button>
                 </div>
               </div>

@@ -20,8 +20,8 @@ export default defineEventHandler(async (event) => {
 
         switch (method) {
             case 'PATCH':
-
                 console.log('PATCH');
+                console.log(body);
                 if (!body._id) {
                     console.error('Error: ID faltante en el cuerpo para POST');
                     return {
@@ -33,8 +33,8 @@ export default defineEventHandler(async (event) => {
                 const response = await fetch(`${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/${collection}/${id}`, {
                     method: 'PATCH',
                     headers: {
-                      'Authorization': token,
-                      'Content-Type': 'application/json',
+                        'Authorization': token,
+                        'Content-Type': 'application/json',
                     },
                     body: JSON.stringify(body), 
                 });
@@ -52,7 +52,7 @@ export default defineEventHandler(async (event) => {
                 console.log('Respuesta ok:', data);
 
                 return {
-                    status: 201,
+                    status: 200,
                     body: JSON.stringify({
                         message: 'Community updated successfully',
                         data: {

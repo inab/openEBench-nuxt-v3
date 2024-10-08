@@ -36,11 +36,6 @@ const emit = defineEmits(["modal-close"]);
 
 const target = ref(null);
 
-
-function dialogShow() {
-    console.log('dialogShow');
-}
-
 </script>
 
 <style scoped lang="scss">

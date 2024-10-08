@@ -3,12 +3,12 @@
         <div class="w-100 container">
             <div class="dashboard-community-edit__title">
                 <h2 class="text-primaryOeb-500 ">
-                    <span class="">Edit Community : <i>{{ id }}</i></span>
+                    <span class="">{{ labelTitle }} : <i>{{ id }}</i></span>
                     <span class="">
                         <NuxtLink class="btn-primary hover_effect"
                             :to="'/benchmarking/' + id"
                         >
-                        View Community
+                        {{ labelButton}}
                         </NuxtLink>
                     </span>
                 </h2>
@@ -27,53 +27,87 @@
                         </template>
                         <template #item="{ item }">
                             <div v-if="item.key === 'main'">
-                                {{state}}
-                                {{ schema }}
                                 <UForm :schema="schema" :state="state" class="space-y-4"
                                     @error="onError"
                                     @submit="onSubmitCommunity">
                                     <div class="w-100 form-card">
                                         <div class="row justify-content-between">
-                                            <div class="col-4 typeOptions">
-                                                <div class="form-group">
-                                                    <label for="id">
-                                                        ID
-                                                        <span class="text-red-400 required">*</span>
-                                                    </label>
-                                                    <div class="w-100">
-                                                        <input type="text" class="form-control custom-entry-input" 
-                                                            id="id"
-                                                            placeholder="Community id" 
-                                                            v-model="state._id" 
-                                                        />
+                                            <div class="col-6">
+                                                <div class="logo-col">
+                                                    <div class="logo-col-wrapper">
+                                                        <div class="form-logo">
+                                                            <img v-if="localLogo && localLogo != ''" :src="localLogo" alt="Entry logo" />
+                                                            <img v-else src="~/assets/images/dashboard/empty-logo.jpg" alt="Entry logo" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex justify-content-center">
+                                                    <div class="form-logo-input">
+                                                        <label for="file-upload" 
+                                                            class="custom-file-upload btn-primary hover_effect">
+                                                            Upload new logo
+                                                            <font-awesome-icon :icon="['fas', 'upload']" />
+                                                        </label>
+                                                        <input id="file-upload" 
+                                                            type="file"
+                                                            accept="image/*"
+                                                            @change="onFileChange" />
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-4">
-                                                <div class="form-group">
-                                                    <label for="status">Status</label>
-                                                    <USelectMenu  
-                                                        v-model="localStatus.value" 
-                                                        :options="CommunityStatusLabels"
-                                                        @change="onChangeStatus">
-                                                        <template #label>
-                                                            <span 
-                                                                :class="`status-${ localStatus.value }__option inline-block h-2 w-2 flex-shrink-0 rounded-full`" 
-                                                                aria-hidden="true" />
-                                                            <span class="truncate">{{ localStatus.label }}</span>
-                                                        </template>
-                                                        <template #option="{ option: item }">
-                                                            <span
-                                                                class="h-2 w-2 rounded-full" 
-                                                                :class="`status-${ item?.value }__option`"></span>
-                                                            <span>{{ item.label }}</span>
-                                                        </template>
-                                                    </USelectMenu>
+                                            <div class="col-6">
+                                                <div class="row justify-content-end">
+                                                    <div class="col-10 typeOptions">
+                                                        <div class="form-group">
+                                                            <label for="id">
+                                                                ID
+                                                                <span class="text-red-400 required">*</span>
+                                                            </label>
+                                                            <div class="w-100">
+                                                                <input type="text" class="form-control custom-entry-input" 
+                                                                    id="id"
+                                                                    placeholder="Community id" 
+                                                                    v-model="state._id" 
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-10">
+                                                        <div class="form-group">
+                                                            <label for="status">Status</label>
+                                                            <USelectMenu  
+                                                                v-model="localStatus.value" 
+                                                                :options="CommunityStatusLabels"
+                                                                @change="onChangeStatus">
+                                                                <template #label>
+                                                                    <span 
+                                                                        :class="`status-${ localStatus.value }__option inline-block h-2 w-2 flex-shrink-0 rounded-full`" 
+                                                                        aria-hidden="true" />
+                                                                    <span class="truncate">{{ localStatus.label }}</span>
+                                                                </template>
+                                                                <template #option="{ option: item }">
+                                                                    <span
+                                                                        class="h-2 w-2 rounded-full" 
+                                                                        :class="`status-${ item?.value }__option`"></span>
+                                                                    <span>{{ item.label }}</span>
+                                                                </template>
+                                                            </USelectMenu>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-10">
+                                                        <div class="form-group">
+                                                            <label for="type">Type</label>
+                                                            <USelect v-model="state.type" 
+                                                                :options="typeOptions" 
+                                                                option-attribute="label" />
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-4">
+                                        <CustomBorder />
+                                        <div class="row custom-section">
+                                            <div class="col-6">
                                                 <div class="form-group">
                                                     <label for="acronym">
                                                         Acronym
@@ -83,25 +117,7 @@
                                                         :disabled="!commmunityPrivileges.community.update || isView" />
                                                 </div>
                                             </div>
-                                            <div class="col-4">
-                                                <div class="form-group">
-                                                    <label for="privileges">Privileges</label>
-                                                    <input type="text"
-                                                        class="form-control"
-                                                        id="type"
-                                                        v-model="localPrivilegesType" 
-                                                        disabled />
-                                                </div>
-                                            </div>
-                                            <div class="col-4">
-                                                <div class="form-group">
-                                                    <label for="type">Type</label>
-                                                    <USelect v-model="state.type" 
-                                                        :options="typeOptions" 
-                                                        option-attribute="label" />
-                                                </div>
-                                            </div>
-                                            <div class="col-12">
+                                            <div class="col-6">
                                                 <div class="form-group">
                                                     <label for="description">
                                                         Name
@@ -273,6 +289,7 @@
                                                                         :disabled="!commmunityPrivileges.community.update || isView" />
                                                                     <button class="btn-delete-input"
                                                                         type="button"
+                                                                        @click="onDeleteElement(index, localKeywords)"
                                                                         v-if="commmunityPrivileges.community.update && !isView">
                                                                         <font-awesome-icon :icon="['far', 'trash-can']" />
                                                                     </button>
@@ -280,6 +297,20 @@
                                                             </div>
                                                         </div>
                                                     </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="w-100">
+                                            <div class="ok-response" v-if="oks">
+                                                <div class="alert alert-success text-center">
+                                                    {{ oks }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="w-100">
+                                            <div class="errors" v-if="errors.length>0">
+                                                <div class="alert alert-danger text-center">
+                                                    {{ getErrors }}
                                                 </div>
                                             </div>
                                         </div>
@@ -330,7 +361,7 @@
             <template #footer>
                 <template v-if="dialogType && dialogType === 'yesno'">
                     <button type="button" class="btn-primary" @click="isDialogOpened = false">No</button>
-                    <button type="button" class="btn-primary" @click="isDialogOpened = false">Yes</button>
+                    <button type="button" class="btn-primary" @click="deleteElement">Yes</button>
                 </template>
                 <template v-else>
                     <button type="button" class="btn-primary" @click="isDialogOpened = false">Cancel</button>
@@ -341,27 +372,30 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, nextTick, onMounted, useTemplateRef } from "vue";
+import { computed, ref, nextTick, onMounted, useTemplateRef, watch } from "vue";
 import { useUser } from "@/stores/user.ts";
 import { Community } from "@/types/communities";
 import { CommunityStatusLabels, CommunityStatusColors } from '@/constants/community_const';
-import EventsList from '@/components/Dashboard/communities/EventsList.vue';
-import CommunitySummary from "@/components/Dashboard/communities/CommunitySummary.vue";
+import EventsList from '@/components/Dashboard/entries/EventsList.vue';
+import CommunitySummary from "@/components/Dashboard/entries/CommunitySummary.vue";
 import CustomSubtitle from "@/components/Common/CustomSubtitle.vue";
 import { CommunityPrivilegeActions } from '@/constants/privileges';
 import { useRouter } from "vue-router";
 import type { FormErrorEvent, FormSubmitEvent } from '#ui/types'
 import CustomDialog from "@/components/Common/CustomDialog.vue";
 import { Event } from "@/types/events";
-import { object, string, array, safeParse, nonEmpty } from 'valibot';
-import { o } from "vitest/dist/chunks/reporters.C_zwCd4j";
+import { object, string, array, safeParse, optional } from 'valibot';
+import CustomBorder from "@/components/Common/CustomBorder.vue";
 
 
 const router = useRouter();
 const runtimeConfig = useRuntimeConfig();
 const { data } = useAuth();
+
 const token: string = data?.value.accessToken;
 const userStore = useUser();
+
+const imageDefault = '~/assets/images/dashboards/empty-logo.jpg';
 
 const props = defineProps<{
     id: string,
@@ -398,6 +432,8 @@ const schema = object({
     links: array(object({
         uri: string(),
         label: string(),
+        comment: optional(string()),
+
     })),
     keywords: array(string()),
     type: string(),
@@ -411,8 +447,13 @@ let dialogTitle = ref("");
 let dialogType = ref("yesno");
 let isDialogOpened = ref(false);
 let dialogText = ref("");
-
+let elementToDelete = ref({
+    index: null as number | null,
+    element: [] as string[]
+});
+let logo = ref("");
 const errors = ref<string[]>([]);
+const oks = ref<string>("");
 const inputLinkRefs = ref<(HTMLInputElement | null)[]>([]);
 const inputContactsRefs = ref<(HTMLInputElement | null)[]>([]);
 const inputKeywordsRefs = ref<(HTMLInputElement | null)[]>([]);
@@ -422,12 +463,17 @@ const items = [{
     key: "main",
     label: 'Community Data',
     icon: 'i-heroicons-document-chart-bar',
-}]
+}];
+
+const getErrors = computed(() => errors.value.join(", "));
 
 const userPrivileges: Array<string> = computed(() => userStore.getUserCommunitiesRoles);
 if(userPrivileges.value.length == 0) {
     userStore.setUserCommunitiesRoles(data.value.oeb_roles)
 }
+
+let labelTitle = ref("");
+let labelButton = ref("");
 
 const communityData = computed(() => {
     state.value = {
@@ -455,6 +501,8 @@ const communityData = computed(() => {
             icon: 'i-heroicons-calendar',
         });
         state.value.type = 'Community';
+        labelTitle.value = "Edit Community";
+        labelButton.value = "View Community";
     } else {
         items.push({
             key: "summary",
@@ -462,6 +510,8 @@ const communityData = computed(() => {
             icon: 'i-heroicons-squares-2x2-16-solid',
         });
         state.value.type = 'Project';
+        labelTitle.value = "Edit Project";
+        labelButton.value = "View Project";
     }
     return state.value;
 });
@@ -474,6 +524,7 @@ let localContacts = ref<string[]>([]);
 let localLinks = ref<string[]>([]);
 let localKeywords = ref<string[]>([]);
 let contactsData = ref<string[]>([]);
+let localLogo = ref<string | null>(null);
 
 const localPrivilegesType = computed(() => {
     return props.privilegesType;
@@ -519,45 +570,33 @@ const checkEmptyKeywords = computed(() => {
 });
 
 function goBack() {
-    router.push("/dashboard/communities");
+    router.push("/dashboard/entries");
 }
 
 async function onSubmitCommunity(event: FormSubmitEvent<Schema>) {
-    console.log("submitting...");
     event.preventDefault();
 
-    console.log("submitting...");
+    oks.value = "";
+    errors.value = [];
 
     const result = safeParse(schema, state.value);
-
-    console.log(result)
-
     if (result.success) {
         const customErrors = validateRequiredFields(state.value);
-
-        console.log("we have errors", customErrors);
-
         if (customErrors.length > 0) {
             errors.value = customErrors;
         } else {
             errors.value = [];
- 
-            const response = await updateCommunity();
-            //console.log(response);
+            await updateCommunity();
         }
     } else {
         errors.value = result.error.issues.map(issue => issue.message);
     }
 }
 
-
 async function onError (event: FormErrorEvent) {
-    console.log(state.value)
-    console.log(event)
-    //console.log("onError", event.errors);
-    //const element = document.getElementById(event.errors[0].id)
-    //element?.focus()
-    //element?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    const element = document.getElementById(event.errors[0].id)
+    element?.focus()
+    element?.scrollIntoView({ behavior: 'smooth', block: 'center' })
 }
 
 
@@ -570,7 +609,7 @@ async function updateCommunity() {
     let cleanKeywords = deleteEmptyElements(localKeywords.value);
     let cleanContacts = deleteEmptyElements(localContacts.value);
 
-    const body = [{
+    const body = {
         _id: state.value._id,
         _schema: state.value._schema,
         name: state.value.name,
@@ -589,31 +628,53 @@ async function updateCommunity() {
             return element;
         }),
         description: state.value.description
-    }];
+    };
 
-    console.log(body)
+    if (localLogo.value) {
+        body.links.push({
+            label: "other",
+            comment: "@logo",
+            uri: localLogo.value
+        });
+    }
 
-    // try {
-    //     const response = await fetch(`/api/staged/Community/${props.communityObj._id}`, {
-    //         method: 'PATCH',
-    //         headers: {
-    //             'Authorization': `Bearer ${token}`,
-    //             'Content-Type': 'application/json',
-    //         },
-    //         body: JSON.stringify(body),
-    //         });
+    try {
+        const response = await fetch(`/api/staged/Community/${props.communityObj._id}`, {
+            method: 'PATCH',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(body),
+            });
 
-    //         console.log(response);
+            if (!response.ok) {
+                throw new Error('Error en la respuesta de la API');
+            }
 
-    //         if (!response.ok) {
-    //             throw new Error('Error en la respuesta de la API');
-    //         }
+            const data = await response.json();
+            if(data.status === 200) {
+                let msg = "We've saved your community changes.";
+                await showOkMessage(msg).then(() => {
+                    router.push("/dashboard/entries");
+                });
+            } else {
+                let responseData = JSON.parse(data.body)
+                errors.value = [responseData.message];
+            }
+    } catch (error) {
+        console.error("Error fetching communities data:", error);
+    }
+}
 
-    //         const data = await response.json();
-    //         console.log('Respuesta exitosa:', data);
-    // } catch (error) {
-    //     console.error("Error fetching communities data:", error);
-    // }
+async function showOkMessage(msg: string) {
+    oks.value = msg;
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            oks.value = "";
+            resolve('done');
+        }, 5000);
+    });
 }
 
 
@@ -656,20 +717,49 @@ function onAddElement(array: string[], arrayRef?: HTMLInputElement[]) {
 }
 
 function onDeleteElement(index: number, element: string[]) {
-    console.log(element[index]);
     if (element[index] === '') {
         element.splice(index, 1);
+        restartElementToDelete();
     } else {
         dialogText.value = "Are you sure you want to delete this element?";
         dialogTitle.value = "Delete Element";
         isDialogOpened.value = true;
+
+        elementToDelete.value = {
+            index: index,
+            element: element
+        }
     }
 }
 
-const getErrors = computed(() => errors.value.join(", "));
+function restartElementToDelete() {
+    elementToDelete.value = {
+        index: null,
+        element: []
+    }
+}
+
+function deleteElement() {
+    if (elementToDelete.value.index !== null) {
+        elementToDelete.value.element.splice(elementToDelete.value.index, 1);
+        isDialogOpened.value = false;
+    }
+}
 
 function dialogShow() {
     console.log('dialogShow!!!!');
+}
+
+function onFileChange(event: Event) {
+    let input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+        const file = input.files[0];
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            localLogo.value = e.target?.result as string;
+        };
+        reader.readAsDataURL(file);
+    }
 }
 
 const fetchContacts = async (token: string): Promise<void> => {
@@ -702,6 +792,9 @@ watch(
                 })
                 .map((link: { uri: string }) => link.uri)
                 .filter((uri: string | undefined): uri is string => uri !== undefined);
+            localLogo.value = newVal.links.find((link: { comment?: string }) => {
+                return link.comment && link.comment === '@logo';
+            })?.uri || '';
         }
         if (newVal && newVal.community_contact_ids) {
             localContacts.value = newVal.community_contact_ids.map((contact: string) => {
@@ -839,5 +932,23 @@ watch(
             opacity: 0.5;
             color: rgba(0, 0, 0, 0.3);
         }
+    }
+    .btn-dialog {
+        padding: 5px 25px;
+    }
+    .custom-section {
+        padding: 10px 0 0;
+    }
+
+    input[type="file"] {
+        display: none;
+    }
+    .custom-file-upload {
+        border: 1px solid #ccc;
+        display: inline-block;
+        padding: 6px 12px;
+        cursor: pointer;
+        margin-top: 10px;
+        font-size: 14px;
     }
 </style>

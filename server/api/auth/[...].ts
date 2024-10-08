@@ -24,6 +24,8 @@ const refreshAccessToken = async (token: JWT) => {
 
     const formData = formBody.join('&');
 
+    console.log("8 - calling to token ...");
+
     const url = `${runtimeConfig.public.KEYCLOAK_HOST}/auth/realms/${runtimeConfig.public.KEYCLOAK_REALM}/protocol/openid-connect/token`;
     const response = await fetch(url, {
       method: 'POST',
@@ -32,6 +34,8 @@ const refreshAccessToken = async (token: JWT) => {
       },
       body: formData,
     });
+
+    console.log("9 - token response: " , response);
 
     const refreshedTokens = await response.json();
 
@@ -141,7 +145,7 @@ export default NuxtAuthHandler({
       session.preferred_username = token.preferred_username;
       session.resource_access = token.resource_access;
       session.oeb_roles = token['oeb:roles']
-      session.user['oeb:roles'] = token['oeb:roles']; // Pasa el campo "oeb:roles" a la sesión      console.log("new session: ", session);
+      session.user['oeb:roles'] = token['oeb:roles'];
       return session;
     },
   },

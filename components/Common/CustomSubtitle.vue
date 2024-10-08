@@ -7,9 +7,12 @@
 <script setup lang="ts">
     import { defineProps } from 'vue';
 
-    defineProps<{
-        text: string;
+    const props = defineProps<{
+        text: string,
+        size: string
     }>();
+
+    let fontSize = props.size ?? "22px";
 </script>
 
 <style lang="scss" scoped>
@@ -18,7 +21,7 @@
         border-color: rgb(226, 232, 240);
         border-bottom-width: 1px;
         color: theme("colors.primary.500");
-        font-size: 22px;
+        font-size: v-bind(fontSize);
         padding-bottom: 10px;
     }
 </style>

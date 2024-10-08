@@ -3,7 +3,8 @@
         <BreadcrumbsBar :breadcrumbs-array="routeArray" />
         <div class="dashboard-community-event-add__body">
             <CommunityEventAdd 
-                :eventPrivileges="eventPrivileges"
+              :eventPrivileges="eventPrivileges"
+              :communityId="communityId"
             />
         </div>
     </div>
@@ -36,8 +37,12 @@ if(userPrivileges.value.length == 0) {
 }
 
 const eventPrivileges = computed(() => {
+  let isAdmin = userPrivileges.value.filter((privilege) => privilege.role === "admin");
+    if(isAdmin.length > 0) {
+      return privileges.admin;
+    }
     const privilege = userPrivileges.value.find((privilege) => {
-        return privilege.community === communityId;
+      return privilege.community === communityId;
     });
     return privilege ? privileges[privilege.role] : privileges.anyone;
 });
