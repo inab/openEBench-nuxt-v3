@@ -11,6 +11,7 @@
   </div>
 </template>
 <script setup></script>
+
 <style scoped lang="scss">
 .login-required {
   &__body {
