@@ -54,8 +54,8 @@ jobs:
       - name: Install dependencies 👨🏻‍💻
         run: npm ci
 
-      - name: Run Docker tests 🧪
-        run: docker run --rm -v ${{ github.workspace }}:/app openebench-nuxt3:devci npm run test
+      - name: Run unit tests locally 🧪
+        run: npm run test
 
       # Uses the `docker/login-action` action to log in to the Container registry registry using the account and password that will publish the packages. Once published, the packages are scoped to the account defined here.
       - name: Log in to the Container Registry
