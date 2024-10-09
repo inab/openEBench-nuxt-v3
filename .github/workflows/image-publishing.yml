@@ -76,7 +76,7 @@ jobs:
         run: docker build -t openebench-nuxt3:devci -f Dockerfile.devci .
 
       - name: Run tests
-        run: docker run --rm -v ${{ github.workspace }}:/app openebench-nuxt3:devci npm run test
+        run: docker run --rm -v ${{ github.workspace }}:/app ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:devci npm run test -- --watch=false
 
       # This step uses the `docker/build-push-action` action to build the image, based on your repository's `Dockerfile`. If the build succeeds, it pushes the image to GitHub Packages.
       # It uses the `context` parameter to define the build's context as the set of files located in the specified path. For more information, see "[Usage](https://github.com/docker/build-push-action#usage)" in the README of the `docker/build-push-action` repository.
