@@ -2,7 +2,7 @@
 FROM node:20 as node
 WORKDIR /app
 #define env vars
-ARG ENVIRONMENT=openebench
+ARG ENVIRONMENT=dev-openebench
 ARG APP_BASE_URL=https://test2.openebench.bsc.es/
 ARG OEB_LEGACY_ANGULAR_URI=https://legacy.openebench.bsc.es/
 ARG VRE_URI=https://dev-openebench.bsc.es/vre/home/
@@ -15,6 +15,7 @@ ARG KEYCLOAK_REALM=dev-openebench
 ARG KEYCLOAK_CLIENT_ID=oeb-frontend
 ARG OBSERVATORY_API_URL=https://observatory.openebench.bsc.es/api
 ARG GITHUBAPP_API_URL=https://observatory.openebench.bsc.es/githubapp/api
+
 ENV ENVIRONMENT $ENVIRONMENT
 ENV OEB_LEGACY_ANGULAR_URI $OEB_LEGACY_ANGULAR_URI
 ENV VRE_URI $VRE_URI
