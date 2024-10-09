@@ -49,8 +49,6 @@ jobs:
         with:
           context: .
           file: ./Dockerfile.devci
-          build_args: |
-            openebench_nuxt_3_checkout=${{ github.sha }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
