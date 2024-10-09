@@ -48,6 +48,7 @@ jobs:
         uses: docker/build-push-action@v6.7.0
         with:
           context: .
+          file: ./Dockerfile.devci
           build_args: |
             openebench_nuxt_3_checkout=${{ github.sha }}
           push: true
