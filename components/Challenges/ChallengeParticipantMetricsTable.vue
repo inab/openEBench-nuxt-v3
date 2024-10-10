@@ -68,6 +68,14 @@ items = items.map((item: Object) => {
     ...item,
     ...item.metricsValues.reduce(
       (acc: Object, metric: Object, metricI: number) => {
+        if (metric === null || metric.value === null) {
+          // Assign a default value
+          return {
+            ...acc,
+            [`metricsValues_${metricI}`]: '-',
+          };
+        }
+
         return {
           ...acc,
           [`metricsValues_${metricI}`]: metric.value,
@@ -77,6 +85,7 @@ items = items.map((item: Object) => {
     ),
   };
 });
+
 
 items = items.map(({ metricsValues, ...keepAttrs }) => keepAttrs);
 
