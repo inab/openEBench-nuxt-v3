@@ -20,12 +20,12 @@ defineProps<{
   text-align: center;
   height: 100%;
   .image {
-    width: 450px; 
+    width: 450px;
     height: auto;
   }
-  .text{
-   font-size: 24px;
-   font-weight: 400;
+  .text {
+    font-size: 24px;
+    font-weight: 400;
   }
 }
 </style>

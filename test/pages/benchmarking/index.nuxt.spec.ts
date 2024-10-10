@@ -122,7 +122,7 @@ describe("Benchmarking Page", () => {
     const fetchData = vi.spyOn(wrapper.vm, "fetchCommunitiesData");
 
     // Declare the fetchCommunitiesData method
-    wrapper.vm.fetchCommunitiesData()
+    wrapper.vm.fetchCommunitiesData();
 
     await wrapper.vm.$nextTick();
 
@@ -133,7 +133,7 @@ describe("Benchmarking Page", () => {
     const wrapper = mount(Index, {
       global: {
         plugins: [pinia],
-        stubs: ["NuxtIcon"]
+        stubs: ["NuxtIcon"],
       },
     });
 

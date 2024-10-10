@@ -115,15 +115,20 @@ const props = defineProps<{
 const emit = defineEmits(["handleChangeChallengers"]);
 
 const community = computed(() => props.communityId);
-const page = ref<Number>(1);
-const pageCount = ref<Number>(10);
+const page = ref<number>(1);
+const pageCount = ref<number>(10);
 const search = ref<string>("");
-const pageFrom = computed(() => (Number(page.value) - 1) * Number(pageCount.value) + 1);
+const pageFrom = computed(
+  () => (Number(page.value) - 1) * Number(pageCount.value) + 1,
+);
 const pageTo = computed(() =>
-  Math.min(Number(page.value) * Number(pageCount.value), Number(totalPages.value)),
+  Math.min(
+    Number(page.value) * Number(pageCount.value),
+    Number(totalPages.value),
+  ),
 );
 const selected = ref<any[]>([]);
-let _total = ref(0);
+const _total = ref(0);
 
 const columns = [
   {

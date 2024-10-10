@@ -1,11 +1,11 @@
-import { vi } from 'vitest';
-import { createPinia, setActivePinia } from 'pinia';
-import { useNuxtApp } from '#app';
-import { mockNuxtApp } from './mocks/nuxtAppMock';
+import { vi } from "vitest";
+import { createPinia, setActivePinia } from "pinia";
+import { useNuxtApp } from "#app";
+import { mockNuxtApp } from "./mocks/nuxtAppMock";
 
 // Mockear useNuxtApp para devolver el mock de $graphql
-vi.mock('#app', () => ({
-  useNuxtApp: () => mockNuxtApp
+vi.mock("#app", () => ({
+  useNuxtApp: () => mockNuxtApp,
 }));
 
 // Configura Pinia

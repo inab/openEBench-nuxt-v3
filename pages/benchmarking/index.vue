@@ -121,7 +121,10 @@ const HEADER_ITEM = [
 
 const fetchCommunitiesData = async () => {
   try {
-    if (communitiesStore.getCommunities && Object.keys(communitiesStore.getCommunities).length > 0) {
+    if (
+      communitiesStore.getCommunities &&
+      Object.keys(communitiesStore.getCommunities).length > 0
+    ) {
       communities.value = communitiesStore.getCommunities;
       statusRef.value = "success";
     } else {
@@ -135,7 +138,6 @@ const fetchCommunitiesData = async () => {
 };
 
 onMounted(fetchCommunitiesData);
-
 </script>
 <style scoped lang="scss">
 .benchmarking-communities {

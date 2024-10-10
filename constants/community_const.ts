@@ -1,23 +1,23 @@
 export const CommunityStatusColors: { [key: string]: string } = {
-    active: 'bg-green-500',
-    archived: 'bg-pink-800',
-    incubating: 'bg-purple-700',
+  active: "bg-green-500",
+  archived: "bg-pink-800",
+  incubating: "bg-purple-700",
 };
 
 export const CommunityStatusTextColors: { [key: string]: string } = {
-    active: '#00caa4',
-    archived: '#d7a31a',
-    incubating: '#7b62b8',
+  active: "#00caa4",
+  archived: "#d7a31a",
+  incubating: "#7b62b8",
 };
 
 export const CommunityStatusBackgroundColors: { [key: string]: string } = {
-    active: 'bg-statusActive-50',
-    archived: 'bg-statusArchived-50',
-    incubating: 'bg-statusIncubating-50',
+  active: "bg-statusActive-50",
+  archived: "bg-statusArchived-50",
+  incubating: "bg-statusIncubating-50",
 };
 
-export const CommunityStatusLabels: Array<{ value: string, label: string }> = [
-    { value: 'active', label: 'Active' },
-    { value: 'archived', label: 'Archived' },
-    { value: 'incubating', label: 'Incubating' },
+export const CommunityStatusLabels: Array<{ value: string; label: string }> = [
+  { value: "active", label: "Active" },
+  { value: "archived", label: "Archived" },
+  { value: "incubating", label: "Incubating" },
 ];

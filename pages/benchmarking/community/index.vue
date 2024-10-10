@@ -10,36 +10,65 @@
         </div>
       </div>
       <div v-else>
-        <CommunityInfo :community="community" :community-references="communityReferences" />
+        <CommunityInfo
+          :community="community"
+          :community-references="communityReferences"
+        />
         <div class="community-tabs md:flex">
-          <UTabs :items="tabsItems" class="w-full" :ui="{ list: { tab: { active: 'text-primaryOeb-500' } } }">
+          <UTabs
+            :items="tabsItems"
+            class="w-full"
+            :ui="{ list: { tab: { active: 'text-primaryOeb-500' } } }"
+          >
             <template #default="{ item, index, selected }">
               <div class="flex items-center gap-2 relative truncate">
                 <span class="">{{ item.label }}</span>
-                <UBadge v-if="item.label == 'Datasets' && datasetsObj.length > 0" color="gray" variant="solid"
-                  :ui="{ rounded: 'rounded-full' }">{{ datasetsObj.length }}</UBadge>
-                <UBadge v-if="item.label == 'Tools' && toolsObj.length > 0" color="gray" variant="solid"
-                  :ui="{ rounded: 'rounded-full' }">{{ toolsObj.length }}</UBadge>
-                <span v-if="selected"
-                  class="absolute -right-4 w-2 h-2 rounded-full bg-primary-500 dark:bg-primary-400" />
+                <UBadge
+                  v-if="item.label == 'Datasets' && datasetsObj.length > 0"
+                  color="gray"
+                  variant="solid"
+                  :ui="{ rounded: 'rounded-full' }"
+                  >{{ datasetsObj.length }}</UBadge
+                >
+                <UBadge
+                  v-if="item.label == 'Tools' && toolsObj.length > 0"
+                  color="gray"
+                  variant="solid"
+                  :ui="{ rounded: 'rounded-full' }"
+                  >{{ toolsObj.length }}</UBadge
+                >
+                <span
+                  v-if="selected"
+                  class="absolute -right-4 w-2 h-2 rounded-full bg-primary-500 dark:bg-primary-400"
+                />
               </div>
             </template>
             <template #results>
               <div class="p-4 custom-tab">
-                <CommunityEvent :current-event="currentEvent" :events="eventsObj" :community-id="communityId" />
+                <CommunityEvent
+                  :current-event="currentEvent"
+                  :events="eventsObj"
+                  :community-id="communityId"
+                />
               </div>
             </template>
             <template v-if="datasetsObj && datasetsObj.length > 0" #datasets>
               <div class="custom-tab">
                 <div class="p-4">
-                  <CommunityDataset :datasets="datasetsObj" :community-id="communityId" />
+                  <CommunityDataset
+                    :datasets="datasetsObj"
+                    :community-id="communityId"
+                  />
                 </div>
               </div>
             </template>
             <template v-if="toolsObj && toolsObj.length > 0" #tools>
               <div class="custom-tab">
                 <div class="p-4">
-                  <CommunityTools :tools="toolsObj" :community-id="communityId" />
+                  <CommunityTools
+                    :tools="toolsObj"
+                    :community-id="communityId"
+                  />
                 </div>
               </div>
             </template>
@@ -78,10 +107,10 @@ const event: string = route.query.event;
 if (communityStore.communityId && communityStore.communityId == communityId) {
   community.value = communityStore.getCommunityData;
 } else {
-  const { data, pending }: { data: any; pending: Ref<boolean> } = await useAsyncData(
-    "community",
-    () => communityStore.requestCommunityData(communityId, event),
-  );
+  const { data, pending }: { data: any; pending: Ref<boolean> } =
+    await useAsyncData("community", () =>
+      communityStore.requestCommunityData(communityId, event),
+    );
   community.value = data.value ?? null;
   isPending.value = pending.value;
 }
@@ -94,7 +123,6 @@ const communityReferences = communityStore.getCommunityReferences;
 
 const currentEvent = computed(() => {
   const selectedEvent = communityStore.getCurrentEvent;
-
 
   // If no event is selected, select the first available event.
   if (!selectedEvent && eventsObj.length > 0) {
@@ -155,8 +183,6 @@ const routeArray = computed(() => [
     isActualRoute: true,
   },
 ]);
-
-
 
 watch(
   () => route.query.event,

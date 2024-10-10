@@ -10,7 +10,10 @@
         </div>
       </div>
       <div v-else>
-        <CommunityInfo :community="community" :community-references="communityReferences" />
+        <CommunityInfo
+          :community="community"
+          :community-references="communityReferences"
+        />
         <CommunityEventsList :events="eventsObj" :community-id="community_Id" />
       </div>
     </div>
@@ -62,18 +65,24 @@ const community_Id = Array.isArray(route.params.community)
 if (communityStore.communityId && communityStore.communityId == community_Id) {
   community.value = communityStore.getCommunityData;
 } else {
-  const { data, pending }: { data: any, pending: Ref<boolean> } = await useAsyncData(
-    "community",
-    () => communityStore.requestCommunityData(community_Id, event),
-  );
+  const { data, pending }: { data: any; pending: Ref<boolean> } =
+    await useAsyncData("community", () =>
+      communityStore.requestCommunityData(community_Id, event),
+    );
   community.value = data.value ?? null;
   isPending.value = pending.value;
 }
 
 const eventsObj = computed(() => communityStore.getEvents ?? []);
-const communityReferences = computed(() => communityStore.getCommunityReferences ?? []);
+const communityReferences = computed(
+  () => communityStore.getCommunityReferences ?? [],
+);
 
-const routeArray: Array<{ label: string; isActualRoute: boolean; route?: string }> = [
+const routeArray: Array<{
+  label: string;
+  isActualRoute: boolean;
+  route?: string;
+}> = [
   {
     label: "Benchmarking Communities",
     isActualRoute: false,

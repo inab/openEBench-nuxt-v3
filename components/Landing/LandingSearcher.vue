@@ -1,18 +1,18 @@
 <template>
   <div class="landing-searcher">
     <div class="container">
-      <UInput 
+      <UInput
         v-model="searchValue"
         name="searchValue"
         placeholder="Search for individual tools."
         autocomplete="off"
         size="xl"
+        :ui="{ icon: { trailing: { pointer: '' }, leading: { pointer: '' } } }"
         @keydown.enter="handleSubmit"
-        :ui="{ icon: { trailing: { pointer: '' }, leading: {pointer: ''} } }"
       >
         <!-- Prepend slot for the left icon (Magnifying glass) -->
         <template #leading>
-          <UButton 
+          <UButton
             class="left-icon"
             color="gray"
             variant="link"
@@ -24,7 +24,7 @@
 
         <!-- Trailing slot for the right icon (Clear button) -->
         <template #trailing>
-          <UButton 
+          <UButton
             v-show="searchValue !== ''"
             color="gray"
             variant="link"
@@ -48,7 +48,7 @@ const router = useRouter();
 function handleSubmit() {
   if (searchValue.value.trim() !== "") {
     router.push({
-      path: '/tool',
+      path: "/tool",
       query: { search: searchValue.value },
     });
   }

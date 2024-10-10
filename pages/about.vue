@@ -3,5 +3,5 @@
 </template>
 
 <script setup lang="ts">
-  let title = 'About Page';
+const title = "About Page";
 </script>
