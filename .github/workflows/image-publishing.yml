@@ -4,8 +4,8 @@ name: Create and publish openEBench3 Docker image
 on:
   workflow_dispatch:
   push:
-    branches:
-      - main
+    #branches:
+    #  - main
     tags:
       # Push events to every tag not containing /
       - '*'
