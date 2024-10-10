@@ -2,8 +2,8 @@
 FROM node:20 as node
 WORKDIR /app
 #define env vars
-ARG ENVIRONMENT=dev-openebench
-ARG APP_BASE_URL=https://test2.openebench.bsc.es/
+ARG ENVIRONMENT=test2-openebench
+ARG APP_BASE_URL=https://test2.openebench.bsc.es
 ARG OEB_LEGACY_ANGULAR_URI=https://legacy.openebench.bsc.es/
 ARG VRE_URI=https://dev-openebench.bsc.es/vre/home/
 ARG OBSERVATORY_URI=https://observatory.openebench.bsc.es
