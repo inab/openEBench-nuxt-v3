@@ -516,6 +516,7 @@ import CustomDialog from "@/components/Common/CustomDialog.vue";
 import { object, string, array, safeParse, nonEmpty } from "valibot";
 import CustomBorder from "@/components/Common/CustomBorder.vue";
 
+const runtimeConfig = useRuntimeConfig();
 const userStore = useUser();
 const router = useRouter();
 const { data } = useAuth();
@@ -730,33 +731,54 @@ async function createCommunity() {
     });
   }
 
+  // call to exist community
+  let responseCommunity = null;
   try {
-      const response = await fetch(`/api/staged/Community`, {
-          method: 'POST',
-          headers: {
-              'Authorization': `Bearer ${token}`,
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(body),
+    responseCommunity = await fetch(
+      `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Community/${state.value._id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        method: "GET",
+      },
+    );
+    responseCommunity = await responseCommunity.json();
+    if(responseCommunity._id) {
+      errors.value = ["Community ID already exists. Please, choose another one."];
+      return true;
+    }
+  } catch (error) {
+    console.error("Error fetching communities data:", error);
+  }
+
+  try {
+    const response = await fetch(`/api/staged/Community`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
+
+    if (!response.ok) {
+      throw new Error('Error in API response');
+    }
+
+    const responseData = await response.json();
+    if(responseData.status == 200) {
+        errors.value = [];
+        router.push("/dashboard/communities");
+    } else {
+      let errorResponse = JSON.parse(responseData.body);
+      errors.value = errorResponse.error.map((error: any) => {
+        if(error.pointer) { 
+            return `${error.message}`;
+          }
+        return error.message;
       });
-
-      if (!response.ok) {
-          throw new Error('Error en la respuesta de la API');
-      }
-
-      const responseData = await response.json();
-      if(responseData.status == 200) {
-          errors.value = [];
-          router.push("/dashboard/communities");
-      } else {
-          let errorResponse = JSON.parse(responseData.body);
-          errors.value = errorResponse.error.map((error: any) => {
-              if(error.pointer) {
-                  return `${error.message}`;
-              }
-              return error.message;
-          });
-      }
+    }
   } catch (error) {
       console.error("Error fetching communities data:", error);
   }
