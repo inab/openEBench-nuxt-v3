@@ -3,7 +3,6 @@
     <BreadcrumbsBar :breadcrumbs-array="routeArray" />
     <div class="user-communities-edit__body">
       <div class="user-communities-edit__body__table">
-        {{ privilege }}
         <CommunityEdit
           :id="communityId"
           :loading-data="loadingData"
@@ -13,6 +12,7 @@
           :events="communityEvents"
           :is-loading-events="isLoadingEvents"
           :privileges-type="privilegesType"
+          :tab-index="tabIndex"
         />
       </div>
     </div>
@@ -40,11 +40,9 @@ definePageMeta({
 
 const runtimeConfig = useRuntimeConfig();
 const { data } = useAuth();
-
-console.log("this is evebt");
-
 const route = useRoute();
 const communityId: string = route.params.id;
+const tabIndex: Ref<string> = ref(route.query.events ? "1" : "0");
 const loadingData = ref<boolean>(true);
 const token: string = data?.value.accessToken;
 const userStore = useUser();

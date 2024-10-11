@@ -53,7 +53,7 @@ import { ref, onMounted, computed } from "vue";
 import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
 import { useUser } from "@/stores/user.ts";
 import { privileges } from "@/constants/privileges";
-import CommunityEvent from "@/components/Dashboard/communities/events/CommunityEvent.vue";
+import CommunityEvent from "@/components/Dashboard/entries/events/CommunityEvent.vue";
 import type { Event } from "@/types/events";
 import type { Challenge } from "@/types/challenge";
 

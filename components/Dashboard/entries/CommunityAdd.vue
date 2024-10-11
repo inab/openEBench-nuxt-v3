@@ -164,7 +164,7 @@
                     <div class="form-group w-100">
                       <div class="w-100">
                         <label for="contacts" class="form-group-row">
-                          <span class="label-text w-100">
+                          <span class="label-text">
                             Associated users
                             <span class="text-red-400 required">*</span>
                           </span>
@@ -255,7 +255,7 @@
                     <div class="form-group">
                       <div class="w-100">
                         <label for="contacts" class="form-group-row">
-                          <span class="label-text w-100"> Links </span>
+                          <span class="label-text">Links</span>
                           <button
                             class="btn-form-add btn-primary"
                             type="button"
@@ -309,7 +309,7 @@
                     <div class="form-group">
                       <div class="w-100">
                         <label for="contacts" class="form-group-row">
-                          <span class="label-text w-100">
+                          <span class="label-text">
                             Contacts
                             <span class="text-red-400 required">*</span>
                           </span>
@@ -389,7 +389,7 @@
                     <div class="form-group">
                       <div class="w-100">
                         <label for="contacts" class="form-group-row">
-                          <span class="label-text w-100"> Keywords </span>
+                          <span class="label-text">Keywords</span>
                           <button
                             class="btn-form-add btn-primary"
                             type="button"
@@ -690,7 +690,6 @@ async function onSubmitCommunity(event: FormSubmitEvent<Schema>) {
     } else {
       errors.value = [];
       const response = await createCommunity();
-      console.log(response);
     }
   } else {
     errors.value = result.error.issues.map((issue) => issue.message);
@@ -731,38 +730,36 @@ async function createCommunity() {
     });
   }
 
-  console.log("body:", body);
+  try {
+      const response = await fetch(`/api/staged/Community`, {
+          method: 'POST',
+          headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(body),
+      });
 
-  // try {
-  //     const response = await fetch(`/api/staged/Community`, {
-  //         method: 'POST',
-  //         headers: {
-  //             'Authorization': `Bearer ${token}`,
-  //             'Content-Type': 'application/json',
-  //         },
-  //         body: JSON.stringify(body),
-  //     });
+      if (!response.ok) {
+          throw new Error('Error en la respuesta de la API');
+      }
 
-  //     if (!response.ok) {
-  //         throw new Error('Error en la respuesta de la API');
-  //     }
-
-  //     const responseData = await response.json();
-  //     if(responseData.status == 200) {
-  //         errors.value = [];
-  //         router.push("/dashboard/communities");
-  //     } else {
-  //         let errorResponse = JSON.parse(responseData.body);
-  //         errors.value = errorResponse.error.map((error: any) => {
-  //             if(error.pointer) {
-  //                 return `${error.message}`;
-  //             }
-  //             return error.message;
-  //         });
-  //     }
-  // } catch (error) {
-  //     console.error("Error fetching communities data:", error);
-  // }
+      const responseData = await response.json();
+      if(responseData.status == 200) {
+          errors.value = [];
+          router.push("/dashboard/communities");
+      } else {
+          let errorResponse = JSON.parse(responseData.body);
+          errors.value = errorResponse.error.map((error: any) => {
+              if(error.pointer) {
+                  return `${error.message}`;
+              }
+              return error.message;
+          });
+      }
+  } catch (error) {
+      console.error("Error fetching communities data:", error);
+  }
 }
 
 function goBack() {
@@ -797,7 +794,6 @@ function onAddObjectElement(
     role: "owner",
   });
 
-  console.log("array:", array);
   nextTick(() => {
     const lastElementIndex = array.length - 1;
     const inputElement = arrayRef ? arrayRef[lastElementIndex] : null;
@@ -839,10 +835,6 @@ function deleteElement() {
     elementToDelete.value.element.splice(elementToDelete.value.index, 1);
     isDialogOpened.value = false;
   }
-}
-
-function dialogShow() {
-  console.log("dialogShow!!!!");
 }
 
 function onFileChange(event: Event) {
@@ -996,6 +988,7 @@ onMounted(() => {
         padding: 10px 20px;
         border: 1px solid rgba(233, 236, 239);
         background-color: white;
+        border-radius: 3px;
       }
     }
     &__full_row {

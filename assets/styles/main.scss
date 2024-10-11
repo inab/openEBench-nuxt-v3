@@ -126,6 +126,26 @@ $colorSecondary: #f47c21;
       background-color: theme("colors.statusIncubating.500");
   }
 }
+.status-abandoned {
+  background-color: theme("colors.statusAbandoned.50");
+  color: theme("colors.statusAbandoned.500");
+  border: 1px solid theme("colors.statusAbandoned.500");
+  transition: .5s;
+  cursor: pointer;
+  &:hover {
+      background-color: theme("colors.statusAbandoned.500");
+      color: theme("colors.statusAbandoned.50");
+  }
+  &.option-btn {
+      &:hover {
+          background-color: theme("colors.statusAbandoned.50");
+          color: theme("colors.statusAbandoned.500");
+      }
+  }
+  &__option {
+      background-color: theme("colors.statusAbandoned.500");
+  }
+}
 .btn-custom-badget {
   background-color: theme("colors.primary.50");
   color: theme("colors.primary.500");

@@ -230,7 +230,7 @@ const totalPages = computed(() => {
 });
 
 const getCommunityEventEditLink = (row) => {
-  return `/dashboard/communities/${row.community_id}/events/${row._id}`;
+  return `/dashboard/entries/${row.community_id}/events/${row._id}`;
 };
 </script>
 

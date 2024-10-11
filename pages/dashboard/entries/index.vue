@@ -77,7 +77,7 @@ const items = [
 
 const routeArray: Array = [
   { label: "Dashboard", isActualRoute: false, route: "/dashboard" },
-  { label: "Communities", isActualRoute: true },
+  { label: "Entries", isActualRoute: true },
 ];
 
 if (userStore.getUserCommunitiesRoles.length == 0) {
@@ -94,17 +94,8 @@ const isAdmin = computed(() => {
 
 const fetchUserCommunities = async (token: string): Promise<void> => {
   try {
-    let comData = [];
-    if (
-      userStore.getUserCommunities &&
-      Object.keys(userStore.getUserCommunities).length > 0
-    ) {
-      comData = userStore.getUserCommunities;
-    } else {
-      comData = await userStore.fetchCommunities(token);
-    }
+    const comData = await userStore.fetchCommunities(token);
     isLoadingData.value = false;
-    console.log("Communities data:", comData);
   } catch (error) {
     console.error("Error fetching communities data:", error);
   }

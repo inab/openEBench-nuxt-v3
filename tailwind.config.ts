@@ -43,6 +43,10 @@ export default <Partial<Config>>{
           50: "#f4f2f7",
           500: "#7b62b8",
         },
+        statusAbandoned: {
+          50: "#faaaaa",
+          500: "#800000",
+        },
       },
     },
   },

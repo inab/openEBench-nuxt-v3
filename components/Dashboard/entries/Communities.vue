@@ -79,7 +79,6 @@
                 
                     <template #name-data="{ row }">
                         <div class="d-flex f-items-center">
-                           
                             <span>{{ row._id }} - {{ row.name }}</span>
                         </div> 
                     </template>
@@ -118,9 +117,13 @@
                                     </button>
                                 </div>
                             </div>
-                            <div v-else>
-                                <div>-</div>
-                            </div>
+                            <button class="btn-custom-badget text-sm">
+                                <NuxtLink :to="getCommunityEditLink(row, true)" 
+                                    title="View community events" 
+                                    class="text-sm">
+                                    Events <font-awesome-icon :icon="['fas', 'calendar-check']" />
+                                </NuxtLink>
+                            </button>
                         </div>
                         
                     </template>
@@ -309,7 +312,10 @@ function removeTag(tagName: string) {
     });
 }
 
-function getCommunityEditLink(row: any) {
+function getCommunityEditLink(row: any, isEvent: boolean = false) {
+    if(isEvent) {
+        return `/dashboard/entries/${row._id}?events=true`;
+    }
     return `/dashboard/entries/${row._id}`;
 }
 
