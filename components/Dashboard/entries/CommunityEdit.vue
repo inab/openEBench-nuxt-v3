@@ -696,17 +696,17 @@ const communityData = computed(() => {
       key: "events",
       label: "Events",
       icon: "i-heroicons-calendar",
-      index: 1
+      index: 1,
     });
     state.value.type = "Community";
     labelTitle.value = "Edit Community";
     labelButton.value = "View Community";
-  } else if(props.communityObj && props.communityObj._metadata) {
+  } else if (props.communityObj && props.communityObj._metadata) {
     items.value.push({
       key: "summary",
       label: "Summary",
       icon: "i-heroicons-squares-2x2-16-solid",
-      index: 2
+      index: 2,
     });
     state.value.type = "Project";
     labelTitle.value = "Edit Project";

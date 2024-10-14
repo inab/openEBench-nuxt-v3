@@ -744,8 +744,10 @@ async function createCommunity() {
       },
     );
     responseCommunity = await responseCommunity.json();
-    if(responseCommunity._id) {
-      errors.value = ["Community ID already exists. Please, choose another one."];
+    if (responseCommunity._id) {
+      errors.value = [
+        "Community ID already exists. Please, choose another one.",
+      ];
       return true;
     }
   } catch (error) {
@@ -754,33 +756,33 @@ async function createCommunity() {
 
   try {
     const response = await fetch(`/api/staged/Community`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(body),
     });
 
     if (!response.ok) {
-      throw new Error('Error in API response');
+      throw new Error("Error in API response");
     }
 
     const responseData = await response.json();
-    if(responseData.status == 200) {
-        errors.value = [];
-        router.push("/dashboard/communities");
+    if (responseData.status == 200) {
+      errors.value = [];
+      router.push("/dashboard/communities");
     } else {
-      let errorResponse = JSON.parse(responseData.body);
+      const errorResponse = JSON.parse(responseData.body);
       errors.value = errorResponse.error.map((error: any) => {
-        if(error.pointer) { 
-            return `${error.message}`;
-          }
+        if (error.pointer) {
+          return `${error.message}`;
+        }
         return error.message;
       });
     }
   } catch (error) {
-      console.error("Error fetching communities data:", error);
+    console.error("Error fetching communities data:", error);
   }
 }
 
