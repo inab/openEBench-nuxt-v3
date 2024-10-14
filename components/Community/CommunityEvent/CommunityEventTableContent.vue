@@ -19,7 +19,7 @@
       />
     </div>
     <div class="pt-3 community-event-table-content__row">
-      <h2 class="">Challenges</h2>
+      <h2 class="mb-4">Challenges</h2>
       <p class="text-body-2 text--secondary d-flex align-center text-stone-500">
         <span>
           <UIcon name="i-heroicons-information-circle" scale="2" />
@@ -30,6 +30,11 @@
         reference dataset and one or more evaluation metrics. This can be
         customised if needed.
       </p>
+    </div>
+
+    <div class="alert alert-info mt-4">
+      To filter the table results, please select single challenges below, the
+      table will update automatically.
     </div>
     <div class="community-event-table-content__row">
       <CommunityEventTable
@@ -52,13 +57,10 @@ defineProps<{
   communityId: string;
 }>();
 
-// TODO
-const search: string = ref("");
+const selected = ref<any[]>([]);
+const selectedIds = computed(() => selected.value.map((item: any) => item._id));
 
-const selected: Array<any> = ref([]);
-const selectedIds = computed(() => selected.value.map((item) => item._id));
-
-function handleChangeChallengers(currentSelected) {
+function handleChangeChallengers(currentSelected: any) {
   selected.value = currentSelected;
 }
 </script>
@@ -76,8 +78,11 @@ function handleChangeChallengers(currentSelected) {
   &__row {
     font-size: 14px;
     h2 {
-      font-size: 18px;
+      font-size: 25px;
     }
   }
+}
+.alert-info {
+  font-size: 14px;
 }
 </style>

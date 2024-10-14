@@ -11,10 +11,28 @@
       </div>
       <div v-else>
         <CommunityInfo
+          v-if="community"
           :community="community"
           :community-references="communityReferences"
         />
-        <div class="community-tabs md:flex">
+        <div v-else>
+          <p v-if="!community && !isPending">
+            <noDataAvailable
+              description="No community found for Id "
+              :id="`'` + communityId + `'.`"
+              btnPath="/benchmarking"
+              btn-text="Benchmarking communities"
+            />
+          </p>
+          <p v-else>
+            <noDataAvailable
+              description="No information found to display."
+              btnPath="/benchmarking"
+            />
+          </p>
+        </div>
+
+        <div class="community-tabs md:flex" v-if="community">
           <UTabs
             :items="tabsItems"
             class="w-full"
@@ -88,21 +106,25 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch, computed } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import CommunityInfo from "@/components/Community/CommunityInfo.vue";
 import CommunityEvent from "@/components/Community/CommunityEvent/CommunityEvent.vue";
 import CommunityDataset from "@/components/Community/CommunityDataset/CommunityDataset.vue";
 import CommunityTools from "@/components/Community/CommunityTools/CommunityTools.vue";
 import CommunityEventSummary from "@/components/Community/CommunityEvent/CommunityEventSummary.vue";
 import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
+import noDataAvailable from "@/layouts/noDataAvailable.vue";
 import { useCommunity } from "@/stores/community";
 
 const route = useRoute();
+const router = useRouter();
 const communityStore = useCommunity();
+
 const isPending = ref(false);
-const community: Ref<any> = ref(null);
-const communityId: string = route.params.community;
-const event: string = route.query.event;
+const community = ref<any>(null);
+const communityId = route.params.community as string;
+const event = route.query.event as string;
 
 if (communityStore.communityId && communityStore.communityId == communityId) {
   community.value = communityStore.getCommunityData;
@@ -167,33 +189,55 @@ if (eventData.value && (eventData.value as { summary?: any }).summary) {
   });
 }
 
-const routeArray = computed(() => [
-  {
-    label: "Benchmarking Communities",
-    isActualRoute: false,
-    route: "/benchmarking",
-  },
-  {
-    label: community.value?.acronym + " " + "Events",
-    isActualRoute: false,
-    route: "/benchmarking/" + communityId + "/events",
-  },
-  {
-    label: currentEvent.value?.name,
-    isActualRoute: true,
-  },
-]);
+const routeArray = computed(() => {
+  if (!community.value) {
+    // If the community is not found, define an alternative route
+    return [
+      {
+        label: "Benchmarking Communities",
+        isActualRoute: false,
+        route: "/benchmarking",
+      },
+      {
+        label: "Community Not Found",
+        isActualRoute: true,
+      },
+    ];
+  }
+  // Route in case of finding the community
+  return [
+    {
+      label: "Benchmarking Communities",
+      isActualRoute: false,
+      route: "/benchmarking",
+    },
+    {
+      label: community.value.acronym + " " + "Events",
+      isActualRoute: false,
+      route: "/benchmarking/" + communityId + "/events",
+    },
+    {
+      label: currentEvent.value?.name,
+      isActualRoute: true,
+    },
+  ];
+});
 
 watch(
   () => route.query.event,
   async (newEventId) => {
     if (newEventId) {
       const newEvent = eventsObj.find((event) => event._id === newEventId);
+
       if (newEvent) {
         communityStore.setCurrentEvent(newEvent);
       } else {
         // If the event is not found in the current list, makes a request to get the event data.
         await communityStore.requestCommunityData(communityId, newEventId);
+        if (currentEvent.value) {
+          // Here we replace the route with the correct event ID
+          router.replace({ query: { event: currentEvent.value._id } });
+        }
       }
     } else {
       // If no event is selected, make sure `currentEvent` is null.

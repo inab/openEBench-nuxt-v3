@@ -13,12 +13,17 @@
           class="input-search"
         />
       </div>
+
+      <!-- Checkbox in header to select/deselect all visible elements on the current page -->
+      <input
+        type="checkbox"
+        class="allChecks"
+        @change="toggleSelectAll"
+        :checked="isAllSelected"
+      />
+
       <UTable
-        v-model="selected"
-        :loading-state="{
-          icon: 'i-heroicons-arrow-path-20-solid',
-          label: 'Loading...',
-        }"
+        v-model:selected="selected"
         :rows="filteredRows"
         :columns="columns"
         :ui="{
@@ -39,14 +44,19 @@
             size: 'text-sm',
           },
         }"
-        @select="select"
       >
+        <template #checkbox-data="{ row }">
+          <input
+            type="checkbox"
+            :checked="isSelected(row)"
+            @change="select(row)"
+          />
+        </template>
+
         <template #name-data="{ row }">
           <span
             :class="[
-              selected.find(
-                (eventsFormated) => eventsFormated._id === row._id,
-              ) && 'text-primaryOeb-500 dark:text-primary-400',
+              isSelected(row) && 'text-primaryOeb-500 dark:text-primary-400',
             ]"
           >
             {{ row.name }}
@@ -71,6 +81,7 @@
           </NuxtLink>
         </template>
       </UTable>
+
       <div class="flex flex-wrap justify-between items-center pt-2">
         <div>
           <span class="text-sm leading-5">
@@ -103,8 +114,7 @@
 </template>
 
 <script setup lang="ts">
-import _ from "@/server/api/auth/[...]";
-import { ref, watch, computed } from "vue";
+import { ref, computed, watch } from "vue";
 
 const props = defineProps<{
   eventChallenges: Array<any>;
@@ -132,6 +142,10 @@ const _total = ref(0);
 
 const columns = [
   {
+    key: "checkbox",
+    label: "",
+  },
+  {
     key: "_id",
     label: "Acronym",
   },
@@ -145,24 +159,24 @@ const columns = [
   },
 ];
 
+// Keeps all rows (without pagination) to refer to the complete data
+const allRows = ref(props.eventChallenges);
+
+// Computed for rows filtered by search and pagination
 const filteredRows = computed(() => {
-  if (!search.value) {
-    _total.value = props.eventChallenges.length;
-    return props.eventChallenges.slice(
-      (Number(page.value) - 1) * Number(pageCount.value),
-      Number(page.value) * Number(pageCount.value),
-    );
-  }
+  const filteredData = search.value
+    ? allRows.value.filter((challenge: any) => {
+        return Object.values(challenge).some((value) => {
+          return String(value)
+            .toLowerCase()
+            .includes(search.value.toLowerCase());
+        });
+      })
+    : allRows.value;
 
-  const filteredSearcher = props.eventChallenges.filter((challenge: any) => {
-    return Object.values(challenge).some((value) => {
-      return String(value).toLowerCase().includes(search.value.toLowerCase());
-    });
-  });
+  _total.value = filteredData.length;
 
-  _total.value = filteredSearcher.length;
-
-  return filteredSearcher.slice(
+  return filteredData.slice(
     (Number(page.value) - 1) * Number(pageCount.value),
     Number(page.value) * Number(pageCount.value),
   );
@@ -172,6 +186,7 @@ const totalPages = computed(() => {
   return Math.ceil(Number(_total.value) / Number(pageCount.value));
 });
 
+// Function for selecting/deselecting a single element
 function select(row: any) {
   const index = selected.value.findIndex((item: any) => item._id === row._id);
   if (index === -1) {
@@ -181,10 +196,45 @@ function select(row: any) {
   }
 }
 
-// Use watch, normal Obj bind, does not work
-watch(selected, () => {
-  emit("handleChangeChallengers", selected.value);
+function isSelected(row: any) {
+  return selected.value.some((item: any) => item._id === row._id);
+}
+
+// Function to select/deselect all elements of the current page
+function toggleSelectAll() {
+  const currentPageRows = filteredRows.value;
+
+  if (isAllSelected.value) {
+    // If all items on the current page are selected, deselect all of them
+    selected.value = selected.value.filter(
+      (row) =>
+        !currentPageRows.some((currentRow) => currentRow._id === row._id),
+    );
+  } else {
+    // If not all are selected, select all items on the current page.
+    const newSelections = currentPageRows.filter(
+      (row) =>
+        !selected.value.some((selectedRow) => selectedRow._id === row._id),
+    );
+    selected.value.push(...newSelections);
+  }
+}
+
+// Computed to check if all items on the current page are selected
+const isAllSelected = computed(() => {
+  return filteredRows.value.every((row) =>
+    selected.value.some((selectedRow) => selectedRow._id === row._id),
+  );
 });
+
+// Observe the changes in the selected array to issue the change to the parent component.
+watch(
+  selected,
+  (newSelected) => {
+    emit("handleChangeChallengers", newSelected);
+  },
+  { deep: true },
+);
 </script>
 
 <style scoped lang="scss">
@@ -212,5 +262,12 @@ watch(selected, () => {
 .form-checkbox:checked,
 .form-checkbox:indeterminate {
   background-color: currentColor !important;
+}
+
+.allChecks {
+  position: absolute;
+  margin-top: 12px;
+  margin-left: 15px;
+  z-index: 100;
 }
 </style>

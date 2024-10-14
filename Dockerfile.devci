@@ -2,19 +2,20 @@
 FROM node:20 as node
 WORKDIR /app
 #define env vars
-ARG ENVIRONMENT=openebench
-ARG APP_BASE_URL=https://dev-openebench.bsc.es/
+ARG ENVIRONMENT=test2-openebench
+ARG APP_BASE_URL=https://test2.openebench.bsc.es
 ARG OEB_LEGACY_ANGULAR_URI=https://legacy.openebench.bsc.es/
-ARG VRE_URI=https://openebench.bsc.es/vre/home/
+ARG VRE_URI=https://dev-openebench.bsc.es/vre/home/
 ARG OBSERVATORY_URI=https://observatory.openebench.bsc.es
-ARG REST_API_URL=https://openebench.bsc.es/monitor/rest/
+ARG REST_API_URL=https://dev-openebench.bsc.es/monitor/rest/
 ARG SCIENTIFIC_SERVICE_URL=https://dev-openebench.bsc.es/api/scientific
-ARG BENCH_EVENT_API_URL=https://openebench.bsc.es/rest/bench_event_api
+ARG BENCH_EVENT_API_URL=https://dev-openebench.bsc.es/rest/bench_event_api
 ARG KEYCLOAK_HOST=https://inb.bsc.es
-ARG KEYCLOAK_REALM=devopenebench
+ARG KEYCLOAK_REALM=dev-openebench
 ARG KEYCLOAK_CLIENT_ID=oeb-frontend
 ARG OBSERVATORY_API_URL=https://observatory.openebench.bsc.es/api
 ARG GITHUBAPP_API_URL=https://observatory.openebench.bsc.es/githubapp/api
+
 ENV ENVIRONMENT $ENVIRONMENT
 ENV OEB_LEGACY_ANGULAR_URI $OEB_LEGACY_ANGULAR_URI
 ENV VRE_URI $VRE_URI

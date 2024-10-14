@@ -1,4 +1,4 @@
-version: '4'
+version: "4"
 volumes:
   dist-volume:
   node-modules-volume:
@@ -14,6 +14,7 @@ services:
       - ./assets:/app/assets:ro
       - ./components:/app/components:ro
       - ./config:/app/config:ro
+      - ./constants:/app/constants:ro
       - ./layouts:/app/layouts:ro
       - ./pages:/app/pages:ro
       - ./plugins:/app/plugins:ro
@@ -21,10 +22,13 @@ services:
       - ./stores:/app/stores:ro
       - ./stories:/app/stories:ro
       - ./test:/app/test:ro
+      - ./vitest.config.ts:/app/vitest.config.ts:ro
       - ./nuxt.config.js:/app/nuxt.config.js:ro
       - ./package.json:/app/package.json:ro
       - ./package-lock.json:/app/package-lock.json
       - ./stylelint.config.js:/app/stylelint.config.js:ro
+      - ./server:/app/server:ro
+      - ./types:/app/types:ro
       - ./tsconfig.json:/app/tsconfig.json:ro
       - node-modules-volume:/app/node_modules
 
@@ -41,6 +45,7 @@ services:
     volumes:
       - ./assets:/app/assets:ro
       - ./components:/app/components:ro
+      - ./constants:/app/constants:ro
       - ./config:/app/config:ro
       - ./layouts:/app/layouts:ro
       - ./pages:/app/pages:ro
@@ -49,12 +54,14 @@ services:
       - ./stores:/app/stores:ro
       - ./stories:/app/stories:ro
       - ./test:/app/test:ro
+      - ./vitest.config.ts:/app/vitest.config.ts:ro
       - ./nuxt.config.js:/app/nuxt.config.js:ro
       - ./package.json:/app/package.json:ro
       - ./package-lock.json:/app/package-lock.json
+      - ./server:/app/server:ro
+      - ./types:/app/types:ro
       - ./stylelint.config.js:/app/stylelint.config.js:ro
       - ./tsconfig.json:/app/tsconfig.json:ro
-
       - node-modules-volume:/app/node_modules
       - dist-volume:/app/dist
     ports:

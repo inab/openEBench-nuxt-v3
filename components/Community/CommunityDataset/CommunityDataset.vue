@@ -1,9 +1,7 @@
 <template>
   <div class="community-dataset">
-    <div class="pb-3 flex align-items-baseline">
-      <span
-        class="community-dataset__title text-lg text-o dark:text-gray-400 text-primaryOeb-500"
-      >
+    <div>
+      <span class="community-dataset__title">
         Find the datasets available for this community
       </span>
     </div>
@@ -159,6 +157,10 @@ const totalPages = computed(() => {
 <style scoped lang="scss">
 .community-dataset {
   &__title {
+    display: flex;
+    align-items: center;
+    color: #0b579f;
+    font-size: 18px;
     font-weight: 600;
   }
 }

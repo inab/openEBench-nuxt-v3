@@ -34,7 +34,7 @@
         </div>
       </div>
       <div v-else class="">
-        <noDataAvailable item="participants and metrics" />
+        <noDataAvailable description="No participants and metrics available." />
       </div>
       <div
         class="chart-image text--secondary"
