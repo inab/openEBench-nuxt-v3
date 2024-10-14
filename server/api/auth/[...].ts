@@ -86,6 +86,9 @@ export default NuxtAuthHandler({
           token_endpoint_auth_method: "none",
         },
       },
+      httpOptions: {
+        timeout: 100000,
+      },
       userinfo: {
         url: `${runtimeConfig.public.KEYCLOAK_HOST}/auth/realms/${runtimeConfig.public.KEYCLOAK_REALM}/protocol/openid-connect/userinfo`,
       },
