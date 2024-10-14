@@ -29,14 +29,6 @@
             </div>
           </div>
           <div class="dashboard-tabs">
-            <CustomSubtitle text="Entries List" size="22px" />
-            <div class="dashboard__description text-gray-500">
-              It is a long established fact that a reader will be distracted by
-              the readable content of a page when looking at its layout. The
-              point of using Lorem Ipsum is that it has a more-or-less normal
-              distribution of letters, as opposed to using 'Content here,
-              content here', making it look like readable English.
-            </div>
             <Communities :is-loading-data="isLoadingData" />
           </div>
         </div>

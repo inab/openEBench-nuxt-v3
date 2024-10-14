@@ -13,7 +13,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
-import CommunityEventAdd from "@/components/Dashboard/communities/events/CommunityEventAdd.vue";
+import CommunityEventAdd from "@/components/Dashboard/entries/events/CommunityEventAdd.vue";
 import { useUser } from "@/stores/user.ts";
 import { privileges } from "@/constants/privileges";
 

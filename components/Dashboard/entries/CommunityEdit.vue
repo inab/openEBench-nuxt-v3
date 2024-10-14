@@ -608,26 +608,26 @@ const state = ref({
 });
 
 const schema = object({
-  _id: string(),
-  acronym: string(),
-  status: string(),
-  name: string(),
-  description: string(),
-  _schema: string(),
+  _id: string,
+  acronym: string,
+  status: string,
+  name: string,
+  description: string,
+  _schema: string,
   links: array(
     object({
-      uri: string(),
-      label: string(),
-      comment: optional(string()),
-    }),
+      uri: string,
+      label: string,
+      comment: optional(string),
+    })
   ),
-  keywords: array(string()),
-  type: string(),
+  keywords: array(string),
+  type: string,
   community_contact_ids: array(
     object({
-      id: string(),
-      name: string(),
-    }),
+      id: string,
+      name: string,
+    })
   ),
 });
 

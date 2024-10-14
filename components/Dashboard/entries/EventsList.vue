@@ -5,7 +5,7 @@
       class="w-100 flex justify-content-end gap-3 py-3"
     >
       <NuxtLink
-        :to="`/dashboard/communities/${communityId}/events/add`"
+        :to="`/dashboard/entries/${communityId}/events/add`"
         class="btn custom-btn btn-primary"
         title="Create New Event"
       >
@@ -56,56 +56,40 @@
           </div>
         </template>
         <template #actions-data="{ row }">
-          <div v-if="row.privileges === 'Owner' && row.actions.community">
-            <button title="Edit community" class="btn-event text-neutral-300">
-              <NuxtLink :to="getCommunityEventEditLink(row)">
-                <font-awesome-icon :icon="['fas', 'pencil']" />
-              </NuxtLink>
-            </button>
-            <template v-if="row.actions.community.delete">
-              <button
-                title="Delete community"
-                class="btn-event text-neutral-300"
+          <div class="action-btn-group">
+            <button class="btn-custom-badget text-sm">
+              <NuxtLink
+                :to="`/benchmarking/${row.community_id}?event=${row._id}`"
+                title="View community events"
+                class="text-sm"
               >
-                <font-awesome-icon :icon="['fas', 'trash']" />
-              </button>
-            </template>
-          </div>
-          <div
-            v-else-if="row.privileges === 'Manager' && row.actions.community"
-          >
-            <button title="Edit community" class="btn-event text-neutral-300">
-              <NuxtLink :to="getCommunityEventEditLink(row)">
-                <font-awesome-icon :icon="['fas', 'pencil']" />
+                Live <font-awesome-icon :icon="['far', 'eye']" />
               </NuxtLink>
             </button>
-            <template v-if="row.actions.community.delete">
-              <button
-                title="Delete community"
-                class="btn-event text-neutral-300"
-              >
-                <font-awesome-icon :icon="['fas', 'trash']" />
+            <div v-if="row.privileges === 'Owner' && row.actions.community">
+              <button title="Edit community" class="btn-custom-badget text-sm">
+                <NuxtLink :to="getCommunityEventEditLink(row)">
+                  <font-awesome-icon :icon="['fas', 'pencil']" />
+                </NuxtLink>
               </button>
-            </template>
-          </div>
-          <div v-else-if="row.privileges === 'anyone' && row.actions.community">
-            <button title="Edit community" class="btn-event text-neutral-300">
-              <NuxtLink :to="getCommunityEventEditLink(row)">
-                <font-awesome-icon :icon="['fas', 'pencil']" />
-              </NuxtLink>
-            </button>
-          </div>
-        </template>
-        <template #view-data="{ row }">
-          <button class="btn-custom-badget text-sm">
-            <NuxtLink
-              :to="`/benchmarking/${row.community_id}?event=${row._id}`"
-              title="View community events"
-              class="text-sm"
+            </div>
+            <div
+              v-else-if="row.privileges === 'Manager' && row.actions.community"
             >
-              Live
-            </NuxtLink>
-          </button>
+              <button title="Edit community" class="btn-custom-badget text-sm">
+                <NuxtLink :to="getCommunityEventEditLink(row)">
+                  View <font-awesome-icon :icon="['fas', 'pencil']" />
+                </NuxtLink>
+              </button>
+            </div>
+            <div v-else-if="row.privileges === 'anyone' && row.actions.community">
+              <button title="Edit community" class="btn-custom-badget text-sm">
+                <NuxtLink :to="getCommunityEventEditLink(row)">
+                  View <font-awesome-icon :icon="['fas', 'pencil']" />
+                </NuxtLink>
+              </button>
+            </div>
+          </div>
         </template>
       </UTable>
     </div>
@@ -164,10 +148,6 @@ const columns = [
   {
     label: "Contacts",
     key: "bench_contact",
-  },
-  {
-    label: "VIEW",
-    key: "view",
   },
   {
     key: "actions",
@@ -244,5 +224,9 @@ const getCommunityEventEditLink = (row) => {
   a {
     color: theme("colors.gray.400");
   }
+}
+.action-btn-group {
+  display: flex;
+  gap: 10px;
 }
 </style>

@@ -88,7 +88,7 @@
                                 <NuxtLink :to="`/benchmarking/${row._id}`" 
                                     title="View community events" 
                                     class="text-sm">
-                                    Life <font-awesome-icon :icon="['far', 'eye']" />
+                                    Live <font-awesome-icon :icon="['far', 'eye']" />
                                 </NuxtLink>
                             </button>
                             <div v-if="row.actions">
@@ -117,7 +117,7 @@
                                     </button>
                                 </div>
                             </div>
-                            <button class="btn-custom-badget text-sm">
+                            <button class="btn-custom-badget text-sm" v-if="!row._metadata">
                                 <NuxtLink :to="getCommunityEditLink(row, true)" 
                                     title="View community events" 
                                     class="text-sm">
@@ -125,11 +125,10 @@
                                 </NuxtLink>
                             </button>
                         </div>
-                        
                     </template>
                     <template #type-data="{row}">
                         <div class="inline-block rounded-full text-left">
-                            <template v-if="row._metadata && row._metadata">
+                            <template v-if="row._metadata && row._metadata!=''">
                                 <font-awesome-icon :icon="['fas', 'diagram-project']" />
                                 <span>
                                     Project
