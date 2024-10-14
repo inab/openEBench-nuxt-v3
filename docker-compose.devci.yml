@@ -1,4 +1,4 @@
-version: '4'
+version: "4"
 volumes:
   dist-volume:
   node-modules-volume:
@@ -156,4 +156,4 @@ services:
       - dist-volume:/usr/share/nginx/html/:ro
       - ./nginx.conf.devci:/etc/nginx/conf.d/default.conf:ro
     ports:
-      - '8080:80'
+      - "8080:80"

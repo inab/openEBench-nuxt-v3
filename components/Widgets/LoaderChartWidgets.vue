@@ -1,7 +1,11 @@
 <template>
   <div class="loader-chart-widget">
     <div v-if="isLoadingGraph" class="loader-container mt-5">
-      <img src="~/assets/images/201805.OpenEBench.logo.Animated.0050secs.gif" alt="Loader GIF" class="loader" />
+      <img
+        src="~/assets/images/201805.OpenEBench.logo.Animated.0050secs.gif"
+        alt="Loader GIF"
+        class="loader"
+      />
     </div>
     <div v-else>
       <div v-if="schemaUrl" class="schema-url text-primaryOeb-500">
@@ -32,8 +36,8 @@ const type: string = ref("");
 
 const schemaUrl = computed(() =>
   dataGraph.value.inline_data &&
-    dataGraph.value.inline_data.visualization &&
-    dataGraph.value.inline_data.visualization.schema_url
+  dataGraph.value.inline_data.visualization &&
+  dataGraph.value.inline_data.visualization.schema_url
     ? dataGraph.value.inline_data.visualization.schema_url
     : null,
 );
@@ -192,7 +196,6 @@ function getMetricsNames(metricX: string, metricY: string) {
 </script>
 
 <style lang="scss" scoped>
-
 .loader-container {
   display: flex;
   justify-content: center;

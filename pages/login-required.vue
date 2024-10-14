@@ -3,10 +3,13 @@
     <div class="container">
       <h1 class="text-primaryOeb-500">Requires authentication</h1>
       <div class="login-required__body">
-        <NuxtImg class="login-required__body__img" src="images/illustrations/authentication-img.svg" alt="authentication" />
+        <NuxtImg
+          class="login-required__body__img"
+          src="images/illustrations/authentication-img.svg"
+          alt="authentication"
+        />
         <p>Please login to view this page.</p>
       </div>
-      
     </div>
   </div>
 </template>
@@ -29,6 +32,5 @@
       text-align: center;
     }
   }
- 
 }
 </style>

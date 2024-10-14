@@ -7,14 +7,16 @@
       <div class="community-events-list__header">
         <h3 class="mb-4">Please choose an event:</h3>
         <div class="community-events-list__header__subtitle">
-          <p class="text-body-2 text--secondary d-flex align-items-center text-stone-500">
+          <p
+            class="text-body-2 text--secondary d-flex align-items-center text-stone-500"
+          >
             <span class="mt-1 me-3">
               <UIcon name="i-heroicons-information-circle" scale="2" />
             </span>
             An Event corresponds to a time-bound contest where a tool, pipeline,
-            service, or product, i.e., the participant, is compared against other
-            participants using a predefined collection of reference datasets and
-            assessment metrics.
+            service, or product, i.e., the participant, is compared against
+            other participants using a predefined collection of reference
+            datasets and assessment metrics.
           </p>
         </div>
       </div>
@@ -42,9 +44,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed } from "vue";
 import EventCard from "@/components/Cards/EventCard/EventCard.vue";
-
 
 interface Challenge {
   _id: string;

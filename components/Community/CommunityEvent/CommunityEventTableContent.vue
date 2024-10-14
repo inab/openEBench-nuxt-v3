@@ -31,9 +31,10 @@
         customised if needed.
       </p>
     </div>
-    
+
     <div class="alert alert-info mt-4">
-      To filter the table results, please select single challenges below, the table will update automatically.
+      To filter the table results, please select single challenges below, the
+      table will update automatically.
     </div>
     <div class="community-event-table-content__row">
       <CommunityEventTable
@@ -81,7 +82,7 @@ function handleChangeChallengers(currentSelected: any) {
     }
   }
 }
-.alert-info{
+.alert-info {
   font-size: 14px;
 }
 </style>

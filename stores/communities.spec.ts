@@ -3,7 +3,6 @@ import { useCommunities } from "./communities";
 import { beforeEach, describe, expect, it } from "vitest";
 
 describe("Communities", () => {
-
   beforeEach(() => {
     setActivePinia(createPinia());
   });
@@ -13,5 +12,4 @@ describe("Communities", () => {
     const { communities } = useCommunities();
     expect(communities).toEqual([]);
   });
-
 });

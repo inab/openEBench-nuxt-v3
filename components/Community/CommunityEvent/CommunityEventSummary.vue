@@ -33,7 +33,7 @@ const markup = computed(() =>
       color: #396fba;
     }
     a {
-      color:  #0b579f;;
+      color: #0b579f;
       text-decoration: none;
       &:hover {
         text-decoration: underline;

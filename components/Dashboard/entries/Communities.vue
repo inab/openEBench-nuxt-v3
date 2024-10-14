@@ -79,56 +79,53 @@
                 
                     <template #name-data="{ row }">
                         <div class="d-flex f-items-center">
-                            <span v-if="row.privileges === 'Owner' && row.actions.community"
-                                title="Community Owner"
-                                class="row-icon">
-                                <font-awesome-icon :icon="['fas', 'key']" />
-                            </span>
-                            <span v-if="row.privileges === 'Manager' && row.actions.community"
-                                title="Community Manager"
-                                class="row-icon">
-                                <font-awesome-icon :icon="['fas', 'gear']" />
-                            </span>
                             <span>{{ row._id }} - {{ row.name }}</span>
                         </div> 
                     </template>
                     <template #actions-data="{ row }">
-                        <div v-if="row.actions">
-                            <div class="text-center" v-if="row.privileges === 'Owner' && row.actions.community">
-                                <button title="Edit community" class="btn-event text-neutral-300">
-                                    <NuxtLink :to="getCommunityEditLink(row)">
-                                        <font-awesome-icon :icon="['fas', 'pencil']" />
-                                    </NuxtLink>
-                                </button>
-                                <template v-if="row.actions.community.delete">
-                                    <button title="Delete community" class="btn-event text-neutral-300">
-                                        <font-awesome-icon :icon="['fas', 'trash']" />
+                        <div class="action-btn-group">
+                            <button class="btn-custom-badget text-sm">
+                                <NuxtLink :to="`/benchmarking/${row._id}`" 
+                                    title="View community events" 
+                                    class="text-sm">
+                                    Life <font-awesome-icon :icon="['far', 'eye']" />
+                                </NuxtLink>
+                            </button>
+                            <div v-if="row.actions">
+                                <div class="text-center" v-if="row.privileges === 'Owner' && row.actions.community">
+                                    <button title="Edit community" class="btn-custom-badget text-sm">
+                                        <NuxtLink :to="getCommunityEditLink(row)"
+                                            class="text-sm">
+                                            View <font-awesome-icon :icon="['fas', 'pencil']" />
+                                        </NuxtLink>
                                     </button>
-                                </template>
-                            </div>
-                            <div class="text-center" v-else-if="row.privileges=== 'Manager' && row.actions.community">
-                                <button title="Edit community" class="btn-event text-neutral-300">
-                                    <NuxtLink :to="getCommunityEditLink(row)">
-                                        <font-awesome-icon :icon="['fas', 'pencil']" />
-                                    </NuxtLink>
-                                </button>
-                                <template v-if="row.actions.community.delete">
-                                    <button title="Delete community" class="btn-event text-neutral-300">
-                                        <font-awesome-icon :icon="['fas', 'trash']" />
+                                </div>
+                                <div class="text-center" v-else-if="row.privileges=== 'Manager' && row.actions.community">
+                                    <button title="Edit community" class="btn-custom-badget text-sm">
+                                        <NuxtLink :to="getCommunityEditLink(row)"
+                                            class="text-sm">
+                                            View <font-awesome-icon :icon="['fas', 'pencil']" />
+                                        </NuxtLink>
                                     </button>
-                                </template>
+                                </div>
+                                <div class="text-center" v-else-if="row.privileges=== 'anyone' && row.actions.community">
+                                    <button title="Edit community" class="btn-custom-badget text-sm">
+                                        <NuxtLink :to="getCommunityEditLink(row)"
+                                            class="text-sm">
+                                            View <font-awesome-icon :icon="['fas', 'pencil']" />
+                                        </NuxtLink>
+                                    </button>
+                                </div>
                             </div>
-                            <div class="text-center" v-else-if="row.privileges=== 'anyone' && row.actions.community">
-                                <button title="Edit community" class="btn-event text-neutral-300">
-                                    <NuxtLink :to="getCommunityEditLink(row)">
-                                        <font-awesome-icon :icon="['fas', 'pencil']" />
-                                    </NuxtLink>
-                                </button>
-                            </div>
+                            <button class="btn-custom-badget text-sm">
+                                <NuxtLink :to="getCommunityEditLink(row, true)" 
+                                    title="View community events" 
+                                    class="text-sm">
+                                    Events <font-awesome-icon :icon="['fas', 'calendar-check']" />
+                                </NuxtLink>
+                            </button>
                         </div>
-                        <div v-else>
-                            <div>-</div>
-                        </div>
+                        
                     </template>
                     <template #type-data="{row}">
                         <div class="inline-block rounded-full text-left">
@@ -156,14 +153,20 @@
                             </div>
                         </div>
                     </template>
-                    <template #view-data="{ row }">
-                        <button class="btn-custom-badget text-sm">
-                            <NuxtLink :to="`/benchmarking/${row._id}`" 
-                                title="View community events" 
-                                class="text-sm">
-                                Live
-                            </NuxtLink>
-                        </button>
+                    <template #role-data="{ row }">
+                        <span v-if="row.privileges === 'Owner' && row.actions.community"
+                            title="Community Owner"
+                            class="row-icon">
+                            <font-awesome-icon :icon="['fas', 'key']" />
+                        </span>
+                        <span v-else-if="row.privileges === 'Manager' && row.actions.community"
+                            title="Community Manager"
+                            class="row-icon">
+                            <font-awesome-icon :icon="['fas', 'gear']" />
+                        </span>
+                        <span v-else>
+                            -
+                        </span>
                     </template>
                 </UTable>
                 <div
@@ -231,6 +234,9 @@ const columns: Array<CommunityColumnsDashboard> = [
         key: 'name',
         label: 'NAME'
     },{
+        key: 'role',
+        label: 'ROLE'
+    },{
         key: "community_contact",
         label: "CONTACTS"
     },{
@@ -239,9 +245,6 @@ const columns: Array<CommunityColumnsDashboard> = [
     },{
         key: 'status',
         label: 'STATUS'
-    },{
-        key: 'view',
-        label: 'VIEW'
     },{
         key: 'actions',
         label: 'ACTIONS'
@@ -309,8 +312,11 @@ function removeTag(tagName: string) {
     });
 }
 
-function getCommunityEditLink(row: any) {
-    return `/dashboard/communities/${row._id}`;
+function getCommunityEditLink(row: any, isEvent: boolean = false) {
+    if(isEvent) {
+        return `/dashboard/entries/${row._id}?events=true`;
+    }
+    return `/dashboard/entries/${row._id}`;
 }
 
 </script>
@@ -376,6 +382,10 @@ function getCommunityEditLink(row: any) {
 }
 .row-icon {
     padding-right: 10px;
+}
+.action-btn-group {
+    display: flex;
+    gap: 10px;
 }
 </style>
 
@@ -473,4 +483,37 @@ function getCommunityEditLink(row: any) {
     height: 10px;
     margin-right: 10px;
 }
+.logo-col {
+    display: flex;
+    justify-content: center;
+    .logo-col-wrapper {
+        width: 200px;
+        height: 200px;
+        display: flex;
+        justify-content: center;
+        border: 1px solid #e9ecef;
+        border-radius: 5px;
+        background-color: white;
+        .form-logo {
+            width: 150px;
+            height: 150px;
+            overflow: hidden;
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+            }
+        }
+    }
+}
+.form-logo-input {
+    width: 200px;
+    display: flex;
+    justify-content: center;
+    button {
+        padding: 2px 25px;
+        margin-top: 10px;
+    }
+}
+
 </style>

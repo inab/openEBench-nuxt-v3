@@ -17,44 +17,76 @@
         />
         <div v-else>
           <p v-if="!community && !isPending">
-            <noDataAvailable description="No community found for Id " :id="`'` + communityId + `'.`"
-            btnPath="/benchmarking" btn-text="Benchmarking communities" />
+            <noDataAvailable
+              description="No community found for Id "
+              :id="`'` + communityId + `'.`"
+              btnPath="/benchmarking"
+              btn-text="Benchmarking communities"
+            />
           </p>
           <p v-else>
-            <noDataAvailable description="No information found to display."
-            btnPath="/benchmarking" />
+            <noDataAvailable
+              description="No information found to display."
+              btnPath="/benchmarking"
+            />
           </p>
         </div>
 
         <div class="community-tabs md:flex" v-if="community">
-          <UTabs :items="tabsItems" class="w-full" :ui="{ list: { tab: { active: 'text-primaryOeb-500' } } }">
+          <UTabs
+            :items="tabsItems"
+            class="w-full"
+            :ui="{ list: { tab: { active: 'text-primaryOeb-500' } } }"
+          >
             <template #default="{ item, index, selected }">
               <div class="flex items-center gap-2 relative truncate">
                 <span class="">{{ item.label }}</span>
-                <UBadge v-if="item.label == 'Datasets' && datasetsObj.length > 0" color="gray" variant="solid"
-                  :ui="{ rounded: 'rounded-full' }">{{ datasetsObj.length }}</UBadge>
-                <UBadge v-if="item.label == 'Tools' && toolsObj.length > 0" color="gray" variant="solid"
-                  :ui="{ rounded: 'rounded-full' }">{{ toolsObj.length }}</UBadge>
-                <span v-if="selected"
-                  class="absolute -right-4 w-2 h-2 rounded-full bg-primary-500 dark:bg-primary-400" />
+                <UBadge
+                  v-if="item.label == 'Datasets' && datasetsObj.length > 0"
+                  color="gray"
+                  variant="solid"
+                  :ui="{ rounded: 'rounded-full' }"
+                  >{{ datasetsObj.length }}</UBadge
+                >
+                <UBadge
+                  v-if="item.label == 'Tools' && toolsObj.length > 0"
+                  color="gray"
+                  variant="solid"
+                  :ui="{ rounded: 'rounded-full' }"
+                  >{{ toolsObj.length }}</UBadge
+                >
+                <span
+                  v-if="selected"
+                  class="absolute -right-4 w-2 h-2 rounded-full bg-primary-500 dark:bg-primary-400"
+                />
               </div>
             </template>
             <template #results>
               <div class="p-4 custom-tab">
-                <CommunityEvent :current-event="currentEvent" :events="eventsObj" :community-id="communityId" />
+                <CommunityEvent
+                  :current-event="currentEvent"
+                  :events="eventsObj"
+                  :community-id="communityId"
+                />
               </div>
             </template>
             <template v-if="datasetsObj && datasetsObj.length > 0" #datasets>
               <div class="custom-tab">
                 <div class="p-4">
-                  <CommunityDataset :datasets="datasetsObj" :community-id="communityId" />
+                  <CommunityDataset
+                    :datasets="datasetsObj"
+                    :community-id="communityId"
+                  />
                 </div>
               </div>
             </template>
             <template v-if="toolsObj && toolsObj.length > 0" #tools>
               <div class="custom-tab">
                 <div class="p-4">
-                  <CommunityTools :tools="toolsObj" :community-id="communityId" />
+                  <CommunityTools
+                    :tools="toolsObj"
+                    :community-id="communityId"
+                  />
                 </div>
               </div>
             </template>
@@ -74,8 +106,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue';
-import { useRoute, useRouter} from 'vue-router';
+import { ref, watch, computed } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import CommunityInfo from "@/components/Community/CommunityInfo.vue";
 import CommunityEvent from "@/components/Community/CommunityEvent/CommunityEvent.vue";
 import CommunityDataset from "@/components/Community/CommunityDataset/CommunityDataset.vue";
@@ -94,14 +126,13 @@ const community = ref<any>(null);
 const communityId = route.params.community as string;
 const event = route.query.event as string;
 
-
 if (communityStore.communityId && communityStore.communityId == communityId) {
   community.value = communityStore.getCommunityData;
 } else {
-  const { data, pending }: { data: any; pending: Ref<boolean> } = await useAsyncData(
-    "community",
-    () => communityStore.requestCommunityData(communityId, event),
-  );
+  const { data, pending }: { data: any; pending: Ref<boolean> } =
+    await useAsyncData("community", () =>
+      communityStore.requestCommunityData(communityId, event),
+    );
   community.value = data.value ?? null;
   isPending.value = pending.value;
 }
@@ -208,7 +239,6 @@ watch(
           router.replace({ query: { event: currentEvent.value._id } });
         }
       }
-
     } else {
       // If no event is selected, make sure `currentEvent` is null.
       communityStore.setCurrentEvent(null);
@@ -216,7 +246,6 @@ watch(
   },
   { immediate: true },
 );
-
 </script>
 
 <style lang="scss" scoped>

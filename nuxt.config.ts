@@ -21,13 +21,23 @@ export default defineNuxtConfig({
       },
     },
     plugins: [svgLoader()],
-    optimizeDeps: { 
-      include: [ "dompurify", "aos", "data-urls", "whatwg-encoding", 
-        "vue3-carousel/dist/carousel.es.js", "gsap", "vue-multiselect", "pluralize",
-        "marked", "lodash.debounce", "@inb/oeb-classification-table",
-        "@inb/oeb-widgets-graphs", "valibot" 
-      ] 
-    }
+    optimizeDeps: {
+      include: [
+        "dompurify",
+        "aos",
+        "data-urls",
+        "whatwg-encoding",
+        "vue3-carousel/dist/carousel.es.js",
+        "gsap",
+        "vue-multiselect",
+        "pluralize",
+        "marked",
+        "lodash.debounce",
+        "@inb/oeb-classification-table",
+        "@inb/oeb-widgets-graphs",
+        "valibot",
+      ],
+    },
   },
 
   devServer: {
@@ -39,7 +49,7 @@ export default defineNuxtConfig({
     "bootstrap/dist/css/bootstrap.min.css",
     "@fortawesome/fontawesome-svg-core/styles.css",
     "aos/dist/aos.css",
-    "vue-multiselect/dist/vue-multiselect.min.css"
+    "vue-multiselect/dist/vue-multiselect.min.css",
   ],
 
   ssr: false,
@@ -74,7 +84,9 @@ export default defineNuxtConfig({
       SCIENTIFIC_SERVICE_URL:
         process.env.NUXT_SCIENTIFIC_SERVICE_URL ||
         "https://dev-openebench.bsc.es/api/scientific",
-      SCIENTIFIC_SERVICE_URL_API: process.env.SCIENTIFIC_SERVICE_URL_API || "https://dev-openebench.bsc.es/api/scientific",
+      SCIENTIFIC_SERVICE_URL_API:
+        process.env.SCIENTIFIC_SERVICE_URL_API ||
+        "https://dev-openebench.bsc.es/api/scientific",
       BENCH_EVENT_API_URL:
         process.env.BENCH_EVENT_API_URL ||
         "https://dev-openebench.bsc.es/rest/bench_event_api",
@@ -126,9 +138,7 @@ export default defineNuxtConfig({
     "@sidebase/nuxt-auth",
   ],
 
-  buildModules: [
-    '@nuxt/typescript-build'
-  ],
+  buildModules: ["@nuxt/typescript-build"],
 
   eslint: {
     // TODO: Remove this when the project is clean
