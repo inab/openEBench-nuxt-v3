@@ -16,13 +16,13 @@
           </span>
         </h2>
       </div>
-      <div class="" v-if="loadingData">
+      <div v-if="loadingData" class="">
         <div class="space-y-2">
           <USkeleton class="dashboard-community-edit__skeleton__small" />
           <USkeleton class="dashboard-community-edit__skeleton__big" />
         </div>
       </div>
-      <div class="dashboard-community-edit__content" v-else>
+      <div v-else class="dashboard-community-edit__content">
         <div class="w-100">
           <UTabs :items="items">
             <template #icon="{ item, selected }">
@@ -49,10 +49,10 @@
                         <div class="form-group">
                           <label for="type">Type</label>
                           <input
-                            type="text"
-                            class="form-control"
                             id="type"
                             v-model="communityData.type"
+                            type="text"
+                            class="form-control"
                             disabled
                           />
                         </div>
@@ -61,10 +61,10 @@
                         <div class="form-group">
                           <label for="privileges">Privileges</label>
                           <input
-                            type="text"
-                            class="form-control"
                             id="type"
                             v-model="localPrivilegesType"
+                            type="text"
+                            class="form-control"
                             disabled
                           />
                         </div>
@@ -75,10 +75,10 @@
                         <div class="form-group">
                           <label for="acronym">Acronym</label>
                           <input
-                            type="text"
-                            class="form-control"
                             id="acronym"
                             v-model="communityData.acronym"
+                            type="text"
+                            class="form-control"
                             :disabled="
                               !commmunityPrivileges.community.update || isView
                             "
@@ -124,10 +124,10 @@
                         <div class="form-group">
                           <label for="description">Name</label>
                           <input
-                            type="text"
-                            class="form-control"
                             id="name"
                             v-model="communityData.name"
+                            type="text"
+                            class="form-control"
                             :disabled="
                               !commmunityPrivileges.community.update || isView
                             "
@@ -138,10 +138,10 @@
                         <div class="form-group">
                           <label for="description">Description</label>
                           <textarea
-                            class="form-control"
                             id="description"
-                            rows="10"
                             v-model="communityData.description"
+                            class="form-control"
+                            rows="10"
                             :disabled="
                               !commmunityPrivileges.community.update || isView
                             "
@@ -164,12 +164,12 @@
                                 </span>
                                 <button
                                   class="btn-form-add btn-primary"
-                                  @click="onAddElement(localLinks)"
                                   :disabled="
                                     !commmunityPrivileges.community.update ||
                                     isView ||
                                     checkEmptyLinks
                                   "
+                                  @click="onAddElement(localLinks)"
                                 >
                                   <font-awesome-icon :icon="['fas', 'plus']" />
                                 </button>
@@ -184,23 +184,23 @@
                                 <div class="input-wrapper big d-flex">
                                   <span>{{ index + 1 }}.</span>
                                   <input
-                                    type="text"
-                                    class="form-control"
                                     id="link"
                                     v-model="localLinks[index]"
+                                    type="text"
+                                    class="form-control"
                                     :disabled="
                                       !commmunityPrivileges.community.update ||
                                       isView
                                     "
                                   />
                                   <button
-                                    class="btn-delete-input"
-                                    type="button"
-                                    @click="onDeleteElement(index, localLinks)"
                                     v-if="
                                       commmunityPrivileges.community.update &&
                                       !isView
                                     "
+                                    class="btn-delete-input"
+                                    type="button"
+                                    @click="onDeleteElement(index, localLinks)"
                                   >
                                     <font-awesome-icon
                                       :icon="['far', 'trash-can']"
@@ -223,12 +223,12 @@
                                 </span>
                                 <button
                                   class="btn-form-add btn-primary"
-                                  @click="onAddElement(localContacts)"
                                   :disabled="
                                     !commmunityPrivileges.community.update ||
                                     isView ||
                                     cheEmptyContacts
                                   "
+                                  @click="onAddElement(localContacts)"
                                 >
                                   <font-awesome-icon :icon="['fas', 'plus']" />
                                 </button>
@@ -242,20 +242,20 @@
                               >
                                 <div class="input-wrapper">
                                   <input
+                                    v-model="localContacts[index]"
                                     type="text"
                                     class="form-control"
-                                    v-model="localContacts[index]"
                                     :disabled="
                                       !commmunityPrivileges.community.update ||
                                       isView
                                     "
                                   />
                                   <button
-                                    class="btn-delete-input"
                                     v-if="
                                       commmunityPrivileges.community.update &&
                                       !isView
                                     "
+                                    class="btn-delete-input"
                                   >
                                     <font-awesome-icon
                                       :icon="['far', 'trash-can']"
@@ -276,11 +276,11 @@
                             >
                             <div class="w-100 d-flex">
                               <input
+                                id="schema"
+                                v-model="communityData._provenance"
                                 type="text"
                                 class="form-control custom-entry-input"
-                                id="schema"
                                 placeholder="https://provenance.org/Community"
-                                v-model="communityData._provenance"
                               />
                             </div>
                           </div>
@@ -293,11 +293,11 @@
                             <label for="schema">Schema</label>
                             <div class="w-100 d-flex">
                               <input
+                                id="schema"
+                                v-model="communityData._schema"
                                 type="text"
                                 class="form-control custom-entry-input"
-                                id="schema"
                                 placeholder="https://schema.org/Community"
-                                v-model="communityData._schema"
                               />
                             </div>
                           </div>
@@ -312,12 +312,12 @@
                                 <span class="label-text"> Keywords </span>
                                 <button
                                   class="btn-form-add btn-primary"
-                                  @click="onAddElement(localKeywords)"
                                   :disabled="
                                     !commmunityPrivileges.community.update ||
                                     isView ||
                                     checkEmptyKeywords
                                   "
+                                  @click="onAddElement(localKeywords)"
                                 >
                                   <font-awesome-icon :icon="['fas', 'plus']" />
                                 </button>
@@ -331,20 +331,20 @@
                               >
                                 <div class="input-wrapper">
                                   <input
+                                    v-model="localKeywords[index]"
                                     type="text"
                                     class="form-control"
-                                    v-model="localKeywords[index]"
                                     :disabled="
                                       !commmunityPrivileges.community.update ||
                                       isView
                                     "
                                   />
                                   <button
-                                    class="btn-delete-input"
                                     v-if="
                                       commmunityPrivileges.community.update &&
                                       !isView
                                     "
+                                    class="btn-delete-input"
                                   >
                                     <font-awesome-icon
                                       :icon="['far', 'trash-can']"
@@ -366,11 +366,11 @@
                         Cancel
                       </UButton>
                       <UButton
+                        v-if="commmunityPrivileges.community.update && !isView"
                         type="submit"
                         :disabled="
                           !commmunityPrivileges.community.update || isView
                         "
-                        v-if="commmunityPrivileges.community.update && !isView"
                       >
                         Submit
                       </UButton>
@@ -383,8 +383,8 @@
                   <EventsList
                     :events="events"
                     :is-loading-data="isLoadingEvents"
-                    :commmunityPrivileges="commmunityPrivileges"
-                    :communityId="id"
+                    :commmunity-privileges="commmunityPrivileges"
+                    :community-id="id"
                   />
                 </div>
               </div>
@@ -396,7 +396,7 @@
         </div>
       </div>
     </div>
-    <CustomDialog :isDialogOpen="isDialogOpened" @modal-close="dialogShow">
+    <CustomDialog :is-dialog-open="isDialogOpened" @modal-close="dialogShow">
       <template #header>
         {{ dialogTitle }}
       </template>
@@ -443,12 +443,12 @@ import {
 import EventsList from "@/components/Dashboard/communities/EventsList.vue";
 import CommunitySummary from "@/components/Dashboard/communities/CommunitySummary.vue";
 import CustomSubtitle from "@/components/Common/CustomSubtitle.vue";
-import { CommunityPrivilegeActions } from "@/constants/privileges";
+import type { CommunityPrivilegeActions } from "@/constants/privileges";
 import { useRouter } from "vue-router";
 import type { FormSubmitEvent } from "#ui/types";
 import * as v from "valibot";
 import CustomDialog from "@/components/Common/CustomDialog.vue";
-import { Event } from "@/types/events";
+import type { Event } from "@/types/events";
 
 const router = useRouter();
 const runtimeConfig = useRuntimeConfig();
@@ -480,10 +480,10 @@ const schema = v.object({
   description: v.pipe(v.string()),
 });
 
-let dialogTitle = ref("");
-let dialogType = ref("yesno");
-let isDialogOpened = ref(false);
-let dialogText = ref("");
+const dialogTitle = ref("");
+const dialogType = ref("yesno");
+const isDialogOpened = ref(false);
+const dialogText = ref("");
 
 const errors = ref<string[]>([]);
 
@@ -536,7 +536,7 @@ if (props.communityObj && typeof props.communityObj.status === "string") {
     props.communityObj.status.slice(1);
 }
 
-let localContacts = ref<string[]>([]);
+const localContacts = ref<string[]>([]);
 if (props.communityObj && props.communityObj.community_contact_ids) {
   localContacts.value =
     props.communityObj.community_contact_ids.map((contact: string) => {
@@ -544,7 +544,7 @@ if (props.communityObj && props.communityObj.community_contact_ids) {
     }) || [];
 }
 
-let localLinks = ref<string[]>([]);
+const localLinks = ref<string[]>([]);
 if (props.communityObj && props.communityObj.links) {
   localLinks.value = props.communityObj.links
     .filter((link: { comment?: string }) => {
@@ -554,7 +554,7 @@ if (props.communityObj && props.communityObj.links) {
     .filter((uri: string | undefined): uri is string => uri !== undefined);
 }
 
-let localKeywords = ref<string[]>([]);
+const localKeywords = ref<string[]>([]);
 if (props.communityObj && props.communityObj.keywords) {
   localKeywords.value = props.communityObj.keywords;
 }

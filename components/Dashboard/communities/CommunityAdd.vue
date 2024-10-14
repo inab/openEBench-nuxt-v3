@@ -20,11 +20,11 @@
                   <div class="form-group">
                     <label for="acronym">Acronym</label>
                     <input
+                      id="acronym"
+                      v-model="state.acronym"
                       type="text"
                       class="form-control custom-entry-input"
-                      id="acronym"
                       placeholder="Community acronym"
-                      v-model="state.acronym"
                     />
                   </div>
                 </div>
@@ -57,11 +57,11 @@
                   <div class="form-group">
                     <label for="description">Name</label>
                     <input
+                      id="name"
+                      v-model="state.name"
                       type="text"
                       class="form-control custom-entry-input"
                       placeholder="Community name"
-                      id="name"
-                      v-model="state.name"
                     />
                   </div>
                 </div>
@@ -69,10 +69,10 @@
                   <div class="form-group">
                     <label for="description">Description</label>
                     <textarea
-                      class="form-control"
                       id="description"
-                      rows="10"
                       v-model="state.description"
+                      class="form-control"
+                      rows="10"
                     >
                     </textarea>
                   </div>
@@ -90,8 +90,8 @@
                           <span class="label-text text-gray-500"> Links </span>
                           <button
                             class="btn-form-add btn-primary"
-                            @click="onAddElement(localLinks)"
                             :disabled="checkEmptyLinks"
+                            @click="onAddElement(localLinks)"
                           >
                             <font-awesome-icon :icon="['fas', 'plus']" />
                           </button>
@@ -99,18 +99,18 @@
                       </div>
                       <div class="w-100 row no-space">
                         <div
-                          v-if="localLinks.length > 0"
                           v-for="(link, index) in localLinks"
+                          v-if="localLinks.length > 0"
                           :key="link"
                           class="col-12 d-flex pl-0"
                         >
                           <div class="input-wrapper big d-flex">
                             <span>{{ index + 1 }}.</span>
                             <input
-                              type="text"
-                              class="form-control"
                               id="link"
                               v-model="localLinks[index]"
+                              type="text"
+                              class="form-control"
                             />
                             <button
                               class="btn-delete-input"
@@ -121,7 +121,7 @@
                             </button>
                           </div>
                         </div>
-                        <div class="col-12 pt-0" v-else>
+                        <div v-else class="col-12 pt-0">
                           <div class="w-100 empty-elements text-slate-400">
                             <span
                               >There are no links associated with this
@@ -144,8 +144,8 @@
                           </span>
                           <button
                             class="btn-form-add btn-primary"
-                            @click="onAddElement(localContacts)"
                             :disabled="cheEmptyContacts"
+                            @click="onAddElement(localContacts)"
                           >
                             <font-awesome-icon :icon="['fas', 'plus']" />
                           </button>
@@ -153,23 +153,23 @@
                       </div>
                       <div class="w-100 row no-space">
                         <div
-                          v-if="localContacts.length > 0"
                           v-for="(contact, index) in localContacts"
+                          v-if="localContacts.length > 0"
                           :key="index"
                           class="col-6 pt-0"
                         >
                           <div class="input-wrapper">
                             <input
+                              v-model="localContacts[index]"
                               type="text"
                               class="form-control"
-                              v-model="localContacts[index]"
                             />
                             <button class="btn-delete-input">
                               <font-awesome-icon :icon="['far', 'trash-can']" />
                             </button>
                           </div>
                         </div>
-                        <div class="col-12 pt-0" v-else>
+                        <div v-else class="col-12 pt-0">
                           <div class="w-100 empty-elements text-slate-400">
                             <span
                               >There are no contacts associated with this
@@ -190,11 +190,11 @@
                       >
                       <div class="w-100 d-flex">
                         <input
+                          id="schema"
+                          v-model="state._provenance"
                           type="text"
                           class="form-control custom-entry-input"
-                          id="schema"
                           placeholder="https://provenance.org/Community"
-                          v-model="state._provenance"
                         />
                       </div>
                     </div>
@@ -207,11 +207,11 @@
                       <label for="schema" class="text-gray-500">Schema</label>
                       <div class="w-100 d-flex">
                         <input
+                          id="schema"
+                          v-model="state._schema"
                           type="text"
                           class="form-control custom-entry-input"
-                          id="schema"
                           placeholder="https://schema.org/Community"
-                          v-model="state._schema"
                         />
                       </div>
                     </div>
@@ -228,8 +228,8 @@
                           </span>
                           <button
                             class="btn-form-add btn-primary"
-                            @click="onAddElement(localKeywords)"
                             :disabled="checkEmptyKeywords"
+                            @click="onAddElement(localKeywords)"
                           >
                             <font-awesome-icon :icon="['fas', 'plus']" />
                           </button>
@@ -237,23 +237,23 @@
                       </div>
                       <div class="w-100 row no-space">
                         <div
-                          v-if="localKeywords.length > 0"
                           v-for="(keys, index) in localKeywords"
+                          v-if="localKeywords.length > 0"
                           :key="index"
                           class="col-6 pt-0"
                         >
                           <div class="input-wrapper">
                             <input
+                              v-model="localKeywords[index]"
                               type="text"
                               class="form-control"
-                              v-model="localKeywords[index]"
                             />
                             <button class="btn-delete-input">
                               <font-awesome-icon :icon="['far', 'trash-can']" />
                             </button>
                           </div>
                         </div>
-                        <div class="col-12 pt-0" v-else>
+                        <div v-else class="col-12 pt-0">
                           <div class="w-100 empty-elements text-slate-400">
                             <span
                               >There are no keywords associated with this
@@ -277,7 +277,7 @@
         </div>
       </div>
     </div>
-    <CustomDialog :isDialogOpen="isDialogOpened" @modal-close="dialogShow">
+    <CustomDialog :is-dialog-open="isDialogOpened" @modal-close="dialogShow">
       <template #header>
         {{ dialogTitle }}
       </template>
@@ -344,10 +344,10 @@ const schema = v.object({
   description: v.pipe(v.string()),
 });
 
-let dialogTitle = ref("");
-let dialogType = ref("yesno");
-let isDialogOpened = ref(false);
-let dialogText = ref("");
+const dialogTitle = ref("");
+const dialogType = ref("yesno");
+const isDialogOpened = ref(false);
+const dialogText = ref("");
 
 const errors = ref<string[]>([]);
 
@@ -356,9 +356,9 @@ const localStatus = ref({
   value: "active",
   label: "Active",
 });
-let localContacts = ref<string[]>([]);
-let localLinks = ref<string[]>([]);
-let localKeywords = ref<string[]>([]);
+const localContacts = ref<string[]>([]);
+const localLinks = ref<string[]>([]);
+const localKeywords = ref<string[]>([]);
 
 const checkEmptyLinks = computed(() => {
   return localLinks.value.some((link: string) => link === "");
@@ -390,11 +390,11 @@ async function createCommunity() {
       _id: "OEBC998",
       _schema:
         "https://www.elixir-europe.org/excelerate/WP2/json-schemas/1.0/Community",
-      name: state.name,
-      acronym: state.acronym,
-      status: state.status,
+      name: state.value.name,
+      acronym: state.value.acronym,
+      status: state.value.status,
       community_contact_ids: ["Salvador.Capella-Gutierrez"],
-      description: state.description,
+      description: state.value.description,
     },
   ];
 

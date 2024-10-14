@@ -29,11 +29,11 @@ const selectTab = computed(() => props.selected);
 const itemsTab = computed(() => props.items);
 const emit = defineEmits(["change-selected"]);
 
-if(props.selected) {
+if (props.selected) {
   selectTab.value = props.selected;
 }
 
-if(props.items) {
+if (props.items) {
   itemsTab.value = props.items;
 }
 
@@ -49,9 +49,9 @@ watchEffect(() => {
     display: flex;
     justify-content: space-around;
     gap: 1rem;
-    padding: .25rem;
+    padding: 0.25rem;
     color: theme("colors.gray.500");
-    border-radius: .5rem;
+    border-radius: 0.5rem;
     font-size: 14px;
     margin-bottom: 8px;
     .tab-item {
@@ -76,7 +76,7 @@ watchEffect(() => {
   .selected {
     color: rgb(15, 23, 42);
     background-color: white;
-    border-radius: .5rem;
+    border-radius: 0.5rem;
     span {
       color: theme("colors.secondaryOeb.400");
     }

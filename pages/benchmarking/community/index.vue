@@ -18,21 +18,21 @@
         <div v-else>
           <p v-if="!community && !isPending">
             <noDataAvailable
-              description="No community found for Id "
               :id="`'` + communityId + `'.`"
-              btnPath="/benchmarking"
+              description="No community found for Id "
+              btn-path="/benchmarking"
               btn-text="Benchmarking communities"
             />
           </p>
           <p v-else>
             <noDataAvailable
               description="No information found to display."
-              btnPath="/benchmarking"
+              btn-path="/benchmarking"
             />
           </p>
         </div>
 
-        <div class="community-tabs md:flex" v-if="community">
+        <div v-if="community" class="community-tabs md:flex">
           <UTabs
             :items="tabsItems"
             class="w-full"

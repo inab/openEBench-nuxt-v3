@@ -18,8 +18,8 @@
       <input
         type="checkbox"
         class="allChecks"
-        @change="toggleSelectAll"
         :checked="isAllSelected"
+        @change="toggleSelectAll"
       />
 
       <UTable
