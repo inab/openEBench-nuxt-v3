@@ -21,7 +21,7 @@
         :columns="columns"
         :ui="{
           tr: {
-            base: '',
+            base: 'hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer',
           },
           th: {
             base: 'text-left rtl:text-right',
