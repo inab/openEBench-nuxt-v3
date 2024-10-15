@@ -4,14 +4,26 @@
       :rows="rows"
       :columns="headers"
       :sort="sort"
-      class="w-full"
+      class="w-full mt-4 cursor-auto"
       sort-asc-icon="i-heroicons-arrow-up-20-solid"
       sort-desc-icon="i-heroicons-arrow-down-20-solid"
       :ui="{
         tr: {
-          base: 'hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer',
+          base: 'hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer cursor-auto',
         },
-        td: { base: 'max-w-[0] truncate' },
+        th: {
+            base: 'text-left',
+            padding: 'py-2.5',
+            color: 'text-gray-900 dark:text-white',
+            font: 'font-medium',
+            size: 'text-sm',
+          },
+        td: {
+            base: 'max-w-[0] truncate',
+            padding: 'py-3',
+            font: '',
+            size: 'text-sm',
+          },
       }"
     >
     </UTable>
@@ -33,6 +45,13 @@ import { ref, computed } from "vue";
 const props = defineProps<{
   metricsTable: any;
 }>();
+
+const formatName = (text: string) => {
+  if (typeof text === 'string' && text.startsWith('Dataset_participant:3D:2022-12-17_')) {
+    return text.replace('Dataset_participant:3D:2022-12-17_', '');
+  }
+  return text;
+};
 
 const sort = ref({
   column: "participant_label",
@@ -58,7 +77,7 @@ let items = props.metricsTable.participants.map(
   (participant: Object, participantI: number) => {
     return {
       _id: participant._id,
-      participant_label: participant.participant_label,
+      participant_label: formatName(participant.participant_label),
       metricsValues: props.metricsTable.dataMatrix[participantI],
     };
   },
