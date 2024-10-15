@@ -17,12 +17,19 @@
         />
         <div v-else>
           <p v-if="!community && !isPending">
-            <noDataAvailable description="No events found for community with Id " :id="`'` + community_Id + `'.`"
-            btnPath="/benchmarking" btn-text="Benchmarking communities" />
+            <noDataAvailable
+              :id="`'` + community_Id + `'.`"
+              description="No events found for community with Id "
+              btn-path="/benchmarking"
+              btn-text="Benchmarking communities"
+            />
           </p>
           <p v-else>
-            <noDataAvailable description="No information found to display."
-            btnPath="/benchmarking" btn-text="Benchmarking communities" />
+            <noDataAvailable
+              description="No information found to display."
+              btn-path="/benchmarking"
+              btn-text="Benchmarking communities"
+            />
           </p>
         </div>
 
@@ -77,18 +84,24 @@ const community_Id = Array.isArray(route.params.community)
 if (communityStore.communityId && communityStore.communityId == community_Id) {
   community.value = communityStore.getCommunityData;
 } else {
-  const { data, pending }: { data: any, pending: Ref<boolean> } = await useAsyncData(
-    "community",
-    () => communityStore.requestCommunityData(community_Id, event),
-  );
+  const { data, pending }: { data: any; pending: Ref<boolean> } =
+    await useAsyncData("community", () =>
+      communityStore.requestCommunityData(community_Id, event),
+    );
   community.value = data.value ?? null;
   isPending.value = pending.value;
 }
 
 const eventsObj = computed(() => communityStore.getEvents ?? []);
-const communityReferences = computed(() => communityStore.getCommunityReferences ?? []);
+const communityReferences = computed(
+  () => communityStore.getCommunityReferences ?? [],
+);
 
-const routeArray: Array<{ label: string; isActualRoute: boolean; route?: string }> = !community.value
+const routeArray: Array<{
+  label: string;
+  isActualRoute: boolean;
+  route?: string;
+}> = !community.value
   ? [
       {
         label: "Benchmarking Communities",
@@ -105,6 +118,4 @@ const routeArray: Array<{ label: string; isActualRoute: boolean; route?: string 
       },
       { label: community.value.acronym + " Events", isActualRoute: true },
     ];
-
-
 </script>

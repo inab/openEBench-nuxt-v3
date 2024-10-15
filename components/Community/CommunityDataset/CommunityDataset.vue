@@ -1,9 +1,7 @@
 <template>
   <div class="community-dataset">
     <div>
-      <span
-        class="community-dataset__title"
-      >
+      <span class="community-dataset__title">
         Find the datasets available for this community
       </span>
     </div>

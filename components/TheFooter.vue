@@ -75,7 +75,7 @@
         </div>
 
         <!-- Col 3 -->
-        <div class="col-md-3 col-12 p-4  col-funding">
+        <div class="col-md-3 col-12 p-4 col-funding">
           <div>
             <a
               href="mailto:openebench-support@bsc.es"
@@ -126,11 +126,7 @@
               </p>
             </div>
             <div class="col col-3">
-              <img
-                :src="euFlag"
-                alt="EU logo"
-                class="eu-logo"
-              />
+              <img :src="euFlag" alt="EU logo" class="eu-logo" />
             </div>
           </div>
         </div>
@@ -208,8 +204,8 @@ export default {
   max-width: 150px;
 }
 
-.eu-logo{
-  max-width: 100%
+.eu-logo {
+  max-width: 100%;
 }
 
 .btn-f:hover {
@@ -241,13 +237,14 @@ export default {
     max-width: 100%;
   }
 
-  .col-funding, .col-logo {
+  .col-funding,
+  .col-logo {
     flex: 0 0 100%;
     max-width: 100%;
   }
 
-  .eu-logo{
-    max-width: 60%
+  .eu-logo {
+    max-width: 60%;
   }
 
   .footer .container-fluid {
@@ -258,10 +255,10 @@ export default {
 
 /* Para pantallas más pequeñas */
 @media (max-width: 768px) {
-  .col-md-6, .col-md-3 {
+  .col-md-6,
+  .col-md-3 {
     flex: 0 0 100%;
     max-width: 100%;
   }
 }
-
 </style>

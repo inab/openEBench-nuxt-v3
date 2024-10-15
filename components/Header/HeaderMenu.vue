@@ -169,7 +169,7 @@
                 </button>
 
                 <template v-if="data">
-                  <div id="profile" class="nav-item dropdown-login dropdown" >
+                  <div id="profile" class="nav-item dropdown-login dropdown">
                     <a
                       id="loginDropdown"
                       color="white"
@@ -247,7 +247,8 @@
                   </div>
                 </template>
                 <template v-else>
-                  <button id="btn-login"
+                  <button
+                    id="btn-login"
                     class="ripple text-white bg-primaryOeb-500 hover:bg-primaryOeb-400 font-medium rounded-md text-sm px-2.5 py-2"
                     @click="handleLogin"
                   >
@@ -282,11 +283,7 @@ import menuEntries from "~/components/Header/HeaderMenu/menuEntries";
 import subMenuEntriesObservatory from "./HeaderMenu/subMenuEntriesObservatory";
 import subMenuEntriesAbout from "./HeaderMenu/subMenuEntriesAbout";
 
-const {
-  data,
-  signIn,
-  signOut,
-} = useAuth();
+const { data, signIn, signOut } = useAuth();
 
 const runtimeConfig = useRuntimeConfig();
 const { $viewport } = useNuxtApp();
@@ -479,7 +476,7 @@ function closeMenu() {
     display: flex;
     align-items: center;
     justify-content: end !important;
-    
+
     @media only screen and (max-width: 1181px) {
       display: flex;
       flex-direction: column;
@@ -710,10 +707,10 @@ function closeMenu() {
       display: block;
     }
 
-    #btn-benchmark{
+    #btn-benchmark {
       margin-left: 16px;
     }
-    #profile{
+    #profile {
       left: -16px;
     }
     #btn-login {

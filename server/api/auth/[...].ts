@@ -11,7 +11,7 @@ const refreshAccessToken = async (token: JWT) => {
       client_id: runtimeConfig.public.KEYCLOAK_CLIENT_ID,
       client_secret: "",
       authorization_code: token.accessToken,
-      grant_type: 'refresh_token',
+      grant_type: "refresh_token",
       refresh_token: token.refreshToken,
     };
     const formBody: string[] = [];
@@ -19,19 +19,23 @@ const refreshAccessToken = async (token: JWT) => {
     Object.entries(details).forEach(([key, value]: [string, any]) => {
       const encodedKey = encodeURIComponent(key);
       const encodedValue = encodeURIComponent(value);
-      formBody.push(encodedKey + '=' + encodedValue);
+      formBody.push(encodedKey + "=" + encodedValue);
     });
 
-    const formData = formBody.join('&');
+    const formData = formBody.join("&");
+
+    console.log("8 - calling to token ...");
 
     const url = `${runtimeConfig.public.KEYCLOAK_HOST}/auth/realms/${runtimeConfig.public.KEYCLOAK_REALM}/protocol/openid-connect/token`;
     const response = await fetch(url, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
       },
       body: formData,
     });
+
+    console.log("9 - token response: ", response);
 
     const refreshedTokens = await response.json();
 
@@ -45,7 +49,7 @@ const refreshAccessToken = async (token: JWT) => {
   } catch (error) {
     return {
       ...token,
-      error: 'RefreshAccessTokenError',
+      error: "RefreshAccessTokenError",
     };
   }
 };
@@ -82,19 +86,22 @@ export default NuxtAuthHandler({
           token_endpoint_auth_method: "none",
         },
       },
+      httpOptions: {
+        timeout: 100000,
+      },
       userinfo: {
         url: `${runtimeConfig.public.KEYCLOAK_HOST}/auth/realms/${runtimeConfig.public.KEYCLOAK_REALM}/protocol/openid-connect/userinfo`,
       },
       session: {
         jwt: true,
-        maxAge: (30 * 60) + 10,
+        maxAge: 30 * 60 + 10,
       },
       cookies: {
         sessionToken: {
           name: `__Secure-next-auth.session-token`,
           options: {
             httpOnly: true,
-            sameSite: 'lax',
+            sameSite: "lax",
           },
         },
       },
@@ -116,16 +123,18 @@ export default NuxtAuthHandler({
       if (account && user) {
         token.accessToken = account.access_token;
         token.id_token = account.id_token;
-        token['oeb:roles'] = user['oeb:roles'] || account['oeb:roles']; // Guarda el campo "oeb:roles" en el token        token.accessTokenExpires = Date.now() + account.expires_in * 1000; // Guardar tiempo de expiración
+        token["oeb:roles"] = user["oeb:roles"] || account["oeb:roles"]; // Guarda el campo "oeb:roles" en el token        token.accessTokenExpires = Date.now() + account.expires_in * 1000; // Guardar tiempo de expiración
         token.refreshToken = account.refresh_token; // Guardar el refresh token
-        const decodedAccessToken = JSON.parse(atob(account.access_token.split('.')[1]));
-        if (decodedAccessToken['oeb:roles']) {
-          token['oeb:roles'] = decodedAccessToken['oeb:roles'];
+        const decodedAccessToken = JSON.parse(
+          atob(account.access_token.split(".")[1]),
+        );
+        if (decodedAccessToken["oeb:roles"]) {
+          token["oeb:roles"] = decodedAccessToken["oeb:roles"];
         }
       }
 
       if (user) {
-        token['oeb:roles'] = user['oeb:roles'] ?? token['oeb:roles'];
+        token["oeb:roles"] = user["oeb:roles"] ?? token["oeb:roles"];
       }
 
       if (Date.now() < token.accessTokenExpires) {
@@ -140,8 +149,8 @@ export default NuxtAuthHandler({
       session.token = token.id_token;
       session.preferred_username = token.preferred_username;
       session.resource_access = token.resource_access;
-      session.oeb_roles = token['oeb:roles']
-      session.user['oeb:roles'] = token['oeb:roles']; // Pasa el campo "oeb:roles" a la sesión      console.log("new session: ", session);
+      session.oeb_roles = token["oeb:roles"];
+      session.user["oeb:roles"] = token["oeb:roles"];
       return session;
     },
   },

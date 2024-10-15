@@ -10,15 +10,22 @@
         {{ challenge.name }}
       </div>
       <div class="benchmarking-challenge__body">
-        <div v-for="(item, index) in datasets" :key="index"
-          class="benchmarking-challenge__body_dec text-gray-500 text-sm">
+        <div
+          v-for="(item, index) in datasets"
+          :key="index"
+          class="benchmarking-challenge__body_dec text-gray-500 text-sm"
+        >
           <div v-if="index == tab && item">
-            <ChartDescriptionCard :type="item.datalink.inline_data.visualization.type"
-              :label="challenge.challenge_label" />
+            <ChartDescriptionCard
+              :type="item.datalink.inline_data.visualization.type"
+              :label="challenge.challenge_label"
+            />
           </div>
         </div>
         <div class="benchmarking-challenge__body__content text-sm">
-          <h2 class="benchmarking-challenge__body__content__title text-h6 mt-8 mb-2">
+          <h2
+            class="benchmarking-challenge__body__content__title text-h6 mt-8 mb-2"
+          >
             Choose the metrics you want to visualize in the diagram:
           </h2>
           <div class="benchmarking-challenge__body__content__graphs m">
@@ -77,8 +84,8 @@ await challengeAPI(challengeId).then(async (response: any) => {
         ? (value as any).datalink.inline_data.visualization.available_metrics[0]
         : (value as any).datalink.inline_data.visualization.type == "2D-plot"
           ? (value as any).datalink.inline_data.visualization.x_axis +
-          " + " +
-          (value as any).datalink.inline_data.visualization.y_axis
+            " + " +
+            (value as any).datalink.inline_data.visualization.y_axis
           : (value as any).datalink.inline_data.visualization.metric;
 
     const newData = value;
@@ -97,17 +104,16 @@ await challengeAPI(challengeId).then(async (response: any) => {
 if (communityStore.communityId === communityId) {
   community.value = communityStore.getCommunityData;
 } else {
-  const { data, pending }: { data: any; pending: Ref<boolean> } = await useAsyncData(
-    "community",
-    () => communityStore.requestCommunityData(communityId, event),
-  );
+  const { data, pending }: { data: any; pending: Ref<boolean> } =
+    await useAsyncData("community", () =>
+      communityStore.requestCommunityData(communityId, event),
+    );
   community.value = data.value ?? null;
   isPending.value = pending.value;
 }
 
 const currentEvent = computed(() => {
   const selectedEvent = communityStore.getCurrentEvent;
-
 
   // If no event is selected, select the first available event.
   if (!selectedEvent && eventsObj.length > 0) {
@@ -118,7 +124,11 @@ const currentEvent = computed(() => {
   return selectedEvent;
 });
 
-const routeArray: Array<{ label: string; isActualRoute: boolean; route?: string }> = [
+const routeArray: Array<{
+  label: string;
+  isActualRoute: boolean;
+  route?: string;
+}> = [
   {
     label: "Benchmarking Communities",
     isActualRoute: false,
@@ -132,15 +142,13 @@ const routeArray: Array<{ label: string; isActualRoute: boolean; route?: string 
   {
     label: currentEvent.value?.name,
     isActualRoute: false,
-    route: "/benchmarking/" + communityId + "?event=" + currentEvent.value._id
+    route: "/benchmarking/" + communityId + "?event=" + currentEvent.value._id,
   },
   {
-    label: "Challenge " + challenge.value.acronym + ' ' + challengeId,
+    label: "Challenge " + challenge.value.acronym + " " + challengeId,
     isActualRoute: true,
   },
-
 ];
-
 </script>
 
 <style scoped lang="scss">
@@ -184,7 +192,7 @@ const routeArray: Array<{ label: string; isActualRoute: boolean; route?: string 
   }
 }
 
-hr{
+hr {
   opacity: 0.1;
 }
 </style>

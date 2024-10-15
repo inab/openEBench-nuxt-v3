@@ -2,20 +2,30 @@
   <div class="community-event-selector row">
     <div class="col-8 ps-1">
       <div class="community-event-selector__item">
-        <USelectMenu 
-          v-slot="{ open }" 
-          v-model="eventSelected" 
+        <USelectMenu
+          v-slot="{ open }"
+          v-model="eventSelected"
           :options="eventsArray"
           searchable
-          searchable-placeholder="Search a event..." 
+          searchable-placeholder="Search a event..."
           class="community-event-selector__select"
-          @change="handleChangeEvent">
-            <UButton color="white" class="flex-1 justify-between primary-label truncate">
-              <span class="h-2 w-2 rounded-full bg-primary-500 dark:bg-primary-400" />
-              {{ eventSelected }}
+          @change="handleChangeEvent"
+        >
+          <UButton
+            color="white"
+            class="flex-1 justify-between primary-label truncate"
+          >
+            <span
+              class="h-2 w-2 rounded-full bg-primary-500 dark:bg-primary-400"
+            />
+            {{ eventSelected }}
 
-              <UIcon name="i-heroicons-chevron-right-20-solid" class="w-5 h-5 transition-transform text-gray-400 dark:text-gray-500" :class="[open && 'transform rotate-90']" />
-            </UButton>
+            <UIcon
+              name="i-heroicons-chevron-right-20-solid"
+              class="w-5 h-5 transition-transform text-gray-400 dark:text-gray-500"
+              :class="[open && 'transform rotate-90']"
+            />
+          </UButton>
         </USelectMenu>
       </div>
     </div>
@@ -85,7 +95,7 @@ async function handleChangeEvent() {
   a {
     text-decoration: none;
     color: #6a98c4;
-    font-size: 15px
+    font-size: 15px;
   }
   &__item {
     display: flex;

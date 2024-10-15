@@ -6,24 +6,24 @@
           <h2 class="text-primaryOeb-500">Dashboard</h2>
         </div>
         <div class="dashboard__header__description text-gray-500">
-          Welcome {{ userName }} to the OpenEBench Dashboard. 
+          Welcome {{ userName }} to the OpenEBench Dashboard.
         </div>
       </div>
       <div class="dashboard__body row">
-        <UCard class="dashboard__body__card col-6"
-        :ui="{
-          header: {
-            base: '',
-            background: '',
-            padding: 'px-2 py-3 sm:px-6',
-          },
-        }">
+        <UCard
+          class="dashboard__body__card col-6"
+          :ui="{
+            header: {
+              base: '',
+              background: '',
+              padding: 'px-2 py-3 sm:px-6',
+            },
+          }"
+        >
           <template #header>
-            <div class="dashboard__body__card__header">
-              Communities
-            </div>
+            <div class="dashboard__body__card__header">Entries</div>
           </template>
-      
+
           <div class="">
             <div class="row">
               <div class="col-6">
@@ -35,11 +35,14 @@
               </div>
               <div class="col-6">
                 <div class="">
-                  Here you can find information about the communities you are part of and the tools you have access to.
+                  Here you can find information about the communities you are
+                  part of and the tools you have access to.
                 </div>
                 <div class="dashboard__body__card__link">
                   <button class="ripple custom-button-primary">
-                    <NuxtLink to="/dashboard/communities" class="dashboard-link">Communities</NuxtLink>
+                    <NuxtLink to="/dashboard/entries" class="dashboard-link"
+                      >Communities</NuxtLink
+                    >
                   </button>
                 </div>
               </div>
@@ -56,26 +59,26 @@ import { computed } from "vue";
 import { useUser } from "@/stores/user.ts";
 
 definePageMeta({
-  middleware: 'auth',
+  middleware: "auth",
   auth: {
     authenticatedOnly: true, // Solo permite acceso a usuarios autenticados
-    navigateUnauthenticatedTo: '/login-required' // Redirige a los no autenticados
-  }
-})
+    navigateUnauthenticatedTo: "/login-required", // Redirige a los no autenticados
+  },
+});
 
 const { data, status } = useAuth();
 const userStore = useUser();
 
-
-if (status.value == 'authenticated') {
+if (status.value == "authenticated") {
   const userName = computed(() => data.value.user.name);
-  const privileges: Array<string> = computed(() => userStore.getUserCommunitiesRoles);
+  const privileges: Array<string> = computed(
+    () => userStore.getUserCommunitiesRoles,
+  );
 
-  if(privileges.value.length == 0) {
-    userStore.setUserCommunitiesRoles(data.value.oeb_roles)
+  if (privileges.value.length == 0) {
+    userStore.setUserCommunitiesRoles(data.value.oeb_roles);
   }
 }
-
 </script>
 
 <style lang="scss" scoped>
@@ -112,7 +115,7 @@ if (status.value == 'authenticated') {
       }
     }
   }
-  
+
   .custom-button-primary {
     border-radius: 20px;
     background-color: theme("colors.primary.500");

@@ -35,19 +35,36 @@
       <h2 class="section-title-border text-2xl font-normal mt-5">Fundings</h2>
       <hr class="mb-4" />
       <div class="row mt-5">
-        <div v-for="(collaborator, index) in fundingCollaborators" :key="index"
-          class="col-12 col-sm-6 col-md-4 d-flex justify-content-center">
-          <CollaboratorsCard :title="collaborator.title" :href="collaborator.href" :src="collaborator.src">
+        <div
+          v-for="(collaborator, index) in fundingCollaborators"
+          :key="index"
+          class="col-12 col-sm-6 col-md-4 d-flex justify-content-center"
+        >
+          <CollaboratorsCard
+            :title="collaborator.title"
+            :href="collaborator.href"
+            :src="collaborator.src"
+          >
           </CollaboratorsCard>
         </div>
       </div>
 
       <!-- Collaborators Section -->
-      <h2 class="section-title-border text-2xl font-normal mt-5">Collaborators</h2>
+      <h2 class="section-title-border text-2xl font-normal mt-5">
+        Collaborators
+      </h2>
       <hr class="mb-4" />
       <div class="row mt-5">
-        <div v-for="(collaborator, index) in otherCollaborators" :key="index" class="col-12 col-sm-6 col-md-4">
-          <CollaboratorsCard :title="collaborator.title" :href="collaborator.href" :src="collaborator.src">
+        <div
+          v-for="(collaborator, index) in otherCollaborators"
+          :key="index"
+          class="col-12 col-sm-6 col-md-4"
+        >
+          <CollaboratorsCard
+            :title="collaborator.title"
+            :href="collaborator.href"
+            :src="collaborator.src"
+          >
           </CollaboratorsCard>
         </div>
       </div>

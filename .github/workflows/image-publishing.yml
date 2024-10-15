@@ -4,11 +4,11 @@ name: Create and publish openEBench3 Docker image
 on:
   workflow_dispatch:
   push:
-    #branches:
-    #  - main
+    branches:
+      - main
     tags:
       # Push events to every tag not containing /
-      - '*'
+      - "*"
 
 # Defines two custom environment variables for the workflow. These are used for the Container registry domain, and a name for the Docker image that this workflow builds.
 env:
@@ -86,7 +86,7 @@ jobs:
       # It uses the `tags` and `labels` parameters to tag and label the image with the output from the "meta" step.
       - name: Push Docker image 📦
         id: push
-        uses: docker/build-push-action@v6.7.0
+        uses: docker/build-push-action@v6.9.0
         with:
           context: .
           file: ./Dockerfile.devci

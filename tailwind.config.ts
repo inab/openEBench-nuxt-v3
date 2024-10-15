@@ -33,16 +33,20 @@ export default <Partial<Config>>{
         },
         statusActive: {
           50: "#e6f9f5",
-          500: "#00caa4"
+          500: "#00caa4",
         },
         statusArchived: {
           50: "#f8f2e9",
-          500: "#d7a31a"
+          500: "#d7a31a",
         },
         statusIncubating: {
           50: "#f4f2f7",
-          500: "#7b62b8"
-        }
+          500: "#7b62b8",
+        },
+        statusAbandoned: {
+          50: "#faaaaa",
+          500: "#800000",
+        },
       },
     },
   },
