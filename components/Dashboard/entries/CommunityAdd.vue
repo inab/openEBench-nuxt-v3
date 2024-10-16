@@ -513,7 +513,7 @@ import { useRouter } from "vue-router";
 import CustomSubtitle from "@/components/Common/CustomSubtitle.vue";
 import type { FormSubmitEvent } from "#ui/types";
 import CustomDialog from "@/components/Common/CustomDialog.vue";
-import { object, string, array, safeParse, nonEmpty } from "valibot";
+import { object, string, array, safeParse, nonEmpty, is } from "valibot";
 import CustomBorder from "@/components/Common/CustomBorder.vue";
 
 const runtimeConfig = useRuntimeConfig();
@@ -552,7 +552,7 @@ const state = ref({
   community_contact_ids: [],
   type: "Community",
   privileges: "owner",
-  users: [],
+  users: []
 });
 
 const schema = object({
@@ -581,7 +581,7 @@ const schema = object({
       email: string(),
       role: string(),
     }),
-  ),
+  )
 });
 
 const dialogTitle = ref("");
@@ -771,7 +771,7 @@ async function createCommunity() {
     const responseData = await response.json();
     if (responseData.status == 200) {
       errors.value = [];
-      router.push("/dashboard/communities");
+      router.push("/dashboard/entries");
     } else {
       const errorResponse = JSON.parse(responseData.body);
       errors.value = errorResponse.error.map((error: any) => {

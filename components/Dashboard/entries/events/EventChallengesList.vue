@@ -43,42 +43,45 @@
         </div>
       </template>
       <template #actions-data="{ row }">
-        <div v-if="row.privileges === 'Owner' && row.actions.community">
-          <button title="Edit community" class="btn-event text-neutral-300">
-            <NuxtLink :to="getCommunityChallengeEditLink(row)">
-              <font-awesome-icon :icon="['fas', 'pencil']" />
+        <div class="action-btn-group">
+          <button class="btn-custom-badget text-sm">
+            <NuxtLink
+              :to="`/benchmarking/${communityId}/${row._id}`"
+              title="View community events"
+              class="text-sm"
+            >
+              Live <font-awesome-icon :icon="['far', 'eye']" />
             </NuxtLink>
           </button>
-          <template v-if="row.actions.community.delete">
-            <button title="Delete community" class="btn-event text-neutral-300">
-              <font-awesome-icon :icon="['fas', 'trash']" />
+          <div v-if="row.privileges === 'Owner' && row.actions.community">
+            <button title="Edit community" class="btn-event text-neutral-300">
+              <NuxtLink :to="getCommunityChallengeEditLink(row)">
+                View <font-awesome-icon :icon="['fas', 'pencil']" />
+              </NuxtLink>
             </button>
-          </template>
-        </div>
-        <div v-else-if="row.privileges === 'Manager' && row.actions.community">
-          <button title="Edit challenge" class="btn-event text-neutral-300">
-            <NuxtLink :to="getCommunityChallengeEditLink(row)">
-              <font-awesome-icon :icon="['fas', 'pencil']" />
-            </NuxtLink>
-          </button>
-          <template v-if="row.actions.community.delete">
-            <button title="Delete challenge" class="btn-event text-neutral-300">
-              <font-awesome-icon :icon="['fas', 'trash']" />
+          </div>
+          <div
+            v-else-if="row.privileges === 'Manager' && row.actions.community"
+          >
+            <button title="Edit challenge" class="btn-custom-badget text-sm">
+              <NuxtLink :to="getCommunityChallengeEditLink(row)">
+                View <font-awesome-icon :icon="['fas', 'pencil']" />
+              </NuxtLink>
             </button>
-          </template>
-        </div>
-        <div v-else-if="row.privileges === 'anyone' && row.actions.community">
-          <button title="Edit challenge" class="btn-event text-neutral-300">
-            <NuxtLink :to="getCommunityChallengeEditLink(row)">
-              <font-awesome-icon :icon="['fas', 'pencil']" />
-            </NuxtLink>
-          </button>
+          </div>
+          <div v-else-if="row.privileges === 'anyone' && row.actions.community">
+            <button title="Edit challenge" class="btn-custom-badget text-sm">
+              <NuxtLink :to="getCommunityChallengeEditLink(row)">
+                View <font-awesome-icon :icon="['fas', 'pencil']" />
+              </NuxtLink>
+            </button>
+          </div>
         </div>
       </template>
       <template #view-data="{ row }">
         <button class="btn-custom-badget text-sm">
           <NuxtLink
-            :to="`/benchmarking/${row.community_id}?event=${row._id}`"
+            :to="`/benchmarking/${communityId}?event=${row._id}`"
             title="View community events"
             class="text-sm"
           >
@@ -144,10 +147,6 @@ const columns = [
     key: "challenge_contact",
   },
   {
-    label: "VIEW",
-    key: "view",
-  },
-  {
     key: "actions",
     label: "ACTIONS",
   },
@@ -211,7 +210,7 @@ const challengePrivileges = computed(() => {
 });
 
 const getCommunityChallengeEditLink = (row) => {
-  return `/dashboard/communities/${props.communityId}/events/${props.eventId}/challenges/${row._id}`;
+  return `/dashboard/entries/${props.communityId}/events/${props.eventId}/challenges/${row._id}`;
 };
 </script>
 
@@ -222,5 +221,10 @@ const getCommunityChallengeEditLink = (row) => {
   a {
     color: theme("colors.gray.400");
   }
+}
+
+.action-btn-group {
+  display: flex;
+  gap: 10px;
 }
 </style>

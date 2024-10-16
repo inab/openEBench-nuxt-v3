@@ -13,7 +13,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
-import CommunityEventAdd from "@/components/Dashboard/communities/events/CommunityEventAdd.vue";
+import CommunityEventAdd from "@/components/Dashboard/entries/events/CommunityEventAdd.vue";
 import { useUser } from "@/stores/user.ts";
 import { privileges } from "@/constants/privileges";
 
@@ -60,14 +60,14 @@ const errors = ref<string[]>([]);
 const routeArray: Array = ref([
   { label: "Dashboard", isActualRoute: false, route: "/dashboard" },
   {
-    label: "Communities",
+    label: "Entries",
     isActualRoute: false,
-    route: "/dashboard/communities",
+    route: "/dashboard/entries",
   },
   {
     label: `Communitiy ${communityId}`,
     isActualRoute: false,
-    route: `/dashboard/communities/${communityId}`,
+    route: `/dashboard/entries/${communityId}`,
   },
   {
     label: "New event",
