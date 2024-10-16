@@ -1,11 +1,11 @@
 <template>
   <div class="community-event-challenges">
     <div
-      v-if="commmunityPrivileges.create"
+      v-if="commmunityPrivileges.challenge.create"
       class="w-100 flex justify-content-end gap-3 py-3"
     >
       <NuxtLink
-        :to="`/dashboard/communities/${communityId}/events/add`"
+        :to="`/dashboard/entries/${communityId}/events/${eventId}/add`"
         class="btn custom-btn btn-primary"
         title="Create New Event"
       >

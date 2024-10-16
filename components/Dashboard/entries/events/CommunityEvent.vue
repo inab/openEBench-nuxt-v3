@@ -8,8 +8,6 @@
         </div>
       </div>
       <div v-else class="dashboard-community-event-edit__content">
-        {{ localStartDate }}
-        {{ eventPrivileges.event }}
         <div class="w-100">
           <CustomTab
             :items="items"
@@ -88,7 +86,6 @@
                         </div>
                       </div>
                       <div class="col-4">
-                        {{ localAutomated }}
                         <div class="form-group">
                           <label for="dates">Is Automated Event</label>
                           <USelect

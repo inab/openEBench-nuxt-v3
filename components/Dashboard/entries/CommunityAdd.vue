@@ -142,7 +142,7 @@
                 </div>
                 <div class="form-card__row__box">
                   <div class="form-group">
-                    <label for="description">
+                    <label for="name">
                       Name
                       <span class="text-red-400 required">*</span>
                     </label>
