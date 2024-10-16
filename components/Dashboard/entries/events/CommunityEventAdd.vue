@@ -20,7 +20,6 @@
             :state="state"
             class="space-y-4"
             @submit="onSubmitCommunityEvent"
-            @error="onError"
           >
             <div class="w-100 form-card">
               <div class="form-card__row">
@@ -68,14 +67,7 @@
                           Event Start Date
                           <span class="text-red-400 required">*</span>
                         </label>
-                        <input
-                          id="dates"
-                          v-model="state.dates.benchmark_start"
-                          type="date"
-                          class="form-control custom-entry-input"
-                          placeholder="Start Date"
-                          :disabled="!eventPrivileges.event.create"
-                        />
+                        <VueDatePicker v-model="state.dates.benchmark_start"></VueDatePicker>
                       </div>
                     </div>
                     <div class="col-4">
@@ -84,14 +76,7 @@
                           Event End Date
                           <span class="text-red-400 required">*</span>
                         </label>
-                        <input
-                          id="dates"
-                          v-model="state.dates.benchmark_end"
-                          type="date"
-                          class="form-control custom-entry-input"
-                          placeholder="End Date"
-                          :disabled="!eventPrivileges.event.create"
-                        />
+                        <VueDatePicker v-model="state.dates.benchmark_stop"></VueDatePicker>
                       </div>
                     </div>
                     <div class="col-4">
@@ -368,12 +353,15 @@ import type { CommunityPrivilegeActions } from "@/constants/privileges";
 import CustomDialog from "@/components/Common/CustomDialog.vue";
 import type { FormSubmitEvent, FormErrorEvent } from "#ui/types";
 import { object, string, array, safeParse, boolean, optional } from "valibot";
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
 
 const runtimeConfig = useRuntimeConfig();
 const router = useRouter();
 const userStore = useUser();
 const { data } = useAuth();
 const token: string = data?.value.accessToken;
+const date = ref();
 
 const props = defineProps<{
   eventPrivileges: CommunityPrivilegeActions;
@@ -392,7 +380,7 @@ const state = ref({
   is_automated: false,
   dates: {
     benchmark_start: "",
-    benchmark_end: "",
+    benchmark_stop: "",
   },
 });
 
@@ -419,7 +407,7 @@ const schema = object({
     ),
   ),
   _schema: string(),
-  url: string(),
+  url: optional(string()),
   is_automated: boolean(),
 });
 
@@ -455,8 +443,12 @@ const checkEmptyReferences = computed(() => {
   return localReferences.value.some((keyword: string) => keyword === "");
 });
 
+state.value.dates.benchmark_start = new Date();
+state.value.dates.benchmark_stop = new Date(state.value.dates.benchmark_start);
+state.value.dates.benchmark_stop = state.value.dates.benchmark_stop.setMonth(state.value.dates.benchmark_stop.getMonth() + 1);
+
 function goBack() {
-  router.push(`/dashboard/communities/${state.value.community_id}`);
+  router.push(`/dashboard/entries/${state.value.community_id}`);
 }
 
 const getErrors = computed(() => errors.value.join(", "));
@@ -497,7 +489,7 @@ async function createBenchmarkingEvent() {
     is_automated: state.value.is_automated,
     dates: {
       benchmark_start: convertToUTCFullDate(state.value.dates.benchmark_start),
-      benchmark_end: convertToUTCFullDate(state.value.dates.benchmark_end),
+      benchmark_stop: convertToUTCFullDate(state.value.dates.benchmark_stop),
     },
   };
 
@@ -783,7 +775,6 @@ onMounted(() => {
       rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
     &__row {
       padding: 20px 15px;
-
       &:last-child {
         width: 100%;
       }

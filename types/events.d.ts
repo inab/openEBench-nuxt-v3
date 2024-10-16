@@ -25,4 +25,5 @@ export interface Event {
   _schema?: string;
   references?: Array<string>;
   actions?: Array<CommunityPrivileges>;
+  is_automated?: boolean;
 }

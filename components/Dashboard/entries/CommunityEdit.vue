@@ -751,7 +751,7 @@ if (props.communityObj && typeof props.communityObj.status === "string") {
 if (props.communityObj && props.communityObj.community_contact_ids) {
   localContacts.value =
     props.communityObj.community_contact_ids.map((contact: string) => {
-      return contact.replace(/\./g, " ");
+      return contact;
     }) || [];
 }
 

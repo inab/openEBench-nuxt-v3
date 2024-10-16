@@ -24,7 +24,7 @@
             </span>
           </h2>
         </div>
-        <div class="dashboar-community-events__description text-gray-500">
+        <div class="dashboard-community-events__description text-gray-500">
           It is a long established fact that a reader will be distracted by the
           readable content of a page when looking at its layout. The point of
           using Lorem Ipsum is that it has a more-or-less normal distribution of
@@ -42,6 +42,7 @@
           :is-view="isView"
           :challenges="eventChallenge"
           :is-loadin-challenges="isLoadinChallenges"
+          :tab-index="tabIndex"
         />
       </div>
     </div>
@@ -70,6 +71,7 @@ const { data, status } = useAuth();
 const route = useRoute();
 const isLoadingData = ref(true);
 const isLoadinChallenges = ref(true);
+const tabIndex: Ref<string> = ref(route.query.challenges ? "1" : "0");
 
 if (status.value !== "authenticated") {
   await navigateTo("/login-required");
@@ -99,6 +101,12 @@ if (userPrivileges.value.length == 0) {
 }
 
 const eventPrivileges = computed(() => {
+  const isAdmin = userPrivileges.value.filter(
+    (privilege) => privilege.role === "admin",
+  );
+  if (isAdmin.length > 0) {
+    return privileges.admin;
+  }
   const privilege = userPrivileges.value.find((privilege) => {
     return privilege.community === communityId;
   });
@@ -120,7 +128,6 @@ const fetchUserCommunitiesEvents = async (token: string): Promise<void> => {
     const data = await response.json();
     communityDataEvent.value = data;
     isLoadingData.value = false;
-
     const communityResponse = await fetchCommunityChallengers(token, eventId);
     eventChallenge.value = communityResponse;
   } catch (error) {
@@ -150,7 +157,7 @@ const routeArray: Array = ref([
   {
     label: `Community ${communityId}`,
     isActualRoute: false,
-    route: `/dashboard/communities/${communityId}`,
+    route: `/dashboard/entries/${communityId}`,
   },
   {
     label: `Event ${eventId}`,

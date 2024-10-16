@@ -69,7 +69,7 @@
             <div v-if="row.privileges === 'Owner' && row.actions.community">
               <button title="Edit community" class="btn-custom-badget text-sm">
                 <NuxtLink :to="getCommunityEventEditLink(row)">
-                  <font-awesome-icon :icon="['fas', 'pencil']" />
+                  View <font-awesome-icon :icon="['fas', 'pencil']" />
                 </NuxtLink>
               </button>
             </div>
@@ -82,13 +82,25 @@
                 </NuxtLink>
               </button>
             </div>
-            <div v-else-if="row.privileges === 'anyone' && row.actions.community">
+            <div
+              v-else-if="row.privileges === 'anyone' && row.actions.community"
+            >
               <button title="Edit community" class="btn-custom-badget text-sm">
                 <NuxtLink :to="getCommunityEventEditLink(row)">
                   View <font-awesome-icon :icon="['fas', 'pencil']" />
                 </NuxtLink>
               </button>
             </div>
+            <button class="btn-custom-badget text-sm">
+              <NuxtLink
+                :to="getCommunityEventEditLink(row, true)"
+                title="View community events"
+                class="text-sm column-link"
+              >
+                Challenges
+                <font-awesome-icon :icon="['far', 'calendar']" />
+              </NuxtLink>
+            </button>
           </div>
         </template>
       </UTable>
@@ -209,7 +221,10 @@ const totalPages = computed(() => {
   return Math.ceil(Number(_total.value) / Number(pageCount.value));
 });
 
-const getCommunityEventEditLink = (row) => {
+const getCommunityEventEditLink = (row: any, isChallenge: boolean = false) => {
+  if (isChallenge) {
+    return `/dashboard/entries/${row.community_id}/events/${row._id}?challenges=true`;
+  }
   return `/dashboard/entries/${row.community_id}/events/${row._id}`;
 };
 </script>
@@ -228,5 +243,10 @@ const getCommunityEventEditLink = (row) => {
 .action-btn-group {
   display: flex;
   gap: 10px;
+}
+
+.column-link {
+  display: block;
+  min-width: 100px;
 }
 </style>

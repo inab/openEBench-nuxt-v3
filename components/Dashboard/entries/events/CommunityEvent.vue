@@ -8,49 +8,132 @@
         </div>
       </div>
       <div v-else class="dashboard-community-event-edit__content">
+        {{ localStartDate }}
+        {{ eventPrivileges.event }}
         <div class="w-100">
-          <UTabs :items="items">
-            <template #icon="{ item, selected }">
-              <UIcon
-                :name="item.icon"
-                class="w-4 h-4 flex-shrink-0 me-2"
-                :class="[
-                  selected &&
-                    'text-secondaryOeb-500 dark:text-secondaryOeb-400',
-                ]"
-              />
-            </template>
-            <template #item="{ item }">
-              <div v-if="item.key === 'summary'">
-                <UForm
-                  :schema="schema"
-                  :state="state"
-                  class="space-y-4"
-                  @submit="onSubmitCommunityEvent"
-                >
-                  <div class="w-100 form-card">
+          <CustomTab
+            :items="items"
+            :selected="selectedTab"
+            @change-selected="changeSelected"
+          >
+          </CustomTab>
+          <div v-if="selectedTab == '0'">
+            <UForm
+              :schema="schema"
+              :state="state"
+              class="space-y-4"
+              @submit="onSubmitCommunityEvent"
+              @error="onError"
+            >
+              <div class="w-100 form-card">
+                <div class="form-card__row">
+                  <div class="form-card__row__box w-100">
                     <div class="row">
-                      <div class="col-12">
+                      <div class="col-4 typeOptions">
                         <div class="form-group">
-                          <label for="name">Name</label>
+                          <label for="id">
+                            ID
+                            <span class="text-red-400 required">*</span>
+                          </label>
+                          <div class="w-100">
+                            <input
+                              id="id"
+                              v-model="eventData._id"
+                              type="text"
+                              class="form-control custom-entry-input"
+                              placeholder="Event id"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-4 typeOptions">
+                        <div class="form-group">
+                          <label for="id">
+                            Community ID
+                            <span class="text-red-400 required">*</span>
+                          </label>
+                          <div class="w-100">
+                            <input
+                              id="id"
+                              v-model="eventData.community_id"
+                              type="text"
+                              class="form-control custom-entry-input"
+                              placeholder="Community id"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-4">
+                        <div class="form-group">
+                          <label for="dates">
+                            Event Start Date
+                            <span class="text-red-400 required">*</span>
+                          </label>
+                          <VueDatePicker
+                            v-model="state.dates.benchmark_start"
+                          ></VueDatePicker>
+                        </div>
+                      </div>
+                      <div class="col-4">
+                        <div class="form-group">
+                          <label for="dates">
+                            Event End Date
+                            <span class="text-red-400 required">*</span>
+                          </label>
+                          <VueDatePicker
+                            v-model="state.dates.benchmark_stop"
+                          ></VueDatePicker>
+                        </div>
+                      </div>
+                      <div class="col-4">
+                        {{ localAutomated }}
+                        <div class="form-group">
+                          <label for="dates">Is Automated Event</label>
+                          <USelect
+                            v-model="localAutomated"
+                            :options="automatedOptions"
+                            option-attribute="label"
+                            value-attribute="value"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-8">
+                        <div class="form-group">
+                          <label for="name">
+                            Name
+                            <span class="text-red-400 required">*</span>
+                          </label>
                           <input
                             id="name"
                             v-model="eventData.name"
                             type="text"
-                            class="form-control"
-                            :disabled="!eventPrivileges.update || isView"
+                            class="form-control custom-entry-input"
+                            placeholder="Event name"
+                            :disabled="!eventPrivileges.event.update"
                           />
                         </div>
                       </div>
-                      <div class="col-6">
+                    </div>
+                  </div>
+                </div>
+                <div class="form-card__row">
+                  <div class="form-card__row__box w-100">
+                    <div class="row">
+                      <div class="col-12">
                         <div class="form-group">
-                          <label for="orig_id">Orig ID</label>
+                          <label for="schema">
+                            Schema
+                            <span class="text-red-400 required">*</span>
+                          </label>
                           <input
-                            id="orig_id"
-                            v-model="eventData.orig_id"
+                            id="schema"
+                            v-model="eventData._schema"
                             type="text"
-                            class="form-control"
-                            :disabled="!eventPrivileges.update || isView"
+                            class="form-control custom-entry-input"
+                            placeholder="https://schema.org/Community"
+                            :disabled="!eventPrivileges.event.update"
                           />
                         </div>
                       </div>
@@ -61,182 +144,184 @@
                             id="url"
                             v-model="eventData.url"
                             type="text"
-                            class="form-control"
-                            :disabled="!eventPrivileges.update || isView"
+                            class="form-control custom-entry-input"
+                            placeholder="URL"
+                            :disabled="!eventPrivileges.event.update"
                           />
                         </div>
                       </div>
-                      <div class="col-12">
-                        <div class="form-group">
-                          <label for="schema">Schema</label>
-                          <input
-                            id="schema"
-                            v-model="eventData._schema"
-                            type="text"
-                            class="form-control"
-                            :disabled="!eventPrivileges.update || isView"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div class="w-100">
-                      <div class="row">
-                        <div class="col-6">
-                          <div class="form-card__row__box">
-                            <div class="form-group">
-                              <div class="w-100">
-                                <label for="contacts" class="form-group-row">
-                                  <span class="label-text"> References </span>
-                                  <button
-                                    class="btn-form-add btn-primary"
-                                    :disabled="
-                                      !eventPrivileges.update ||
-                                      isView ||
-                                      checkEmptyReferences
-                                    "
-                                    @click="onAddElement(localReferences)"
-                                  >
-                                    <font-awesome-icon
-                                      :icon="['fas', 'plus']"
-                                    />
-                                  </button>
-                                </label>
-                              </div>
-                              <div class="w-100 row no-space">
-                                <div
-                                  v-for="(reference, index) in localReferences"
-                                  v-if="localReferences.length > 0"
-                                  :key="index"
-                                  class="col-12 pt-0 pb-1"
-                                >
-                                  <div class="input-wrapper">
-                                    <input
-                                      v-model="localReferences[index]"
-                                      type="text"
-                                      class="form-control"
-                                      :disabled="
-                                        !eventPrivileges.update || isView
-                                      "
-                                    />
-                                    <button
-                                      v-if="eventPrivileges.update && !isView"
-                                      class="btn-delete-input"
-                                    >
-                                      <font-awesome-icon
-                                        :icon="['far', 'trash-can']"
-                                      />
-                                    </button>
-                                  </div>
-                                </div>
-                                <div v-else class="col-12 pt-0">
-                                  <div
-                                    class="w-100 empty-elements text-slate-400"
-                                  >
-                                    <span
-                                      >There are no reference associated with
-                                      this event</span
-                                    >
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="col-6">
-                          <div class="form-card__row__box">
-                            <div class="form-group">
-                              <div class="w-100">
-                                <label for="contacts" class="form-group-row">
-                                  <span class="label-text"> Contacts </span>
-                                  <button
-                                    class="btn-form-add btn-primary"
-                                    :disabled="
-                                      !eventPrivileges.update ||
-                                      isView ||
-                                      checkEmptyContacts
-                                    "
-                                    @click="onAddElement(localContacts)"
-                                  >
-                                    <font-awesome-icon
-                                      :icon="['fas', 'plus']"
-                                    />
-                                  </button>
-                                </label>
-                              </div>
-                              <div class="w-100 row no-space">
-                                <div
-                                  v-for="(contact, index) in localContacts"
-                                  v-if="localContacts.length > 0"
-                                  :key="index"
-                                  class="col-12 pt-0 pb-1"
-                                >
-                                  <div class="input-wrapper">
-                                    <input
-                                      v-model="localContacts[index]"
-                                      type="text"
-                                      class="form-control"
-                                      :disabled="
-                                        !eventPrivileges.update || isView
-                                      "
-                                    />
-                                    <button
-                                      v-if="eventPrivileges.update && !isView"
-                                      class="btn-delete-input"
-                                    >
-                                      <font-awesome-icon
-                                        :icon="['far', 'trash-can']"
-                                      />
-                                    </button>
-                                  </div>
-                                </div>
-                                <div v-else class="col-12 pt-0">
-                                  <div
-                                    class="w-100 empty-elements text-slate-400"
-                                  >
-                                    <span
-                                      >There are no contacts associated with
-                                      this event</span
-                                    >
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="form-footer">
-                      <UButton
-                        type="button"
-                        variant="secondary"
-                        @click="goBack"
-                      >
-                        Cancel
-                      </UButton>
-                      <UButton
-                        v-if="eventPrivileges.update && !isView"
-                        type="submit"
-                        :disabled="!eventPrivileges.update || isView"
-                      >
-                        Submit
-                      </UButton>
                     </div>
                   </div>
-                </UForm>
-              </div>
-              <div v-if="item.key === 'challenges'">
-                <div>
-                  <EventChallengesList
-                    :challenges="challenges"
-                    :is-loading-challenges="isLoadinChallenges"
-                    :commmunity-privileges="eventPrivileges"
-                    :event-id="id"
-                    :community-id="communityId"
-                  />
+                </div>
+                <div class="form-card__row">
+                  <div class="w-100">
+                    <div class="row">
+                      <div class="col-6">
+                        <div class="form-card__row__box">
+                          <div class="form-group">
+                            <div class="w-100">
+                              <label for="contacts" class="form-group-row">
+                                <span class="label-text"> References </span>
+                                <button
+                                  class="btn-form-add btn-primary"
+                                  :disabled="
+                                    !eventPrivileges.event.update ||
+                                    isView ||
+                                    checkEmptyReferences
+                                  "
+                                  @click="onAddElement(localReferences)"
+                                >
+                                  <font-awesome-icon :icon="['fas', 'plus']" />
+                                </button>
+                              </label>
+                            </div>
+                            <div class="w-100 row no-space">
+                              <div
+                                v-for="(reference, index) in localReferences"
+                                v-if="localReferences.length > 0"
+                                :key="index"
+                                class="col-12 pt-0 pb-1"
+                              >
+                                <div class="input-wrapper">
+                                  <input
+                                    v-model="localReferences[index]"
+                                    type="text"
+                                    class="form-control"
+                                    :disabled="
+                                      !eventPrivileges.event.update || isView
+                                    "
+                                  />
+                                  <button
+                                    v-if="eventPrivileges.event.update && !isView"
+                                    class="btn-delete-input"
+                                  >
+                                    <font-awesome-icon
+                                      :icon="['far', 'trash-can']"
+                                    />
+                                  </button>
+                                </div>
+                              </div>
+                              <div v-else class="col-12 pt-0">
+                                <div
+                                  class="w-100 empty-elements text-slate-400"
+                                >
+                                  <span
+                                    >There are no reference associated with this
+                                    event</span
+                                  >
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="form-card__row__box">
+                          <div class="form-group">
+                            <div class="w-100">
+                              <label for="contacts" class="form-group-row">
+                                <span class="label-text"> Contacts </span>
+                                <button
+                                  class="btn-form-add btn-primary"
+                                  :disabled="
+                                    !eventPrivileges.event.update ||
+                                    isView ||
+                                    checkEmptyContacts
+                                  "
+                                  @click="onAddElement(localContacts)"
+                                >
+                                  <font-awesome-icon :icon="['fas', 'plus']" />
+                                </button>
+                              </label>
+                            </div>
+                            <div class="w-100 row no-space">
+                              <div
+                                v-for="(contact, index) in localContacts"
+                                v-if="localContacts.length > 0"
+                                :key="index"
+                                class="col-12 pt-0 pb-1"
+                              >
+                                <div class="input-wrapper big d-flex">
+                                  <USelectMenu
+                                    :ref="`contact_${index}`"
+                                    v-model="localContacts[index]"
+                                    class="w-full lg:w-100"
+                                    searchable
+                                    selected-icon="i-heroicons-check-16-solid"
+                                    placeholder="Select a contact"
+                                    :options="contactsData"
+                                    value-attribute="id"
+                                    option-attribute="name"
+                                  >
+                                  </USelectMenu>
+                                  <button
+                                    class="btn-delete-input"
+                                    type="button"
+                                    @click="
+                                      onDeleteElement(index, localContacts)
+                                    "
+                                  >
+                                    <font-awesome-icon
+                                      :icon="['far', 'trash-can']"
+                                    />
+                                  </button>
+                                </div>
+                              </div>
+                              <div v-else class="col-12 pt-0">
+                                <div
+                                  class="w-100 empty-elements text-slate-400"
+                                >
+                                  <span
+                                    >There are no contacts associated with this
+                                    event</span
+                                  >
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row w-100">
+                    <div v-if="oks" class="ok-response">
+                      <div class="alert alert-success text-center">
+                        {{ oks }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div v-if="errors.length > 0" class="row errors">
+                  <div class="col-12">
+                    <div class="alert alert-danger" v-html="getErrors"></div>
+                  </div>
+                </div>
+                <div class="form-footer">
+                  <UButton type="button" variant="secondary" @click="goBack">
+                    Cancel
+                  </UButton>
+                  <UButton
+                    v-if="eventPrivileges.event.update && !isView"
+                    type="submit"
+                    :disabled="!eventPrivileges.event.update || isView"
+                  >
+                    Submit
+                  </UButton>
                 </div>
               </div>
-            </template>
-          </UTabs>
+            </UForm>
+          </div>
+          <div v-else-if="selectedTab == '1'">
+            <div>
+              <EventChallengesList
+                :challenges="challenges"
+                :is-loading-challenges="isLoadinChallenges"
+                :commmunity-privileges="eventPrivileges"
+                :event-id="id"
+                :community-id="communityId"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -279,17 +364,24 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref, onMounted, watch } from "vue";
+import { useUser } from "@/stores/user.ts";
 import type { Event } from "@/types/events";
 import type { Challenge } from "@/types/challenge";
 import type { CommunityPrivilegeActions } from "@/constants/privileges";
 import EventChallengesList from "@/components/Dashboard/entries/events/EventChallengesList.vue";
 import CustomDialog from "@/components/Common/CustomDialog.vue";
-import * as v from "valibot";
+import CustomTab from "@/components/Common/CustomTab.vue";
+import VueDatePicker from "@vuepic/vue-datepicker";
+import "@vuepic/vue-datepicker/dist/main.css";
+import { object, string, array, safeParse, boolean, optional } from "valibot";
+import type { FormSubmitEvent, FormErrorEvent } from "#ui/types";
+
 
 const router = useRouter();
 const { data } = useAuth();
 const token: string = data?.value.accessToken;
+const userStore = useUser();
 
 const props = defineProps<{
   id: string;
@@ -300,23 +392,26 @@ const props = defineProps<{
   eventPrivileges: CommunityPrivilegeActions;
   challenges: Array<Challenge>;
   isLoadinChallenges: boolean;
+  tabIndex: string;
 }>();
 
 const dialogTitle = ref("");
 const dialogType = ref("yesno");
 const isDialogOpened = ref(false);
 const dialogText = ref("");
-
+const selectedTab = ref(props.tabIndex);
 const items = [
   {
     key: "summary",
     label: "Event Data",
     icon: "i-heroicons-document-chart-bar",
+    index: 0,
   },
   {
     key: "challenges",
     label: "Challenges",
     icon: "i-heroicons-calendar-date-range-16-solid",
+    index: 1,
   },
 ];
 
@@ -326,72 +421,240 @@ const state = ref({
   community_id: "",
   bench_contact_ids: "",
   dates: {
-    benchmark_start: "",
-    benchmark_stop: "",
+    benchmark_start: Date,
+    benchmark_stop: Date,
   },
   orig_id: "",
   _schema: "",
   references: [],
+  is_automated: false,
 });
 
-const schema = v.object({
-  _id: v.string(),
-  name: v.string(),
-  community_id: v.string(),
-  bench_contact_ids: v.string(),
-  dates: v.string(),
-  orig_id: v.string(),
-  _schema: v.string(),
+const schema = object({
+  _id: string(),
+  name: string(),
+  community_id: string(),
+  bench_contact_ids: array(
+    object({
+      id: string(),
+      name: string(),
+    }),
+  ),
+  dates: object({
+    benchmark_start: string(),
+    benchmark_stop: string(),
+  }),
+  references: optional(
+    array(
+      object({
+        id: string(),
+        name: string(),
+      }),
+    ),
+  ),
+  _schema: string(),
+  url: optional(string()),
+  is_automated: boolean(),
 });
+
+const automatedOptions = [
+  { label: "Yes", value: true },
+  { label: "No", value: false },
+];
+const errors = ref<string[]>([]);
+const oks = ref<string>("");
+const contactsData = ref<string[]>([]);
+const localReferences = ref<string[]>([]);
+const localContacts = ref<string[]>([]);
+const localAutomated = ref<boolean>(false);
 
 const eventData = computed(() => {
   state.value = {
     _id: String(props.eventObj?._id || ""),
     name: props.eventObj?.name || "",
     community_id: props.eventObj?.community_id || "",
-    bench_contact_ids: props.eventObj?.bench_contact_ids?.join(", ") || "",
-    dates: props.eventObj?.dates || { benchmark_start: "", benchmark_stop: "" },
+    bench_contact_ids:
+      props.eventObj?.bench_contact_ids.map((contact: string) => {
+        return {
+          id: contact,
+          name: contact,
+        };
+    }) || [],
+    dates: props.eventObj?.dates || { benchmark_start: Date, benchmark_stop: Date },
     orig_id: props.eventObj?.orig_id || "",
     _schema: props.eventObj?._schema || "",
     references: props.eventObj?.references || [],
+    is_automated: props.eventObj?.is_automated || false,
   };
   return props.eventObj;
 });
 
-const localReferences = ref<string[]>([]);
+state.value.dates.benchmark_start = new Date(state.value.dates.benchmark_start);
+state.value.dates.benchmark_stop = new Date(state.value.dates.benchmark_stop);
+
+const localStartDate = computed(() => {
+  if (eventData.value && eventData.value.dates && eventData.value.dates.benchmark_start) {
+    const date = new Date(eventData.value.dates.benchmark_start);
+    return date.toLocaleString();
+  }
+  return "";
+});
+
 if (props.eventObj && props.eventObj.references) {
   localReferences.value = props.eventObj.references;
 }
 
-const localContacts = ref<string[]>([]);
 if (props.eventObj && props.eventObj.bench_contact_ids) {
   localContacts.value =
     props.eventObj.bench_contact_ids.map((contact: string) => {
-      return contact.replace(/\./g, " ");
+      return contact;
     }) || [];
 }
 
-function onAddElement(array: []) {
+if (props.eventObj && props.eventObj.is_automated) {
+  localAutomated.value = Boolean(props.eventObj.is_automated);
+}
+
+if (props.tabIndex) {
+  selectedTab.value = props.tabIndex;
+}
+
+function onAddElement(array: string[]) {
   array.push("");
 }
 
+const elementToDelete = ref<{ index: number; element: string[] } | null>(null);
+
 function onDeleteElement(index: number, element: string[]) {
-  console.log(element[index]);
+  dialogElement.value = null;
   if (element[index] === "") {
     element.splice(index, 1);
+    restartElementToDelete();
   } else {
+    dialogElement.value = {
+      element: element,
+      index: index,
+    };
     dialogText.value = "Are you sure you want to delete this element?";
     dialogTitle.value = "Delete Element";
     isDialogOpened.value = true;
+    elementToDelete.value = {
+      index: index,
+      element: element,
+    };
   }
+}
+
+const fetchContacts = async (token: string): Promise<void> => {
+  try {
+    if (userStore.getContactsList && userStore.getContactsList.length > 0) {
+      contactsData.value = userStore.getContactsList;
+    } else {
+      contactsData.value = await userStore.fetchContacts(token);
+    }
+  } catch (error) {
+    console.error("Error fetching contacts data:", error);
+  }
+};
+
+function restartElementToDelete() {
+  elementToDelete.value = {
+    index: null,
+    element: [],
+  };
+}
+
+function deleteElement() {
+  if (elementToDelete.value.index !== null) {
+    elementToDelete.value.element.splice(elementToDelete.value.index, 1);
+    isDialogOpened.value = false;
+  }
+}
+
+function changeSelected(index: string) {
+  selectedTab.value = index;
 }
 
 function dialogShow() {
   console.log("dialogShow!!!!");
 }
 
-function onSubmitCommunityEvent() {
-  console.log("submitting...");
+async function onError(event: FormErrorEvent) {
+  console.log(event)
+}
+
+const getErrors = computed(() => errors.value.join(", "));
+
+async function onSubmitCommunityEvent(event: FormSubmitEvent<Schema>) {
+  const result = safeParse(schema, state.value);
+  if (result.success) {
+    const customErrors = validateRequiredFields(state.value);
+    if (customErrors.length > 0) {
+      errors.value = errorClean(customErrors);
+    } else {
+      errors.value = [];
+      await updateBenchmarkingEven();
+    }
+  } else {
+    errors.value = result.error.issues.map((issue) => issue.message);
+  }
+}
+
+async function updateBenchmarkingEven() {
+  const cleanContacts = deleteEmptyElements(localContacts.value);
+  const cleanReferences = deleteEmptyElements(localReferences.value);
+
+  const body = {
+    _id: state.value._id,
+    name: state.value.name,
+    community_id: state.value.community_id,
+    bench_contact_ids: cleanContacts.map((element) => {
+      return element;
+    }),
+    _schema: state.value._schema,
+    references: cleanReferences.map((element) => {
+      return element;
+    }),
+    url: state.value.url,
+    is_automated: localAutomated.value,
+    dates: {
+      benchmark_start: convertToUTCFullDate(state.value.dates.benchmark_start),
+      benchmark_stop: convertToUTCFullDate(state.value.dates.benchmark_stop),
+    },
+  };
+
+  console.log(body);
+
+  try {
+    const response = await fetch(`/api/staged/BenchmarkingEvent/${state.value._id}`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+
+    if (!response.ok) {
+      throw new Error("Error in API response");
+    }
+
+    const responseData = await response.json();
+    if (responseData.status == 200) {
+      errors.value = [];
+      router.push(`/dashboard/entries/${state.value.community_id}?events=true`);
+    } else {
+      const errorResponse = JSON.parse(responseData.body);
+      errors.value = errorResponse.error.map((error: any) => {
+        if (error.pointer) {
+          return `${error.message}`;
+        }
+        return error.message;
+      });
+    }
+  } catch (error) {
+    console.error("Error fetching communities data:", error);
+  }
 }
 
 const checkEmptyContacts = computed(() => {
@@ -403,9 +666,119 @@ const checkEmptyReferences = computed(() => {
 });
 
 function goBack() {
-  console.log("going back");
-  router.push(`/dashboard/communities/${state.value.community_id}`);
+  router.push(`/dashboard/entries/${state.value.community_id}`);
 }
+
+function convertToUTCFullDate(dateString: string): string {
+  const date = new Date(dateString);
+  return date.toISOString();
+}
+
+function deleteEmptyElements(array: string[]): string[] {
+  return array.filter((element) => element.trim() !== "");
+}
+
+function validateRequiredFields(data: any): string[] {
+  const requiredFields = [
+    "_id",
+    "_schema",
+    "name",
+    "dates.benchmark_start",
+    "dates.benchmark_end",
+    "community_id",
+    "bench_contact_ids",
+  ];
+  const errorMessages: string[] = [];
+
+  requiredFields.forEach((field) => {
+    if (typeof data[field] === "string" && data[field].trim() === "") {
+      errorMessages.push(`${field} cannot be empty`);
+    }
+  });
+
+  if (data["_id"] && !checkIdPattern(data["_id"])) {
+    errorMessages.push(
+      `_id is not in the correct format. Example: <b><i>${state.value.community_id}000000A</i></b>`,
+    );
+  }
+
+  if (localContacts.value.length == 0) {
+    errorMessages.push(`community_contact_ids cannot be empty`);
+  } else {
+    localContacts.value.forEach((contact: string, index: number) => {
+      if (contact.trim() === "") {
+        errorMessages.push(`community_contact_ids  cannot be empty`);
+      }
+    });
+  }
+
+  if (!state.value.dates.benchmark_start) {
+    errorMessages.push("benchmark_start date is required");
+  }
+  if (!state.value.dates.benchmark_stop) {
+    errorMessages.push("benchmark_end date is required");
+  }
+
+  return errorMessages;
+}
+
+function errorClean(errors: string[]): string[] {
+  const cleanedErrors = errors.map((element: string) =>
+    elementTranslator(element.trim()),
+  );
+  return cleanedErrors;
+}
+
+function checkIdPattern(id: string) {
+  const pattern = new RegExp("^OEBE[0-9]{3}[A-Z0-9]{7}$");
+  return pattern.test(id);
+}
+
+function elementTranslator(element: string) {
+  // Define a mapping of field names to their replacements
+  const fieldMap: { [key: string]: string } = {
+    community_contact_ids: "Contacts",
+    references: "References",
+    _id: "ID",
+    _schema: "Schema",
+    name: "Name",
+    benchmark_end: "Event End",
+    benchmark_start: "Event Start",
+  };
+
+  // Replace the field name in the error message if it exists in the fieldMap
+  for (const [field, replacement] of Object.entries(fieldMap)) {
+    const regex = new RegExp(`\\b${field}\\b`, "g");
+    element = element.replace(regex, `<b>${replacement}</b>`);
+  }
+
+  return element;
+}
+
+onMounted(() => {
+  fetchContacts(token);
+});
+
+watch(
+  () => props.eventObj,
+  (newVal) => {
+    if (newVal && newVal.bench_contact_ids) {
+      localContacts.value =
+        newVal.bench_contact_ids.map((contact: string) => {
+          return contact;
+        }) || [];
+    }
+    if (newVal && newVal.references) {
+      localReferences.value = newVal.references;
+    }
+
+    if (newVal && newVal.is_automated) {
+      localAutomated.value = Boolean(newVal.is_automated);
+    }
+  },
+  { immediate: true },
+);
+
 </script>
 
 <style scoped lang="scss">
@@ -509,11 +882,7 @@ function goBack() {
       rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
       rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
     &__row {
-      padding: 30px 15px;
-      display: grid;
-      grid-template-columns: auto auto;
-      column-gap: 10px;
-      row-gap: 20px;
+      padding: 20px 15px;
       &:last-child {
         width: 100%;
       }
@@ -525,10 +894,6 @@ function goBack() {
         border: 1px solid rgba(233, 236, 239);
         background-color: white;
         border-radius: 7px;
-        &:last-child {
-          width: 100%;
-          grid-column: span 2;
-        }
         .content-box {
           border: 1px solid rgba(233, 236, 239);
         }
@@ -547,6 +912,16 @@ function goBack() {
   .custom-entry-input::placeholder {
     opacity: 0.5;
     color: rgba(0, 0, 0, 0.3);
+  }
+  .custom-entry-input::placeholder {
+    opacity: 0.5;
+    color: rgba(0, 0, 0, 0.3);
+  }
+  .errors {
+    padding: 10px 15px;
+    .alert {
+      padding: 10px;
+    }
   }
 }
 </style>

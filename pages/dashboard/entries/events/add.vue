@@ -60,14 +60,14 @@ const errors = ref<string[]>([]);
 const routeArray: Array = ref([
   { label: "Dashboard", isActualRoute: false, route: "/dashboard" },
   {
-    label: "Communities",
+    label: "Entries",
     isActualRoute: false,
-    route: "/dashboard/communities",
+    route: "/dashboard/entries",
   },
   {
     label: `Communitiy ${communityId}`,
     isActualRoute: false,
-    route: `/dashboard/communities/${communityId}`,
+    route: `/dashboard/entries/${communityId}`,
   },
   {
     label: "New event",
