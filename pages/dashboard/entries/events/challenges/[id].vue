@@ -65,9 +65,8 @@ const userStore = useUser();
 const { data, status } = useAuth();
 const route = useRoute();
 const isLoadingData = ref(true);
-const userPrivileges: Array<string> = computed(
-  () => userStore.getUserCommunitiesRoles,
-);
+const userPrivileges: ComputedRef<Array<{ role: string; community: string }>> =
+  computed(() => userStore.getUserCommunitiesRoles);
 
 if (status.value !== "authenticated") {
   await navigateTo("/login-required");
@@ -93,6 +92,13 @@ if (userPrivileges.value.length == 0) {
 }
 
 const challengePrivileges = computed(() => {
+  const isAdmin = userPrivileges.value.filter(
+    (privilege) => privilege.role === "admin",
+  );
+  if (isAdmin.length > 0) {
+    return privileges.admin;
+  }
+  
   const privilege = userPrivileges.value.find((privilege) => {
     return privilege.community === communityId;
   });

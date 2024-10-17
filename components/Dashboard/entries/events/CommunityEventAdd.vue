@@ -20,6 +20,7 @@
             :state="state"
             class="space-y-4"
             @submit="onSubmitCommunityEvent"
+            @error="onError"
           >
             <div class="w-100 form-card">
               <div class="form-card__row">
@@ -37,7 +38,7 @@
                             v-model="state._id"
                             type="text"
                             class="form-control custom-entry-input"
-                            placeholder="Event id"
+                            placeholder="OEBE0010000000"
                           />
                         </div>
                       </div>
@@ -67,7 +68,9 @@
                           Event Start Date
                           <span class="text-red-400 required">*</span>
                         </label>
-                        <VueDatePicker v-model="state.dates.benchmark_start"></VueDatePicker>
+                        <VueDatePicker
+                          v-model="state.dates.benchmark_start"
+                        ></VueDatePicker>
                       </div>
                     </div>
                     <div class="col-4">
@@ -76,7 +79,9 @@
                           Event End Date
                           <span class="text-red-400 required">*</span>
                         </label>
-                        <VueDatePicker v-model="state.dates.benchmark_stop"></VueDatePicker>
+                        <VueDatePicker
+                          v-model="state.dates.benchmark_stop"
+                        ></VueDatePicker>
                       </div>
                     </div>
                     <div class="col-4">
@@ -84,6 +89,7 @@
                         <label for="dates">Is Automated Event</label>
                         <USelect
                           v-model="state.is_automated"
+                          class="selector"
                           :options="automatedOptions"
                           option-attribute="label"
                           value-attribute="value"
@@ -352,16 +358,23 @@ import { useUser } from "@/stores/user.ts";
 import type { CommunityPrivilegeActions } from "@/constants/privileges";
 import CustomDialog from "@/components/Common/CustomDialog.vue";
 import type { FormSubmitEvent, FormErrorEvent } from "#ui/types";
-import { object, string, array, safeParse, boolean, optional } from "valibot";
-import VueDatePicker from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css'
+import {
+  object,
+  string,
+  array,
+  safeParse,
+  boolean,
+  optional,
+  date,
+} from "valibot";
+import VueDatePicker from "@vuepic/vue-datepicker";
+import "@vuepic/vue-datepicker/dist/main.css";
 
 const runtimeConfig = useRuntimeConfig();
 const router = useRouter();
 const userStore = useUser();
 const { data } = useAuth();
 const token: string = data?.value.accessToken;
-const date = ref();
 
 const props = defineProps<{
   eventPrivileges: CommunityPrivilegeActions;
@@ -395,8 +408,8 @@ const schema = object({
     }),
   ),
   dates: object({
-    benchmark_start: string(),
-    benchmark_stop: string(),
+    benchmark_start: date(),
+    benchmark_stop: date(),
   }),
   references: optional(
     array(
@@ -443,9 +456,12 @@ const checkEmptyReferences = computed(() => {
   return localReferences.value.some((keyword: string) => keyword === "");
 });
 
-state.value.dates.benchmark_start = new Date();
-state.value.dates.benchmark_stop = new Date(state.value.dates.benchmark_start);
-state.value.dates.benchmark_stop = state.value.dates.benchmark_stop.setMonth(state.value.dates.benchmark_stop.getMonth() + 1);
+const benchmarkStart = new Date();
+const benchmarkStop = new Date(benchmarkStart);
+benchmarkStop.setMonth(benchmarkStop.getMonth() + 1);
+
+state.value.dates.benchmark_start = benchmarkStart;
+state.value.dates.benchmark_stop = benchmarkStop;
 
 function goBack() {
   router.push(`/dashboard/entries/${state.value.community_id}`);
@@ -512,13 +528,22 @@ async function createBenchmarkingEvent() {
       errors.value = [];
       router.push(`/dashboard/entries/${state.value.community_id}?events=true`);
     } else {
-      const errorResponse = JSON.parse(responseData.body);
-      errors.value = errorResponse.error.map((error: any) => {
-        if (error.pointer) {
-          return `${error.message}`;
-        }
-        return error.message;
-      });
+      let errorResponse = JSON.parse(responseData.body);
+      errorResponse = errorResponse.error || [];
+      console.log("errorResponse", errorResponse);
+      if (errorResponse.error) {
+        errors.value = errorResponse.error.map((error: any) => {
+          console.log("error", error);
+          if (error) {
+            return `${error}`;
+          }
+          return error.message;
+        });
+      } else if (errorResponse.message) {
+        errors.value = [errorResponse.message];
+      } else {
+        errors.value = [errorResponse];
+      }
     }
   } catch (error) {
     console.error("Error fetching communities data:", error);
@@ -535,7 +560,7 @@ function validateRequiredFields(data: any): string[] {
     "_schema",
     "name",
     "dates.benchmark_start",
-    "dates.benchmark_end",
+    "dates.benchmark_stop",
     "community_id",
     "bench_contact_ids",
   ];
@@ -566,7 +591,7 @@ function validateRequiredFields(data: any): string[] {
   if (!state.value.dates.benchmark_start) {
     errorMessages.push("benchmark_start date is required");
   }
-  if (!state.value.dates.benchmark_end) {
+  if (!state.value.dates.benchmark_stop) {
     errorMessages.push("benchmark_end date is required");
   }
 
@@ -657,14 +682,13 @@ const fetchContacts = async (token: string): Promise<void> => {
 };
 
 function checkIdPattern(id: string) {
-  const pattern = new RegExp("^OEBE[0-9]{3}[A-Z0-9]{7}$");
+  const pattern = new RegExp(`^${state.value.community_id}[A-Z0-9]{7}$`);
   return pattern.test(id);
 }
 
 async function onError(event: FormErrorEvent) {
-  const element = document.getElementById(event.errors[0].id);
-  element?.focus();
-  element?.scrollIntoView({ behavior: "smooth", block: "center" });
+  console.log(state.value);
+  console.log("onError", event);
 }
 
 onMounted(() => {

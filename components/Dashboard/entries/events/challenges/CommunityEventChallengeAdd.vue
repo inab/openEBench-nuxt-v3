@@ -125,6 +125,7 @@
                         <label for="dates">Is Automated Event</label>
                         <USelect
                           v-model="state.is_automated"
+                          class="selector"
                           :options="automatedOptions"
                           option-attribute="label"
                           value-attribute="value"
@@ -145,7 +146,8 @@
                           id="name"
                           v-model="state.name"
                           type="text"
-                          class="form-control"
+                          placeholder="Challenge name"
+                          class="form-control custom-entry-input"
                         />
                       </div>
                     </div>
@@ -156,7 +158,8 @@
                           id="acronym"
                           v-model="state.acronym"
                           type="text"
-                          class="form-control"
+                          placeholder="Challenge acronym"
+                          class="form-control custom-entry-input"
                         />
                       </div>
                     </div>
@@ -173,8 +176,9 @@
                         <input
                           id="_schema"
                           v-model="state._schema"
+                          placeholder="https://www.elixir-europe.org/excelerate/WP2/json-schemas/1.0/Challenge"
                           type="text"
-                          class="form-control"
+                          class="form-control custom-entry-input"
                         />
                       </div>
                     </div>

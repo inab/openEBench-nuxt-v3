@@ -86,7 +86,7 @@ export const useUser = defineStore("user", {
 
     async fetchUserPrivileges(token) {
       return await fetch(
-        `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}/query/privileges`,
+        `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}query/privileges`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
