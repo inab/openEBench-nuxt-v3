@@ -530,7 +530,6 @@ async function createBenchmarkingEvent() {
     } else {
       let errorResponse = JSON.parse(responseData.body);
       errorResponse = errorResponse.error || [];
-      console.log("errorResponse", errorResponse);
       if (errorResponse.error) {
         errors.value = errorResponse.error.map((error: any) => {
           console.log("error", error);

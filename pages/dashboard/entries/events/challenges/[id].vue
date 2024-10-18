@@ -51,7 +51,7 @@ import { ref, onMounted, computed } from "vue";
 import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
 import { useUser } from "@/stores/user.ts";
 import { privileges } from "@/constants/privileges";
-import CommunityEventChallenge from "@/components/Dashboard/entries/events/challenges/CommunityEventChallenge.vue";
+import CommunityEventChallenge from "@/components/Dashboard/entries/events/challenges/ChallengeEventChallenge.vue";
 
 definePageMeta({
   middleware: "auth",

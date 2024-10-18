@@ -1,13 +1,13 @@
 <template>
-  <div class="dashboard-community-event-edit">
+  <div class="dashboard-community-event-challenge-edit">
     <div class="w-100 container">
-      <div v-if="isLoadingData" class="">
+      <div v-if="isLoadingData" class="w-100">
         <div class="space-y-2">
           <USkeleton class="dashboard-community-edit__skeleton__small" />
           <USkeleton class="dashboard-community-edit__skeleton__big" />
         </div>
       </div>
-      <div v-else class="dashboard-community-event-edit__content">
+      <div v-else class="dashboard-community-event-challenge-edit__content">
         <div class="w-100">
           <CustomTab
             :items="items"
@@ -20,26 +20,44 @@
               :schema="schema"
               :state="state"
               class="space-y-4"
-              @submit="onSubmitCommunityEvent"
-              @error="onError"
+              @submit="onSubmitChallenge"
             >
               <div class="w-100 form-card">
                 <div class="form-card__row">
-                  <div class="form-card__row__box w-100">
+                  <div class="form-card__row__box">
                     <div class="row">
                       <div class="col-4 typeOptions">
                         <div class="form-group">
                           <label for="id">
-                            ID
+                            Challenge ID
+                            <span class="text-red-400 required">*</span>
+                          </label>
+
+                          <div class="w-100">
+                            <input
+                              id="id"
+                              v-model="state._id"
+                              type="text"
+                              class="form-control custom-entry-input"
+                              placeholder="Challenge id"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-4 typeOptions">
+                        <div class="form-group">
+                          <label for="id">
+                            Event ID
                             <span class="text-red-400 required">*</span>
                           </label>
                           <div class="w-100">
                             <input
                               id="id"
-                              v-model="eventData._id"
+                              v-model="eventId"
                               type="text"
                               class="form-control custom-entry-input"
                               placeholder="Event id"
+                              disabled
                             />
                           </div>
                         </div>
@@ -53,44 +71,67 @@
                           <div class="w-100">
                             <input
                               id="id"
-                              v-model="eventData.community_id"
+                              v-model="state.community_id"
                               type="text"
                               class="form-control custom-entry-input"
                               placeholder="Community id"
+                              disabled
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-4 typeOptions pt-3">
+                        <div class="form-group">
+                          <label for="orig_id"> Original ID </label>
+                          <div class="w-100">
+                            <input
+                              id="orig_id"
+                              v-model="state.orig_id"
+                              type="text"
+                              class="form-control custom-entry-input"
+                              placeholder="Original ID"
                             />
                           </div>
                         </div>
                       </div>
                     </div>
+                  </div>
+                </div>
+                <div class="form-card__row">
+                  <div class="form-card__row__box w-100">
                     <div class="row">
                       <div class="col-4">
                         <div class="form-group">
                           <label for="dates">
-                            Event Start Date
+                            Challenge Start Date
                             <span class="text-red-400 required">*</span>
                           </label>
-                          {{ localDates.dates.benchmark_start }}
                           <VueDatePicker
                             v-model="localDates.dates.benchmark_start"
+                            :format="dateFormat"
+                            locale="en"
                           ></VueDatePicker>
                         </div>
                       </div>
                       <div class="col-4">
                         <div class="form-group">
                           <label for="dates">
-                            Event End Date
+                            Challenge End Date
                             <span class="text-red-400 required">*</span>
                           </label>
                           <VueDatePicker
                             v-model="localDates.dates.benchmark_stop"
-                          ></VueDatePicker>
+                            :format="dateFormat"
+                            locale="en"
+                          >
+                          </VueDatePicker>
                         </div>
                       </div>
                       <div class="col-4">
                         <div class="form-group">
                           <label for="dates">Is Automated Event</label>
                           <USelect
-                            v-model="localAutomated"
+                            v-model="state.is_automated"
                             class="selector"
                             :options="automatedOptions"
                             option-attribute="label"
@@ -98,19 +139,33 @@
                           />
                         </div>
                       </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-card__row">
+                  <div class="form-card__row__box w-100">
+                    <div class="row">
                       <div class="col-8">
                         <div class="form-group">
-                          <label for="name">
-                            Name
-                            <span class="text-red-400 required">*</span>
-                          </label>
+                          <label for="name">Name</label>
                           <input
                             id="name"
                             v-model="state.name"
                             type="text"
+                            placeholder="Challenge name"
                             class="form-control custom-entry-input"
-                            placeholder="Event name"
-                            :disabled="!eventPrivileges.event.update"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-4">
+                        <div class="form-group">
+                          <label for="acronym">Acronym</label>
+                          <input
+                            id="acronym"
+                            v-model="state.acronym"
+                            type="text"
+                            placeholder="Challenge acronym"
+                            class="form-control custom-entry-input"
                           />
                         </div>
                       </div>
@@ -122,38 +177,33 @@
                     <div class="row">
                       <div class="col-12">
                         <div class="form-group">
-                          <label for="schema">
-                            Schema
-                            <span class="text-red-400 required">*</span>
-                          </label>
+                          <label for="_schema">Schema</label>
                           <input
-                            id="schema"
+                            id="_schema"
                             v-model="state._schema"
+                            placeholder="https://www.elixir-europe.org/excelerate/WP2/json-schemas/1.0/Challenge"
                             type="text"
                             class="form-control custom-entry-input"
-                            placeholder="https://www.elixir-europe.org/excelerate/WP2/json-schemas/1.0/Challenge"
-                            :disabled="!eventPrivileges.event.update"
                           />
                         </div>
                       </div>
-                      <div class="col-6">
+                      <div class="col-12 pt-3">
                         <div class="form-group">
-                          <label for="url">URL</label>
-                          <input
-                            id="url"
-                            v-model="state.url"
-                            type="text"
-                            class="form-control custom-entry-input"
-                            placeholder="URL"
-                            :disabled="!eventPrivileges.event.update"
-                          />
+                          <label for="description">Description</label>
+                          <textarea
+                            id="description"
+                            v-model="state.description"
+                            class="form-control"
+                            rows="10"
+                          >
+                          </textarea>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
                 <div class="form-card__row">
-                  <div class="w-100">
+                  <div class="form-card__row__box w-100">
                     <div class="row">
                       <div class="col-6">
                         <div class="form-card__row__box">
@@ -164,7 +214,7 @@
                                 <button
                                   class="btn-form-add btn-primary"
                                   :disabled="
-                                    !eventPrivileges.event.update ||
+                                    !challengePrivileges.challenge.update ||
                                     isView ||
                                     checkEmptyReferences
                                   "
@@ -187,12 +237,13 @@
                                     type="text"
                                     class="form-control"
                                     :disabled="
-                                      !eventPrivileges.event.update || isView
+                                      !challengePrivileges.challenge.update
                                     "
                                   />
                                   <button
                                     v-if="
-                                      eventPrivileges.event.update && !isView
+                                      challengePrivileges.challenge.update &&
+                                      !isView
                                     "
                                     class="btn-delete-input"
                                   >
@@ -225,7 +276,7 @@
                                 <button
                                   class="btn-form-add btn-primary"
                                   :disabled="
-                                    !eventPrivileges.event.update ||
+                                    !challengePrivileges.challenge.update ||
                                     isView ||
                                     checkEmptyContacts
                                   "
@@ -256,8 +307,11 @@
                                   >
                                   </USelectMenu>
                                   <button
+                                    v-if="
+                                      challengePrivileges.challenge.update &&
+                                      !isView
+                                    "
                                     class="btn-delete-input"
-                                    type="button"
                                     @click="
                                       onDeleteElement(index, localContacts)
                                     "
@@ -302,9 +356,9 @@
                     Cancel
                   </UButton>
                   <UButton
-                    v-if="eventPrivileges.event.update && !isView"
+                    v-if="challengePrivileges.update && !isView"
                     type="submit"
-                    :disabled="!eventPrivileges.event.update || isView"
+                    :disabled="!challengePrivileges.update || isView"
                   >
                     Submit
                   </UButton>
@@ -313,67 +367,23 @@
             </UForm>
           </div>
           <div v-else-if="selectedTab == '1'">
-            <div>
-              <EventChallengesList
-                :challenges="challenges"
-                :is-loading-challenges="isLoadinChallenges"
-                :commmunity-privileges="eventPrivileges"
-                :event-id="id"
-                :community-id="communityId"
-              />
-            </div>
+            <ChallengeMetrics
+              :metric-data="metricData"
+              :is-loading-data="isLoadingData"
+            />
           </div>
         </div>
       </div>
     </div>
-    <CustomDialog :is-dialog-open="isDialogOpened" @modal-close="dialogShow">
-      <template #header>
-        {{ dialogTitle }}
-      </template>
-      <template #content>
-        {{ dialogText }}
-      </template>
-      <template #footer>
-        <template v-if="dialogType && dialogType === 'yesno'">
-          <button
-            type="button"
-            class="btn-primary"
-            @click="isDialogOpened = false"
-          >
-            No
-          </button>
-          <button
-            type="button"
-            class="btn-primary"
-            @click="isDialogOpened = false"
-          >
-            Yes
-          </button>
-        </template>
-        <template v-else>
-          <button
-            type="button"
-            class="btn-primary"
-            @click="isDialogOpened = false"
-          >
-            Cancel
-          </button>
-        </template>
-      </template>
-    </CustomDialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onMounted, watch } from "vue";
-import { useUser } from "@/stores/user.ts";
-import type { Event } from "@/types/events";
+import { computed, ref, watch, onMounted } from "vue";
 import type { Challenge } from "@/types/challenge";
+import { ChallengeDates } from "@/types/challenge";
 import type { CommunityPrivilegeActions } from "@/constants/privileges";
-import EventChallengesList from "@/components/Dashboard/entries/events/EventChallengesList.vue";
 import CustomDialog from "@/components/Common/CustomDialog.vue";
-import CustomTab from "@/components/Common/CustomTab.vue";
-import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 import {
   object,
@@ -384,95 +394,40 @@ import {
   optional,
   date,
 } from "valibot";
+import VueDatePicker from "@vuepic/vue-datepicker";
 import type { FormSubmitEvent, FormErrorEvent } from "#ui/types";
+import { getLocaleDateString } from "@/constants/global_const";
+import CustomTab from "@/components/Common/CustomTab.vue";
+import ChallengeMetrics from "@/components/Dashboard/entries/events/challenges/ChallengeMetrics.vue";
 
 const router = useRouter();
 const { data } = useAuth();
-const token: string = data?.value.accessToken;
 const userStore = useUser();
+const token: string = data?.value.accessToken;
 
 const props = defineProps<{
   id: string;
   communityId: string;
-  eventObj: Event | null;
+  eventId: string;
   isLoadingData: boolean;
   isView: boolean;
-  eventPrivileges: CommunityPrivilegeActions;
-  challenges: Array<Challenge>;
-  isLoadinChallenges: boolean;
-  tabIndex: string;
+  challengePrivileges: CommunityPrivilegeActions;
+  challengeObj: Challenge;
 }>();
 
 const dialogTitle = ref("");
 const dialogType = ref("yesno");
 const isDialogOpened = ref(false);
 const dialogText = ref("");
-const selectedTab = ref(props.tabIndex);
-const items = [
-  {
-    key: "summary",
-    label: "Event Data",
-    icon: "i-heroicons-document-chart-bar",
-    index: 0,
-  },
-  {
-    key: "challenges",
-    label: "Challenges",
-    icon: "i-heroicons-calendar-date-range-16-solid",
-    index: 1,
-  },
-];
-
-const state = ref({
-  _id: "",
-  name: "",
-  community_id: "",
-  bench_contact_ids: "",
-  dates: {
-    benchmark_start: "",
-    benchmark_stop: "",
-    creation: "",
-    modification: "",
-  },
-  orig_id: "",
-  _schema: "",
-  references: [],
-  is_automated: false,
-  url: "",
-});
-
-const schema = object({
-  _id: string(),
-  name: string(),
-  community_id: string(),
-  bench_contact_ids: array(
-    object({
-      id: string(),
-      name: string(),
-    }),
-  ),
-  dates: object({
-    benchmark_start: date(),
-    benchmark_stop: date(),
-    creation: date(),
-    modification: date(),
-  }),
-  references: optional(array(string())),
-  _schema: string(),
-  url: optional(string()),
-  is_automated: boolean(),
-});
-
-const automatedOptions = [
-  { label: "Yes", value: true },
-  { label: "No", value: false },
-];
-const errors = ref<string[]>([]);
-const oks = ref<string>("");
-const contactsData = ref<string[]>([]);
 const localReferences = ref<string[]>([]);
 const localContacts = ref<string[]>([]);
-const localAutomated = ref<boolean>(false);
+const localMetricsCategories = ref<string[]>([]);
+const eventId = ref(props.eventId);
+const communityId = ref(props.communityId);
+const contactsData = ref<string[]>([]);
+const errors = ref<string[]>([]);
+const oks = ref<string>("");
+const selectedTab = ref("0");
 const localDates = ref({
   dates: {
     benchmark_start: new Date(),
@@ -482,91 +437,136 @@ const localDates = ref({
   },
 });
 
-const eventData = computed(() => {
-  state.value = {
-    _id: String(props.eventObj?._id || ""),
-    name: props.eventObj?.name || "",
-    community_id: props.eventObj?.community_id || "",
-    bench_contact_ids:
-      props.eventObj?.bench_contact_ids.map((contact: string) => {
-        return {
-          id: contact,
-          name: contact,
-        };
-      }) || [],
-    dates: {
-      benchmark_start:
-        new Date(props.eventObj?.dates.benchmark_start) || new Date(),
-      benchmark_stop:
-        new Date(props.eventObj?.dates.benchmark_stop) || new Date(),
-      creation: new Date(props.eventObj?.dates.creation) || new Date(),
-      modification: new Date(props.eventObj?.dates.modification) || new Date(),
-    },
-    orig_id: props.eventObj?.orig_id || "",
-    _schema: props.eventObj?._schema || "",
-    references: props.eventObj?.references || array<string>(),
-    is_automated: props.eventObj?.is_automated || false,
-    url: props.eventObj?.url || "",
-  };
-  return props.eventObj;
+const metricData = ref<string[]>([]);
+
+const state = ref({
+  _id: "",
+  community_id: "",
+  name: "",
+  acronym: "",
+  _schema: "",
+  benchmarking_event_id: "",
+  challenge_contact_ids: [],
+  dates: {
+    benchmark_start: "",
+    benchmark_stop: "",
+  },
+  is_automated: false,
+  url: "",
+  orig_id: "",
+  references: [],
+  metrics_categories: [],
 });
 
-if (props.eventObj && props.eventObj.references) {
-  localReferences.value =
-    props.eventObj.references.map((reference: string) => {
-      return reference;
-    }) || [];
+const items = [
+  {
+    key: "challenge",
+    label: "Challenge",
+    icon: "i-heroicons-calendar-date-range-16-solid",
+    index: 0,
+  },
+  {
+    key: "metrics",
+    label: "Metrics Data",
+    icon: "i-heroicons-document-chart-bar",
+    index: 1,
+  },
+];
+
+const schema = object({
+  _id: string(),
+  community_id: string(),
+  name: string(),
+  acronym: string(),
+  is_automated: boolean(),
+  dates: object({
+    benchmark_start: date(),
+    benchmark_stop: date(),
+  }),
+  _schema: string(),
+  url: string(),
+  orig_id: string(),
+  is_automated: boolean(),
+});
+
+const lang = window.navigator.userLanguage || window.navigator.language;
+const dateFormat = computed(() => getLocaleDateString(lang));
+const automatedOptions = [
+  { label: "Yes", value: true },
+  { label: "No", value: false },
+];
+const elementToDelete = ref({
+  index: null as number | null,
+  element: [] as string[],
+});
+
+const challengeData = computed(() => {
+  state.value = {
+    _id: props.challengeObj?._id || "",
+    community_id: props.communityId || "",
+    name: props.challengeObj?.name || "",
+    acronym: props.challengeObj?.acronym || "",
+    _schema: props.challengeObj?._schema || "",
+    benchmarking_event_id: props.challengeObj?.benchmarking_event_id || "",
+    challenge_contact_ids: props.challengeObj?.challenge_contact_ids || [],
+    dates: {
+      benchmark_start:
+        new Date(props.challengeObj?.dates.benchmark_start) || new Date(),
+      benchmark_stop:
+        new Date(props.challengeObj?.dates.benchmark_stop) || new Date(),
+    },
+    url: props.challengeObj?.url || "",
+    orig_id: props.challengeObj?.orig_id || "",
+    references: props.challengeObj?.references || [],
+    metrics_categories: props.challengeObj?.metrics_categories || [],
+    is_automated: props.eventObj?.is_automated || false,
+  };
+
+  return state;
+});
+challengeData.value;
+
+if (props.challengeObj && props.challengeObj.references) {
+  localReferences.value = props.challengeObj.references;
 }
 
-if (props.eventObj && props.eventObj.bench_contact_ids) {
+if (props.challengeObj && props.challengeObj.metrics_categories) {
+  localMetricsCategories.value = props.challengeObj.metrics_categories;
+}
+
+if (props.challengeObj && props.challengeObj.challenge_contact_ids) {
   localContacts.value =
-    props.eventObj.bench_contact_ids.map((contact: string) => {
+    props.challengeObj.challenge_contact_ids.map((contact: string) => {
       return contact;
     }) || [];
 }
 
-if (props.eventObj && props.eventObj.is_automated) {
-  localAutomated.value = Boolean(props.eventObj.is_automated);
-}
-
-if (props.eventObj && props.eventObj.dates) {
+if (props.challengeObj && props.challengeObj.dates) {
   localDates.value.dates = {
-    benchmark_start: new Date(props.eventObj.dates.benchmark_start),
-    benchmark_stop: new Date(props.eventObj.dates.benchmark_stop),
-    creation: new Date(props.eventObj.dates.creation),
-    modification: new Date(props.eventObj.dates.modification),
+    benchmark_start: new Date(props.challengeObj.dates.benchmark_start),
+    benchmark_stop: new Date(props.challengeObj.dates.benchmark_stop),
+    creation: new Date(props.challengeObj.dates.creation),
+    modification: new Date(props.challengeObj.dates.modification),
   };
 }
 
-if (props.tabIndex) {
-  selectedTab.value = props.tabIndex;
-}
-
-function onAddElement(array: string[]) {
+function onAddElement(array: []) {
   array.push("");
 }
 
-const elementToDelete = ref<{ index: number; element: string[] } | null>(null);
+const checkEmptyContacts = computed(() => {
+  return localContacts.value.some((contact: string) => contact === "");
+});
 
-function onDeleteElement(index: number, element: string[]) {
-  dialogElement.value = null;
-  if (element[index] === "") {
-    element.splice(index, 1);
-    restartElementToDelete();
-  } else {
-    dialogElement.value = {
-      element: element,
-      index: index,
-    };
-    dialogText.value = "Are you sure you want to delete this element?";
-    dialogTitle.value = "Delete Element";
-    isDialogOpened.value = true;
-    elementToDelete.value = {
-      index: index,
-      element: element,
-    };
-  }
-}
+const checkEmptyReferences = computed(() => {
+  return localReferences.value.some((keyword: string) => keyword === "");
+});
+
+const checkEmptyMetricsCategories = computed(() => {
+  return localMetricsCategories.value.some(
+    (category: string) => category === "",
+  );
+});
 
 const fetchContacts = async (token: string): Promise<void> => {
   try {
@@ -580,265 +580,31 @@ const fetchContacts = async (token: string): Promise<void> => {
   }
 };
 
-function restartElementToDelete() {
-  elementToDelete.value = {
-    index: null,
-    element: [],
-  };
-}
-
-function deleteElement() {
-  if (elementToDelete.value.index !== null) {
-    elementToDelete.value.element.splice(elementToDelete.value.index, 1);
-    isDialogOpened.value = false;
-  }
-}
-
 function changeSelected(index: string) {
+  console.log("index", index);
   selectedTab.value = index;
 }
 
-function dialogShow() {
-  console.log("dialogShow!!!!");
-}
-
-async function onError(event: FormErrorEvent) {
-  // console.log("state: ", state.value);
-  // console.log("event: ", event);
-}
-
-const getErrors = computed(() => errors.value.join(", "));
-
-async function onSubmitCommunityEvent(event: FormSubmitEvent<Schema>) {
-  const result = safeParse(schema, state.value);
-  if (result.success) {
-    const customErrors = validateRequiredFields(state.value);
-    if (customErrors.length > 0) {
-      errors.value = errorClean(customErrors);
-    } else {
-      errors.value = [];
-      await updateBenchmarkingEvent();
-    }
-  } else {
-    errors.value = result.error.issues.map((issue) => issue.message);
-  }
-}
-
-async function updateBenchmarkingEvent() {
-  const cleanContacts = deleteEmptyElements(localContacts.value);
-  const cleanReferences = deleteEmptyElements(localReferences.value);
-
-  const body = {
-    _id: state.value._id,
-    name: state.value.name,
-    community_id: state.value.community_id,
-    bench_contact_ids: cleanContacts.map((element) => {
-      return element;
-    }),
-    _schema: state.value._schema,
-    references: cleanReferences.map((element) => {
-      return element;
-    }),
-    url: state.value.url,
-    is_automated: localAutomated.value,
-    dates: {
-      benchmark_start: new Date(
-        Date.UTC(
-          localDates.value.dates.benchmark_start.getUTCFullYear(),
-          localDates.value.dates.benchmark_start.getUTCMonth(),
-          localDates.value.dates.benchmark_start.getUTCDate(),
-          localDates.value.dates.benchmark_start.getUTCHours(),
-          localDates.value.dates.benchmark_start.getUTCMinutes(),
-          localDates.value.dates.benchmark_start.getUTCSeconds(),
-        ),
-      ).toISOString(),
-      benchmark_stop: new Date(
-        Date.UTC(
-          localDates.value.dates.benchmark_stop.getUTCFullYear(),
-          localDates.value.dates.benchmark_stop.getUTCMonth(),
-          localDates.value.dates.benchmark_stop.getUTCDate(),
-          localDates.value.dates.benchmark_stop.getUTCHours(),
-          localDates.value.dates.benchmark_stop.getUTCMinutes(),
-          localDates.value.dates.benchmark_stop.getUTCSeconds(),
-        ),
-      ).toISOString(),
-      creation: new Date(
-        Date.UTC(
-          localDates.value.dates.creation.getUTCFullYear(),
-          localDates.value.dates.creation.getUTCMonth(),
-          localDates.value.dates.creation.getUTCHours(),
-          localDates.value.dates.creation.getUTCDate(),
-          localDates.value.dates.creation.getUTCMinutes(),
-          localDates.value.dates.creation.getUTCSeconds(),
-        ),
-      ).toISOString(),
-      modification: new Date(
-        Date.UTC(
-          localDates.value.dates.modification.getUTCMonth(),
-          localDates.value.dates.modification.getUTCFullYear(),
-          localDates.value.dates.modification.getUTCDate(),
-          localDates.value.dates.modification.getUTCHours(),
-          localDates.value.dates.modification.getUTCMinutes(),
-          localDates.value.dates.modification.getUTCSeconds(),
-        ),
-      ).toISOString(),
-    },
-  };
-
-  console.log(body);
-
-  try {
-    const response = await fetch(
-      `/api/staged/BenchmarkingEvent/${state.value._id}`,
-      {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body),
-      },
-    );
-
-    if (!response.ok) {
-      throw new Error("Error in API response");
-    }
-
-    const responseData = await response.json();
-    if (responseData.status == 200) {
-      errors.value = [];
-      router.push(`/dashboard/entries/${state.value.community_id}?events=true`);
-    } else {
-      const errorResponse = JSON.parse(responseData.body);
-      errors.value = errorResponse.error.map((error: any) => {
-        if (error.pointer) {
-          return `${error.message}`;
-        }
-        return error.message;
-      });
-    }
-  } catch (error) {
-    console.error("Error fetching communities data:", error);
-  }
-}
-
-const checkEmptyContacts = computed(() => {
-  return localContacts.value.some((contact: string) => contact === "");
-});
-
-const checkEmptyReferences = computed(() => {
-  return localReferences.value.some((keyword: string) => keyword === "");
-});
-
 function goBack() {
-  router.push(`/dashboard/entries/${state.value.community_id}`);
-}
-
-function convertToUTCFullDate(dateString: string): string {
-  const date = new Date(dateString);
-  return date.toISOString();
-}
-
-function deleteEmptyElements(array: string[]): string[] {
-  return array.filter((element) => element.trim() !== "");
-}
-
-function validateRequiredFields(data: any): string[] {
-  const requiredFields = [
-    "_id",
-    "_schema",
-    "name",
-    "dates.benchmark_start",
-    "dates.benchmark_end",
-    "community_id",
-    "bench_contact_ids",
-  ];
-  const errorMessages: string[] = [];
-
-  requiredFields.forEach((field) => {
-    if (typeof data[field] === "string" && data[field].trim() === "") {
-      errorMessages.push(`${field} cannot be empty`);
-    }
-  });
-
-  if (data["_id"] && !checkIdPattern(data["_id"])) {
-    errorMessages.push(
-      `_id is not in the correct format. Example: <b><i>${state.value.community_id}000000A</i></b>`,
-    );
-  }
-
-  if (localContacts.value.length == 0) {
-    errorMessages.push(`community_contact_ids cannot be empty`);
-  } else {
-    localContacts.value.forEach((contact: string, index: number) => {
-      if (contact.trim() === "") {
-        errorMessages.push(`community_contact_ids  cannot be empty`);
-      }
-    });
-  }
-
-  if (!state.value.dates.benchmark_start) {
-    errorMessages.push("benchmark_start date is required");
-  }
-  if (!state.value.dates.benchmark_stop) {
-    errorMessages.push("benchmark_end date is required");
-  }
-
-  return errorMessages;
-}
-
-function errorClean(errors: string[]): string[] {
-  const cleanedErrors = errors.map((element: string) =>
-    elementTranslator(element.trim()),
+  router.push(
+    `/dashboard/communities/${props.communityId}/events/${props.eventId}/challenges`,
   );
-  return cleanedErrors;
 }
-
-function checkIdPattern(id: string) {
-  const pattern = new RegExp("^OEBE[0-9]{3}[A-Z0-9]{7}$");
-  return pattern.test(id);
-}
-
-function elementTranslator(element: string) {
-  // Define a mapping of field names to their replacements
-  const fieldMap: { [key: string]: string } = {
-    community_contact_ids: "Contacts",
-    references: "References",
-    _id: "ID",
-    _schema: "Schema",
-    name: "Name",
-    benchmark_end: "Event End",
-    benchmark_start: "Event Start",
-  };
-
-  // Replace the field name in the error message if it exists in the fieldMap
-  for (const [field, replacement] of Object.entries(fieldMap)) {
-    const regex = new RegExp(`\\b${field}\\b`, "g");
-    element = element.replace(regex, `<b>${replacement}</b>`);
-  }
-
-  return element;
-}
-
-onMounted(() => {
-  fetchContacts(token);
-});
 
 watch(
-  () => props.eventObj,
+  () => props.challengeObj,
   (newVal) => {
-    if (newVal && newVal.bench_contact_ids) {
-      localContacts.value =
-        newVal.bench_contact_ids.map((contact: string) => {
-          return contact;
-        }) || [];
-    }
     if (newVal && newVal.references) {
       localReferences.value = newVal.references;
     }
-
-    if (newVal && newVal.is_automated) {
-      localAutomated.value = Boolean(newVal.is_automated);
+    if (newVal && newVal.challenge_contact_ids) {
+      localContacts.value =
+        newVal.challenge_contact_ids.map((contact: string) => {
+          return contact;
+        }) || [];
+    }
+    if (newVal && newVal.metrics_categories) {
+      localMetricsCategories.value = newVal.metrics_categories;
     }
     if (newVal && newVal.dates) {
       localDates.value.dates = {
@@ -848,13 +614,20 @@ watch(
         modification: new Date(newVal.dates.modification),
       };
     }
+
+    if (newVal && newVal.metrics_categories) {
+      metricData.value = newVal.metrics_categories;
+    }
   },
   { immediate: true },
 );
+onMounted(() => {
+  fetchContacts(token);
+});
 </script>
 
 <style scoped lang="scss">
-.dashboard-community-event-edit {
+.dashboard-community-event-challenge-edit {
   &__title {
     padding-bottom: 20px;
     padding-top: 20px;
@@ -915,9 +688,6 @@ watch(
         .col-3 {
           padding: 5px;
         }
-        &.no-space {
-          padding: 0;
-        }
       }
     }
     .input-wrapper {
@@ -955,6 +725,10 @@ watch(
       rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
     &__row {
       padding: 10px 15px;
+      display: grid;
+      grid-template-columns: auto auto;
+      column-gap: 10px;
+      row-gap: 20px;
       &:last-child {
         width: 100%;
       }
@@ -966,34 +740,16 @@ watch(
         border: 1px solid rgba(233, 236, 239);
         background-color: white;
         border-radius: 7px;
-        .content-box {
-          border: 1px solid rgba(233, 236, 239);
+        &:last-child {
+          width: 100%;
+          grid-column: span 2;
         }
       }
     }
-    &__box {
-      padding: 10px 20px;
-      border: 1px solid rgba(233, 236, 239);
-      background-color: white;
-      &:last-child {
-        width: 100%;
-        grid-column: span 2;
-      }
-    }
   }
   .custom-entry-input::placeholder {
     opacity: 0.5;
     color: rgba(0, 0, 0, 0.3);
-  }
-  .custom-entry-input::placeholder {
-    opacity: 0.5;
-    color: rgba(0, 0, 0, 0.3);
-  }
-  .errors {
-    padding: 10px 15px;
-    .alert {
-      padding: 10px;
-    }
   }
 }
 </style>

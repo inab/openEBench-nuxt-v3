@@ -14,6 +14,7 @@
             :state="state"
             class="space-y-4"
             @submit="onSubmitChallenge"
+            @error="onError"
           >
             <div class="w-100 form-card">
               <div class="form-card__row">
@@ -31,7 +32,7 @@
                             v-model="state._id"
                             type="text"
                             class="form-control custom-entry-input"
-                            placeholder="Challenge id"
+                            placeholder="OEBX0010000001"
                           />
                         </div>
                       </div>
@@ -335,22 +336,26 @@
                   </div>
                 </div>
               </div>
-              <div v-if="errors.length > 0" class="row errors">
+              <div v-if="errors.length > 0" class="form-card__row">
                 <div class="col-12">
                   <div class="alert alert-danger" v-html="getErrors"></div>
                 </div>
               </div>
-              <div class="form-footer">
-                <UButton type="button" variant="secondary" @click="goBack">
-                  Cancel
-                </UButton>
-                <UButton
-                  v-if="challengePrivileges.challenge.update && !isView"
-                  type="submit"
-                  :disabled="!challengePrivileges.challenge.update || isView"
-                >
-                  Submit
-                </UButton>
+              <div class="form-card__row">
+                <div class="col-12">
+                  <div class="form-footer">
+                    <UButton type="button" variant="secondary" @click="goBack">
+                      Cancel
+                    </UButton>
+                    <UButton
+                      v-if="challengePrivileges.challenge.create"
+                      type="submit"
+                      :disabled="!challengePrivileges.challenge.create"
+                    >
+                      Submit
+                    </UButton>
+                  </div>
+                </div>
               </div>
             </div>
           </UForm>
@@ -377,6 +382,7 @@ import {
   boolean,
   optional,
   date,
+  description,
 } from "valibot";
 import type { FormSubmitEvent, FormErrorEvent } from "#ui/types";
 import { getLocaleDateString } from "@/constants/global_const";
@@ -407,35 +413,40 @@ const errors = ref<string[]>([]);
 const oks = ref<string>("");
 
 const state = ref({
+  _id: "",
+  benchmarking_event_id: eventId.value,
   name: "",
   acronym: "",
-  _schema: "",
-  benchmarking_event_id: "",
-  challenge_contact_ids: [],
+  is_automated: false,
+  orig_id: "",
   dates: {
     challenge_start: "",
     challenge_stop: "",
   },
-  is_automated: false,
+  _schema: "https://www.elixir-europe.org/excelerate/WP2/json-schemas/1.0/BenchmarkingEvent",
+  challenge_contact_ids: [],
   url: "",
-  orig_id: "",
   references: [],
-  metrics_categories: [],
+  description: "",
 });
 
 const schema = object({
   _id: string(),
+  benchmarking_event_id: string(),
   name: string(),
   acronym: string(),
   is_automated: boolean(),
   dates: object({
-    challenge_start: Date(),
-    challenge_stop: Date(),
+    challenge_start: date(),
+    challenge_stop: date(),
   }),
-  _schema: string(),
-  url: string(),
   orig_id: string(),
-  is_automated: boolean(),
+  _schema: string(),
+  benchmarking_event_id: string(),
+  challenge_contact_ids: array(string()),
+  url: string(),
+  references: array(string()),
+  description: string(),
 });
 
 const lang = window.navigator.userLanguage || window.navigator.language;
@@ -469,6 +480,13 @@ state.value.dates.challenge_stop = new Date(state.value.dates.challenge_start);
 state.value.dates.challenge_stop = state.value.dates.challenge_stop.setMonth(
   state.value.dates.challenge_stop.getMonth() + 1,
 );
+
+const challengeStart = new Date();
+const challengeStop = new Date(challengeStart);
+challengeStop.setMonth(challengeStop.getMonth() + 1);
+
+state.value.dates.challenge_start = challengeStart;
+state.value.dates.challenge_stop = challengeStop;
 
 function onAddElement(array: []) {
   array.push("");
@@ -513,9 +531,181 @@ async function onSubmitChallenge(event: FormSubmitEvent<Schema>) {
   const result = safeParse(schema, state.value);
   if (result.success) {
     const customErrors = validateRequiredFields(state.value);
+    console.log(customErrors);
+    if (customErrors.length > 0) {
+      errors.value = errorClean(customErrors);
+    } else {
+      errors.value = [];
+      await createChallenge();
+    }
   } else {
+    console.log("we have some errors");
     errors.value = result.error.issues.map((issue) => issue.message);
   }
+}
+
+const getErrors = computed(() => errors.value.join(", "));
+
+function validateRequiredFields(data: any): string[] {
+  const requiredFields = [
+    "_id",
+    "_schema",
+    "name",
+    "benchmarking_event_id",
+    "is_automated",
+    "dates",
+    "challenge_contact_ids",
+  ];
+  const errorMessages: string[] = [];
+
+  requiredFields.forEach((field) => {
+    if (typeof data[field] === "string" && data[field].trim() === "") {
+      errorMessages.push(`${field} cannot be empty`);
+    }
+  });
+
+  if (data["_id"] && !checkIdPattern(data["_id"])) {
+    const communityText = communityId.value.slice(0, 3); // Gets the first part
+    const communityIdNumber = communityId.value.slice(4);
+    errorMessages.push(
+      `_id is not in the correct format. Example: <b><i>${communityText}X${communityIdNumber}000000A</i></b>`,
+    );
+  }
+
+  if (localContacts.value.length == 0) {
+    errorMessages.push(`challenge_contact_ids cannot be empty`);
+  } else {
+    localContacts.value.forEach((contact: string, index: number) => {
+      if (contact.trim() === "") {
+        errorMessages.push(`challenge_contact_ids  cannot be empty`);
+      }
+    });
+  }
+
+  if (!state.value.dates.challenge_start) {
+    errorMessages.push("challenge_start date is required");
+  }
+  if (!state.value.dates.challenge_stop) {
+    errorMessages.push("challenge_end date is required");
+  }
+
+  return errorMessages;
+}
+
+async function createChallenge() {
+  console.log("creting challenge");
+  const cleanContacts = deleteEmptyElements(localContacts.value);
+  const cleanReferences = deleteEmptyElements(localReferences.value);
+
+  const body = {
+    _id: state.value._id,
+    name: state.value.name,
+    acronym: state.value.acronym,
+    benchmarking_event_id: state.value.benchmarking_event_id,
+    challenge_contact_ids: cleanContacts.map((element) => {
+      return element;
+    }),
+    description: state.value.description,
+    orig_id: state.value._id,
+    _schema: state.value._schema,
+    references: cleanReferences.map((element) => {
+      return element;
+    }),
+    is_automated: state.value.is_automated,
+    dates: {
+      challenge_start: convertToUTCFullDate(state.value.dates.challenge_start),
+      challenge_stop: convertToUTCFullDate(state.value.dates.challenge_stop),
+    },
+  };
+
+  console.log(body);
+  try {
+    const response = await fetch(`/api/staged/Challenge`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+
+    if (!response.ok) {
+      throw new Error("Error in API response");
+    }
+
+    const responseData = await response.json();
+    if (responseData.status == 200) {
+      errors.value = [];
+      router.push(`/dashboard/entries/${communityId.value}/events/${eventId.value}?challenges=true`);
+    } else {
+      let errorResponse = JSON.parse(responseData.body);
+      errorResponse = errorResponse.error || [];
+      if (errorResponse.error) {
+        errors.value = errorResponse.error.map((error: any) => {
+          console.log("error", error);
+          if (error) {
+            return `${error}`;
+          }
+          return error.message;
+        });
+      } else if (errorResponse.message) {
+        errors.value = [errorResponse.message];
+      } else {
+        errors.value = [errorResponse];
+      }
+    }
+  } catch (error) {
+    console.error("Error adding challenge data:", error);
+  }
+}
+
+function convertToUTCFullDate(dateString: string): string {
+  const date = new Date(dateString);
+  return date.toISOString();
+}
+
+function deleteEmptyElements(array: string[]): string[] {
+  return array.filter((element) => element.trim() !== "");
+}
+
+function checkIdPattern(id: string) {
+  const text = communityId.value.slice(0, 3); // Gets the first part
+  const IDNumber = communityId.value.slice(4);
+  const pattern = new RegExp(`^${text}X${IDNumber}[A-Z0-9]{7}$`);
+  return pattern.test(id);
+}
+
+function errorClean(errors: string[]): string[] {
+  const cleanedErrors = errors.map((element: string) =>
+    elementTranslator(element.trim()),
+  );
+  return cleanedErrors;
+}
+
+async function onError(event: FormErrorEvent) {
+  console.log("state: ", state.value);
+  console.log("event: ", event);
+}
+
+function elementTranslator(element: string) {
+  // Define a mapping of field names to their replacements
+  const fieldMap: { [key: string]: string } = {
+    challenge_contact_ids: "Contacts",
+    _id: "ID",
+    _schema: "Schema",
+    name: "Name",
+    dates: "Dates",
+    benchmark_end: "Challenge End",
+    benchmark_start: "Challenge Start",
+  };
+
+  // Replace the field name in the error message if it exists in the fieldMap
+  for (const [field, replacement] of Object.entries(fieldMap)) {
+    const regex = new RegExp(`\\b${field}\\b`, "g");
+    element = element.replace(regex, `<b>${replacement}</b>`);
+  }
+
+  return element;
 }
 
 const fetchContacts = async (token: string): Promise<void> => {
@@ -694,6 +884,12 @@ onMounted(() => {
   .custom-entry-input::placeholder {
     opacity: 0.5;
     color: rgba(0, 0, 0, 0.3);
+  }
+  .errors {
+    padding: 10px 15px;
+    .alert {
+      padding: 10px;
+    }
   }
 }
 </style>
