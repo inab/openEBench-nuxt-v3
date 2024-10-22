@@ -5,7 +5,7 @@
         <div class="row my-4">
           <h5 class="">Explore Data Integration at the Software Observatory</h5>
         </div>
-        <div class="row">
+        <div class="row my-4">
           <div class="col-6">
             <p style="line-height: 1.9" class="mb-0 mt-0">
               Our system periodically pulls metadata from
@@ -29,7 +29,8 @@
 
         </div>
 
-        <div class="row mt-3">
+        <!-- collectionSelector -->
+        <div class="row mt-4">
           <div  class="col-2"></div>
           <div class="col-8">
             <collectionSelector/>
@@ -37,6 +38,10 @@
           <div class="col-2"></div>
         </div>
         
+        <!-- MainCards -->
+        <div class="bg-neutral-100 my-4">
+          <MainCards/>
+        </div>
 
       </div>
     </NuxtLayout>
@@ -45,17 +50,13 @@
   
 <script setup lang="ts">
 import collectionSelector from "@/components/Observatory/CollectionSelector.vue"
+import MainCards from "@/components/Observatory/data/CountCards/MainCards.vue"
 
 const layout = 'observatory'
 
 </script>
 
 <style scoped>
-.card-main {
-	background-color: #f5f5f5;
-	margin: auto;
-}
-
 .illustration5{
   width: 80%;
 }
