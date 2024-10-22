@@ -1,6 +1,4 @@
 import { defineStore } from "pinia";
-import parseDataURL from "data-urls";
-import { labelToName, decode } from "whatwg-encoding";
 
 export const useObservatory = defineStore("observatory", {
   state: () => ({
@@ -89,8 +87,31 @@ export const useObservatory = defineStore("observatory", {
   },
 
   actions: {
+    // Cambiar la pestaña activa
+    changeTab(tabKey) {
+      this.tab = tabKey;
+    },
+
+    // Cambiar el ancho de la ventana
+    changeWindowWidth(width) {
+      this.window.width = width;
+    },
+
+    // Cambiar la colección actual
     setCurrentCollection(collectionId) {
-      this.currentCollection = collectionId
+      this.currentCollection = collectionId;
+    },
+
+    // Cambiar la colección única basada en el ID
+    changeUniqueCollection(collectionId) {
+      const uniqueCollectionObject = this.collections.find(
+        (element) => element.id === collectionId
+      );
+
+      if (uniqueCollectionObject) {
+        this.uniqueCollection = uniqueCollectionObject;
+        this.currentCollection = collectionId;
+      }
     },
   },
 
