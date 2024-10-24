@@ -98,7 +98,7 @@ const challengePrivileges = computed(() => {
   if (isAdmin.length > 0) {
     return privileges.admin;
   }
-  
+
   const privilege = userPrivileges.value.find((privilege) => {
     return privilege.community === communityId;
   });
@@ -150,7 +150,6 @@ const fetchUserCommunityEventChallenge = async (
     );
 
     const data = await response.json();
-    console.log(data);
     isLoadingData.value = false;
     challengeData.value = data;
   } catch (error) {

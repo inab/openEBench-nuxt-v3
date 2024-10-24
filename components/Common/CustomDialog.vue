@@ -9,9 +9,7 @@
           <slot name="content"> Default Content </slot>
         </div>
         <div class="dialog-footer">
-          <slot name="footer">
-            <button @click.stop="emit('modal-close')"></button>
-          </slot>
+          <slot name="footer"> </slot>
         </div>
       </div>
     </div>
@@ -21,13 +19,10 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-const props = defineProps<{
+defineProps<{
   isDialogOpen: boolean;
   width: number;
 }>();
-
-const emit = defineEmits(["modal-close"]);
-
 const target = ref(null);
 </script>
 

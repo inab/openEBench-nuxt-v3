@@ -29,7 +29,6 @@ onMounted(() => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("Authentication successful:", data);
         // Redirige a la página principal o un dashboard
         router.push("/dashboard");
       })

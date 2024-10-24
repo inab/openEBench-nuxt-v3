@@ -12,6 +12,7 @@
               >
                 <h2>Entries</h2>
                 <NuxtLink
+                  id="dashboard-create-community"
                   to="/dashboard/entries/add"
                   class="btn custom-btn btn-primary mb-2"
                   title="Create new community"
@@ -39,11 +40,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
 import { useUser } from "@/stores/user.ts";
 import Communities from "@/components/Dashboard/entries/Communities.vue";
-import CustomSubtitle from "@/components/Common/CustomSubtitle.vue";
 
 definePageMeta({
   middleware: "auth",
@@ -56,7 +56,11 @@ definePageMeta({
 const userStore = useUser();
 const { data, status } = useAuth();
 const isLoadingData = ref(true);
-const token: string = data?.value.accessToken;
+
+let token: string | undefined;
+if (data.value) {
+  token = data.value.accessToken;
+}
 
 const items = [
   {
@@ -77,11 +81,8 @@ if (userStore.getUserCommunitiesRoles.length == 0) {
 }
 
 const isAdmin = computed(() => {
-  return (
-    userStore.getUserCommunitiesRoles.filter((role: string) => {
-      return role.role == "admin";
-    }).length > 0
-  );
+  const roles = userStore.getUserCommunitiesRoles;
+  return roles.filter((role) => role.role == "admin").length > 0;
 });
 
 const fetchUserCommunities = async (token: string): Promise<void> => {

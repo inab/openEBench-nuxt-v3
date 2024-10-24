@@ -423,7 +423,8 @@ const state = ref({
     challenge_start: "",
     challenge_stop: "",
   },
-  _schema: "https://www.elixir-europe.org/excelerate/WP2/json-schemas/1.0/BenchmarkingEvent",
+  _schema:
+    "https://www.elixir-europe.org/excelerate/WP2/json-schemas/1.0/BenchmarkingEvent",
   challenge_contact_ids: [],
   url: "",
   references: [],
@@ -531,7 +532,6 @@ async function onSubmitChallenge(event: FormSubmitEvent<Schema>) {
   const result = safeParse(schema, state.value);
   if (result.success) {
     const customErrors = validateRequiredFields(state.value);
-    console.log(customErrors);
     if (customErrors.length > 0) {
       errors.value = errorClean(customErrors);
     } else {
@@ -539,7 +539,6 @@ async function onSubmitChallenge(event: FormSubmitEvent<Schema>) {
       await createChallenge();
     }
   } else {
-    console.log("we have some errors");
     errors.value = result.error.issues.map((issue) => issue.message);
   }
 }
@@ -593,7 +592,6 @@ function validateRequiredFields(data: any): string[] {
 }
 
 async function createChallenge() {
-  console.log("creting challenge");
   const cleanContacts = deleteEmptyElements(localContacts.value);
   const cleanReferences = deleteEmptyElements(localReferences.value);
 
@@ -618,7 +616,6 @@ async function createChallenge() {
     },
   };
 
-  console.log(body);
   try {
     const response = await fetch(`/api/staged/Challenge`, {
       method: "POST",
@@ -636,13 +633,14 @@ async function createChallenge() {
     const responseData = await response.json();
     if (responseData.status == 200) {
       errors.value = [];
-      router.push(`/dashboard/entries/${communityId.value}/events/${eventId.value}?challenges=true`);
+      router.push(
+        `/dashboard/entries/${communityId.value}/events/${eventId.value}?challenges=true`,
+      );
     } else {
       let errorResponse = JSON.parse(responseData.body);
       errorResponse = errorResponse.error || [];
       if (errorResponse.error) {
         errors.value = errorResponse.error.map((error: any) => {
-          console.log("error", error);
           if (error) {
             return `${error}`;
           }
@@ -683,8 +681,7 @@ function errorClean(errors: string[]): string[] {
 }
 
 async function onError(event: FormErrorEvent) {
-  console.log("state: ", state.value);
-  console.log("event: ", event);
+  // TODO check error
 }
 
 function elementTranslator(element: string) {

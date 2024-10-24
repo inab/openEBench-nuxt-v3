@@ -248,7 +248,7 @@
               </div>
             </div>
             <div class="w-100 form-card">
-              <CustomSubtitle text="Data" />
+              <CustomSubtitle text="Data" size="22px" />
               <div class="row form-card__row">
                 <div class="form-card__row__box">
                   <div class="col-12">
@@ -257,7 +257,7 @@
                         <label for="contacts" class="form-group-row">
                           <span class="label-text">Links</span>
                           <button
-                            class="btn-form-add btn-primary"
+                            class="btn-form-add btn-primary btn-add-link"
                             type="button"
                             :disabled="checkEmptyLinks"
                             @click="onAddElement(localLinks, inputLinkRefs)"
@@ -462,11 +462,7 @@
         </div>
       </div>
     </div>
-    <CustomDialog
-      :is-dialog-open="isDialogOpened"
-      :width="400"
-      @modal-close="dialogShow"
-    >
+    <CustomDialog :is-dialog-open="isDialogOpened" :width="400">
       <template #header>
         {{ dialogTitle }}
       </template>
@@ -552,7 +548,7 @@ const state = ref({
   community_contact_ids: [],
   type: "Community",
   privileges: "owner",
-  users: []
+  users: [],
 });
 
 const schema = object({
@@ -581,7 +577,7 @@ const schema = object({
       email: string(),
       role: string(),
     }),
-  )
+  ),
 });
 
 const dialogTitle = ref("");

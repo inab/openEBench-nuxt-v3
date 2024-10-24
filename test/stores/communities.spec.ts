@@ -1,6 +1,6 @@
 import { setActivePinia, createPinia } from "pinia";
-import { useCommunities } from "./communities";
-import { beforeEach, describe, expect, it } from "vitest";
+import { useCommunities } from "@/stores/communities.js";
+import { beforeEach, describe, expect, test } from "vitest";
 
 describe("Communities", () => {
   beforeEach(() => {
@@ -8,7 +8,7 @@ describe("Communities", () => {
   });
 
   // Default value is empty value
-  it("should have a default value", () => {
+  test("can have a default value", () => {
     const { communities } = useCommunities();
     expect(communities).toEqual([]);
   });

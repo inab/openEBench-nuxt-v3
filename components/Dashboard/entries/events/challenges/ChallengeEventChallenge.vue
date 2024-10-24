@@ -580,9 +580,7 @@ const fetchContacts = async (token: string): Promise<void> => {
   }
 };
 
-function changeSelected(index: string) {
-  console.log("index", index);
-  selectedTab.value = index;
+function changeSelected(index: string) {  selectedTab.value = index;
 }
 
 function goBack() {

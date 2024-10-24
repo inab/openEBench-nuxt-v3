@@ -9,7 +9,7 @@ import { defineProps } from "vue";
 
 const props = defineProps<{
   text: string;
-  size: string;
+  size?: string;
 }>();
 
 const fontSize = props.size ?? "22px";

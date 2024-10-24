@@ -6,7 +6,8 @@
           <h2 class="text-primaryOeb-500">Dashboard</h2>
         </div>
         <div class="dashboard__header__description text-gray-500">
-          Welcome {{ userName }} to the OpenEBench Dashboard.
+          Welcome <span data-testid="name">{{ data.name }}</span
+          >to the OpenEBench Dashboard.
         </div>
       </div>
       <div class="dashboard__body row">
@@ -50,12 +51,13 @@
           </div>
         </UCard>
       </div>
+      <div class=""></div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref, watch } from "vue";
 import { useUser } from "@/stores/user.ts";
 
 definePageMeta({
@@ -69,15 +71,22 @@ definePageMeta({
 const { data, status } = useAuth();
 const userStore = useUser();
 
-if (status.value == "authenticated") {
-  const userName = computed(() => data.value.user.name);
-  const privileges: Array<string> = computed(
-    () => userStore.getUserCommunitiesRoles,
-  );
+const userName = computed(() => {
+  return data.value && data.value.statusCode != "404" ? data.value.name : "";
+});
 
-  if (privileges.value.length == 0) {
+if (status.value == "authenticated") {
+  const privileges: Array<string> = computed(() => {
+    return userStore.getUserCommunitiesRoles.map(
+      (role: { role: string }) => role.role,
+    );
+  });
+
+  if (privileges && privileges.length === 0) {
     userStore.setUserCommunitiesRoles(data.value.oeb_roles);
   }
+} else {
+  userName.value = "";
 }
 </script>
 

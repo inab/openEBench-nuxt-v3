@@ -20,8 +20,8 @@ interface CommunityEvents {
 
 export const useUser = defineStore("user", {
   state: () => ({
-    userInfo: {},
-    userRoles: [],
+    userInfo: {} as object,
+    userRoles: [] as string[],
     communitiesRoles: [] as CommunityRole[],
     userCommunities: [],
     userCommunitiesEvents: {
@@ -37,7 +37,7 @@ export const useUser = defineStore("user", {
 
     getUserRoles: (state) => state.userRoles,
 
-    getUserCommunitiesRoles: (state) => state.communitiesRoles,
+    getUserCommunitiesRoles: (state) => state.communitiesRoles || [],
 
     getUserCommunities: (state) => state.userCommunities,
 
@@ -49,7 +49,7 @@ export const useUser = defineStore("user", {
   },
 
   actions: {
-    setUserInfo(userInfo) {
+    setUserInfo(userInfo: object) {
       this.userInfo = userInfo;
     },
 
@@ -297,6 +297,7 @@ export const useUser = defineStore("user", {
 
     setCommunityPrivileges(data: Community[]): Community[] {
       const userPrivileges = this.getUserCommunitiesRoles;
+      console.log(userPrivileges);
       data.forEach((community: Community) => {
         community.actions = [];
         community.privileges = "None";

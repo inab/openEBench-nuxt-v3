@@ -532,7 +532,6 @@ async function createBenchmarkingEvent() {
       errorResponse = errorResponse.error || [];
       if (errorResponse.error) {
         errors.value = errorResponse.error.map((error: any) => {
-          console.log("error", error);
           if (error) {
             return `${error}`;
           }
@@ -686,8 +685,7 @@ function checkIdPattern(id: string) {
 }
 
 async function onError(event: FormErrorEvent) {
-  console.log(state.value);
-  console.log("onError", event);
+  // TO CHECK
 }
 
 onMounted(() => {

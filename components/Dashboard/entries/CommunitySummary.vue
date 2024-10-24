@@ -14,8 +14,6 @@ const props = defineProps<{
   metadata: CommunityMetadata;
 }>();
 
-console.log(props.metadata);
-
 const markdownString: ComputedRef<string | null> = computed(
   () => props.metadata.project_summary ?? null,
 );
