@@ -61,27 +61,70 @@
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import { useObservatory } from "@/stores/observatory/index.js";
+import { useFairness } from "@/stores/observatory/fairness";
+import { useTrends } from "@/stores/observatory/trends";
+import { useData } from "@/stores/observatory/data";
 
+// Store
 const observatoryStore = useObservatory();
-const collections = observatoryStore.collections
-const selectedCollection = ref(null)
+const fairnessStore = useFairness();
+const trendsStore = useTrends();
+const dataStore = useData();
 
-
-function setCollection(index) {
-  selectedCollection.value = index
-}
+// Collections
+const collections = observatoryStore.getCollections;
+const selectedCollection = ref(null);
 
 // Función para obtener la imagen correcta desde el path
 function getImagePath(image) {
-  return new URL(`/assets/images/collections/${image}`, import.meta.url).href
+  return new URL(`/assets/images/collections/${image}`, import.meta.url).href;
+}
+
+// Método para seleccionar la colección
+function setCollection(index) {
+  // Cambiar la colección seleccionada solo si es diferente
+  if (selectedCollection.value !== index) {
+    selectedCollection.value = index;
+
+    // Cambiar la colección actual en el store
+    const collectionId = collections[selectedCollection.value].id;
+    observatoryStore.changeCurrentCollection(collectionId);
+    console.log(observatoryStore.currentCollection)
+
+    // Refrescar los datos asociados a la colección seleccionada
+    triggerDataRefresh();
+  } else {
+    // Si ya está seleccionada, resetearla
+    selectedCollection.value = null;
+    observatoryStore.changeCurrentCollection('tools');
+  }
+}
+
+// Método para refrescar los datos de la colección seleccionada
+function triggerDataRefresh() {
+  // Llamadas a la API para actualizar los datos
+  fairnessStore.getFAIRscores();
+  trendsStore.getLicensesSunburst();
+  trendsStore.getLicensesOpenSource();
+  trendsStore.getSemanticVersioning();
+  trendsStore.getVersionControlCount();
+  trendsStore.getVersionControlRepositories();
+  trendsStore.getPublications();
+  dataStore.getCountsPerSource();
+  dataStore.getTotalCount();
+  dataStore.getFeatures();
+  dataStore.getCoverageSources();
+  dataStore.getCompleteness();
+  dataStore.getTypes();
 }
 
 </script>
-<style scoped>
 
+<style scoped>
 .carousel__prev, .carousel__next {
   background-color: white !important;
   top: 30% !important;
@@ -92,5 +135,4 @@ function getImagePath(image) {
   width: 60%;
   margin: 0 auto;
 }
-
 </style>
