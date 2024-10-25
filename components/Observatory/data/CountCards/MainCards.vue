@@ -45,17 +45,18 @@ import { useData } from '@/stores/observatory/data.js';
 import SourceCard from '@/components/Observatory/data/CountCards/SourceCard.vue';
 import TotalCard from '@/components/Observatory/data/CountCards/TotalCard.vue';
 
-// Instancia de la store de Pinia
+// STORE
 const store = useData();
 
-// Llamar las acciones para cargar los datos al montar el componente
+// Call the actions to load the data when mounting the component
 onMounted(() => {
   store.getTotalCount();
 });
 
-// Computed properties para los valores de la store
+// Computed
 const totalC = computed(() => store.totalCount);
 
+// Cards Info
 const cards_info = reactive({
   biotools: {
     title: 'Bio.tools',
