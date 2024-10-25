@@ -7,7 +7,7 @@ export const useObservatory = defineStore("observatory", {
       width: 0,
     },
     currentCollection: 'tools',
-	  uniqueCollection: null,
+    uniqueCollection: null,
     collections: [
       {
         id: 'RIS3CAT VEIS',
@@ -80,29 +80,24 @@ export const useObservatory = defineStore("observatory", {
   getters: {
     getCollections: (state) => state.collections,
     getCurrentCollection: (state) => state.currentCollection,
-    getUniqueCollection: (state) => state._uniqueCollection,
+    getUniqueCollection: (state) => state.uniqueCollection,
     getWindow: (state) => state.window,
     getActiveTab: (state) => state.tab,
-
   },
 
   actions: {
-    // Cambiar la pestaña activa
     changeTab(tabKey) {
       this.tab = tabKey;
     },
 
-    // Cambiar el ancho de la ventana
     changeWindowWidth(width) {
       this.window.width = width;
     },
 
-    // Cambiar la colección actual
-    setCurrentCollection(collectionId) {
+    changeCurrentCollection(collectionId) {
       this.currentCollection = collectionId;
     },
 
-    // Cambiar la colección única basada en el ID
     changeUniqueCollection(collectionId) {
       const uniqueCollectionObject = this.collections.find(
         (element) => element.id === collectionId
@@ -114,5 +109,4 @@ export const useObservatory = defineStore("observatory", {
       }
     },
   },
-
 });
