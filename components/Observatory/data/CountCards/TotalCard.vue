@@ -15,11 +15,7 @@ const props = defineProps<{
   count: number,
 }>();
 
-console.log(props.count);
-
 function formatNumber(value:number) {
-  console.log(value);
-
 	return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 </script>
