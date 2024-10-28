@@ -37,6 +37,7 @@
     "nuxt": "^3.12.2",
     "nuxt-viewport": "^2.1.5",
     "pinia": "^2.2.2",
+    "plotly.js-dist": "^2.35.2",
     "pluralize": "^8.0.0",
     "unicorn-magic": "^0.3.0",
     "valibot": "^0.41.0",
