@@ -135,6 +135,10 @@ const props = defineProps<{
 
 const columns = [
   {
+    label: "Acronym",
+    key: "acronym",
+  },
+  {
     label: "Name",
     key: "name",
   },

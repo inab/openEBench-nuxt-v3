@@ -744,6 +744,10 @@ watch(
     if (newVal && newVal.metrics_categories) {
       localMetricsCategories.value = newVal.metrics_categories;
     }
+
+    if (newVal && newVal._id) {
+      state.value._id = newVal._id;
+    }
   },
   { immediate: true },
 );

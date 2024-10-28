@@ -32,7 +32,6 @@
                             Challenge ID
                             <span class="text-red-400 required">*</span>
                           </label>
-
                           <div class="w-100">
                             <input
                               id="id"
@@ -580,7 +579,8 @@ const fetchContacts = async (token: string): Promise<void> => {
   }
 };
 
-function changeSelected(index: string) {  selectedTab.value = index;
+function changeSelected(index: string) {
+  selectedTab.value = index;
 }
 
 function goBack() {
@@ -613,8 +613,18 @@ watch(
       };
     }
 
+    console.log("newVal", newVal);
+
     if (newVal && newVal.metrics_categories) {
       metricData.value = newVal.metrics_categories;
+    }
+
+    if (newVal && newVal.is_automated) {
+      state.value.is_automated = newVal.is_automated;
+    }
+
+    if (newVal && newVal._id) {
+      state.value._id = newVal._id.toString();
     }
   },
   { immediate: true },

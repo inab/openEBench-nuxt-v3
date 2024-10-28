@@ -50,6 +50,7 @@
     "valibot": "^0.41.0",
     "vite-svg-loader": "5.1.0",
     "vue": "latest",
+    "vue-instant": "^1.0.4",
     "vue-multiselect": "3.1.0",
     "vue-observe-visibility": "2.0.0-alpha.1",
     "vue3-carousel": "0.3.3",
