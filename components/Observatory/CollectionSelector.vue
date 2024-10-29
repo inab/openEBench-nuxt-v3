@@ -79,47 +79,44 @@ const dataStore = useData();
 const collections = observatoryStore.getCollections;
 const selectedCollection = ref(null);
 
-// Función para obtener la imagen correcta desde el path
-function getImagePath(image) {
-  return new URL(`/assets/images/collections/${image}`, import.meta.url).href;
-}
-
-// Método para seleccionar la colección
 function setCollection(index) {
-  // Cambiar la colección seleccionada solo si es diferente
   if (selectedCollection.value !== index) {
     selectedCollection.value = index;
 
-    // Cambiar la colección actual en el store
+    // Change the current collection 
     const collectionId = collections[selectedCollection.value].id;
     observatoryStore.changeCurrentCollection(collectionId);
-    console.log(observatoryStore.currentCollection)
 
-    // Refrescar los datos asociados a la colección seleccionada
     triggerDataRefresh();
   } else {
-    // Si ya está seleccionada, resetearla
+    // Reset the current collection
     selectedCollection.value = null;
     observatoryStore.changeCurrentCollection('tools');
+    triggerDataRefresh();
   }
 }
 
 // Método para refrescar los datos de la colección seleccionada
 function triggerDataRefresh() {
   // Llamadas a la API para actualizar los datos
-  fairnessStore.getFAIRscores();
-  trendsStore.getLicensesSunburst();
-  trendsStore.getLicensesOpenSource();
-  trendsStore.getSemanticVersioning();
-  trendsStore.getVersionControlCount();
-  trendsStore.getVersionControlRepositories();
-  trendsStore.getPublications();
+  // fairnessStore.getFAIRscores();
+  // trendsStore.getLicensesSunburst();
+  // trendsStore.getLicensesOpenSource();
+  // trendsStore.getSemanticVersioning();
+  // trendsStore.getVersionControlCount();
+  // trendsStore.getVersionControlRepositories();
+  // trendsStore.getPublications();
   dataStore.getCountsPerSource();
   dataStore.getTotalCount();
-  dataStore.getFeatures();
-  dataStore.getCoverageSources();
-  dataStore.getCompleteness();
-  dataStore.getTypes();
+  // dataStore.getFeatures();
+  // dataStore.getCoverageSources();
+  // dataStore.getCompleteness();
+  // dataStore.getTypes();
+}
+
+// Image Path
+function getImagePath(image) {
+  return new URL(`/assets/images/collections/${image}`, import.meta.url).href;
 }
 
 </script>
