@@ -2,7 +2,7 @@
 import { defineStore } from 'pinia';
 import { useObservatory } from '@/stores/observatory/index.js';
 
-const BASE_URL = '/stats/tools/';
+const BASE_URL = '/api/stats/tools/';
 
 export const useData = defineStore('data', {
   state: () => ({
@@ -70,42 +70,66 @@ export const useData = defineStore('data', {
     },
 
     // ------------------------------------------------------------------------
+
+    async GET_URL(URL) {
+      const result =
+        await useAsyncData("GET_URL", () =>
+          $observatory(URL, {
+            method: "GET",
+          }),
+        );
+
+      console.log(result);
+      return result.data.data;
+    },
+
     async getCountsPerSource() {
       const { $observatory } = useNuxtApp();
       const observatoryStore = useObservatory();
-      const URL = `${BASE_URL}counts_per_source?collection=${observatoryStore.currentCollection}`;
+      const URL = `${BASE_URL}count_per_source?collection=${observatoryStore.currentCollection}`;
       
       try {
         this.setLoaded({ countsPerSource: true });
-        const result = await $observatory(URL);
+        const { data } = await useAsyncData("countsPerSource", () =>
+          $observatory(URL, {
+            method: "GET", // Cambiar a POST si el endpoint lo requiere
+          })
+        );
 
-        // Verifica la estructura de result
-        if (result && result.length > 0) {
-          this.setCountsPerSource(result[0].data);
+        // Accede a data.value.data, que es el array que contiene los resultados
+        const result = data.value?.data;
+        if (Array.isArray(result)) {
+          const nonZeroSources = result.filter((element) => element.count > 0);
+          this.setCountsPerSource(nonZeroSources);
+        } else {
+          console.error('Data returned is not an array:', result);
         }
-    
+
         this.setLoaded({ countsPerSource: false });
 
-      } catch {
-        console.error('Error fetching total count:', error);
+      } catch (error) {
+        console.error('Error fetching counts per source:', error);
         this.setLoaded({ countsPerSource: false });
       }
     },
 
     async getTotalCount() {
-      const observatoryStore = useObservatory();
       const { $observatory } = useNuxtApp();
-      const URL = `/stats/tools/count_total?collection=${observatoryStore.currentCollection}`;
-    
+      const observatoryStore = useObservatory();
+      const URL = `${BASE_URL}count_total?collection=${observatoryStore.currentCollection}`;
+      
       try {
         this.setLoaded({ totalCount: true });
-        const result = await $observatory(URL);
-    
+        const resources =
+          await useAsyncData("resources", () =>
+            $observatory(URL, {
+              method: "GET",
+            }),
+        );
         // Verifica la estructura de result
-        if (result && result.length > 0) {
-          this.setTotalCount(result[0].data);
+        if (resources && resources.data._value.length > 0) {
+          this.setTotalCount(resources.data._value[0].data)
         }
-    
         this.setLoaded({ totalCount: false });
     
       } catch (error) {
