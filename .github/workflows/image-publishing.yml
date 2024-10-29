@@ -91,5 +91,5 @@ jobs:
           context: .
           file: ./Dockerfile.devci
           push: true
-          tags: ghcr.io/inab/${{ env.IMAGE_NAME }}:test2
+          tags: ghcr.io/${{ env.IMAGE_NAME }}:test2
           labels: ${{ steps.meta.outputs.labels }}
