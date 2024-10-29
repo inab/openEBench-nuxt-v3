@@ -116,7 +116,7 @@
 
            <!-- 3 -->
             <div class="col-6">
-              <div class="my-4 p-4 max-full bg-white border border-gray-100 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+              <div class="pb-5 my-4 p-4 max-full bg-white border border-gray-100 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                 <h5 class="text-center mt-6 mb-4">
                   (Meta)data Completeness
                 </h5>
@@ -190,8 +190,9 @@ import PlotSources from "@/components/Observatory/data/PlotSources.vue"
 import PlotTypes from "@/components/Observatory/data/PlotTypes.vue"
 import CompletenessPlot from "@/components/Observatory/data/CompletenessPlot.vue"
 
+// Layout
 const layout = 'observatory'
-
+// Store Data
 const store = useData();
 
 
