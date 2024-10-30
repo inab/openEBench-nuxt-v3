@@ -5,36 +5,23 @@
         Collections
       </h6>
       <p class="mb-1 text-base text-center">
-				Select a collection below to view the trends of the software associated
-				to a specific project/organization
-			</p>
+        Select a collection below to view the trends of the software associated
+        to a specific project/organization
+      </p>
       <!-- Slides -->
-      <Carousel
-        :items-to-show="5"
-        :wrap-around="false"
-        :transition="500"
-        class="my-3"
-      >
-        <Slide
-          v-for="(slide, index) in collections"
-          :key="index"
-        >
+      <Carousel :items-to-show="5" :wrap-around="false" :transition="500" class="my-3">
+        <Slide v-for="(slide, index) in collections" :key="index">
           <div class="carousel__item mt-3">
-            <button 
+            <button
               class="uppercase bg-gray-100 text-gray-800 text-xs font-medium px-3 py-1 rounded-full dark:bg-gray-700 dark:text-gray-300"
-              :class="{ 'bg-primaryOeb-500 text-white': selectedCollection === index }"
-              @click="setCollection(index)"
-              >
+              :class="{ 'bg-primaryOeb-500 text-white': selectedCollection === index }" @click="setCollection(index)">
               {{ slide.title }}
             </button>
           </div>
         </Slide>
 
         <template #addons>
-          <Navigation
-            prev-class="carousel__prev" 
-            next-class="carousel__next" 
-          />
+          <Navigation prev-class="carousel__prev" next-class="carousel__next" />
         </template>
       </Carousel>
 
@@ -49,11 +36,8 @@
             <p class="text-sm">{{ collections[selectedCollection].description }}</p>
           </div>
           <div class="col-2">
-            <img
-              :src="getImagePath(collections[selectedCollection].image)"
-              alt="Collection Image"
-              class="rounded-lg collection-image"
-            />
+            <img :src="getImagePath(collections[selectedCollection].image)" alt="Collection Image"
+              class="rounded-lg collection-image" />
           </div>
         </div>
       </div>
@@ -125,13 +109,14 @@ function triggerDataRefresh() {
 </script>
 
 <style scoped>
-.carousel__prev, .carousel__next {
+.carousel__prev,
+.carousel__next {
   background-color: white !important;
   top: 30% !important;
   margin: 0 0 !important;
 }
 
-.collection-image{
+.collection-image {
   width: 60%;
   margin: 0 auto;
 }
