@@ -13,9 +13,9 @@
     <!-- Source -->
     <div v-else>
       <div class="flex flex-wrap justify-around items-center">
-        <div class="my-4" 
+        <div class="mt-4" 
           v-for="card in cardsC" :key="cards_info[card.source.title]">
-          <div class="source-card pt-3 px-3 rounded-sm">
+          <div class="py-1 bg-white border border-gray-100 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
             <SourceCard
               :title="cards_info[card.source].title"
               :count="card.count"
@@ -27,7 +27,7 @@
     </div>
 
     <!-- Total -->
-    <div class="row mt-4">
+    <div class="row mt-5">
       <div class="col-4"></div>
       <div class="col-4 flex items-center justify-center">
         <TotalCard :count="totalC" />
@@ -51,10 +51,14 @@ const store = useData();
 // Call the actions to load the data when mounting the component
 onMounted(() => {
   store.getTotalCount();
+  store.getCountsPerSource();
+
 });
 
 // Computed
 const totalC = computed(() => store.totalCount);
+const cardsC = computed(() => store.countsPerSource);
+
 
 // Cards Info
 const cards_info = reactive({
