@@ -1,7 +1,6 @@
 import { defineVitestConfig } from "@nuxt/test-utils/config";
 import vue from "@vitejs/plugin-vue";
-const mockAuthModule = process.env.VITEST ? ['test/mocks/setup'] : [];
-
+const mockAuthModule = process.env.VITEST ? ["test/mocks/setup"] : [];
 
 export default defineVitestConfig({
   plugins: [],
