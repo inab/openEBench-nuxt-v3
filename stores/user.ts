@@ -84,7 +84,7 @@ export const useUser = defineStore("user", {
       this.userCommunitiesChallenges = userCommunitiesChallenges;
     },
 
-    async fetchUserPrivileges(token) {
+    async fetchUserPrivileges(token: string) {
       return await fetch(
         `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}query/privileges`,
         {
@@ -103,7 +103,7 @@ export const useUser = defineStore("user", {
         .catch((error) => console.error("Error:", error));
     },
 
-    async fetchCommunities(token) {
+    async fetchCommunities(token: string) {
       return await fetch(
         `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Community`,
         {

@@ -91,6 +91,13 @@
                 </NuxtLink>
               </button>
             </div>
+            <div v-else>
+              <button title="Edit community" class="btn-custom-badget text-sm">
+                <NuxtLink :to="getCommunityEventEditLink(row)">
+                  View <font-awesome-icon :icon="['fas', 'pencil']" />
+                </NuxtLink>
+              </button>
+            </div>
             <button class="btn-custom-badget text-sm">
               <NuxtLink
                 :to="getCommunityEventEditLink(row, true)"

@@ -144,6 +144,16 @@
                     </NuxtLink>
                   </button>
                 </div>
+                <div class="text-center" v-else>
+                  <button
+                    title="View community"
+                    class="btn-custom-badget text-sm"
+                  >
+                    <NuxtLink :to="getCommunityEditLink(row)" class="text-sm">
+                      View <font-awesome-icon :icon="['fas', 'pencil']" />
+                    </NuxtLink>
+                  </button>
+                </div>
               </div>
               <button class="btn-custom-badget text-sm" v-if="!row._metadata">
                 <NuxtLink
@@ -262,7 +272,6 @@ const pageFrom = computed(
   () => (Number(page.value) - 1) * Number(pageCount.value) + 1,
 );
 
-console.log(communitiesData.value);
 const pageTo = computed(() =>
   Math.min(
     Number(page.value) * Number(pageCount.value),

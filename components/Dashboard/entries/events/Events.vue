@@ -36,6 +36,8 @@
           }"
         >
           <template #actions-data="{ row }">
+            {{ row }}
+
             <div v-if="row.actions">
               <div v-if="row.privileges === 'Owner' && row.actions.event">
                 <template v-if="row.actions.event.read">
@@ -52,39 +54,29 @@
                     </NuxtLink>
                   </button>
                 </template>
-                <template v-if="row.actions.event.delete">
-                  <button title="Delete community" class="btn-event">
-                    <font-awesome-icon :icon="['fas', 'trash']" />
-                  </button>
-                </template>
               </div>
               <div
                 v-else-if="row.privileges === 'Manager' && row.actions.event"
               >
                 <template v-if="row.actions.event.read">
-                  <button title="View community" class="btn-event">
-                    <NuxtLink :to="`/dashboard/community/${row._id}?view`">
+                  <button title="View Entry" class="btn-event">
+                    <NuxtLink :to="`/dashboard/entries/${row._id}?view`">
                       <font-awesome-icon :icon="['fas', 'eye']" />
                     </NuxtLink>
                   </button>
                 </template>
                 <template v-if="row.actions.event.create">
-                  <button title="Create community" class="btn-event">
-                    <NuxtLink :to="`/dashboard/community/${row._id}`">
+                  <button title="Create Entry" class="btn-event">
+                    <NuxtLink :to="`/dashboard/entries/${row._id}`">
                       <font-awesome-icon :icon="['fas', 'plus']" />
                     </NuxtLink>
                   </button>
                 </template>
                 <template v-if="row.actions.event.update">
-                  <button title="Edit community" class="btn-event">
-                    <NuxtLink :to="`/dashboard/community/${row._id}/edit`">
+                  <button title="Edit Entry" class="btn-event">
+                    <NuxtLink :to="`/dashboard/entries/${row._id}/edit`">
                       <font-awesome-icon :icon="['fas', 'pencil']" />
                     </NuxtLink>
-                  </button>
-                </template>
-                <template v-if="row.actions.event.delete">
-                  <button title="Delete community" class="btn-event">
-                    <font-awesome-icon :icon="['fas', 'trash']" />
                   </button>
                 </template>
               </div>

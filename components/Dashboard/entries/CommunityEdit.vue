@@ -61,6 +61,9 @@
                         <label
                           for="file-upload"
                           class="custom-file-upload btn-primary hover_effect"
+                          :disabled="
+                            !commmunityPrivileges.community.update || isView
+                          "
                         >
                           Upload new logo
                           <font-awesome-icon :icon="['fas', 'upload']" />
@@ -69,6 +72,9 @@
                           id="file-upload"
                           type="file"
                           accept="image/*"
+                          :disabled="
+                            !commmunityPrivileges.community.update || isView
+                          "
                           @change="onFileChange"
                         />
                       </div>
@@ -91,6 +97,10 @@
                                   type="text"
                                   class="form-control custom-entry-input"
                                   placeholder="Community id"
+                                  :disabled="
+                                    !commmunityPrivileges.community.update ||
+                                    isView
+                                  "
                                 />
                               </div>
                             </div>
@@ -101,6 +111,10 @@
                               <USelectMenu
                                 v-model="localStatus.value"
                                 :options="CommunityStatusLabels"
+                                :disabled="
+                                  !commmunityPrivileges.community.update ||
+                                  isView
+                                "
                                 @change="onChangeStatus"
                               >
                                 <template #label>
@@ -129,6 +143,10 @@
                                 v-model="state.type"
                                 :options="typeOptions"
                                 option-attribute="label"
+                                :disabled="
+                                  !commmunityPrivileges.community.update ||
+                                  isView
+                                "
                               />
                             </div>
                           </div>
@@ -171,82 +189,6 @@
                           !commmunityPrivileges.community.update || isView
                         "
                       />
-                    </div>
-                  </div>
-                </div>
-                <div class="row form-card__full_row">
-                  <div class="form-card__row__box">
-                    <div class="col-12">
-                      <div class="form-group w-100">
-                        <div class="w-100">
-                          <label for="contacts" class="form-group-row">
-                            <span class="label-text">
-                              Associated users
-                              <span class="text-red-400 required">*</span>
-                            </span>
-                            <button
-                              class="btn-form-add btn-primary"
-                              type="button"
-                              :disabled="checkEmptyKeywords"
-                              @click="
-                                onAddObjectElement(localUsers, inputUsersRefs)
-                              "
-                            >
-                              <font-awesome-icon :icon="['fas', 'plus']" />
-                            </button>
-                          </label>
-                        </div>
-                        <div class="w-100 row no-space">
-                          <div
-                            v-for="(keys, index) in localUsers"
-                            v-if="localUsers.length > 0"
-                            :key="index"
-                            class="col-12 pt-0"
-                          >
-                            <div class="input-wrapper cols-4-input">
-                              <input
-                                id="keyword"
-                                ref="inputKeywordsRefs"
-                                v-model="localUsers[index].name"
-                                type="text"
-                                class="form-control"
-                                placeholder="User name"
-                              />
-                              <input
-                                id="keyword"
-                                ref="inputKeywordsRefs"
-                                v-model="localUsers[index].email"
-                                type="text"
-                                class="form-control"
-                                placeholder="User email"
-                              />
-                              <USelect
-                                v-model="localUsers[index]['role']"
-                                :options="userAvailableRoles"
-                                option-attribute="label"
-                                value-attribute="value"
-                              />
-                              <button
-                                class="btn-delete-input"
-                                type="button"
-                                @click="onDeleteElement(index, localUsers)"
-                              >
-                                <font-awesome-icon
-                                  :icon="['far', 'trash-can']"
-                                />
-                              </button>
-                            </div>
-                          </div>
-                          <div v-else class="col-12 pt-0">
-                            <div class="w-100 empty-elements text-slate-400">
-                              <span
-                                >There are no associated users in this
-                                community</span
-                              >
-                            </div>
-                          </div>
-                        </div>
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -373,11 +315,19 @@
                                 :options="contactsData"
                                 value-attribute="id"
                                 option-attribute="name"
+                                :disabled="
+                                  !commmunityPrivileges.community.update ||
+                                  isView
+                                "
                               >
                               </USelectMenu>
                               <button
                                 class="btn-delete-input"
                                 type="button"
+                                :disabled="
+                                  !commmunityPrivileges.community.update ||
+                                  isView
+                                "
                                 @click="onDeleteElement(index, localContacts)"
                               >
                                 <font-awesome-icon
@@ -412,6 +362,9 @@
                             type="text"
                             class="form-control custom-entry-input"
                             placeholder="https://schema.org/Community"
+                            :disabled="
+                              !commmunityPrivileges.community.update || isView
+                            "
                           />
                         </div>
                       </div>
@@ -619,7 +572,7 @@ const schema = object({
       uri: string,
       label: string,
       comment: optional(string),
-    })
+    }),
   ),
   keywords: array(string),
   type: string,
@@ -627,7 +580,7 @@ const schema = object({
     object({
       id: string,
       name: string,
-    })
+    }),
   ),
 });
 
@@ -1084,6 +1037,9 @@ watchEffect(() => {
       border: none;
       background-color: rgba(255, 255, 255, 0.8);
       width: 100%;
+      &:disabled {
+        background-color: #e9ecef;
+      }
     }
     &.big {
       margin-bottom: 5px;
@@ -1189,6 +1145,9 @@ input[type="file"] {
   cursor: pointer;
   margin-top: 10px;
   font-size: 14px;
+  > .btn.primary {
+    background-color: red;
+  }
 }
 .logo-col {
   display: flex;
