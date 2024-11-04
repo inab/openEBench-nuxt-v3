@@ -3,7 +3,11 @@
 		<NuxtLayout :name="layout">
 			<div class="p-4">
 				<div class="ml-6">
-					<div class="fs-4 fw-medium">About the Software Observatory</div>
+
+					<div class="row my-4">
+						<h5 class="">About the Software Observatory</h5>
+					</div>
+
 
 					<v-row justify="left">
 						<v-col md="10" sm="10" cols="10" lg="10" xl="10">
@@ -15,13 +19,13 @@
 								within the Life Sciences community.
 							</p>
 
-							<h6 class="fw-bold fs-5">Data Availability</h6>
+							<h6 class="fw-bold fs-6">Data Availability</h6>
 							<p class="mb-6">
 								Software Metadata and statistics are made available through the
 								<a href="https://observatory.openebench.bsc.es/docs/api/">Software Observatory API</a>.
 							</p>
 
-							<h6  class="fw-bold fs-5">Terminology</h6>
+							<h6 class="fw-bold fs-6">Terminology</h6>
 
 							<p class="mb-6">
 								The Software Observatory uses the following terminology:
@@ -55,7 +59,7 @@
 								</li>
 							</ul>
 
-							<h6  class="fw-bold fs-5">Citation</h6>
+							<h6 class="fw-bold fs-6">Citation</h6>
 							<p class="mb-6">
 								<span class="citation-article mt-0">FAIRsoft - A practical implementation of FAIR
 									principles for
@@ -65,7 +69,7 @@
 									https://doi.org/10.1101/2022.05.04.490563</a>
 							</p>
 
-							<h6  class="fw-bold fs-5">Terms of Use</h6>
+							<h6 class="fw-bold fs-6">Terms of Use</h6>
 							<p class="mb-6">
 								All data is distributed under a
 								<a href="https://creativecommons.org/licenses/by-nd/2.0/">
@@ -82,7 +86,9 @@
 </template>
 
 <script setup lang="ts">
-const layout = 'observatory'
+
+
+const layout = 'observatory';
 
 </script>
 
@@ -104,12 +110,12 @@ const layout = 'observatory'
 }
 
 a {
-  color: #0b579f;
-  text-decoration: none;
+	color: #0b579f;
+	text-decoration: none;
 }
 
 a:hover {
-  text-decoration: underline;
-  color: #6a98c4;
+	text-decoration: underline;
+	color: #6a98c4;
 }
 </style>
