@@ -108,7 +108,7 @@ function triggerDataRefresh() {
   // trendsStore.getPublications();
   dataStore.getCountsPerSource();
   dataStore.getTotalCount();
-  // dataStore.getFeatures();
+  dataStore.getFeatures();
   // dataStore.getCoverageSources();
   // dataStore.getCompleteness();
   // dataStore.getTypes();

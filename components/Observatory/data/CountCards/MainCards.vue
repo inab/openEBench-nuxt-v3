@@ -1,7 +1,7 @@
 <template>
   <div class="container px-3 pb-4">
     <!-- loading -->
-    <div v-if="store.unLoaded.countsPerSource">
+    <div v-if="dataStore.unLoaded.countsPerSource">
       <div class="flex flex-wrap justify-around items-center">
         <div class="my-4 " v-for="card in 8" :key="card">
           <div class="source-card pt-3 px-3 rounded-sm">
@@ -41,23 +41,21 @@
 
 <script setup lang="ts">
 import { computed, reactive, onMounted } from 'vue';
-import { useData } from '@/stores/observatory/data.js';
+import { useData } from "@/stores/observatory/data";
 import SourceCard from '@/components/Observatory/data/CountCards/SourceCard.vue';
 import TotalCard from '@/components/Observatory/data/CountCards/TotalCard.vue';
 
 // STORE
-const store = useData();
+const dataStore = useData();
 
 // Call the actions to load the data when mounting the component
-onMounted(() => {
-  store.getTotalCount();
-  store.getCountsPerSource();
-
-});
+dataStore.getTotalCount();
+dataStore.getCountsPerSource();
+dataStore.getFeatures();
 
 // Computed
-const totalC = computed(() => store.totalCount);
-const cardsC = computed(() => store.countsPerSource);
+const totalC = computed(() => dataStore.totalCount);
+const cardsC = computed(() => dataStore.countsPerSource);
 
 
 // Cards Info
