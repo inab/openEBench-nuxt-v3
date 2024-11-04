@@ -1,6 +1,7 @@
 // stores/data.js
 import { defineStore } from 'pinia';
 import { useObservatory } from '@/stores/observatory/index.js';
+import { useAsyncData } from 'nuxt/app';
 
 const BASE_URL = '/api/stats/tools/';
 
@@ -49,7 +50,6 @@ export const useData = defineStore('data', {
     },
 
     setTotalCount(count) {
-      console.log('adding counts', count, 'to state');
       this.totalCount = count;
     },
 
@@ -98,18 +98,15 @@ export const useData = defineStore('data', {
 
         // Accede a data.value.data, que es el array que contiene los resultados
         const result = data.value?.data;
-        if (Array.isArray(result)) {
-          const nonZeroSources = result.filter((element) => element.count > 0);
-          this.setCountsPerSource(nonZeroSources);
-        } else {
-          console.error('Data returned is not an array:', result);
-        }
+        const nonZeroSources = result.filter((element) => element.count > 0);
+        this.setCountsPerSource(nonZeroSources);
 
+        // If no errors
         this.setLoaded({ countsPerSource: false });
 
       } catch (error) {
-        console.error('Error fetching counts per source:', error);
-        this.setLoaded({ countsPerSource: false });
+        console.error('Error fetching Counts Per Source:', error);
+        this.setLoaded({ countsPerSource: true });
       }
     },
 
@@ -130,11 +127,41 @@ export const useData = defineStore('data', {
         if (resources && resources.data._value.length > 0) {
           this.setTotalCount(resources.data._value[0].data)
         }
+
+        // If no errors
         this.setLoaded({ totalCount: false });
     
       } catch (error) {
-        console.error('Error fetching total count:', error);
+        console.error('Error fetching Total Count:', error);
         this.setLoaded({ totalCount: false });
+      }
+    },
+
+    async getFeatures() {
+      const { $observatory } = useNuxtApp();
+      const observatoryStore = useObservatory();
+      const URL = `${BASE_URL}features?collection=${observatoryStore.currentCollection}`;
+
+      try {
+        this.setLoaded({ features: true });
+        const result = 
+          await useAsyncData('Features', () => 
+            $observatory(URL, {
+            method: "GET",
+          })
+        );
+
+        if(result.data === null) {
+          console.log('Features no data available');
+          this.setLoaded({ features: true });
+        }else{
+          this.setFeatures(result.value?.data);
+          // If no errors
+          this.setLoaded({ features: false });
+        }
+      } catch (error) {
+        console.error('Error fetching Features:', error);
+        this.setLoaded({ features: true });
       }
     },
     
