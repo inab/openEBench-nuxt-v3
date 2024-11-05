@@ -155,7 +155,7 @@ export const useData = defineStore('data', {
           console.log('Features no data available');
           this.setLoaded({ features: true });
         }else{
-          this.setFeatures(result.value?.data);
+          this.setFeatures(result.data);
           // If no errors
           this.setLoaded({ features: false });
         }

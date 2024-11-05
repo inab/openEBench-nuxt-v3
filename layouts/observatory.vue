@@ -96,7 +96,7 @@ function setActiveTab(index:number, path:string) {
 
 watch(route, (newRoute) => {
   activeTabIndex.value = tabsItems.findIndex(item => item.path === newRoute.path);
-  console.log('Active Tab Index:', activeTabIndex.value);
+  // console.log('Active Tab Index:', activeTabIndex.value);
 
 });
 
