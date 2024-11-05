@@ -1,6 +1,7 @@
 <template>
   <div>
-    <NuxtLayout :name="layout">
+  <NuxtLayout :name="layout">
+    <template #data>
       <div class="p-4">
         <div class="row my-4">
           <h5 class="">Explore Data Integration at the Software Observatory</h5>
@@ -58,14 +59,14 @@
                   <USkeleton v-if="store.unLoaded.features" class="h-52 mb-3 mx-10"/>
                   <USkeleton v-if="store.unLoaded.features" class="h-7 w-80 rounded-xl mb-5 mx-10" />
                   <!-- v-else -->
-                   <PlotOverview v-else />
+                    <PlotOverview v-else />
                 </div>
                 <div class="col-3">
                   <p class="mb-2">
                     <span class="text-primaryOeb-600 text-base"
                       >Features obtained from the different software metadata
-									    sources and total number of instances for which each feature
-									    exists in the dataset.</span>
+                      sources and total number of instances for which each feature
+                      exists in the dataset.</span>
                   </p>
                   <p class="mb-5">
                     Dots (green: primary sources, red: secondary sources, blue:
@@ -81,7 +82,7 @@
           </div>
 
           <!-- 2 -->
-           <div class="col-12">
+            <div class="col-12">
             <div class="my-4 p-4 max-full bg-white border border-gray-100 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
               <h5 class="text-center mt-6 mb-4">
                 Instances Coverage
@@ -92,7 +93,7 @@
                   <USkeleton v-if="store.unLoaded.features" class="h-52 mb-3 mx-10"/>
                   <USkeleton v-if="store.unLoaded.features" class="h-7 w-80 rounded-xl mb-5 mx-10" />
                   <!-- v-else -->
-                   <PlotSources v-else />
+                    <PlotSources v-else />
                 </div>
                 <div class="col-4">
                   <p class="mb-2">
@@ -112,9 +113,9 @@
                 </div>
               </div>
             </div>
-           </div>
+            </div>
 
-           <!-- 3 -->
+            <!-- 3 -->
             <div class="col-6">
               <div class="pb-5 my-4 p-4 max-full bg-white border border-gray-100 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                 <h5 class="text-center mt-6 mb-4">
@@ -147,15 +148,15 @@
           <div class="col-6">
             <div class="my-4 p-4 max-full bg-white border border-gray-100 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
               <h5 class="text-center mt-6 mb-4">
-						    Types Of Software
-					    </h5>
+                Types Of Software
+              </h5>
               <div class="row">
                 <div class="col-12">
                   <!-- v-if -->
                   <USkeleton v-if="store.unLoaded.features" class="h-52 mb-3 mx-10"/>
                   <USkeleton v-if="store.unLoaded.features" class="h-7 w-80 rounded-xl mb-5 mx-10" />
                   <!-- v-else -->
-                   <PlotTypes v-else />
+                    <PlotTypes v-else />
                 </div>
                 <div class="col-12">
                   <p class="mb-2">
@@ -165,11 +166,11 @@
                   </p>
                   <p class="mb-5">
                     Research Software may be implemented or accessed in different
-								    ways via web interface, REST API, command line, workflow, etc.
-								    Current types captured are (<i
-									  >cmd, web, db, app, lib, ontology, workflow, plugin, sparql,
-									    soap, script, rest, workbench, suite</i
-								    >)
+                    ways via web interface, REST API, command line, workflow, etc.
+                    Current types captured are (<i
+                    >cmd, web, db, app, lib, ontology, workflow, plugin, sparql,
+                      soap, script, rest, workbench, suite</i
+                    >)
                   </p>
                 </div>
               </div>
@@ -177,8 +178,9 @@
           </div>
         </div>
       </div>
-    </NuxtLayout>
-  </div>
+    </template>
+  </NuxtLayout>
+</div>
 </template>
   
 <script setup lang="ts">

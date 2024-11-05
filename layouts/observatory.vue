@@ -16,30 +16,29 @@
           </div>
         </template>
 
-        <!-- Slots para el contenido -->
         <template #trends>
           <div class="custom-tab">
-            <slot/>
+            <slot name="trends"/>
           </div>
         </template>
         <template #fairness>
           <div class="custom-tab">
-            <slot/>
+            <slot name="fairness"/>
           </div>
         </template>
         <template #fairsoft>
           <div class="custom-tab">
-            <slot/>
+            <slot name="fairsoft"/>
           </div>
         </template>
         <template #data>
           <div class="custom-tab">
-            <slot/>
+            <slot name="data"/>
           </div>
         </template>
         <template #about>
           <div class="custom-tab">
-            <slot/>
+            <slot name="about"/>
           </div>
         </template>
       </UTabs>
@@ -97,6 +96,8 @@ function setActiveTab(index:number, path:string) {
 
 watch(route, (newRoute) => {
   activeTabIndex.value = tabsItems.findIndex(item => item.path === newRoute.path);
+  console.log('Active Tab Index:', activeTabIndex.value);
+
 });
 
 activeTabIndex.value = tabsItems.findIndex(item => item.path === route.path);

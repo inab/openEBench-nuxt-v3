@@ -1,10 +1,10 @@
 <template>
   <div>
-    <NuxtLayout :name="layout">
+  <NuxtLayout :name="layout">
+    <template #fairness>
       <h1>FAIRness</h1>
-
-    </NuxtLayout>
-  
+    </template>
+  </NuxtLayout>
   </div>
 </template>
   
