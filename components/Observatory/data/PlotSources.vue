@@ -11,7 +11,9 @@ import Plotly from 'plotly.js-dist';
 const dataStore = useData();
 const coverageSources = computed(() => dataStore.coverageSources);
 
-const small = false;  // Puedes ajustar esto según sea necesario
+const props = defineProps<{
+  small: boolean;
+}>();
 
 // Datos reactivos
 const nums = ['1', '2', '3', '4', '5'];
@@ -61,7 +63,7 @@ const config = {
 
 const layout = computed(() => {
   const l = { ...layout_base };
-  if (small) {
+  if (props.small) {
     l.legend = { orientation: 'h', y: 5, x: -0.2, size: 15 };
   } else {
     l.legend = {};
