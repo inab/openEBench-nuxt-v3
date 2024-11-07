@@ -184,7 +184,7 @@
 </template>
   
 <script setup lang="ts">
-import { useData } from '@/stores/observatory/data.js';
+import { useData, onMounted } from '@/stores/observatory/data.js';
 import collectionSelector from "@/components/Observatory/CollectionSelector.vue"
 import MainCards from "@/components/Observatory/data/CountCards/MainCards.vue"
 import PlotOverview from "@/components/Observatory/data/PlotOverview.vue"
@@ -197,6 +197,12 @@ const layout = 'observatory'
 // Store Data
 const store = useData();
 
+store.getCountsPerSource();
+store.getTotalCount();
+store.getFeatures();
+store.getCoverageSources();
+  // store.getCompleteness();
+  // store.getTypes();
 
 </script>
 

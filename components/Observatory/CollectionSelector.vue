@@ -93,7 +93,7 @@ function triggerDataRefresh() {
   dataStore.getCountsPerSource();
   dataStore.getTotalCount();
   dataStore.getFeatures();
-  // dataStore.getCoverageSources();
+  dataStore.getCoverageSources();
   // dataStore.getCompleteness();
   // dataStore.getTypes();
 }

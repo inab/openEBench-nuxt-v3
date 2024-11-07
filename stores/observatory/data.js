@@ -2,6 +2,7 @@
 import { defineStore } from 'pinia';
 import { useObservatory } from '@/stores/observatory/index.js';
 import { useAsyncData } from 'nuxt/app';
+import { reactive } from 'vue';
 
 const BASE_URL = '/api/stats/tools/';
 
@@ -10,10 +11,7 @@ export const useData = defineStore('data', {
     countsPerSource: {},
     totalCount: null,
     features: {},
-    coverageSources: {
-      counts: {},
-      counts_cummulative: {},
-    },
+    coverageSources: reactive({ counts: {}, counts_cummulative: {}, }),
     completeness: {
       cummulative_features: {},
       distribution_features: {},
@@ -162,6 +160,34 @@ export const useData = defineStore('data', {
       } catch (error) {
         console.error('Error fetching Features:', error);
         this.setLoaded({ features: true });
+      }
+    },
+
+    async getCoverageSources () {
+      const { $observatory } = useNuxtApp();
+      const observatoryStore = useObservatory();
+      const URL = `${BASE_URL}coverage_sources?collection=${observatoryStore.currentCollection}`;
+      
+      try {
+        this.setLoaded({ coverageSources : true});
+        const result =
+          await useAsyncData('CoverageSources', () =>
+            $observatory(URL, {
+              method: "GET",
+          })
+        );
+
+        if(result.data === null) {
+          console.log('CoverageSources no data available');
+          this.setLoaded({ coverageSources : true})
+        }else{
+          // If not error
+          this.setCoverageSources(result.data);
+          this.setLoaded({ coverageSources : false});
+        }
+      } catch (error) {
+        console.error('Error fetching Coverage Source: ',error);
+        this.setLoaded({ coverageSources : true});
       }
     },
     

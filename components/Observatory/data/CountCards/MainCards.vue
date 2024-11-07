@@ -40,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, onMounted } from 'vue';
+import { computed, reactive } from 'vue';
 import { useData } from "@/stores/observatory/data";
 import SourceCard from '@/components/Observatory/data/CountCards/SourceCard.vue';
 import TotalCard from '@/components/Observatory/data/CountCards/TotalCard.vue';
@@ -51,7 +51,6 @@ const dataStore = useData();
 // Call the actions to load the data when mounting the component
 dataStore.getTotalCount();
 dataStore.getCountsPerSource();
-dataStore.getFeatures();
 
 // Computed
 const totalC = computed(() => dataStore.totalCount);
