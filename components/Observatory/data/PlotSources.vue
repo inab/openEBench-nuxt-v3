@@ -1,5 +1,5 @@
 <template>
-  <div id="plot2"></div>
+  <div id="plot_21"></div>
 </template>
 
 <script setup lang="ts">
@@ -130,11 +130,11 @@ function updatePlot() {
 
   data.push(lineData);
 
-  const plotElement = document.getElementById('plot2');
+  const plotElement = document.getElementById('plot_21');
   if (plotElement) {
     Plotly.newPlot(plotElement, data, layout.value, config);
   } else {
-    console.error('No DOM element with id "plot2" exists on the page.');
+    console.error('No DOM element with id "plot_21" exists on the page.');
   }
 }
 
@@ -151,12 +151,12 @@ onMounted(() => {
 </script>
   
 <style scoped>
-#plot2 {
+#plot_21 {
   padding: 0%;
   margin: 0%;
 }
 
-#plot2 .modebar {
+#plot_21 .modebar {
   display: none !important;
 }
 

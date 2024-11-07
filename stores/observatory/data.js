@@ -59,8 +59,9 @@ export const useData = defineStore('data', {
       this.coverageSources = sources;
     },
 
-    setCompleteness(completeness) {
-      this.completeness = completeness;
+    setCompleteness(result1, result2 ) {
+      this.completeness.cummulative_features = result1;
+      this.completeness.distribution_features = result2;
     },
 
     setTypes(types) {
@@ -190,8 +191,44 @@ export const useData = defineStore('data', {
         this.setLoaded({ coverageSources : true});
       }
     },
-    
-    
+
+    async getCompleteness () {
+		// This plot uses two serires of data, one for the histogram and one for the line (cummulative distribution)
+      const { $observatory } = useNuxtApp();
+      const observatoryStore = useObservatory();
+      const URLCummulativeFeatures = BASE_URL + 'features_cummulative';
+  		const URLDistributionFeatures = BASE_URL + 'distribution_features';
+
+      try {
+        this.setLoaded({ completeness : true});
+        const resultCummulativeFeatures =
+          await useAsyncData('completeness Cummulative', () =>
+            $observatory(URLCummulativeFeatures, {
+              method: "GET",
+          })
+        );
+
+        const resultDistributionFeatures =
+          await useAsyncData('completeness Distribution', () =>
+            $observatory(URLDistributionFeatures, {
+              method: "GET",
+          })
+        );
+
+        if(resultCummulativeFeatures.data === null && resultDistributionFeatures.data === data) {
+          console.log('Completeness no data available');
+          this.setLoaded({ completeness : true})
+        }else{
+          // If not error
+          this.setCompleteness(resultCummulativeFeatures.data, resultDistributionFeatures.data);
+          this.setLoaded({ completeness : false});
+        }
+
+      }catch (error) {
+        console.error('Error fetching Completeness: ',error);
+        this.setLoaded({ completeness : true});
+      }
+    }    
 
   },
 });

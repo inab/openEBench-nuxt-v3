@@ -202,7 +202,7 @@ store.getCountsPerSource();
 store.getTotalCount();
 store.getFeatures();
 store.getCoverageSources();
-  // store.getCompleteness();
+store.getCompleteness();
   // store.getTypes();
 
 const isSmallViewport = ref(false);
