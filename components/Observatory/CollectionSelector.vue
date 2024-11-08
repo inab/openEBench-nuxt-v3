@@ -95,7 +95,7 @@ function triggerDataRefresh() {
   dataStore.getFeatures();
   dataStore.getCoverageSources();
   dataStore.getCompleteness();
-  // dataStore.getTypes();
+  dataStore.getTypes();
 }
 
 // Image Path

@@ -90,8 +90,8 @@
               <div class="row">
                 <div class="col-lg-8 col-12">
                   <!-- v-if -->
-                  <USkeleton v-if="store.unLoaded.features" class="h-52 mb-3 mx-10"/>
-                  <USkeleton v-if="store.unLoaded.features" class="h-7 w-80 rounded-xl mb-5 mx-10" />
+                  <USkeleton v-if="store.unLoaded.coverageSources" class="h-52 mb-3 mx-10"/>
+                  <USkeleton v-if="store.unLoaded.coverageSources" class="h-7 w-80 rounded-xl mb-5 mx-10" />
                   <!-- v-else -->
                     <PlotSources v-else :small="isSmallViewport" />
                 </div>
@@ -153,8 +153,8 @@
               <div class="row">
                 <div class="col-12">
                   <!-- v-if -->
-                  <USkeleton v-if="store.unLoaded.features" class="h-52 mb-3 mx-10"/>
-                  <USkeleton v-if="store.unLoaded.features" class="h-7 w-80 rounded-xl mb-5 mx-10" />
+                  <USkeleton v-if="store.unLoaded.types" class="h-52 mb-3 mx-10"/>
+                  <USkeleton v-if="store.unLoaded.types" class="h-7 w-80 rounded-xl mb-5 mx-10" />
                   <!-- v-else -->
                     <PlotTypes v-else />
                 </div>
@@ -203,7 +203,7 @@ store.getTotalCount();
 store.getFeatures();
 store.getCoverageSources();
 store.getCompleteness();
-  // store.getTypes();
+store.getTypes();
 
 const isSmallViewport = ref(false);
 const checkViewportSize = () => { 
