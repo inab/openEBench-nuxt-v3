@@ -1,57 +1,74 @@
 <template>
   <div class="my-4">
-    <div class="p-4 max-w-4xl bg-white border border-gray-100 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-      <h6 class="text-primaryOeb-500 text-center mb-2">
-        Collections
-      </h6>
-      <p class="mb-1 text-base text-center">
-        Select a collection below to view the trends of the software associated
-        to a specific project/organization
+    <div class="p-4 max-w-full bg-white border border-gray-100 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+      <h6 class="text-primaryOeb-500 uppercase text-sm text-center mb-2">Collections</h6>
+      <p class="mb-1 text-sm text-center">
+        Select a collection below to view the trends of the software associated with a specific project/organization.
       </p>
-      <!-- Slides -->
-      <Carousel :items-to-show="5" :wrap-around="false" :transition="500" class="my-3">
+
+      <!-- Carousel -->
+      <Carousel 
+        :items-to-show="5" 
+        :wrap-around="false" 
+        :snap-align="'center'"
+        :transition="500" 
+        :scrollPerPage="true"
+        class="my-3 relative px-8 custom-carousel"
+      >
         <Slide v-for="(slide, index) in collections" :key="index">
-          <div class="carousel__item mt-3">
+          <div class="carousel__item mt-3 mx-1">
             <button
-              class="uppercase bg-gray-100 text-gray-800 text-xs font-medium px-3 py-1 rounded-full dark:bg-gray-700 dark:text-gray-300"
-              :class="{ 'bg-primaryOeb-500 text-white': selectedCollection === index }" @click="setCollection(index)">
+              class="uppercase bg-gray-100 text-gray-800 text-sm font-medium px-4 py-2 rounded-full dark:bg-gray-700 dark:text-gray-300 transition-all duration-200 ease-in-out"
+              :class="{ 'bg-primaryOeb-500 text-white': selectedCollection === index }"
+              @click="setCollection(index)"
+              ref="buttons"
+              :style="{ width: 'auto', display: 'inline-block', whiteSpace: 'nowrap' }"
+            >
               {{ slide.title }}
             </button>
           </div>
         </Slide>
 
+        <!-- Navigation Arrows -->
         <template #addons>
           <Navigation prev-class="carousel__prev" next-class="carousel__next" />
         </template>
       </Carousel>
 
-      <!-- Selected collection details -->
-      <div v-if="selectedCollection !== null" class="max-w-7xl p-3 mt-4 bg-gray-50 rounded-lg">
-        <div class="flex justify-between items-center">
-          <div class="col-10">
-            <h6 class="text-lg font-bold text-primaryOeb-500">
-              {{ collections[selectedCollection].title }}
-            </h6>
-            <p class="text-sm text-gray-600 ">{{ collections[selectedCollection].subtitle }}</p>
-            <p class="text-sm">{{ collections[selectedCollection].description }}</p>
-          </div>
-          <div class="col-2">
-            <img :src="getImagePath(collections[selectedCollection].image)" alt="Collection Image"
-              class="rounded-lg collection-image" />
+      <!-- Selected collection details with transition effect -->
+      <transition name="slide-fade" mode="out-in">
+        <div 
+          v-if="selectedCollection !== null" 
+          class="max-w-7xl p-3 mt-4 bg-gray-50 rounded-lg transition-all duration-500 ease-in-out transform"
+        >
+          <div class="flex justify-between items-center">
+            <div class="w-3/4">
+              <h6 class="text-lg font-bold text-primaryOeb-500">
+                {{ collections[selectedCollection].title }}
+              </h6>
+              <p class="text-sm font-medium">{{ collections[selectedCollection].subtitle }}</p>
+              <p class="text-sm text-gray-600 text-justify">{{ collections[selectedCollection].description }}</p>
+            </div>
+            <div class="w-1/4 ml-8">
+              <img 
+                :src="getImagePath(collections[selectedCollection].image)" 
+                alt="Collection Image"
+                class="rounded-lg collection-image transition-opacity duration-500 ease-in-out" 
+              />
+            </div>
           </div>
         </div>
-      </div>
-
+      </transition>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import { useObservatory } from "@/stores/observatory/index.js";
-import { useFairness } from "@/stores/observatory/fairness";
-import { useTrends } from "@/stores/observatory/trends";
-import { useData } from "@/stores/observatory/data";
+import { ref, watch } from 'vue';
+import { useObservatory } from '@/stores/observatory/index.js';
+import { useFairness } from '@/stores/observatory/fairness';
+import { useTrends } from '@/stores/observatory/trends';
+import { useData } from '@/stores/observatory/data';
 
 // Store
 const observatoryStore = useObservatory();
@@ -61,17 +78,28 @@ const dataStore = useData();
 
 // Collections
 const collections = observatoryStore.getCollections;
-const selectedCollection = ref(null);
+const selectedCollection = ref<number | null>(null);
 
-function setCollection(index) {
+// Auto-scroll logic
+function scrollToButton(index: number) {
+  const buttons = document.querySelectorAll('.carousel__item button');
+  if (buttons[index]) {
+    buttons[index].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+  }
+}
+
+function setCollection(index: number) {
   if (selectedCollection.value !== index) {
     selectedCollection.value = index;
 
-    // Change the current collection 
+    // Change the current collection
     const collectionId = collections[selectedCollection.value].id;
     observatoryStore.changeCurrentCollection(collectionId);
 
     triggerDataRefresh();
+
+    // Auto-scroll to the button
+    scrollToButton(index);
   } else {
     // Reset the current collection
     selectedCollection.value = null;
@@ -80,9 +108,16 @@ function setCollection(index) {
   }
 }
 
-// Método para refrescar los datos de la colección seleccionada
+// Watch to trigger auto-scroll on selection near edges
+watch(selectedCollection, (newIndex) => {
+  if (newIndex !== null) {
+    scrollToButton(newIndex);
+  }
+});
+
+// Refresh data for the selected collection
 function triggerDataRefresh() {
-  // Llamadas a la API para actualizar los datos
+  // API calls to refresh data
   // fairnessStore.getFAIRscores();
   // trendsStore.getLicensesSunburst();
   // trendsStore.getLicensesOpenSource();
@@ -98,11 +133,9 @@ function triggerDataRefresh() {
   // dataStore.getTypes();
 }
 
-// Image Path
-function getImagePath(image) {
+function getImagePath(image: string) {
   return new URL(`/assets/images/collections/${image}`, import.meta.url).href;
 }
-
 </script>
 
 <style scoped>
@@ -110,11 +143,64 @@ function getImagePath(image) {
 .carousel__next {
   background-color: white !important;
   top: 30% !important;
-  margin: 0 0 !important;
+  margin: 0 !important;
+  width: 50px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+}
+
+.carousel__prev:hover,
+.carousel__next:hover {
+  background-color: #e2e8f0;
+}
+
+.carousel__item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 10px; /* Ensure consistent spacing between buttons */
+}
+
+.carousel__item button {
+  transition: transform 0.2s, background-color 0.3s;
+  white-space: nowrap; /* Prevent text wrapping */
+  width: auto;
+  display: inline-block;
+}
+
+.carousel__item button:hover {
+  transform: scale(1.05);
+}
+
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.slide-fade-enter,
+.slide-fade-leave-to {
+  opacity: 0;
+  transform: translateX(10px);
 }
 
 .collection-image {
-  width: 60%;
-  margin: 0 auto;
+  width: 100%;
+  max-width: 150px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.collection-image:hover {
+  transform: scale(1.05);
+}
+
+/* Ensure equal spacing between buttons */
+.custom-carousel {
+  display: flex;
+  justify-content: space-between;
 }
 </style>
