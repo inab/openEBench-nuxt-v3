@@ -54,14 +54,14 @@
                 Consolidated Research Software (meta)data
               </h5>
               <div class="row">
-                <div class="col-9">
+                <div class="col-lg-9 col-12">
                   <!-- v-if -->
                   <USkeleton v-if="store.unLoaded.features" class="h-52 mb-3 mx-10"/>
                   <USkeleton v-if="store.unLoaded.features" class="h-7 w-80 rounded-xl mb-5 mx-10" />
                   <!-- v-else -->
                     <PlotOverview v-else />
                 </div>
-                <div class="col-3">
+                <div class="col-lg-3 col-12">
                   <p class="mb-2">
                     <span class="text-primaryOeb-600 text-base"
                       >Features obtained from the different software metadata
@@ -88,14 +88,14 @@
                 Instances Coverage
               </h5>
               <div class="row">
-                <div class="col-8">
+                <div class="col-lg-8 col-12">
                   <!-- v-if -->
                   <USkeleton v-if="store.unLoaded.features" class="h-52 mb-3 mx-10"/>
                   <USkeleton v-if="store.unLoaded.features" class="h-7 w-80 rounded-xl mb-5 mx-10" />
                   <!-- v-else -->
-                    <PlotSources v-else />
+                    <PlotSources v-else :small="isSmallViewport" />
                 </div>
-                <div class="col-4">
+                <div class="col-lg-3 col-12">
                   <p class="mb-2">
                     <span class="text-primaryOeb-600 text-base"
                       >Cumulative distribution of number of sources where individual
@@ -184,6 +184,7 @@
 </template>
   
 <script setup lang="ts">
+import { ref, onMounted, onUnmounted } from 'vue';
 import { useData } from '@/stores/observatory/data.js';
 import collectionSelector from "@/components/Observatory/CollectionSelector.vue"
 import MainCards from "@/components/Observatory/data/CountCards/MainCards.vue"
@@ -197,7 +198,25 @@ const layout = 'observatory'
 // Store Data
 const store = useData();
 
+store.getCountsPerSource();
+store.getTotalCount();
+store.getFeatures();
+store.getCoverageSources();
+store.getCompleteness();
+  // store.getTypes();
 
+const isSmallViewport = ref(false);
+const checkViewportSize = () => { 
+  isSmallViewport.value = window.innerWidth <= 600;
+}; 
+onMounted(() => { 
+  checkViewportSize(); 
+  window.addEventListener('resize', checkViewportSize); 
+});
+
+onUnmounted(() => { 
+  window.removeEventListener('resize', checkViewportSize);
+});
 </script>
 
 <style scoped>
