@@ -32,15 +32,15 @@
           class="max-w-7xl p-3 mt-4 bg-gray-50 rounded-lg transition-all duration-500 ease-in-out transform">
           <div class="flex justify-between items-center">
             <div class="w-3/4">
-              <h6 href={{collections[selectedCollection].homepage}} target="_blank" class="text-lg font-bold text-primaryOeb-500">
-                {{ collections[selectedCollection].title }}
+              <h6  class="text-lg font-bold text-primaryOeb-500">
+                <a :href=collections[selectedCollection].homepage target="_blank">{{ collections[selectedCollection].title }}</a>
               </h6>
               <p class="text-sm font-medium">{{ collections[selectedCollection].subtitle }}</p>
               <p class="text-sm text-gray-600 text-justify">{{ collections[selectedCollection].description }}</p>
             </div>
             <div class="w-1/4 ml-8">
-              <img :src="getImagePath(collections[selectedCollection].image)" alt="Collection Image" target="_blank" href={{collections[selectedCollection].homepage}}
-                class="rounded-lg collection-image transition-transform duration-500 ease-in-out" />
+              <a  target="_blank" :href=collections[selectedCollection].homepage><img :src="getImagePath(collections[selectedCollection].image)" alt="Collection Image"
+                class="rounded-lg collection-image transition-transform duration-500 ease-in-out"/></a>
             </div>
           </div>
         </div>
@@ -192,5 +192,15 @@ function getImagePath(image: string) {
 .custom-carousel {
   display: flex;
   justify-content: space-between;
+}
+
+a {
+  color: #0b579f;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+  color: #6a98c4;
 }
 </style>
