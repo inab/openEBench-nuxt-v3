@@ -7,23 +7,14 @@
       </p>
 
       <!-- Carousel -->
-      <Carousel 
-        :items-to-show="5" 
-        :wrap-around="false" 
-        :snap-align="'center'"
-        :transition="500" 
-        :scrollPerPage="true"
-        class="my-3 relative px-8 custom-carousel"
-      >
+      <Carousel :items-to-show="5" :wrap-around="false" :snap-align="'center'" :transition="500" :scrollPerPage="true"
+        class="my-3 relative px-8 custom-carousel">
         <Slide v-for="(slide, index) in collections" :key="index">
           <div class="carousel__item mt-3 mx-1">
             <button
               class="uppercase bg-gray-100 text-gray-800 text-sm font-medium px-4 py-2 rounded-full dark:bg-gray-700 dark:text-gray-300 transition-all duration-200 ease-in-out"
-              :class="{ 'bg-primaryOeb-500 text-white': selectedCollection === index }"
-              @click="setCollection(index)"
-              ref="buttons"
-              :style="{ width: 'auto', display: 'inline-block', whiteSpace: 'nowrap' }"
-            >
+              :class="{ 'bg-primaryOeb-500 text-white': selectedCollection === index }" @click="setCollection(index)"
+              ref="buttons" :style="{ width: 'auto', display: 'inline-block', whiteSpace: 'nowrap' }">
               {{ slide.title }}
             </button>
           </div>
@@ -36,25 +27,20 @@
       </Carousel>
 
       <!-- Selected collection details with transition effect -->
-      <transition name="slide-fade" mode="out-in">
-        <div 
-          v-if="selectedCollection !== null" 
-          class="max-w-7xl p-3 mt-4 bg-gray-50 rounded-lg transition-all duration-500 ease-in-out transform"
-        >
+      <transition name="slide" mode="out-in">
+        <div v-if="selectedCollection !== null"
+          class="max-w-7xl p-3 mt-4 bg-gray-50 rounded-lg transition-all duration-500 ease-in-out transform">
           <div class="flex justify-between items-center">
             <div class="w-3/4">
-              <h6 class="text-lg font-bold text-primaryOeb-500">
+              <h6 href={{collections[selectedCollection].homepage}} target="_blank" class="text-lg font-bold text-primaryOeb-500">
                 {{ collections[selectedCollection].title }}
               </h6>
               <p class="text-sm font-medium">{{ collections[selectedCollection].subtitle }}</p>
               <p class="text-sm text-gray-600 text-justify">{{ collections[selectedCollection].description }}</p>
             </div>
             <div class="w-1/4 ml-8">
-              <img 
-                :src="getImagePath(collections[selectedCollection].image)" 
-                alt="Collection Image"
-                class="rounded-lg collection-image transition-opacity duration-500 ease-in-out" 
-              />
+              <img :src="getImagePath(collections[selectedCollection].image)" alt="Collection Image" target="_blank" href={{collections[selectedCollection].homepage}}
+                class="rounded-lg collection-image transition-transform duration-500 ease-in-out" />
             </div>
           </div>
         </div>
@@ -128,8 +114,8 @@ function triggerDataRefresh() {
   dataStore.getCountsPerSource();
   dataStore.getTotalCount();
   dataStore.getFeatures();
-  dataStore.getCoverageSources();
-  dataStore.getCompleteness();
+  // dataStore.getCoverageSources();
+  // dataStore.getCompleteness();
   // dataStore.getTypes();
 }
 
@@ -163,12 +149,14 @@ function getImagePath(image: string) {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0 10px; /* Ensure consistent spacing between buttons */
+  margin: 0 10px;
+  /* Ensure consistent spacing between buttons */
 }
 
 .carousel__item button {
   transition: transform 0.2s, background-color 0.3s;
-  white-space: nowrap; /* Prevent text wrapping */
+  white-space: nowrap;
+  /* Prevent text wrapping */
   width: auto;
   display: inline-block;
 }
@@ -177,21 +165,23 @@ function getImagePath(image: string) {
   transform: scale(1.05);
 }
 
-.slide-fade-enter-active,
-.slide-fade-leave-active {
-  transition: opacity 0.5s ease, transform 0.5s ease;
+.slide-enter-active,
+.slide-leave-active {
+  transition: transform 0.5s ease;
 }
 
-.slide-fade-enter,
-.slide-fade-leave-to {
-  opacity: 0;
-  transform: translateX(10px);
+.slide-enter {
+  transform: translateY(-20px);
+}
+
+.slide-leave-to {
+  transform: translateY(20px);
 }
 
 .collection-image {
   width: 100%;
   max-width: 150px;
-  transition: transform 0.3s ease, opacity 0.3s ease;
+  transition: transform 0.3s ease;
 }
 
 .collection-image:hover {
