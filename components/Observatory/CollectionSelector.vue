@@ -8,7 +8,7 @@
 
       <!-- Carousel -->
       <Carousel :items-to-show="5" :wrap-around="false" :snap-align="'center'" :transition="500" :scrollPerPage="true"
-        class="my-3 relative px-8 custom-carousel">
+        class="my-3 relative px-4 md:px-8 custom-carousel">
         <Slide v-for="(slide, index) in collections" :key="index">
           <div class="carousel__item mt-3 mx-1">
             <button
@@ -27,20 +27,22 @@
       </Carousel>
 
       <!-- Selected collection details with transition effect -->
-      <transition name="slide" mode="out-in">
+      <transition name="slide">
         <div v-if="selectedCollection !== null"
-          class="max-w-7xl p-3 mt-4 bg-gray-50 rounded-lg transition-all duration-500 ease-in-out transform">
-          <div class="flex justify-between items-center">
-            <div class="w-3/4">
-              <h6  class="text-lg font-bold text-primaryOeb-500">
-                <a :href=collections[selectedCollection].homepage target="_blank">{{ collections[selectedCollection].title }}</a>
+          class="max-w-7xl p-3 mt-4 bg-gray-50 rounded-lg transition-all transform">
+          <div class="flex flex-col md:flex-row justify-between items-center">
+            <div class="w-full md:w-3/4">
+              <h6 class="text-lg font-bold text-primaryOeb-500">
+                <a :href="collections[selectedCollection].homepage" target="_blank">{{
+                  collections[selectedCollection].title }}</a>
               </h6>
               <p class="text-sm font-medium">{{ collections[selectedCollection].subtitle }}</p>
               <p class="text-sm text-gray-600 text-justify">{{ collections[selectedCollection].description }}</p>
             </div>
-            <div class="w-1/4 ml-8">
-              <a  target="_blank" :href=collections[selectedCollection].homepage><img :src="getImagePath(collections[selectedCollection].image)" alt="Collection Image"
-                class="rounded-lg collection-image transition-transform duration-500 ease-in-out"/></a>
+            <div class="w-full md:w-1/4 mt-4 md:mt-0 ml-0 md:ml-8">
+              <a target="_blank" :href="collections[selectedCollection].homepage"><img
+                  :src="getImagePath(collections[selectedCollection].image)" alt="Collection Image"
+                  class="rounded-lg collection-image transition-transform duration-500 ease-in-out" /></a>
             </div>
           </div>
         </div>
@@ -48,6 +50,8 @@
     </div>
   </div>
 </template>
+
+
 
 <script setup lang="ts">
 import { ref, watch } from 'vue';
@@ -130,8 +134,8 @@ function getImagePath(image: string) {
   background-color: white !important;
   top: 30% !important;
   margin: 0 !important;
-  width: 50px;
-  height: 80px;
+  width: 40px;  /* Adjusted size for smaller screens */
+  height: 40px; /* Adjusted size for smaller screens */
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -149,15 +153,22 @@ function getImagePath(image: string) {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0 10px;
-  /* Ensure consistent spacing between buttons */
+  margin: 0 5px; /* Adjusted spacing for smaller screens */
+}
+
+.carousel__slide {
+  width: auto !important;
+}
+
+.carousel__track {
+  display: flex;
+  justify-content: space-between;
 }
 
 .carousel__item button {
   transition: transform 0.2s, background-color 0.3s;
   white-space: nowrap;
-  /* Prevent text wrapping */
-  width: auto;
+  width: auto !important;
   display: inline-block;
 }
 
@@ -165,33 +176,33 @@ function getImagePath(image: string) {
   transform: scale(1.05);
 }
 
-.slide-enter-active,
-.slide-leave-active {
-  transition: transform 0.5s ease;
+/* Transition Effects */
+.slide-enter-from {
+  opacity: 0;
+  transform: translateY(-60px);
 }
 
-.slide-enter {
-  transform: translateY(-20px);
+.slide-enter-active {
+  transition: all 0.3s ease;
 }
 
 .slide-leave-to {
-  transform: translateY(20px);
+  opacity: 0;
+  transform: translateY(-60px);
+}
+
+.slide-leave-active {
+  transition: all 0.3s ease;
 }
 
 .collection-image {
   width: 100%;
-  max-width: 150px;
+  max-width: 100px; /* Adjusted size for smaller screens */
   transition: transform 0.3s ease;
 }
 
 .collection-image:hover {
   transform: scale(1.05);
-}
-
-/* Ensure equal spacing between buttons */
-.custom-carousel {
-  display: flex;
-  justify-content: space-between;
 }
 
 a {
@@ -203,4 +214,5 @@ a:hover {
   text-decoration: underline;
   color: #6a98c4;
 }
+
 </style>
