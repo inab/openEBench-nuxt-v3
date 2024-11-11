@@ -114,9 +114,9 @@ function triggerDataRefresh() {
   dataStore.getCountsPerSource();
   dataStore.getTotalCount();
   dataStore.getFeatures();
-  // dataStore.getCoverageSources();
-  // dataStore.getCompleteness();
-  // dataStore.getTypes();
+  dataStore.getCoverageSources();
+  dataStore.getCompleteness();
+  dataStore.getTypes();
 }
 
 function getImagePath(image: string) {

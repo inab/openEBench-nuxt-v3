@@ -228,7 +228,36 @@ export const useData = defineStore('data', {
         console.error('Error fetching Completeness: ',error);
         this.setLoaded({ completeness : true});
       }
-    }    
+    },
+
+    async getTypes() {
+      const { $observatory } = useNuxtApp();
+      const observatoryStore = useObservatory();
+      const URL = `${BASE_URL}types_count?collection=${observatoryStore.currentCollection}`;
+
+      try {
+        this.setLoaded({ types : true});
+        const result =
+          await useAsyncData('Types', () =>
+            $observatory(URL, {
+              method: "GET",
+          })
+        );
+
+        if(result.data === null) {
+          console.log('Types no data available');
+          this.setLoaded({ types : true})
+        }else{
+          // If not error
+          this.setTypes(result.data);
+          this.setLoaded({ types : false});
+        }
+      } catch (error) {
+        console.error('Error fetching Types: ',error);
+        this.setLoaded({ types : true});
+      }
+
+    },
 
   },
 });
