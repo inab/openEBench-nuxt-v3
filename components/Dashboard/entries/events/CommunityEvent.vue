@@ -21,7 +21,6 @@
               :state="state"
               class="space-y-4"
               @submit="onSubmitCommunityEvent"
-              @error="onError"
             >
               <div class="w-100 form-card">
                 <div class="form-card__row">
@@ -602,11 +601,6 @@ function dialogShow() {
   console.log("dialogShow!!!!");
 }
 
-async function onError(event: FormErrorEvent) {
-  // console.log("state: ", state.value);
-  // console.log("event: ", event);
-}
-
 const getErrors = computed(() => errors.value.join(", "));
 
 async function onSubmitCommunityEvent(event: FormSubmitEvent<Schema>) {
@@ -684,9 +678,7 @@ async function updateBenchmarkingEvent() {
       ).toISOString(),
     },
   };
-
-  console.log(body);
-
+  
   try {
     const response = await fetch(
       `/api/staged/BenchmarkingEvent/${state.value._id}`,

@@ -73,4 +73,14 @@ export const customRoutes = [
       "pages/dashboard/entries/events/challenges/metrics/add.vue",
     ),
   },
+  {
+    name: "dashboard-contacts",
+    path: "/dashboard/contacts",
+    file: resolve(__dirname, "pages/dashboard/contacts"),
+  },
+  {
+    name: "dashboard-contacts-add",
+    path: "/dashboard/contacts/add",
+    file: resolve(__dirname, "pages/dashboard/contacts/add.vue"),
+  },
 ];

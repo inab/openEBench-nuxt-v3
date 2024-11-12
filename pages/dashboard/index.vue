@@ -11,45 +11,88 @@
         </div>
       </div>
       <div class="dashboard__body row">
-        <UCard
-          class="dashboard__body__card col-6"
-          :ui="{
-            header: {
-              base: '',
-              background: '',
-              padding: 'px-2 py-3 sm:px-6',
-            },
-          }"
-        >
-          <template #header>
-            <div class="dashboard__body__card__header">Entries</div>
-          </template>
+        <div class="col-4">
+          <UCard
+            class="dashboard__body__card"
+            :ui="{
+              header: {
+                base: '',
+                background: '',
+                padding: 'px-2 py-3 sm:px-6',
+              },
+            }"
+          >
+            <template #header>
+              <div class="dashboard__body__card__header">Entries</div>
+            </template>
 
-          <div class="">
-            <div class="row">
-              <div class="col-6">
-                <img
-                  src="assets/images/dashboard/22821946_Na_Dec_02.jpg"
-                  alt="User profile picture"
-                  class=""
-                />
-              </div>
-              <div class="col-6">
-                <div class="">
-                  Here you can find information about the communities you are
-                  part of and the tools you have access to.
+            <div class="">
+              <div class="row">
+                <div class="col-6">
+                  <img
+                    src="assets/images/dashboard/22821946_Na_Dec_02.jpg"
+                    alt="User profile picture"
+                    class=""
+                  />
                 </div>
-                <div class="dashboard__body__card__link">
-                  <button class="ripple custom-button-primary">
-                    <NuxtLink to="/dashboard/entries" class="dashboard-link"
-                      >Communities</NuxtLink
-                    >
-                  </button>
+                <div class="col-6">
+                  <div class="">
+                    Here you can find information about the communities you are
+                    part of and the tools you have access to.
+                  </div>
+                  <div class="dashboard__body__card__link">
+                    <button class="ripple custom-button-primary">
+                      <NuxtLink to="/dashboard/entries" class="dashboard-link"
+                        >Communities</NuxtLink
+                      >
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </UCard>
+          </UCard>
+        </div>
+        <div class="col-4">
+          <UCard
+            class="dashboard__body__card"
+            :ui="{
+              header: {
+                base: '',
+                background: '',
+                padding: 'px-2 py-3 sm:px-6',
+              },
+            }"
+          >
+            <template #header>
+              <div class="dashboard__body__card__header">Contacts</div>
+            </template>
+
+            <div class="">
+              <div class="row">
+                <div class="col-6">
+                  <img
+                    src="assets/images/dashboard/contacts.jpg"
+                    alt="User profile picture"
+                    class=""
+                  />
+                </div>
+                <div class="col-6">
+                  <div class="">
+                    Here you can find information about the communities you are
+                    part of and the tools you have access to.
+                  </div>
+                  <div class="dashboard__body__card__link">
+                    <button class="ripple custom-button-primary">
+                      <NuxtLink to="/dashboard/contacts" class="dashboard-link"
+                        >Contacts</NuxtLink
+                      >
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </UCard>
+        </div>
       </div>
       <div class=""></div>
     </div>
@@ -82,7 +125,7 @@ if (status.value == "authenticated") {
     );
   });
 
-  if (privileges && privileges.length === 0) {
+  if (privileges.value && privileges.value.length === 0) {
     userStore.setUserCommunitiesRoles(data.value.oeb_roles);
   }
 } else {
