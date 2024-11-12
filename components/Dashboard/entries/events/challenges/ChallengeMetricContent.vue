@@ -131,8 +131,6 @@ const metricTool = computed(() => {
   return props.metricTool;
 });
 
-console.log(props.metricId);
-console.log("metricId: ", metricId.value);
 const isOpen = ref(false);
 
 const runtimeConfig = useRuntimeConfig();

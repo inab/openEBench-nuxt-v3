@@ -369,6 +369,7 @@
             <ChallengeMetrics
               :metric-data="metricData"
               :is-loading-data="isLoadingData"
+              :challenge-id="challengeObj._id"
             />
           </div>
         </div>
@@ -380,21 +381,10 @@
 <script setup lang="ts">
 import { computed, ref, watch, onMounted } from "vue";
 import type { Challenge } from "@/types/challenge";
-import { ChallengeDates } from "@/types/challenge";
 import type { CommunityPrivilegeActions } from "@/constants/privileges";
-import CustomDialog from "@/components/Common/CustomDialog.vue";
 import "@vuepic/vue-datepicker/dist/main.css";
-import {
-  object,
-  string,
-  array,
-  safeParse,
-  boolean,
-  optional,
-  date,
-} from "valibot";
+import { object, string, boolean, date } from "valibot";
 import VueDatePicker from "@vuepic/vue-datepicker";
-import type { FormSubmitEvent, FormErrorEvent } from "#ui/types";
 import { getLocaleDateString } from "@/constants/global_const";
 import CustomTab from "@/components/Common/CustomTab.vue";
 import ChallengeMetrics from "@/components/Dashboard/entries/events/challenges/ChallengeMetrics.vue";
@@ -414,15 +404,10 @@ const props = defineProps<{
   challengeObj: Challenge;
 }>();
 
-const dialogTitle = ref("");
-const dialogType = ref("yesno");
-const isDialogOpened = ref(false);
-const dialogText = ref("");
 const localReferences = ref<string[]>([]);
 const localContacts = ref<string[]>([]);
 const localMetricsCategories = ref<string[]>([]);
 const eventId = ref(props.eventId);
-const communityId = ref(props.communityId);
 const contactsData = ref<string[]>([]);
 const errors = ref<string[]>([]);
 const oks = ref<string>("");
@@ -501,28 +486,33 @@ const elementToDelete = ref({
 
 const challengeData = computed(() => {
   state.value = {
-    _id: props.challengeObj?._id || "",
+    _id: props.challengeObj?._id?.toString() || "",
     community_id: props.communityId || "",
     name: props.challengeObj?.name || "",
     acronym: props.challengeObj?.acronym || "",
     _schema: props.challengeObj?._schema || "",
     benchmarking_event_id: props.challengeObj?.benchmarking_event_id || "",
-    challenge_contact_ids: props.challengeObj?.challenge_contact_ids || [],
+    challenge_contact_ids:
+      props.challengeObj?.challenge_contact_ids || ([] as string[]),
     dates: {
-      benchmark_start:
-        new Date(props.challengeObj?.dates.benchmark_start) || new Date(),
-      benchmark_stop:
-        new Date(props.challengeObj?.dates.benchmark_stop) || new Date(),
+      benchmark_start: props.challengeObj?.dates?.benchmark_start
+        ? new Date(props.challengeObj.dates.benchmark_start)
+        : new Date(),
+      benchmark_stop: props.challengeObj?.dates?.benchmark_stop
+        ? new Date(props.challengeObj.dates.benchmark_stop)
+        : new Date(),
     },
     url: props.challengeObj?.url || "",
     orig_id: props.challengeObj?.orig_id || "",
-    references: props.challengeObj?.references || [],
-    metrics_categories: props.challengeObj?.metrics_categories || [],
-    is_automated: props.eventObj?.is_automated || false,
+    references: props.challengeObj?.references || ([] as string[]),
+    metrics_categories:
+      props.challengeObj?.metrics_categories || ([] as string[]),
+    is_automated: props.challengeObj?.is_automated || false,
   };
 
   return state;
 });
+
 challengeData.value;
 
 if (props.challengeObj && props.challengeObj.references) {
@@ -559,12 +549,6 @@ const checkEmptyContacts = computed(() => {
 
 const checkEmptyReferences = computed(() => {
   return localReferences.value.some((keyword: string) => keyword === "");
-});
-
-const checkEmptyMetricsCategories = computed(() => {
-  return localMetricsCategories.value.some(
-    (category: string) => category === "",
-  );
 });
 
 const fetchContacts = async (token: string): Promise<void> => {
@@ -612,9 +596,7 @@ watch(
         modification: new Date(newVal.dates.modification),
       };
     }
-
-    console.log("newVal", newVal);
-
+    
     if (newVal && newVal.metrics_categories) {
       metricData.value = newVal.metrics_categories;
     }
@@ -629,9 +611,11 @@ watch(
   },
   { immediate: true },
 );
+
 onMounted(() => {
   fetchContacts(token);
 });
+
 </script>
 
 <style scoped lang="scss">

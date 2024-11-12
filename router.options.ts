@@ -65,4 +65,12 @@ export const customRoutes = [
       "pages/dashboard/entries/events/challenges/[id].vue",
     ),
   },
+  {
+    name: "dashboard-community-event-community-metric",
+    path: "/dashboard/entries/:community_id/events/:event_id/challenges/:id/metrics/add",
+    file: resolve(
+      __dirname,
+      "pages/dashboard/entries/events/challenges/metrics/add.vue",
+    ),
+  },
 ];

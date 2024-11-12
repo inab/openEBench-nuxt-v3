@@ -29,7 +29,6 @@ export default async function metricsSearcher(id: string, token: string) {
       }
     });
 
-    console.log(challengeList);
     return challengeList;
   } catch (error) {
     console.error(error);
