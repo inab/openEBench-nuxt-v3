@@ -108,7 +108,7 @@ watch(selectedCollection, (newIndex) => {
 // Refresh data for the selected collection
 function triggerDataRefresh() {
   // API calls to refresh data
-  // fairnessStore.getFAIRscores();
+  fairnessStore.getFAIRscores();
   // trendsStore.getLicensesSunburst();
   // trendsStore.getLicensesOpenSource();
   // trendsStore.getSemanticVersioning();
