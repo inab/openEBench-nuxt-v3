@@ -29,7 +29,7 @@ const labels = {
 };
 export const useFairness = defineStore("fairness", {
   state: () => ({
-    FAIRscores: {
+    fairScores: {
       F: { fair_scores: [], id: 'F', labels: [] },
       A: { fair_scores: [], id: 'A', labels: [] },
       I: { fair_scores: [], id: 'I', labels: [] },
@@ -49,9 +49,9 @@ export const useFairness = defineStore("fairness", {
   }),
 
   getters: {
-    FAIRscores: (state) => state.FAIRscores,
+    FAIRscores: (state) => state.fairScores,
     ControlFAIRscores: (state) => state.controlFAIRscores,
-    CurrentCollection: (state) => state.currentCollection,
+    getCurrentCollection: (state) => state.currentCollection,
   },
 
   actions: {
@@ -60,21 +60,15 @@ export const useFairness = defineStore("fairness", {
     },
 
     setFAIRscores(fairscores) {
-      this.$patch((state) => {
-        state.FAIRscores.F = { ...state.FAIRscores.F, ...fairscores.F };
-        state.FAIRscores.A = { ...state.FAIRscores.A, ...fairscores.A };
-        state.FAIRscores.I = { ...state.FAIRscores.I, ...fairscores.I };
-        state.FAIRscores.R = { ...state.FAIRscores.R, ...fairscores.R };
-      });
+      this.fairScores = fairscores
+    },
+
+    changeCurrentCollection(collectionId) {
+      this.currentCollection = collectionId;
     },
 
     setControlFAIRscores(controlFAIRscores) {
-      this.$patch((state) => {
-        state.controlFAIRscores.F = { ...state.controlFAIRscores.F, ...controlFAIRscores.F };
-        state.controlFAIRscores.A = { ...state.controlFAIRscores.A, ...controlFAIRscores.A };
-        state.controlFAIRscores.I = { ...state.controlFAIRscores.I, ...controlFAIRscores.I };
-        state.controlFAIRscores.R = { ...state.controlFAIRscores.R, ...controlFAIRscores.R };
-      });
+      this.controlFAIRscores = controlFAIRscores
     },
 
     async getFAIRscores() {
