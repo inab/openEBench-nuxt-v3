@@ -7,24 +7,28 @@
       </p>
 
       <!-- Carousel -->
-      <Carousel :items-to-show="5" :wrap-around="false" :snap-align="'center'" :transition="500" :scrollPerPage="true"
-        class="my-3 relative px-4 md:px-8 custom-carousel">
-        <Slide v-for="(slide, index) in collections" :key="index">
-          <div class="carousel__item mt-3 mx-1">
-            <button
-              class="uppercase bg-gray-100 text-gray-800 text-sm font-medium px-4 py-2 rounded-full dark:bg-gray-700 dark:text-gray-300 transition-all duration-200 ease-in-out"
-              :class="{ 'bg-primaryOeb-500 text-white': selectedCollection === index }" @click="setCollection(index)"
-              ref="buttons" :style="{ width: 'auto', display: 'inline-block', whiteSpace: 'nowrap' }">
-              {{ slide.title }}
-            </button>
-          </div>
-        </Slide>
+      <div class="relative">
+        <Carousel :items-to-show="5" :wrap-around="false" :snap-align="'center'" :transition="500" :scrollPerPage="true"
+          class="my-3 relative px-4 md:px-8 custom-carousel">
+          <Slide v-for="(slide, index) in collections" :key="index">
+            <div class="carousel__item mt-3 mx-1">
+              <button
+                class="uppercase bg-gray-100 text-gray-800 text-sm font-medium px-4 py-2 rounded-full dark:bg-gray-700 dark:text-gray-300 transition-all duration-200 ease-in-out"
+                :class="{ 'bg-primaryOeb-500 text-white': selectedCollection === index }" @click="setCollection(index)"
+                ref="buttons" :style="{ width: 'auto', display: 'inline-block', whiteSpace: 'nowrap' }">
+                {{ slide.title }}
+              </button>
+            </div>
+          </Slide>
 
-        <!-- Navigation Arrows -->
-        <template #addons>
-          <Navigation prev-class="carousel__prev" next-class="carousel__next" />
-        </template>
-      </Carousel>
+          <!-- Navigation Arrows -->
+          <template #addons>
+            <Navigation prev-class="carousel__prev" next-class="carousel__next" />
+          </template>
+
+
+        </Carousel>
+      </div>
 
       <!-- Selected collection details with transition effect -->
       <transition name="slide">
@@ -51,8 +55,6 @@
   </div>
 </template>
 
-
-
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { useObservatory } from '@/stores/observatory/index.js';
@@ -71,12 +73,14 @@ const collections = observatoryStore.getCollections;
 const selectedCollection = ref<number | null>(null);
 
 // Auto-scroll logic
-function scrollToButton(index: number) {
+function scrollToButton(index) {
   const buttons = document.querySelectorAll('.carousel__item button');
   if (buttons[index]) {
     buttons[index].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
   }
 }
+
+
 
 function setCollection(index: number) {
   if (selectedCollection.value !== index) {
@@ -129,13 +133,29 @@ function getImagePath(image: string) {
 </script>
 
 <style scoped>
+.carousel-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+::v-deep .carousel__viewport {
+  overflow: hidden !important;
+  margin-right: 20px !important;
+  margin-left: 20px !important;
+  max-width: 100%;
+  white-space: nowrap;
+}
+
 .carousel__prev,
 .carousel__next {
   background-color: white !important;
-  top: 30% !important;
-  margin: 0 !important;
-  width: 40px;  /* Adjusted size for smaller screens */
-  height: 40px; /* Adjusted size for smaller screens */
+  top: 50% !important;
+  margin: 0 20px !important;
+  /* Added margin to separate from buttons */
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -149,11 +169,13 @@ function getImagePath(image: string) {
   background-color: #e2e8f0;
 }
 
+
 .carousel__item {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0 5px; /* Adjusted spacing for smaller screens */
+  margin: 0 5px;
+
 }
 
 .carousel__slide {
@@ -163,6 +185,10 @@ function getImagePath(image: string) {
 .carousel__track {
   display: flex;
   justify-content: space-between;
+  flex-wrap: nowrap;
+  overflow-x: hidden;
+  max-width: 100%;
+  position: relative;
 }
 
 .carousel__item button {
@@ -175,6 +201,13 @@ function getImagePath(image: string) {
 .carousel__item button:hover {
   transform: scale(1.05);
 }
+
+::v-deep .carousel__next--disabled, ::v-deep .carousel__prev--disabled {
+  cursor: not-allowed !important;
+  opacity: 0.5;
+}
+
+
 
 /* Transition Effects */
 .slide-enter-from {
@@ -197,7 +230,8 @@ function getImagePath(image: string) {
 
 .collection-image {
   width: 100%;
-  max-width: 100px; /* Adjusted size for smaller screens */
+  max-width: 100px;
+  /* Adjusted size for smaller screens */
   transition: transform 0.3s ease;
 }
 
@@ -214,5 +248,4 @@ a:hover {
   text-decoration: underline;
   color: #6a98c4;
 }
-
 </style>
