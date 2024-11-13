@@ -41,6 +41,13 @@
     <CustomModal :is-open="isModalOpened" width="600" @modal-close="closeModal">
       <template #header>
         <h2>Edit contact</h2>
+        <UButton
+          color="bg-slate-300"
+          variant="ghost"
+          icon="i-heroicons-x-mark-20-solid"
+          class=""
+          @click="isModalOpened = false"
+        />
       </template>
       <template #content>
         <div class="w-100">
@@ -93,8 +100,8 @@
                   <div class="row">
                     <div class="col-6 typeOptions">
                       <div class="form-group">
-                        <label for="id">
-                          Email
+                        <label for="type">
+                          Type
                           <span class="text-red-400 required">*</span>
                         </label>
                         <div class="w-100">
@@ -113,10 +120,43 @@
                         </label>
                         <div class="w-100">
                           <USelect
-                            v-model="state.community_id"
+                            v-model="defaultCommunity"
                             :options="communities"
-                            option-attribute="_id"
+                            value-attribute="_id"
+                            option-attribute="name"
                           />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12 typeOptions">
+                      <div class="form-group">
+                        <label for="email">
+                          Email
+                          <span class="text-red-400 required">*</span>
+                        </label>
+                        <div class="w-100">
+                          <input
+                            id="email"
+                            v-model="state.email[0]"
+                            type="text"
+                            class="form-control custom-entry-input"
+                            placeholder="Contact Email"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12 typeOptions">
+                      <div class="form-group">
+                        <label for="notes">
+                          Notes
+                          <span class="text-red-400 required">*</span>
+                        </label>
+                        <div class="w-100">
+                          <UTextarea v-model="defaultNotes" />
                         </div>
                       </div>
                     </div>
@@ -134,6 +174,7 @@
   </div>
 </template>
 <script setup lang="ts">
+import type { Ref } from "vue";
 import { computed, ref } from "vue";
 import CustomModal from "@/components/Common/CustomModal.vue";
 import { useUser } from "@/stores/user.ts";
@@ -175,6 +216,9 @@ const pageCount = 15;
 const isModalOpened = ref(false);
 const communities = ref<Community[]>([]);
 const userStore = useUser();
+
+const defaultCommunity: Ref<string> = ref("");
+const defaultNotes: Ref<string> = ref("");
 
 const state = ref({
   _id: "",
@@ -260,6 +304,9 @@ const fetchContactData = async (id: string): Promise<void> => {
     );
     const data = await response.json();
     isModalOpened.value = true;
+    defaultCommunity.value = data.community_id ?? "";
+    defaultNotes.value =
+      data.notes && data.notes != "Unknown" ? data.notes : "";
     if (token) {
       await fetchUserCommunities(token);
     } else {
@@ -274,8 +321,12 @@ const fetchContactData = async (id: string): Promise<void> => {
 const fetchUserCommunities = async (token: string): Promise<void> => {
   try {
     communities.value = await userStore.fetchCommunities(token);
-    state.value.community_id = communities.value[0]._id.toString();
-    console.log(state.value.community_id);
+    communities.value = communities.value.map((community) => {
+      return {
+        ...community,
+        name: `${community._id} - ${community.name}`,
+      };
+    });
   } catch (error) {
     console.error("Error fetching communities data:", error);
   }

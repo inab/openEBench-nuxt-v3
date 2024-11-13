@@ -48,7 +48,6 @@ const target = ref(null)
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
-  
   display: flex;
   align-items: center;
   justify-content: center;
@@ -62,5 +61,13 @@ const target = ref(null)
   background-color: #fff;
   border-radius: 2px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
+}
+
+.modal-header {
+  color: theme("colors.primary.500");
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  border-bottom: 1px solid rgb(226, 232, 240);
 }
 </style>
