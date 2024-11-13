@@ -76,7 +76,7 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
       - name: Build Docker image ✈️
-        run: docker build -t ghcr.io/${{ env.IMAGE_NAME }}:test2 -f Dockerfile.devci .
+        run: docker build -t ghcr.io/${{ env.IMAGE_NAME }}:test2 -f Dockerfile.production .
 
       - name: Run tests in Docker container 🧪
         run: docker run --rm -v ${{ github.workspace }}:/app ghcr.io/${{ env.IMAGE_NAME }}:test2 npm run test -- --watch=false
