@@ -48,6 +48,10 @@
           <!-- 1  -->
           <div class="col-12">
             <div class="my-4 p-4 max-full bg-white border border-gray-100 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+              <PlotWOptions class="copy-icon" 
+                :items="dialogItemsFindability"
+                :currentCollection="current_collection"
+              />
               <h5 class="text-center mt-6 mb-4">
                 Findability
               </h5>
@@ -57,11 +61,106 @@
                   <USkeleton v-if="storeFairness.unLoaded.FAIRscores" class="h-52 mb-3 mx-10"/>
                   <USkeleton v-if="storeFairness.unLoaded.FAIRscores" class="h-7 w-80 rounded-xl mb-5 mx-10" />
                   <!-- Plot -->
-                  <BubbleChart v-else />
+                  <BubbleChart v-else 
+                    div_id="findability"
+                    :collection="current_collection"
+                    :collection_scores="fair_scores.F.fair_scores"
+                    :indicators_labels="fair_scores.F.labels"
+                    :control_scores="control_fair_scores.F.fair_scores"
+                    :collection_colors="colors"
+                    :collection_colors_lines="colors_lines"/>
                 </div>
               </div>
             </div>
           </div>
+
+          <!-- 2  -->
+          <div class="col-12">
+            <div class="my-4 p-4 max-full bg-white border border-gray-100 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+              <PlotWOptions class="copy-icon" 
+                :items="dialogItemsAccessibility"
+                :currentCollection="current_collection"
+              />
+              <h5 class="text-center mt-6 mb-4"> Accessibility </h5>
+              <div class="row">
+                <div class="col-12">
+                  <!-- Loader -->
+                  <USkeleton v-if="storeFairness.unLoaded.FAIRscores" class="h-52 mb-3 mx-10"/>
+                  <USkeleton v-if="storeFairness.unLoaded.FAIRscores" class="h-7 w-80 rounded-xl mb-5 mx-10" />
+                  <!-- Plot -->
+                  <BubbleChart v-else 
+                    div_id="accessibility"
+                    :collection="current_collection"
+                    :collection_scores="fair_scores.A.fair_scores"
+                    :indicators_labels="fair_scores.A.labels"
+                    :control_scores="control_fair_scores.A.fair_scores"
+                    :collection_colors="colors"
+                    :collection_colors_lines="colors_lines"
+                  />
+                
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3 -->
+          <div class="col-12">
+            <div class="my-4 p-4 max-full bg-white border border-gray-100 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+              <PlotWOptions class="copy-icon" 
+                :items="dialogItemsInteroperability"
+                :currentCollection="current_collection"
+              />
+              <h5 class="text-center mt-6 mb-4"> Interoperability </h5>
+              <div class="row">
+                <div class="col-12">
+                  <!-- Loader -->
+                  <USkeleton v-if="storeFairness.unLoaded.FAIRscores" class="h-52 mb-3 mx-10"/>
+                  <USkeleton v-if="storeFairness.unLoaded.FAIRscores" class="h-7 w-80 rounded-xl mb-5 mx-10" />
+                  <!-- Plot -->
+                  <BubbleChart v-else 
+                    div_id="interoperability"
+                    :collection="current_collection"
+                    :collection_scores="fair_scores.I.fair_scores"
+                    :indicators_labels="fair_scores.I.labels"
+                    :control_scores="control_fair_scores.I.fair_scores"
+                    :collection_colors="colors"
+                    :collection_colors_lines="colors_lines"
+                  />
+                
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4 -->
+          <div class="col-12">
+            <div class="my-4 p-4 max-full bg-white border border-gray-100 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+              <PlotWOptions class="copy-icon" 
+                :items="dialogItemsReusability"
+                :currentCollection="current_collection"
+              />
+              <h5 class="text-center mt-6 mb-4"> Reusability </h5>
+              <div class="row">
+                <div class="col-12">
+                  <!-- Loader -->
+                  <USkeleton v-if="storeFairness.unLoaded.FAIRscores" class="h-52 mb-3 mx-10"/>
+                  <USkeleton v-if="storeFairness.unLoaded.FAIRscores" class="h-7 w-80 rounded-xl mb-5 mx-10" />
+                  <!-- Plot -->
+                  <BubbleChart v-else 
+                    div_id="reusability"
+                    :collection="current_collection"
+                    :collection_scores="fair_scores.R.fair_scores"
+                    :indicators_labels="fair_scores.R.labels"
+                    :control_scores="control_fair_scores.R.fair_scores"
+                    :collection_colors="colors"
+                    :collection_colors_lines="colors_lines"
+                  />
+                
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
 
       </div>
@@ -71,26 +170,46 @@
 </template>
   
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch, computed } from 'vue';
 import { useFairness } from '@/stores/observatory/fairness';
-import collectionSelector from "@/components/Observatory/CollectionSelector.vue"
-import BubbleChart from "@/components/Observatory/fairness/BubbleChart.vue"
-
-
+import { useObservatory } from '@/stores/observatory/index.js';
+import collectionSelector from "@/components/Observatory/CollectionSelector.vue";
+import BubbleChart from "@/components/Observatory/fairness/BubbleChart.vue";
+import PlotWOptions from '@/components/Observatory/PlotWOptions.vue';
+import { embedCodes } from '@/components/Observatory/visualizations/embedCodes.js'
 // Layout
-const layout = 'observatory'
+const layout = 'observatory';
+
 // Store Data
 const storeFairness = useFairness();
+const observatoryStore = useObservatory();
 
+// Llamada para obtener los datos
 storeFairness.getFAIRscores();
 storeFairness.getControlFAIRscores();
 
+// Constantes
+const dialogItemsFindability = [embedCodes.findabilityBubble]
+const dialogItemsAccessibility = [embedCodes.accessibilityBubble]
+const dialogItemsInteroperability = [embedCodes.interoperabilityBubble]
+const dialogItemsReusability = [embedCodes.reusabilityBubble]
 
+const fair_scores = computed(() => storeFairness.fairScores);
+const control_fair_scores = computed(() => storeFairness.controlFAIRscores);
+const current_collection = computed(() => observatoryStore.currentCollection);
+const colors = ['#5da4d6', '#ff900e', '#2ca065', '#bd86f0']
+const colors_lines = ['#0075c7', '#995302', '#046b37', '#5e3d7d']
 
-// Status to control the visibility of the alert 
+// Estado para controlar la visibilidad de la alerta 
 const showAlert = ref(true);
 const closeButtonOptions = { icon: 'i-heroicons-x-circle-16-solid', color: 'gray', variant: 'link', padded: false };
 
-// Method for handling the closure of the alert 
+// Método para manejar el cierre de la alerta 
 function handleClose() { showAlert.value = false; }
 </script>
+
+<style scoped>
+.copy-icon {
+	float: inline-end;
+}
+</style>
