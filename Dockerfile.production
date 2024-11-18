@@ -34,13 +34,7 @@ ENV NODE_OPTIONS --openssl-legacy-provider
 COPY . .
 
 RUN npm ci
-
-RUN ls -la /app/.output
-
 RUN npm run build
-
-RUN ls -la /app/.output
-
 #RUN npm run generate
 
 #stage 2
