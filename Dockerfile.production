@@ -35,7 +35,7 @@ COPY . .
 
 RUN npm ci
 RUN npm run build
-#RUN npm run generate
+RUN npm run generate
 
 #stage 2
 FROM nginx:alpine
