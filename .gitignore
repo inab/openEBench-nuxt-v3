@@ -26,3 +26,5 @@ logs
 components/test/*
 
 coverage
+
+.output

@@ -34,13 +34,18 @@ ENV NODE_OPTIONS --openssl-legacy-provider
 COPY . .
 
 RUN npm ci
+
+RUN ls -la /app/.output
+
 RUN npm run build
-RUN npm run generate
+
+RUN ls -la /app/.output
+
+#RUN npm run generate
 
 #stage 2
 FROM nginx:alpine
-RUN chmod -R 755 /usr/share/nginx/html
 #COPY --from=node /app/.output/public /usr/share/nginx/html
 COPY --from=build /app/.output/public /usr/share/nginx/html
-#COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
