@@ -10,7 +10,7 @@
             data-aos-duration="3000"
           >
             <NuxtImg
-              src="~/assets/images/illustrations/404.svg"
+              src="/illustrations/404.svg"
               alt="welcome-header-image"
             />
           </div>

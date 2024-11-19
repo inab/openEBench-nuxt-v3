@@ -114,8 +114,8 @@ export default defineNuxtConfig({
       type: "authjs",
     },
     redirect: {
-      login: "/login", // Redirige a la página de login si no está autenticado
-      home: "/", // Página de inicio después del login
+      login: "/login",
+      home: "/",
     },
   },
 
@@ -139,6 +139,10 @@ export default defineNuxtConfig({
   ],
 
   buildModules: ["@nuxt/typescript-build"],
+
+  image: {
+    dir: "assets/images"
+  },
 
   eslint: {
     // TODO: Remove this when the project is clean
