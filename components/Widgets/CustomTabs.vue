@@ -5,20 +5,33 @@
       <table>
         <tbody>
           <tr v-for="row in paginatedData" :key="row[0]?.key">
-            <td v-for="(item, index) in row" :key="index" class="custom-tabs-item">
-              <!-- Show Tooltip only if item.name is longer than 25 characters -->
-              <template v-if="item.name.length > 25">
-                <UTooltip 
-                  :text="formatName(item.name, 'tooltip')" 
+            <td
+              v-for="(item, index) in row"
+              :key="index"
+              class="custom-tabs-item"
+            >
+              <template v-if="item.label.length > 25">
+                <UTooltip
+                  :text="formatName(item.label, 'tooltip')"
                   :popper="{ offsetDistance: 16 }"
-                  :ui="{ background: 'bg-primaryOeb-500', color: 'text-white', width: 'w-auto' }"
+                  :ui="{
+                    background: 'bg-primaryOeb-500',
+                    color: 'text-white',
+                    width: 'w-auto',
+                  }"
                 >
                   <button
                     class="custom-tabs-button truncate"
-                    :class="{ 'custom-tabs-button--active': item.key == selected.key }"
+                    :class="{
+                      'custom-tabs-button--active': item.key == selected.key,
+                    }"
                     @click="selected = item"
                   >
-                    {{ formatName(item.label) ? formatName(item.label) : formatName(item.name) }}
+                    {{
+                      formatName(item.label)
+                        ? formatName(item.label)
+                        : formatName(item.name)
+                    }}
                   </button>
                 </UTooltip>
               </template>
@@ -27,10 +40,16 @@
               <template v-else>
                 <button
                   class="custom-tabs-button truncate"
-                  :class="{ 'custom-tabs-button--active': item.key == selected.key }"
+                  :class="{
+                    'custom-tabs-button--active': item.key == selected.key,
+                  }"
                   @click="selected = item"
                 >
-                  {{ formatName(item.label) ? formatName(item.label) : formatName(item.name) }}
+                  {{
+                    formatName(item.label)
+                      ? formatName(item.label)
+                      : formatName(item.name)
+                  }}
                 </button>
               </template>
             </td>
@@ -41,8 +60,8 @@
 
     <!-- Paginator -->
     <div
-      class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700"
       v-if="props.data.length > itemsPerPage"
+      class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700"
     >
       <UPagination
         v-model="currentPage"
@@ -66,7 +85,6 @@
   </div>
 </template>
 
-
 <script setup lang="ts">
 import LoaderChartWidgets from "@/components/Widgets/LoaderChartWidgets.vue";
 import { ref, computed } from "vue";
@@ -76,12 +94,15 @@ const props = defineProps<{
   metrics: any[];
 }>();
 
-const formatName = (text: string, type?:string) => {
-  if (typeof text === 'string' && text.startsWith('Dataset_participant:3D:2022-12-17_')) {
-    if(type == 'tooltip'){
-      return text.replace('Dataset_participant:', '');
-    }else{
-      return text.replace('Dataset_participant:3D:2022-12-17_', '');
+const formatName = (text: string, type?: string) => {
+  if (
+    typeof text === "string" &&
+    text.startsWith("Dataset_participant:3D:2022-12-17_")
+  ) {
+    if (type == "tooltip") {
+      return text.replace("Dataset_participant:", "");
+    } else {
+      return text.replace("Dataset_participant:3D:2022-12-17_", "");
     }
   }
   return text;
@@ -90,14 +111,14 @@ const formatName = (text: string, type?:string) => {
 // States for pagination
 const currentPage = ref(1);
 const itemsPerPage = 25; // 5 filas x 4 columnas = 20 botones por página
-const columns = 5
+const columns = 5;
 
 // Calculate items to be displayed on the current page
 const paginatedData = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage;
   const end = start + itemsPerPage;
   const pageData = props.data.slice(start, end);
-  
+
   // Organizar los elementos en filas de # columnas
   const rows = [];
   for (let i = 0; i < pageData.length; i += columns) {
