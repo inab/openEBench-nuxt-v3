@@ -140,17 +140,13 @@ export default defineNuxtConfig({
 
   buildModules: [
     "@nuxt/typescript-build",
-    [
-      "@nuxt/image",
-      {
-        provider: "static",
-        dir: "assets/images",
-      },
-    ],
   ],
 
   image: {
-    dir: "assets/images",
+    dir: 'assets/images',
+    alias: {
+      illustrations: 'assets/images/illustrations',
+    },
   },
 
   eslint: {
