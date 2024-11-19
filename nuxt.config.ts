@@ -138,10 +138,19 @@ export default defineNuxtConfig({
     "@sidebase/nuxt-auth",
   ],
 
-  buildModules: ["@nuxt/typescript-build"],
+  buildModules: [
+    "@nuxt/typescript-build",
+    [
+      "@nuxt/image",
+      {
+        provider: "static",
+        dir: "assets/images",
+      },
+    ],
+  ],
 
   image: {
-    dir: "assets/images"
+    dir: "assets/images",
   },
 
   eslint: {
