@@ -16,11 +16,13 @@ export default defineEventHandler(async (event) => {
   console.log("Cuerpo de la solicitud:", body);
   console.log("token:", token);
 
+  let responseStatus = 0;
+
   try {
     if (method === "POST") {
       console.log("Simulando respuesta para solicitud POST...");
 
-      const url = `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}/staged/${collection}`;
+      const url = `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/${collection}`;
       console.log("URL:", url);
 
       const response = await fetch(url, {
@@ -34,6 +36,8 @@ export default defineEventHandler(async (event) => {
 
       console.log("Respuesta:", response);
       console.log(token);
+
+      responseStatus = response.status;
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -59,8 +63,8 @@ export default defineEventHandler(async (event) => {
         body: JSON.stringify({
           message: "Community added successfully",
           data: {
-            id: body.id, // ID proporcionado
-            ...body, // Incluye el cuerpo que se envió
+            id: body.id,
+            ...body,
           },
         }),
       };
@@ -72,9 +76,11 @@ export default defineEventHandler(async (event) => {
       };
     }
   } catch (error) {
+    console.log(error)
+    console.log("responseStatus: " , responseStatus)
     console.error("Error en el middleware:", error.message);
     return {
-      status: 500,
+      status: responseStatus || 500,
       body: JSON.stringify({ error: error.message }),
     };
   }

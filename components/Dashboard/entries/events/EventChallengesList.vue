@@ -1,11 +1,11 @@
 <template>
   <div class="community-event-challenges">
     <div
-      v-if="commmunityPrivileges.create"
+      v-if="commmunityPrivileges.challenge.create"
       class="w-100 flex justify-content-end gap-3 py-3"
     >
       <NuxtLink
-        :to="`/dashboard/communities/${communityId}/events/add`"
+        :to="`/dashboard/entries/${communityId}/events/${eventId}/add`"
         class="btn custom-btn btn-primary"
         title="Create New Event"
       >
@@ -56,7 +56,7 @@
           <div v-if="row.privileges === 'Owner' && row.actions.community">
             <button title="Edit community" class="btn-event text-neutral-300">
               <NuxtLink :to="getCommunityChallengeEditLink(row)">
-                View <font-awesome-icon :icon="['fas', 'pencil']" />
+                Edit <font-awesome-icon :icon="['fas', 'pencil']" />
               </NuxtLink>
             </button>
           </div>
@@ -65,14 +65,7 @@
           >
             <button title="Edit challenge" class="btn-custom-badget text-sm">
               <NuxtLink :to="getCommunityChallengeEditLink(row)">
-                View <font-awesome-icon :icon="['fas', 'pencil']" />
-              </NuxtLink>
-            </button>
-          </div>
-          <div v-else-if="row.privileges === 'anyone' && row.actions.community">
-            <button title="Edit challenge" class="btn-custom-badget text-sm">
-              <NuxtLink :to="getCommunityChallengeEditLink(row)">
-                View <font-awesome-icon :icon="['fas', 'pencil']" />
+                Edit <font-awesome-icon :icon="['fas', 'pencil']" />
               </NuxtLink>
             </button>
           </div>
@@ -134,6 +127,10 @@ const props = defineProps<{
 }>();
 
 const columns = [
+  {
+    label: "Acronym",
+    key: "acronym",
+  },
   {
     label: "Name",
     key: "name",

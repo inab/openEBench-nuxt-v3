@@ -26,6 +26,13 @@ $colorSecondary: #f47c21;
     top: 1px;
     transition: 0.5s;
   }
+  &.small {
+    padding: 5px 10px;
+    font-size: 13px;
+    display: flex;
+    justify-content:space-between;
+    align-items: center;
+  }
 
   &:hove:after {
     opacity: 1;
@@ -65,6 +72,14 @@ $colorSecondary: #f47c21;
   border: 1px solid theme("colors.primary.500") !important;
   box-shadow: none !important;
 }
+.selector select {
+  box-shadow:
+  rgb(255, 255, 255) 0px 0px 0px 0px inset,
+  rgb(209, 213, 219) 0px 0px 0px 1px inset,
+  rgba(0, 0, 0, 0.05) 0px 1px 2px 0px !important;
+  transition: border-color .2s cubic-bezier(0.645, 0.045, 0.355, 1);
+  border-radius: 0.375rem;
+}
 
 .status-active {
   background-color: theme("colors.statusActive.50");
@@ -73,17 +88,22 @@ $colorSecondary: #f47c21;
   transition: .5s;
   cursor: pointer;
   &:hover {
-      background-color: theme("colors.statusActive.500");
-      color: theme("colors.statusActive.50");
+    background-color: theme("colors.statusActive.500");
+    color: theme("colors.statusActive.50");
+  }
+  &.no-hover {
+    background-color: theme("colors.statusActive.50");
+    color: theme("colors.statusActive.500");
+    border: 1px solid theme("colors.statusActive.500");
   }
   &.option-btn {
-      &:hover {
-          background-color: theme("colors.statusActive.50");
-          color: theme("colors.statusActive.500");
-      }
+    &:hover {
+      background-color: theme("colors.statusActive.50");
+      color: theme("colors.statusActive.500");
+    }
   }
   &__option {
-      background-color: theme("colors.statusActive.500");
+    background-color: theme("colors.statusActive.500");
   }
 }
 .status-archived {
@@ -93,14 +113,19 @@ $colorSecondary: #f47c21;
   transition: .5s;
   cursor: pointer;
   &:hover {
-      background-color: theme("colors.statusArchived.500");
-      color: theme("colors.statusArchived.50");
+    background-color: theme("colors.statusArchived.500");
+    color: theme("colors.statusArchived.50");
+  }
+  &.no-hover {
+    background-color: theme("colors.statusArchived.50");
+    color: theme("colors.statusArchived.500");
+    border: 1px solid theme("colors.statusArchived.500");
   }
   &.option-btn {
-      &:hover {
-          background-color: theme("colors.statusArchived.50");
-          color: theme("colors.statusArchived.500");
-      }
+    &:hover {
+      background-color: theme("colors.statusArchived.50");
+      color: theme("colors.statusArchived.500");
+    }
   }
   &__option {
       background-color: theme("colors.statusArchived.500");
@@ -113,14 +138,19 @@ $colorSecondary: #f47c21;
   transition: .5s;
   cursor: pointer;
   &:hover {
-      background-color: theme("colors.statusIncubating.500");
-      color: theme("colors.statusIncubating.50");
+    background-color: theme("colors.statusIncubating.500");
+    color: theme("colors.statusIncubating.50");
+  }
+  &.no-hover {
+    background-color: theme("colors.statusIncubating.50");
+    color: theme("colors.statusIncubating.500");
+    border: 1px solid theme("colors.statusIncubating.500");
   }
   &.option-btn {
-      &:hover {
-          background-color: theme("colors.statusIncubating.50");
-          color: theme("colors.statusIncubating.500");
-      }
+    &:hover {
+      background-color: theme("colors.statusIncubating.50");
+      color: theme("colors.statusIncubating.500");
+    }
   }
   &__option {
       background-color: theme("colors.statusIncubating.500");
@@ -133,23 +163,28 @@ $colorSecondary: #f47c21;
   transition: .5s;
   cursor: pointer;
   &:hover {
-      background-color: theme("colors.statusAbandoned.500");
-      color: theme("colors.statusAbandoned.50");
+    background-color: theme("colors.statusAbandoned.500");
+    color: theme("colors.statusAbandoned.50");
+  }
+  &.no-hover {
+    background-color: theme("colors.statusAbandoned.50");
+    color: theme("colors.statusAbandoned.500");
+    border: 1px solid theme("colors.statusAbandoned.500");
   }
   &.option-btn {
-      &:hover {
-          background-color: theme("colors.statusAbandoned.50");
-          color: theme("colors.statusAbandoned.500");
-      }
+    &:hover {
+      background-color: theme("colors.statusAbandoned.50");
+      color: theme("colors.statusAbandoned.500");
+    }
   }
   &__option {
-      background-color: theme("colors.statusAbandoned.500");
+    background-color: theme("colors.statusAbandoned.500");
   }
 }
 .btn-custom-badget {
-  background-color: theme("colors.primary.50");
-  color: theme("colors.primary.500");
-  border: 1px solid theme("colors.primary.500");
+  background-color: white;
+  color: theme("colors.gray.400");
+  border: 1px solid theme("colors.gray.400");
   border-radius: 50px;
   min-width: 80px;
   font-size: 12px;
@@ -166,6 +201,7 @@ $colorSecondary: #f47c21;
   a {
     font-size: 12px;
     text-decoration: none;
+    color: theme("colors.gray.400");
   }
 }
 
@@ -201,4 +237,16 @@ $colorSecondary: #f47c21;
 
 .btn-delete-input {
   font-size: 15px;
+}
+
+.tab-wrapper {
+  border: 1px solid theme("colors.gray.200");
+  border-radius: 5px;
+}
+
+.tab-body-title {
+  font-size: 1.1rem;
+  color: theme("colors.primary.500");
+  border-bottom: 1px solid theme("colors.gray.200");
+  margin-bottom: 20px;
 }

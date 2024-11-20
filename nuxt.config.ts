@@ -36,6 +36,7 @@ export default defineNuxtConfig({
         "@inb/oeb-classification-table",
         "@inb/oeb-widgets-graphs",
         "valibot",
+        "@vuepic/vue-datepicker",
       ],
     },
   },

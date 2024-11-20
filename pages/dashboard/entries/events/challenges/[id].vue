@@ -51,7 +51,7 @@ import { ref, onMounted, computed } from "vue";
 import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
 import { useUser } from "@/stores/user.ts";
 import { privileges } from "@/constants/privileges";
-import CommunityEventChallenge from "@/components/Dashboard/entries/events/challenges/CommunityEventChallenge.vue";
+import CommunityEventChallenge from "@/components/Dashboard/entries/events/challenges/ChallengeEventChallenge.vue";
 
 definePageMeta({
   middleware: "auth",
@@ -65,9 +65,8 @@ const userStore = useUser();
 const { data, status } = useAuth();
 const route = useRoute();
 const isLoadingData = ref(true);
-const userPrivileges: Array<string> = computed(
-  () => userStore.getUserCommunitiesRoles,
-);
+const userPrivileges: ComputedRef<Array<{ role: string; community: string }>> =
+  computed(() => userStore.getUserCommunitiesRoles);
 
 if (status.value !== "authenticated") {
   await navigateTo("/login-required");
@@ -93,6 +92,13 @@ if (userPrivileges.value.length == 0) {
 }
 
 const challengePrivileges = computed(() => {
+  const isAdmin = userPrivileges.value.filter(
+    (privilege) => privilege.role === "admin",
+  );
+  if (isAdmin.length > 0) {
+    return privileges.admin;
+  }
+
   const privilege = userPrivileges.value.find((privilege) => {
     return privilege.community === communityId;
   });
@@ -106,12 +112,12 @@ const routeArray: Array = ref([
   {
     label: `Community ${communityId}`,
     isActualRoute: false,
-    route: `/dashboard/communities/${communityId}`,
+    route: `/dashboard/entries/${communityId}`,
   },
   {
     label: `Event ${eventId}`,
     isActualRoute: false,
-    route: `/dashboard/communities/${communityId}/events/${eventId}`,
+    route: `/dashboard/entries/${communityId}/events/${eventId}`,
   },
   {
     label: `Challenge ${challengeId}`,
@@ -144,7 +150,6 @@ const fetchUserCommunityEventChallenge = async (
     );
 
     const data = await response.json();
-    console.log(data);
     isLoadingData.value = false;
     challengeData.value = data;
   } catch (error) {

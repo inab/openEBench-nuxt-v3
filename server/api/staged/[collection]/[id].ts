@@ -69,59 +69,6 @@ export default defineEventHandler(async (event) => {
           }),
         };
         break;
-      case "PUT":
-        // Lógica para manejar PUT
-        // if (!id) {
-        //     return {
-        //         status: 400,
-        //         body: JSON.stringify({ error: 'Falta id para PUT' }),
-        //     };
-        // }
-        // response = await fetch(`https://dev-openebench.bsc.es/api/scientific/staged/${collection}/${id}`, {
-        //     method: 'PUT',
-        //     headers: {
-        //         'Authorization': token,
-        //         'Content-Type': 'application/json',
-        //     },
-        //     body: JSON.stringify(body),
-        // });
-        break;
-
-      case "PATCH":
-        // Lógica para manejar PATCH
-        // if (!id) {
-        //     return {
-        //         status: 400,
-        //         body: JSON.stringify({ error: 'Falta id para PATCH' }),
-        //     };
-        // }
-        // response = await fetch(`https://dev-openebench.bsc.es/api/scientific/staged/${collection}/${id}`, {
-        //     method: 'PATCH',
-        //     headers: {
-        //         'Authorization': token,
-        //         'Content-Type': 'application/json',
-        //     },
-        //     body: JSON.stringify(body),
-        // });
-        break;
-
-      case "DELETE":
-        // Lógica para manejar DELETE
-        // if (!id) {
-        //     return {
-        //         status: 400,
-        //         body: JSON.stringify({ error: 'Falta id para DELETE' }),
-        //     };
-        // }
-        // response = await fetch(`https://dev-openebench.bsc.es/api/scientific/staged/${collection}/${id}`, {
-        //     method: 'DELETE',
-        //     headers: {
-        //         'Authorization': token,
-        //         'Content-Type': 'application/json',
-        //     },
-        // });
-        break;
-
       default:
         return {
           status: 405,

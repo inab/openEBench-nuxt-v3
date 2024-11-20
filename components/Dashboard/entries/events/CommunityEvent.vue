@@ -8,8 +8,6 @@
         </div>
       </div>
       <div v-else class="dashboard-community-event-edit__content">
-        {{ localStartDate }}
-        {{ eventPrivileges.event }}
         <div class="w-100">
           <CustomTab
             :items="items"
@@ -23,7 +21,6 @@
               :state="state"
               class="space-y-4"
               @submit="onSubmitCommunityEvent"
-              @error="onError"
             >
               <div class="w-100 form-card">
                 <div class="form-card__row">
@@ -71,8 +68,9 @@
                             Event Start Date
                             <span class="text-red-400 required">*</span>
                           </label>
+                          {{ localDates.dates.benchmark_start }}
                           <VueDatePicker
-                            v-model="state.dates.benchmark_start"
+                            v-model="localDates.dates.benchmark_start"
                           ></VueDatePicker>
                         </div>
                       </div>
@@ -83,16 +81,16 @@
                             <span class="text-red-400 required">*</span>
                           </label>
                           <VueDatePicker
-                            v-model="state.dates.benchmark_stop"
+                            v-model="localDates.dates.benchmark_stop"
                           ></VueDatePicker>
                         </div>
                       </div>
                       <div class="col-4">
-                        {{ localAutomated }}
                         <div class="form-group">
                           <label for="dates">Is Automated Event</label>
                           <USelect
                             v-model="localAutomated"
+                            class="selector"
                             :options="automatedOptions"
                             option-attribute="label"
                             value-attribute="value"
@@ -107,7 +105,7 @@
                           </label>
                           <input
                             id="name"
-                            v-model="eventData.name"
+                            v-model="state.name"
                             type="text"
                             class="form-control custom-entry-input"
                             placeholder="Event name"
@@ -129,10 +127,10 @@
                           </label>
                           <input
                             id="schema"
-                            v-model="eventData._schema"
+                            v-model="state._schema"
                             type="text"
                             class="form-control custom-entry-input"
-                            placeholder="https://schema.org/Community"
+                            placeholder="https://www.elixir-europe.org/excelerate/WP2/json-schemas/1.0/Challenge"
                             :disabled="!eventPrivileges.event.update"
                           />
                         </div>
@@ -142,7 +140,7 @@
                           <label for="url">URL</label>
                           <input
                             id="url"
-                            v-model="eventData.url"
+                            v-model="state.url"
                             type="text"
                             class="form-control custom-entry-input"
                             placeholder="URL"
@@ -192,7 +190,9 @@
                                     "
                                   />
                                   <button
-                                    v-if="eventPrivileges.event.update && !isView"
+                                    v-if="
+                                      eventPrivileges.event.update && !isView
+                                    "
                                     class="btn-delete-input"
                                   >
                                     <font-awesome-icon
@@ -374,9 +374,16 @@ import CustomDialog from "@/components/Common/CustomDialog.vue";
 import CustomTab from "@/components/Common/CustomTab.vue";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
-import { object, string, array, safeParse, boolean, optional } from "valibot";
+import {
+  object,
+  string,
+  array,
+  safeParse,
+  boolean,
+  optional,
+  date,
+} from "valibot";
 import type { FormSubmitEvent, FormErrorEvent } from "#ui/types";
-
 
 const router = useRouter();
 const { data } = useAuth();
@@ -421,13 +428,16 @@ const state = ref({
   community_id: "",
   bench_contact_ids: "",
   dates: {
-    benchmark_start: Date,
-    benchmark_stop: Date,
+    benchmark_start: "",
+    benchmark_stop: "",
+    creation: "",
+    modification: "",
   },
   orig_id: "",
   _schema: "",
   references: [],
   is_automated: false,
+  url: "",
 });
 
 const schema = object({
@@ -441,17 +451,12 @@ const schema = object({
     }),
   ),
   dates: object({
-    benchmark_start: string(),
-    benchmark_stop: string(),
+    benchmark_start: date(),
+    benchmark_stop: date(),
+    creation: date(),
+    modification: date(),
   }),
-  references: optional(
-    array(
-      object({
-        id: string(),
-        name: string(),
-      }),
-    ),
-  ),
+  references: optional(array(string())),
   _schema: string(),
   url: optional(string()),
   is_automated: boolean(),
@@ -467,6 +472,14 @@ const contactsData = ref<string[]>([]);
 const localReferences = ref<string[]>([]);
 const localContacts = ref<string[]>([]);
 const localAutomated = ref<boolean>(false);
+const localDates = ref({
+  dates: {
+    benchmark_start: new Date(),
+    benchmark_stop: new Date(),
+    creation: new Date(),
+    modification: new Date(),
+  },
+});
 
 const eventData = computed(() => {
   state.value = {
@@ -479,29 +492,29 @@ const eventData = computed(() => {
           id: contact,
           name: contact,
         };
-    }) || [],
-    dates: props.eventObj?.dates || { benchmark_start: Date, benchmark_stop: Date },
+      }) || [],
+    dates: {
+      benchmark_start:
+        new Date(props.eventObj?.dates.benchmark_start) || new Date(),
+      benchmark_stop:
+        new Date(props.eventObj?.dates.benchmark_stop) || new Date(),
+      creation: new Date(props.eventObj?.dates.creation) || new Date(),
+      modification: new Date(props.eventObj?.dates.modification) || new Date(),
+    },
     orig_id: props.eventObj?.orig_id || "",
     _schema: props.eventObj?._schema || "",
-    references: props.eventObj?.references || [],
+    references: props.eventObj?.references || array<string>(),
     is_automated: props.eventObj?.is_automated || false,
+    url: props.eventObj?.url || "",
   };
   return props.eventObj;
 });
 
-state.value.dates.benchmark_start = new Date(state.value.dates.benchmark_start);
-state.value.dates.benchmark_stop = new Date(state.value.dates.benchmark_stop);
-
-const localStartDate = computed(() => {
-  if (eventData.value && eventData.value.dates && eventData.value.dates.benchmark_start) {
-    const date = new Date(eventData.value.dates.benchmark_start);
-    return date.toLocaleString();
-  }
-  return "";
-});
-
 if (props.eventObj && props.eventObj.references) {
-  localReferences.value = props.eventObj.references;
+  localReferences.value =
+    props.eventObj.references.map((reference: string) => {
+      return reference;
+    }) || [];
 }
 
 if (props.eventObj && props.eventObj.bench_contact_ids) {
@@ -513,6 +526,15 @@ if (props.eventObj && props.eventObj.bench_contact_ids) {
 
 if (props.eventObj && props.eventObj.is_automated) {
   localAutomated.value = Boolean(props.eventObj.is_automated);
+}
+
+if (props.eventObj && props.eventObj.dates) {
+  localDates.value.dates = {
+    benchmark_start: new Date(props.eventObj.dates.benchmark_start),
+    benchmark_stop: new Date(props.eventObj.dates.benchmark_stop),
+    creation: new Date(props.eventObj.dates.creation),
+    modification: new Date(props.eventObj.dates.modification),
+  };
 }
 
 if (props.tabIndex) {
@@ -579,10 +601,6 @@ function dialogShow() {
   console.log("dialogShow!!!!");
 }
 
-async function onError(event: FormErrorEvent) {
-  console.log(event)
-}
-
 const getErrors = computed(() => errors.value.join(", "));
 
 async function onSubmitCommunityEvent(event: FormSubmitEvent<Schema>) {
@@ -593,14 +611,14 @@ async function onSubmitCommunityEvent(event: FormSubmitEvent<Schema>) {
       errors.value = errorClean(customErrors);
     } else {
       errors.value = [];
-      await updateBenchmarkingEven();
+      await updateBenchmarkingEvent();
     }
   } else {
     errors.value = result.error.issues.map((issue) => issue.message);
   }
 }
 
-async function updateBenchmarkingEven() {
+async function updateBenchmarkingEvent() {
   const cleanContacts = deleteEmptyElements(localContacts.value);
   const cleanReferences = deleteEmptyElements(localReferences.value);
 
@@ -618,22 +636,61 @@ async function updateBenchmarkingEven() {
     url: state.value.url,
     is_automated: localAutomated.value,
     dates: {
-      benchmark_start: convertToUTCFullDate(state.value.dates.benchmark_start),
-      benchmark_stop: convertToUTCFullDate(state.value.dates.benchmark_stop),
+      benchmark_start: new Date(
+        Date.UTC(
+          localDates.value.dates.benchmark_start.getUTCFullYear(),
+          localDates.value.dates.benchmark_start.getUTCMonth(),
+          localDates.value.dates.benchmark_start.getUTCDate(),
+          localDates.value.dates.benchmark_start.getUTCHours(),
+          localDates.value.dates.benchmark_start.getUTCMinutes(),
+          localDates.value.dates.benchmark_start.getUTCSeconds(),
+        ),
+      ).toISOString(),
+      benchmark_stop: new Date(
+        Date.UTC(
+          localDates.value.dates.benchmark_stop.getUTCFullYear(),
+          localDates.value.dates.benchmark_stop.getUTCMonth(),
+          localDates.value.dates.benchmark_stop.getUTCDate(),
+          localDates.value.dates.benchmark_stop.getUTCHours(),
+          localDates.value.dates.benchmark_stop.getUTCMinutes(),
+          localDates.value.dates.benchmark_stop.getUTCSeconds(),
+        ),
+      ).toISOString(),
+      creation: new Date(
+        Date.UTC(
+          localDates.value.dates.creation.getUTCFullYear(),
+          localDates.value.dates.creation.getUTCMonth(),
+          localDates.value.dates.creation.getUTCHours(),
+          localDates.value.dates.creation.getUTCDate(),
+          localDates.value.dates.creation.getUTCMinutes(),
+          localDates.value.dates.creation.getUTCSeconds(),
+        ),
+      ).toISOString(),
+      modification: new Date(
+        Date.UTC(
+          localDates.value.dates.modification.getUTCMonth(),
+          localDates.value.dates.modification.getUTCFullYear(),
+          localDates.value.dates.modification.getUTCDate(),
+          localDates.value.dates.modification.getUTCHours(),
+          localDates.value.dates.modification.getUTCMinutes(),
+          localDates.value.dates.modification.getUTCSeconds(),
+        ),
+      ).toISOString(),
     },
   };
-
-  console.log(body);
-
+  
   try {
-    const response = await fetch(`/api/staged/BenchmarkingEvent/${state.value._id}`, {
-      method: "PATCH",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
+    const response = await fetch(
+      `/api/staged/BenchmarkingEvent/${state.value._id}`,
+      {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
       },
-      body: JSON.stringify(body),
-    });
+    );
 
     if (!response.ok) {
       throw new Error("Error in API response");
@@ -775,10 +832,17 @@ watch(
     if (newVal && newVal.is_automated) {
       localAutomated.value = Boolean(newVal.is_automated);
     }
+    if (newVal && newVal.dates) {
+      localDates.value.dates = {
+        benchmark_start: new Date(newVal.dates.benchmark_start),
+        benchmark_stop: new Date(newVal.dates.benchmark_stop),
+        creation: new Date(newVal.dates.creation),
+        modification: new Date(newVal.dates.modification),
+      };
+    }
   },
   { immediate: true },
 );
-
 </script>
 
 <style scoped lang="scss">
@@ -882,7 +946,7 @@ watch(
       rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
       rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
     &__row {
-      padding: 20px 15px;
+      padding: 10px 15px;
       &:last-child {
         width: 100%;
       }

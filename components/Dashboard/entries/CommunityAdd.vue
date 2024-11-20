@@ -142,7 +142,7 @@
                 </div>
                 <div class="form-card__row__box">
                   <div class="form-group">
-                    <label for="description">
+                    <label for="name">
                       Name
                       <span class="text-red-400 required">*</span>
                     </label>
@@ -154,80 +154,6 @@
                         class="form-control custom-entry-input"
                         placeholder="Community name"
                       />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="row form-card__full_row">
-                <div class="form-card__row__box">
-                  <div class="col-12">
-                    <div class="form-group w-100">
-                      <div class="w-100">
-                        <label for="contacts" class="form-group-row">
-                          <span class="label-text">
-                            Associated users
-                            <span class="text-red-400 required">*</span>
-                          </span>
-                          <button
-                            class="btn-form-add btn-primary"
-                            type="button"
-                            :disabled="checkEmptyKeywords"
-                            @click="
-                              onAddObjectElement(localUsers, inputUsersRefs)
-                            "
-                          >
-                            <font-awesome-icon :icon="['fas', 'plus']" />
-                          </button>
-                        </label>
-                      </div>
-                      <div class="w-100 row no-space">
-                        <div
-                          v-for="(keys, index) in localUsers"
-                          v-if="localUsers.length > 0"
-                          :key="index"
-                          class="col-12 pt-0"
-                        >
-                          <div class="input-wrapper cols-4-input">
-                            <input
-                              id="keyword"
-                              ref="inputKeywordsRefs"
-                              v-model="localUsers[index].name"
-                              type="text"
-                              class="form-control"
-                              placeholder="User name"
-                            />
-                            <input
-                              id="keyword"
-                              ref="inputKeywordsRefs"
-                              v-model="localUsers[index].email"
-                              type="text"
-                              class="form-control"
-                              placeholder="User email"
-                            />
-                            <USelect
-                              v-model="localUsers[index]['role']"
-                              :options="userAvailableRoles"
-                              option-attribute="label"
-                              value-attribute="value"
-                            />
-                            <button
-                              class="btn-delete-input"
-                              type="button"
-                              @click="onDeleteElement(index, localUsers)"
-                            >
-                              <font-awesome-icon :icon="['far', 'trash-can']" />
-                            </button>
-                          </div>
-                        </div>
-                        <div v-else class="col-12 pt-0">
-                          <div class="w-100 empty-elements text-slate-400">
-                            <span
-                              >There are no associated users in this
-                              community</span
-                            >
-                          </div>
-                        </div>
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -248,7 +174,7 @@
               </div>
             </div>
             <div class="w-100 form-card">
-              <CustomSubtitle text="Data" />
+              <CustomSubtitle text="Data" size="22px" />
               <div class="row form-card__row">
                 <div class="form-card__row__box">
                   <div class="col-12">
@@ -257,7 +183,7 @@
                         <label for="contacts" class="form-group-row">
                           <span class="label-text">Links</span>
                           <button
-                            class="btn-form-add btn-primary"
+                            class="btn-form-add btn-primary btn-add-link"
                             type="button"
                             :disabled="checkEmptyLinks"
                             @click="onAddElement(localLinks, inputLinkRefs)"
@@ -462,11 +388,7 @@
         </div>
       </div>
     </div>
-    <CustomDialog
-      :is-dialog-open="isDialogOpened"
-      :width="400"
-      @modal-close="dialogShow"
-    >
+    <CustomDialog :is-dialog-open="isDialogOpened" :width="400">
       <template #header>
         {{ dialogTitle }}
       </template>
@@ -552,7 +474,7 @@ const state = ref({
   community_contact_ids: [],
   type: "Community",
   privileges: "owner",
-  users: []
+  users: [],
 });
 
 const schema = object({
@@ -581,7 +503,7 @@ const schema = object({
       email: string(),
       role: string(),
     }),
-  )
+  ),
 });
 
 const dialogTitle = ref("");
@@ -997,7 +919,7 @@ onMounted(() => {
       rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
       rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
     &__row {
-      padding: 20px 15px;
+      padding: 10px 15px;
       display: grid;
       grid-template-columns: 1fr 1fr;
       column-gap: 20px;

@@ -1,16 +1,16 @@
 <template>
   <div class="community-events">
-    <div
-      v-if="eventPrivileges.create"
-      class="w-100 flex justify-content-end gap-3 py-3"
-    >
-      <NuxtLink
-        :to="`/dashboard/entries/${communityId}/events/add`"
-        class="btn custom-btn btn-primary"
-        title="Create New Event"
-      >
-        Create New Event
-      </NuxtLink>
+    <div class="tab-body-title w-100 flex justify-content-between">
+      Events
+      <div v-if="eventPrivileges.create" class="">
+        <NuxtLink
+          :to="`/dashboard/entries/${communityId}/events/add`"
+          class="btn custom-btn btn-primary small"
+          title="Create New Event"
+        >
+          Create New Event
+        </NuxtLink>
+      </div>
     </div>
     <div class="w-100">
       <div class="flex items-center justify-between gap-3 py-3">
@@ -63,13 +63,13 @@
                 title="View community events"
                 class="text-sm"
               >
-                Live <font-awesome-icon :icon="['far', 'eye']" />
+                Visit <font-awesome-icon :icon="['far', 'eye']" />
               </NuxtLink>
             </button>
             <div v-if="row.privileges === 'Owner' && row.actions.community">
               <button title="Edit community" class="btn-custom-badget text-sm">
                 <NuxtLink :to="getCommunityEventEditLink(row)">
-                  View <font-awesome-icon :icon="['fas', 'pencil']" />
+                  Edit <font-awesome-icon :icon="['fas', 'pencil']" />
                 </NuxtLink>
               </button>
             </div>
@@ -78,16 +78,7 @@
             >
               <button title="Edit community" class="btn-custom-badget text-sm">
                 <NuxtLink :to="getCommunityEventEditLink(row)">
-                  View <font-awesome-icon :icon="['fas', 'pencil']" />
-                </NuxtLink>
-              </button>
-            </div>
-            <div
-              v-else-if="row.privileges === 'anyone' && row.actions.community"
-            >
-              <button title="Edit community" class="btn-custom-badget text-sm">
-                <NuxtLink :to="getCommunityEventEditLink(row)">
-                  View <font-awesome-icon :icon="['fas', 'pencil']" />
+                  Edit <font-awesome-icon :icon="['fas', 'pencil']" />
                 </NuxtLink>
               </button>
             </div>
