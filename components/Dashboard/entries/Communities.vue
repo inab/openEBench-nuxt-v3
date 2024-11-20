@@ -97,7 +97,8 @@
                   title="View community events"
                   class="text-sm"
                 >
-                  Live <font-awesome-icon :icon="['far', 'eye']" />
+                  <font-awesome-icon :icon="['far', 'eye']" />
+                  Visit
                 </NuxtLink>
               </button>
               <div v-if="row.actions">
@@ -110,7 +111,8 @@
                     class="btn-custom-badget text-sm"
                   >
                     <NuxtLink :to="getCommunityEditLink(row)" class="text-sm">
-                      View <font-awesome-icon :icon="['fas', 'pencil']" />
+                      <font-awesome-icon :icon="['fas', 'pencil']" />
+                      Edit
                     </NuxtLink>
                   </button>
                 </div>
@@ -125,22 +127,8 @@
                     class="btn-custom-badget text-sm"
                   >
                     <NuxtLink :to="getCommunityEditLink(row)" class="text-sm">
-                      View <font-awesome-icon :icon="['fas', 'pencil']" />
-                    </NuxtLink>
-                  </button>
-                </div>
-                <div
-                  class="text-center"
-                  v-else-if="
-                    row.privileges === 'anyone' && row.actions.community
-                  "
-                >
-                  <button
-                    title="Edit community"
-                    class="btn-custom-badget text-sm"
-                  >
-                    <NuxtLink :to="getCommunityEditLink(row)" class="text-sm">
-                      View <font-awesome-icon :icon="['fas', 'pencil']" />
+                      <font-awesome-icon :icon="['fas', 'pencil']" />
+                      Edit
                     </NuxtLink>
                   </button>
                 </div>
@@ -150,7 +138,7 @@
                     class="btn-custom-badget text-sm"
                   >
                     <NuxtLink :to="getCommunityEditLink(row)" class="text-sm">
-                      View <font-awesome-icon :icon="['fas', 'pencil']" />
+                      Edit <font-awesome-icon :icon="['fas', 'pencil']" />
                     </NuxtLink>
                   </button>
                 </div>
@@ -167,7 +155,7 @@
             </div>
           </template>
           <template #type-data="{ row }">
-            <div class="inline-block rounded-full text-left">
+            <div class="inline-block rounded-full text-left not-inline">
               <template v-if="row._metadata && row._metadata != ''">
                 <font-awesome-icon :icon="['fas', 'diagram-project']" />
                 <span> Project </span>
@@ -181,33 +169,42 @@
           <template #status-data="{ row }">
             <div
               class="inline-block rounded-full custom-badget font-semibold"
-              :class="`status-${row.status}`"
+              :class="`status-${row.status} no-hover`"
               :title="`${'Status'} ${row.status}`"
             >
               <div
                 class="text-xs font-normal leading-none max-w-full flex-initial font-semibold"
                 :title="`${'Status'} ${row.status}`"
               >
+                <span v-if="row.status === 'active'"><font-awesome-icon :icon="['fas', 'check']" /></span>
+                <span v-else-if="row.status === 'archived'"><font-awesome-icon :icon="['fas', 'box-archive']" /></span>
+                <span v-else-if="row.status === 'incubating'"><font-awesome-icon :icon="['fas', 'stopwatch']" /></span>
+                <span v-else-if="row.status === 'abandoned'"><font-awesome-icon :icon="['fas', 'ban']" /></span>
+                <span v-else-if="row.status === 'unknown'"><font-awesome-icon :icon="['far', 'circle-question']" /></span>
                 {{ row.status }}
               </div>
             </div>
           </template>
           <template #role-data="{ row }">
-            <span
-              v-if="row.privileges === 'Owner' && row.actions.community"
-              title="Community Owner"
-              class="row-icon"
-            >
-              <font-awesome-icon :icon="['fas', 'key']" />
-            </span>
-            <span
-              v-else-if="row.privileges === 'Manager' && row.actions.community"
-              title="Community Manager"
-              class="row-icon"
-            >
-              <font-awesome-icon :icon="['fas', 'gear']" />
-            </span>
-            <span v-else> - </span>
+            <div class="not-inline">
+              <span
+                v-if="row.privileges === 'Owner' && row.actions.community"
+                title="Community Owner"
+                class="row-icon"
+              >
+                <font-awesome-icon :icon="['fas', 'key']" />
+                Owner
+              </span>
+              <span
+                v-else-if="row.privileges === 'Manager' && row.actions.community"
+                title="Community Manager"
+                class="row-icon"
+              >
+                <font-awesome-icon :icon="['fas', 'gear']" />
+                Manager
+              </span>
+              <span v-else> - </span>
+            </div>
           </template>
         </UTable>
         <div
@@ -385,6 +382,7 @@ function getCommunityEditLink(row: any, isEvent: boolean = false) {
   return `/dashboard/entries/${row._id}`;
 }
 </script>
+
 <style lang="scss" scoped>
 .user-communities {
   &__body {
@@ -410,6 +408,7 @@ function getCommunityEditLink(row: any, isEvent: boolean = false) {
     text-align: center;
     min-width: 100px;
     text-transform: capitalize;
+    cursor: default;
     &.filter-badget {
       margin-right: 0.5rem;
     }
@@ -585,5 +584,8 @@ function getCommunityEditLink(row: any, isEvent: boolean = false) {
     padding: 2px 25px;
     margin-top: 10px;
   }
+}
+.not-inline {
+  display: ruby;
 }
 </style>

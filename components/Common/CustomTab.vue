@@ -1,6 +1,6 @@
 <template>
   <div class="common-tab">
-    <div class="tab-header bg-gray-100 rounded-lg items-center">
+    <div class="tab-header  rounded-lg items-center">
       <div
         v-for="item in itemsTab"
         :key="item.id"
@@ -53,7 +53,8 @@ watchEffect(() => {
     color: theme("colors.gray.500");
     border-radius: 0.5rem;
     font-size: 14px;
-    margin-bottom: 8px;
+    /* border: 1px solid theme("colors.gray.200"); */
+    background-color: theme("colors.gray.50");
     .tab-item {
       cursor: pointer;
       display: flex;
@@ -74,11 +75,11 @@ watchEffect(() => {
     padding: 1rem 0;
   }
   .selected {
-    color: rgb(15, 23, 42);
-    background-color: white;
+    color: white;
+    background-color: theme("colors.secondaryOeb.400");
     border-radius: 0.5rem;
     span {
-      color: theme("colors.secondaryOeb.400");
+      color: white;
     }
   }
 }

@@ -23,80 +23,128 @@
         </div>
       </div>
       <div v-else class="dashboard-community-edit__content">
-        <div class="w-100">
+        <div class="w-100 tab-wrapper">
           <CustomTab
             :items="items"
             :selected="selectedTab"
             @change-selected="changeSelected"
           ></CustomTab>
-          <div v-if="selectedTab == '0'">
-            <UForm
-              :schema="schema"
-              :state="state"
-              class="space-y-4"
-              @error="onError"
-              @submit="onSubmitCommunity"
-            >
-              <div class="w-100 form-card">
-                <div class="row justify-content-between">
-                  <div class="col-6">
-                    <div class="logo-col">
-                      <div class="logo-col-wrapper">
-                        <div class="form-logo">
-                          <img
-                            v-if="localLogo && localLogo != ''"
-                            :src="localLogo"
-                            alt="Entry logo"
-                          />
-                          <img
-                            v-else
-                            src="~/assets/images/dashboard/empty-logo.jpg"
-                            alt="Entry logo"
+          <CustomTabBody>
+            <div v-if="selectedTab == '0'">
+              <div class="tab-body-title">Community Data</div>
+              <UForm
+                :schema="schema"
+                :state="state"
+                class="space-y-4"
+                @error="onError"
+                @submit="onSubmitCommunity"
+              >
+                <div class="w-100 form-card">
+                  <div class="row justify-content-between">
+                    <div class="col-6">
+                      <div class="logo-col">
+                        <div class="logo-col-wrapper">
+                          <div class="form-logo">
+                            <img
+                              v-if="localLogo && localLogo != ''"
+                              :src="localLogo"
+                              alt="Entry logo"
+                            />
+                            <img
+                              v-else
+                              src="~/assets/images/dashboard/empty-logo.jpg"
+                              alt="Entry logo"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div class="d-flex justify-content-center">
+                        <div class="form-logo-input">
+                          <label
+                            for="file-upload"
+                            class="custom-file-upload btn-primary hover_effect"
+                            :disabled="
+                              !commmunityPrivileges.community.update || isView
+                            "
+                          >
+                            Upload new logo
+                            <font-awesome-icon :icon="['fas', 'upload']" />
+                          </label>
+                          <input
+                            id="file-upload"
+                            type="file"
+                            accept="image/*"
+                            :disabled="
+                              !commmunityPrivileges.community.update || isView
+                            "
+                            @change="onFileChange"
                           />
                         </div>
                       </div>
                     </div>
-                    <div class="d-flex justify-content-center">
-                      <div class="form-logo-input">
-                        <label
-                          for="file-upload"
-                          class="custom-file-upload btn-primary hover_effect"
-                          :disabled="
-                            !commmunityPrivileges.community.update || isView
-                          "
-                        >
-                          Upload new logo
-                          <font-awesome-icon :icon="['fas', 'upload']" />
-                        </label>
-                        <input
-                          id="file-upload"
-                          type="file"
-                          accept="image/*"
-                          :disabled="
-                            !commmunityPrivileges.community.update || isView
-                          "
-                          @change="onFileChange"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-6">
-                    <div class="row justify-content-end form-card__full_row">
-                      <div class="form-card__row__box">
-                        <div class="row justify-content-end">
-                          <div class="col-12 typeOptions">
-                            <div class="form-group">
-                              <label for="id">
-                                ID
-                                <span class="text-red-400 required">*</span>
-                              </label>
-                              <div class="w-100">
-                                <input
-                                  id="id"
-                                  v-model="state._id"
-                                  type="text"
-                                  class="form-control custom-entry-input"
-                                  placeholder="Community id"
+                    <div class="col-6">
+                      <div class="row justify-content-end form-card__full_row">
+                        <div class="form-card__row__box">
+                          <div class="row justify-content-end">
+                            <div class="col-12 typeOptions">
+                              <div class="form-group">
+                                <label for="id">
+                                  ID
+                                  <span class="text-red-400 required">*</span>
+                                </label>
+                                <div class="w-100">
+                                  <input
+                                    id="id"
+                                    v-model="state._id"
+                                    type="text"
+                                    class="form-control custom-entry-input"
+                                    placeholder="Community id"
+                                    :disabled="
+                                      !commmunityPrivileges.community.update ||
+                                      isView
+                                    "
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-6">
+                              <div class="form-group">
+                                <label for="status">Status</label>
+                                <USelectMenu
+                                  v-model="localStatus.value"
+                                  :options="CommunityStatusLabels"
+                                  :disabled="
+                                    !commmunityPrivileges.community.update ||
+                                    isView
+                                  "
+                                  @change="onChangeStatus"
+                                >
+                                  <template #label>
+                                    <span
+                                      :class="`status-${localStatus.value}__option inline-block h-2 w-2 flex-shrink-0 rounded-full`"
+                                      aria-hidden="true"
+                                    />
+                                    <span class="truncate">{{
+                                      localStatus.label
+                                    }}</span>
+                                  </template>
+                                  <template #option="{ option: item }">
+                                    <span
+                                      class="h-2 w-2 rounded-full"
+                                      :class="`status-${item?.value}__option`"
+                                    ></span>
+                                    <span>{{ item.label }}</span>
+                                  </template>
+                                </USelectMenu>
+                              </div>
+                            </div>
+                            <div class="col-6">
+                              <div class="form-group">
+                                <label for="type">Type</label>
+                                <USelect
+                                  v-model="state.type"
+                                  :options="typeOptions"
+                                  option-attribute="label"
                                   :disabled="
                                     !commmunityPrivileges.community.update ||
                                     isView
@@ -105,367 +153,300 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-6">
-                            <div class="form-group">
-                              <label for="status">Status</label>
-                              <USelectMenu
-                                v-model="localStatus.value"
-                                :options="CommunityStatusLabels"
-                                :disabled="
-                                  !commmunityPrivileges.community.update ||
-                                  isView
-                                "
-                                @change="onChangeStatus"
-                              >
-                                <template #label>
-                                  <span
-                                    :class="`status-${localStatus.value}__option inline-block h-2 w-2 flex-shrink-0 rounded-full`"
-                                    aria-hidden="true"
-                                  />
-                                  <span class="truncate">{{
-                                    localStatus.label
-                                  }}</span>
-                                </template>
-                                <template #option="{ option: item }">
-                                  <span
-                                    class="h-2 w-2 rounded-full"
-                                    :class="`status-${item?.value}__option`"
-                                  ></span>
-                                  <span>{{ item.label }}</span>
-                                </template>
-                              </USelectMenu>
-                            </div>
-                          </div>
-                          <div class="col-6">
-                            <div class="form-group">
-                              <label for="type">Type</label>
-                              <USelect
-                                v-model="state.type"
-                                :options="typeOptions"
-                                option-attribute="label"
-                                :disabled="
-                                  !commmunityPrivileges.community.update ||
-                                  isView
-                                "
-                              />
-                            </div>
-                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                <CustomBorder />
-                <div class="row form-card__row">
-                  <div class="form-card__row__box">
-                    <div class="form-group">
-                      <label for="acronym">
-                        Acronym
-                        <span class="text-red-400 required">*</span>
-                      </label>
-                      <input
-                        id="acronym"
-                        v-model="communityData.acronym"
-                        type="text"
-                        class="form-control"
-                        :disabled="
-                          !commmunityPrivileges.community.update || isView
-                        "
-                      />
-                    </div>
-                  </div>
-                  <div class="form-card__row__box">
-                    <div class="form-group">
-                      <label for="description">
-                        Name
-                        <span class="text-red-400 required">*</span>
-                      </label>
-                      <input
-                        id="name"
-                        v-model="communityData.name"
-                        type="text"
-                        class="form-control"
-                        :disabled="
-                          !commmunityPrivileges.community.update || isView
-                        "
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div class="row form-card__full_row">
-                  <div class="form-card__row__box">
-                    <div class="col-12">
-                      <label for="description">Description</label>
-                      <textarea
-                        id="description"
-                        v-model="communityData.description"
-                        class="form-control"
-                        rows="10"
-                        :disabled="
-                          !commmunityPrivileges.community.update || isView
-                        "
-                      >
-                      </textarea>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="w-100 form-card">
-                <CustomSubtitle text="Data" />
-                <div class="row form-card__row">
-                  <div class="form-card__row__box">
-                    <div class="col-12">
+                  <CustomBorder />
+                  <div class="row form-card__row">
+                    <div class="form-card__row__box">
                       <div class="form-group">
-                        <div class="w-100">
-                          <label for="contacts" class="form-group-row">
-                            <span class="label-text text-gray-500">
-                              Links
-                            </span>
-                            <button
-                              class="btn-form-add btn-primary"
-                              :disabled="
-                                !commmunityPrivileges.community.update ||
-                                isView ||
-                                checkEmptyLinks
-                              "
-                              type="button"
-                              @click="onAddElement(localLinks)"
-                            >
-                              <font-awesome-icon :icon="['fas', 'plus']" />
-                            </button>
-                          </label>
-                        </div>
-                        <div class="w-100 row no-space">
-                          <div
-                            v-for="(link, index) in localLinks"
-                            :key="link"
-                            class="col-12 d-flex pl-0"
-                          >
-                            <div class="input-wrapper big d-flex">
-                              <span>{{ index + 1 }}.</span>
-                              <input
-                                id="link"
-                                v-model="localLinks[index]"
-                                type="text"
-                                class="form-control"
-                                :disabled="
-                                  !commmunityPrivileges.community.update ||
-                                  isView
-                                "
-                              />
-                              <button
-                                v-if="
-                                  commmunityPrivileges.community.update &&
-                                  !isView
-                                "
-                                class="btn-delete-input"
-                                type="button"
-                                @click="onDeleteElement(index, localLinks)"
-                              >
-                                <font-awesome-icon
-                                  :icon="['far', 'trash-can']"
-                                />
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="form-card__row__box">
-                    <div class="col-12">
-                      <div class="form-group">
-                        <div class="w-100">
-                          <label for="contacts" class="form-group-row">
-                            <span class="label-text text-gray-500">
-                              Contacts
-                              <span class="text-red-400 required">*</span>
-                            </span>
-                            <button
-                              class="btn-form-add btn-primary"
-                              :disabled="
-                                !commmunityPrivileges.community.update ||
-                                isView ||
-                                cheEmptyContacts
-                              "
-                              type="button"
-                              @click="onAddElement(localContacts, itemRefs)"
-                            >
-                              <font-awesome-icon :icon="['fas', 'plus']" />
-                            </button>
-                          </label>
-                        </div>
-                        <div class="w-100 row no-space">
-                          <div
-                            v-for="(contact, index) in localContacts"
-                            v-if="localContacts.length > 0"
-                            :key="index"
-                            ref="itemsContact"
-                            class="col-12 pt-0"
-                          >
-                            <div class="input-wrapper big d-flex">
-                              <USelectMenu
-                                :ref="`contact_${index}`"
-                                v-model="localContacts[index]"
-                                class="w-full lg:w-100"
-                                searchable
-                                selected-icon="i-heroicons-check-16-solid"
-                                placeholder="Select a contact"
-                                :options="contactsData"
-                                value-attribute="id"
-                                option-attribute="name"
-                                :disabled="
-                                  !commmunityPrivileges.community.update ||
-                                  isView
-                                "
-                              >
-                              </USelectMenu>
-                              <button
-                                class="btn-delete-input"
-                                type="button"
-                                :disabled="
-                                  !commmunityPrivileges.community.update ||
-                                  isView
-                                "
-                                @click="onDeleteElement(index, localContacts)"
-                              >
-                                <font-awesome-icon
-                                  :icon="['far', 'trash-can']"
-                                />
-                              </button>
-                            </div>
-                          </div>
-                          <div v-else class="col-12 pt-0">
-                            <div class="w-100 empty-elements text-slate-400">
-                              <span
-                                >There are no contacts associated with this
-                                community</span
-                              >
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="form-card__row__box">
-                    <div class="col-12">
-                      <div class="form-group">
-                        <label for="schema">
-                          Schema
+                        <label for="acronym">
+                          Acronym
                           <span class="text-red-400 required">*</span>
                         </label>
-                        <div class="w-100 d-flex">
-                          <input
-                            id="schema"
-                            v-model="communityData._schema"
-                            type="text"
-                            class="form-control custom-entry-input"
-                            placeholder="https://schema.org/Community"
-                            :disabled="
-                              !commmunityPrivileges.community.update || isView
-                            "
-                          />
-                        </div>
+                        <input
+                          id="acronym"
+                          v-model="communityData.acronym"
+                          type="text"
+                          class="form-control"
+                          :disabled="
+                            !commmunityPrivileges.community.update || isView
+                          "
+                        />
+                      </div>
+                    </div>
+                    <div class="form-card__row__box">
+                      <div class="form-group">
+                        <label for="description">
+                          Name
+                          <span class="text-red-400 required">*</span>
+                        </label>
+                        <input
+                          id="name"
+                          v-model="communityData.name"
+                          type="text"
+                          class="form-control"
+                          :disabled="
+                            !commmunityPrivileges.community.update || isView
+                          "
+                        />
                       </div>
                     </div>
                   </div>
-                  <div class="form-card__row__box">
-                    <div class="col-12">
-                      <div class="form-group">
-                        <div class="w-100">
-                          <label for="contacts" class="form-group-row">
-                            <span class="label-text"> Keywords </span>
-                            <button
-                              class="btn-form-add btn-primary"
-                              type="button"
-                              :disabled="
-                                !commmunityPrivileges.community.update ||
-                                isView ||
-                                checkEmptyKeywords
-                              "
-                              @click="onAddElement(localKeywords)"
-                            >
-                              <font-awesome-icon :icon="['fas', 'plus']" />
-                            </button>
-                          </label>
-                        </div>
-                        <div class="w-100 row no-space">
-                          <div
-                            v-for="(keys, index) in localKeywords"
-                            :key="index"
-                            class="col-6 pt-0"
-                          >
-                            <div class="input-wrapper">
-                              <input
-                                v-model="localKeywords[index]"
-                                type="text"
-                                class="form-control"
+                  <div class="row form-card__full_row">
+                    <div class="form-card__row__box">
+                      <div class="col-12">
+                        <label for="description">Description</label>
+                        <textarea
+                          id="description"
+                          v-model="communityData.description"
+                          class="form-control"
+                          rows="10"
+                          :disabled="
+                            !commmunityPrivileges.community.update || isView
+                          "
+                        >
+                        </textarea>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="w-100 form-card">
+                  <CustomSubtitle text="Data" />
+                  <div class="row form-card__row">
+                    <div class="form-card__row__box">
+                      <div class="col-12">
+                        <div class="form-group">
+                          <div class="w-100">
+                            <label for="contacts" class="form-group-row">
+                              <span class="label-text text-gray-500">
+                                Links
+                              </span>
+                              <button
+                                class="btn-form-add btn-primary"
                                 :disabled="
                                   !commmunityPrivileges.community.update ||
-                                  isView
+                                  isView ||
+                                  checkEmptyLinks
                                 "
-                              />
-                              <button
-                                v-if="
-                                  commmunityPrivileges.community.update &&
-                                  !isView
-                                "
-                                class="btn-delete-input"
                                 type="button"
-                                @click="onDeleteElement(index, localKeywords)"
+                                @click="onAddElement(localLinks)"
                               >
-                                <font-awesome-icon
-                                  :icon="['far', 'trash-can']"
-                                />
+                                <font-awesome-icon :icon="['fas', 'plus']" />
                               </button>
+                            </label>
+                          </div>
+                          <div class="w-100 row no-space">
+                            <div
+                              v-for="(link, index) in localLinks"
+                              :key="link"
+                              class="col-12 d-flex pl-0"
+                            >
+                              <div class="input-wrapper big d-flex">
+                                <span>{{ index + 1 }}.</span>
+                                <input
+                                  id="link"
+                                  v-model="localLinks[index]"
+                                  type="text"
+                                  class="form-control"
+                                  :disabled="
+                                    !commmunityPrivileges.community.update ||
+                                    isView
+                                  "
+                                />
+                                <button
+                                  v-if="
+                                    commmunityPrivileges.community.update &&
+                                    !isView
+                                  "
+                                  class="btn-delete-input"
+                                  type="button"
+                                  @click="onDeleteElement(index, localLinks)"
+                                >
+                                  <font-awesome-icon
+                                    :icon="['far', 'trash-can']"
+                                  />
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-card__row__box">
+                      <div class="col-12">
+                        <div class="form-group">
+                          <div class="w-100">
+                            <label for="contacts" class="form-group-row">
+                              <span class="label-text text-gray-500">
+                                Contacts
+                                <span class="text-red-400 required">*</span>
+                              </span>
+                              <button
+                                class="btn-form-add btn-primary"
+                                :disabled="
+                                  !commmunityPrivileges.community.update ||
+                                  isView ||
+                                  cheEmptyContacts
+                                "
+                                type="button"
+                                @click="onAddElement(localContacts, itemRefs)"
+                              >
+                                <font-awesome-icon :icon="['fas', 'plus']" />
+                              </button>
+                            </label>
+                          </div>
+                          <div class="w-100 row no-space">
+                            <div
+                              v-for="(contact, index) in localContacts"
+                              v-if="localContacts.length > 0"
+                              :key="index"
+                              ref="itemsContact"
+                              class="col-12 pt-0"
+                            >
+                              <div class="input-wrapper big d-flex">
+                                <USelectMenu
+                                  :ref="`contact_${index}`"
+                                  v-model="localContacts[index]"
+                                  class="w-full lg:w-100"
+                                  searchable
+                                  selected-icon="i-heroicons-check-16-solid"
+                                  placeholder="Select a contact"
+                                  :options="contactsData"
+                                  value-attribute="id"
+                                  option-attribute="name"
+                                  :disabled="
+                                    !commmunityPrivileges.community.update ||
+                                    isView
+                                  "
+                                >
+                                </USelectMenu>
+                                <button
+                                  class="btn-delete-input"
+                                  type="button"
+                                  :disabled="
+                                    !commmunityPrivileges.community.update ||
+                                    isView
+                                  "
+                                  @click="onDeleteElement(index, localContacts)"
+                                >
+                                  <font-awesome-icon
+                                    :icon="['far', 'trash-can']"
+                                  />
+                                </button>
+                              </div>
+                            </div>
+                            <div v-else class="col-12 pt-0">
+                              <div class="w-100 empty-elements text-slate-400">
+                                <span
+                                  >There are no contacts associated with this
+                                  community</span
+                                >
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                <div class="w-100">
-                  <div v-if="oks" class="ok-response">
-                    <div class="alert alert-success text-center">
-                      {{ oks }}
+                  <div class="row form-card__full_row">
+                    <div class="form-card__row__box">
+                      <div class="col-12">
+                        <div class="form-group">
+                          <div class="w-100">
+                            <label for="contacts" class="form-group-row">
+                              <span class="label-text"> Keywords </span>
+                              <button
+                                class="btn-form-add btn-primary"
+                                type="button"
+                                :disabled="
+                                  !commmunityPrivileges.community.update ||
+                                  isView ||
+                                  checkEmptyKeywords
+                                "
+                                @click="onAddElement(localKeywords)"
+                              >
+                                <font-awesome-icon :icon="['fas', 'plus']" />
+                              </button>
+                            </label>
+                          </div>
+                          <div class="w-100 row no-space">
+                            <div
+                              v-for="(keys, index) in localKeywords"
+                              :key="index"
+                              class="col-4 pt-0"
+                            >
+                              <div class="input-wrapper">
+                                <input
+                                  v-model="localKeywords[index]"
+                                  type="text"
+                                  class="form-control"
+                                  :disabled="
+                                    !commmunityPrivileges.community.update ||
+                                    isView
+                                  "
+                                />
+                                <button
+                                  v-if="
+                                    commmunityPrivileges.community.update &&
+                                    !isView
+                                  "
+                                  class="btn-delete-input"
+                                  type="button"
+                                  @click="onDeleteElement(index, localKeywords)"
+                                >
+                                  <font-awesome-icon
+                                    :icon="['far', 'trash-can']"
+                                  />
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div class="w-100">
-                  <div v-if="errors.length > 0" class="errors">
-                    <div class="alert alert-danger text-center">
-                      {{ getErrors }}
+                  <div class="w-100">
+                    <div v-if="oks" class="ok-response">
+                      <div class="alert alert-success text-center">
+                        {{ oks }}
+                      </div>
                     </div>
                   </div>
+                  <div class="w-100">
+                    <div v-if="errors.length > 0" class="errors">
+                      <div class="alert alert-danger text-center">
+                        {{ getErrors }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-footer">
+                    <UButton type="button" variant="secondary" @click="goBack">
+                      Cancel
+                    </UButton>
+                    <UButton
+                      v-if="commmunityPrivileges.community.update && !isView"
+                      type="submit"
+                      :disabled="!commmunityPrivileges.community.update || isView"
+                    >
+                      Submit
+                    </UButton>
+                  </div>
                 </div>
-                <div class="form-footer">
-                  <UButton type="button" variant="secondary" @click="goBack">
-                    Cancel
-                  </UButton>
-                  <UButton
-                    v-if="commmunityPrivileges.community.update && !isView"
-                    type="submit"
-                    :disabled="!commmunityPrivileges.community.update || isView"
-                  >
-                    Submit
-                  </UButton>
-                </div>
-              </div>
-            </UForm>
-          </div>
-          <div v-if="selectedTab == '1'">
-            <div>
-              <EventsList
-                :events="events"
-                :is-loading-data="isLoadingEvents"
-                :commmunity-privileges="commmunityPrivileges"
-                :community-id="id"
-              />
+              </UForm>
             </div>
-          </div>
-          <div v-if="selectedTab == '2'">Contenido del Tab de Perfil</div>
+            <div v-if="selectedTab == '1'">
+              <div>
+                <EventsList
+                  :events="events"
+                  :is-loading-data="isLoadingEvents"
+                  :commmunity-privileges="commmunityPrivileges"
+                  :community-id="id"
+                />
+              </div>
+            </div>
+          </CustomTabBody>
         </div>
       </div>
     </div>
@@ -526,6 +507,7 @@ import type { Event } from "@/types/events";
 import { object, string, array, safeParse, optional } from "valibot";
 import CustomBorder from "@/components/Common/CustomBorder.vue";
 import CustomTab from "@/components/Common/CustomTab.vue";
+import CustomTabBody from "@/components/Common/CustomTabBody.vue";
 
 const router = useRouter();
 const runtimeConfig = useRuntimeConfig();
@@ -1088,12 +1070,6 @@ watchEffect(() => {
     }
   }
   .form-card {
-    padding: 10px 15px;
-    border-radius: 5px;
-    background-color: rgba(233, 236, 239, 0.2);
-    box-shadow:
-      rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
-      rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
     &__row {
       padding: 10px 15px;
       display: grid;

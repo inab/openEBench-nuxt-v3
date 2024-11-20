@@ -14,9 +14,10 @@
                 <NuxtLink
                   id="dashboard-create-community"
                   to="/dashboard/entries/add"
-                  class="btn custom-btn btn-primary mb-2"
+                  class="btn custom-btn btn-primary mb-2 small"
                   title="Create new community"
                 >
+                  <font-awesome-icon :icon="['fas', 'plus']" />
                   Create New Entry
                 </NuxtLink>
               </div>
@@ -30,7 +31,8 @@
             </div>
           </div>
           <div class="dashboard-tabs">
-            <Communities :is-loading-data="isLoadingData" />
+            <Communities :is-loading-data="isLoadingData"
+            :is-admin="isAdmin" />
           </div>
         </div>
         <div v-else class="">Not authenticated</div>
