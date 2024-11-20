@@ -153,10 +153,6 @@ export default defineNuxtConfig({
     "@nuxt/typescript-build",
   ],
 
-  image: {
-    provider: "static",
-  },
-
  
   eslint: {
     // TODO: Remove this when the project is clean
