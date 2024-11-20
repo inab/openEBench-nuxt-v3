@@ -73,7 +73,7 @@ const collections = observatoryStore.getCollections;
 const selectedCollection = ref<number | null>(null);
 
 // Auto-scroll logic
-function scrollToButton(index) {
+function scrollToButton(index: number) {
   const buttons = document.querySelectorAll('.carousel__item button');
   if (buttons[index]) {
     buttons[index].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
@@ -113,12 +113,12 @@ watch(selectedCollection, (newIndex) => {
 function triggerDataRefresh() {
   // API calls to refresh data
   fairnessStore.getFAIRscores();
-  // trendsStore.getLicensesSunburst();
-  // trendsStore.getLicensesOpenSource();
-  // trendsStore.getSemanticVersioning();
-  // trendsStore.getVersionControlCount();
-  // trendsStore.getVersionControlRepositories();
-  // trendsStore.getPublications();
+  trendsStore.getLicensesSunburst();
+  trendsStore.getLicensesOpenSource();
+  trendsStore.getSemanticVersioning();
+  trendsStore.getVersionControlCount();
+  trendsStore.getVersionControlRepositories();
+  trendsStore.getPublications();
   dataStore.getCountsPerSource();
   dataStore.getTotalCount();
   dataStore.getFeatures();
