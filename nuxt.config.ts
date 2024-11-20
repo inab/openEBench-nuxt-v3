@@ -155,10 +155,7 @@ export default defineNuxtConfig({
 
   image: {
     provider: 'ipx',
-    dir: 'assets/images',
-    alias: {
-      illustrations: '/assets/images/illustrations',
-    },
+    dir: 'assets/images'
   },
  
   eslint: {

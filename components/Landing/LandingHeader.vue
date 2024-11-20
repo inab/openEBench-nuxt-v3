@@ -55,8 +55,8 @@
           </div>
           <div class="col-lg-5 d-none d-lg-block">
             <div class="welcome-header-image">
-              <NuxtImg
-                src="/illustrations/chart-person.svg"
+              <img
+                src="/images/illustrations/chart-person.svg"
                 alt="welcome-header-image"
               />
             </div>
