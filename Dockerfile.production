@@ -16,7 +16,7 @@ ARG KEYCLOAK_REALM=dev-openebench
 ARG KEYCLOAK_CLIENT_ID=oeb-frontend
 ARG OBSERVATORY_API_URL=https://observatory.openebench.bsc.es/api
 ARG GITHUBAPP_API_URL=https://observatory.openebench.bsc.es/githubapp/api
-ARG AUTH_ORIGIN = https://inb.bsc.es
+ARG AUTH_ORIGIN=https://inb.bsc.es
 
 ENV ENVIRONMENT $ENVIRONMENT
 ENV OEB_LEGACY_ANGULAR_URI $OEB_LEGACY_ANGULAR_URI
