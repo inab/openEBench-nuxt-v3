@@ -114,6 +114,8 @@ export default defineNuxtConfig({
   },
 
   auth: {
+    isEnabled: true,
+    disableServerSideAuth: false,
     globalAppMiddleware: false,
     provider: {
       type: "authjs",
@@ -123,9 +125,8 @@ export default defineNuxtConfig({
       home: "/",
     },
     basePath: '/api/auth',
-    disableServerSideAuth: false,
     originEnvKey: 'AUTH_ORIGIN',
-    baseURL: process.env.AUTH_ORIGIN || "https://inb.bsc.es",
+    baseURL: "https://test2.openebench.bsc.es/api/auth",
     origin: process.env.AUTH_ORIGIN || "https://inb.bsc.es", 
   },
 
@@ -152,13 +153,7 @@ export default defineNuxtConfig({
     "@nuxt/typescript-build",
   ],
 
-  image: {
-    dir: 'assets/images',
-    alias: {
-      illustrations: '/assets/images/illustrations',
-    },
-  },
-
+ 
   eslint: {
     // TODO: Remove this when the project is clean
   },

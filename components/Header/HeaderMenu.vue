@@ -373,7 +373,7 @@ const isActiveAbout = computed(() => {
 
 function handleLogin() {
   console.log("Login");
-  console.log(runtimeConfig.public);
+  console.log(runtimeConfig.public.KEYCLOAK_HOST, runtimeConfig.public.KEYCLOAK_REALM, runtimeConfig.public.BASE_URL, runtimeConfig.public.KEYCLOAK_CLIENT_ID);
   console.log("Login attempt...");
 
   try {
