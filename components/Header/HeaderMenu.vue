@@ -373,6 +373,7 @@ const isActiveAbout = computed(() => {
 
 function handleLogin() {
   console.log("Login");
+  console.log(runtimeConfig.public);
   //signIn('keycloak', { callbackUrl: 'https://test2.openebench.bsc.es/login' });
   signIn("keycloak", { callbackUrl: "/login" });
 }
