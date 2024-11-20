@@ -154,10 +154,6 @@ export default defineNuxtConfig({
   ],
 
   image: {
-    dir: 'assets/images',
-    alias: {
-      illustrations: '/assets/images/illustrations',
-    },
     provider: "ipx",
   },
 
