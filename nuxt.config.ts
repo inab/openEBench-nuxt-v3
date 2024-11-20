@@ -106,6 +106,7 @@ export default defineNuxtConfig({
       KEYCLOAK_REALM: process.env.KEYCLOAK_REALM || "openebench",
       KEYCLOAK_CLIENT_ID: process.env.KEYCLOAK_CLIENT_ID || "oeb-frontend",
       BASE_URL: process.env.APP_BASE_URL || "https://openebench.bsc.es",
+      AUTH_ORIGIN: process.env.AUTH_ORIGIN || "https://inb.bsc.es",
     },
   },
 
@@ -118,6 +119,9 @@ export default defineNuxtConfig({
       login: "/login",
       home: "/",
     },
+    basePath: '/api/auth',
+    baseURL: `http://localhost:${process.env.PORT || 3000}`,
+    origin: process.env.APP_BASE_URL || process.env.APP_BASE_URL, 
   },
 
   hooks: {
