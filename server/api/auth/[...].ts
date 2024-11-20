@@ -107,6 +107,11 @@ export default NuxtAuthHandler({
       },
     }),
   ],
+  async debugHandler(req, res, next) {
+    console.log('Auth request:', req.url);
+    console.log('Config:', runtimeConfig.public);
+    next();
+  },
   events: {
     async signIn() {
       return true;

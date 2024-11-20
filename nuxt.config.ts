@@ -5,6 +5,9 @@ export default defineNuxtConfig({
   devtools: {
     enabled: true,
   },
+  nitro: {
+    preset: 'node-server',
+  },
   vite: {
     server: {
       port: 3001,

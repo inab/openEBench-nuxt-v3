@@ -9,8 +9,7 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 
 onMounted(() => {
-  // Esto se ejecuta cuando la página se carga
-  const hash = window.location.hash.substring(1); // Eliminar el '#'
+  const hash = window.location.hash.substring(1);
   const params = new URLSearchParams(hash);
 
   const accessToken = params.get("access_token");
@@ -19,9 +18,7 @@ onMounted(() => {
 
   console.log("Access token:", accessToken);
 
-  // Envía los tokens al servidor o almacénalos en el cliente
   if (accessToken && idToken) {
-    // Ejemplo: Envía los tokens al servidor para iniciar una sesión
     fetch("/api/auth/callback", {
       method: "POST",
       headers: {
@@ -31,12 +28,10 @@ onMounted(() => {
     })
       .then((response) => response.json())
       .then((data) => {
-        // Redirige a la página principal o un dashboard
         router.push("/dashboard");
       })
       .catch((error) => {
         console.error("Error during authentication:", error);
-        // Maneja el error, tal vez redirige a una página de error
         router.push("/login-error");
       });
   } else {
