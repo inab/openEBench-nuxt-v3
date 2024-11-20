@@ -17,6 +17,8 @@ onMounted(() => {
   const idToken = params.get("id_token");
   const expiresIn = params.get("expires_in");
 
+  console.log("Access token:", accessToken);
+
   // Envía los tokens al servidor o almacénalos en el cliente
   if (accessToken && idToken) {
     // Ejemplo: Envía los tokens al servidor para iniciar una sesión
