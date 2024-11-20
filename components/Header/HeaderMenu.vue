@@ -374,8 +374,16 @@ const isActiveAbout = computed(() => {
 function handleLogin() {
   console.log("Login");
   console.log(runtimeConfig.public);
+  console.log("Login attempt...");
+
+  try {
+    signIn("keycloak", { callbackUrl: "/login" });
+    console.log("signIn() was called successfully");
+  } catch (error) {
+    console.error("Error during signIn:", error);
+  }
   //signIn('keycloak', { callbackUrl: 'https://test2.openebench.bsc.es/login' });
-  signIn("keycloak", { callbackUrl: "/login" });
+  //signIn("keycloak", { callbackUrl: "/login" });
 }
 
 function handleLogout() {

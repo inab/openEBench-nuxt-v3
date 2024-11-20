@@ -3,6 +3,8 @@ import KeycloakProvider from "next-auth/providers/keycloak";
 
 const runtimeConfig = useRuntimeConfig();
 
+console.log("Starting NuxtAuthHandler configuration...");
+
 const refreshAccessToken = async (token: JWT) => {
   console.log("7 - refreshing token ...");
   try {
@@ -162,3 +164,4 @@ export default NuxtAuthHandler({
   },
   debug: true,
 });
+console.log("NuxtAuthHandler configuration complete");
