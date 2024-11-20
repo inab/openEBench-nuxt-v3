@@ -9,7 +9,7 @@ const refreshAccessToken = async (token: JWT) => {
     //if (Date.now() > token.refreshTokenExpired) throw Error;
     const details = {
       client_id: runtimeConfig.public.KEYCLOAK_CLIENT_ID,
-      client_secret: "",
+      client_secret: "secret", // No
       authorization_code: token.accessToken,
       grant_type: "refresh_token",
       refresh_token: token.refreshToken,
