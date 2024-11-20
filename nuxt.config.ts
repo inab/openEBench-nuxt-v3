@@ -153,6 +153,13 @@ export default defineNuxtConfig({
     "@nuxt/typescript-build",
   ],
 
+  image: {
+    provider: 'ipx',
+    dir: 'assets/images',
+    alias: {
+      illustrations: '/assets/images/illustrations',
+    },
+  },
  
   eslint: {
     // TODO: Remove this when the project is clean
