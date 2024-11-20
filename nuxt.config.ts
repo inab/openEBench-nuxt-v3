@@ -120,8 +120,8 @@ export default defineNuxtConfig({
       home: "/",
     },
     basePath: '/api/auth',
-    baseURL: `http://localhost:${process.env.PORT || 3000}`,
-    origin: process.env.APP_BASE_URL || process.env.APP_BASE_URL, 
+    baseURL: process.env.APP_BASE_URL || 'https://test2.openebench.bsc.es',
+    origin: process.env.AUTH_ORIGIN || 'https://test2.openebench.bsc.es', 
   },
 
   hooks: {
