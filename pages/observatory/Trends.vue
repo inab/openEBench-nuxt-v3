@@ -27,6 +27,30 @@
               </div>
             </div>
           </div>
+          <div class="row justify-center mt-4">
+            <div class="col-6">
+              <div
+                class="pb-5 my-4 p-4 max-full bg-white border border-gray-100 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                <VersioningMain />
+              </div>
+            </div>
+
+            <div class="col-6">
+              <div
+                class="pb-5 my-4 p-4 max-full bg-white border border-gray-100 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                <VersionControl />
+              </div>
+            </div>
+          </div>
+
+          <div class="row mt-4">
+            <div class="col-12">
+              <div
+                class="my-4 p-4 max-full bg-white border border-gray-100 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                <PublicationsMain />
+              </div>
+            </div>
+          </div>
         </div>
       </template>
     </NuxtLayout>
@@ -35,6 +59,9 @@
 <script setup lang="ts">
 import collectionSelector from "@/components/Observatory/CollectionSelector.vue"
 import LicensesMain from "@/components/Observatory/trends/licenses/LicensesMain.vue"
+import VersioningMain from '@/components/Observatory/trends/versioning/VersioningMain.vue';
+import VersionControl from '@/components/Observatory/trends/versionControl/VersionControl.vue';
+import PublicationsMain from '@/components/Observatory/trends/publications/PublicationsMain.vue';
 
 const layout = 'observatory'
 
