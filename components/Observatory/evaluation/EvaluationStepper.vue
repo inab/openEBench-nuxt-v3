@@ -1,7 +1,9 @@
 <template>
   <div class="stepper row">
-    <div v-for="(step, index) in steps" :key="index" class="step flex items-center mb-4">
+    <div v-for="(step, index) in steps" :key="index" class="step flex items-center mb-4 relative">
       <div class="col-12" :class="{'folded': !step.active}">
+        <!-- Vertical Line -->
+        <div v-if="index < steps.length - 1" class="vertical-line" :class="{'short': !step.active}"></div>
         <!-- Header step -->
         <div>
           <p class="flex items-center">
@@ -50,15 +52,21 @@
 
           <!----------------- STEP 2 ------------------->
           <!-------------------------------------------->
-          <div v-if="index === 1">
-            <div v-if="selectedSource === 'github'"> {{ selectedSource }}</div>
-            <div v-else-if="selectedSource === 'software_observatory'">{{ selectedSource }}</div>
-            <div v-else>{{ selectedSource }}</div>
+          <div v-if="index === 1" class="my-4 p-4">
+            <div v-if="selectedSource === 'github'">
+              <GitHubInput />
+            </div>
+            <div v-else-if="selectedSource === 'software_observatory'">
+              <ObservatoryInput />
+            </div>
+            <div v-else>
+              <MetadataFileInput />
+            </div>
 
             <!-- Buttons -->
             <div class="buttons mt-2 ml-5">
               <button v-if="index > 0" class="btn btn-secondary mr-2" @click="goBack(index)">Back</button>
-              <button v-if="!step.completed" class="btn btn-primary mr-2" @click="completeStep(index)">Next</button>
+              <button v-if="!step.completed" class="btn btn-primary mr-2 px-3 py-1 shadow-md" @click="completeStep(index)">Continue</button>
               <button v-if="index === steps.length - 1" class="btn btn-danger" @click="cancelSteps">Cancel</button>
             </div>
           </div>
@@ -93,6 +101,9 @@
 <script setup>
 import { ref } from 'vue';
 import EvaluationSourceCard from "@/components/Observatory/evaluation/EvaluationSourceCard.vue"
+import GitHubInput from "@/components/Observatory/evaluation/GitHub/GitHubInput.vue"
+import ObservatoryInput from "@/components/Observatory/evaluation/Observatory/ObservatoryInput.vue"
+import MetadataFileInput from "@/components/Observatory/evaluation/MetadataFile/MetadataFileInput.vue"
 
 const steps = ref([
   { title: "Select the source of the software's metadata", completed: false, active: true },
@@ -142,6 +153,7 @@ const handleSourceSelected = (source) => {
   display: flex;
   align-items: center;
   margin-bottom: 1rem;
+  position: relative;
 }
 .content {
   display: flex;
@@ -168,5 +180,16 @@ const handleSourceSelected = (source) => {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.vertical-line {
+  position: absolute;
+  left: 22px; /* Adjust this value to align with your icons */
+  top: 30px; /* Adjust this value to align with your icons */
+  width: 1.5px;
+  background-color: #9CA3AF;
+  height: calc(100% - 30px); /* Adjust this value to align with your icons */
+}
+.vertical-line.short {
+  height: 1.5rem; /* Adjust this value as needed */
 }
 </style>

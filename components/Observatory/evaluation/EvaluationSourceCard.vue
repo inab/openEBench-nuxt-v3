@@ -16,7 +16,7 @@
         <p class="mt-3 text-center text-sm" v-html="description"></p>
       </div>
       <div>
-        <button class="btn btn-primary mr-2" @click="selectSource">Select</button>
+        <button class="btn btn-primary mr-2 px-3 py-1 shadow-md" @click="selectSource">Select</button>
       </div>
     </div>
   </div>
