@@ -26,7 +26,7 @@
             <div class="row">
               <div class="col-11">
                 <pre class="bg-gray-100 p-2 rounded">
-                  <div class="prueba">{{ copyIframeCode(item.url).trimStart() }}</div>
+                  <div class="adjustable">{{ copyIframeCode(item.url) }}</div>
                 </pre>
               </div>
               <div class="col-1">
@@ -109,7 +109,7 @@ watch(dialog, (newValue) => {
 
 <style scoped>
 
-.prueba{
+.adjustable{
   padding-left: -10px;
 }
 .copy-icon {
