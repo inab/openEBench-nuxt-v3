@@ -5,6 +5,7 @@
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
+    "start": "nuxt start" ,
     "test": "vitest",
     "test:ui": "vitest --ui",
     "coverage": "vitest run --coverage",
