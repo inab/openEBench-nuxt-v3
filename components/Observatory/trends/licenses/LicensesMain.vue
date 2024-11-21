@@ -40,7 +40,7 @@
 
 
 <script setup lang="ts">
-import { onMounted, computed, watch } from 'vue';
+import { onMounted, computed } from 'vue';
 import PlotLicensesPie from './PlotLicensesPie.vue';
 import PlotLicensesBars from './PlotLicensesBars.vue'
 import { useTrends } from '@/stores/observatory/trends';
