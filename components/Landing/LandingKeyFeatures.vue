@@ -10,7 +10,7 @@
             data-aos-duration="3000"
           >
             <img
-              src="~/assets/images/illustrations/404.svg"
+              :src="communityImg"
               alt="welcome-header-image"
             />
           </div>
@@ -51,6 +51,7 @@
 
 <script setup lang="ts">
 import AOS from "aos";
+const communityImg = "/images/illustrations/404.svg";
 AOS.init();
 </script>
 

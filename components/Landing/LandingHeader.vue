@@ -45,7 +45,7 @@
                 </p>
                 <NuxtLink
                   to="/observatory"
-                  class="custom-btn secondary welcome-header-btn"
+                  class="custom-btn secondary welcome-header-btn "
                   title="Go to Tools Observatory"
                 >
                   Tools Observatory
@@ -65,7 +65,7 @@
 </template>
 
 <script setup>
-const communityImg = "~/assets/images/illustrations/chart-person.svg";
+const communityImg = "/images/illustrations/chart-person.svg";
 </script>
 
 <style scoped lang="scss">
@@ -75,21 +75,10 @@ const communityImg = "~/assets/images/illustrations/chart-person.svg";
   height: 60px;
   width: 60px;
   padding: 5px;
-  cursor: pointer;
   transition: 0.5s;
-
-  &:hover {
-    border: 1px solid #0b579f;
-    background-color: white;
-  }
+  color: white;
   &.secondary {
     background-color: #f47c21;
-    transition: 0.5s;
-
-    &:hover {
-      border: 1px solid #f47c21;
-      background-color: white;
-    }
   }
   &__image {
     background-color: white;
@@ -97,9 +86,6 @@ const communityImg = "~/assets/images/illustrations/chart-person.svg";
     -webkit-mask: url("~/assets/icons/benchmark.svg") no-repeat center;
     mask: url("~/assets/icons/benchmark.svg") no-repeat center;
     transition: transform 0.7s ease-in-out;
-    &:hover {
-      background-color: #0b579f;
-    }
   }
   &__image_secondary {
     background-color: white;
@@ -107,9 +93,6 @@ const communityImg = "~/assets/images/illustrations/chart-person.svg";
     -webkit-mask: url("~/assets/icons/observatory.svg") no-repeat center;
     mask: url("~/assets/icons/observatory.svg") no-repeat center;
     transition: transform 0.7s ease-in-out;
-    &:hover {
-      background-color: #f47c21;
-    }
   }
 }
 .welcome-header-image {
@@ -150,8 +133,26 @@ const communityImg = "~/assets/images/illustrations/chart-person.svg";
 }
 .welcome-header-btn {
   width: 100%;
+  min-height: 40px;
   padding: 12px 30px;
   color: white;
   text-decoration: none;
+  padding: 5px;
+  cursor: pointer;
+  transition: 0.5s;
+  border: 1px solid #0b579f;
+  &:hover {
+    background-color: white;
+    color: #0b579f;
+  }
+  &.secondary {
+    background-color: #f47c21;
+    color: white;
+    border: 1px solid #f47c21;
+    &:hover {
+      background-color: white;
+      color: #f47c21;
+    }
+  }
 }
 </style>
