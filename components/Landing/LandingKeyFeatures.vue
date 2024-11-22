@@ -18,7 +18,7 @@
         <div class="col-lg-6 landingkey-features__box gap-3">
           <div class="col-row">
             <div class="rounder-icon">
-              <UIcon name="i-heroicons-check-16-solid" />
+              <UIcon name="i-heroicons-check-16-solid"/>
             </div>
             <div class="landingkey-features__text">
               <span> Supporting community-driven benchmarking </span>
