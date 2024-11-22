@@ -1,9 +1,13 @@
-#stage 1
+
+
+# EXPOSE 3000
+# CMD ["node", "run", "start"]#stage 1
 FROM node:20 as build
+
 WORKDIR /app
 #define env vars
 ARG ENVIRONMENT=test2-openebench
-ARG APP_BASE_URL=https://test2.openebench.bsc.es
+ARG APP_BASE_URL=https://localhost
 ARG OEB_LEGACY_ANGULAR_URI=https://legacy.openebench.bsc.es/
 ARG VRE_URI=https://dev-openebench.bsc.es/vre/home/
 ARG OBSERVATORY_URI=https://observatory.openebench.bsc.es
@@ -60,3 +64,40 @@ EXPOSE 80 3000
 
 # Inicia Nuxt 3 y Nginx
 CMD node .output/server/index.mjs & nginx -g "daemon off;"
+
+
+# COPY . .
+
+# RUN npm ci
+# RUN npm run buildf
+# RUN npm run generate
+
+# #stage 2
+# FROM nginx:alpine
+# COPY --from=build /app/.output/public /usr/share/nginx/html
+# COPY nginx.conf /etc/nginx/conf.d/default.conf
+# EXPOSE 80
+
+
+#stage 2
+# FROM nginx:alpine
+# # COPY --from=build /app/.output/public /usr/share/nginx/html
+# # COPY nginx.conf /etc/nginx/conf.d/default.conf
+# # EXPOSE 80
+
+# # Install Node.js runtime for running the server
+# RUN apk add --no-cache nodejs npm
+
+# # Copy the custom Nginx configuration
+# COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# # Copiar la aplicación generada desde la etapa de construcción
+# COPY --from=build /app/.output/public /usr/share/nginx/html/public
+# COPY --from=build /app/.output/server /usr/share/nginx/html/server
+
+# # Expose port 80
+# EXPOSE 3000
+# EXPOSE 80
+
+# # Start Nginx
+# CMD ["sh", "-c", "npm run start & nginx -g 'daemon off;'"]
