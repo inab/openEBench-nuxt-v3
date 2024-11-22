@@ -56,8 +56,8 @@
           <div class="col-lg-5 d-none d-lg-block">
             <div class="welcome-header-image">
               <img
-                src="~/assets/images/illustrations/chart-person.svg"
-                alt="welcome-header-image"
+                src="~/assets/images/illustrations/lab_community.png"
+                alt="welcome header image"
               />
             </div>
           </div>
