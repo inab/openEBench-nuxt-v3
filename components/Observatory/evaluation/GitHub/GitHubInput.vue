@@ -134,10 +134,23 @@ const validateInput = () => {
 };
 
 // UI State
-const iconClasses = computed(() => [
-  'text-2xl text-gray-500',
-  { 'text-gray-500': !showError.value, 'text-primaryOeb-500': !showError.value && isFocused.value, 'text-red-500': showError.value},
-]);
+const iconClasses = computed(() => {
+  let baseClasses = 'text-2xl text-gray-500';
+
+  if (showError.value) {
+    return `${baseClasses} text-red-500`;
+  }
+
+  if (value.value.trim() !== '') {
+    return `${baseClasses} text-gray-500`;
+  }
+
+  if (isFocused.value) {
+    return `${baseClasses} text-primaryOeb-500`;
+  }
+  return `${baseClasses} text-gray-500`;
+});
+
 
 const inputClasses = computed(() => [
   'block px-3 py-3 w-full text-sm text-gray-900 bg-transparent rounded-md border outline-none appearance-none dark:text-white dark:bg-gray-900 peer',
@@ -160,7 +173,7 @@ const clearButtonClasses = computed(() => [
 // Methods
 const handleFocus = () => { isFocused.value = true; };
 
-const clearLink = () => { value.value = ''; errorMessage.value = 'Required.'; };
+const clearLink = () => { value.value = ''; errorMessage.value = 'Required.'; isFocused.value = false;};
 const inputExample = (URL: string) => { value.value = URL; showError.value = false; };
 const goBack = () => { /* Handle back action */ };
 const cancel = () => { /* Handle cancel action */ };
