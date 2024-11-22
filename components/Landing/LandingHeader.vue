@@ -55,10 +55,7 @@
           </div>
           <div class="col-lg-5 d-none d-lg-block">
             <div class="welcome-header-image">
-              <img
-                src="~/assets/images/illustrations/lab_community.png"
-                alt="welcome header image"
-              />
+              <img :src="communityImg" alt="welcome header image" />
             </div>
           </div>
         </div>
@@ -67,7 +64,9 @@
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+const communityImg = "~/assets/images/illustrations/chart-person.svg";
+</script>
 
 <style scoped lang="scss">
 .welcome-avatar {
