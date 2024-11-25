@@ -17,7 +17,7 @@ const props = defineProps<{
 }>();
 
 // Defaults for optional props
-const { title = '', height = 300 } = props;
+const { title = '', height = 280 } = props;
 
 // Define layout and config as reactive objects
 const layout = {
@@ -25,7 +25,7 @@ const layout = {
     xaxis: { title: '' },
     height: height,
     autosize: true,
-    margin: { t: 40, b: 0, l: 0, r: 0 },
+    margin: { b: 30, t: 10, r: 50, l: 90 },
     title: { text: title, x: 0.5, xanchor: 'center', yanchor: 'top' },
     hoverlabel: { bgcolor: '#FFF' },
 };
@@ -37,7 +37,7 @@ const config = {
 
 // Watch for height prop changes and update the layout
 watch(() => props.height, (newHeight) => {
-    layout.height = newHeight ?? 300;
+    layout.height = newHeight ?? 280;
     plotChart();
 });
 
@@ -71,6 +71,7 @@ function plotChart() {
 </script>
 
 <style scoped>
+
 #plot_1 {
     width: 100%;
 }

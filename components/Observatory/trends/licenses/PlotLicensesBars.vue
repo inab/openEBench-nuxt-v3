@@ -19,7 +19,7 @@ const props = defineProps<{
 }>();
 
 // Set defaults for optional props
-const { title = '', height = 300 } = props;
+const { title = '', height = 280 } = props;
 
 // Define labs and layout
 const labs = {
@@ -36,7 +36,18 @@ const labs = {
 };
 
 const layout = {
-    yaxis: { title: 'Number of instances' },
+    legend: {
+        orientation: 'h', // Horizontal orientation
+        x: 0.5, // Center the legend horizontally
+        xanchor: 'center', // Anchor the legend to its center
+        y: 1.2, // Move the legend below the chart
+    },
+    yaxis: {
+        title: {
+            text: 'Number of instances',
+            standoff: 15, // Adds spacing between the title and the axis
+        },
+    },
     xaxis: {
         title: 'License Family/Type',
         categoryorder: 'total ascending',
@@ -44,7 +55,7 @@ const layout = {
     hoverlabel: { bgcolor: '#FFF' },
     autosize: true,
     height,
-    margin: { b: 70, t: 40, r: 0 },
+    margin: { b: 70, t: 40, r: 40, l: 60 }, // Adjust left margin for better Y-axis alignment
     title: { text: title },
 };
 
@@ -130,5 +141,7 @@ onMounted(() => {
 <style scoped>
 #plot_2 {
     width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
 }
 </style>
