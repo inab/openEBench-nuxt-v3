@@ -37,15 +37,15 @@ const labs = {
 
 const layout = {
     legend: {
-        orientation: 'h', // Horizontal orientation
-        x: 0.5, // Center the legend horizontally
-        xanchor: 'center', // Anchor the legend to its center
-        y: 1.2, // Move the legend below the chart
+        orientation: 'h', // Horizontal
+        x: 0.5,
+        xanchor: 'center',
+        y: 1.2, // Move the legend above the chart
     },
     yaxis: {
         title: {
             text: 'Number of instances',
-            standoff: 15, // Adds spacing between the title and the axis
+            standoff: 15,
         },
     },
     xaxis: {
@@ -55,7 +55,7 @@ const layout = {
     hoverlabel: { bgcolor: '#FFF' },
     autosize: true,
     height,
-    margin: { b: 70, t: 40, r: 40, l: 60 }, // Adjust left margin for better Y-axis alignment
+    margin: { b: 70, t: 40, r: 40, l: 60 },
     title: { text: title },
 };
 

@@ -17,13 +17,12 @@ const props = defineProps<{
 // Set defaults for optional props
 const { title = '', height = 280 } = props;
 
-
 // Define labels for y-axis with links
 const labels = {
-  gitlab: '<a href="https://gitlab.com/gitlab-org/gitlab" target="_blank">GitLab</a>',
-  bitbucket: '<a href="https://bitbucket.org/" target="_blank">Bitbucket</a>',
-  sourceforge: '<a href="https://sourceforge.net/" target="_blank">SourceForge</a>',
-  github: '<a href="https://github.com/" target="_blank">GitHub</a>',
+    gitlab: '<a href="https://gitlab.com/gitlab-org/gitlab" target="_blank">GitLab</a>',
+    bitbucket: '<a href="https://bitbucket.org/" target="_blank">Bitbucket</a>',
+    sourceforge: '<a href="https://sourceforge.net/" target="_blank">SourceForge</a>',
+    github: '<a href="https://github.com/" target="_blank">GitHub</a>',
 };
 
 // Define layout and config as reactive objects
@@ -31,6 +30,13 @@ const layout: Partial<Plotly.Layout> = {
     showlegend: false,
     yaxis: {
         automargin: true,
+        standoff: 20,
+        tickvals: props.yValues.map((_, index) => index),
+        ticktext: props.yValues.map(
+            (value) => (labels[value] || value) + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' //  Adding manual space to separete from the axis, standoff not working
+        ),
+        showLine : true,
+
     },
     xaxis: {
         title: 'Number of instances',
@@ -38,13 +44,14 @@ const layout: Partial<Plotly.Layout> = {
     height: height,
     autosize: true,
     margin: {
-        autoexpand: true,
         t: 10,
         b: 50,
     },
     title: { text: title, font: { size: 16 } },
     hoverlabel: { bgcolor: '#FFF' },
 };
+
+console.log(layout);
 
 const config: Partial<Plotly.Config> = {
     responsive: true,
@@ -65,33 +72,26 @@ onMounted(() => {
     plotChart();
 });
 
-// Function to build the trace for the Plotly chart
-function buildTrace(x: number[], y: string[]): Partial<Plotly.PlotData> {
-    return {
-        type: 'bar',
-        x,
-        y: y.map((value) => labels[value] || value),
-        orientation: 'h',
-        marker: {
-            color: '#4f71b8',
-        },
-        hoverinfo: 'x',
-        hovertemplate: '%{x:,d} instances <extra></extra>',
-    };
-}
-
-// Plot the chart when the component is mounted
-onMounted(() => {
-    plotChart();
-});
-
 // Function to plot the chart
 function plotChart() {
-    const trace = buildTrace(props.xValues, props.yValues);
-    Plotly.newPlot('plot_4', [trace], layout, config);
+    // Define the data array directly
+    const data: Partial<Plotly.PlotData>[] = [
+        {
+            type: 'bar',
+            x: props.xValues,
+            y: props.yValues.map((value) => labels[value] || value),
+            orientation: 'h',
+            marker: {
+                color: '#4f71b8',
+            },
+            hoverinfo: 'x',
+            hovertemplate: '%{x:,d} instances <extra></extra>',
+        },
+    ];
+
+    // Pass the data and layout directly to Plotly
+    Plotly.newPlot('plot_4', data, layout, config);
 }
 </script>
-
-
 
 <style scoped></style>
