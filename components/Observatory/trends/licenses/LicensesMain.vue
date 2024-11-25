@@ -1,40 +1,40 @@
 <template>
     <div class="relative">
         <!-- Options Button -->
-        <PlotWOptions class="absolute top-2 right-2" :items="dialogItems" :currentCollection="current_collection" />
+        <PlotWOptions class="copy-icon" :items="dialogItems" :currentCollection="current_collection" />
 
         <!-- Licensing Header -->
         <div class="text-center mt-4">
             <h6 class="text-lg font-semibold">Licensing</h6>
             <p class="text-sm text-gray-700">
                 Licensing is one of the most crucial features of a piece of software, determining both its
-                <span class="font-semibold text-blue-500">Accessibility</span> and
-                <span class="font-semibold text-blue-500">Reusability</span>.
+                <span class="highlight">Accessibility</span> and
+                <span class="highlight">Reusability</span>.
             </p>
         </div>
 
         <!-- Visualizations -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+        <div class="grid grid-cols-12 gap-6 mt-6 pb-4">
             <!-- Sunburst Chart -->
-            <div class="flex justify-center items-center">
+            <div class="col-span-4 flex justify-center items-center">
                 <div v-if="isLicensesSunburstLoading" class="w-full">
-                    <USkeleton class="h-52 mb-3 mx-10" />
+                    <USkeleton class="h-52 mx-10" />
                 </div>
                 <PlotLicensesPie v-else :labels="sunburstLabels" :parents="sunburstParents" :values="sunburstValues"
                     :text="sunburstText" />
             </div>
 
             <!-- Bar Chart -->
-            <div class="flex justify-center items-center">
+            <div class="col-span-8 flex justify-center items-center">
                 <div v-if="isLicensesOpenSourceLoading" class="w-full">
-                    <USkeleton class="h-52 mb-3 mx-10" />
-
+                    <USkeleton class="h-52 mx-10" />
                 </div>
                 <PlotLicensesBars v-else :counts_permissive="countsPermissive" :licenses_permissive="licensesPermissive"
                     :counts_copyleft="countsCopyleft" :licenses_copyleft="licensesCopyleft" :counts_data="countsData"
                     :licenses_data="licensesData" />
             </div>
         </div>
+
     </div>
 </template>
 
@@ -90,5 +90,10 @@ onMounted(() => {
     position: absolute;
     top: 5px;
     right: 10px;
+}
+
+.highlight {
+    color: #001752f8;
+    font-weight: 500;
 }
 </style>
