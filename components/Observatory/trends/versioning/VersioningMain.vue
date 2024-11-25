@@ -103,4 +103,14 @@ onMounted(() => {
 .icon {
     color: #001752f8;
 }
+
+a {
+    color: #0b579f;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+    color: #6a98c4;
+}
 </style>
