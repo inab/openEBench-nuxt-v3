@@ -4,7 +4,6 @@
     max-height="320"
     min-width="230"
     max-width="320">
-
     <div class="flex items-center flex-col">
       <div class="my-4 relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-400 rounded-full dark:bg-gray-600">
         <UIcon :name="icon" class="text-white text-2xl" />
@@ -23,6 +22,8 @@
 </template>
 
 <script setup lang="ts">
+import { useStepperStore } from '@/stores/observatory/evaluation/index';
+
 // PROPS
 const props = defineProps<{
   title: String,
@@ -31,10 +32,9 @@ const props = defineProps<{
   icon: String,
 }>();
 
-const emit = defineEmits(['sourceSelected']);
+const stepperStore = useStepperStore();
 
 function selectSource() {
-  // Emitir el evento para avanzar al siguiente paso
-  emit('sourceSelected', props.source);
+  stepperStore.handleSourceSelected(props.source);
 }
 </script>

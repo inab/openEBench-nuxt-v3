@@ -68,27 +68,30 @@
       <!-- Form Action Buttons -->
       <div class="row justify-center">
         <div class="col-10 text-right">
+          <button type="button" class="btn btn-secondary mr-2" @click="goBack">Back</button>
           <button
             type="submit"
             class="btn btn-primary"
             :disabled="!value || showError"
+            @click="completeStep"
           >
             Continue
           </button>
-          <button type="button" class="btn btn-secondary" @click="goBack">Back</button>
         </div>
       </div>
     </form>
 
     <!-- Dialogs -->
     <DialogAppInstall
-      :initial-dialog-app-install="dialogAppInstall"
       :title="installDialogParameters.title"
       :text="installDialogParameters.text"
-      :installation-url="installDialogParameters.installationURL"
+      :installationUrl="installDialogParameters.installationURL"
+      :initialDialogAppInstall="dialogAppInstall"
       @cancel="cancel"
       @ready="fetchMetadata"
     />
+
+    <!-- Modal Importing metadata -->
     <DialogImportMetadata />
   </div>
 </template>
@@ -97,6 +100,7 @@
 import { ref, computed } from 'vue';
 import DialogAppInstall from './DialogAppInstall.vue';
 import DialogImportMetadata from './DialogImportMetadata.vue';
+import { useStepperStore } from '@/stores/observatory/evaluation/index';
 
 // Props and data setup
 const value = ref('');
@@ -151,7 +155,6 @@ const iconClasses = computed(() => {
   return `${baseClasses} text-gray-500`;
 });
 
-
 const inputClasses = computed(() => [
   'block px-3 py-3 w-full text-sm text-gray-900 bg-transparent rounded-md border outline-none appearance-none dark:text-white dark:bg-gray-900 peer',
   {
@@ -173,10 +176,15 @@ const clearButtonClasses = computed(() => [
 // Methods
 const handleFocus = () => { isFocused.value = true; };
 
-const clearLink = () => { value.value = ''; errorMessage.value = 'Required.'; isFocused.value = false;};
-const inputExample = (URL: string) => { value.value = URL; showError.value = false; };
-const goBack = () => { /* Handle back action */ };
-const cancel = () => { /* Handle cancel action */ };
+const clearLink = () => { 
+  value.value = ''; 
+  errorMessage.value = 'Required.'; 
+  isFocused.value = false;
+};
+const inputExample = (URL: string) => { 
+  value.value = URL; 
+  showError.value = false; 
+};
 const fetchMetadata = () => { /* Fetch metadata action */ };
 
 const submitGitHubLink = () => {
@@ -185,23 +193,14 @@ const submitGitHubLink = () => {
     console.log('GitHub link');
   }
 };
+
+const stepperStore = useStepperStore();
+const goBack = () => {
+  const currentStepIndex = 1; // Actualiza con el índice del paso actual
+  stepperStore.goBack(currentStepIndex);
+};
+const completeStep = () => {
+  const currentStepIndex = 1; // Actualiza con el índice del paso actual
+  stepperStore.completeStep(currentStepIndex);
+};
 </script>
-
-<style scoped>
-.invalid-feedback {
-  display: block;
-}
-
-.clear-btn {
-  background: transparent;
-  border: none;
-}
-
-.validInput {
-  border-color: #0b579f !important;
-}
-
-.invalidInput {
-  border-color: #ef4444 !important;
-}
-</style>
