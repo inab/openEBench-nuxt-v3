@@ -27,17 +27,17 @@
               </div>
             </div>
           </div>
-          <div class="row justify-center mt-4">
-            <div class="col-6">
+          <div class="row justify-center mt-4 d-flex align-items-stretch">
+            <div class="col-5 d-flex">
               <div
-                class="pb-5 my-4 p-4 max-full bg-white border border-gray-100 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                class="pb-5 my-4 p-4 w-100 bg-white border border-gray-100 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                 <VersioningMain />
               </div>
             </div>
 
-            <div class="col-6">
+            <div class="col-7 d-flex">
               <div
-                class="pb-5 my-4 p-4 max-full bg-white border border-gray-100 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                class="pb-5 my-4 p-4 w-100 bg-white border border-gray-100 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                 <VersionControl />
               </div>
             </div>
