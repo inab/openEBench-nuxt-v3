@@ -15,7 +15,7 @@ const props = defineProps<{
 }>();
 
 // Set defaults for optional props
-const { title = '', height = 300 } = props;
+const { title = '', height = 280 } = props;
 
 // Define layout and config as reactive objects
 const layout = {
@@ -40,7 +40,7 @@ const config = {
 
 // Watch for height prop changes and update the layout
 watch(() => props.height, (newHeight) => {
-    layout.height = newHeight ?? 300;
+    layout.height = newHeight ?? 280;
     plotChart();
 });
 
