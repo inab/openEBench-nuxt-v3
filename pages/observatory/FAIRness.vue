@@ -211,5 +211,7 @@ function handleClose() { showAlert.value = false; }
 <style scoped>
 .copy-icon {
 	float: inline-end;
+  margin-top: -23px;
+  margin-right: -20px;
 }
 </style>

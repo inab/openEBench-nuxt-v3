@@ -7,9 +7,9 @@
         leaveActiveClass: 'transition ease-in duration-150',
       }
     }">
-      <button @click="dialog = true" class="px-2 py-1 rounded-full hover:bg-gray-100 click-animation"
+      <button @click="dialog = true" class="px-2 rounded-full hover:bg-gray-100 click-animation"
         aria-label="Copy icon">
-        <UIcon name="i-oui-copy" class="text-gray-500" />
+        <UIcon name="i-oui-copy" class="text-slate-300" />
       </button>
     </UTooltip>
 
@@ -84,7 +84,7 @@ const showCopiedMessage = () => {
   copied.value = true;
   setTimeout(() => {
     copied.value = false;
-  }, 30000); // Ocultar después de 30 segundos (30000 ms)
+  }, 5000); // Ocultar después de 5 segundos (5000 ms)
 };
 
 const handleCopyClick = (url: string) => {
@@ -97,7 +97,7 @@ const closeDialog = () => {
   setTimeout(() => {
     dialog.value = false;
     dialogAnimation.value = 'an1'; // Restablecer animación para la próxima apertura
-  }, 200); // Duración de la animación an2
+  }, 10); // Duración de la animación an2
 };
 
 watch(dialog, (newValue) => {
@@ -114,6 +114,9 @@ watch(dialog, (newValue) => {
 }
 .copy-icon {
   cursor: pointer;
+  margin-top: -50px;
+  margin-right: -30px;
+
 }
 
 .hover\:bg-gray-300:hover {
