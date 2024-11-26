@@ -1,10 +1,8 @@
 <template>
   <div class="stepper row">
-    <div v-for="(step, index) in steps" :key="index" class="step flex items-center mb-4 relative">
+    <div v-for="(step, index) in stepperStore.steps" :key="index" class="step flex items-center mb-4 relative">
       <div class="col-12" :class="{'folded': !step.active}">
-        <!-- Vertical Line -->
-        <div v-if="index < steps.length - 1" class="vertical-line" :class="{'short': !step.active}"></div>
-        <!-- Header step -->
+        <div v-if="index < stepperStore.steps.length - 1" class="vertical-line" :class="{'short': !step.active}"></div>
         <div>
           <p class="flex items-center">
             <span>
@@ -14,8 +12,8 @@
             {{ step.title }}
           </p>
         </div>
-        <!-- Content step -->
         <div v-if="step.active" class="step-content">
+
           <!----------------- STEP 1 ------------------->
           <!-------------------------------------------->
           <div v-if="index === 0">
@@ -26,7 +24,6 @@
                   description="Select a software from the Software Observatory's database"
                   source="software_observatory"
                   icon="mdi-database"
-                  @sourceSelected="handleSourceSelected"
                 />
               </div>
               <div class="col-3">
@@ -35,7 +32,6 @@
                   description="Enter the URL of the software's GitHub repository"
                   source="github"
                   icon="mdi-github"
-                  @sourceSelected="handleSourceSelected"
                 />
               </div>
               <div class="col-3">
@@ -44,7 +40,6 @@
                   description="Provide the URL of a metadata file in Bioschema format"
                   source="metadata_file"
                   icon="mdi-code-json"
-                  @sourceSelected="handleSourceSelected"
                 />
               </div>
             </div>
@@ -53,43 +48,39 @@
           <!----------------- STEP 2 ------------------->
           <!-------------------------------------------->
           <div v-if="index === 1" class="my-4 p-4">
-            <div v-if="selectedSource === 'github'">
+            <div v-if="stepperStore.selectedSource === 'github'">
               <GitHubInput />
             </div>
-            <div v-else-if="selectedSource === 'software_observatory'">
+            <div v-else-if="stepperStore.selectedSource === 'software_observatory'">
               <ObservatoryInput />
             </div>
             <div v-else>
               <MetadataFileInput />
             </div>
-
-            <!-- Buttons -->
-            <div class="buttons mt-2 ml-5">
-              <button v-if="index > 0" class="btn btn-secondary mr-2" @click="goBack(index)">Back</button>
-              <button v-if="!step.completed" class="btn btn-primary mr-2 px-3 py-1 shadow-md" @click="completeStep(index)">Continue</button>
-              <button v-if="index === steps.length - 1" class="btn btn-danger" @click="cancelSteps">Cancel</button>
-            </div>
+            <!-- <div class="buttons mt-2 ml-5">
+              <button v-if="index > 0" class="btn btn-secondary mr-2" @click="stepperStore.goBack(index)">Back</button>
+              <button v-if="!step.completed" class="btn btn-primary mr-2 px-3 py-1 shadow-md" @click="stepperStore.completeStep(index)">Continue</button>
+            </div> -->
           </div>
 
           <!----------------- STEP 3 ------------------->
           <!-------------------------------------------->
           <div v-if="index === 2">
-            <p>Additional content for Step 3</p>
+            <p>Step 3 is building</p>
             <div class="buttons mt-2 ml-5">
-              <button v-if="index > 0" class="btn btn-secondary mr-2" @click="goBack(index)">Back</button>
-              <button v-if="!step.completed" class="btn btn-primary mr-2" @click="completeStep(index)">Next</button>
-              <button v-if="index === steps.length - 1" class="btn btn-danger" @click="cancelSteps">Cancel</button>
+              <button v-if="index > 0" class="btn btn-secondary mr-2" @click="stepperStore.goBack(index)">Back</button>
+              <button v-if="!step.completed" class="btn btn-primary mr-2" @click="stepperStore.completeStep(index)">Next</button>
             </div>
           </div>
 
           <!----------------- STEP 4 ------------------->
           <!-------------------------------------------->
           <div v-if="index === 3">
-            <p>Additional content for Step 4</p>
+            <p>Step 4 is building</p>
             <div class="buttons mt-2 ml-5">
-              <button v-if="index > 0" class="btn btn-secondary mr-2" @click="goBack(index)">Back</button>
-              <button v-if="!step.completed" class="btn btn-primary mr-2" @click="completeStep(index)">Next</button>
-              <button v-if="index === steps.length - 1" class="btn btn-danger" @click="cancelSteps">Cancel</button>
+              <button v-if="index > 0" class="btn btn-secondary mr-2" @click="stepperStore.goBack(index)">Back</button>
+              <button v-if="!step.completed" class="btn btn-primary mr-2" @click="stepperStore.completeStep(index)">Next</button>
+              <button v-if="index === stepperStore.steps.length - 1" class="btn btn-danger" @click="stepperStore.cancelSteps">Cancel</button>
             </div>
           </div>
         </div>
@@ -98,50 +89,16 @@
   </div>
 </template>
 
-<script setup>
-import { ref } from 'vue';
+<script setup lang="ts">
+import { useStepperStore } from '@/stores/observatory/evaluation/index';
+import { storeToRefs } from 'pinia';
 import EvaluationSourceCard from "@/components/Observatory/evaluation/EvaluationSourceCard.vue"
 import GitHubInput from "@/components/Observatory/evaluation/GitHub/GitHubInput.vue"
 import ObservatoryInput from "@/components/Observatory/evaluation/Observatory/ObservatoryInput.vue"
 import MetadataFileInput from "@/components/Observatory/evaluation/MetadataFile/MetadataFileInput.vue"
 
-const steps = ref([
-  { title: "Select the source of the software's metadata", completed: false, active: true },
-  { title: 'Introduce software to evaluate', completed: false, active: false },
-  { title: 'Edit the metadata if needed', completed: false, active: false },
-  { title: 'Results', completed: false, active: false },
-]);
-
-const selectedSource = ref('');
-
-const completeStep = (index) => {
-  steps.value[index].completed = true;
-  if (index < steps.value.length - 1) {
-    steps.value[index].active = false;
-    steps.value[index + 1].active = true;
-  }
-};
-
-const goBack = (index) => {
-  if (index > 0) {
-    steps.value[index].active = false;
-    steps.value[index - 1].completed = false;
-    steps.value[index - 1].active = true;
-  }
-};
-
-const cancelSteps = () => {
-  steps.value.forEach((step, index) => {
-    step.completed = false;
-    step.active = index === 0;
-  });
-};
-
-const handleSourceSelected = (source) => {
-  console.log(`Source selected: ${source}`);
-  selectedSource.value = source;
-  completeStep(0); // Avanzar al siguiente paso
-};
+const stepperStore = useStepperStore();
+const { steps, selectedSource, completeStep, goBack, cancelSteps, handleSourceSelected } = storeToRefs(stepperStore);
 </script>
 
 <style scoped>
@@ -186,7 +143,7 @@ const handleSourceSelected = (source) => {
   left: 22px; /* Adjust this value to align with your icons */
   top: 30px; /* Adjust this value to align with your icons */
   width: 1.5px;
-  background-color: #9CA3AF;
+  background-color: #dfe3ea;
   height: calc(100% - 30px); /* Adjust this value to align with your icons */
 }
 .vertical-line.short {
