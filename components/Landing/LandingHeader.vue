@@ -55,7 +55,7 @@
           </div>
           <div class="col-lg-5 d-none d-lg-block">
             <div class="welcome-header-image">
-              <img :src="communityImg" alt="welcome header image" />
+              <CommunityImg />
             </div>
           </div>
         </div>
@@ -65,7 +65,7 @@
 </template>
 
 <script setup>
-const communityImg = "/images/illustrations/chart-person.svg";
+import CommunityImg from "../../public/images/illustrations/chart-person.svg?component";
 </script>
 
 <style scoped lang="scss">
