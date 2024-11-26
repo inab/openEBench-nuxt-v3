@@ -9,10 +9,7 @@
             data-aos="fade-up"
             data-aos-duration="3000"
           >
-            <img
-              :src="communityImg"
-              alt="welcome-header-image"
-            />
+            <CommunityImg />
           </div>
         </div>
         <div class="col-lg-6 landingkey-features__box gap-3">
@@ -52,6 +49,7 @@
 <script setup lang="ts">
 import AOS from "aos";
 const communityImg = "/images/illustrations/404.svg";
+import CommunityImg from "../../public/images/illustrations/404.svg?component";
 AOS.init();
 </script>
 
@@ -126,7 +124,7 @@ AOS.init();
   }
 }
 
-.welcome-header-image img {
+.welcome-header-image svg {
   width: 100%;
 }
 

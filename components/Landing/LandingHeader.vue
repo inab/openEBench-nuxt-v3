@@ -96,7 +96,7 @@ import CommunityImg from "../../public/images/illustrations/chart-person.svg?com
   }
 }
 .welcome-header-image {
-  img {
+  svg {
     width: 100%;
     max-height: 350px;
   }
