@@ -113,6 +113,7 @@ await challengeAPI(challengeId).then((response: any) => {
         _id: value._id,
         key: value._id,
         name: value.participant_label,
+        label: value.participant_label,
         dates: charData,
         dataset_contact_ids: "",
         inline_data: {
