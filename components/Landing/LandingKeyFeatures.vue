@@ -9,7 +9,7 @@
             data-aos="fade-up"
             data-aos-duration="3000"
           >
-            <CommunityImg />
+            <img src="~/assets/images/illustrations/404.png" alt="Community" />
           </div>
         </div>
         <div class="col-lg-6 landingkey-features__box gap-3">
@@ -48,8 +48,6 @@
 
 <script setup lang="ts">
 import AOS from "aos";
-const communityImg = "/images/illustrations/404.svg";
-import CommunityImg from "../../public/images/illustrations/404.svg?component";
 AOS.init();
 </script>
 
@@ -124,8 +122,17 @@ AOS.init();
   }
 }
 
+.welcome-header-image {
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+  width: 100%; 
+  height: 100%;
+}
 .welcome-header-image svg {
-  width: 100%;
+  width: 100% !important; 
+  height: auto !important; 
+  max-height: 100% !important; 
 }
 
 @media (max-width: 768px) {
