@@ -36,7 +36,6 @@ export const useStepperStore = defineStore('stepper', () => {
   };
 
   const handleSourceSelected = (source) => {
-    console.log(`Source selected: ${source}`);
     selectedSource.value = source;
     completeStep(0); // Avanzar al siguiente paso
   };
