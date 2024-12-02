@@ -45,17 +45,17 @@ RUN npm install
 COPY . .
 
 # Construir la aplicación Nuxt
-RUN npm run build
+#RUN npm run build
 
 # COPY . .
-# RUN npm install && npm run build
+RUN npm install && npm run build
 
 # Etapa de producción
 FROM nginx:latest
 WORKDIR /app
 
-#COPY --from=build /app/.output /app/.output
-COPY --from=build /app/.output/public /usr/share/nginx/html
+COPY --from=build /app/.output /app/.output
+#COPY --from=build /app/.output/public /usr/share/nginx/html
 
 # Copiar configuración de Nginx personalizada
 COPY nginx_copy.conf /etc/nginx/conf.d/default.conf
@@ -70,7 +70,7 @@ RUN apt-get update && apt-get install -y curl && \
 EXPOSE 80 3000
 
 # Inicia Nuxt 3 y Nginx
-CMD npm run preview & nginx -g "daemon off;"
-#CMD node .output/server/index.mjs & nginx -g "daemon off;"
+#CMD npm run preview & nginx -g "daemon off;"
+CMD node .output/server/index.mjs & nginx -g "daemon off;"
 
 #CMD ["node", ".output/server/index.mjs"]
