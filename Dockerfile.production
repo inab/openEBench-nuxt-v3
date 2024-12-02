@@ -39,15 +39,12 @@ ENV NITRO_HOST localhost
 
 
 #COPY package*.json ./
-COPY package.json package-lock.json ./
-RUN npm install
+COPY package*.json ./
 
 COPY . .
 
-# Construir la aplicación Nuxt
-#RUN npm run build
+RUN npm install
 
-# COPY . .
 RUN npm install && npm run build
 
 # Etapa de producción
