@@ -61,7 +61,7 @@ export const useTrends = defineStore("trends", {
         const result = await useAsyncData(key, () =>
           $observatory(URL, { method: "GET" })
         );
-        console.log(`Result for ${key}:`, result.data);
+        //console.log(`Result for ${key}:`, result.data);
 
         if (result.data === null) {
           console.log(`${key} -> no data available`);
