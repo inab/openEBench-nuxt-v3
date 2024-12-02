@@ -43,7 +43,7 @@
               <p class="text-sm font-medium">{{ collections[selectedCollection].subtitle }}</p>
               <p class="text-sm text-gray-600 text-justify">{{ collections[selectedCollection].description }}</p>
             </div>
-            <div class="w-full md:w-1/4 mt-4 md:mt-0 ml-0 md:ml-8">
+            <div class="w-full md:w-1/4 mt-4 md:mt-0 ml-0 md:ml-20">
               <a target="_blank" :href="collections[selectedCollection].homepage"><img
                   :src="getImagePath(collections[selectedCollection].image)" alt="Collection Image"
                   class="rounded-lg collection-image transition-transform duration-500 ease-in-out" /></a>
