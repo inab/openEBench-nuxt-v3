@@ -62,6 +62,6 @@ RUN apt-get update && apt-get install -y curl && \
 EXPOSE 80 3000
 
 # Inicia Nuxt 3 y Nginx
-#CMD node .output/server/index.mjs & nginx -g "daemon off;"
+CMD node .output/server/index.mjs & nginx -g "daemon off;"
 
-CMD ["node", ".output/server/index.mjs"]
+#CMD ["node", ".output/server/index.mjs"]
