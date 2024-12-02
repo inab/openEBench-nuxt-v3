@@ -5,7 +5,7 @@
 
         <!-- Licensing Header -->
         <div class="text-center mt-4">
-            <h6 class="text-lg font-semibold">Licensing</h6>
+            <h6 class="text-2xl font-semibold">Licensing</h6>
             <p class="text-sm text-gray-700">
                 Licensing is one of the most crucial features of a piece of software, determining both its
                 <span class="highlight">Accessibility</span> and
@@ -40,7 +40,7 @@
 
 
 <script setup lang="ts">
-import { onMounted, computed } from 'vue';
+import { onBeforeMount, computed } from 'vue';
 import PlotLicensesPie from './PlotLicensesPie.vue';
 import PlotLicensesBars from './PlotLicensesBars.vue'
 import { useTrends } from '@/stores/observatory/trends';
@@ -73,9 +73,9 @@ const isLicensesSunburstLoading = computed(() => store.Loaded.licensesSunburst);
 const isLicensesOpenSourceLoading = computed(() => store.Loaded.licensesOpenSource);
 
 // Fetch Data on Mount
-onMounted(() => {
-    store.getLicensesSunburst();
-    store.getLicensesOpenSource();
+onBeforeMount(async () => {
+    await store.getLicensesSunburst();
+    await store.getLicensesOpenSource();
 });
 
 </script>
