@@ -4,7 +4,7 @@
         <PlotWOptions class="copy-icon" :items="dialogItems" :currentCollection="current_collection" />
         <!-- Versioning  Header -->
         <div class="text-center mt-4">
-            <h6 class="text-lg font-semibold">Versioning</h6>
+            <h6 class="text-2xl font-semibold">Versioning</h6>
             <p class="text-sm mt-4 text-gray-700">
                 Following a specific set of rules for naming software releases allows its
                 inequivocal identification, which increases its
@@ -41,7 +41,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, computed } from 'vue';
+import { onBeforeMount, computed } from 'vue';
 import VersioningPlot from './VersioningPlot.vue';
 import { useTrends } from '@/stores/observatory/trends';
 import { useObservatory } from '@/stores/observatory/index.js';
@@ -63,8 +63,8 @@ const isSemanticVersioningLoading = computed(() => store.Loaded.semanticVersioni
 
 
 // Fetch Data on Mount
-onMounted(() => {
-    store.getSemanticVersioning();
+onBeforeMount(async () => {
+    await store.getSemanticVersioning();
 });
 
 </script>

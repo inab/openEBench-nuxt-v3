@@ -1,13 +1,13 @@
 <template>
     <div class="relative">
         <!-- Options Button -->
-        <PlotWOptions class="copy-icon" :items="dialogItems" :currentCollection="current_collection" />
+        <PlotWOptions  v-if="versionControlVisible" class="copy-icon" :items="dialogItems" :currentCollection="current_collection" />
 
         <!-- Header Section -->
         <div class="text-center mt-4">
             <div class="flex flex-wrap lg:flex-nowrap lg:h-full"> <!-- Left Column: Description -->
                 <div class="flex-1 lg:w-2/3  flex flex-col justify-center lg:h-full">
-                    <h6 class="text-lg font-semibold text-center lg:text-left"> Repositories and Version Control </h6>
+                    <h6 class="text-2xl font-semibold text-center lg:text-left"> Repositories and Version Control </h6>
                     <p class="text-sm text-gray-700 mt-2 card-content-vs leading-relaxed text-center lg:text-left">
                         Making software available through any of the main software repositories makes it more <span
                             class="highlight">Findable</span> and <span class="highlight">Accessible</span>. </p>
@@ -44,16 +44,20 @@
                 </p>
             </div>
         </div>
+        <div v-else>
+            <noDataAvailable class="mt-8" info=""></noDataAvailable>
+        </div>
     </div>
 </template>
 
 
 <script setup lang="ts">
-import { onMounted, computed } from 'vue';
+import { onBeforeMount, computed } from 'vue';
 import { useTrends } from '@/stores/observatory/trends';
-import { useObservatory } from '@/stores/observatory/index';
-import PlotWOptions from '~/components/Observatory/PlotWOptions.vue';
 import VersionControlPlot from './VersionControlPlot.vue';
+import { useObservatory } from '@/stores/observatory/index';
+import noDataAvailable from "@/layouts/noDataAvailableImg.vue";
+import PlotWOptions from '~/components/Observatory/PlotWOptions.vue';
 import { embedCodes } from '~/components/Observatory/visualizations/embedCodes.js';
 
 // Stores
@@ -85,9 +89,9 @@ const percentage = computed(() => {
 const versionControlVisible = computed(() => control_counts.value?.['version control'] > 0);
 
 // Fetch Data on Mount
-onMounted(() => {
-    trendsStore.getVersionControlCount();
-    trendsStore.getVersionControlRepositories();
+onBeforeMount(async () => {
+    await trendsStore.getVersionControlCount();
+    await trendsStore.getVersionControlRepositories();
 });
 </script>
 
@@ -115,7 +119,8 @@ onMounted(() => {
 }
 
 .card-adjustment {
-    margin-top: 5px;;
+    margin-top: 5px;
+    ;
     padding-top: 10px;
     padding-bottom: 0px;
     padding-left: 15px;

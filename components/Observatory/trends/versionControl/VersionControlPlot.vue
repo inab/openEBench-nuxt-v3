@@ -51,8 +51,6 @@ const layout: Partial<Plotly.Layout> = {
     hoverlabel: { bgcolor: '#FFF' },
 };
 
-console.log(layout);
-
 const config: Partial<Plotly.Config> = {
     responsive: true,
     displayModeBar: false,
