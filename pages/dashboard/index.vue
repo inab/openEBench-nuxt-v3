@@ -10,6 +10,95 @@
           >to the OpenEBench Dashboard.
         </div>
       </div>
+      <div class="dashboard__body row mb-5">
+        <div class="col-6">
+          <UCard
+            class="dashboard__body__card"
+            :ui="{
+              header: {
+                base: '',
+                background: '',
+                padding: 'px-2 py-3 sm:px-6',
+              },
+            }"
+          >
+            <template #header>
+              <div class="dashboard__body__card__header">Metrics</div>
+            </template>
+
+            <div class="">
+              <div class="row">
+                <div class="col-6">
+                  <img
+                    src="assets/images/dashboard/22821946_Na_Dec_02.jpg"
+                    alt="User profile picture"
+                    class=""
+                  />
+                </div>
+                <div class="col-6">
+                  <div class="">
+                    <div class="">
+                      Total metrics: <span>{{ totalMetrics }}</span>
+                    </div>
+                    <div class="">
+                      Here you can find information about the communities you
+                      are part of and the tools you have access to.
+                    </div>
+                  </div>
+                  <div class="dashboard__body__card__link">
+                    <button class="ripple custom-button-primary">
+                      <NuxtLink to="/dashboard/entries" class="dashboard-link"
+                        >Metrics</NuxtLink
+                      >
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </UCard>
+        </div>
+        <div class="col-6">
+          <UCard
+            class="dashboard__body__card"
+            :ui="{
+              header: {
+                base: '',
+                background: '',
+                padding: 'px-2 py-3 sm:px-6',
+              },
+            }"
+          >
+            <template #header>
+              <div class="dashboard__body__card__header">Entries</div>
+            </template>
+
+            <div class="">
+              <div class="row">
+                <div class="col-6">
+                  <img
+                    src="assets/images/dashboard/22821946_Na_Dec_02.jpg"
+                    alt="User profile picture"
+                    class=""
+                  />
+                </div>
+                <div class="col-6">
+                  <div class="">
+                    Here you can find information about the communities you are
+                    part of and the tools you have access to.
+                  </div>
+                  <div class="dashboard__body__card__link">
+                    <button class="ripple custom-button-primary">
+                      <NuxtLink to="/dashboard/entries" class="dashboard-link"
+                        >Communities</NuxtLink
+                      >
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </UCard>
+        </div>
+      </div>
       <div class="dashboard__body row">
         <div class="col-4">
           <UCard
@@ -39,6 +128,52 @@
                   <div class="">
                     Here you can find information about the communities you are
                     part of and the tools you have access to.
+                  </div>
+                  <div class="dashboard__body__card__link">
+                    <button class="ripple custom-button-primary">
+                      <NuxtLink to="/dashboard/entries" class="dashboard-link"
+                        >Communities</NuxtLink
+                      >
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </UCard>
+        </div>
+        <div class="col-4">
+          <UCard
+            class="dashboard__body__card"
+            :ui="{
+              header: {
+                base: '',
+                background: '',
+                padding: 'px-2 py-3 sm:px-6',
+              },
+            }"
+          >
+            <template #header>
+              <div class="dashboard__body__card__header">Tools</div>
+            </template>
+
+            <div class="">
+              <div class="row">
+                <div class="col-6">
+                  <img
+                    src="assets/images/dashboard/22821946_Na_Dec_02.jpg"
+                    alt="User profile picture"
+                    class=""
+                  />
+                </div>
+                <div class="col-6">
+                  <div class="">
+                    <div class="">
+                      Total Tools: <span>{{ totalTools }}</span>
+                    </div>
+                    <div class="">
+                      Here you can find information about the communities you
+                      are part of and the tools you have access to.
+                    </div>
                   </div>
                   <div class="dashboard__body__card__link">
                     <button class="ripple custom-button-primary">
@@ -103,6 +238,8 @@
 import { computed, ref, watch } from "vue";
 import { useUser } from "@/stores/user.ts";
 
+import Plotly from "plotly.js-dist-min";
+
 definePageMeta({
   middleware: "auth",
   auth: {
@@ -113,6 +250,19 @@ definePageMeta({
 
 const { data, status } = useAuth();
 const userStore = useUser();
+const runtimeConfig = useRuntimeConfig();
+const totalMetrics = ref(0);
+const totalTools = ref(0);
+const metricsByType = ref([
+  { name: "Bar Plot", total: 0 },
+  { name: "Scatter Plot", total: 0 },
+  { name: "Line Plot", total: 0 },
+]);
+
+let token: string | undefined;
+if (data.value) {
+  token = data.value.accessToken;
+}
 
 const userName = computed(() => {
   return data.value && data.value.statusCode != "404" ? data.value.name : "";
@@ -130,6 +280,81 @@ if (status.value == "authenticated") {
   }
 } else {
   userName.value = "";
+}
+
+await countTotalMetrics();
+async function countTotalMetrics() {
+  try {
+    const response = await $fetch(
+      `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Metrics`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+        },
+        method: "GET",
+      },
+    );
+
+    const data = await response;
+    totalMetrics.value = data.length;
+    await getMetricsByType(data);
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}
+
+await countTotalTools();
+async function countTotalTools() {
+  try {
+    const response = await $fetch(
+      `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Tool`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+        },
+        method: "GET",
+      },
+    );
+
+    const data = await response;
+    totalTools.value = data.length;
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}
+
+async function getMetricsByType(metrics) {
+  metrics.forEach((metric) => {
+    if (
+      metric.representation_hints &&
+      metric.representation_hints.visualization
+    ) {
+      const type = metricsByType.value.filter(
+        (item) => item.name === "Bar Plot",
+      );
+      type[0].total += 1;
+    } else if (
+      metric.representation_hints &&
+      metric.representation_hints.optimization
+    ) {
+      const type = metricsByType.value.filter(
+        (item) => item.name === "Scatter Plot",
+      );
+      type[0].total += 1;
+    } else if (
+      metric.representation_hints &&
+      metric.representation_hints.visualization
+    ) {
+      const type = metricsByType.value.filter(
+        (item) => item.name === "Line Plot",
+      );
+      type[0].total += 1;
+    }
+  });
+
+  console.log(metricsByType.value);
 }
 </script>
 
