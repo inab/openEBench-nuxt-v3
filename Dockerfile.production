@@ -38,10 +38,17 @@ ENV NITRO_PORT 3000
 ENV NITRO_HOST localhost
 
 
-COPY package*.json ./
+#COPY package*.json ./
+COPY package.json package-lock.json ./
+RUN npm install
 
 COPY . .
-RUN npm install && npm run build
+
+# Construir la aplicación Nuxt
+RUN npm run build
+
+# COPY . .
+# RUN npm install && npm run build
 
 # Etapa de producción
 FROM nginx:latest
