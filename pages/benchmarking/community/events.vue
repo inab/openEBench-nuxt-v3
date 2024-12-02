@@ -37,7 +37,7 @@ import { ref } from "vue";
 import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
 import CommunityInfo from "@/components/Community/CommunityInfo.vue";
 import CommunityEventsList from "@/components/Community/CommunityEventsList/CommunityEventsList.vue";
-import noDataAvailable from "@/layouts/noDataAvailable.vue";
+import noDataAvailable from "@/layouts/noDataAvailableCard.vue";
 import { useCommunity } from "@/stores/community";
 
 interface Link {
