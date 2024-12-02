@@ -59,7 +59,10 @@ RUN apt-get update && apt-get install -y curl && \
     apt-get clean
 
 # Exponer los puertos necesarios
-EXPOSE 80 3000
+#EXPOSE 80 3000
 
 # Inicia Nuxt 3 y Nginx
-CMD node .output/server/index.mjs & nginx -g "daemon off;"
+#CMD node .output/server/index.mjs & nginx -g "daemon off;"
+
+CMD ["node", ".output/server/index.mjs"]
+EXPOSE 3000
