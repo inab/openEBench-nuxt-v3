@@ -90,9 +90,6 @@
                 </template>
               </div>
             </div>
-            <div v-else>
-              <div>-</div>
-            </div>
           </template>
           <template #challenges-data="{ row }">
             <NuxtLink

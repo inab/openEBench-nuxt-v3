@@ -53,15 +53,23 @@
               Live <font-awesome-icon :icon="['far', 'eye']" />
             </NuxtLink>
           </button>
-          <div v-if="row.privileges === 'Owner' && row.actions.community">
-            <button title="Edit community" class="btn-event text-neutral-300">
+          <div
+            v-if="
+              row.privileges === 'Owner' ||
+              commmunityPrivileges.challenge.update
+            "
+          >
+            <button title="Edit community" class="btn-custom-badget text-sm">
               <NuxtLink :to="getCommunityChallengeEditLink(row)">
                 Edit <font-awesome-icon :icon="['fas', 'pencil']" />
               </NuxtLink>
             </button>
           </div>
           <div
-            v-else-if="row.privileges === 'Manager' && row.actions.community"
+            v-else-if="
+              row.privileges === 'Manager' ||
+              commmunityPrivileges.challenge.update
+            "
           >
             <button title="Edit challenge" class="btn-custom-badget text-sm">
               <NuxtLink :to="getCommunityChallengeEditLink(row)">
@@ -173,8 +181,12 @@ const challengesData = computed(() => {
   });
 });
 
+console.log("props.commmunityPrivileges", props.commmunityPrivileges.challenge);
+
 const filteredRows = computed(() => {
   if (!props.challenges) return [];
+
+  console.log("props.challenges", props.challenges);
 
   if (!search.value) {
     _total.value = props.challenges.length;
@@ -192,11 +204,15 @@ const filteredRows = computed(() => {
 
   _total.value = filteredSearcher.length;
 
+  console.log(filteredSearcher);
+
   return filteredSearcher.slice(
     (Number(page.value) - 1) * Number(pageCount.value),
     Number(page.value) * Number(pageCount.value),
   );
 });
+
+console.log("filteredRows", filteredRows.value);
 
 const totalPages = computed(() => {
   return Math.ceil(Number(_total.value) / Number(pageCount.value));

@@ -48,7 +48,7 @@
                   <div class="dashboard__body__card__link">
                     <button class="ripple custom-button-primary">
                       <NuxtLink to="/dashboard/entries" class="dashboard-link"
-                        >Metrics</NuxtLink
+                        >Explore Metrics</NuxtLink
                       >
                     </button>
                   </div>
@@ -69,33 +69,65 @@
             }"
           >
             <template #header>
-              <div class="dashboard__body__card__header">Entries</div>
+              <div class="dashboard__body__card__header">Metrics stats</div>
             </template>
-
             <div class="">
               <div class="row">
-                <div class="col-6">
-                  <img
-                    src="assets/images/dashboard/22821946_Na_Dec_02.jpg"
-                    alt="User profile picture"
-                    class=""
-                  />
-                </div>
-                <div class="col-6">
-                  <div class="">
-                    Here you can find information about the communities you are
-                    part of and the tools you have access to.
+                <div class="col-6 card-row">
+                  <div class="card-row-wrapper">
+                    <div class="card-plot-title">
+                      <h3>Bar plots</h3>
+                      <div class="card-plot-title-sub">
+                        <span>{{ metricsByType[0].total }} plots</span>
+                        <div class="card-plot-img">
+                          <BarSvg />
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div class="dashboard__body__card__link">
-                    <button class="ripple custom-button-primary">
-                      <NuxtLink to="/dashboard/entries" class="dashboard-link"
-                        >Communities</NuxtLink
-                      >
-                    </button>
+                </div>
+                <div class="col-6 card-row">
+                  <div class="card-row-wrapper">
+                    <div class="card-plot-title">
+                      <h3>Scatter plot</h3>
+                      <div class="card-plot-title-sub">
+                        <span>{{ metricsByType[1].total }} plots</span>
+                        <div class="card-plot-img">
+                          <ScatterSvg />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6 card-row">
+                  <div class="card-row-wrapper">
+                    <div class="card-plot-title">
+                      <h3>Line plot</h3>
+                      <div class="card-plot-title-sub">
+                        <span>{{ metricsByType[2].total }} plots</span>
+                        <div class="card-plot-img">
+                          <LineSvg />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6 card-row">
+                  <div class="card-row-wrapper">
+                    <div class="card-plot-title">
+                      <h3>Radar plot</h3>
+                      <div class="card-plot-title-sub">
+                        <span>{{ metricsByType[3].total }} plots</span>
+                        <div class="card-plot-img">
+                          <RadarSvg />
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+            
           </UCard>
         </div>
       </div>
@@ -132,53 +164,7 @@
                   <div class="dashboard__body__card__link">
                     <button class="ripple custom-button-primary">
                       <NuxtLink to="/dashboard/entries" class="dashboard-link"
-                        >Communities</NuxtLink
-                      >
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </UCard>
-        </div>
-        <div class="col-4">
-          <UCard
-            class="dashboard__body__card"
-            :ui="{
-              header: {
-                base: '',
-                background: '',
-                padding: 'px-2 py-3 sm:px-6',
-              },
-            }"
-          >
-            <template #header>
-              <div class="dashboard__body__card__header">Tools</div>
-            </template>
-
-            <div class="">
-              <div class="row">
-                <div class="col-6">
-                  <img
-                    src="assets/images/dashboard/22821946_Na_Dec_02.jpg"
-                    alt="User profile picture"
-                    class=""
-                  />
-                </div>
-                <div class="col-6">
-                  <div class="">
-                    <div class="">
-                      Total Tools: <span>{{ totalTools }}</span>
-                    </div>
-                    <div class="">
-                      Here you can find information about the communities you
-                      are part of and the tools you have access to.
-                    </div>
-                  </div>
-                  <div class="dashboard__body__card__link">
-                    <button class="ripple custom-button-primary">
-                      <NuxtLink to="/dashboard/entries" class="dashboard-link"
-                        >Communities</NuxtLink
+                        >Entries</NuxtLink
                       >
                     </button>
                   </div>
@@ -238,7 +224,10 @@
 import { computed, ref, watch } from "vue";
 import { useUser } from "@/stores/user.ts";
 
-import Plotly from "plotly.js-dist-min";
+import BarSvg from "../../public/images/plots/bar-chart.svg?component";
+import ScatterSvg from "../../public/images/plots/scatter-chart.svg?component";
+import LineSvg from "../../public/images/plots/line-chart.svg?component";
+import RadarSvg from "../../public/images/plots/radar-chart.svg?component";
 
 definePageMeta({
   middleware: "auth",
@@ -257,6 +246,7 @@ const metricsByType = ref([
   { name: "Bar Plot", total: 0 },
   { name: "Scatter Plot", total: 0 },
   { name: "Line Plot", total: 0 },
+  { name: "Radar Plot", total: 0 },
 ]);
 
 let token: string | undefined;
@@ -379,6 +369,10 @@ async function getMetricsByType(metrics) {
   }
   &__body {
     &__card {
+      box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px !important;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
       &__header {
         font-size: 20px;
         font-weight: 600;
@@ -386,9 +380,6 @@ async function getMetricsByType(metrics) {
       }
       &__link {
         padding-top: 15px;
-      }
-      &:hover {
-        transform: scale(1.05);
       }
     }
   }
@@ -412,6 +403,45 @@ async function getMetricsByType(metrics) {
       background-color: white;
       color: theme("colors.primary.500");
     }
+  }
+  .card-plot-title {
+    width: 100%;
+    h3 {
+      font-size: 14px;
+    }
+  }
+  .card-plot-title-sub {
+    font-size: 16px;
+    font-weight: 600;
+    color: theme("colors.primary.500");
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    padding: 5px 10px;
+  }
+  .card-plot-img {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    svg {
+      width: 30px;
+      height: 30px;
+    }
+  }
+  .card-row {
+    text-align: center;
+    padding: 5px 10px;
+    margin-bottom: 5px;
+  }
+  .card-row-wrapper {
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 10px;
+    height: 100%;
   }
 }
 </style>

@@ -3,7 +3,7 @@
     <CustomSubtitle text="Challenge Metric" />
     <NuxtLink :to="`${to}/metrics/add`" class="text-primaryOeb-950">
       <font-awesome-icon :icon="['far', 'calendar-check']" />
-      Add Metric to challenge
+      Add aggregation metric
     </NuxtLink>
     <div class="challenge-metrics-categories">
       <div
@@ -51,7 +51,7 @@
             <div
               v-for="(m, i) in metric[0].metrics"
               :key="i"
-              class="col-6 challenge-metrics-categories__category__metric"
+              class="col-12 challenge-metrics-categories__category__metric"
             >
               <CommunityMetric :metric="m" :is-loading-data="isLoadingData" />
             </div>
@@ -107,10 +107,12 @@ const to = props.challengeId;
 
 const metrics_by_categories = computed(() => {
   return props.metricData.reduce((acc, metric) => {
-    if (!acc[metric.category]) {
-      acc[metric.category] = [];
+    if(metric.category === 'aggregation') {
+      if (!acc[metric.category]) {
+        acc[metric.category] = [];
+      }
+      acc[metric.category].push(metric);
     }
-    acc[metric.category].push(metric);
     return acc;
   }, {});
 });

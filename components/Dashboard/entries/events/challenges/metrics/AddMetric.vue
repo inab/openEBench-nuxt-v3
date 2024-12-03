@@ -7,7 +7,119 @@
             Create a new metric that will be added to this challengec
           </div>
         </div>
-        <div class="col-12 challenge-metric-modal-form__new">
+        <div class="col-12">
+          <div class="w-100">
+            <div class="modal_section_title text-primaryOeb-500">
+              Search for an existing metric
+            </div>
+            <div class="row flex justify-between">
+              <div class="col-12 d-flex">
+                <input
+                  v-model="searchMetric"
+                  placeholder="Search ..."
+                  class="input-search-lg"
+                />
+                <button
+                  class="btn btn-primary btn-input"
+                  type="button"
+                  :disabled="searchMetric.length === 0"
+                  @click="search"
+                >
+                  <UIcon name="i-heroicons-magnifying-glass" class="w-5 h-5" />
+                </button>
+              </div>
+              <div v-if="searchList.length > 0" class="col-12">
+                <SearchMetricTable :metric-rows="searchList" />
+              </div>
+              <div v-if="selectedMetric" class="col-5">
+                <button
+                  class="btn btn-primary"
+                  type="button"
+                  :disabled="!selectedMetric"
+                  @click="searchMetricResults"
+                >
+                  <UIcon name="i-heroicons-magnifying-glass" class="w-5 h-5" />
+                  Search Associated metrics
+                </button>
+              </div>
+            </div>
+          </div>
+          <div v-if="showAdvancedSearch" class="w-100">
+            <div v-if="isSearchingSelectedMetric" class="">
+              <CustomSearcherLoader />
+            </div>
+            <div v-else class="searching-metric__results">
+              <div v-if="Object.keys(metricAssociatedList).length > 0" class="">
+                <div class="searching-metric__results__title">
+                  We found some associated challengers with this metric
+                </div>
+                <div class="">
+                  <div class="">
+                    The metric <b>{{ selectedMetric._id }}</b> is usually found
+                    alongside these others:
+                  </div>
+                  <div class="pt-2">
+                    <div
+                      v-for="(pm, index) in processedMetrics"
+                      :key="index"
+                      class=""
+                    >
+                      <div class="">
+                        <input
+                          type="checkbox"
+                          color="primary form-checkbox"
+                          :v-model="selectedMetricResults[index]"
+                          @change="handleChangeMetricSelected(index)"
+                        />
+                        <label class="pl-2">{{ pm }}</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="pt-2">
+                    <button
+                      class="btn btn-primary"
+                      type="button"
+                      :disabled="!selectedMetric"
+                      @click="addSelectedMetric"
+                    >
+                      <font-awesome-icon :icon="['fas', 'plus']" />
+                      Add selected metrics
+                    </button>
+                  </div>
+                </div>
+                <div class="w-100 pt-4">
+                  <div
+                    v-for="(challenge, metricId) in metricAssociatedList"
+                    :key="metricId"
+                    class=""
+                  >
+                    <div class="">
+                      Metric <span class="font-bold">{{ metricId }}</span> is
+                      associated with
+                      <span class="font-bold">{{ challenge.count }}</span>
+                      challenges
+                    </div>
+                    <div class="">
+                      <AddMetricTable
+                        :challenge-rows="challenge.challenges"
+                        :challenge-id="challengeId"
+                      />
+                    </div>
+                    <CustomBorder />
+                  </div>
+                </div>
+              </div>
+              <div v-else class="">
+                <div class="searching-metric__results__title">
+                  Associated metrics not found. Please try again.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <CustomBorder />
+
+        <!-- <div class="col-12 challenge-metric-modal-form__new">
           <div class="w-100 pt-2">
             <div class="w-100 row">
               <div class="col-4 pt-2">
@@ -143,115 +255,7 @@
               </div>
             </div>
           </div>
-        </div>
-        <CustomBorder />
-        <div class="col-12">
-          <div class="w-100">
-            <div class="modal_section_title text-primaryOeb-500">
-              Or search for an existing metric
-            </div>
-            <div class="row flex justify-between">
-              <div class="col-7">
-                <USelectMenu
-                  v-model="selectedMetric"
-                  searchable
-                  searchable-placeholder="Search for a metic..."
-                  :search="search"
-                  :options="metricDataList"
-                  :loading="loadingInput"
-                  :search-attributes="['title']"
-                  placeholder="Search for a metic..."
-                  trailing
-                  option-attribute="title"
-                  by="title"
-                />
-              </div>
-              <div class="col-5">
-                <button
-                  class="btn btn-primary"
-                  type="button"
-                  :disabled="!selectedMetric"
-                  @click="searchMetricResults"
-                >
-                  <UIcon name="i-heroicons-magnifying-glass" class="w-5 h-5" />
-                  Search Associated metrics
-                </button>
-              </div>
-            </div>
-          </div>
-          <div v-if="showAdvancedSearch" class="w-100">
-            <div v-if="isSearchingSelectedMetric" class="">
-              <CustomSearcherLoader />
-            </div>
-            <div v-else class="searching-metric__results">
-              <div v-if="Object.keys(metricAssociatedList).length > 0" class="">
-                <div class="searching-metric__results__title">
-                  We found some associated challengers with this metric
-                </div>
-                <div class="">
-                  <div class="">
-                    The metric <b>{{ selectedMetric._id }}</b> is usually found
-                    alongside these others:
-                  </div>
-                  <div class="pt-2">
-                    <div
-                      v-for="(pm, index) in processedMetrics"
-                      :key="index"
-                      class=""
-                    >
-                      <div class="">
-                        <input
-                          type="checkbox"
-                          color="primary form-checkbox"
-                          :v-model="selectedMetricResults[index]"
-                          @change="handleChangeMetricSelected(index)"
-                        />
-                        <label class="pl-2">{{ pm }}</label>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="pt-2">
-                    <button
-                      class="btn btn-primary"
-                      type="button"
-                      :disabled="!selectedMetric"
-                      @click="addSelectedMetric"
-                    >
-                      <font-awesome-icon :icon="['fas', 'plus']" />
-                      Add selected metrics
-                    </button>
-                  </div>
-                </div>
-                <div class="w-100 pt-4">
-                  <div
-                    v-for="(challenge, metricId) in metricAssociatedList"
-                    :key="metricId"
-                    class=""
-                  >
-                    <div class="">
-                      Metric <span class="font-bold">{{ metricId }}</span> is
-                      associated with
-                      <span class="font-bold">{{ challenge.count }}</span>
-                      challenges
-                    </div>
-                    <div class="">
-                      <AddMetricTable
-                        :challenge-rows="challenge.challenges"
-                        :challenge-id="challengeId"
-                      />
-                    </div>
-                    <CustomBorder />
-                  </div>
-                </div>
-              </div>
-              <div v-else class="">
-                <div class="searching-metric__results__title">
-                  Associated metrics not found. Please try again.
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -264,7 +268,7 @@ import type { Metric } from "@/types/challenge_metric";
 import { useMetrics } from "@/stores/metrics.ts";
 import metricsSearcher from "@/utils/metricsMatch";
 import AddMetricTable from "@/components/Dashboard/entries/events/challenges/metrics/AddMetricTable.vue";
-
+import SearchMetricTable from "@/components/Dashboard/entries/events/challenges/metrics/SearchMetricTable.vue";
 const props = defineProps<{
   contactsData: string[];
 }>();
@@ -281,10 +285,12 @@ const metricDataList = ref<Metric[] | never[]>([]);
 const metricsStore = useMetrics();
 const isSearchingMetrics = ref(false);
 const isSearchingSelectedMetric = ref(false);
+const searchList = ref<Metric[]>([]);
 const selectedMetricResults = ref<boolean[]>([]);
 const token: string = data?.value.accessToken;
 const processedMetrics = ref(new Set());
 const selectedMetric = ref(null);
+const searchMetric = ref<string>("");
 const localContacts = ref<string[]>([]);
 const dialogElement = ref<{ element: string[]; index: number } | null>(null);
 const metricAssociatedList = ref<{
@@ -339,20 +345,20 @@ async function searchMetricResults() {
   isSearchingSelectedMetric.value = false;
 }
 
-async function search(q: string) {
+async function search() {
   loadingInput.value = true;
 
-  if (q.length < 3) {
-    loadingInput.value = false;
-    return metricDataList.value;
-  }
+  console.log(searchMetric.value);
 
   const searchFilter = metricDataList.value.filter((metric) => {
-    return metric.title.toLowerCase().includes(q.toLowerCase());
+    return metric.title
+      .toLowerCase()
+      .includes(searchMetric.value.toLowerCase());
   });
   loadingInput.value = false;
 
-  return searchFilter;
+  console.log(searchFilter);
+  searchList.value = searchFilter;
 }
 
 await fetchMetrics(token);
@@ -388,7 +394,6 @@ const goBack = () => {
     },
   });
 };
-
 
 function onAddElement(array: string[]) {
   array.push("");
@@ -441,6 +446,22 @@ watch(props.contactsData, (newVal: string[]) => {
     font-size: 1.05rem;
     font-weight: 600;
   }
+}
+
+.input-search-lg {
+  height: 100%;
+  * > input {
+    height: 100% !important;
+    box-shadow:
+      rgb(255, 255, 255) 0px 0px 0px 0px inset,
+      rgb(209, 213, 219) 0px 0px 0px 1px inset,
+      rgba(0, 0, 0, 0.05) 0px 1px 2px 0px !important;
+  }
+}
+.btn-input {
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+  border-left: none !important;
 }
 
 .form-group-row {
