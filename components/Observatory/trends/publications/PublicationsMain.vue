@@ -1,7 +1,7 @@
 <template>
     <div class="relative">
         <!-- Options Button -->
-        <PlotWOptions  v-if="checkData" class="copy-icon" :items="dialogItems"
+        <PlotWOptions  v-if="checkData.value" class="copy-icon" :items="dialogItems"
             :currentCollection="current_collection" />
         <!-- Header -->
         <div class="text-center mt-4">
@@ -22,7 +22,7 @@
                 <USkeleton class="h-52 mb-3 mx-10" />
             </div>
             <div v-else>
-                <PublicationsPlot v-if="checkData" :xValues="xvalues" :yPercentageValues="ypercentagevalues"
+                <PublicationsPlot v-if="checkData.value" :xValues="xvalues" :yPercentageValues="ypercentagevalues"
                     :yIFValues="yifvalues" :textPercentageTools="textpercentagetools"
                     :textPercentageJournals="textpercentagejournals" />
                 <noDataAvailable info="publications" v-else></noDataAvailable>
@@ -67,11 +67,14 @@ const textpercentagejournals = computed(() => trendsStore.Publications.data.perc
 const isPublicationsLoading = computed(() => trendsStore.Loaded.publications);
 
 // Is visible
-const checkData = computed(() => trendsStore.Publications.data.IF_tools.x.length > 0);
+const checkData = ref(null)
 
 // Fetch Data on Mount
 onMounted(async () => {
     await trendsStore.getPublications();
+
+    checkData.value = computed(() => trendsStore.Publications.data.IF_tools.x.length > 0);
+
 });
 
 </script>
