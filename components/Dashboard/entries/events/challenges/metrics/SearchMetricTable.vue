@@ -2,8 +2,13 @@
   <div class="add-metric-table">
     <div class="add-metric">
       <UTable
+        v-model="selectedMetric"
         :columns="columns"
         :rows="rows"
+        :empty-state="{
+          icon: 'i-heroicons-circle-stack-20-solid',
+          label: 'No items.',
+        }"
         :ui="{
           tr: {
             base: 'hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer',
@@ -22,6 +27,7 @@
             size: 'text-sm',
           },
         }"
+        @select="select"
       >
         <template #view-data="{ row }">
           <button class="btn-custom-badget text-sm">
@@ -45,12 +51,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, computed } from "vue";
+import { ref, defineProps, computed, defineEmits, watch } from "vue";
 
 const props = defineProps<{
   metricRows: [];
+  selectedMetrics: [];
 }>();
 
+const emits = defineEmits(["handleSelectedMetrics"]);
+
+const selectedMetric = ref([]);
 const page = ref(1);
 const pageCount = 5;
 
@@ -75,4 +85,20 @@ const rows = computed(() => {
     page.value * pageCount,
   );
 });
+
+function select(row) {
+  console.log("select!!");
+  const index = selectedMetric.value.findIndex((item) => item.id === row.id);
+  if (index === -1) {
+    selectedMetric.value.push(row);
+  } else {
+    selectedMetric.value.splice(index, 1);
+  }
+}
+
+watch(selectedMetric, (value) => {
+  emits("handleSelectedMetrics", value);
+});
 </script>
+
+<style lang="scss" scoped></style>

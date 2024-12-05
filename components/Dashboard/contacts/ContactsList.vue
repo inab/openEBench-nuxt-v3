@@ -273,8 +273,6 @@ const contactTypeOptions = ["person", "helpdesk", "other"];
 
 async function openModal(id: string) {
   const contact = await fetchContactData(id);
-  console.log("contact: ", contact);
-
   if (contact) {
     state.value = { ...contact };
     isModalOpened.value = true;

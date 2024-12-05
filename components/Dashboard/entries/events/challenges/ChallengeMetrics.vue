@@ -1,10 +1,12 @@
 <template>
   <div class="challenge-metrics">
     <CustomSubtitle text="Challenge Metric" />
-    <NuxtLink :to="`${to}/metrics/add`" class="text-primaryOeb-950">
-      <font-awesome-icon :icon="['far', 'calendar-check']" />
-      Add aggregation metric
-    </NuxtLink>
+    <div class="d-flex justify-end pt-2">
+      <NuxtLink class="btn-primary hover_effect" :to="`${to}/metrics/add`">
+        <UIcon name="i-heroicons-plus" />
+        Add aggregation metric
+      </NuxtLink>
+    </div>
     <div class="challenge-metrics-categories">
       <div
         v-for="(metric, index) in metrics_by_categories"
@@ -40,7 +42,6 @@
               >
                 Metric Type: {{ index }}
               </div>
-             
             </div>
           </template>
           <div class="challenge-metrics-categories__category__description">
@@ -107,7 +108,7 @@ const to = props.challengeId;
 
 const metrics_by_categories = computed(() => {
   return props.metricData.reduce((acc, metric) => {
-    if(metric.category === 'aggregation') {
+    if (metric.category === "aggregation") {
       if (!acc[metric.category]) {
         acc[metric.category] = [];
       }
@@ -116,7 +117,6 @@ const metrics_by_categories = computed(() => {
     return acc;
   }, {});
 });
-
 </script>
 
 <style scoped lang="scss">
@@ -184,5 +184,11 @@ const metrics_by_categories = computed(() => {
 .modal-challenge-wrapper {
   max-width: 700px;
   min-height: 350px;
+}
+.hover_effect {
+  padding: 5px 10px;
+  font-size: 14px;
+  text-decoration: none;
+  margin-bottom: 5px;
 }
 </style>

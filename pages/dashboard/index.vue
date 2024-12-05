@@ -115,11 +115,11 @@
                 <div class="col-6 card-row">
                   <div class="card-row-wrapper">
                     <div class="card-plot-title">
-                      <h3>Radar plot</h3>
+                      <h3>Box plot</h3>
                       <div class="card-plot-title-sub">
                         <span>{{ metricsByType[3].total }} plots</span>
                         <div class="card-plot-img">
-                          <RadarSvg />
+                          <BoxSvg />
                         </div>
                       </div>
                     </div>
@@ -127,7 +127,6 @@
                 </div>
               </div>
             </div>
-            
           </UCard>
         </div>
       </div>
@@ -227,7 +226,7 @@ import { useUser } from "@/stores/user.ts";
 import BarSvg from "../../public/images/plots/bar-chart.svg?component";
 import ScatterSvg from "../../public/images/plots/scatter-chart.svg?component";
 import LineSvg from "../../public/images/plots/line-chart.svg?component";
-import RadarSvg from "../../public/images/plots/radar-chart.svg?component";
+import BoxSvg from "../../public/images/plots/box-chart.svg?component";
 
 definePageMeta({
   middleware: "auth",
@@ -246,7 +245,7 @@ const metricsByType = ref([
   { name: "Bar Plot", total: 0 },
   { name: "Scatter Plot", total: 0 },
   { name: "Line Plot", total: 0 },
-  { name: "Radar Plot", total: 0 },
+  { name: "Box Plot Plot", total: 0 },
 ]);
 
 let token: string | undefined;
@@ -338,6 +337,14 @@ async function getMetricsByType(metrics) {
       metric.representation_hints.visualization
     ) {
       const type = metricsByType.value.filter(
+        (item) => item.name === "Box Plot",
+      );
+      type[0].total += 1;
+    } else if (
+      metric.representation_hints &&
+      metric.representation_hints.visualization
+    ) {
+      const type = metricsByType.value.filter(
         (item) => item.name === "Line Plot",
       );
       type[0].total += 1;
@@ -369,7 +376,9 @@ async function getMetricsByType(metrics) {
   }
   &__body {
     &__card {
-      box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px !important;
+      box-shadow:
+        rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
+        rgba(0, 0, 0, 0.08) 0px 0px 0px 1px !important;
       height: 100%;
       display: flex;
       flex-direction: column;
@@ -435,7 +444,9 @@ async function getMetricsByType(metrics) {
     margin-bottom: 5px;
   }
   .card-row-wrapper {
-    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+    box-shadow:
+      rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
+      rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
     display: flex;
     flex-direction: column;
     justify-content: center;

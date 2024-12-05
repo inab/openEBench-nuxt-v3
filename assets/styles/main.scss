@@ -87,13 +87,19 @@ $colorSecondary: #f47c21;
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }
-.input-search-lg:focus,
-.input-search-lg:focus-visible {
+.input-search-lg:focus{
   border: 1px solid theme("colors.primary.500") !important;
   box-shadow: none !important;
-  
 }
 
+.form-checkbox:checked,
+.form-checkbox:indeterminate {
+  background-position: 50% !important;
+  background-repeat: no-repeat !important;
+  background-size: 100% 100% !important;
+  border-color: #0000 !important;
+  background-color:theme("colors.primary.500") !important;
+}
 
 .selector select {
   box-shadow:
