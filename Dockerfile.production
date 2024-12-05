@@ -67,6 +67,7 @@ RUN npm install
 
 # Exponer puertos
 EXPOSE 80
+EXPOSE 3000
 
 # Iniciar el servidor de Nuxt y Nginx
 CMD ["sh", "-c", "node /var/www/nuxt/index.mjs & nginx -g 'daemon off;'"]
