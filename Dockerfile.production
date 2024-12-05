@@ -53,8 +53,8 @@ FROM nginx:alpine
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Copiar los archivos construidos por Nuxt (estáticos y backend)
-COPY --from=builder /app/.output/public /usr/share/nginx/html
-COPY --from=builder /app/.output/server /var/www/nuxt
+COPY --from=build /app/.output/public /usr/share/nginx/html
+COPY --from=build /app/.output/server /var/www/nuxt
 
 # Instalar Node.js en la imagen de Nginx para correr el servidor Nuxt
 RUN apk add --no-cache nodejs npm
