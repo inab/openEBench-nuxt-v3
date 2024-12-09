@@ -5,7 +5,7 @@
       <div class="p-4">
         <div class="row my-4">
           <div class="col-12">
-            <h5 class="mb-3">Welcome to the FAIRsoft Evaluator!</h5>
+            <h3 class="mb-3">Welcome to the FAIRsoft Evaluator!</h3>
             <p style="line-height: 1.9" class="mb-0 mt-0">
               Enhance the FAIRness of your software. Here’s how you can use our tool:
             </p>
