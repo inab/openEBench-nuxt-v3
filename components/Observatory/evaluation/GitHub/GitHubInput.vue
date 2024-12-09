@@ -68,15 +68,16 @@
       <!-- Form Action Buttons -->
       <div class="row justify-center">
         <div class="col-10 text-right">
-          <button type="button" class="btn btn-secondary mr-2" @click="goBack">Back</button>
-          <button
-            type="submit"
-            class="btn btn-primary"
-            :disabled="!value || showError"
-            @click="completeStep"
-          >
+          <UButton class="mr-2" color="gray" variant="ghost" size="md" :ui="{color:{gray:{ghost:'text-gray-900 hover:bg-gray-100'}},}" @click="goBack">
+            Back
+          </UButton>
+          <UButton class="mr-2 bg-primaryOeb-500" variant="solid" size="md" 
+          :ui="{color:{variant:{solid:'hover:bg-{blue}-500'}}}"
+          :disabled="!value || showError"
+          @click="submitGitHubLink">
             Continue
-          </button>
+          </UButton>
+          
         </div>
       </div>
     </form>
@@ -101,6 +102,10 @@ import { ref, computed } from 'vue';
 import DialogAppInstall from './DialogAppInstall.vue';
 import DialogImportMetadata from './DialogImportMetadata.vue';
 import { useStepperStore } from '@/stores/observatory/evaluation/index';
+import { useGithub } from '@/stores/observatory/evaluation/github';
+
+
+const githubStore = useGithub();
 
 // Props and data setup
 const value = ref('');
@@ -185,13 +190,42 @@ const inputExample = (URL: string) => {
   value.value = URL; 
   showError.value = false; 
 };
-const fetchMetadata = () => { /* Fetch metadata action */ };
+const fetchMetadata = async () => {
+  const payload = {
+    installationID: githubStore.getInstallationID,
+    repo: githubStore.repository.repo,
+    owner: githubStore.repository.owner,
+  };
+  await githubStore.fetchGitHubMeta(payload);
+};
 
-const submitGitHubLink = () => {
+const submitGitHubLink = async () => {
   validateInput();
   if (!showError.value) {
-    console.log('GitHub link');
+    const owner = value.value.split('/')[3];
+    const repo = value.value.split('/')[4].split('.git')[0];
+
+    // Check if the app is installed
+    githubStore.updateRepository({ owner, repo });
+    githubStore.updateDialogImportMetadata(true);
+
+    // Get installation ID
+    await githubStore.getExtractorInstallationID(githubStore.getRepository);
+
+    // If it is installed, fetch metadata
+    if (githubStore.getInstallationID) {
+      await fetchMetadata();
+      console.log('Import Error: ', githubStore.getImportError)
+
+    } else {
+      // If it is not installed, open dialog to install it
+      githubStore.updateDialogImportMetadata(false);
+      githubStore.updateDialogAppInstall(true);
+    }
+    completeStep();
   }
+  console.log('Import Error2: ', githubStore.getImportError)
+
 };
 
 const stepperStore = useStepperStore();
