@@ -2,53 +2,50 @@
   <div>
     <BreadcrumbsBar />
     <div class="container">
-      <UTabs 
-        :items="tabsItems" 
-        class="w-full" 
-        :ui="{ list: { tab: { active: 'text-primaryOeb-500' } } }"
-        :defaultIndex="activeTabIndex"
-      >
+      <UTabs :items="tabsItems" class="w-full" :ui="{ list: { tab: { active: 'text-primaryOeb-500' } } }"
+        :defaultIndex="activeTabIndex">
         <template #default="{ item, index, selected }">
           <div class="flex items-center gap-2 relative truncate w-full" @click="setActiveTab(index, item.path)">
             <span>{{ item.label }}</span>
-            <span v-if="selected"
-              class="absolute -right-4 w-2 h-2 rounded-full bg-primary-500 dark:bg-primary-400" />
+            <span v-if="selected" class="absolute -right-4 w-2 h-2 rounded-full bg-primary-500 dark:bg-primary-400" />
           </div>
         </template>
 
         <template #trends>
           <div class="custom-tab">
-            <slot name="trends"/>
+            <slot name="trends" />
           </div>
         </template>
         <template #fairness>
           <div class="custom-tab">
-            <slot name="fairness"/>
+            <slot name="fairness" />
           </div>
         </template>
         <template #fairsoft>
           <div class="custom-tab">
-            <slot name="fairsoft"/>
+            <slot name="fairsoft" />
           </div>
         </template>
         <template #data>
           <div class="custom-tab">
-            <slot name="data"/>
+            <slot name="data" />
           </div>
         </template>
         <template #about>
           <div class="custom-tab">
-            <slot name="about"/>
+            <slot name="about" />
           </div>
         </template>
       </UTabs>
     </div>
+    <ScrollToTop />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
+import ScrollToTop from '~/components/Common/ArrowUp.vue';
 import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
 
 const router = useRouter();
@@ -89,8 +86,8 @@ const tabsItems = [
 
 
 const activeTabIndex = ref(0);
-function setActiveTab(index:number, path:string) {
-  activeTabIndex.value = index; 
+function setActiveTab(index: number, path: string) {
+  activeTabIndex.value = index;
   router.push(path);
 }
 
