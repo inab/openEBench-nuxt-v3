@@ -4,7 +4,7 @@
       <template #trends>
         <div class="p-4">
           <div class="row my-4">
-            <h5 class="">FAIRness Trends Analysis</h5>
+            <h3 class="">FAIRness Trends Analysis</h3>
             <p style="line-height: 1.9" class="mb-2 mt-0">
               Explore trends in key aspects to the FAIRness of research software.
             </p>

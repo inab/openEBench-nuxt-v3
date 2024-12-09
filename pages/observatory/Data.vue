@@ -4,7 +4,7 @@
     <template #data>
       <div class="p-4">
         <div class="row my-4">
-          <h5 class="">Explore Data Integration at the Software Observatory</h5>
+          <h3 class="">Explore Data Integration at the Software Observatory</h3>
         </div>
         <div class="row my-4">
           <div class="col-6">

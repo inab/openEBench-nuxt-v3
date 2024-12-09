@@ -29,7 +29,6 @@
                   ? 'i-heroicons-minus-16-solid'
                   : 'i-heroicons-plus-16-solid'
               "
-              c
             />
           </span>
         </p>

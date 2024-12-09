@@ -40,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, computed } from 'vue';
+import { onMounted, computed, ref} from 'vue';
 import PublicationsPlot from './PublicationsPlot.vue';
 import { useTrends } from '@/stores/observatory/trends';
 import { useObservatory } from '@/stores/observatory/index.js';
@@ -67,7 +67,7 @@ const textpercentagejournals = computed(() => trendsStore.Publications.data.perc
 const isPublicationsLoading = computed(() => trendsStore.Loaded.publications);
 
 // Is visible
-const checkData = ref(null)
+const checkData = ref(false)
 
 // Fetch Data on Mount
 onMounted(async () => {
