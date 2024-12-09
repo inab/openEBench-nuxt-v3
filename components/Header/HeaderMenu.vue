@@ -285,6 +285,8 @@ import subMenuEntriesAbout from "./HeaderMenu/subMenuEntriesAbout";
 
 const { data, signIn, signOut } = useAuth();
 
+const { $keycloakAuthUrl } = useNuxtApp();
+
 const runtimeConfig = useRuntimeConfig();
 const { $viewport } = useNuxtApp();
 const toggleMenu = ref(false);
@@ -372,7 +374,8 @@ const isActiveAbout = computed(() => {
 });
 
 function handleLogin() {
-  signIn("keycloak", { callbackUrl: "/login" });
+  //signIn("keycloak", { callbackUrl: "/login" });
+  window.location.href = $keycloakAuthUrl;
 }
 
 function handleLogout() {

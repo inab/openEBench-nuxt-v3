@@ -71,6 +71,7 @@ export default defineNuxtConfig({
     "~/plugins/useGraphql",
     "~/plugins/useObservatory",
     "~/plugins/useApi",
+    "~/plugins/keycloak.client",
   ],
 
   runtimeConfig: {
