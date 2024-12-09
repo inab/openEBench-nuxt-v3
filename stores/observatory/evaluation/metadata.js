@@ -100,7 +100,7 @@ export const useMetadataStore = defineStore('metadata', {
       }
     },
 
-    async getVocabulariesItems() {
+    async fetchVocabulariesItems() {
       const URL = 'edam/EDAMTerms';
 
       try {
@@ -143,6 +143,9 @@ export const useMetadataStore = defineStore('metadata', {
     // Other Functions
     // ----------------------------------------------------------------
 
+    test(result){
+      console.log('test ',result);
+    },
     prepareMetadata(result){
       /* ---Modifications to the metadata are needed to make it compatible with the UI ---- */
       result.source.push('observatory') // add observatory as source
