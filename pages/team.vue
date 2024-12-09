@@ -19,8 +19,12 @@
           different roles and complementary expertise who work together to
           maintain OpenEBench and add new functionality for a better user
           experience. The team is mainly affiliated with the
-          <a href="https://bsc.es/" target="_blank">Barcelona Supercomputing Center (BSC).<font-awesome-icon
-              :icon="['fas', 'arrow-up-right-from-square']" size="xs" class="mx-2" />
+          <a href="https://bsc.es/" target="_blank"
+            >Barcelona Supercomputing Center (BSC).<font-awesome-icon
+              :icon="['fas', 'arrow-up-right-from-square']"
+              size="xs"
+              class="mx-2"
+            />
           </a>
           However, we are open to collaborations worldwide as OpenEBench follows
           the Open Science principles since its inception to facilitate working
@@ -37,9 +41,18 @@
         <!-- Leaders -->
         <h2 class="section-title-border text-2xl font-normal mt-5">Leaders</h2>
         <hr class="mb-4" />
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 auto-cols-max">
-          <div v-for="(leader, index) in sortedByName(leaders)" :key="index" class="h-100">
-            <MemberCard :member="leader" :institution-mapping="institutionMapping" />
+        <div
+          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 auto-cols-max"
+        >
+          <div
+            v-for="(leader, index) in sortedByName(leaders)"
+            :key="index"
+            class="h-100"
+          >
+            <MemberCard
+              :member="leader"
+              :institution-mapping="institutionMapping"
+            />
           </div>
         </div>
 
@@ -48,9 +61,18 @@
           Group Members
         </h2>
         <hr class="mb-4" />
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 auto-cols-max">
-          <div v-for="(teammate, index) in sortedByName(teammates)" :key="index" class="h-100">
-            <MemberCard :member="teammate" :institution-mapping="institutionMapping" />
+        <div
+          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 auto-cols-max"
+        >
+          <div
+            v-for="(teammate, index) in sortedByName(teammates)"
+            :key="index"
+            class="h-100"
+          >
+            <MemberCard
+              :member="teammate"
+              :institution-mapping="institutionMapping"
+            />
           </div>
         </div>
         <br id="alumni" />
@@ -66,8 +88,14 @@
         <br />
 
         <!-- Alumni -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 auto-cols-max">
-          <div v-for="(alumni, index) in sortedByName(alumnis)" :key="index" class="h-100">
+        <div
+          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 auto-cols-max"
+        >
+          <div
+            v-for="(alumni, index) in sortedByName(alumnis)"
+            :key="index"
+            class="h-100"
+          >
             <AlumniCard :alumni="alumni" />
           </div>
         </div>
@@ -78,13 +106,23 @@
         <div id="accordionExample" class="accordion roles-legend mt-4">
           <div class="accordion-item">
             <h2 id="headingTwo" class="accordion-header">
-              <button class="accordion-button custom-button collapsed" type="button" data-bs-toggle="collapse"
-                data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+              <button
+                class="accordion-button custom-button collapsed"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseTwo"
+                aria-expanded="false"
+                aria-controls="collapseTwo"
+              >
                 Roles Legend
               </button>
             </h2>
-            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
-              data-bs-parent="#accordionExample">
+            <div
+              id="collapseTwo"
+              class="accordion-collapse collapse"
+              aria-labelledby="headingTwo"
+              data-bs-parent="#accordionExample"
+            >
               <div class="accordion-body">
                 <table class="table custom-table">
                   <thead>

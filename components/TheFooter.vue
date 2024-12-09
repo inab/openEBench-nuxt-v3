@@ -75,7 +75,7 @@
         </div>
 
         <!-- Col 3 -->
-        <div class="col-md-3 col-12 p-4  col-funding">
+        <div class="col-md-3 col-12 p-4 col-funding">
           <div>
             <a
               href="mailto:openebench-support@bsc.es"
@@ -126,11 +126,7 @@
               </p>
             </div>
             <div class="col col-3">
-              <img
-                :src="euFlag"
-                alt="EU logo"
-                class="eu-logo"
-              />
+              <div id="svg-container"></div>
             </div>
           </div>
         </div>
@@ -141,7 +137,6 @@
 
 <script>
 import logo from "~/assets/images/opeb_logo_white_minimal.png";
-import euFlag from "/images/illustrations/eu.svg";
 import footerEntries from "~/components/footerEntries";
 import subMenuEntriesObservatory from "~/components/Header/HeaderMenu/subMenuEntriesObservatory.js";
 import subMenuEntriesAbout from "~/components/Header/HeaderMenu/subMenuEntriesAbout";
@@ -149,7 +144,6 @@ import subMenuEntriesAbout from "~/components/Header/HeaderMenu/subMenuEntriesAb
 export default {
   data: () => ({
     logo,
-    euFlag,
     footers: [
       { headline: "OpenEBench", links: footerEntries },
       { headline: "Observatory", links: subMenuEntriesObservatory },
@@ -208,8 +202,8 @@ export default {
   max-width: 150px;
 }
 
-.eu-logo{
-  max-width: 100%
+.eu-logo {
+  max-width: 100%;
 }
 
 .btn-f:hover {
@@ -241,13 +235,14 @@ export default {
     max-width: 100%;
   }
 
-  .col-funding, .col-logo {
+  .col-funding,
+  .col-logo {
     flex: 0 0 100%;
     max-width: 100%;
   }
 
-  .eu-logo{
-    max-width: 60%
+  .eu-logo {
+    max-width: 60%;
   }
 
   .footer .container-fluid {
@@ -258,10 +253,19 @@ export default {
 
 /* Para pantallas más pequeñas */
 @media (max-width: 768px) {
-  .col-md-6, .col-md-3 {
+  .col-md-6,
+  .col-md-3 {
     flex: 0 0 100%;
     max-width: 100%;
   }
 }
 
+#svg-container {
+  width: 100%;
+  height: 50px;
+  background-image: url('~/assets/images/eu.svg'); 
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; 
+}
 </style>

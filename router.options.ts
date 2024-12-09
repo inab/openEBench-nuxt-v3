@@ -31,27 +31,56 @@ export const customRoutes = [
   },
   {
     name: "dashboard-community",
-    path: "/dashboard/communities/:id/edit",
-    file: resolve(__dirname, "pages/dashboard/communities/[id].vue"),
+    path: "/dashboard/entries/:id/edit",
+    file: resolve(__dirname, "pages/dashboard/entries/[id].vue"),
   },
   {
     name: "dashboard-community",
-    path: "/dashboard/communities/add",
-    file: resolve(__dirname, "pages/dashboard/communities/add.vue"),
+    path: "/dashboard/entries/add",
+    file: resolve(__dirname, "pages/dashboard/entries/add.vue"),
   },
   {
     name: "dashboard-community-events",
-    path: "/dashboard/communities/:community_id/events/:id",
-    file: resolve(__dirname, "pages/dashboard/communities/events/[id].vue"),
+    path: "/dashboard/entries/:community_id/events/:id",
+    file: resolve(__dirname, "pages/dashboard/entries/events/[id].vue"),
   },
   {
     name: "dashboard-community-event-add",
-    path: "/dashboard/communities/:community_id/events/add",
-    file: resolve(__dirname, "pages/dashboard/communities/events/add.vue"),
+    path: "/dashboard/entries/:community_id/events/add",
+    file: resolve(__dirname, "pages/dashboard/entries/events/add.vue"),
+  },
+  {
+    name: "dashboard-community-event-community-add",
+    path: "/dashboard/entries/:community_id/events/:event_id/add",
+    file: resolve(
+      __dirname,
+      "pages/dashboard/entries/events/challenges/add.vue",
+    ),
   },
   {
     name: "dashboard-community-event-community",
-    path: "/dashboard/communities/:community_id/events/:event_id/challenges/:id",
-    file: resolve(__dirname, "pages/dashboard/communities/events/challenges/[id].vue"),
+    path: "/dashboard/entries/:community_id/events/:event_id/challenges/:id",
+    file: resolve(
+      __dirname,
+      "pages/dashboard/entries/events/challenges/[id].vue",
+    ),
+  },
+  {
+    name: "dashboard-community-event-community-metric",
+    path: "/dashboard/entries/:community_id/events/:event_id/challenges/:id/metrics/add",
+    file: resolve(
+      __dirname,
+      "pages/dashboard/entries/events/challenges/metrics/add.vue",
+    ),
+  },
+  {
+    name: "dashboard-contacts",
+    path: "/dashboard/contacts",
+    file: resolve(__dirname, "pages/dashboard/contacts"),
+  },
+  {
+    name: "dashboard-contacts-add",
+    path: "/dashboard/contacts/add",
+    file: resolve(__dirname, "pages/dashboard/contacts/add.vue"),
   },
 ];

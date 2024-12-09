@@ -10,7 +10,10 @@
         <i>{{ challenge.name }}</i>
       </div>
 
-      <div v-if="status.pending" class="benchmarking-participant__skeleton"></div>
+      <div
+        v-if="status.pending"
+        class="benchmarking-participant__skeleton"
+      ></div>
       <p class="text">
         List of tools participating in the challenge, together with a summary of
         the metrics obtained.
@@ -33,7 +36,11 @@
       <div v-else class="">
         <noDataAvailable description="No participants and metrics available." />
       </div>
-      <div class="chart-image text--secondary" align="center" color="rgba(0, 0, 0, 0.6)">
+      <div
+        class="chart-image text--secondary"
+        align="center"
+        color="rgba(0, 0, 0, 0.6)"
+      >
         <CustomTabs :data="itemsObjList" :metrics="metrics" />
       </div>
     </div>
@@ -106,6 +113,7 @@ await challengeAPI(challengeId).then((response: any) => {
         _id: value._id,
         key: value._id,
         name: value.participant_label,
+        label: value.participant_label,
         dates: charData,
         dataset_contact_ids: "",
         inline_data: {
@@ -250,17 +258,16 @@ function getMetricsTable() {
 if (communityStore.communityId === communityId) {
   community.value = communityStore.getCommunityData;
 } else {
-  const { data, pending }: { data: any; pending: Ref<boolean> } = await useAsyncData(
-    "community",
-    () => communityStore.requestCommunityData(communityId, event),
-  );
+  const { data, pending }: { data: any; pending: Ref<boolean> } =
+    await useAsyncData("community", () =>
+      communityStore.requestCommunityData(communityId, event),
+    );
   community.value = data.value ?? null;
   isPending.value = pending.value;
 }
 
 const currentEvent = computed(() => {
   const selectedEvent = communityStore.getCurrentEvent;
-
 
   // If no event is selected, select the first available event.
   if (!selectedEvent && eventsObj.length > 0) {
@@ -271,7 +278,11 @@ const currentEvent = computed(() => {
   return selectedEvent;
 });
 
-const routeArray: Array<{ label: string; isActualRoute: boolean; route?: string }> = [
+const routeArray: Array<{
+  label: string;
+  isActualRoute: boolean;
+  route?: string;
+}> = [
   {
     label: "Benchmarking Communities",
     isActualRoute: false,
@@ -285,19 +296,18 @@ const routeArray: Array<{ label: string; isActualRoute: boolean; route?: string 
   {
     label: currentEvent.value?.name,
     isActualRoute: false,
-    route: "/benchmarking/" + communityId + "?event=" + currentEvent.value._id
+    route: "/benchmarking/" + communityId + "?event=" + currentEvent.value._id,
   },
   {
-    label: "Challenge " + challenge.value.acronym + ' ' + challengeId,
+    label: "Challenge " + challenge.value.acronym + " " + challengeId,
     isActualRoute: false,
-    route: "/benchmarking/" + communityId + "/" + challengeId
+    route: "/benchmarking/" + communityId + "/" + challengeId,
   },
   {
     label: "Participants",
     isActualRoute: true,
   },
 ];
-
 </script>
 
 <style scoped lang="scss">
@@ -347,7 +357,7 @@ const routeArray: Array<{ label: string; isActualRoute: boolean; route?: string 
   margin-top: 25px;
 }
 
-hr{
+hr {
   opacity: 0.1;
 }
 </style>

@@ -45,7 +45,7 @@
                 </p>
                 <NuxtLink
                   to="/observatory"
-                  class="custom-btn secondary welcome-header-btn"
+                  class="custom-btn secondary welcome-header-btn "
                   title="Go to Tools Observatory"
                 >
                   Tools Observatory
@@ -55,10 +55,7 @@
           </div>
           <div class="col-lg-5 d-none d-lg-block">
             <div class="welcome-header-image">
-              <NuxtImg
-                src="/images/illustrations/chart-person.svg"
-                alt="welcome-header-image"
-              />
+              <CommunityImg />
             </div>
           </div>
         </div>
@@ -67,7 +64,9 @@
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import CommunityImg from "../../public/images/illustrations/chart-person.svg?component";
+</script>
 
 <style scoped lang="scss">
 .welcome-avatar {
@@ -76,21 +75,10 @@
   height: 60px;
   width: 60px;
   padding: 5px;
-  cursor: pointer;
   transition: 0.5s;
-
-  &:hover {
-    border: 1px solid #0b579f;
-    background-color: white;
-  }
+  color: white;
   &.secondary {
     background-color: #f47c21;
-    transition: 0.5s;
-
-    &:hover {
-      border: 1px solid #f47c21;
-      background-color: white;
-    }
   }
   &__image {
     background-color: white;
@@ -98,9 +86,6 @@
     -webkit-mask: url("~/assets/icons/benchmark.svg") no-repeat center;
     mask: url("~/assets/icons/benchmark.svg") no-repeat center;
     transition: transform 0.7s ease-in-out;
-    &:hover {
-      background-color: #0b579f;
-    }
   }
   &__image_secondary {
     background-color: white;
@@ -108,13 +93,10 @@
     -webkit-mask: url("~/assets/icons/observatory.svg") no-repeat center;
     mask: url("~/assets/icons/observatory.svg") no-repeat center;
     transition: transform 0.7s ease-in-out;
-    &:hover {
-      background-color: #f47c21;
-    }
   }
 }
 .welcome-header-image {
-  img {
+  svg {
     width: 100%;
     max-height: 350px;
   }
@@ -151,8 +133,26 @@
 }
 .welcome-header-btn {
   width: 100%;
+  min-height: 40px;
   padding: 12px 30px;
   color: white;
   text-decoration: none;
+  padding: 5px;
+  cursor: pointer;
+  transition: 0.5s;
+  border: 1px solid #0b579f;
+  &:hover {
+    background-color: white;
+    color: #0b579f;
+  }
+  &.secondary {
+    background-color: #f47c21;
+    color: white;
+    border: 1px solid #f47c21;
+    &:hover {
+      background-color: white;
+      color: #f47c21;
+    }
+  }
 }
 </style>

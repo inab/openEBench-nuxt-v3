@@ -5,6 +5,9 @@ export default defineNuxtConfig({
   devtools: {
     enabled: true,
   },
+  nitro: {
+    preset: 'node-server',
+  },
   vite: {
     server: {
       port: 3001,
@@ -21,13 +24,24 @@ export default defineNuxtConfig({
       },
     },
     plugins: [svgLoader()],
-    optimizeDeps: { 
-      include: [ "dompurify", "aos", "data-urls", "whatwg-encoding", 
-        "vue3-carousel/dist/carousel.es.js", "gsap", "vue-multiselect", "pluralize",
-        "marked", "lodash.debounce", "@inb/oeb-classification-table",
-        "@inb/oeb-widgets-graphs", "valibot" 
-      ] 
-    }
+    optimizeDeps: {
+      include: [
+        "dompurify",
+        "aos",
+        "data-urls",
+        "whatwg-encoding",
+        "vue3-carousel/dist/carousel.es.js",
+        "gsap",
+        "vue-multiselect",
+        "pluralize",
+        "marked",
+        "lodash.debounce",
+        "@inb/oeb-classification-table",
+        "@inb/oeb-widgets-graphs",
+        "valibot",
+        "@vuepic/vue-datepicker",
+      ],
+    },
   },
 
   devServer: {
@@ -39,7 +53,7 @@ export default defineNuxtConfig({
     "bootstrap/dist/css/bootstrap.min.css",
     "@fortawesome/fontawesome-svg-core/styles.css",
     "aos/dist/aos.css",
-    "vue-multiselect/dist/vue-multiselect.min.css"
+    "vue-multiselect/dist/vue-multiselect.min.css",
   ],
 
   ssr: false,
@@ -75,7 +89,9 @@ export default defineNuxtConfig({
       SCIENTIFIC_SERVICE_URL:
         process.env.NUXT_SCIENTIFIC_SERVICE_URL ||
         "https://dev-openebench.bsc.es/api/scientific",
-      SCIENTIFIC_SERVICE_URL_API: process.env.SCIENTIFIC_SERVICE_URL_API || "https://dev-openebench.bsc.es/api/scientific",
+      SCIENTIFIC_SERVICE_URL_API:
+        process.env.SCIENTIFIC_SERVICE_URL_API ||
+        "https://dev-openebench.bsc.es/api/scientific",
       BENCH_EVENT_API_URL:
         process.env.BENCH_EVENT_API_URL ||
         "https://dev-openebench.bsc.es/rest/bench_event_api",
@@ -94,18 +110,25 @@ export default defineNuxtConfig({
       KEYCLOAK_REALM: process.env.KEYCLOAK_REALM || "openebench",
       KEYCLOAK_CLIENT_ID: process.env.KEYCLOAK_CLIENT_ID || "oeb-frontend",
       BASE_URL: process.env.APP_BASE_URL || "https://openebench.bsc.es",
+      AUTH_ORIGIN: process.env.AUTH_ORIGIN || "https://inb.bsc.es",
     },
   },
 
   auth: {
+    isEnabled: true,
+    disableServerSideAuth: false,
     globalAppMiddleware: false,
     provider: {
       type: "authjs",
     },
     redirect: {
-      login: "/login", // Redirige a la página de login si no está autenticado
-      home: "/", // Página de inicio después del login
+      login: "/login",
+      home: "/",
     },
+    basePath: '/api/auth',
+    originEnvKey: 'AUTH_ORIGIN',
+    baseURL: process.env.APP_BASE_URL || "https://test2.openebench.bsc.es/api/auth",
+    origin: process.env.AUTH_ORIGIN || "https://inb.bsc.es", 
   },
 
   hooks: {
@@ -128,9 +151,14 @@ export default defineNuxtConfig({
   ],
 
   buildModules: [
-    '@nuxt/typescript-build'
+    "@nuxt/typescript-build",
   ],
 
+  image: {
+    provider: 'ipx',
+    dir: 'assets/images'
+  },
+ 
   eslint: {
     // TODO: Remove this when the project is clean
   },

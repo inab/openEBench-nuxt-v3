@@ -1,6 +1,8 @@
 <template>
   <div class="community-event-table">
-    <div class="community-event-table__border px-3 py-3.5 relative not-prose bg-white overflow-hidden">
+    <div
+      class="community-event-table__border py-3.5 relative not-prose bg-white overflow-hidden"
+    >
       <div class="justify-content-end flex py-3.5">
         <UInput
           v-model="search"
@@ -11,9 +13,14 @@
           class="input-search"
         />
       </div>
-      
+
       <!-- Checkbox in header to select/deselect all visible elements on the current page -->
-      <input type="checkbox" class="allChecks" @change="toggleSelectAll" :checked="isAllSelected" />
+      <input
+        type="checkbox"
+        class="allChecks"
+        :checked="isAllSelected"
+        @change="toggleSelectAll"
+      />
 
       <UTable
         v-model:selected="selected"
@@ -21,18 +28,18 @@
         :columns="columns"
         :ui="{
           tr: {
-            base: '',
+            base: 'hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer',
           },
           th: {
             base: 'text-left rtl:text-right',
-            padding: 'px-2.5 py-2.5',
+            padding: 'py-2.5',
             color: 'text-gray-900 dark:text-white',
             font: 'font-semibold',
             size: 'text-sm',
           },
           td: {
             base: 'whitespace-nowrap',
-            padding: 'px-3 py-3',
+            padding: 'py-3',
             font: '',
             size: 'text-sm',
           },
@@ -66,12 +73,17 @@
         </template>
         <template #participant-data="{ row }">
           <NuxtLink
+            v-if="!loadingRows.includes(row._id)"
             class="text-primary-500 dark:text-primary-400"
             title="Go to participant"
             :to="`${community}/${row._id}/participants`"
+            @click="handleClick(row._id)"
           >
             Participant
           </NuxtLink>
+          <span v-else>
+            Loading...
+          </span>
         </template>
       </UTable>
 
@@ -121,12 +133,17 @@ const community = computed(() => props.communityId);
 const page = ref<number>(1);
 const pageCount = ref<number>(10);
 const search = ref<string>("");
-const pageFrom = computed(() => (Number(page.value) - 1) * Number(pageCount.value) + 1);
+const pageFrom = computed(
+  () => (Number(page.value) - 1) * Number(pageCount.value) + 1,
+);
 const pageTo = computed(() =>
-  Math.min(Number(page.value) * Number(pageCount.value), Number(totalPages.value)),
+  Math.min(
+    Number(page.value) * Number(pageCount.value),
+    Number(totalPages.value),
+  ),
 );
 const selected = ref<any[]>([]);
-let _total = ref(0);
+const _total = ref(0);
 
 const columns = [
   {
@@ -155,7 +172,9 @@ const filteredRows = computed(() => {
   const filteredData = search.value
     ? allRows.value.filter((challenge: any) => {
         return Object.values(challenge).some((value) => {
-          return String(value).toLowerCase().includes(search.value.toLowerCase());
+          return String(value)
+            .toLowerCase()
+            .includes(search.value.toLowerCase());
         });
       })
     : allRows.value;
@@ -193,12 +212,14 @@ function toggleSelectAll() {
   if (isAllSelected.value) {
     // If all items on the current page are selected, deselect all of them
     selected.value = selected.value.filter(
-      (row) => !currentPageRows.some((currentRow) => currentRow._id === row._id)
+      (row) =>
+        !currentPageRows.some((currentRow) => currentRow._id === row._id),
     );
   } else {
     // If not all are selected, select all items on the current page.
     const newSelections = currentPageRows.filter(
-      (row) => !selected.value.some((selectedRow) => selectedRow._id === row._id)
+      (row) =>
+        !selected.value.some((selectedRow) => selectedRow._id === row._id),
     );
     selected.value.push(...newSelections);
   }
@@ -207,9 +228,18 @@ function toggleSelectAll() {
 // Computed to check if all items on the current page are selected
 const isAllSelected = computed(() => {
   return filteredRows.value.every((row) =>
-    selected.value.some((selectedRow) => selectedRow._id === row._id)
+    selected.value.some((selectedRow) => selectedRow._id === row._id),
   );
 });
+
+// Participants loading
+const loadingRows = ref<string[]>([]);
+function handleClick(rowId: string) {
+  // Si ya está cargando, no hacer nada
+  if (!loadingRows.value.includes(rowId)) {
+    loadingRows.value.push(rowId);
+  }
+}
 
 // Observe the changes in the selected array to issue the change to the parent component.
 watch(
@@ -217,7 +247,7 @@ watch(
   (newSelected) => {
     emit("handleChangeChallengers", newSelected);
   },
-  { deep: true }
+  { deep: true },
 );
 </script>
 
@@ -248,10 +278,10 @@ watch(
   background-color: currentColor !important;
 }
 
-.allChecks{
+.allChecks {
   position: absolute;
   margin-top: 12px;
-  margin-left: 15px;
+  margin-left: 24px;
   z-index: 100;
 }
 </style>

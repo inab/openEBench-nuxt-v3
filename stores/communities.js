@@ -17,7 +17,7 @@ export const useCommunities = defineStore("communities", {
     async requestCommunitiesData(type) {
       const { $graphql } = useNuxtApp();
       if (!$graphql) {
-        throw new Error('$graphql is not available in the current context');
+        throw new Error("$graphql is not available in the current context");
       }
 
       return await $graphql("/graphql", {
@@ -47,25 +47,29 @@ export const useCommunities = defineStore("communities", {
                                 }
                             }`,
         }),
-      }).then((returnData) => {
-        let data = returnData.data.getCommunities;
-        let dataFormatted = this.formatData(data ?? null);
-        this.communities = this.filterCommunities(dataFormatted);
-        this.projects = this.filterProjects(dataFormatted);
+      })
+        .then((returnData) => {
+          let data = returnData.data.getCommunities;
+          let dataFormatted = this.formatData(data ?? null);
+          this.communities = this.filterCommunities(dataFormatted);
+          this.projects = this.filterProjects(dataFormatted);
 
-        if (type && type === "projects") {
-          return this.projects;
-        }
+          if (type && type === "projects") {
+            return this.projects;
+          }
 
-        return this.communities;
-      }).catch((error) => {
-        console.error('Error:', error);
-      });
+          return this.communities;
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
     },
 
     formatData(data) {
       return data.map((community) => {
-        if(!community.links) { community.links = []; }
+        if (!community.links) {
+          community.links = [];
+        }
         community.links.forEach((link) => {
           if (link.comment === "@logo") {
             community.logo = link.uri;
