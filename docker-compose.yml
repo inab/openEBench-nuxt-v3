@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.production
+    image: ghcr.io/${{ github.repository }}:latest
+    labels:
+      org.opencontainers.image.source: ${{ github.repository }}
+      org.opencontainers.image.revision: ${{ github.sha }}
+      org.opencontainers.image.created: ${{ github.event.head_commit.timestamp }}
