@@ -45,8 +45,8 @@ RUN npm install
 
 RUN npm run build
 
-RUN rm -rf node_modules && \
-  npm install --production --prefer-offline --pure-lockfile --non-interactive
+# Instalar Node.js y npm
+RUN apk add --no-cache nodejs npm
 
 FROM nginx:latest
 
