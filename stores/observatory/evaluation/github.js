@@ -3,11 +3,11 @@ This store is used for the github integration.
 In Step 2: import of metadata from a github repository.
 */
 import { defineStore } from 'pinia';
-import { useAsyncData, useNuxtApp } from 'nuxt/app';
+import { useNuxtApp } from 'nuxt/app';
+import { useMetadataStore } from'@/stores/observatory/evaluation/metadata.js';
 
 export const useGithub = defineStore('github', {
   state: () => ({
-    test: 'test',
     // requested repository to import metadata from (as <owner>/<repo>)
     repository: {
       owner: '',
@@ -143,6 +143,7 @@ export const useGithub = defineStore('github', {
 
     async fetchGitHubMeta() {
       const { $githubapp } = useNuxtApp()
+      const metadataStore = useMetadataStore();
       this.updateDialogImportMetadata(true);
       this.setUpdateImportProgressText('Fetching repository metadata ...')
 
@@ -161,14 +162,16 @@ export const useGithub = defineStore('github', {
 
         let result = response.data;
 
+        console.log('Result fetchGitGunMeta',result)
+        
         // Assuming these methods are available and configured
-        await this.$dispatch('observatory/evaluation/metadata/prepareMetadata', result); 
-        await this.$dispatch('observatory/evaluation/metadata/updateToolsMetadata', result); 
-        await this.$dispatch('observatory/evaluation/metadata/updateLoadedMetadata', true); 
+        metadataStore.prepareMetadata(result);
+        metadataStore.updateToolsMetadata(result);
+        metadataStore.updateLoadedMetadata(true);
         
         this.setUpdateImportProgressText('Importation finished')
         this.updateDialogImportMetadata(false);
-
+        this.setUpdateImportError(false);
       }catch (error) {
         console.debug('Error while fetching metadata: ' + error);
         this.setUpdateImportProgressText('Error while fetching metadata')
