@@ -42,6 +42,19 @@ ENV NITRO_HOST localhost
 # Usa la imagen base Node.js
 FROM node:16-alpine
 
+# Instala dependencias necesarias para Node.js y herramientas de construcción
+RUN apt-get update && apt-get install -y \
+    curl \
+    bash \
+    build-essential \
+    ca-certificates && \
+    rm -rf /var/lib/apt/lists/*
+
+# Instala Node.js (versión 18.x LTS en este caso)
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
+    apt-get install -y nodejs && \
+    npm install -g npm@latest
+
 # Crea y usa el directorio /app
 WORKDIR /app
 
