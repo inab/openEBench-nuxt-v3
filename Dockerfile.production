@@ -39,31 +39,34 @@ ENV AUTH_ORIGIN $AUTH_ORIGIN
 ENV NITRO_PORT 3000
 ENV NITRO_HOST 0.0.0.0
 
+# Crear el directorio de trabajo
+WORKDIR /app
+
+# Copiar los archivos necesarios
+COPY package*.json ./
 COPY . .
+
+# Instalar dependencias y construir la aplicación
 RUN npm install
 RUN npm run build
 
-# Fase final
-FROM node:20
+# Fase de producción: usar una imagen ligera de Nginx
+FROM nginx:alpine
 
-WORKDIR /app
+# Copiar la aplicación compilada
+COPY --from=builder /app/.output/public /usr/share/nginx/html
 
-# Instalar Nginx
-RUN apt-get update && apt-get install -y nginx && rm -rf /var/lib/apt/lists/*
+# Copiar las configuraciones de Nuxt para el servidor
+COPY --from=builder /app/.output/server /app/server
 
-# Copiar archivos generados por Nuxt
-COPY --from=build /app/.output /app/.output
+# Copiar configuración personalizada de Nginx
+COPY nginx_copy.conf /etc/nginx/nginx.conf
 
-# Eliminar la configuración por defecto de Nginx si existe
-RUN rm -f /etc/nginx/conf.d/default.conf
-
-COPY nginx_copy.conf /etc/nginx/conf.d/default.conf
-
+# Exponer el puerto
 EXPOSE 80
-EXPOSE 3000
 
-# Comando para iniciar Node (SSR en :3000) y Nginx (en :80)
-CMD ["sh", "-c", "node .output/server/index.mjs & nginx -g 'daemon off;'"]
+# Comando por defecto
+CMD ["nginx", "-g", "daemon off;"]
 
 
 #COPY package*.json ./
