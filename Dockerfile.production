@@ -66,7 +66,7 @@ COPY nginx_copy.conf /etc/nginx/nginx.conf
 EXPOSE 80
 
 # Comando por defecto
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["node", ".output/server/index.mjs"]
 
 
 #COPY package*.json ./
