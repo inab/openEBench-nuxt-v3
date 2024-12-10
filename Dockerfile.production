@@ -45,25 +45,25 @@ RUN npm install
 
 RUN npm run build
 
-# # 2. Configurar Nginx como proxy inverso y ejecutar Nuxt
-FROM nginx:alpine
-
-# Instalar Node.js y npm
-RUN apk add --no-cache nodejs npm
-
-COPY nginx_copy.conf /etc/nginx/conf.d
-
-
-FROM node:20 as prod-stage
+# 2. Fase de producción con Node y Nginx
+FROM node:20
 
 WORKDIR /app
 
-COPY --from=build /app/.output/  ./.output/
+# Instalar Nginx en Debian/Ubuntu
+RUN apt-get update && apt-get install -y nginx && apt-get clean
 
+# Copiar los archivos generados por Nuxt
+COPY --from=build /app/.output/ ./.output/
+
+# Copiar la configuración de Nginx
+COPY nginx_copy.conf /etc/nginx/conf.d/default.conf
+
+# Exponer el puerto 80
 EXPOSE 80
 
-
-CMD [ "node", ".output/server/index.mjs" ]
+# Iniciar el servidor Node.js en segundo plano y Nginx en primer plano
+CMD ["sh", "-c", "node .output/server/index.mjs & nginx -g 'daemon off;'"]
 
 
 #COPY package*.json ./
