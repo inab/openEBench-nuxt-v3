@@ -46,11 +46,7 @@ RUN npm install
 RUN npm run build
 
 RUN rm -rf node_modules && \
-  NODE_ENV=production npm install \
-  --prefer-offline \
-  --pure-lockfile \
-  --non-interactive \
-  --production
+  npm install --production --prefer-offline --pure-lockfile --non-interactive
 
 FROM nginx:latest
 
