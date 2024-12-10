@@ -2,7 +2,6 @@
   <div>
     <UModal v-model="githubStore.dialogImportMetadata">
       <div class="p-4">
-        {{ githubStore.importError }}
         <div v-if="githubStore.importError" class="pt-3 pb-3 pl-2 pr-2">
           <h6 class="mt-0 pt-0 text-h6">Importing metadata</h6>
           <div class="mt-3">

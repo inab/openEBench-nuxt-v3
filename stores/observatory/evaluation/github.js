@@ -161,8 +161,6 @@ export const useGithub = defineStore('github', {
         });
 
         let result = response.data;
-
-        console.log('Result fetchGitGunMeta',result)
         
         // Assuming these methods are available and configured
         metadataStore.prepareMetadata(result);
