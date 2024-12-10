@@ -2,7 +2,7 @@
   <div class="no-data">
     <div class="no-data__image">
       <div class="no-data__image__content">
-        <NuxtImg src="/images/illustrations/empty-state.svg" alt="empty data" />
+        <emptyImg  alt="empty data" viewBox="0 0 650 1300"/>
       </div>
     </div>
     <div class="no-data_body">
@@ -14,6 +14,7 @@
 </template>
 
 <script setup lang="ts">
+import emptyImg from "../../public/images/illustrations/empty-state.svg?component";
 const props = defineProps<{
   info?: string;
 }>();
