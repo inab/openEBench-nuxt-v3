@@ -54,10 +54,10 @@ RUN npm run build
 FROM nginx:alpine
 
 # Copiar la aplicación compilada
-COPY --from=builder /app/.output/public /usr/share/nginx/html
+COPY --from=build /app/.output/public /usr/share/nginx/html
 
 # Copiar las configuraciones de Nuxt para el servidor
-COPY --from=builder /app/.output/server /app/server
+COPY --from=build /app/.output/server /app/server
 
 # Copiar configuración personalizada de Nginx
 COPY nginx_copy.conf /etc/nginx/nginx.conf
