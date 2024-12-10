@@ -84,10 +84,10 @@
 
     <!-- Dialogs -->
     <DialogAppInstall
+      :initialDialogAppInstall="dialogAppInstall"
       :title="installDialogParameters.title"
       :text="installDialogParameters.text"
       :installationUrl="installDialogParameters.installationURL"
-      :initialDialogAppInstall="dialogAppInstall"
       @cancel="cancel"
       @ready="fetchMetadata"
     />
@@ -118,7 +118,8 @@ const installDialogParameters = ref({
   title: "Unable to access repository's metadata.",
   text: 'Let the FAIRsoft Evaluator access the requested repositories metadata by granting the <a href="https://github.com/apps/metadata-extractor-for-fairsoft" target="_blank">Metadata Extractor for FAIRsoft GitHub App</a> the necessary permissions.',
 });
-const dialogAppInstall = ref(false);
+
+const dialogAppInstall = computed(() => githubStore.getDialogAppInstall);
 
 // Validation State
 const showError = ref(false);
@@ -186,6 +187,10 @@ const clearLink = () => {
   errorMessage.value = 'Required.'; 
   isFocused.value = false;
 };
+
+const cancel = () => {
+  githubStore.cancelImport();
+};
 const inputExample = (URL: string) => { 
   value.value = URL; 
   showError.value = false; 
@@ -205,27 +210,27 @@ const submitGitHubLink = async () => {
     const owner = value.value.split('/')[3];
     const repo = value.value.split('/')[4].split('.git')[0];
 
-    // Check if the app is installed
+    // 1. Check if the app is installed
     githubStore.updateRepository({ owner, repo });
+
+    // 1.1 Open dialog to show progress
     githubStore.updateDialogImportMetadata(true);
 
-    // Get installation ID
+    // 1.2 Get installation ID
     await githubStore.getExtractorInstallationID(githubStore.getRepository);
 
-    // If it is installed, fetch metadata
+    // 2. If it is installed, fetch metadata
     if (githubStore.getInstallationID) {
       await fetchMetadata();
-      console.log('Import Error: ', githubStore.getImportError)
 
+      // 2.1 If all ok, complete step
+      completeStep();
     } else {
-      // If it is not installed, open dialog to install it
+      // 3. If it is not installed, open dialog to install it
       githubStore.updateDialogImportMetadata(false);
       githubStore.updateDialogAppInstall(true);
     }
-    completeStep();
   }
-  console.log('Import Error2: ', githubStore.getImportError)
-
 };
 
 const stepperStore = useStepperStore();

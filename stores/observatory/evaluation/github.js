@@ -62,7 +62,7 @@ export const useGithub = defineStore('github', {
       this.dialogImportMetadata = value; 
     },
 
-    setUpdateDialogAppInstall(value) { 
+    updateDialogAppInstall(value) { 
       this.dialogAppInstall = value; 
     },
 
@@ -105,7 +105,7 @@ export const useGithub = defineStore('github', {
         this.setUpdateExtractorInstallationID(installationID)
 
       } catch (error) {
-        console.error('Error while getting installation ID:', error);
+        console.debug('Error while getting installation ID:', error);
         this.setUpdateExtractorInstallationID(null)
         this.setUpdateImportProgressText("Error while fetching the repository's installation ID for the metadata extractor.");
         this.setUpdateImportError(true);
@@ -179,9 +179,9 @@ export const useGithub = defineStore('github', {
 
     // Esta se usa en DialogImportMetadata
     cancelImport() { 
-      this.dialogImportMetadata = false;
+      this.updateDialogImportMetadata(false);
       this.setUpdateImportError(false);
-      this.dialogAppInstall = false;
+      this.updateDialogAppInstall(false);
       this.setUpdateImportProgressText('')
     },
 
