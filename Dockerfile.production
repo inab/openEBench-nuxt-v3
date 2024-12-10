@@ -57,7 +57,7 @@ FROM nginx:alpine
 COPY --from=build /app/.output/public /usr/share/nginx/html
 
 # Copiar las configuraciones de Nuxt para el servidor
-COPY --from=build /app/.output/server /app/server
+COPY --from=build /app/.output /app/.output
 
 # Copiar configuración personalizada de Nginx
 COPY nginx_copy.conf /etc/nginx/nginx.conf
