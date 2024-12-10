@@ -39,24 +39,34 @@ ENV NITRO_HOST localhost
 
 
 
-# Instalar dependencias necesarias
-RUN apk add --no-cache nginx bash curl nodejs npm
-
-# Copia los archivos necesarios
-COPY package*.json ./
 COPY . .
 
-# Instala dependencias
 RUN npm install
 
-# Construye la aplicación
 RUN npm run build
 
-# Usa el puerto por defecto de Nuxt (3000)
-EXPOSE 3000
+RUN rm -rf node_modules && \
+  NODE_ENV=production npm install \
+  --prefer-offline \
+  --pure-lockfile \
+  --non-interactive \
+  --production=true
 
-# Comando por defecto
-CMD ["npm", "run", "start"]
+FROM nginx:latest
+
+# RUN rm -rf /etc/nginx/conf.d/default.conf
+
+COPY nginx_copy.conf /etc/nginx/conf.d
+
+
+FROM node:20 as prod-stage
+
+WORKDIR /app
+
+COPY --from=build /app/.output/  ./.output/
+
+CMD [ "node", ".output/server/index.mjs" ]
+
 
 #COPY package*.json ./
 # COPY package*.json ./
