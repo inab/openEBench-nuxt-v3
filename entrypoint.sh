@@ -1,6 +1,6 @@
 #!/bin/sh
 # Inicia el servidor Node.js en segundo plano
-node node /app/.output/server/index.mjs &
+node /app/.output/server/index.mjs &
 
 # Inicia Nginx
 nginx -g "daemon off;"
