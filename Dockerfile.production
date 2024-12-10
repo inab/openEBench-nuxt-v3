@@ -62,12 +62,16 @@ COPY --from=builder /app/.output/server /app/server
 # Copiar configuración personalizada de Nginx
 COPY nginx_copy.conf /etc/nginx/nginx.conf
 
-# Exponer el puerto
-EXPOSE 80
+# Instalar Node.js para correr el servidor
+RUN apk add --no-cache nodejs npm
 
-# Comando por defecto
-CMD ["node", ".output/server/index.mjs"]
+# Crear script para iniciar ambos servicios
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
+EXPOSE 80 3000
+
+CMD ["/entrypoint.sh"]
 
 #COPY package*.json ./
 # COPY package*.json ./
