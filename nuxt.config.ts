@@ -10,9 +10,9 @@ export default defineNuxtConfig({
   },
   nitro: {
     serveStatic: true, // Asegúrate de que Nitro sirva los recursos estáticos
-    static: {
-      '/_nuxt/': './.output/public/_nuxt', // Ruta específica para recursos estáticos
-    },
+    // static: {
+    //   '/_nuxt/': './.output/public/_nuxt', // Ruta específica para recursos estáticos
+    // },
   },
   build: {
     publicPath: '/_nuxt/',
