@@ -61,6 +61,10 @@ RUN npm run build
 #FROM node:20
 
 FROM nginx:alpine
+
+# Instalar Node.js en la imagen de Nginx
+RUN apk add --no-cache nodejs npm
+
 COPY --from=build /app/.output/public /usr/share/nginx/html/_nuxt
 
 # Copiar las configuraciones de Nuxt para el servidor
