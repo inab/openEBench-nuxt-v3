@@ -6,7 +6,7 @@ export default defineNuxtConfig({
     enabled: true,
   },
   nitro: {
-    preset: 'node-server',
+    serveStatic: true, // Asegúrate de que Nitro sirva los recursos estáticos
   },
   build: {
     publicPath: '/_nuxt/',
