@@ -5,6 +5,9 @@ export default defineNuxtConfig({
   devtools: {
     enabled: true,
   },
+  app: {
+    baseURL: '/', // Tu aplicación está en la raíz del dominio
+  },
   nitro: {
     serveStatic: true, // Asegúrate de que Nitro sirva los recursos estáticos
   },
