@@ -57,16 +57,14 @@
             <div v-else>
               <MetadataFileInput />
             </div>
-            <!-- <div class="buttons mt-2 ml-5">
-              <button v-if="index > 0" class="btn btn-secondary mr-2" @click="stepperStore.goBack(index)">Back</button>
-              <button v-if="!step.completed" class="btn btn-primary mr-2 px-3 py-1 shadow-md" @click="stepperStore.completeStep(index)">Continue</button>
-            </div> -->
           </div>
 
           <!----------------- STEP 3 ------------------->
           <!-------------------------------------------->
           <div v-if="index === 2">
-            <p>Step 3 is building</p>
+            <div>
+              <MetadataEdit v-if="loadedMetadata"/>
+            </div>
             <div class="buttons mt-2 ml-5">
               <button v-if="index > 0" class="btn btn-secondary mr-2" @click="stepperStore.goBack(index)">Back</button>
               <button v-if="!step.completed" class="btn btn-primary mr-2" @click="stepperStore.completeStep(index)">Next</button>
@@ -91,13 +89,20 @@
 
 <script setup lang="ts">
 import { useStepperStore } from '@/stores/observatory/evaluation/index';
+import { useMetadataStore } from '@/stores/observatory/evaluation/metadata';
 import { storeToRefs } from 'pinia';
 import EvaluationSourceCard from "@/components/Observatory/evaluation/EvaluationSourceCard.vue"
 import GitHubInput from "@/components/Observatory/evaluation/GitHub/GitHubInput.vue"
 import ObservatoryInput from "@/components/Observatory/evaluation/Observatory/ObservatoryInput.vue"
 import MetadataFileInput from "@/components/Observatory/evaluation/MetadataFile/MetadataFileInput.vue"
+import MetadataEdit from "@/components/Observatory/evaluation/Metadata/MetadataEdit.vue"
 
 const stepperStore = useStepperStore();
+const metadataStore = useMetadataStore();
+// Getters
+const loadedMetadata = computed(() => metadataStore.getLoadedMetadata);
+const toolMetadata = computed(() => metadataStore.getToolMetadata);
+
 const { steps, selectedSource, completeStep, goBack, cancelSteps, handleSourceSelected } = storeToRefs(stepperStore);
 </script>
 
