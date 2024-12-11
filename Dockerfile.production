@@ -39,7 +39,7 @@ ENV AUTH_ORIGIN $AUTH_ORIGIN
 ENV NITRO_PORT 3000
 ENV NITRO_HOST 0.0.0.0
 
-
+#WORKDIR /app
 # # Copiar los archivos necesarios
 # COPY package*.json ./
 # COPY . .
@@ -58,24 +58,16 @@ RUN npm run build
 
 
 # Fase de producción: usar una imagen ligera de Nginx
-#FROM node:20
+FROM node:20
 
-FROM nginx:alpine
-
-# Instalar Node.js en la imagen de Nginx
-RUN apk add --no-cache nodejs npm
-
-COPY --from=build /app/.output/public /usr/share/nginx/html/_nuxt
 
 # Copiar las configuraciones de Nuxt para el servidor
 COPY --from=build /app/.output /app/.output
-COPY nginx_copy.conf /etc/nginx/nginx.conf
 
-#EXPOSE 3000
-EXPOSE 80 3000
+EXPOSE 3000
+#EXPOSE 80 3000
 
-CMD ["sh", "-c", "node /app/.output/server/index.mjs & nginx -g 'daemon off;'"]
-# CMD ["node", "/app/.output/server/index.mjs"]
+CMD ["node", "/app/.output/server/index.mjs"]
 
 #COPY package*.json ./
 # COPY package*.json ./
