@@ -8,6 +8,9 @@ export default defineNuxtConfig({
   nitro: {
     preset: 'node-server',
   },
+  build: {
+    publicPath: '/_nuxt/',
+  },
   vite: {
     server: {
       port: 3001,
