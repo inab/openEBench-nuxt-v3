@@ -40,7 +40,7 @@ ENV NITRO_PORT 3000
 ENV NITRO_HOST 0.0.0.0
 
 # Crear el directorio de trabajo
-WORKDIR /app
+#WORKDIR /app
 
 # Copiar los archivos necesarios
 COPY package*.json ./
@@ -51,27 +51,29 @@ RUN npm install
 RUN npm run build
 
 # Fase de producción: usar una imagen ligera de Nginx
-FROM nginx:alpine
+FROM node:20
+#FROM nginx:alpine
 
 # Copiar la aplicación compilada
-COPY --from=build /app/.output/public /usr/share/nginx/html
+#COPY --from=build /app/.output/public /usr/share/nginx/html
 
 # Copiar las configuraciones de Nuxt para el servidor
 COPY --from=build /app/.output /app/.output
 
 # Copiar configuración personalizada de Nginx
-COPY nginx_copy.conf /etc/nginx/nginx.conf
+#COPY nginx_copy.conf /etc/nginx/nginx.conf
 
 # Instalar Node.js para correr el servidor
-RUN apk add --no-cache nodejs npm
+#RUN apk add --no-cache nodejs npm
 
 # Crear script para iniciar ambos servicios
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+#COPY entrypoint.sh /entrypoint.sh
+#RUN chmod +x /entrypoint.sh
 
-EXPOSE 80 3000
+EXPOSE 3000
+#EXPOSE 80 3000
 
-CMD ["/entrypoint.sh"]
+CMD ["node", "/app/.output/server/index.mjs"]
 
 #COPY package*.json ./
 # COPY package*.json ./
