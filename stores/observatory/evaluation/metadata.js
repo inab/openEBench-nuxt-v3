@@ -31,7 +31,6 @@
 
 import { defineStore } from 'pinia';
 import { useNuxtApp } from 'nuxt/app';
-import { useAsyncData } from "nuxt/app";
 
 export const useMetadataStore = defineStore('metadata', {
   state: () => ({
@@ -85,12 +84,15 @@ export const useMetadataStore = defineStore('metadata', {
     async POST_URL (payload){
       const { $observatory } = useNuxtApp();
       try {
+        const result = await $observatory(payload.url, {
+          method: "POST", // Método POST
+          body: payload.data,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
 
-        const result = await useAsyncData('PostURL', () =>
-          $observatory(payload.url, { method: "POST",body: payload.data })
-        );
-
-        return result.data; // Devuelve el resultado
+        return result // Devuelve el resultado
       } catch (error) {
         console.error("Error in POST_URL:", error);
         throw error; // Lanza el error para manejarlo donde se llame la acción
@@ -126,8 +128,8 @@ export const useMetadataStore = defineStore('metadata', {
     async transformToJSONLD(){
       // Transform the metadata to JSON-LD
       const payload = {
-        data: this.toolMetadata,
-        url: 'tools/jsonld',
+        data: this._toolMetadata,
+        url: '/api/tools/jsonld',
       };
       const result = await this.POST_URL(payload);
 
@@ -137,8 +139,8 @@ export const useMetadataStore = defineStore('metadata', {
     async transformToCFF(){
       // Transform the metadata to CFF
       const payload = {
-        data: state._toolMetadata,
-        url: '/tools/cff',
+        data: this._toolMetadata,
+        url: '/api/tools/cff',
       };
 
       const result = await this.POST_URL(payload);
