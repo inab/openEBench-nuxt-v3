@@ -31,6 +31,7 @@
 
 import { defineStore } from 'pinia';
 import { useNuxtApp } from 'nuxt/app';
+import { useAsyncData } from "nuxt/app";
 
 export const useMetadataStore = defineStore('metadata', {
   state: () => ({
@@ -73,9 +74,8 @@ export const useMetadataStore = defineStore('metadata', {
     async GET_URL(URL) {
       const { $observatory } = useNuxtApp();
       try {
-        const result = await $observatory.get(URL);
-        console.log(result.data)
-        return result.data;
+        const result = await $observatory(URL, { method: "GET" });
+        return result;
       } catch (error) {
         console.error('Error fetching data from URL:', error);
         throw error;
@@ -83,14 +83,22 @@ export const useMetadataStore = defineStore('metadata', {
     },
 
     async POST_URL (payload){
-      const result = await $observatory.post(payload.url, {
-        data: payload.data,
-      });
-      return result.data;
+      const { $observatory } = useNuxtApp();
+      try {
+
+        const result = await useAsyncData('PostURL', () =>
+          $observatory(payload.url, { method: "POST",body: payload.data })
+        );
+
+        return result.data; // Devuelve el resultado
+      } catch (error) {
+        console.error("Error in POST_URL:", error);
+        throw error; // Lanza el error para manejarlo donde se llame la acción
+      }
     },
 
     async fetchSPDXLicenses() {
-      const URL = 'spdx/SPDXLicenses';
+      const URL = '/api/spdx/SPDXLicenses';
 
       try {
         const SPDXLicenses = await this.GET_URL(URL);
@@ -101,7 +109,7 @@ export const useMetadataStore = defineStore('metadata', {
     },
 
     async fetchVocabulariesItems() {
-      const URL = 'edam/EDAMTerms';
+      const URL = '/api/edam/EDAMTerms';
 
       try {
         const EDAMTerms = await this.GET_URL(URL);
