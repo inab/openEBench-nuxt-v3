@@ -88,6 +88,7 @@
 </template>
 
 <script setup lang="ts">
+import { ref, computed } from "vue";
 import { useStepperStore } from '@/stores/observatory/evaluation/index';
 import { useMetadataStore } from '@/stores/observatory/evaluation/metadata';
 import { storeToRefs } from 'pinia';
