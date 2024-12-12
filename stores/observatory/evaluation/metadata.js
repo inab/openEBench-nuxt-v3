@@ -128,7 +128,7 @@ export const useMetadataStore = defineStore('metadata', {
     async transformToJSONLD(){
       // Transform the metadata to JSON-LD
       const payload = {
-        data: this._toolMetadata,
+        data: this.toolMetadata,
         url: '/api/tools/jsonld',
       };
       const result = await this.POST_URL(payload);
@@ -139,7 +139,7 @@ export const useMetadataStore = defineStore('metadata', {
     async transformToCFF(){
       // Transform the metadata to CFF
       const payload = {
-        data: this._toolMetadata,
+        data: this.toolMetadata,
         url: '/api/tools/cff',
       };
 
