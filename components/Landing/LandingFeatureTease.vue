@@ -83,7 +83,7 @@
               Life Sciences
             </p>
             <NuxtLink
-              to="/observatory"
+              to="/observatory/Trends"
               class="custom-btn primary btn-empty-filled landing-feature-btn"
               title="Go to Tools Observatory"
             >

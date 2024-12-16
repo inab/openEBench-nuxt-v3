@@ -372,7 +372,18 @@ const isActiveAbout = computed(() => {
 });
 
 function handleLogin() {
-  signIn("keycloak", { callbackUrl: "/login" });
+  console.log("Login");
+  console.log(runtimeConfig.public.KEYCLOAK_HOST, runtimeConfig.public.KEYCLOAK_REALM, runtimeConfig.public.BASE_URL, runtimeConfig.public.KEYCLOAK_CLIENT_ID);
+  console.log("Login attempt...");
+
+  try {
+    signIn("keycloak", { callbackUrl: "/login" });
+    console.log("signIn() was called successfully");
+  } catch (error) {
+    console.error("Error during signIn:", error);
+  }
+  //signIn('keycloak', { callbackUrl: 'https://test2.openebench.bsc.es/login' });
+  //signIn("keycloak", { callbackUrl: "/login" });
 }
 
 function handleLogout() {

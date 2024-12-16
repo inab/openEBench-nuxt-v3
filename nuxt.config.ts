@@ -5,6 +5,16 @@ export default defineNuxtConfig({
   devtools: {
     enabled: true,
   },
+  app: {
+    baseURL: '/', // Tu aplicación está en la raíz del dominio
+  },
+  nitro: {
+    serveStatic: true, // Asegúrate de que Nitro sirva los recursos estáticos
+    compressPublicAssets: false,
+  },
+  build: {
+    publicPath: '/_nuxt/',
+  },
   vite: {
     server: {
       port: 3001,
@@ -42,6 +52,7 @@ export default defineNuxtConfig({
   },
 
   devServer: {
+    host: '0.0.0.0',
     port: 3001,
   },
 
@@ -106,18 +117,25 @@ export default defineNuxtConfig({
       KEYCLOAK_REALM: process.env.KEYCLOAK_REALM || "openebench",
       KEYCLOAK_CLIENT_ID: process.env.KEYCLOAK_CLIENT_ID || "oeb-frontend",
       BASE_URL: process.env.APP_BASE_URL || "https://openebench.bsc.es",
+      AUTH_ORIGIN: process.env.AUTH_ORIGIN || "https://inb.bsc.es",
     },
   },
 
   auth: {
+    isEnabled: true,
+    disableServerSideAuth: false,
     globalAppMiddleware: false,
     provider: {
       type: "authjs",
     },
     redirect: {
-      login: "/login", // Redirige a la página de login si no está autenticado
-      home: "/", // Página de inicio después del login
+      login: "/login",
+      home: "/",
     },
+    basePath: '/api/auth',
+    originEnvKey: 'AUTH_ORIGIN',
+    baseURL: process.env.APP_BASE_URL || "https://test2.openebench.bsc.es/api/auth",
+    origin: process.env.AUTH_ORIGIN || "https://inb.bsc.es", 
   },
 
   hooks: {
@@ -139,8 +157,15 @@ export default defineNuxtConfig({
     "@sidebase/nuxt-auth",
   ],
 
-  buildModules: ["@nuxt/typescript-build"],
+  buildModules: [
+    "@nuxt/typescript-build",
+  ],
 
+  image: {
+    provider: 'ipx',
+    dir: 'assets/images'
+  },
+ 
   eslint: {
     // TODO: Remove this when the project is clean
   },

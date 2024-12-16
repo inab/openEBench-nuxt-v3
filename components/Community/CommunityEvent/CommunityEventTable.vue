@@ -1,7 +1,7 @@
 <template>
   <div class="community-event-table">
     <div
-      class="community-event-table__border px-3 py-3.5 relative not-prose bg-white overflow-hidden"
+      class="community-event-table__border py-3.5 relative not-prose bg-white overflow-hidden"
     >
       <div class="justify-content-end flex py-3.5">
         <UInput
@@ -28,18 +28,18 @@
         :columns="columns"
         :ui="{
           tr: {
-            base: '',
+            base: 'hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer',
           },
           th: {
             base: 'text-left rtl:text-right',
-            padding: 'px-2.5 py-2.5',
+            padding: 'py-2.5',
             color: 'text-gray-900 dark:text-white',
             font: 'font-semibold',
             size: 'text-sm',
           },
           td: {
             base: 'whitespace-nowrap',
-            padding: 'px-3 py-3',
+            padding: 'py-3',
             font: '',
             size: 'text-sm',
           },
@@ -73,12 +73,17 @@
         </template>
         <template #participant-data="{ row }">
           <NuxtLink
+            v-if="!loadingRows.includes(row._id)"
             class="text-primary-500 dark:text-primary-400"
             title="Go to participant"
             :to="`${community}/${row._id}/participants`"
+            @click="handleClick(row._id)"
           >
             Participant
           </NuxtLink>
+          <span v-else>
+            Loading...
+          </span>
         </template>
       </UTable>
 
@@ -227,6 +232,15 @@ const isAllSelected = computed(() => {
   );
 });
 
+// Participants loading
+const loadingRows = ref<string[]>([]);
+function handleClick(rowId: string) {
+  // Si ya está cargando, no hacer nada
+  if (!loadingRows.value.includes(rowId)) {
+    loadingRows.value.push(rowId);
+  }
+}
+
 // Observe the changes in the selected array to issue the change to the parent component.
 watch(
   selected,
@@ -267,7 +281,7 @@ watch(
 .allChecks {
   position: absolute;
   margin-top: 12px;
-  margin-left: 15px;
+  margin-left: 24px;
   z-index: 100;
 }
 </style>

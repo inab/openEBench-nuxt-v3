@@ -9,16 +9,13 @@
             data-aos="fade-up"
             data-aos-duration="3000"
           >
-            <NuxtImg
-              src="/images/illustrations/404.svg"
-              alt="welcome-header-image"
-            />
+            <img src="~/assets/images/illustrations/404.png" alt="Community" />
           </div>
         </div>
         <div class="col-lg-6 landingkey-features__box gap-3">
           <div class="col-row">
             <div class="rounder-icon">
-              <UIcon name="i-heroicons-check-16-solid" />
+              <UIcon name="i-heroicons-check-16-solid"/>
             </div>
             <div class="landingkey-features__text">
               <span> Supporting community-driven benchmarking </span>
@@ -125,8 +122,17 @@ AOS.init();
   }
 }
 
-.welcome-header-image img {
-  width: 100%;
+.welcome-header-image {
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+  width: 100%; 
+  height: 100%;
+}
+.welcome-header-image svg {
+  width: 100% !important; 
+  height: auto !important; 
+  max-height: 100% !important; 
 }
 
 @media (max-width: 768px) {

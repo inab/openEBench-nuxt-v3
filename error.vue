@@ -1,6 +1,6 @@
 <template>
   <div
-    class="container min-vh-80 d-flex justify-content-center align-items-center"
+    class="container min-vh-80 d-flex justify-content-center align-items-center error-page"
   >
     <div class="row shadow p-3 mb-5 bg-white rounded m-5">
       <div class="col-12 col-sm-12 col-md-6">
@@ -17,10 +17,7 @@
       </div>
 
       <div class="col-12 col-sm-12 col-md-6">
-        <NuxtImg
-          src="/images/illustrations/404.svg"
-          sizes="100vw sm:50vw md:400px"
-        />
+        <CommunityImg />
       </div>
     </div>
   </div>
@@ -28,6 +25,7 @@
 
 <script setup lang="ts">
 import type { NuxtError } from "#app";
+import CommunityImg from "./public/images/illustrations/chart-person.svg?component";
 
 defineProps({
   error: Object as () => NuxtError,
@@ -43,5 +41,9 @@ const handleError = () => clearError({ redirect: "/" });
 <style>
 .min-vh-80 {
   min-height: 80vh;
+}
+.error-page svg {
+  max-width: 400px;
+  max-height: 350px;
 }
 </style>

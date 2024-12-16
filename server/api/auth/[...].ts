@@ -3,13 +3,15 @@ import KeycloakProvider from "next-auth/providers/keycloak";
 
 const runtimeConfig = useRuntimeConfig();
 
+console.log("Starting NuxtAuthHandler configuration...");
+
 const refreshAccessToken = async (token: JWT) => {
   console.log("7 - refreshing token ...");
   try {
     //if (Date.now() > token.refreshTokenExpired) throw Error;
     const details = {
       client_id: runtimeConfig.public.KEYCLOAK_CLIENT_ID,
-      client_secret: "",
+      client_secret: "secrettt", 
       authorization_code: token.accessToken,
       grant_type: "refresh_token",
       refresh_token: token.refreshToken,
@@ -55,6 +57,7 @@ const refreshAccessToken = async (token: JWT) => {
 };
 
 export default NuxtAuthHandler({
+  secret: '2990de7a246eb8aa80684cc357ebd54615a5add237758af78388f25e68383db4',
   providers: [
     KeycloakProvider.default({
       clientId: runtimeConfig.public.KEYCLOAK_CLIENT_ID,
@@ -107,6 +110,11 @@ export default NuxtAuthHandler({
       },
     }),
   ],
+  async debugHandler(req, res, next) {
+    console.log('Auth request:', req.url);
+    console.log('Config:', runtimeConfig.public);
+    next();
+  },
   events: {
     async signIn() {
       return true;
@@ -156,3 +164,4 @@ export default NuxtAuthHandler({
   },
   debug: true,
 });
+console.log("NuxtAuthHandler configuration complete");
