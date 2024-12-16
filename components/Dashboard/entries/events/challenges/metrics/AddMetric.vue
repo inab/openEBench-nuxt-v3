@@ -2,171 +2,131 @@
   <div class="w-100">
     <div class="challenge-metric-modal text-neutral-500">
       <div class="challenge-metric-modal__form">
-        <div class="col-12 justify-content-between">
-          <div class="modal_section_title text-primaryOeb-500 pt-4">
-            Create a new metric that will be added to this challengec
-          </div>
-        </div>
-        <div class="col-12 challenge-metric-modal-form__new">
-          <div class="w-100 pt-2">
-            <div class="w-100 row">
-              <div class="col-4 pt-2">
-                <div class="form-group">
-                  <label for="orig_id">Metric ID</label>
-                  <div class="w-100">
-                    <input
-                      id="metricFormalDefinition"
-                      v-model="metricOrigId"
-                      type="text"
-                      class="form-control custom-entry-input"
-                      placeholder="Metric ID"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div class="col-8 pt-2">
-                <div class="form-group">
-                  <label for="orig_id"> Metric Title</label>
-                  <div class="w-100">
-                    <input
-                      id="metricFormalDefinition"
-                      v-model="metricTitle"
-                      type="text"
-                      class="form-control custom-entry-input"
-                      placeholder="Metric Title"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div class="col-6 pt-2">
-                <div class="form-group">
-                  <label for="orig_id"> Metric Formal Definition</label>
-                  <div class="w-100">
-                    <input
-                      id="metricFormalDefinition"
-                      v-model="metricFormalDefinition"
-                      type="text"
-                      class="form-control custom-entry-input"
-                      placeholder="Metric Formal Definition"
-                    />
-                  </div>
-                </div>
-              </div>
-              
-              <div class="col-6 pt-2">
-                <div class="form-group">
-                  <label for="orig_id"> Metric Schema</label>
-                  <div class="w-100">
-                    <input
-                      id="metricSchema"
-                      v-model="metricSchema"
-                      type="text"
-                      class="form-control custom-entry-input"
-                      placeholder="Metric Schema"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div class="col-12 pt-3">
-                <div class="form-card__row__box">
-                  <div class="form-group">
-                    <div class="w-100">
-                      <label for="contacts" class="form-group-row">
-                        <span class="label-text"> Contacts </span>
-                        <button
-                          class="btn-form-add btn-primary"
-                          @click="onAddElement(localContacts)"
-                        >
-                          <font-awesome-icon :icon="['fas', 'plus']" />
-                        </button>
-                      </label>
-                    </div>
-                    <div class="w-100 row no-space">
-                      <div
-                        v-for="(contact, index) in localContacts"
-                        v-if="localContacts.length > 0"
-                        :key="index"
-                        class="col-4 pt-0 pb-1"
-                      >
-                        <div class="input-wrapper big d-flex">
-                          <USelectMenu
-                            :ref="`contact_${index}`"
-                            v-model="localContacts[index]"
-                            class="w-full lg:w-100"
-                            searchable
-                            selected-icon="i-heroicons-check-16-solid"
-                            placeholder="Select a contact"
-                            :options="contactsData"
-                            value-attribute="id"
-                            option-attribute="name"
-                          >
-                          </USelectMenu>
-                          <button
-                            class="btn-delete-input"
-                            type="button"
-                            @click="onDeleteElement(index, localContacts)"
-                          >
-                            <font-awesome-icon :icon="['far', 'trash-can']" />
-                          </button>
-                        </div>
-                      </div>
-                      <div v-else class="col-12 pt-0">
-                        <div class="w-100 empty-elements text-slate-400">
-                          <span
-                            >There are no contacts associated with this
-                            event</span
-                          >
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-12 pt-2">
-                <div class="form-group">
-                  <label for="orig_id"> Metric Description</label>
-                  <textarea
-                    class="form-control"
-                    placeholder="Metric Description"
-                    rows="3"
-                  ></textarea>
-                </div>
-              </div>
-              <div class="w-100"></div>
-            </div>
-            <div class="w-100 row footer-row">
-              <div class="form-footer">
-                <UButton type="button" variant="secondary" @click="goBack">
-                  Cancel
-                </UButton>
-                <UButton type="submit"> Submit </UButton>
-              </div>
-            </div>
-          </div>
-        </div>
-        <CustomBorder />
         <div class="col-12">
-          <div class="w-100">
-            <div class="modal_section_title text-primaryOeb-500">
-              Or search for an existing metric
+          <div class="w-100 row">
+            <div class="col-6">
+              <div class="modal_section_title text-primaryOeb-500">
+                Search for an existing metric
+              </div>
+              <UForm class="space-y-4" @submit="onSubmitSearcher">
+                <div class="d-flex">
+                  <input
+                    v-model="searchMetric"
+                    placeholder="Search ..."
+                    class="input-search-lg"
+                  />
+                  <button
+                    class="btn btn-primary btn-input"
+                    type="button"
+                    :disabled="searchMetric.length === 0"
+                    @click="search"
+                  >
+                    <UIcon
+                      name="i-heroicons-magnifying-glass"
+                      class="w-5 h-5"
+                    />
+                  </button>
+                </div>
+              </UForm>
             </div>
-            <div class="row flex justify-between">
-              <div class="col-7">
-                <USelectMenu
-                  v-model="selectedMetric"
-                  searchable
-                  searchable-placeholder="Search for a metic..."
-                  :search="search"
-                  :options="metricDataList"
-                  :loading="loadingInput"
-                  :search-attributes="['title']"
-                  placeholder="Search for a metic..."
-                  trailing
-                  option-attribute="title"
-                  by="title"
+            <div class="col-6">
+              <div class="modal_section_title text-primaryOeb-500">
+                Or create new one
+                <div class="w-100">
+                  <button
+                    class="btn btn-primary"
+                    type="button"
+                    @click="isModalOpened = true"
+                  >
+                    <UIcon name="i-heroicons-plus" />
+                    Create Metric
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="w-100 challenge-metric-modal__search">
+            <div class="row flex">
+              <div class="stepper-1">
+                <div class="stepper-header">
+                  <ol
+                    class="flex items-center w-full text-sm font-medium text-center text-gray-500 dark:text-gray-400 sm:text-base"
+                  >
+                    <li
+                      class="flex md:w-full items-center text-blue-600 dark:text-blue-500 sm:after:content-[''] after:w-full after:h-1 after:border-b after:border-gray-200 after:border-1 after:hidden sm:after:inline-block after:mx-6 xl:after:mx-10 dark:after:border-gray-700"
+                    >
+                      <span
+                        class="flex items-center after:content-['/'] sm:after:hidden after:mx-2 after:text-gray-200 dark:after:text-gray-500"
+                      >
+                        <svg
+                          class="w-3.5 h-3.5 sm:w-4 sm:h-4 me-2.5"
+                          aria-hidden="true"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"
+                          />
+                        </svg>
+                        Select
+                        <span class="hidden sm:inline-flex sm:ms-2">Metrics</span>
+                      </span>
+                    </li>
+                    <li
+                      class="flex md:w-full items-center after:content-[''] after:w-full after:h-1 after:border-b after:border-gray-200 after:border-1 after:hidden sm:after:inline-block after:mx-6 xl:after:mx-10 dark:after:border-gray-700"
+                    >
+                      <span
+                        class="flex items-center after:content-['/'] sm:after:hidden after:mx-2 after:text-gray-200 dark:after:text-gray-500"
+                      >
+                        <span class="me-2">2</span>
+                        Select
+                        <span class="hidden sm:inline-flex sm:ms-2">Tools</span>
+                      </span>
+                    </li>
+                    <li
+                      class="flex md:w-full items-center after:content-[''] after:w-full after:h-1 after:border-b after:border-gray-200 after:border-1 after:hidden sm:after:inline-block after:mx-6 xl:after:mx-10 dark:after:border-gray-700"
+                    >
+                      <span
+                        class="flex items-center after:content-['/'] sm:after:hidden after:mx-2 after:text-gray-200 dark:after:text-gray-500"
+                      >
+                        <span class="me-2">3</span>
+                        Add
+                        <span class="hidden sm:inline-flex sm:ms-2">Visualization</span>
+                      </span>
+                    </li>
+                    <li class="flex items-center">
+                      <span class="me-2">4</span>
+                      Confirmation
+                    </li>
+                  </ol>
+                </div>
+
+                <div class="col-12 flex justify-between">
+                  <div
+                    v-if="selectedMetrics.length > 0"
+                    class="col-12 text-right"
+                  >
+                    <button
+                      class="btn btn-primary"
+                      type="button"
+                      @click="addSelectedMetrics"
+                    >
+                      <UIcon name="i-heroicons-plus" />
+                      Add selected metrics
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div v-if="isShowSearchTable" class="col-12">
+                <SearchMetricTable
+                  :metric-rows="searchList"
+                  :selected-metrics="selectedMetrics"
+                  @handle-selected-metrics="handleSelectedMetrics"
                 />
               </div>
-              <div class="col-5">
+              <div v-if="selectedMetric" class="col-5">
                 <button
                   class="btn btn-primary"
                   type="button"
@@ -252,6 +212,26 @@
             </div>
           </div>
         </div>
+        <CustomBorder />
+        <CustomModal :is-open="isModalOpened" width="800">
+          <template #header>
+            <div class="modal-header">
+              <div class="modal-title">Create new metric</div>
+              <button
+                class="modal-close"
+                aria-label="Close modal"
+                @click="isModalOpened = false"
+              >
+                <UIcon name="i-heroicons-x-mark-16-solid" />
+              </button>
+            </div>
+          </template>
+          <template #content>
+            <div class="modal-content">
+              <CreateMetric />
+            </div>
+          </template>
+        </CustomModal>
       </div>
     </div>
   </div>
@@ -259,12 +239,14 @@
 
 <script setup lang="ts">
 import { ref, watch } from "vue";
-import CustomBorder from "@/components/Common/CustomBorder.vue";
 import type { Metric } from "@/types/challenge_metric";
 import { useMetrics } from "@/stores/metrics.ts";
 import metricsSearcher from "@/utils/metricsMatch";
+import CustomBorder from "@/components/Common/CustomBorder.vue";
 import AddMetricTable from "@/components/Dashboard/entries/events/challenges/metrics/AddMetricTable.vue";
-
+import SearchMetricTable from "@/components/Dashboard/entries/events/challenges/metrics/SearchMetricTable.vue";
+import CustomModal from "@/components/Common/CustomModal.vue";
+import CreateMetric from "@/components/Dashboard/entries/events/challenges/metrics/CreateMetric.vue";
 const props = defineProps<{
   contactsData: string[];
 }>();
@@ -281,12 +263,17 @@ const metricDataList = ref<Metric[] | never[]>([]);
 const metricsStore = useMetrics();
 const isSearchingMetrics = ref(false);
 const isSearchingSelectedMetric = ref(false);
+const searchList = ref<Metric[]>([]);
 const selectedMetricResults = ref<boolean[]>([]);
 const token: string = data?.value.accessToken;
 const processedMetrics = ref(new Set());
 const selectedMetric = ref(null);
+const selectedMetrics = ref([]);
+const isShowSearchTable = ref(false);
+const searchMetric = ref<string>("");
 const localContacts = ref<string[]>([]);
 const dialogElement = ref<{ element: string[]; index: number } | null>(null);
+const isModalOpened = ref<boolean>(false);
 const metricAssociatedList = ref<{
   [key: string]: { count: number; challenges: any[] };
 }>({});
@@ -295,6 +282,19 @@ interface BasicChallenge {
   challenge_id: string;
   name: string;
 }
+
+const steps = [
+  {
+    index: 0,
+    title: "Search Metric",
+    component: "SearchMetricTable",
+  },
+  {
+    index: 1,
+    title: "Select visualization",
+    component: "AddMetricVisualization",
+  },
+];
 
 async function searchMetricResults() {
   isSearchingSelectedMetric.value = true;
@@ -339,20 +339,19 @@ async function searchMetricResults() {
   isSearchingSelectedMetric.value = false;
 }
 
-async function search(q: string) {
+async function search() {
   loadingInput.value = true;
-
-  if (q.length < 3) {
-    loadingInput.value = false;
-    return metricDataList.value;
-  }
+  searchList.value = [];
 
   const searchFilter = metricDataList.value.filter((metric) => {
-    return metric.title.toLowerCase().includes(q.toLowerCase());
+    return metric.title
+      .toLowerCase()
+      .includes(searchMetric.value.toLowerCase());
   });
-  loadingInput.value = false;
 
-  return searchFilter;
+  loadingInput.value = false;
+  isShowSearchTable.value = true;
+  searchList.value = searchFilter;
 }
 
 await fetchMetrics(token);
@@ -375,7 +374,10 @@ async function fetchMetrics(token: string): Promise<Metric[]> {
 
 function handleChangeMetricSelected(index: number) {
   selectedMetricResults.value[index] = !selectedMetricResults.value[index];
-  console.log(selectedMetricResults.value);
+}
+
+function onSubmitSearcher() {
+  search();
 }
 
 const goBack = () => {
@@ -388,7 +390,6 @@ const goBack = () => {
     },
   });
 };
-
 
 function onAddElement(array: string[]) {
   array.push("");
@@ -412,6 +413,12 @@ function onDeleteElement(index: number, element: string[]) {
       element: element,
     };
   }
+}
+
+function addSelectedMetrics() {}
+
+function handleSelectedMetrics(selectedMetricsData: Metric[]) {
+  selectedMetrics.value = selectedMetricsData;
 }
 
 watch(props.contactsData, (newVal: string[]) => {
@@ -443,6 +450,23 @@ watch(props.contactsData, (newVal: string[]) => {
   }
 }
 
+.input-search-lg {
+  height: 100%;
+  * > input {
+    height: 100% !important;
+    box-shadow:
+      rgb(255, 255, 255) 0px 0px 0px 0px inset,
+      rgb(209, 213, 219) 0px 0px 0px 1px inset,
+      rgba(0, 0, 0, 0.05) 0px 1px 2px 0px !important;
+  }
+}
+.btn-input {
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+  border: none;
+  padding: 4px !important;
+}
+
 .form-group-row {
   display: flex;
   justify-content: space-between;
@@ -472,5 +496,9 @@ watch(props.contactsData, (newVal: string[]) => {
     margin-bottom: 5px;
     width: 100%;
   }
+}
+
+.challenge-metric-modal__search {
+  padding-top: 65px;
 }
 </style>

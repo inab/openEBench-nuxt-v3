@@ -402,6 +402,8 @@ const props = defineProps<{
   tabIndex: string;
 }>();
 
+console.log("props", props.eventPrivileges);
+
 const dialogTitle = ref("");
 const dialogType = ref("yesno");
 const isDialogOpened = ref(false);
