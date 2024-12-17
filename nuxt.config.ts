@@ -134,7 +134,7 @@ export default defineNuxtConfig({
     },
     basePath: '/api/auth',
     originEnvKey: 'AUTH_ORIGIN',
-    baseURL: process.env.APP_BASE_URL || "https://test2.openebench.bsc.es/api/auth",
+    baseURL: process.env.APP_BASE_URL || "https://test2.openebench.bsc.es",
     origin: process.env.AUTH_ORIGIN || "https://inb.bsc.es", 
   },
 

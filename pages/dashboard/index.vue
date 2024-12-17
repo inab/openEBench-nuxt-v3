@@ -47,7 +47,7 @@
                   </div>
                   <div class="dashboard__body__card__link">
                     <button class="ripple custom-button-primary">
-                      <NuxtLink to="/dashboard/entries" class="dashboard-link"
+                      <NuxtLink to="/dashboard/metrics" class="dashboard-link"
                         >Explore Metrics</NuxtLink
                       >
                     </button>
