@@ -4,7 +4,7 @@
       <div class="challenge-metric-modal__form">
         <div class="col-12">
           <div class="w-100 row">
-            <div class="col-6">
+            <div class="col-12">
               <div class="modal_section_title text-primaryOeb-500">
                 Search for an existing metric
               </div>
@@ -26,23 +26,18 @@
                       class="w-5 h-5"
                     />
                   </button>
+                  <div class="w-100 pl-4">
+                    <button
+                      class="btn btn-primary"
+                      type="button"
+                      @click="isModalOpened = true"
+                    >
+                      <UIcon name="i-heroicons-plus" />
+                      Create New Metric
+                    </button>
+                  </div>
                 </div>
               </UForm>
-            </div>
-            <div class="col-6">
-              <div class="modal_section_title text-primaryOeb-500">
-                Or create new one
-                <div class="w-100">
-                  <button
-                    class="btn btn-primary"
-                    type="button"
-                    @click="isModalOpened = true"
-                  >
-                    <UIcon name="i-heroicons-plus" />
-                    Create Metric
-                  </button>
-                </div>
-              </div>
             </div>
           </div>
           <div
@@ -57,8 +52,9 @@
                   >
                     <li
                       class="stepper-header__item"
-                      :class="[stepperIndex == 1 ? 'current' : '']"
-                    >
+                      :class="[stepperIndex == 1 ? 'current' : '', stepperIndex > 1 ? 'complete' : '']"
+                      @click="(stepperIndex >= 1) ? handleStepperClick(1) : null"
+                      >
                       <div class="stepper-header__item__content">
                         <div class="">
                           <span
@@ -80,7 +76,8 @@
                       </div>
                     </li>
                     <li class="stepper-header__item"
-                      :class="[stepperIndex == 2 ? 'current' : '']">
+                      :class="[stepperIndex == 2 ? 'current' : '']"
+                      @click="(stepperIndex >= 2) ? handleStepperClick(2) : null">
                       <div class="stepper-header__item__content">
                         <div class="">
                           <span
@@ -208,6 +205,7 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import type { Metric } from "@/types/challenge_metric";
+import type { Challenge } from "@/types/challenge";
 import { useMetrics } from "@/stores/metrics.ts";
 import metricsSearcher from "@/utils/metricsMatch";
 import CustomBorder from "@/components/Common/CustomBorder.vue";
@@ -346,8 +344,24 @@ async function fetchMetrics(token: string): Promise<Metric[]> {
   }
 }
 
+async function  fetchChallenges(token: string): Promise<Challenge[]> {
+
+}
+
 function handleChangeMetricSelected(index: number) {
   selectedMetricResults.value[index] = !selectedMetricResults.value[index];
+}
+
+function handleStepperClick(index: number) {
+  console.log(index)
+  if (index === 1) {
+    isShowSearchTable.value = true;
+    isShowToolsTable.value = false;
+  } else if(index === 2) {
+    isShowSearchTable.value = false;
+    isShowToolsTable.value = true;
+  }
+  stepperIndex.value = index;
 }
 
 function onSubmitSearcher() {
@@ -444,6 +458,7 @@ watch(props.contactsData, (newVal: string[]) => {
   border-bottom-left-radius: 0 !important;
   border: none;
   padding: 4px !important;
+  width: 50px;
 }
 
 .form-group-row {
@@ -522,9 +537,10 @@ watch(props.contactsData, (newVal: string[]) => {
     );
 
     &.current {
-      background: theme("colors.primary.400");
+      background: theme("colors.secondaryOeb.500");
       font-weight: bold;
       color: white;
+      cursor: pointer;
       &_subtitle {
         color: white;
       }
@@ -538,6 +554,12 @@ watch(props.contactsData, (newVal: string[]) => {
         #f4faf7 20px,
         #f4faf7 40px
       );
+      font-weight: bold;
+      color: v-bind("text-zinc-800");
+      cursor: pointer;
+      .stepper-header__item__subtitle {
+        color: v-bind("text-zinc-800");
+      }
     }
 
     &__content {
@@ -554,7 +576,8 @@ watch(props.contactsData, (newVal: string[]) => {
     &__subtitle {
       text-align: left;
       font-size: 14px;
-      color: #686868C0;
+      color: white;
+      font-weight: bold;
       font-style: italic;
     }
 

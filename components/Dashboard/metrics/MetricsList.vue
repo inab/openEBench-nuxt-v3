@@ -132,6 +132,28 @@
                   <UTextarea disabled placeholder="Description..." v-model="metricObj.description" />
                 </UFormGroup>
               </div>
+              <div class="w-100" v-if="metricObj.representation_hints">
+                <UFormGroup label="Representation hints">
+                  <div class="form-text">
+                    <div class="d-flex" v-if="metricObj.representation_hints.visualization">
+                      Usually found in: <span class="pl-2"><b>Bar plots</b></span>
+                      <NuxtLink
+                        to="/dashboard/plots?type=box"
+                        class="btn custom-btn btn-primary mb-2 small ml-5">
+                        View Box Plot
+                      </NuxtLink>
+                    </div>
+                    <div class="d-flex" v-else-if="metricObj.representation_hints.optimization">
+                      Usually found in: <span class="pl-2"><b>Scatter plots</b></span>
+                      <NuxtLink
+                        to="/dashboard/plots?type=scatter"
+                        class="btn custom-btn btn-primary mb-2 small ml-5">
+                        View Scatter Plot
+                      </NuxtLink>
+                    </div>
+                  </div>
+                </UFormGroup>
+              </div>
             </div>
             <div v-else class="flex justify-content-center items-center">
               <div class="text-red-500">No data found</div>
@@ -157,6 +179,7 @@
 import { Metric } from "@/types/challenge_metric";
 import { ref, computed } from "vue";
 import CustomModal from "@/components/Common/CustomModal.vue";
+import { NuxtAuthHandler } from "@/test/mocks/auth";
 
 const props = defineProps<{
   metricRows: Metric[];
@@ -269,5 +292,8 @@ async function fetchMetric(id: string): Promise<Metric | null> {
 <style scoped>
 .metric__modal input {
   width: 100%;
+}
+.form-text {
+
 }
 </style>
