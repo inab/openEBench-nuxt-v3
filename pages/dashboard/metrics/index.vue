@@ -3,7 +3,9 @@
     <BreadcrumbsBar :breadcrumbs-array="routeArray" />
     <div class="w-100 container">
       <div v-if="status == 'authenticated'">
-        <h2>Metrics</h2>
+        <div class="dashboard__header__title">
+          <h2 class="text-primaryOeb-500">Metrics</h2>
+        </div>
         <div class="metrics__body">
           <div class="dashboard__description text-gray-500">
             It is a long established fact that a reader will be distracted by
@@ -27,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from "vue";
+import { ref } from "vue";
 import type { Metric } from "@/types/challenge_metric";
 import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
 import MetricsList from "@/components/Dashboard/metrics/MetricsList.vue";

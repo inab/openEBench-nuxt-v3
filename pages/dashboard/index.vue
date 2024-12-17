@@ -1,4 +1,4 @@
-<template>
+dashboard__header__title<template>
   <div class="dashboard">
     <div class="w-100 container">
       <div class="dashboard__header">
@@ -355,7 +355,7 @@ async function getMetricsByType(metrics) {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .dashboard {
   .container {
     padding: 1rem;

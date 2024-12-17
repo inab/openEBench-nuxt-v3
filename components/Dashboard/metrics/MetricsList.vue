@@ -15,7 +15,7 @@
   </div>
   <UTable
     :columns="columns"
-    :rows="rows"
+    :rows="filteredRows"
     :ui="{
       tr: {
         base: 'hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer',
@@ -60,7 +60,7 @@
       <UPagination
         v-model="page"
         :page-count="pageCount"
-        :total="metricRows.length"
+        :total="_total"
         :ui="{
           wrapper: 'flex items-center',
           default: {
@@ -167,13 +167,18 @@ const runtimeConfig = useRuntimeConfig();
 const isModalOpen = ref(false);
 const isSearchingMetric = ref(false);
 const metricObj = ref<Metric | null>(null);
-const page = ref(1);
-const pageCount = ref(10);
 const search = ref("");
-let _total = 0;
-const pageFrom = computed(() => (page.value - 1) * pageCount.value + 1);
+const _total = ref(0);
+const page = ref<number>(1);
+const pageCount = ref<number>(10);
+  const pageFrom = computed(
+  () => (Number(page.value) - 1) * Number(pageCount.value) + 1,
+);
 const pageTo = computed(() =>
-  Math.min(page.value * pageCount.value, totalPages.value),
+  Math.min(
+    Number(page.value) * Number(pageCount.value),
+    Number(totalPages.value),
+  ),
 );
 const columns = [
   {
@@ -197,8 +202,9 @@ const cleanContacts = (contacts: any) => {
 };
 
 const filteredRows = computed(() => {
+  console.log("search.value", search.value);
   if (!search.value) {
-    _total = props.metricRows.length;
+    _total.value = props.metricRows.length;
     return props.metricRows.slice(
       (page.value - 1) * pageCount.value,
       page.value * pageCount.value,
@@ -210,15 +216,20 @@ const filteredRows = computed(() => {
       return String(value).toLowerCase().includes(search.value.toLowerCase());
     });
   });
-  _total = filteredSearcher.length;
+
+  console.log("filteredSearcher", filteredSearcher);
+
+  _total.value = filteredSearcher.length;
+
+  
   return filteredSearcher.slice(
-    (page.value - 1) * pageCount.value,
-    page.value * pageCount.value,
+    (Number(page.value) - 1) * Number(pageCount.value),
+    Number(page.value) * Number(pageCount.value),
   );
 });
 
 const totalPages = computed(() => {
-  return _total;
+  return Math.ceil(Number(_total.value) / Number(pageCount.value));
 });
 
 const openModal = async (row: Metric) => {
@@ -253,13 +264,6 @@ async function fetchMetric(id: string): Promise<Metric | null> {
     return null;
   }
 }
-
-const rows = computed(() => {
-  return props.metricRows.slice(
-    (page.value - 1) * pageCount.value,
-    page.value * pageCount.value,
-  );
-});
 </script>
 
 <style scoped>
