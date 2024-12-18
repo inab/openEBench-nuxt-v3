@@ -76,7 +76,7 @@
                       </div>
                     </li>
                     <li class="stepper-header__item"
-                      :class="[stepperIndex == 2 ? 'current' : '']"
+                      :class="[stepperIndex == 2 ? 'current' : '', stepperIndex > 2 ? 'complete' : '']"
                       @click="(stepperIndex >= 2) ? handleStepperClick(2) : null">
                       <div class="stepper-header__item__content">
                         <div class="">
@@ -90,10 +90,17 @@
                             >
                           </span>
                         </div>
-                        <div class="stepper-header__item__subtitle"></div>
+                        <div
+                          v-if="selectedTools.length > 0"
+                          class="stepper-header__item__subtitle"
+                        >
+                          {{ selectedTools.length }} added
+                        </div>
                       </div>
                     </li>
-                    <li class="stepper-header__item">
+                    <li class="stepper-header__item"
+                      :class="[stepperIndex == 3 ? 'current' : '', stepperIndex > 3 ? 'complete' : '']"
+                      @click="(stepperIndex >= 3) ? handleStepperClick(3) : null">
                       <div class="stepper-header__item__content">
                         <div class="">
                           <span
@@ -152,28 +159,58 @@
                 </div>
                 <div v-if="isShowToolsTable" class="row flex">
                   <div class="w-100 stepper-title">Tools</div>
+                  <div class="col-12 flex justify-between">
+                    <div
+                      v-if="selectedTools.length > 0"
+                      class="col-12 text-right"
+                    >
+                      <button
+                        class="btn btn-primary"
+                        type="button"
+                        @click="addSelectedTools(3)"
+                      >
+                        Next
+                        <span>
+                          <UIcon name="i-heroicons-arrow-right-16-solid" />
+                        </span>
+                      </button>
+                    </div>
+                  </div>
                   <div class="row-flex">
                     <SearchToolsTable
                       :tool-rows="searchList"
                       :selected-tools="selectedTools"
                       :selected-metrics="selectedMetrics"
-                      @handle-selected-metrics="handleSelectedMetrics"
+                      @handle-selected-tools="handleSelectedTools"
+                    />
+                  </div>
+                </div>
+                <div v-if="isShowVisualizationTable" class="row flex">
+                  <div class="w-100 stepper-title">Visualization</div>
+                  <div class="col-12 flex justify-between">
+                    <div
+                      v-if="selectedVisualization.length > 0"
+                      class="col-12 text-right"
+                    >
+                      <button
+                        class="btn btn-primary"
+                        type="button"
+                        @click="addSelectedTools(3)"
+                      >
+                        Next
+                        <span>
+                          <UIcon name="i-heroicons-arrow-right-16-solid" />
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="row-flex">
+                    <SearchVisualizationTable
+                      :selected-metrics="selectedMetrics"
                     />
                   </div>
                 </div>
               </div>
-
-              <!-- <div v-if="selectedMetric" class="col-5">
-                <button
-                  class="btn btn-primary"
-                  type="button"
-                  :disabled="!selectedMetric"
-                  @click="searchMetricResults"
-                >
-                  <UIcon name="i-heroicons-magnifying-glass" class="w-5 h-5" />
-                  Search Associated metrics
-                </button>
-              </div> -->
             </div>
           </div>
         </div>
@@ -204,16 +241,16 @@
 
 <script setup lang="ts">
 import { ref, watch } from "vue";
-import type { Metric } from "@/types/challenge_metric";
-import type { Challenge } from "@/types/challenge";
+import type { Metric, Tool } from "@/types/challenge_metric";
 import { useMetrics } from "@/stores/metrics.ts";
 import metricsSearcher from "@/utils/metricsMatch";
 import CustomBorder from "@/components/Common/CustomBorder.vue";
-import AddMetricTable from "@/components/Dashboard/entries/events/challenges/metrics/AddMetricTable.vue";
 import SearchMetricTable from "@/components/Dashboard/entries/events/challenges/metrics/SearchMetricTable.vue";
 import SearchToolsTable from "@/components/Dashboard/entries/events/challenges/metrics/SearchToolsTable.vue";
+import SearchVisualizationTable from "@/components/Dashboard/entries/events/challenges/metrics/SearchVisualizationTable.vue";
 import CustomModal from "@/components/Common/CustomModal.vue";
 import CreateMetric from "@/components/Dashboard/entries/events/challenges/metrics/CreateMetric.vue";
+
 const props = defineProps<{
   contactsData: string[];
 }>();
@@ -234,13 +271,17 @@ const searchList = ref<Metric[]>([]);
 const selectedMetricResults = ref<boolean[]>([]);
 const token: string = data?.value.accessToken;
 const processedMetrics = ref(new Set());
+
 const selectedMetric = ref(null);
 const selectedMetrics = ref([]);
 const isShowSearchTable = ref(false);
-const stepperIndex = ref(1);
 
+const stepperIndex = ref(1);
 const selectedTools = ref([]);
 const isShowToolsTable = ref(false);
+
+const isShowVisualizationTable = ref(false);
+const selectedVisualization = ref([]);
 
 const searchMetric = ref<string>("");
 const localContacts = ref<string[]>([]);
@@ -249,24 +290,6 @@ const isModalOpened = ref<boolean>(false);
 const metricAssociatedList = ref<{
   [key: string]: { count: number; challenges: any[] };
 }>({});
-
-interface BasicChallenge {
-  challenge_id: string;
-  name: string;
-}
-
-const steps = [
-  {
-    index: 0,
-    title: "Search Metric",
-    component: "SearchMetricTable",
-  },
-  {
-    index: 1,
-    title: "Select visualization",
-    component: "AddMetricVisualization",
-  },
-];
 
 async function searchMetricResults() {
   isSearchingSelectedMetric.value = true;
@@ -320,7 +343,6 @@ async function search() {
       .toLowerCase()
       .includes(searchMetric.value.toLowerCase());
   });
-
   loadingInput.value = false;
   isShowSearchTable.value = true;
   searchList.value = searchFilter;
@@ -338,15 +360,12 @@ async function fetchMetrics(token: string): Promise<Metric[]> {
       isSearchingMetrics.value = false;
     }
     isLoadingMetrics.value = false;
+    console.log("metricDataList", metricDataList.value);
     return metricDataList.value as Metric[];
   } catch (error) {
     console.error("Error fetching contacts data:", error);
   }
-}
-
-async function  fetchChallenges(token: string): Promise<Challenge[]> {
-
-}
+} 
 
 function handleChangeMetricSelected(index: number) {
   selectedMetricResults.value[index] = !selectedMetricResults.value[index];
@@ -357,9 +376,15 @@ function handleStepperClick(index: number) {
   if (index === 1) {
     isShowSearchTable.value = true;
     isShowToolsTable.value = false;
+    isShowVisualizationTable.value = false;
   } else if(index === 2) {
     isShowSearchTable.value = false;
     isShowToolsTable.value = true;
+    isShowVisualizationTable.value = false;
+  } else if(index === 3) {
+    isShowSearchTable.value = false;
+    isShowToolsTable.value = false;
+    isShowVisualizationTable.value = true;
   }
   stepperIndex.value = index;
 }
@@ -406,12 +431,21 @@ function onDeleteElement(index: number, element: string[]) {
 function addSelectedMetrics(index: number) {
   isShowSearchTable.value = false;
   isShowToolsTable.value = true;
-  console.log("index", index);
   stepperIndex.value = index;
+}
+
+function addSelectedTools(index: number) {
+  stepperIndex.value = index;
+  handleStepperClick(index);
 }
 
 function handleSelectedMetrics(selectedMetricsData: Metric[]) {
   selectedMetrics.value = selectedMetricsData;
+}
+
+function handleSelectedTools(selectedToolsData: Tool[]) {
+  console.log("selected has change")
+  selectedTools.value = selectedToolsData;
 }
 
 watch(props.contactsData, (newVal: string[]) => {

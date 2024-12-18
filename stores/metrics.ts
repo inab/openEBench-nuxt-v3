@@ -42,11 +42,17 @@ export const useMetrics = defineStore("metrics", {
         [];
       }
 
-      data.forEach((metric: Metric) => {
+      const dataFiltered = data.filter((metric: Metric) => {
+        return metric.representation_hints;
+      });
+
+
+      dataFiltered.forEach((metric: Metric) => {
         metric.title = metric._id + " - " + metric.title;
       });
 
-      this.setMetricsData(data);
+      this.setMetricsData(dataFiltered);
+      this.fetchChallengesData(token);
 
       return data;
     },
@@ -72,7 +78,7 @@ export const useMetrics = defineStore("metrics", {
         challenge.name = challenge._id + " - " + challenge.name;
       });
 
-      this.setMetricsData(data);
+      this.setChallengesData(data);
 
       return data;
     }

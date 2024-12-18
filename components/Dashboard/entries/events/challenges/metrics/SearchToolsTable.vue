@@ -4,6 +4,7 @@
       <UTable
         v-model="selectedToolsTmp"
         :columns="columns"
+        :loading="isTableLoading"
         :rows="rows"
         :empty-state="{
           icon: 'i-heroicons-circle-stack-20-solid',
@@ -51,23 +52,38 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, computed, defineEmits, watch } from "vue";
-
+import { ref, defineProps, computed, defineEmits, watch, onMounted } from "vue";
+import { useMetrics } from "@/stores/metrics.ts";
+import type { Challenge } from "@/types/challenge";
+import type {
+  Tool,
+  Metric,
+  ChallengeCommonMetric,
+} from "@/types/challenge_metric";
 
 const props = defineProps<{
-  toolsRows: [];
-  selectedTools: [];
-  selectedMetrics: [];
+  selectedTools: Tool[];
+  selectedMetrics: Metric[];
 }>();
 
 const emits = defineEmits(["handleSelectedTools"]);
 const runtimeConfig = useRuntimeConfig();
 const { data } = useAuth();
 const token: string = data?.value.accessToken;
-const selectedToolsTmp = ref([]);
+
+const selectedToolsTmp = computed({
+  get: () => [...props.selectedTools],
+  set: (value) => emits("handleSelectedTools", value),
+});
+
 const page = ref(1);
-const pageCount = 5;
-const rowTool = ref([]);
+const pageCount = 10;
+const rowTool = ref<Tool[]>([]);
+const isTableLoading = ref(false);
+const metricsStore = useMetrics();
+const challengeDataList = ref<Challenge[]>([]);
+
+challengeDataList.value = metricsStore.getChallengesData;
 
 const columns = [
   {
@@ -96,16 +112,18 @@ const rows = computed(() => {
 });
 
 function select(row) {
-  console.log("select!!");
-  const index = selectedToolsTmp.value.findIndex((item) => item.id === row.id);
+  const index = selectedToolsTmp.value.findIndex(
+    (item) => item._id === row._id,
+  );
+  const newSelected = [...selectedToolsTmp.value];
   if (index === -1) {
-    selectedToolsTmp.value.push(row);
+    newSelected.push(row);
   } else {
-    selectedToolsTmp.value.splice(index, 1);
+    newSelected.splice(index, 1);
   }
+  selectedToolsTmp.value = newSelected;
 }
 
-await fetchTools(token);
 async function fetchTools(token: string): Promise<Metric[]> {
   const response = await fetch(
     `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Tool`,
@@ -118,18 +136,89 @@ async function fetchTools(token: string): Promise<Metric[]> {
     },
   );
 
-  const data = await response.json();
-  if (!data) {
-    [];
+  const toolsData = await response.json();
+  if (!toolsData || !Array.isArray(toolsData)) {
+    return [];
   }
 
-  rowTool.value = data;
+  const preSelectedTools = await filterMetricsByChallenge(
+    challengeDataList.value,
+    props.selectedMetrics,
+  );
 
-  console.log(data);
-  return data;
+  const toolsToSelect: Tool[] = [];
+
+  if (props.selectedTools.length > 0) {
+    props.selectedTools.forEach((selected) => {
+      const foundTool = toolsData.find((t: Tool) => t._id === selected._id);
+      if (foundTool) {
+        toolsToSelect.push(foundTool);
+        if (!preSelectedTools.includes(selected._id)) {
+          preSelectedTools.push(selected._id);
+        }
+      }
+    });
+  }
+  
+  if (preSelectedTools.length > 0) {
+    preSelectedTools.forEach((toolId) => {
+      const foundTool = toolsData.find((t: Tool) => t._id === toolId);
+      if (foundTool && !toolsToSelect.find((t) => t._id === foundTool._id)) {
+        toolsToSelect.push(foundTool);
+      }
+    });
+  }
+
+  selectedToolsTmp.value = toolsToSelect;
+
+  // Mark selected tools
+  toolsData.sort((a: Tool, b: Tool) => {
+    const aSelected = preSelectedTools.includes(a._id);
+    const bSelected = preSelectedTools.includes(b._id);
+    if (aSelected && !bSelected) return -1;
+    if (!aSelected && bSelected) return 1;
+    return 0;
+  });
+
+  toolsData.forEach((tool: Tool) => {
+    tool.name = `${tool._id} - ${tool.name}`;
+  });
+
+  rowTool.value = toolsData;
+  isTableLoading.value = false;
+
+  return toolsData;
 }
 
-watch(selectedToolsTmp, (value) => {
-  emits("handleSelectedTools", value);
+async function filterMetricsByChallenge(
+  challengeDataList: Challenge[],
+  selectedMetrics: Metric[],
+): Promise<string[]> {
+  const toolIds = new Set<string>();
+
+  challengeDataList.forEach((challenge) => {
+    const aggregationMetrics =
+      challenge.metrics_categories && challenge.metrics_categories[1]
+        ? challenge.metrics_categories[1].metrics
+        : [];
+
+    if (aggregationMetrics.length > 0) {
+      selectedMetrics.forEach((metric: Metric) => {
+        aggregationMetrics.forEach(
+          (aggregationMetric: ChallengeCommonMetric) => {
+            if (metric._id === aggregationMetric.metrics_id) {
+              toolIds.add(aggregationMetric.tool_id);
+            }
+          },
+        );
+      });
+    }
+  });
+
+  return Array.from(toolIds);
+}
+
+onMounted(() => {
+  fetchTools(token);
 });
 </script>

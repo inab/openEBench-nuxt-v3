@@ -60,7 +60,11 @@ const props = defineProps<{
 
 const emits = defineEmits(["handleSelectedMetrics"]);
 
-const selectedMetric = ref([]);
+const selectedMetric = computed({
+  get: () => props.selectedMetrics,
+  set: (value) => emits("handleSelectedMetrics", value),
+});
+
 const page = ref(1);
 const pageCount = 5;
 

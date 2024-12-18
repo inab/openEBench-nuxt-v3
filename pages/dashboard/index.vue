@@ -214,13 +214,12 @@
           </UCard>
         </div>
       </div>
-      <div class=""></div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
+import { computed, ref } from "vue";
 import { useUser } from "@/stores/user.ts";
 
 import BarSvg from "../../public/images/plots/bar-chart.svg?component";
