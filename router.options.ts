@@ -83,4 +83,14 @@ export const customRoutes = [
     path: "/dashboard/contacts/add",
     file: resolve(__dirname, "pages/dashboard/contacts/add.vue"),
   },
+  {
+    name: "dashboard-metrics",
+    path: "/dashboard/metrics",
+    file: resolve(__dirname, "pages/dashboard/metrics/index.vue"),
+  },
+  {
+    name: "dashboard-metrics-id",
+    path: "/dashboard/metrics/:id",
+    file: resolve(__dirname, "pages/dashboard/metrics/[id].vue"),
+  },
 ];

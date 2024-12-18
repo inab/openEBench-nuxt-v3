@@ -31,8 +31,7 @@
             </div>
           </div>
           <div class="dashboard-tabs">
-            <Communities :is-loading-data="isLoadingData"
-            :is-admin="isAdmin" />
+            <Communities :is-loading-data="isLoadingData" :is-admin="isAdmin" />
           </div>
         </div>
         <div v-else class="">Not authenticated</div>

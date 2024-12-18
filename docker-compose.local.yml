@@ -67,4 +67,6 @@ services:
     ports:
       - 3001:3001
     environment:
-      - CHOKIDAR_USEPOLLING=true
+      CHOKIDAR_USEPOLLING: "true"
+      AUTH_ORIGIN: "http://localhost:3001"
+      APP_BASE_URL: "http://localhost:3001"

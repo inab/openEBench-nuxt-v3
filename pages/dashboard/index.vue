@@ -23,6 +23,47 @@
             }"
           >
             <template #header>
+              <div class="dashboard__body__card__header">Entries</div>
+            </template>
+
+            <div class="">
+              <div class="row">
+                <div class="col-6">
+                  <img
+                    src="assets/images/dashboard/entries.png"
+                    alt="User profile picture"
+                    class=""
+                  />
+                </div>
+                <div class="col-6">
+                  <div class="">
+                    Here you can find information about the communities you are
+                    part of and the tools you have access to.
+                  </div>
+                  <div class="dashboard__body__card__link">
+                    <button class="ripple custom-button-primary">
+                      <NuxtLink to="/dashboard/entries" class="dashboard-link"
+                        >Entries</NuxtLink
+                      >
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </UCard>
+        </div>
+        <div class="col-6">
+          <UCard
+            class="dashboard__body__card"
+            :ui="{
+              header: {
+                base: '',
+                background: '',
+                padding: 'px-2 py-3 sm:px-6',
+              },
+            }"
+          >
+            <template #header>
               <div class="dashboard__body__card__header">Metrics</div>
             </template>
 
@@ -47,7 +88,7 @@
                   </div>
                   <div class="dashboard__body__card__link">
                     <button class="ripple custom-button-primary">
-                      <NuxtLink to="/dashboard/entries" class="dashboard-link"
+                      <NuxtLink to="/dashboard/metrics" class="dashboard-link"
                         >Explore Metrics</NuxtLink
                       >
                     </button>
@@ -57,6 +98,8 @@
             </div>
           </UCard>
         </div>
+      </div>
+      <div class="dashboard__body row">
         <div class="col-6">
           <UCard
             class="dashboard__body__card"
@@ -129,49 +172,6 @@
             </div>
           </UCard>
         </div>
-      </div>
-      <div class="dashboard__body row">
-        <div class="col-4">
-          <UCard
-            class="dashboard__body__card"
-            :ui="{
-              header: {
-                base: '',
-                background: '',
-                padding: 'px-2 py-3 sm:px-6',
-              },
-            }"
-          >
-            <template #header>
-              <div class="dashboard__body__card__header">Entries</div>
-            </template>
-
-            <div class="">
-              <div class="row">
-                <div class="col-6">
-                  <img
-                    src="assets/images/dashboard/22821946_Na_Dec_02.jpg"
-                    alt="User profile picture"
-                    class=""
-                  />
-                </div>
-                <div class="col-6">
-                  <div class="">
-                    Here you can find information about the communities you are
-                    part of and the tools you have access to.
-                  </div>
-                  <div class="dashboard__body__card__link">
-                    <button class="ripple custom-button-primary">
-                      <NuxtLink to="/dashboard/entries" class="dashboard-link"
-                        >Entries</NuxtLink
-                      >
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </UCard>
-        </div>
         <div class="col-4">
           <UCard
             class="dashboard__body__card"
@@ -214,13 +214,12 @@
           </UCard>
         </div>
       </div>
-      <div class=""></div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
+import { computed, ref } from "vue";
 import { useUser } from "@/stores/user.ts";
 
 import BarSvg from "../../public/images/plots/bar-chart.svg?component";
@@ -355,7 +354,7 @@ async function getMetricsByType(metrics) {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .dashboard {
   .container {
     padding: 1rem;

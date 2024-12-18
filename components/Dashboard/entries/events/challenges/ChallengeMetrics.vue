@@ -52,7 +52,7 @@
             <div
               v-for="(m, i) in metric[0].metrics"
               :key="i"
-              class="col-12 challenge-metrics-categories__category__metric"
+              class="col-4 challenge-metrics-categories__category__metric"
             >
               <CommunityMetric :metric="m" :is-loading-data="isLoadingData" />
             </div>

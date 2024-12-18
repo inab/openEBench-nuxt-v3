@@ -376,6 +376,9 @@ function handleLogin() {
   console.log(runtimeConfig.public.KEYCLOAK_HOST, runtimeConfig.public.KEYCLOAK_REALM, runtimeConfig.public.BASE_URL, runtimeConfig.public.KEYCLOAK_CLIENT_ID);
   console.log("Login attempt...");
 
+
+  //handleLogout();
+
   try {
     signIn("keycloak", { callbackUrl: "/login" });
     console.log("signIn() was called successfully");
@@ -388,7 +391,12 @@ function handleLogin() {
 
 function handleLogout() {
   const keycloackLogoutUrl = `${runtimeConfig.public.KEYCLOAK_HOST}/auth/realms/${runtimeConfig.public.KEYCLOAK_REALM}/protocol/openid-connect/logout`;
-  window.location.href = `${keycloackLogoutUrl}?post_logout_redirect_uri=${runtimeConfig.public.BASE_URL}/&id_token_hint=${data?.value.token}`;
+
+  //window.location.href = `${keycloackLogoutUrl}?post_logout_redirect_uri=${runtimeConfig.public.BASE_URL}/&id_token_hint=${data?.value.token}`;
+
+  window.location.href = `${keycloackLogoutUrl}?post_logout_redirect_uri=${runtimeConfig.public.BASE_URL}/&client_id=${runtimeConfig.public.KEYCLOAK_CLIENT_ID}`;
+
+  console.log("login out...")
   signOut();
 }
 

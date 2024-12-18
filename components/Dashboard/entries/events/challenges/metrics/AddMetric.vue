@@ -4,7 +4,7 @@
       <div class="challenge-metric-modal__form">
         <div class="col-12">
           <div class="w-100 row">
-            <div class="col-6">
+            <div class="col-12">
               <div class="modal_section_title text-primaryOeb-500">
                 Search for an existing metric
               </div>
@@ -26,187 +26,189 @@
                       class="w-5 h-5"
                     />
                   </button>
+                  <div class="w-100 pl-4">
+                    <button
+                      class="btn btn-primary"
+                      type="button"
+                      @click="isModalOpened = true"
+                    >
+                      <UIcon name="i-heroicons-plus" />
+                      Create New Metric
+                    </button>
+                  </div>
                 </div>
               </UForm>
             </div>
-            <div class="col-6">
-              <div class="modal_section_title text-primaryOeb-500">
-                Or create new one
-                <div class="w-100">
-                  <button
-                    class="btn btn-primary"
-                    type="button"
-                    @click="isModalOpened = true"
-                  >
-                    <UIcon name="i-heroicons-plus" />
-                    Create Metric
-                  </button>
-                </div>
-              </div>
-            </div>
           </div>
-          <div class="w-100 challenge-metric-modal__search">
+          <div
+            v-if="searchList.length > 0"
+            class="w-100 challenge-metric-modal__search"
+          >
             <div class="row flex">
-              <div class="stepper-1">
+              <div class="steppers">
                 <div class="stepper-header">
-                  <ol
-                    class="flex items-center w-full text-sm font-medium text-center text-gray-500 dark:text-gray-400 sm:text-base"
+                  <ul
+                    class="stepper-header__controller flex items-center w-full text-sm font-medium text-center text-gray-500 dark:text-gray-400 sm:text-base"
                   >
                     <li
-                      class="flex md:w-full items-center text-blue-600 dark:text-blue-500 sm:after:content-[''] after:w-full after:h-1 after:border-b after:border-gray-200 after:border-1 after:hidden sm:after:inline-block after:mx-6 xl:after:mx-10 dark:after:border-gray-700"
-                    >
-                      <span
-                        class="flex items-center after:content-['/'] sm:after:hidden after:mx-2 after:text-gray-200 dark:after:text-gray-500"
+                      class="stepper-header__item"
+                      :class="[stepperIndex == 1 ? 'current' : '', stepperIndex > 1 ? 'complete' : '']"
+                      @click="(stepperIndex >= 1) ? handleStepperClick(1) : null"
                       >
-                        <svg
-                          class="w-3.5 h-3.5 sm:w-4 sm:h-4 me-2.5"
-                          aria-hidden="true"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
+                      <div class="stepper-header__item__content">
+                        <div class="">
+                          <span
+                            class="flex items-center after:content-['/'] sm:after:hidden after:mx-2 after:text-gray-200 dark:after:text-gray-500"
+                          >
+                            <span class="me-2">1.</span>
+                            Select
+                            <span class="hidden sm:inline-flex sm:ms-2"
+                              >Metrics</span
+                            >
+                          </span>
+                        </div>
+                        <div
+                          v-if="selectedMetrics.length > 0"
+                          class="stepper-header__item__subtitle"
                         >
-                          <path
-                            d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"
-                          />
-                        </svg>
-                        Select
-                        <span class="hidden sm:inline-flex sm:ms-2">Metrics</span>
-                      </span>
-                    </li>
-                    <li
-                      class="flex md:w-full items-center after:content-[''] after:w-full after:h-1 after:border-b after:border-gray-200 after:border-1 after:hidden sm:after:inline-block after:mx-6 xl:after:mx-10 dark:after:border-gray-700"
-                    >
-                      <span
-                        class="flex items-center after:content-['/'] sm:after:hidden after:mx-2 after:text-gray-200 dark:after:text-gray-500"
-                      >
-                        <span class="me-2">2</span>
-                        Select
-                        <span class="hidden sm:inline-flex sm:ms-2">Tools</span>
-                      </span>
-                    </li>
-                    <li
-                      class="flex md:w-full items-center after:content-[''] after:w-full after:h-1 after:border-b after:border-gray-200 after:border-1 after:hidden sm:after:inline-block after:mx-6 xl:after:mx-10 dark:after:border-gray-700"
-                    >
-                      <span
-                        class="flex items-center after:content-['/'] sm:after:hidden after:mx-2 after:text-gray-200 dark:after:text-gray-500"
-                      >
-                        <span class="me-2">3</span>
-                        Add
-                        <span class="hidden sm:inline-flex sm:ms-2">Visualization</span>
-                      </span>
-                    </li>
-                    <li class="flex items-center">
-                      <span class="me-2">4</span>
-                      Confirmation
-                    </li>
-                  </ol>
-                </div>
-
-                <div class="col-12 flex justify-between">
-                  <div
-                    v-if="selectedMetrics.length > 0"
-                    class="col-12 text-right"
-                  >
-                    <button
-                      class="btn btn-primary"
-                      type="button"
-                      @click="addSelectedMetrics"
-                    >
-                      <UIcon name="i-heroicons-plus" />
-                      Add selected metrics
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <div v-if="isShowSearchTable" class="col-12">
-                <SearchMetricTable
-                  :metric-rows="searchList"
-                  :selected-metrics="selectedMetrics"
-                  @handle-selected-metrics="handleSelectedMetrics"
-                />
-              </div>
-              <div v-if="selectedMetric" class="col-5">
-                <button
-                  class="btn btn-primary"
-                  type="button"
-                  :disabled="!selectedMetric"
-                  @click="searchMetricResults"
-                >
-                  <UIcon name="i-heroicons-magnifying-glass" class="w-5 h-5" />
-                  Search Associated metrics
-                </button>
-              </div>
-            </div>
-          </div>
-          <div v-if="showAdvancedSearch" class="w-100">
-            <div v-if="isSearchingSelectedMetric" class="">
-              <CustomSearcherLoader />
-            </div>
-            <div v-else class="searching-metric__results">
-              <div v-if="Object.keys(metricAssociatedList).length > 0" class="">
-                <div class="searching-metric__results__title">
-                  We found some associated challengers with this metric
-                </div>
-                <div class="">
-                  <div class="">
-                    The metric <b>{{ selectedMetric._id }}</b> is usually found
-                    alongside these others:
-                  </div>
-                  <div class="pt-2">
-                    <div
-                      v-for="(pm, index) in processedMetrics"
-                      :key="index"
-                      class=""
-                    >
-                      <div class="">
-                        <input
-                          type="checkbox"
-                          color="primary form-checkbox"
-                          :v-model="selectedMetricResults[index]"
-                          @change="handleChangeMetricSelected(index)"
-                        />
-                        <label class="pl-2">{{ pm }}</label>
+                          {{ selectedMetrics.length }} added
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                  <div class="pt-2">
-                    <button
-                      class="btn btn-primary"
-                      type="button"
-                      :disabled="!selectedMetric"
-                      @click="addSelectedMetric"
+                    </li>
+                    <li class="stepper-header__item"
+                      :class="[stepperIndex == 2 ? 'current' : '', stepperIndex > 2 ? 'complete' : '']"
+                      @click="(stepperIndex >= 2) ? handleStepperClick(2) : null">
+                      <div class="stepper-header__item__content">
+                        <div class="">
+                          <span
+                            class="flex items-center after:content-['/'] sm:after:hidden after:mx-2 after:text-gray-200 dark:after:text-gray-500"
+                          >
+                            <span class="me-2">2.</span>
+                            Select
+                            <span class="hidden sm:inline-flex sm:ms-2"
+                              >Tools</span
+                            >
+                          </span>
+                        </div>
+                        <div
+                          v-if="selectedTools.length > 0"
+                          class="stepper-header__item__subtitle"
+                        >
+                          {{ selectedTools.length }} added
+                        </div>
+                      </div>
+                    </li>
+                    <li class="stepper-header__item"
+                      :class="[stepperIndex == 3 ? 'current' : '', stepperIndex > 3 ? 'complete' : '']"
+                      @click="(stepperIndex >= 3) ? handleStepperClick(3) : null">
+                      <div class="stepper-header__item__content">
+                        <div class="">
+                          <span
+                            class="flex items-center after:content-['/'] sm:after:hidden after:mx-2 after:text-gray-200 dark:after:text-gray-500"
+                          >
+                            <span class="me-2">3.</span>
+                            Add
+                            <span class="hidden sm:inline-flex sm:ms-2"
+                              >Visualization</span
+                            >
+                          </span>
+                        </div>
+                        <div class="stepper-header__item__subtitle"></div>
+                      </div>
+                    </li>
+                    <li class="stepper-header__item flex items-center">
+                      <div class="stepper-header__item__content">
+                        <div class="">
+                          <span
+                            class="flex items-center after:content-['/'] sm:after:hidden after:mx-2 after:text-gray-200 dark:after:text-gray-500"
+                          >
+                            <span class="me-2">4.</span>
+                            Confirmation
+                            <span class="hidden sm:inline-flex sm:ms-2"></span>
+                          </span>
+                        </div>
+                        <div class="stepper-header__item__subtitle"></div>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+                <div v-if="isShowSearchTable" class="col-12">
+                  <div class="w-100 stepper-title">Metrics</div>
+                  <div class="col-12 flex justify-between">
+                    <div
+                      v-if="selectedMetrics.length > 0"
+                      class="col-12 text-right"
                     >
-                      <font-awesome-icon :icon="['fas', 'plus']" />
-                      Add selected metrics
-                    </button>
+                      <button
+                        class="btn btn-primary"
+                        type="button"
+                        @click="addSelectedMetrics(2)"
+                      >
+                        Next
+                        <span>
+                          <UIcon name="i-heroicons-arrow-right-16-solid" />
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+                  <SearchMetricTable
+                    :metric-rows="searchList"
+                    :selected-metrics="selectedMetrics"
+                    @handle-selected-metrics="handleSelectedMetrics"
+                  />
+                </div>
+                <div v-if="isShowToolsTable" class="row flex">
+                  <div class="w-100 stepper-title">Tools</div>
+                  <div class="col-12 flex justify-between">
+                    <div
+                      v-if="selectedTools.length > 0"
+                      class="col-12 text-right"
+                    >
+                      <button
+                        class="btn btn-primary"
+                        type="button"
+                        @click="addSelectedTools(3)"
+                      >
+                        Next
+                        <span>
+                          <UIcon name="i-heroicons-arrow-right-16-solid" />
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="row-flex">
+                    <SearchToolsTable
+                      :tool-rows="searchList"
+                      :selected-tools="selectedTools"
+                      :selected-metrics="selectedMetrics"
+                      @handle-selected-tools="handleSelectedTools"
+                    />
                   </div>
                 </div>
-                <div class="w-100 pt-4">
-                  <div
-                    v-for="(challenge, metricId) in metricAssociatedList"
-                    :key="metricId"
-                    class=""
-                  >
-                    <div class="">
-                      Metric <span class="font-bold">{{ metricId }}</span> is
-                      associated with
-                      <span class="font-bold">{{ challenge.count }}</span>
-                      challenges
+                <div v-if="isShowVisualizationTable" class="row flex">
+                  <div class="w-100 stepper-title">Visualization</div>
+                  <div class="col-12 flex justify-between">
+                    <div
+                      v-if="selectedVisualization.length > 0"
+                      class="col-12 text-right"
+                    >
+                      <button
+                        class="btn btn-primary"
+                        type="button"
+                        @click="addSelectedTools(3)"
+                      >
+                        Next
+                        <span>
+                          <UIcon name="i-heroicons-arrow-right-16-solid" />
+                        </span>
+                      </button>
                     </div>
-                    <div class="">
-                      <AddMetricTable
-                        :challenge-rows="challenge.challenges"
-                        :challenge-id="challengeId"
-                      />
-                    </div>
-                    <CustomBorder />
                   </div>
-                </div>
-              </div>
-              <div v-else class="">
-                <div class="searching-metric__results__title">
-                  Associated metrics not found. Please try again.
+                  <div class="row-flex">
+                    <SearchVisualizationTable
+                      :selected-metrics="selectedMetrics"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -239,14 +241,16 @@
 
 <script setup lang="ts">
 import { ref, watch } from "vue";
-import type { Metric } from "@/types/challenge_metric";
+import type { Metric, Tool } from "@/types/challenge_metric";
 import { useMetrics } from "@/stores/metrics.ts";
 import metricsSearcher from "@/utils/metricsMatch";
 import CustomBorder from "@/components/Common/CustomBorder.vue";
-import AddMetricTable from "@/components/Dashboard/entries/events/challenges/metrics/AddMetricTable.vue";
 import SearchMetricTable from "@/components/Dashboard/entries/events/challenges/metrics/SearchMetricTable.vue";
+import SearchToolsTable from "@/components/Dashboard/entries/events/challenges/metrics/SearchToolsTable.vue";
+import SearchVisualizationTable from "@/components/Dashboard/entries/events/challenges/metrics/SearchVisualizationTable.vue";
 import CustomModal from "@/components/Common/CustomModal.vue";
 import CreateMetric from "@/components/Dashboard/entries/events/challenges/metrics/CreateMetric.vue";
+
 const props = defineProps<{
   contactsData: string[];
 }>();
@@ -267,9 +271,18 @@ const searchList = ref<Metric[]>([]);
 const selectedMetricResults = ref<boolean[]>([]);
 const token: string = data?.value.accessToken;
 const processedMetrics = ref(new Set());
+
 const selectedMetric = ref(null);
 const selectedMetrics = ref([]);
 const isShowSearchTable = ref(false);
+
+const stepperIndex = ref(1);
+const selectedTools = ref([]);
+const isShowToolsTable = ref(false);
+
+const isShowVisualizationTable = ref(false);
+const selectedVisualization = ref([]);
+
 const searchMetric = ref<string>("");
 const localContacts = ref<string[]>([]);
 const dialogElement = ref<{ element: string[]; index: number } | null>(null);
@@ -277,24 +290,6 @@ const isModalOpened = ref<boolean>(false);
 const metricAssociatedList = ref<{
   [key: string]: { count: number; challenges: any[] };
 }>({});
-
-interface BasicChallenge {
-  challenge_id: string;
-  name: string;
-}
-
-const steps = [
-  {
-    index: 0,
-    title: "Search Metric",
-    component: "SearchMetricTable",
-  },
-  {
-    index: 1,
-    title: "Select visualization",
-    component: "AddMetricVisualization",
-  },
-];
 
 async function searchMetricResults() {
   isSearchingSelectedMetric.value = true;
@@ -348,7 +343,6 @@ async function search() {
       .toLowerCase()
       .includes(searchMetric.value.toLowerCase());
   });
-
   loadingInput.value = false;
   isShowSearchTable.value = true;
   searchList.value = searchFilter;
@@ -366,14 +360,33 @@ async function fetchMetrics(token: string): Promise<Metric[]> {
       isSearchingMetrics.value = false;
     }
     isLoadingMetrics.value = false;
+    console.log("metricDataList", metricDataList.value);
     return metricDataList.value as Metric[];
   } catch (error) {
     console.error("Error fetching contacts data:", error);
   }
-}
+} 
 
 function handleChangeMetricSelected(index: number) {
   selectedMetricResults.value[index] = !selectedMetricResults.value[index];
+}
+
+function handleStepperClick(index: number) {
+  console.log(index)
+  if (index === 1) {
+    isShowSearchTable.value = true;
+    isShowToolsTable.value = false;
+    isShowVisualizationTable.value = false;
+  } else if(index === 2) {
+    isShowSearchTable.value = false;
+    isShowToolsTable.value = true;
+    isShowVisualizationTable.value = false;
+  } else if(index === 3) {
+    isShowSearchTable.value = false;
+    isShowToolsTable.value = false;
+    isShowVisualizationTable.value = true;
+  }
+  stepperIndex.value = index;
 }
 
 function onSubmitSearcher() {
@@ -415,10 +428,24 @@ function onDeleteElement(index: number, element: string[]) {
   }
 }
 
-function addSelectedMetrics() {}
+function addSelectedMetrics(index: number) {
+  isShowSearchTable.value = false;
+  isShowToolsTable.value = true;
+  stepperIndex.value = index;
+}
+
+function addSelectedTools(index: number) {
+  stepperIndex.value = index;
+  handleStepperClick(index);
+}
 
 function handleSelectedMetrics(selectedMetricsData: Metric[]) {
   selectedMetrics.value = selectedMetricsData;
+}
+
+function handleSelectedTools(selectedToolsData: Tool[]) {
+  console.log("selected has change")
+  selectedTools.value = selectedToolsData;
 }
 
 watch(props.contactsData, (newVal: string[]) => {
@@ -465,6 +492,7 @@ watch(props.contactsData, (newVal: string[]) => {
   border-bottom-left-radius: 0 !important;
   border: none;
   padding: 4px !important;
+  width: 50px;
 }
 
 .form-group-row {
@@ -500,5 +528,107 @@ watch(props.contactsData, (newVal: string[]) => {
 
 .challenge-metric-modal__search {
   padding-top: 65px;
+}
+.stepper-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  padding-top: 20px;
+}
+.stepper-header {
+  padding: 5px;
+  &__controller {
+    display: flex;
+    width: 100%;
+    list-style: none;
+    position: relative;
+    gap: 10px;
+    padding-left: 0;
+    &::before {
+      background: white;
+    }
+  }
+  &__item {
+    flex: 100%;
+    flex: 1;
+    padding: 5px 15px 5px 0px;
+    margin: 0 0 0 -19px;
+    height: 60px;
+    background: repeating-linear-gradient(
+      -65deg,
+      theme("colors.primary.50"),
+      theme("colors.primary.50") 20px,
+      theme("colors.primary.50") 20px,
+      theme("colors.primary.50") 40px
+    );
+    background-color: theme("colors.primary.50");
+    -webkit-clip-path: polygon(
+      20px 50%,
+      0% 0%,
+      calc(100% - 20px) 0%,
+      100% 50%,
+      calc(100% - 20px) 100%,
+      0% 100%
+    );
+
+    &.current {
+      background: theme("colors.secondaryOeb.500");
+      font-weight: bold;
+      color: white;
+      cursor: pointer;
+      &_subtitle {
+        color: white;
+      }
+    }
+
+    &.complete {
+      background: repeating-linear-gradient(
+        -65deg,
+        #fcfcfc,
+        #fcfcfc 20px,
+        #f4faf7 20px,
+        #f4faf7 40px
+      );
+      font-weight: bold;
+      color: v-bind("text-zinc-800");
+      cursor: pointer;
+      .stepper-header__item__subtitle {
+        color: v-bind("text-zinc-800");
+      }
+    }
+
+    &__content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-weight: 500;
+      text-align: center;
+      height: 100%;
+      width: 100%;
+    }
+
+    &__subtitle {
+      text-align: left;
+      font-size: 14px;
+      color: white;
+      font-weight: bold;
+      font-style: italic;
+    }
+
+    &:first-child {
+      -webkit-clip-path: polygon(
+        0% 0%,
+        calc(100% - 20px) 0%,
+        100% 50%,
+        calc(100% - 20px) 100%,
+        0% 100%
+      );
+      margin: 0;
+    }
+
+    &:last-child {
+      -webkit-clip-path: polygon(20px 50%, 0% 0%, 100% 0%, 100% 100%, 0% 100%);
+    }
+  }
 }
 </style>

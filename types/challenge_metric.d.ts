@@ -20,3 +20,20 @@ export interface Metric {
   optimization?: string;
   _metadata?: Metadata;
 }
+
+
+export interface Tool {
+  _id: string;
+  _schema: string;
+  activation: string;
+  description: string;
+  is_automated: boolean;
+  name?: string;
+  references?: string[];
+  status: string;
+  tool_access?: string[];
+  tool_contact_ids?: string[];
+  community_ids?: string[];
+  orig_id: string;
+  registry_tool_id: string;
+}
