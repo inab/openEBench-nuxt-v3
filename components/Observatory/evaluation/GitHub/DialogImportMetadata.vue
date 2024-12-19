@@ -27,7 +27,7 @@
             </div>
           </div>
           <div class="flex justify-end mt-4">
-            <UButton label="Cancel" @click="cancelImport" />
+            <UButton label="Cancel" color="gray" variant="ghost" size="md" :ui="{color:{gray:{ghost:'text-gray-900 hover:bg-gray-100'}},}" @click="cancelImport" />
           </div>
         </div>
       </div>

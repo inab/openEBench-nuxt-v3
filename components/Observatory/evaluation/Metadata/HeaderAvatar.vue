@@ -7,8 +7,8 @@
   >
     <UIcon
       :name="metaState ? 'i-heroicons-check-circle-20-solid' : 'i-heroicons-minus-circle-20-solid'"
-      class="w-5 h-5 ms-auto bg-gray-500"
-      :class="[metaState ? 'bg-green-500' : 'bg-gray-300']"
+      class="w-5 h-5 ms-auto bg-gray-400 mx-2"
+      :class="[metaState ? 'bg-green-500' : 'bg-gray-400']"
     />
   </UTooltip>
 

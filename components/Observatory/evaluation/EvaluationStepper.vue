@@ -65,10 +65,6 @@
             <div>
               <MetadataEdit v-if="loadedMetadata"/>
             </div>
-            <div class="buttons mt-2 ml-5">
-              <button v-if="index > 0" class="btn btn-secondary mr-2" @click="stepperStore.goBack(index)">Back</button>
-              <button v-if="!step.completed" class="btn btn-primary mr-2" @click="stepperStore.completeStep(index)">Next</button>
-            </div>
           </div>
 
           <!----------------- STEP 4 ------------------->

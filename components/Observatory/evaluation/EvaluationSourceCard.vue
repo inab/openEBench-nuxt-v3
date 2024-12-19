@@ -15,7 +15,11 @@
         <p class="mt-3 text-center text-sm" v-html="description"></p>
       </div>
       <div>
-        <button class="btn btn-primary mr-2 px-3 py-1 shadow-md" @click="selectSource">Select</button>
+        <UButton class="mt-4 mr-2 bg-primaryOeb-500" variant="solid" size="md" 
+          :ui="{color:{variant:{solid:'hover:bg-{blue}-500'}}}"
+          @click="selectSource">
+            Select
+        </UButton>
       </div>
     </div>
   </div>
