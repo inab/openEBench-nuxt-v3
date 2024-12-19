@@ -71,7 +71,7 @@
           <UButton class="mr-2" color="gray" variant="ghost" size="md" :ui="{color:{gray:{ghost:'text-gray-900 hover:bg-gray-100'}},}" @click="goBack">
             Back
           </UButton>
-          <UButton class="mr-2 bg-primaryOeb-500" variant="solid" size="md" 
+          <UButton class="bg-primaryOeb-500" variant="solid" size="md" 
           :ui="{color:{variant:{solid:'hover:bg-{blue}-500'}}}"
           :disabled="!value || showError"
           @click="submitGitHubLink">
