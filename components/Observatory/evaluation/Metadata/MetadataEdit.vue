@@ -14,8 +14,8 @@
             <div class="flex items-center ms-auto space-x-2">
               <!-- Iconos de PanelHeader -->
               <PanelHeader
-                :fields="metadataFields.identity"
-						    :field_names="metadataFieldNames.identity"
+                :fields="metadataFields[metadataKeys[index]]"
+						    :field_names="metadataFieldNames[metadataKeys[index]]"
                 :visible_ticks="visibleTicks(index)"
               />
               <!-- Chevron Icon -->
@@ -145,6 +145,9 @@ onMounted(() => {
 });
 
 // Methods
+// Crear una lista de claves
+const metadataKeys = Object.keys(metadataFields);
+
 const visibleTicks = (i: number) => {
   return !openPanels.value.includes(i);
 };
