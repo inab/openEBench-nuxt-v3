@@ -72,9 +72,15 @@
           <div v-if="index === 3">
             <p>Step 4 is building</p>
             <div class="buttons mt-2 ml-5">
-              <button v-if="index > 0" class="btn btn-secondary mr-2" @click="stepperStore.goBack(index)">Back</button>
-              <button v-if="!step.completed" class="btn btn-primary mr-2" @click="stepperStore.completeStep(index)">Next</button>
-              <button v-if="index === stepperStore.steps.length - 1" class="btn btn-danger" @click="stepperStore.cancelSteps">Cancel</button>
+
+              <UButton variant="ghost" color="red" @click="stepperStore.cancelSteps" v-if="index === stepperStore.steps.length - 1">
+                Cancel
+              </UButton>
+              <div class="text-right">
+                <UButton v-if="index > 0" class="mr-2" color="gray" variant="ghost" size="md" :ui="{color:{gray:{ghost:'text-gray-900 hover:bg-gray-100'}},}" @click="stepperStore.goBack(index)">
+                  Back
+                </UButton>
+              </div>
             </div>
           </div>
         </div>
