@@ -31,11 +31,50 @@ const props = defineProps<{
 
 // Computed
 const toolMetadata = computed(() => metadataStore.getToolMetadata);
-const metaState = true // Cambia esto dinámicamente según tu lógica
+const metaState = computed(() => getMetadataState(props.field));
 
 // Methods
 const getMetadataState = (field)=> {
+  let state = false;
+  switch (typeof toolMetadata.value[field]) {
+    case 'boolean': {
+      state = toolMetadata.value[field];
+      break;
+    }
 
+    case 'string': {
+      state = toolMetadata.value[field];
+      break;
+    }
+
+    case 'object': {
+      const array = Array.isArray(toolMetadata.value[field]);
+      if (array) {
+        if (toolMetadata.value[field].length > 0){
+          state = !!toolMetadata.value[field][0];
+        }else{
+					state = false;
+        }
+      }else{
+        console.log(
+          'Unknown type of field',
+          field,
+          typeof toolMetadata.value[field],
+          toolMetadata.value[field]
+        );
+      }
+        break;
+    }
+
+    default:
+      console.log (
+        'Unknown type of field',
+        field,
+        typeof toolMetadata.value[field],
+        toolMetadata.value[field]
+      );
+  }
+  return state;
 }
 
 </script>
