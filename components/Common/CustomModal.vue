@@ -21,7 +21,6 @@
 </template>
 <script setup lang="ts">
 import { defineProps, defineEmits, ref, computed } from "vue";
-//import { onClickOutside } from '@vueuse/core'
 
 const props = defineProps({
   isOpen: Boolean,

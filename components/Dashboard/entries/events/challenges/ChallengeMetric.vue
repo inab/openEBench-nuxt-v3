@@ -37,7 +37,7 @@ const metricData = computed(() => {
 
 const item = ref([
   {
-    label: `Metric: ${metricData.value.metrics_id}`,
+    label: `Metric: ${metricData.value.metrics_id}; Tool: ${metricData.value.tool_id}`,
     content: "Metric",
     icon: "i-heroicons-information-circle",
     defaultOpen: false,

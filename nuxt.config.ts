@@ -5,8 +5,15 @@ export default defineNuxtConfig({
   devtools: {
     enabled: true,
   },
+  app: {
+    baseURL: '/', // Tu aplicación está en la raíz del dominio
+  },
   nitro: {
-    preset: 'node-server',
+    serveStatic: true, // Asegúrate de que Nitro sirva los recursos estáticos
+    compressPublicAssets: false,
+  },
+  build: {
+    publicPath: '/_nuxt/',
   },
   vite: {
     server: {
@@ -45,6 +52,7 @@ export default defineNuxtConfig({
   },
 
   devServer: {
+    host: '0.0.0.0',
     port: 3001,
   },
 
@@ -127,7 +135,7 @@ export default defineNuxtConfig({
     },
     basePath: '/api/auth',
     originEnvKey: 'AUTH_ORIGIN',
-    baseURL: process.env.APP_BASE_URL || "https://test2.openebench.bsc.es/api/auth",
+    baseURL: process.env.APP_BASE_URL || "https://test2.openebench.bsc.es",
     origin: process.env.AUTH_ORIGIN || "https://inb.bsc.es", 
   },
 
