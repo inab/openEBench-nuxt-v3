@@ -5,7 +5,7 @@
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
-    "start": "nuxt start" ,
+    "start": "nuxt start",
     "test": "vitest",
     "test:ui": "vitest --ui",
     "coverage": "vitest run --coverage",
@@ -61,7 +61,8 @@
   "devDependencies": {
     "@nuxt/eslint": "^0.4.0",
     "@nuxt/test-utils": "^3.14.1",
-    "@nuxt/typescript-build": "3.0.2",
+    "@nuxt/types": "^2.18.1",
+    "@nuxt/typescript-build": "^3.0.2",
     "@pinia/testing": "0.1.5",
     "@types/data-urls": "3.0.4",
     "@types/dompurify": "3.0.5",
