@@ -1,5 +1,3 @@
-import { a } from "vitest/dist/chunks/suite.BMWOKiTe";
-
 export const CommunityStatusColors: { [key: string]: string } = {
   active: "bg-green-500",
   archived: "bg-pink-800",

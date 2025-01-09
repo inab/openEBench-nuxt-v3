@@ -13,55 +13,205 @@
           )
         </div>
         <div class="add-visualization-table__body__content__box">
+          <div class="row mb-4" v-if="selectedVisualizationTmp !== null && selectedVisualizationTmp.name">
+            <div class="col-12">
+              <div
+                class="card"
+              >
+                <div class="card-body">
+                  <div class="card-body-header">
+                    <h5 class="card-title">
+                      <div
+                        v-if="recomendedVisualization[0]?.name === chartSelected.name"
+                        class="card-recommended"
+                        title="Recommended Visualization"
+                      >
+                        <font-awesome-icon :icon="['fas', 'star']" />
+                      </div>
+                      {{ selectedVisualizationTmp.name }}
+                    </h5>
+                  </div>
+                  <div class="w-100">
+                    <div class="card-body-content row">
+                      <div class="widget-card-img col-7">
+                        <img
+                          heigth="300px"
+                          :src=selectedVisualizationTmp.image
+                        />
+                      </div>
+                      <div class="card-body-content__description col-5">
+                        <p>
+                          {{ selectedVisualizationTmp.description }}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
           <div class="row">
-            <div class="col-6">
-              <div class="card">
+            <div class="col-3" v-if="visualizationSelected === '' || visualizationSelected !== 'bar'">
+              <div
+                class="card"
+                :class="[
+                  visualizationSelected === ''
+                    ? ''
+                    : visualizationSelected === 'bar'
+                    ? 'card-checked'
+                    : 'card-non-checked',
+                ]"
+              >
                 <div class="card-body">
-                  <h5 class="card-title">Bar Plot</h5>
-                  <div class="">
-                    <widget-element
-                      :data="preparedBar"
-                      type="bar-plot"
-                    ></widget-element>
+                  <div class="card-body-header">
+                    <h5 class="card-title">
+                      <div
+                        v-if="recomendedVisualization[0]?.name === 'Bar Plot'"
+                        class="card-recommended"
+                        title="Recommended Visualization"
+                      >
+                        <font-awesome-icon :icon="['fas', 'star']" />
+                      </div>
+                      Bar Plot
+                    </h5>
+                    <div class="card-selector">
+                      <UCheckbox 
+                        :model-value="selectedVisualizationTmp.name === 'bar'"
+                        @update:model-value="updateVisualization(chartBar, $event)"
+                      />
+                    </div>
+                  </div>
+                  <div class="w-100">
+                    <div class="widget-card-img">
+                      <img
+                        heigth="300px"
+                        :src=chartBar.image
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="col-6">
-              <div class="card">
+            <div class="col-3" v-if="visualizationSelected === '' || visualizationSelected !== 'scatter'">
+              <div
+                class="card"
+                :class="[
+                  selectedVisualizationTmp.name === ''
+                  ? ''
+                    : selectedVisualizationTmp.name === 'scatter'
+                    ? 'card-checked'
+                    : 'card-non-checked',
+                ]"
+              >
                 <div class="card-body">
-                  <h5 class="card-title">Scatter Plot</h5>
-                  <div class="">
-                    <widget-element
-                      :data="preparedScatter"
-                      type="2D-plot"
-                    ></widget-element>
+                  <div class="card-body-header">
+                    <h5 class="card-title">
+                      <div
+                        v-if="
+                          recomendedVisualization[0]?.name === 'Scatter Plot'
+                        "
+                        class="card-recommended"
+                        title="Recommended Visualization"
+                      >
+                        <font-awesome-icon :icon="['fas', 'star']" />
+                      </div>
+                      Scatter Plot
+                    </h5>
+                    <div class="card-selector">
+                      <UCheckbox 
+                        :model-value="selectedVisualizationTmp.name === 'scatter'"
+                        @update:model-value="updateVisualization(chartScatter, $event)"
+                      />
+                    </div>
+                  </div>
+                  <div class="w-100">
+                    <div class="widget-card-img">
+                      <img
+                        heigth="300px"
+                        :src=chartScatter.image
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="col-6 mt-3">
-              <div class="card">
+            <div class="col-3" v-if="visualizationSelected === '' || visualizationSelected !== 'radar'">
+              <div
+                class="card"
+                :class="[
+                  selectedVisualizationTmp.name === ''
+                  ? ''
+                    : selectedVisualizationTmp.name === 'radar'
+                    ? 'card-checked'
+                    : 'card-non-checked',
+                ]"
+              >
                 <div class="card-body">
-                  <h5 class="card-title">Radar Plot</h5>
-                  <div class="">
-                    <widget-element
-                      :data="preparedRadar"
-                      type="radar-plot"
-                    ></widget-element>
+                  <div class="card-body-header">
+                    <h5 class="card-title">
+                      <div
+                        v-if="recomendedVisualization[0]?.name === 'Radar Plot'"
+                        class="card-recommended"
+                        title="Recommended Visualization"
+                      >
+                        <font-awesome-icon :icon="['fas', 'star']" />
+                      </div>
+                      Radar Plot
+                    </h5>
+                    <div class="card-selector">
+                      <UCheckbox 
+                        :model-value="selectedVisualizationTmp.name === 'radar'"
+                        @update:model-value="updateVisualization(chartRadar, $event)"
+                      />
+                    </div>
+                  </div>
+                  <div class="w-100">
+                    <div class="widget-card-img">
+                      <img
+                        heigth="300px"
+                        :src=chartRadar.image
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="col-6 mt-3">
-              <div class="card">
+            <div class="col-3" v-if="visualizationSelected === '' || visualizationSelected !== 'box'">
+              <div
+                class="card"
+                :class="[
+                  selectedVisualizationTmp.name === ''
+                  ? ''
+                    : selectedVisualizationTmp.name === 'box'
+                    ? 'card-checked'
+                    : 'card-non-checked',
+                  ]"
+              >
                 <div class="card-body">
-                  <h5 class="card-title">Box Plot</h5>
-                  <div class="">
-                    <widget-element
-                      :data="preparedBox"
-                      type="box-plot"
-                    ></widget-element>
+                  <div class="card-body-header">
+                    <h5 class="card-title">
+                      <div
+                        v-if="recomendedVisualization[0]?.name === 'Box Plot'"
+                        class="card-recommended"
+                      >
+                        <font-awesome-icon :icon="['fas', 'star']" />
+                      </div>
+                      Box Plot
+                    </h5>
+                    <div class="card-selector">
+                      <UCheckbox 
+                        :model-value="selectedVisualizationTmp.name === 'box'"
+                        @update:model-value="updateVisualization(chartBox, $event)"
+                      />
+                    </div>
+                  </div>
+                  <div class="w-100">
+                    <div class="widget-card-img">
+                      <img
+                        heigth="300px"
+                        :src=chartBox.image
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -74,60 +224,36 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from "vue";
+import { ref, computed, defineEmits } from "vue";
 import type { Metric } from "@/types/challenge_metric";
-import demo_bar from "./demo/bar_plot_demo.json";
-import demo_scatter from "./demo/scatter_plot_demo.json";
-import demo_radar from "./demo/radar_plot_demo.json";
-import demo_box from "./demo/box_plot_demo.json";
+import type { ChartDefault } from "@/types/visualizations";
+import { ChartBar, ChartBox, ChartRadar, ChartScatter } from "@/constants/visualization_const";
 
 const props = defineProps<{
   selectedMetrics: Metric[];
+  selectedVisualization: ChartDefault;
 }>();
 
-const isShadowHostReady = ref(false);
-let intervalId: number | undefined;
+const emits = defineEmits(["handleSelectedVisualization"]);
 
-
-const isLoadingGraph = ref(true);
-const preparedBar = ref({
-  _id: "",
-  name: "",
-  dates: [],
-  inline_data: {
-    challenge_participants: [],
-    visualization: {},
-  },
+const selectedVisualizationTmp = computed({
+  get: () => props.selectedVisualization,
+  set: (value) => emits("handleSelectedVisualization", value),
 });
 
-const preparedScatter = ref({
-  _id: "",
+const visualizationSelected = ref(<String>"");
+const chartSelected = ref<ChartDefault>({
+  id: "",
   name: "",
-  dates: "",
-  inline_data: {
-    challenge_participants: [],
-    visualization: {},
-  },
-});
-const preparedRadar = ref({
-  _id: "",
-  name: "",
-  dates: "",
-  inline_data: {
-    challenge_participants: [],
-    visualization: {},
-  },
+  internal_id: "",
+  image: "",
+  description: "",
 });
 
-const preparedBox = ref({
-  _id: "",
-  name: "",
-  dates: "",
-  inline_data: {
-    challenge_participants: [],
-    visualization: {},
-  },
-});
+let chartBar = new ChartBar();
+let chartScatter = new ChartScatter();
+let chartRadar = new ChartRadar();
+let chartBox = new ChartBox();
 
 const recomendedVisualization = computed(() => {
   if (props.selectedMetrics.length === 0) {
@@ -157,160 +283,58 @@ const recomendedVisualization = computed(() => {
     }
   });
 
-  // get the most recommended visualization
   metricsByType.sort((a, b) => b.total - a.total);
 
   return metricsByType;
 });
 
-loadPreparedData();
-
-function getPreparedData() {
-  // Load demo data
-  const bar = demo_bar;
-  const scatter = demo_scatter;
-  const radar = demo_radar;
-  const box = demo_box;
-
-  const barVisualization = bar.inline_data.visualization;
-  const scatterVisualization = scatter.inline_data.visualization;
-  const radarVisualization = radar.visualization;
-  const boxVisualization = box.inline_data.visualization;
-
-
-  preparedBar.value = {
-    _id: bar._id,
-    name: bar.name,
-    dates: bar.dates,
-    inline_data: {
-      challenge_participants: [],
-      visualization: {
-        metric: barVisualization.metric,
-        type: barVisualization.type,
-      },
-    },
-  };
-  preparedBar.value.inline_data.challenge_participants =
-    bar.inline_data.challenge_participants.map((participant: any) => {
-      const preparedParticipant = {
-        tool_id: participant.tool_id,
-        metric_value: participant.metric_value,
-        stderr: participant.stderr,
-      };
-      return preparedParticipant;
-    });
-  preparedBar.value = JSON.stringify(preparedBar.value);
-
-  preparedScatter.value = {
-    _id: scatter._id,
-    dates: scatter.dates,
-    inline_data: {
-      challenge_participants: [],
-      visualization: scatterVisualization,
-    },
-  };
-  preparedScatter.value.inline_data.challenge_participants =
-    scatter.inline_data.challenge_participants.map((participant: any) => {
-      const preparedParticipant = {
-        tool_id: participant.tool_id,
-        metric_x: participant.metric_x,
-        stderr_x: participant.stderr_x,
-        metric_y: participant.metric_y,
-        stderr_y: participant.stderr_y,
-      };
-      return preparedParticipant;
-    });
-  preparedScatter.value = JSON.stringify(preparedScatter.value);
-
-  preparedRadar.value = {
-    _id: radar._id,
-    name: radar.name,
-    dates: radar.dates,
-    inline_data: {
-      challenge_participants: [],
-      visualization: radarVisualization,
-    },
-  };
-  preparedRadar.value.inline_data.challenge_participants =
-    radar.inline_data.challenge_participants.map((participant: any) => {
-      const preparedParticipant = {
-        id: participant._id,
-        label: participant.label,
-        value: participant.value,
-        error: participant.error,
-      };
-      return preparedParticipant;
-    });
-  preparedRadar.value = JSON.stringify(preparedRadar.value);
-
-  preparedBox.value = {
-    _id: box._id,
-    name: box.name,
-    dates: box.dates,
-    inline_data: {
-      challenge_participants: [],
-      visualization: boxVisualization,
-    },
-  };
-  preparedBox.value.inline_data.challenge_participants =
-    box.inline_data.challenge_participants.map((participant: any) => {
-      const preparedParticipant = {
-        name: participant.name,
-        metric_id: participant.metric_id,
-        q1: participant.q1,
-        mean: participant.mean,
-        median: participant.median,
-        q3: participant.q3,
-        lowerfence: participant.lowerfence,
-        upperfence: participant.upperfence,
-      };
-      return preparedParticipant;
-    });
-  preparedBox.value = JSON.stringify(preparedBox.value);
-
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      console.log("Datos cargados.");
-      resolve(true);
-    }, 1000); // Simula retraso en la carga
-  });
-}
-
-async function loadPreparedData() {
-  // Activa el loader
-  isLoadingGraph.value = true;
-
-  // Llama a la función para cargar los datos
-  await getPreparedData();
-
-  // Aplica estilos al shadowRoot después de cargar los datos
-  applyShadowStyles();
-
-  // Desactiva el loader
-  isLoadingGraph.value = false;
-}
-
-function applyShadowStyles() {
-  const shadowHost = document.querySelector(".classification-dropdown");
-
-  if (shadowHost && shadowHost.shadowRoot) {
-    const style = document.createElement("style");
-    style.textContent = `
-      .classification-dropdown {
-        min-width: auto !important;
-      }
-    `;
-    shadowHost.shadowRoot.appendChild(style); // Aplica los estilos
-  } else {
-    console.error("ShadowRoot no encontrado. Verifica el flujo de datos.");
+const updateSelectedTitle = (type: string) => {
+  switch (type) {
+    case 'bar':
+      chartSelected.value = new ChartBar();
+      break;
+    case 'scatter':
+      chartSelected.value = new ChartScatter();
+      break;
+    case 'radar':
+      chartSelected.value = new ChartRadar();
+      break;
+    case 'box':
+      chartSelected.value = new ChartBox();
+      break;
+    default:
+      break;
   }
-}
+};
 
-onMounted(async () => {
-  await import("@inb/oeb-widgets-graphs").then(() => {
-    isLoadingGraph.value = false;
-  });
-});
+const updateVisualization = (type: ChartDefault, isSelected: Boolean) => {
+  console.log(type)
+  selectedVisualizationTmp.value = {
+    id: type.id,
+    name: type.name,
+    internal_id: "",
+    image: type.image,
+    description: type.description,
+  };
+  console.log(type)
+  console.log(selectedVisualizationTmp.value);
+  console.log(isSelected);
+
+  console.log(selectedVisualizationTmp.value)
+
+  if (isSelected) {
+    updateSelectedTitle(type);
+  } else {
+    chartSelected.value = {
+      id: "",
+      name: "",
+      internal_id: "",
+      image: "",
+      description: "",
+    };
+  }
+  //emits("handleSelectedVisualization", chartSelected.value);
+};
 </script>
 
 <style lang="scss" scoped>
@@ -332,12 +356,40 @@ onMounted(async () => {
           font-weight: bold;
         }
       }
+      .card .card-body-header {
+        display: flex;
+        justify-content: space-between;
+        .card-title {
+          display: flex;
+          gap: 10px;
+        }
+        .fa-star {
+          color: #f1c40f;
+        }
+      }
+      .card {
+        &.card-checked {
+          transform: scale(1.04);
+          box-shadow: 0 5px 15px #00000026;
+          cursor: pointer;
+          display: flex;
+          flex-direction: column;
+          height: 100%;
+          justify-content: start;
+          text-decoration: none;
+          transition: transform 0.2s;
+        }
+        &.card-non-checked {
+          background-color: rgba(0, 0, 0, 0.05);
+        }
+      }
     }
   }
 }
-</style>
-<style>
-.add-visualization-table >>> .classification-dropdown {
-  min-width: auto !important;
+.widget-card-img {
+  min-height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

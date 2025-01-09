@@ -491,19 +491,16 @@
 <script setup lang="ts">
 import { computed, ref, nextTick, onMounted, useTemplateRef, watch } from "vue";
 import { useUser } from "@/stores/user.ts";
+
 import type { Community } from "@/types/communities";
-import {
-  CommunityStatusLabels,
-  CommunityStatusColors,
-} from "@/constants/community_const";
-import EventsList from "@/components/Dashboard/entries/EventsList.vue";
-import CommunitySummary from "@/components/Dashboard/entries/CommunitySummary.vue";
-import CustomSubtitle from "@/components/Common/CustomSubtitle.vue";
-import type { CommunityPrivilegeActions } from "@/constants/privileges";
-import { useRouter } from "vue-router";
 import type { FormErrorEvent, FormSubmitEvent } from "#ui/types";
-import CustomDialog from "@/components/Common/CustomDialog.vue";
+import type { CommunityPrivilegeActions } from "@/constants/privileges";
 import type { Event } from "@/types/events";
+
+import EventsList from "@/components/Dashboard/entries/EventsList.vue";
+import CustomSubtitle from "@/components/Common/CustomSubtitle.vue";
+import { useRouter } from "vue-router";
+import CustomDialog from "@/components/Common/CustomDialog.vue";
 import { object, string, array, safeParse, optional } from "valibot";
 import CustomBorder from "@/components/Common/CustomBorder.vue";
 import CustomTab from "@/components/Common/CustomTab.vue";
@@ -971,8 +968,7 @@ watch(
 );
 
 watchEffect(() => {
-  communityData.value; // Acceso a `communityData` para desencadenar su cálculo
-  // Realiza aquí cualquier otra operación que necesites cada vez que `communityData` cambie.
+  communityData.value;
 });
 </script>
 
