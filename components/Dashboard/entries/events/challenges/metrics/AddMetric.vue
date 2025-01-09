@@ -52,9 +52,12 @@
                   >
                     <li
                       class="stepper-header__item"
-                      :class="[stepperIndex == 1 ? 'current' : '', stepperIndex > 1 ? 'complete' : '']"
-                      @click="(stepperIndex >= 1) ? handleStepperClick(1) : null"
-                      >
+                      :class="[
+                        stepperIndex == 1 ? 'current' : '',
+                        stepperIndex > 1 ? 'complete' : '',
+                      ]"
+                      @click="stepperIndex >= 1 ? handleStepperClick(1) : null"
+                    >
                       <div class="stepper-header__item__content">
                         <div class="">
                           <span
@@ -75,9 +78,14 @@
                         </div>
                       </div>
                     </li>
-                    <li class="stepper-header__item"
-                      :class="[stepperIndex == 2 ? 'current' : '', stepperIndex > 2 ? 'complete' : '']"
-                      @click="(stepperIndex >= 2) ? handleStepperClick(2) : null">
+                    <li
+                      class="stepper-header__item"
+                      :class="[
+                        stepperIndex == 2 ? 'current' : '',
+                        stepperIndex > 2 ? 'complete' : '',
+                      ]"
+                      @click="stepperIndex >= 2 ? handleStepperClick(2) : null"
+                    >
                       <div class="stepper-header__item__content">
                         <div class="">
                           <span
@@ -98,9 +106,14 @@
                         </div>
                       </div>
                     </li>
-                    <li class="stepper-header__item"
-                      :class="[stepperIndex == 3 ? 'current' : '', stepperIndex > 3 ? 'complete' : '']"
-                      @click="(stepperIndex >= 3) ? handleStepperClick(3) : null">
+                    <li
+                      class="stepper-header__item"
+                      :class="[
+                        stepperIndex == 3 ? 'current' : '',
+                        stepperIndex > 3 ? 'complete' : '',
+                      ]"
+                      @click="stepperIndex >= 3 ? handleStepperClick(3) : null"
+                    >
                       <div class="stepper-header__item__content">
                         <div class="">
                           <span
@@ -113,10 +126,22 @@
                             >
                           </span>
                         </div>
-                        <div class="stepper-header__item__subtitle"></div>
+                        <div
+                          v-if="selectedVisualization.name"
+                          class="stepper-header__item__subtitle"
+                        >
+                          {{ selectedVisualization.name }} added
+                        </div>
                       </div>
                     </li>
-                    <li class="stepper-header__item flex items-center">
+                    <li
+                      class="stepper-header__item flex items-center"
+                      :class="[
+                        stepperIndex == 4 ? 'current' : '',
+                        stepperIndex > 4 ? 'complete' : '',
+                      ]"
+                      @click="stepperIndex >= 3 ? handleStepperClick(4) : null"
+                    >
                       <div class="stepper-header__item__content">
                         <div class="">
                           <span
@@ -133,7 +158,6 @@
                   </ul>
                 </div>
                 <div v-if="isShowSearchTable" class="col-12">
-                  <div class="w-100 stepper-title">Metrics</div>
                   <div class="col-12 flex justify-between">
                     <div
                       v-if="selectedMetrics.length > 0"
@@ -151,19 +175,30 @@
                       </button>
                     </div>
                   </div>
-                  <SearchMetricTable
-                    :metric-rows="searchList"
-                    :selected-metrics="selectedMetrics"
-                    @handle-selected-metrics="handleSelectedMetrics"
-                  />
+                  <div class="w-100 stepper-title">Metrics</div>
+                  <div class="row-flex metric-content">
+                    <SearchMetricTable
+                      :metric-rows="searchList"
+                      :selected-metrics="selectedMetrics"
+                      @handle-selected-metrics="handleSelectedMetrics"
+                    />
+                  </div>
                 </div>
                 <div v-if="isShowToolsTable" class="row flex">
-                  <div class="w-100 stepper-title">Tools</div>
                   <div class="col-12 flex justify-between">
-                    <div
-                      v-if="selectedTools.length > 0"
-                      class="col-12 text-right"
-                    >
+                    <div class="text-left">
+                      <button
+                        class="btn btn-primary"
+                        type="button"
+                        @click="goPrevious(1)"
+                      >
+                        <span>
+                          <UIcon name="i-heroicons-arrow-left-16-solid" />
+                        </span>
+                        Previous
+                      </button>
+                    </div>
+                    <div v-if="selectedTools.length > 0" class="text-right">
                       <button
                         class="btn btn-primary"
                         type="button"
@@ -176,7 +211,8 @@
                       </button>
                     </div>
                   </div>
-                  <div class="row-flex">
+                  <div class="w-100 stepper-title">Tools</div>
+                  <div class="row-flex metric-content">
                     <SearchToolsTable
                       :tool-rows="searchList"
                       :selected-tools="selectedTools"
@@ -186,16 +222,24 @@
                   </div>
                 </div>
                 <div v-if="isShowVisualizationTable" class="row flex">
-                  <div class="w-100 stepper-title">Visualization</div>
                   <div class="col-12 flex justify-between">
-                    <div
-                      v-if="selectedVisualization.length > 0"
-                      class="col-12 text-right"
-                    >
+                    <div class="text-left">
                       <button
                         class="btn btn-primary"
                         type="button"
-                        @click="addSelectedTools(3)"
+                        @click="goPrevious(2)"
+                      >
+                        <span>
+                          <UIcon name="i-heroicons-arrow-left-16-solid" />
+                        </span>
+                        Previous
+                      </button>
+                    </div>
+                    <div v-if="selectedVisualization.name" class="text-right">
+                      <button
+                        class="btn btn-primary"
+                        type="button"
+                        @click="addSelectedVisualization(4)"
                       >
                         Next
                         <span>
@@ -204,17 +248,116 @@
                       </button>
                     </div>
                   </div>
-                  <div class="row-flex">
+                  <div class="w-100 stepper-title">Visualization</div>
+                  <div class="row-flex metric-content">
                     <SearchVisualizationTable
                       :selected-metrics="selectedMetrics"
+                      :selected-visualization="selectedVisualization"
+                      @handle-selected-visualization="
+                        handleSelectedVisualization
+                      "
                     />
+                  </div>
+                </div>
+                <div v-if="isShowResume" class="row flex">
+                  <div class="col-12 flex justify-between">
+                    <div class="text-left">
+                      <button
+                        class="btn btn-primary"
+                        type="button"
+                        @click="goPrevious(3)"
+                      >
+                        <span>
+                          <UIcon name="i-heroicons-arrow-left-16-solid" />
+                        </span>
+                        Previous
+                      </button>
+                    </div>
+                  </div>
+                  <div class="w-100 stepper-title">Summary of the custom metric</div>
+                  <div class="row-flex metric-content">
+                    <div class="col-12 row">
+                      <div class="col-7">
+                        <UCard
+                          class="metric__body__card"
+                          :ui="{
+                            shadow: '',
+                            header: {
+                              base: '',
+                              background: '',
+                              padding: 'px-2 py-2',
+                            },
+                            body: {
+                              base: '',
+                              padding: 'px-4 py-4',
+                            }
+                          }"
+                        >
+                          <div class="added-item">
+                            <AddMetricsBox :selected-metrics="selectedMetrics" />
+                          </div>
+                        </UCard>
+                        <UCard
+                            class="metric__body__card mt-3"
+                            :ui="{
+                              shadow: '',
+                              header: {
+                                base: '',
+                                background: '',
+                                padding: 'px-2 py-1',
+                              },
+                              body: {
+                                base: '',
+                                padding: 'px-4 py-4',
+                              }
+                            }"
+                          >
+                          <div class="added-item">
+                            <AddToolBox :selected-tools="selectedTools" />
+                          </div>
+                        </UCard>
+                      </div>
+                      <div class="col-5">
+                        <UCard
+                          class="metric__body__card"
+                          :ui="{
+                            shadow: '',
+                            header: {
+                              base: '',
+                              background: '',
+                              padding: 'px-2 py-1',
+                            },
+                            body: {
+                              base: '',
+                              padding: 'px-4 py-4',
+                            }
+                          }"
+                        >
+                          <div class="added-item">
+                            <AddVisualizationBox
+                              :selected-visualization="selectedVisualization"
+                            />
+                          </div>
+                        </UCard>
+                      </div>
+                    </div>
+                    <div class="col-12 pt-5">
+                      <div class="text-right">
+                        <button
+                          class="btn btn-primary"
+                          type="button"
+                          @click="addSelectedVisualization(4)"
+                        >
+                          Add new metric to challenge
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <CustomBorder />
         <CustomModal :is-open="isModalOpened" width="800">
           <template #header>
             <div class="modal-header">
@@ -242,6 +385,7 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import type { Metric, Tool } from "@/types/challenge_metric";
+import type { ChartDefault } from "@/types/visualizations";
 import { useMetrics } from "@/stores/metrics.ts";
 import metricsSearcher from "@/utils/metricsMatch";
 import CustomBorder from "@/components/Common/CustomBorder.vue";
@@ -250,6 +394,9 @@ import SearchToolsTable from "@/components/Dashboard/entries/events/challenges/m
 import SearchVisualizationTable from "@/components/Dashboard/entries/events/challenges/metrics/SearchVisualizationTable.vue";
 import CustomModal from "@/components/Common/CustomModal.vue";
 import CreateMetric from "@/components/Dashboard/entries/events/challenges/metrics/CreateMetric.vue";
+import AddMetricsBox from "@/components/Dashboard/entries/events/challenges/metrics/resume/AddMetricsBox.vue";
+import AddToolBox from "@/components/Dashboard/entries/events/challenges/metrics/resume/AddToolBox.vue";
+import AddVisualizationBox from "@/components/Dashboard/entries/events/challenges/metrics/resume/AddVisualizationBox.vue";
 
 const props = defineProps<{
   contactsData: string[];
@@ -281,7 +428,9 @@ const selectedTools = ref([]);
 const isShowToolsTable = ref(false);
 
 const isShowVisualizationTable = ref(false);
-const selectedVisualization = ref([]);
+const selectedVisualization = ref(<ChartDefault>{});
+
+const isShowResume = ref(false);
 
 const searchMetric = ref<string>("");
 const localContacts = ref<string[]>([]);
@@ -360,31 +509,37 @@ async function fetchMetrics(token: string): Promise<Metric[]> {
       isSearchingMetrics.value = false;
     }
     isLoadingMetrics.value = false;
-    console.log("metricDataList", metricDataList.value);
     return metricDataList.value as Metric[];
   } catch (error) {
     console.error("Error fetching contacts data:", error);
   }
-} 
+}
 
 function handleChangeMetricSelected(index: number) {
   selectedMetricResults.value[index] = !selectedMetricResults.value[index];
 }
 
 function handleStepperClick(index: number) {
-  console.log(index)
   if (index === 1) {
     isShowSearchTable.value = true;
     isShowToolsTable.value = false;
     isShowVisualizationTable.value = false;
-  } else if(index === 2) {
+    isShowResume.value = false;
+  } else if (index === 2) {
     isShowSearchTable.value = false;
     isShowToolsTable.value = true;
     isShowVisualizationTable.value = false;
-  } else if(index === 3) {
+    isShowResume.value = false;
+  } else if (index === 3) {
     isShowSearchTable.value = false;
     isShowToolsTable.value = false;
     isShowVisualizationTable.value = true;
+    isShowResume.value = false;
+  } else {
+    isShowSearchTable.value = false;
+    isShowToolsTable.value = false;
+    isShowVisualizationTable.value = false;
+    isShowResume.value = true;
   }
   stepperIndex.value = index;
 }
@@ -403,6 +558,11 @@ const goBack = () => {
     },
   });
 };
+
+function goPrevious(index: number) {
+  stepperIndex.value = index;
+  handleStepperClick(index);
+}
 
 function onAddElement(array: string[]) {
   array.push("");
@@ -439,13 +599,21 @@ function addSelectedTools(index: number) {
   handleStepperClick(index);
 }
 
+function addSelectedVisualization(index: number) {
+  stepperIndex.value = index;
+  handleStepperClick(index);
+}
+
 function handleSelectedMetrics(selectedMetricsData: Metric[]) {
   selectedMetrics.value = selectedMetricsData;
 }
 
 function handleSelectedTools(selectedToolsData: Tool[]) {
-  console.log("selected has change")
   selectedTools.value = selectedToolsData;
+}
+
+function handleSelectedVisualization(selectedVisualizationData: any) {
+  selectedVisualization.value = selectedVisualizationData;
 }
 
 watch(props.contactsData, (newVal: string[]) => {
@@ -530,12 +698,18 @@ watch(props.contactsData, (newVal: string[]) => {
   padding-top: 65px;
 }
 .stepper-title {
-  font-size: 1.2rem;
+  font-size: 1.4rem;
+  padding-top: 10px;
   font-weight: 600;
-  padding-top: 20px;
+  color: theme("colors.primary.500");
+  border-bottom: 1px solid theme("colors.gray.200");
+}
+.metric-content {
+  padding-top: 30px;
 }
 .stepper-header {
   padding: 5px;
+  padding-bottom: 10px;
   &__controller {
     display: flex;
     width: 100%;

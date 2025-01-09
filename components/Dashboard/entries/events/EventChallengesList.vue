@@ -181,12 +181,8 @@ const challengesData = computed(() => {
   });
 });
 
-console.log("props.commmunityPrivileges", props.commmunityPrivileges.challenge);
-
 const filteredRows = computed(() => {
   if (!props.challenges) return [];
-
-  console.log("props.challenges", props.challenges);
 
   if (!search.value) {
     _total.value = props.challenges.length;
@@ -204,15 +200,11 @@ const filteredRows = computed(() => {
 
   _total.value = filteredSearcher.length;
 
-  console.log(filteredSearcher);
-
   return filteredSearcher.slice(
     (Number(page.value) - 1) * Number(pageCount.value),
     Number(page.value) * Number(pageCount.value),
   );
 });
-
-console.log("filteredRows", filteredRows.value);
 
 const totalPages = computed(() => {
   return Math.ceil(Number(_total.value) / Number(pageCount.value));

@@ -169,6 +169,17 @@
                   </div>
                 </div>
               </div>
+              <div class="row">
+                <div class="">
+                  <div class="dashboard__body__card__link">
+                    <button class="ripple custom-button-primary">
+                      <NuxtLink to="/dashboard/contacts" class="dashboard-link"
+                        >Metrics playground</NuxtLink
+                      >
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </UCard>
         </div>
@@ -349,8 +360,6 @@ async function getMetricsByType(metrics) {
       type[0].total += 1;
     }
   });
-
-  console.log(metricsByType.value);
 }
 </script>
 
