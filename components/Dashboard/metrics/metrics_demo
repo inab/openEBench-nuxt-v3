@@ -1,0 +1,167 @@
+import demo_bar from "./demo/bar_plot_demo.json";
+import demo_scatter from "./demo/scatter_plot_demo.json";
+import demo_radar from "./demo/radar_plot_demo.json";
+import demo_box from "./demo/box_plot_demo.json";
+
+const isLoadingGraphBar = ref(true);
+const isLoadingGraphBox = ref(true);
+const isLoadingGraphRadar = ref(true);
+const isLoadingGraphScatter = ref(true);
+
+const preparedBar = ref({
+  _id: "",
+  name: "",
+  dates: [],
+  inline_data: {
+    challenge_participants: [],
+    visualization: {},
+  },
+});
+
+const preparedScatter = ref({
+  _id: "",
+  name: "",
+  dates: "",
+  inline_data: {
+    challenge_participants: [],
+    visualization: {},
+  },
+});
+const preparedRadar = ref({
+  _id: "",
+  name: "",
+  dates: "",
+  inline_data: {
+    challenge_participants: [],
+    visualization: {},
+  },
+});
+
+const preparedBox = ref({
+  _id: "",
+  name: "",
+  dates: "",
+  inline_data: {
+    challenge_participants: [],
+    visualization: {},
+  },
+});
+
+//loadPreparedData();
+
+// async function loadPreparedData() {
+//   await getPreparedData();
+// }
+
+function getPreparedData() {
+  // Load demo data
+  const bar = demo_bar;
+  const scatter = demo_scatter;
+  const radar = demo_radar;
+  const box = demo_box;
+
+  const barVisualization = bar.inline_data.visualization;
+  const scatterVisualization = scatter.inline_data.visualization;
+  const radarVisualization = radar.visualization;
+  const boxVisualization = box.inline_data.visualization;
+
+  preparedBar.value = {
+    _id: bar._id,
+    name: bar.name,
+    dates: bar.dates,
+    inline_data: {
+      challenge_participants: [],
+      visualization: {
+        metric: barVisualization.metric,
+        type: barVisualization.type,
+      },
+    },
+  };
+  preparedBar.value.inline_data.challenge_participants =
+    bar.inline_data.challenge_participants.map((participant: any) => {
+      const preparedParticipant = {
+        tool_id: participant.tool_id,
+        metric_value: participant.metric_value,
+        stderr: participant.stderr,
+      };
+      return preparedParticipant;
+    });
+  preparedBar.value = JSON.stringify(preparedBar.value);
+
+  preparedScatter.value = {
+    _id: scatter._id,
+    dates: scatter.dates,
+    inline_data: {
+      challenge_participants: [],
+      visualization: scatterVisualization,
+    },
+  };
+  preparedScatter.value.inline_data.challenge_participants =
+    scatter.inline_data.challenge_participants.map((participant: any) => {
+      const preparedParticipant = {
+        tool_id: participant.tool_id,
+        metric_x: participant.metric_x,
+        stderr_x: participant.stderr_x,
+        metric_y: participant.metric_y,
+        stderr_y: participant.stderr_y,
+      };
+      return preparedParticipant;
+    });
+  preparedScatter.value = JSON.stringify(preparedScatter.value);
+
+  preparedRadar.value = {
+    _id: radar._id,
+    name: radar.name,
+    dates: radar.dates,
+    inline_data: {
+      challenge_participants: [],
+      visualization: radarVisualization,
+    },
+  };
+  preparedRadar.value.inline_data.challenge_participants =
+    radar.inline_data.challenge_participants.map((participant: any) => {
+      const preparedParticipant = {
+        id: participant._id,
+        label: participant.label,
+        value: participant.value,
+        error: participant.error,
+      };
+      return preparedParticipant;
+    });
+  preparedRadar.value = JSON.stringify(preparedRadar.value);
+
+  preparedBox.value = {
+    _id: box._id,
+    name: box.name,
+    dates: box.dates,
+    inline_data: {
+      challenge_participants: [],
+      visualization: boxVisualization,
+    },
+  };
+  preparedBox.value.inline_data.challenge_participants =
+    box.inline_data.challenge_participants.map((participant: any) => {
+      const preparedParticipant = {
+        name: participant.name,
+        metric_id: participant.metric_id,
+        q1: participant.q1,
+        mean: participant.mean,
+        median: participant.median,
+        q3: participant.q3,
+        lowerfence: participant.lowerfence,
+        upperfence: participant.upperfence,
+      };
+      return preparedParticipant;
+    });
+  preparedBox.value = JSON.stringify(preparedBox.value);
+}
+
+
+onMounted(async () => {
+  await import("@inb/oeb-widgets-graphs").then(() => {
+    isLoadingGraphBar.value = true;
+    isLoadingGraphScatter.value = true;
+    isLoadingGraphRadar.value = true;
+    isLoadingGraphBox.value = true;
+  });
+});

@@ -176,10 +176,9 @@
 </template>
 
 <script setup lang="ts">
-import { Metric } from "@/types/challenge_metric";
+import type { Metric } from "@/types/challenge_metric";
 import { ref, computed } from "vue";
 import CustomModal from "@/components/Common/CustomModal.vue";
-import { NuxtAuthHandler } from "@/test/mocks/auth";
 
 const props = defineProps<{
   metricRows: Metric[];
@@ -225,7 +224,6 @@ const cleanContacts = (contacts: any) => {
 };
 
 const filteredRows = computed(() => {
-  console.log("search.value", search.value);
   if (!search.value) {
     _total.value = props.metricRows.length;
     return props.metricRows.slice(
@@ -240,10 +238,7 @@ const filteredRows = computed(() => {
     });
   });
 
-  console.log("filteredSearcher", filteredSearcher);
-
   _total.value = filteredSearcher.length;
-
   
   return filteredSearcher.slice(
     (Number(page.value) - 1) * Number(pageCount.value),

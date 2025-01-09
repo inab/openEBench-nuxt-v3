@@ -91,7 +91,6 @@ const rows = computed(() => {
 });
 
 function select(row) {
-  console.log("select!!");
   const index = selectedMetric.value.findIndex((item) => item.id === row.id);
   if (index === -1) {
     selectedMetric.value.push(row);
