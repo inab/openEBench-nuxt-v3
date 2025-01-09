@@ -1,7 +1,12 @@
 <template>
-  <div ref="numberSection" class="d-flex flex-column align-items-center">
-    <h1 class="display-4 thicker-number">{{ animatedNumber }}</h1>
-    <p class="description-text fw-medium">{{ description }}</p>
+  <div ref="numberSection" class="d-flex flex-column align-items-center numbers-container">
+    <div v-if="!props.number" class="loader-container">
+      <div class="loader"></div>
+    </div>
+    <div v-else class="number-item">
+      <h1 class="display-4 thicker-number">{{ animatedNumber }}</h1>
+      <p class="description-text fw-medium">{{ description }}</p>
+    </div>
   </div>
 </template>
 
@@ -41,7 +46,7 @@ const checkIfInView = () => {
     const inViewport =
       rect.top >= 0 &&
       rect.bottom <=
-        (window.innerHeight || document.documentElement.clientHeight);
+      (window.innerHeight || document.documentElement.clientHeight);
     if (inViewport) {
       animateNumber();
     }
@@ -73,6 +78,14 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+.numbers-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+}
+
 .number-section {
   margin-top: 50px;
 }
@@ -82,8 +95,43 @@ onUnmounted(() => {
   text-shadow: 0.5px 0.5px 0 #000000;
 }
 
+.number-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
 .description-text {
   font-size: 20px;
   text-shadow: 0.5px 0.5px 0 #000000;
+  text-align: center;
+}
+
+.loader-container {
+  width: 100px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loader {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #0b579f;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>
