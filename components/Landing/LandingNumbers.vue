@@ -20,8 +20,10 @@
 </template>
 
 <script setup lang="ts">
+import { Ref, ref, onMounted } from 'vue';
 import parseDataURL from "data-urls";
 import { labelToName, decode } from "whatwg-encoding";
+import { useRuntimeConfig, useNuxtApp, useAsyncData } from '#app';
 import customApi from "~/composables/useAPI";
 import AnimateNumber from "~/components/Landing/AnimateNumber.vue";
 
@@ -141,7 +143,8 @@ async function getResourcesCount() {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  background-attachment: fixed; /* Parallax effect */
+  background-attachment: fixed;
+  /* Parallax effect */
   display: flex;
   align-items: center;
 
