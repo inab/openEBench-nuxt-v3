@@ -1,5 +1,5 @@
 <template>
-  <UTooltip :disabled="disabled_tooltip" 
+  <UTooltip :style="{ pointerEvents: disabled_tooltip ? 'none' : 'auto' }" 
     :text="field_name" class="text-right rtl:text-left" 
     :ui="{ background: 'bg-black bg-opacity-50', color: 'text-white',
       transition: {enterActiveClass: 'transition ease-out duration-300', leaveActiveClass: 'transition ease-in duration-150',}
