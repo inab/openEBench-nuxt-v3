@@ -377,9 +377,9 @@ function removeTag(tagName: string) {
 
 function getCommunityEditLink(row: any, isEvent: boolean = false) {
   if (isEvent) {
-    return `/dashboard/entries/${row._id}?events=true`;
+    return `/dashboard/projects_communities/${row._id}?events=true`;
   }
-  return `/dashboard/entries/${row._id}`;
+  return `/dashboard/projects_communities/${row._id}`;
 }
 </script>
 

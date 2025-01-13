@@ -693,7 +693,7 @@ async function createCommunity() {
     const responseData = await response.json();
     if (responseData.status == 200) {
       errors.value = [];
-      router.push("/dashboard/entries");
+      router.push("/dashboard/projects_communities");
     } else {
       const errorResponse = JSON.parse(responseData.body);
       errors.value = errorResponse.error.map((error: any) => {
@@ -709,7 +709,7 @@ async function createCommunity() {
 }
 
 function goBack() {
-  router.push("/dashboard/entries");
+  router.push("/dashboard/projects_communities");
 }
 
 const getErrors = computed(() => errors.value.join(", "));

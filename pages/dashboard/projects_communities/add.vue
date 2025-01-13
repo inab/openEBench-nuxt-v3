@@ -33,7 +33,7 @@ if (userPrivileges.value.length == 0) {
 
 const routeArray: Array = ref([
   { label: "Dashboard", isActualRoute: false, route: "/dashboard" },
-  { label: "entries", isActualRoute: false, route: "/dashboard/entries" },
+  { label: "Projects & communities", isActualRoute: false, route: "/dashboard/projects_communities" },
   {
     label: "Entry Add",
     isActualRoute: true,

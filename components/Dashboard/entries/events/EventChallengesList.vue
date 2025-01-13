@@ -5,7 +5,7 @@
       class="w-100 flex justify-content-end gap-3 py-3"
     >
       <NuxtLink
-        :to="`/dashboard/entries/${communityId}/events/${eventId}/add`"
+        :to="`/dashboard/projects_communities/${communityId}/events/${eventId}/add`"
         class="btn custom-btn btn-primary"
         title="Create New Event"
       >
@@ -215,7 +215,7 @@ const challengePrivileges = computed(() => {
 });
 
 const getCommunityChallengeEditLink = (row) => {
-  return `/dashboard/entries/${props.communityId}/events/${props.eventId}/challenges/${row._id}`;
+  return `/dashboard/projects_communities/${props.communityId}/events/${props.eventId}/challenges/${row._id}`;
 };
 </script>
 

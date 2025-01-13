@@ -98,7 +98,11 @@ const communityEvents = ref<Array<Event>>(null);
 
 const routeArray: Array = ref([
   { label: "Dashboard", isActualRoute: false, route: "/dashboard" },
-  { label: "entries", isActualRoute: false, route: "/dashboard/entries" },
+  {
+    label: "Projects & Communities",
+    isActualRoute: false,
+    route: "/dashboard/projects_communities",
+  },
   {
     label: computed(() => routeName.value),
     isActualRoute: true,

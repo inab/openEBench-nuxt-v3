@@ -99,10 +99,7 @@
                                     type="text"
                                     class="form-control custom-entry-input"
                                     placeholder="Community id"
-                                    :disabled="
-                                      !commmunityPrivileges.community.update ||
-                                      isView
-                                    "
+                                    disabled
                                   />
                                 </div>
                               </div>
@@ -717,7 +714,7 @@ const checkEmptyKeywords = computed(() => {
 });
 
 function goBack() {
-  router.push("/dashboard/entries");
+  router.push("/dashboard/projects_communities");
 }
 
 async function onSubmitCommunity(event: FormSubmitEvent<Schema>) {
@@ -805,7 +802,7 @@ async function updateCommunity() {
     if (data.status === 200) {
       const msg = "We've saved your community changes.";
       await showOkMessage(msg).then(() => {
-        router.push("/dashboard/entries");
+        router.push("/dashboard/projects_communities");
       });
     } else {
       const responseData = JSON.parse(data.body);
