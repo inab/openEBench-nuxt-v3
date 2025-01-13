@@ -10,10 +10,10 @@
                 v-if="userStore.getUserCommunitiesRoles && isAdmin"
                 class="flex justify-content-between gap-3"
               >
-                <h2>Entries</h2>
+                <h2>Projects & Communities</h2>
                 <NuxtLink
                   id="dashboard-create-community"
-                  to="/dashboard/entries/add"
+                  to="/dashboard/projects_communities/add"
                   class="btn custom-btn btn-primary mb-2 small"
                   title="Create new community"
                 >
@@ -23,11 +23,11 @@
               </div>
             </div>
             <div class="dashboard__description text-gray-500">
-              It is a long established fact that a reader will be distracted by
-              the readable content of a page when looking at its layout. The
-              point of using Lorem Ipsum is that it has a more-or-less normal
-              distribution of letters, as opposed to using 'Content here,
-              content here', making it look like readable English.
+              This section features a collection of projects and communities
+              centered around OpenEBench applications. Explore ongoing
+              initiatives, contribute your expertise, or start your own project
+              to collaborate with other users and advance the development of
+              OpenEBench.
             </div>
           </div>
           <div class="dashboard-tabs">
@@ -63,18 +63,9 @@ if (data.value) {
   token = data.value.accessToken;
 }
 
-const items = [
-  {
-    key: "entries",
-    slot: "entries",
-    label: "Entries",
-    icon: "i-heroicons-table-cells-16-solid",
-  },
-];
-
 const routeArray: Array = [
   { label: "Dashboard", isActualRoute: false, route: "/dashboard" },
-  { label: "Entries", isActualRoute: true },
+  { label: "Projects & communities", isActualRoute: true },
 ];
 
 if (userStore.getUserCommunitiesRoles.length == 0) {

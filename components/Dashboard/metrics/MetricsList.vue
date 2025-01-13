@@ -1,48 +1,54 @@
 <template>
-<div class="metrics-table">
-  <div
+  <div class="metrics-table">
+    <div
       v-if="filteredRows.length > 0"
       class="flex justify-content-end py-2.5 border-b border-gray-200 dark:border-gray-700"
     >
-    <UInput
-      v-model="search"
-      color="white"
-      variant="outline"
-      icon="i-heroicons-magnifying-glass"
-      placeholder="Search ..."
-      class="input-search"
-    />
-  </div>
-  <UTable
-    :columns="columns"
-    :rows="filteredRows"
-    :ui="{
-      tr: {
-        base: 'hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer',
-      },
-      th: {
-        base: 'text-left rtl:text-right',
-        padding: 'px-2.5 py-2.5',
-        color: 'text-gray-900 dark:text-white',
-        font: 'font-semibold',
-        size: 'text-sm',
-      },
-      td: {
-        base: '',
-        padding: 'px-3 py-3',
-        font: '',
-        size: 'text-sm',
-      },
-    }"
-  >
-    <template #view-data="{ row }">
-      <button class="btn-custom-badget text-sm text-primaryOeb-950"
-        @click="openModal(row)">
-        View <font-awesome-icon :icon="['fas', 'pencil']" />
-      </button>
-    </template>
-  </UTable>
-  <div
+      <UInput
+        v-model="search"
+        color="white"
+        variant="outline"
+        icon="i-heroicons-magnifying-glass"
+        placeholder="Search ..."
+        class="input-search"
+      />
+    </div>
+    <UTable
+      :columns="columns"
+      :rows="filteredRows"
+      :ui="{
+        tr: {
+          base: 'hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer',
+        },
+        th: {
+          base: 'text-left rtl:text-right',
+          padding: 'px-2.5 py-2.5',
+          color: 'text-gray-900 dark:text-white',
+          font: 'font-semibold',
+          size: 'text-sm',
+        },
+        td: {
+          base: '',
+          padding: 'px-3 py-3',
+          font: '',
+          size: 'text-sm',
+        },
+      }"
+    >
+      <template #view-data="{ row }">
+        <button class="btn-custom-badget text-sm text-primaryOeb-950">
+          <NuxtLink
+            :to="`/dashboard/metrics/${row._id}`"
+            title="View community events"
+            class="text-sm"
+          >
+            <font-awesome-icon :icon="['far', 'eye']" />
+            Visit
+          </NuxtLink>
+        </button>
+      </template>
+    </UTable>
+    <div
       v-if="filteredRows.length > 0"
       class="flex flex-wrap justify-between items-center pt-2"
     >
@@ -72,7 +78,7 @@
         }"
       />
     </div>
-    <CustomModal :is-open="isModalOpen" width="700" @modal-close="closeModal">
+    <!-- <CustomModal :is-open="isModalOpen" width="700" @modal-close="closeModal">
       <template #header>
         <h2>View Metric</h2>
         <UButton
@@ -171,8 +177,8 @@
           </UButton>
         </div>
       </template>
-    </CustomModal>
-</div>
+    </CustomModal> -->
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -193,7 +199,7 @@ const search = ref("");
 const _total = ref(0);
 const page = ref<number>(1);
 const pageCount = ref<number>(10);
-  const pageFrom = computed(
+const pageFrom = computed(
   () => (Number(page.value) - 1) * Number(pageCount.value) + 1,
 );
 const pageTo = computed(() =>
@@ -239,7 +245,7 @@ const filteredRows = computed(() => {
   });
 
   _total.value = filteredSearcher.length;
-  
+
   return filteredSearcher.slice(
     (Number(page.value) - 1) * Number(pageCount.value),
     Number(page.value) * Number(pageCount.value),
@@ -254,7 +260,9 @@ const openModal = async (row: Metric) => {
   isModalOpen.value = true;
   metricObj.value = await fetchMetric(row._id);
   if (metricObj.value) {
-    metricObj.value.metrics_contact_ids = cleanContacts(metricObj.value.metrics_contact_ids);
+    metricObj.value.metrics_contact_ids = cleanContacts(
+      metricObj.value.metrics_contact_ids,
+    );
   }
 };
 
@@ -267,13 +275,16 @@ const closeModal = () => {
 async function fetchMetric(id: string): Promise<Metric | null> {
   isSearchingMetric.value = true;
   try {
-    const response = await fetch(`${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Metrics/${id}`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${props.token}`,
-        Accept: "application/json",
+    const response = await fetch(
+      `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Metrics/${id}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${props.token}`,
+          Accept: "application/json",
+        },
       },
-    });
+    );
     const data = await response.json();
     isSearchingMetric.value = false;
     return data._id ? data : null;
@@ -289,6 +300,5 @@ async function fetchMetric(id: string): Promise<Metric | null> {
   width: 100%;
 }
 .form-text {
-
 }
 </style>

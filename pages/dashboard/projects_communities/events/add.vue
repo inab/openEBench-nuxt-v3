@@ -63,12 +63,12 @@ const routeArray: Array = ref([
   {
     label: "Entries",
     isActualRoute: false,
-    route: "/dashboard/entries",
+    route: "/dashboard/projects_communities",
   },
   {
     label: `Communitiy ${communityId}`,
     isActualRoute: false,
-    route: `/dashboard/entries/${communityId}`,
+    route: `/dashboard/projects_communities/${communityId}`,
   },
   {
     label: "New event",

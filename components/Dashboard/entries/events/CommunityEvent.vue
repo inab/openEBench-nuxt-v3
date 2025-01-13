@@ -699,7 +699,7 @@ async function updateBenchmarkingEvent() {
     const responseData = await response.json();
     if (responseData.status == 200) {
       errors.value = [];
-      router.push(`/dashboard/entries/${state.value.community_id}?events=true`);
+      router.push(`/dashboard/projects_communities/${state.value.community_id}?events=true`);
     } else {
       const errorResponse = JSON.parse(responseData.body);
       errors.value = errorResponse.error.map((error: any) => {
@@ -723,7 +723,7 @@ const checkEmptyReferences = computed(() => {
 });
 
 function goBack() {
-  router.push(`/dashboard/entries/${state.value.community_id}`);
+  router.push(`/dashboard/projects_communities/${state.value.community_id}`);
 }
 
 function convertToUTCFullDate(dateString: string): string {

@@ -6,8 +6,12 @@
           <h2 class="text-primaryOeb-500">Dashboard</h2>
         </div>
         <div class="dashboard__header__description text-gray-500">
-          Welcome <span data-testid="name">{{ data.name }}</span
-          >to the OpenEBench Dashboard.
+          ¡Welcome to the OpenEBench Dashboard! Here you can monitor, optimize
+          and administer your applications in real-time with an intuitive
+          interface that allows you to explore various indicators and metrics
+          for improving efficiency. Don't hesitate to navigate through the
+          functions and options of the control panel to make OpenEBench a
+          valuable tool for your projects.
         </div>
       </div>
       <div class="dashboard__body row mb-5">
@@ -18,35 +22,36 @@
               header: {
                 base: '',
                 background: '',
-                padding: 'px-2 py-3 sm:px-6',
+                padding: 'px-4 py-3 sm:px-6',
               },
             }"
           >
             <template #header>
-              <div class="dashboard__body__card__header">Entries</div>
+              <div class="dashboard__body__card__header">
+                Projects & Communities
+              </div>
             </template>
-
-            <div class="">
-              <div class="row">
-                <div class="col-6">
-                  <img
-                    src="assets/images/dashboard/entries.png"
-                    alt="User profile picture"
-                    class=""
-                  />
+            <div class="row">
+              <div class="col-6">
+                <img
+                  src="assets/images/dashboard/entries.png"
+                  alt="User profile picture"
+                  class=""
+                />
+              </div>
+              <div class="col-6 col-separator">
+                <div class="">
+                  Here you can find information about the communities you are
+                  part of, as well as the tools available to you.
                 </div>
-                <div class="col-6">
-                  <div class="">
-                    Here you can find information about the communities you are
-                    part of and the tools you have access to.
-                  </div>
-                  <div class="dashboard__body__card__link">
-                    <button class="ripple custom-button-primary">
-                      <NuxtLink to="/dashboard/entries" class="dashboard-link"
-                        >Entries</NuxtLink
-                      >
-                    </button>
-                  </div>
+                <div class="dashboard__body__card__link">
+                  <button class="ripple custom-button-primary">
+                    <NuxtLink
+                      to="/dashboard/projects_communities"
+                      class="dashboard-link"
+                      >Projects & Communities</NuxtLink
+                    >
+                  </button>
                 </div>
               </div>
             </div>
@@ -59,40 +64,32 @@
               header: {
                 base: '',
                 background: '',
-                padding: 'px-2 py-3 sm:px-6',
+                padding: 'px-4 py-3 sm:px-6',
               },
             }"
           >
             <template #header>
-              <div class="dashboard__body__card__header">Metrics</div>
+              <div class="dashboard__body__card__header">Contacts</div>
             </template>
-
-            <div class="">
-              <div class="row">
-                <div class="col-6">
-                  <img
-                    src="assets/images/dashboard/22821946_Na_Dec_02.jpg"
-                    alt="User profile picture"
-                    class=""
-                  />
+            <div class="row">
+              <div class="col-5">
+                <img
+                  src="assets/images/dashboard/contacts.jpg"
+                  alt="User profile picture"
+                  class=""
+                />
+              </div>
+              <div class="col-7 col-separator">
+                <div class="w-100">
+                  Access a registry of platform user contact information. Search
+                  and filter by various criteria.
                 </div>
-                <div class="col-6">
-                  <div class="">
-                    <div class="">
-                      Total metrics: <span>{{ totalMetrics }}</span>
-                    </div>
-                    <div class="">
-                      Here you can find information about the communities you
-                      are part of and the tools you have access to.
-                    </div>
-                  </div>
-                  <div class="dashboard__body__card__link">
-                    <button class="ripple custom-button-primary">
-                      <NuxtLink to="/dashboard/metrics" class="dashboard-link"
-                        >Explore Metrics</NuxtLink
-                      >
-                    </button>
-                  </div>
+                <div class="dashboard__body__card__link pt-5">
+                  <button class="ripple custom-button-primary">
+                    <NuxtLink to="/dashboard/contacts" class="dashboard-link"
+                      >Contacts</NuxtLink
+                    >
+                  </button>
                 </div>
               </div>
             </div>
@@ -107,7 +104,7 @@
               header: {
                 base: '',
                 background: '',
-                padding: 'px-2 py-3 sm:px-6',
+                padding: 'px-4 py-3 sm:px-6',
               },
             }"
           >
@@ -169,53 +166,60 @@
                   </div>
                 </div>
               </div>
-              <div class="row">
+              <!-- <div class="row">
                 <div class="">
                   <div class="dashboard__body__card__link">
                     <button class="ripple custom-button-primary">
-                      <NuxtLink to="/dashboard/contacts" class="dashboard-link"
+                      <NuxtLink
+                        to="/dashboard/metrics-playground"
+                        class="dashboard-link"
                         >Metrics playground</NuxtLink
                       >
                     </button>
                   </div>
                 </div>
-              </div>
+              </div> -->
             </div>
           </UCard>
         </div>
-        <div class="col-4">
+        <div class="col-6">
           <UCard
             class="dashboard__body__card"
             :ui="{
               header: {
                 base: '',
                 background: '',
-                padding: 'px-2 py-3 sm:px-6',
+                padding: 'px-4 py-3 sm:px-6',
               },
             }"
           >
             <template #header>
-              <div class="dashboard__body__card__header">Contacts</div>
+              <div class="dashboard__body__card__header">Metrics</div>
             </template>
 
             <div class="">
               <div class="row">
                 <div class="col-6">
                   <img
-                    src="assets/images/dashboard/contacts.jpg"
+                    src="assets/images/dashboard/22821946_Na_Dec_02.jpg"
                     alt="User profile picture"
                     class=""
                   />
                 </div>
                 <div class="col-6">
                   <div class="">
-                    Here you can find information about the communities you are
-                    part of and the tools you have access to.
+                    <div class="">
+                      Total metrics: <span>{{ totalMetrics }}</span>
+                    </div>
+                    <div class="">
+                      Here you can find information about the communities you
+                      are part of and the tools you have access to.
+                    </div>
                   </div>
                   <div class="dashboard__body__card__link">
                     <button class="ripple custom-button-primary">
-                      <NuxtLink to="/dashboard/contacts" class="dashboard-link"
-                        >Contacts</NuxtLink
+                      <NuxtLink to="/dashboard/metrics" class="dashboard-link"
+                        >Explore Metrics</NuxtLink
                       >
                     </button>
                   </div>
@@ -387,7 +391,7 @@ async function getMetricsByType(metrics) {
       box-shadow:
         rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
         rgba(0, 0, 0, 0.08) 0px 0px 0px 1px !important;
-      height: 100%;
+      min-height: 320px;
       display: flex;
       flex-direction: column;
       &__header {
@@ -396,9 +400,19 @@ async function getMetricsByType(metrics) {
         color: theme("colors.primary.500");
       }
       &__link {
-        padding-top: 15px;
+        padding-top: 25px;
+        display: flex;
+        justify-content: end;
+      }
+      & img {
+        max-height: 150px;
       }
     }
+  }
+  .col-separator {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
   }
 
   .custom-button-primary {
@@ -419,6 +433,9 @@ async function getMetricsByType(metrics) {
       border: 1px solid #0b579f;
       background-color: white;
       color: theme("colors.primary.500");
+      &:hover .dashboard-link {
+        color: theme("colors.primary.500");
+      }
     }
   }
   .card-plot-title {

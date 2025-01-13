@@ -4,7 +4,7 @@
       Events
       <div v-if="eventPrivileges.create" class="">
         <NuxtLink
-          :to="`/dashboard/entries/${communityId}/events/add`"
+          :to="`/dashboard/projects_communities/${communityId}/events/add`"
           class="btn custom-btn btn-primary small"
           title="Create New Event"
         >
@@ -214,9 +214,9 @@ const totalPages = computed(() => {
 
 const getCommunityEventEditLink = (row: any, isChallenge: boolean = false) => {
   if (isChallenge) {
-    return `/dashboard/entries/${row.community_id}/events/${row._id}?challenges=true`;
+    return `/dashboard/projects_communities/${row.community_id}/events/${row._id}?challenges=true`;
   }
-  return `/dashboard/entries/${row.community_id}/events/${row._id}`;
+  return `/dashboard/projects_communities/${row.community_id}/events/${row._id}`;
 };
 </script>
 

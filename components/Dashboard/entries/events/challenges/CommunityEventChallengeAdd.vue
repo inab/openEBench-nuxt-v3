@@ -634,7 +634,7 @@ async function createChallenge() {
     if (responseData.status == 200) {
       errors.value = [];
       router.push(
-        `/dashboard/entries/${communityId.value}/events/${eventId.value}?challenges=true`,
+        `/dashboard/projects_communities/${communityId.value}/events/${eventId.value}?challenges=true`,
       );
     } else {
       let errorResponse = JSON.parse(responseData.body);

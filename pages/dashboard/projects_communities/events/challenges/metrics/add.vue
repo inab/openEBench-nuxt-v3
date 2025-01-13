@@ -50,22 +50,22 @@ const routeArray: Array = ref([
   {
     label: "Entries",
     isActualRoute: false,
-    route: "/dashboard/entries",
+    route: "/dashboard/projects_communities",
   },
   {
     label: `Communitiy ${communityId}`,
     isActualRoute: false,
-    route: `/dashboard/entries/${communityId}`,
+    route: `/dashboard/projects_communities/${communityId}`,
   },
   {
     label: `events ${eventId}`,
     isActualRoute: false,
-    route: `/dashboard/entries/${communityId}/events/${eventId}`,
+    route: `/dashboard/projects_communities/${communityId}/events/${eventId}`,
   },
   {
     label: `challenge ${challengeId}`,
     isActualRoute: false,
-    route: `/dashboard/entries/${communityId}/events/${eventId}/challenges/${challengeId}`,
+    route: `/dashboard/projects_communities/${communityId}/events/${eventId}/challenges/${challengeId}`,
   },
   {
     label: "New Metric",

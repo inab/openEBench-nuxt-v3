@@ -464,7 +464,7 @@ state.value.dates.benchmark_start = benchmarkStart;
 state.value.dates.benchmark_stop = benchmarkStop;
 
 function goBack() {
-  router.push(`/dashboard/entries/${state.value.community_id}`);
+  router.push(`/dashboard/projects_communities/${state.value.community_id}`);
 }
 
 const getErrors = computed(() => errors.value.join(", "));
@@ -526,7 +526,7 @@ async function createBenchmarkingEvent() {
     const responseData = await response.json();
     if (responseData.status == 200) {
       errors.value = [];
-      router.push(`/dashboard/entries/${state.value.community_id}?events=true`);
+      router.push(`/dashboard/projects_communities/${state.value.community_id}?events=true`);
     } else {
       let errorResponse = JSON.parse(responseData.body);
       errorResponse = errorResponse.error || [];
