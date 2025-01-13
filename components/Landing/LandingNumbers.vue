@@ -12,7 +12,7 @@
           <AnimateNumber description="Resources" :number="resourcesCount" />
         </div>
         <div class="col-12 col-sm-6 col-lg-3 mb-3 mb-lg-0 h-100">
-          <AnimateNumber description="Project" :number="projectsCount" />
+          <AnimateNumber description="Project Spaces" :number="projectsCount" />
         </div>
       </div>
     </div>

@@ -1,13 +1,16 @@
 <template>
   <div ref="numberSection" class="d-flex flex-column align-items-center numbers-container">
-    <div v-if="!props.number" class="loader-container">
-      <div class="loader"></div>
-    </div>
-    <div v-else class="number-item">
-      <h1 class="display-4 thicker-number">{{ animatedNumber }}</h1>
+    <div class="number-item">
+      <div v-if="!props.number" class="loader-container">
+        <div class="loader"></div>
+      </div>
+      <div v-else>
+        <h1 class="display-4 thicker-number">{{ animatedNumber }}</h1>
+      </div>
       <p class="description-text fw-medium">{{ description }}</p>
     </div>
   </div>
+
 </template>
 
 <script setup lang="ts">
