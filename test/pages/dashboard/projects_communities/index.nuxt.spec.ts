@@ -1,6 +1,6 @@
 import { mount } from "@vue/test-utils";
 import { describe, it, expect, vi, beforeEach, shallowMount } from "vitest";
-import Index from "@/pages/dashboard/entries/index.vue";
+import Index from "@/pages/dashboard/projects_communities/index.vue";
 import { createTestingPinia } from "@pinia/testing";
 
 const mockUseAuth = vi.fn();
