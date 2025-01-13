@@ -28,8 +28,37 @@
           </template>
         </UButton>
       </template>
-    </UAccordion>
 
+      <!-- Content -->
+      <template #item="{ item }">
+
+        <!-- Content 0. Identity -->
+        <div v-if="item.label == '0. Identity'" class="p-4">
+          <!-- Name -->
+          <MetaField
+            title="Name"
+            field="label"
+            value-type=""
+            n_cols="4"
+            :increasable="false"
+          >
+            <template #inputField>
+              <FormField
+                field="label"
+                :increasable="false"
+                :item="toolMetadata.label[0]"
+                :text-class="nameTextClass()"
+              />
+            </template>
+          </MetaField>
+        </div>
+        <div>
+          <p class="italic text-gray-900 dark:text-white text-center">
+            {{ item.label }}
+          </p>
+        </div>
+      </template>
+    </UAccordion>
     <!-- Buttons -->
     <div class="flex justify-between mt-5">
       <UButton variant="ghost" color="red" @click="stepperStore.cancelSteps">
@@ -55,6 +84,8 @@ import { ref, computed, onMounted, watch } from "vue";
 import { useMetadataStore } from '@/stores/observatory/evaluation/metadata';
 import { useResultStore } from '@/stores/observatory/evaluation/results';
 import { useStepperStore } from '@/stores/observatory/evaluation/index';
+import MetaField from "./Metafield.vue";
+import FormField from './FormField.vue';
 
 const metadataStore = useMetadataStore();
 const resultsStore = useResultStore();
