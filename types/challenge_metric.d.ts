@@ -3,6 +3,12 @@ export interface ChallengeCommonMetric {
   tool_id?: string;
 }
 
+export interface ChallengeMetricCategory {
+  category: string;
+  description: string;
+  metrics: ChallengeCommonMetric[];
+}
+
 export interface Metadata {
   "level_2:metric_id": string;
 }
