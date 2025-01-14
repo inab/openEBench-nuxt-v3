@@ -26,13 +26,23 @@
                       class="w-5 h-5"
                     />
                   </button>
-                  <div class="w-100 pl-4">
+                  <div class="pl-1 reset-col" v-if="searchList.length > 0">
+                    <button
+                      class="btn btn-primary"
+                      type="button"
+                      @click="handleResetSearcher"
+                    >
+                      <UIcon name="i-heroicons-arrow-path-16-solid" />
+                      Reset Searcher
+                    </button>
+                  </div>
+                  <div class="w-100 pl-1">
                     <button
                       class="btn btn-primary"
                       type="button"
                       @click="isModalOpened = true"
                     >
-                      <UIcon name="i-heroicons-plus" />
+                      <UIcon name="i-heroicons-plus-16-solid" />
                       Create New Metric
                     </button>
                   </div>
@@ -357,6 +367,19 @@
               </div>
             </div>
           </div>
+          <div class="w-100 existed-metrics" v-else>
+            <div class="w-100" v-if="isLoadingChallengeMetrics">
+              <div class="space-y-2">
+                <USkeleton class="h-4 w-[700px]" />
+                <USkeleton class="h-4 w-[700px]" />
+              </div>
+            </div>
+            <div class="w-100" v-else>
+              <ChallengeMetricsList
+              :metrics-list="challengeMetrics"
+              :loading-metrics="isLoadingChallengeMetrics" />
+            </div>
+          </div>
         </div>
         <CustomModal :is-open="isModalOpened" width="800">
           <template #header>
@@ -384,9 +407,11 @@
 
 <script setup lang="ts">
 import { ref, watch } from "vue";
-import type { Metric, Tool } from "@/types/challenge_metric";
+import type { Metric, Tool, ChallengeMetricCategory } from "@/types/challenge_metric";
 import type { ChartDefault } from "@/types/visualizations";
+
 import { useMetrics } from "@/stores/metrics.ts";
+
 import metricsSearcher from "@/utils/metricsMatch";
 import CustomBorder from "@/components/Common/CustomBorder.vue";
 import SearchMetricTable from "@/components/Dashboard/entries/events/challenges/metrics/SearchMetricTable.vue";
@@ -397,9 +422,12 @@ import CreateMetric from "@/components/Dashboard/entries/events/challenges/metri
 import AddMetricsBox from "@/components/Dashboard/entries/events/challenges/metrics/resume/AddMetricsBox.vue";
 import AddToolBox from "@/components/Dashboard/entries/events/challenges/metrics/resume/AddToolBox.vue";
 import AddVisualizationBox from "@/components/Dashboard/entries/events/challenges/metrics/resume/AddVisualizationBox.vue";
+import ChallengeMetricsList from "@/components/Dashboard/entries/events/challenges/metrics/ChallengeMetricsList.vue";
 
 const props = defineProps<{
   contactsData: string[];
+  challengeMetrics: ChallengeMetricCategory[];
+  isLoadingChallengeMetrics: boolean;
 }>();
 
 const { data } = useAuth();
@@ -557,6 +585,11 @@ const goBack = () => {
       id: challengeId,
     },
   });
+};
+
+const handleResetSearcher = () => {
+  searchMetric.value = "";
+  searchList.value = [];
 };
 
 function goPrevious(index: number) {
@@ -804,5 +837,8 @@ watch(props.contactsData, (newVal: string[]) => {
       -webkit-clip-path: polygon(20px 50%, 0% 0%, 100% 0%, 100% 100%, 0% 100%);
     }
   }
+}
+.reset-col {
+  min-width: 180px;
 }
 </style>
