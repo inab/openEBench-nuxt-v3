@@ -3,18 +3,28 @@
     <div class="w-100 container">
       <div class="dashboard-community-edit__title">
         <h2 class="text-primaryOeb-500">
-          <span class=""
-            >{{ labelTitle }} : <i>{{ id }}</i></span
-          >
-          <span class="">
-            <NuxtLink
-              class="btn-primary hover_effect"
-              :to="'/benchmarking/' + id"
+          <div class="w-100">
+            OEB {{ labelType }} Code: {{ id }}
+            <span class="title-name"
+              ><i>( {{ communityData.name }} )</i></span
             >
-              {{ labelButton }}
-            </NuxtLink>
-          </span>
+          </div>
         </h2>
+        <div class="w-100 d-flex justify-content-end">
+          <NuxtLink
+            class="btn-primary hover_effect header-button"
+            :to="'/benchmarking/' + id"
+          >
+            {{ labelButton }}
+          </NuxtLink>
+        </div>
+      </div>
+      <div class="community-event-challenge__description text-gray-500 pb-4">
+        Communities in OpenEBench are dynamic networks of experts who
+        collaborate to advance software performance evaluation. They drive the
+        creation and refinement of benchmarks, fostering a shared understanding
+        of software capabilities and promoting innovation through collective
+        knowledge sharing.
       </div>
       <div v-if="loadingData" class="">
         <div class="space-y-2">
@@ -31,7 +41,7 @@
           ></CustomTab>
           <CustomTabBody>
             <div v-if="selectedTab == '0'">
-              <div class="tab-body-title">Community Data</div>
+              <CustomSubtitle text="Community Data" />
               <UForm
                 :schema="schema"
                 :state="state"
@@ -109,11 +119,14 @@
                                 <label for="status">Status</label>
                                 <USelectMenu
                                   v-model="localStatus.value"
+                                  class="custom-select-input"
+                                  selected-icon="i-heroicons-hand-thumb-up-solid"
                                   :options="CommunityStatusLabels"
                                   :disabled="
                                     !commmunityPrivileges.community.update ||
                                     isView
                                   "
+                                  :popper="{ arrow: true, offsetDistance: 0 }"
                                   @change="onChangeStatus"
                                 >
                                   <template #label>
@@ -131,6 +144,13 @@
                                       :class="`status-${item?.value}__option`"
                                     ></span>
                                     <span>{{ item.label }}</span>
+                                    <span
+                                      v-if="item.label == localStatus.label"
+                                    >
+                                      <font-awesome-icon
+                                        :icon="['fas', 'check']"
+                                      />
+                                    </span>
                                   </template>
                                 </USelectMenu>
                               </div>
@@ -140,6 +160,7 @@
                                 <label for="type">Type</label>
                                 <USelect
                                   v-model="state.type"
+                                  class="custom-select-input"
                                   :options="typeOptions"
                                   option-attribute="label"
                                   :disabled="
@@ -210,16 +231,14 @@
                   </div>
                 </div>
                 <div class="w-100 form-card">
-                  <CustomSubtitle text="Data" />
+                  <CustomSubtitle text="More data" size="17px" />
                   <div class="row form-card__row">
                     <div class="form-card__row__box">
                       <div class="col-12">
                         <div class="form-group">
                           <div class="w-100">
                             <label for="contacts" class="form-group-row">
-                              <span class="label-text text-gray-500">
-                                Links
-                              </span>
+                              <span class="label-text"> Links </span>
                               <button
                                 class="btn-form-add btn-primary"
                                 :disabled="
@@ -276,7 +295,7 @@
                         <div class="form-group">
                           <div class="w-100">
                             <label for="contacts" class="form-group-row">
-                              <span class="label-text text-gray-500">
+                              <span class="label-text">
                                 Contacts
                                 <span class="text-red-400 required">*</span>
                               </span>
@@ -303,6 +322,7 @@
                               class="col-12 pt-0"
                             >
                               <div class="input-wrapper big d-flex">
+                                <span>{{ index + 1 }}.</span>
                                 <USelectMenu
                                   :ref="`contact_${index}`"
                                   v-model="localContacts[index]"
@@ -368,13 +388,14 @@
                               </button>
                             </label>
                           </div>
-                          <div class="w-100 row no-space">
+                          <div class="w-100 row no-space p-0">
                             <div
                               v-for="(keys, index) in localKeywords"
                               :key="index"
                               class="col-4 pt-0"
                             >
                               <div class="input-wrapper">
+                                <span>{{ index + 1 }}.</span>
                                 <input
                                   v-model="localKeywords[index]"
                                   type="text"
@@ -425,7 +446,9 @@
                     <UButton
                       v-if="commmunityPrivileges.community.update && !isView"
                       type="submit"
-                      :disabled="!commmunityPrivileges.community.update || isView"
+                      :disabled="
+                        !commmunityPrivileges.community.update || isView
+                      "
                     >
                       Submit
                     </UButton>
@@ -489,6 +512,11 @@
 import { computed, ref, nextTick, onMounted, useTemplateRef, watch } from "vue";
 import { useUser } from "@/stores/user.ts";
 
+import {
+  CommunityStatusLabels,
+  CommunityStatusColors,
+} from "@/constants/community_const";
+
 import type { Community } from "@/types/communities";
 import type { FormErrorEvent, FormSubmitEvent } from "#ui/types";
 import type { CommunityPrivilegeActions } from "@/constants/privileges";
@@ -528,34 +556,33 @@ const state = ref({
   status: "",
   name: "",
   description: "",
-  links: [] as string[],
-  keywords: [] as string[],
-  _schema: "",
-  community_contact_ids: [] as string[],
+  links: [],
+  keywords: [],
+  _schema:
+    "https://www.elixir-europe.org/excelerate/WP2/json-schemas/1.0/Community",
+  community_contact_ids: [],
   type: "",
-  privileges: "owner",
+  privileges: "",
 });
 
 const schema = object({
-  _id: string,
-  acronym: string,
-  status: string,
-  name: string,
-  description: string,
-  _schema: string,
+  _id: string(),
+  acronym: string(),
+  status: string(),
+  name: string(),
+  description: string(),
+  _schema: string(),
   links: array(
     object({
-      uri: string,
-      label: string,
-      comment: optional(string),
+      uri: string(),
+      label: string(),
     }),
   ),
-  keywords: array(string),
-  type: string,
+  keywords: array(string()),
   community_contact_ids: array(
     object({
-      id: string,
-      name: string,
+      id: string(),
+      name: string(),
     }),
   ),
 });
@@ -599,6 +626,7 @@ if (userPrivileges.value.length == 0) {
 
 const labelTitle = ref("");
 const labelButton = ref("");
+const labelType = ref("");
 const communityData = computed(() => {
   state.value = {
     _id: props.communityObj?._id,
@@ -630,6 +658,7 @@ const communityData = computed(() => {
     state.value.type = "Community";
     labelTitle.value = "Edit Community";
     labelButton.value = "View Community";
+    labelType.value = "Community";
   } else if (props.communityObj && props.communityObj._metadata) {
     items.value.push({
       key: "summary",
@@ -640,6 +669,7 @@ const communityData = computed(() => {
     state.value.type = "Project";
     labelTitle.value = "Edit Project";
     labelButton.value = "View Project";
+    labelType.value = "Project";
   }
   return state.value;
 });
@@ -718,14 +748,14 @@ function goBack() {
 }
 
 async function onSubmitCommunity(event: FormSubmitEvent<Schema>) {
-  event.preventDefault();
-
-  oks.value = "";
-  errors.value = [];
+  //event.preventDefault();
 
   const result = safeParse(schema, state.value);
+  console.log(result);
+
   if (result.success) {
     const customErrors = validateRequiredFields(state.value);
+
     if (customErrors.length > 0) {
       errors.value = customErrors;
     } else {
@@ -1003,11 +1033,12 @@ watchEffect(() => {
     }
   }
   .input-wrapper {
-    background-color: theme("colors.primary.50");
+    background-color: rgba(11, 87, 159, 0.058);
     padding: 0.6rem 0.8rem;
     border-radius: 9999px;
     font-size: 0.75rem;
     line-height: 1;
+    margin-bottom: 5px;
     input {
       border: none;
       background-color: rgba(255, 255, 255, 0.8);
@@ -1017,7 +1048,6 @@ watchEffect(() => {
       }
     }
     &.big {
-      margin-bottom: 5px;
       width: 100%;
     }
   }
@@ -1055,7 +1085,7 @@ watchEffect(() => {
     padding-bottom: 10px;
     .label-text {
       border-bottom: 1px solid #e9ecef;
-      width: 90%;
+      width: 95%;
     }
     .btn-form-add.btn-primary {
       padding: 1px 6px;
@@ -1104,6 +1134,13 @@ watchEffect(() => {
   padding: 10px 0 0;
 }
 
+.title-name {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
 input[type="file"] {
   display: none;
 }
@@ -1149,5 +1186,11 @@ input[type="file"] {
     padding: 2px 25px;
     margin-top: 10px;
   }
+}
+.header-button {
+  padding: 5px 10px;
+  font-size: 14px;
+  text-decoration: none;
+  margin-bottom: 5px;
 }
 </style>

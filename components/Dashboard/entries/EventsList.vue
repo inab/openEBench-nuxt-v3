@@ -60,36 +60,39 @@
             <button class="btn-custom-badget text-sm">
               <NuxtLink
                 :to="`/benchmarking/${row.community_id}?event=${row._id}`"
-                title="View community events"
+                title="Visit community event"
                 class="text-sm"
               >
-                Visit <font-awesome-icon :icon="['far', 'eye']" />
+                <font-awesome-icon :icon="['far', 'eye']" />
+                Visit 
               </NuxtLink>
             </button>
             <div v-if="row.privileges === 'Owner' && row.actions.community">
-              <button title="Edit community" class="btn-custom-badget text-sm">
+              <button title="Edit Event" class="btn-custom-badget text-sm">
                 <NuxtLink :to="getCommunityEventEditLink(row)">
-                  Edit <font-awesome-icon :icon="['fas', 'pencil']" />
+                  <font-awesome-icon :icon="['fas', 'pencil']" />
+                  Edit 
                 </NuxtLink>
               </button>
             </div>
             <div
               v-else-if="row.privileges === 'Manager' && row.actions.community"
             >
-              <button title="Edit community" class="btn-custom-badget text-sm">
+              <button title="Edit Event" class="btn-custom-badget text-sm">
                 <NuxtLink :to="getCommunityEventEditLink(row)">
-                  Edit <font-awesome-icon :icon="['fas', 'pencil']" />
+                  <font-awesome-icon :icon="['fas', 'pencil']" />
+                  Edit 
                 </NuxtLink>
               </button>
             </div>
             <button class="btn-custom-badget text-sm">
               <NuxtLink
                 :to="getCommunityEventEditLink(row, true)"
-                title="View community events"
+                title="View Event challenges"
                 class="text-sm column-link"
               >
-                Challenges
                 <font-awesome-icon :icon="['far', 'calendar']" />
+                Challenges
               </NuxtLink>
             </button>
           </div>
@@ -138,6 +141,8 @@ const props = defineProps<{
   commmunityPrivileges: CommunityPrivilegeActions;
   communityId: string;
 }>();
+
+console.log(props.events);
 
 const columns = [
   {
