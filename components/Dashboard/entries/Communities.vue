@@ -91,10 +91,10 @@
           </template>
           <template #actions-data="{ row }">
             <div class="action-btn-group">
-              <button class="btn-custom-badget text-sm">
+              <button class="btn-custom-badget text-sm"
+              title="Visit community">
                 <NuxtLink
                   :to="`/benchmarking/${row._id}`"
-                  title="View community events"
                   class="text-sm"
                 >
                   <font-awesome-icon :icon="['far', 'eye']" />
@@ -134,11 +134,12 @@
                 </div>
                 <div class="text-center" v-else>
                   <button
-                    title="View community"
+                    title="Edit community"
                     class="btn-custom-badget text-sm"
                   >
                     <NuxtLink :to="getCommunityEditLink(row)" class="text-sm">
-                      Edit <font-awesome-icon :icon="['fas', 'pencil']" />
+                      <font-awesome-icon :icon="['fas', 'pencil']" />
+                      Edit 
                     </NuxtLink>
                   </button>
                 </div>
@@ -149,7 +150,8 @@
                   title="View community events"
                   class="text-sm"
                 >
-                  Events <font-awesome-icon :icon="['fas', 'calendar-check']" />
+                  <font-awesome-icon :icon="['fas', 'calendar-check']" />
+                  Events 
                 </NuxtLink>
               </button>
             </div>

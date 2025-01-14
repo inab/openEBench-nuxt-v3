@@ -5,31 +5,36 @@
       <div class="">
         <div class="dashboard-community-event-edit__title">
           <h2 class="text-primaryOeb-500">
-            <span class=""
-              >Community Event : <i>{{ eventId }} </i></span
-            >
-            <span class="span-title">
-              <NuxtLink
-                class="btn-primary hover_effect"
-                :to="`/benchmarking/${communityId}`"
+            <div class="w-100">
+              OEB Event Code: {{ eventId }}
+              <span class="title-name"
+                ><i>( {{ communityDataEvent?.name }} )</i></span
               >
-                View Community
-              </NuxtLink>
-              <NuxtLink
-                class="btn-primary hover_effect"
-                :to="`/benchmarking/${communityId}?event=${eventId}`"
-              >
-                View Event
-              </NuxtLink>
-            </span>
+            </div>
           </h2>
+          <div class="w-100 d-flex justify-content-end">
+            <NuxtLink
+              class="btn-primary hover_effect mr-1 header-button"
+              :to="`/benchmarking/${communityId}`"
+            >
+              View Community
+            </NuxtLink>
+            <NuxtLink
+              class="btn-primary hover_effect header-button"
+              :to="`/benchmarking/${communityId}?event=${eventId}`"
+            >
+              View Event
+            </NuxtLink>
+          </div>
         </div>
-        <div class="dashboard-community-events__description text-gray-500">
-          It is a long established fact that a reader will be distracted by the
-          readable content of a page when looking at its layout. The point of
-          using Lorem Ipsum is that it has a more-or-less normal distribution of
-          letters, as opposed to using 'Content here, content here', making it
-          look like readable English.
+        <div class="community-event-challenge__description text-gray-500 pb-4">
+          Communities in OpenEBench host time-bound benchmarking events focused
+          on specific areas of software performance evaluation. These events
+          bring together participants to compare tools, pipelines, services, or
+          products using predefined datasets and assessment metrics. Through
+          collaborative competition, communities drive innovation and foster a
+          shared understanding of performance capabilities within their chosen
+          domains.
         </div>
       </div>
       <div class="">
@@ -52,11 +57,11 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
 import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
+import type { Event } from "@/types/events";
+import type { Challenge } from "@/types/challenge";
 import { useUser } from "@/stores/user.ts";
 import { privileges } from "@/constants/privileges";
 import CommunityEvent from "@/components/Dashboard/entries/events/CommunityEvent.vue";
-import type { Event } from "@/types/events";
-import type { Challenge } from "@/types/challenge";
 
 definePageMeta({
   middleware: "auth",
@@ -128,14 +133,18 @@ const fetchUserCommunitiesEvents = async (token: string): Promise<void> => {
     const data = await response.json();
     communityDataEvent.value = data;
     isLoadingData.value = false;
-    const communityResponse = await fetchCommunityChallengers(token, eventId);
+    const communityResponse = await fetchCommunityEventsChallenges(
+      token,
+      eventId,
+    );
+    console.log(communityResponse);
     eventChallenge.value = communityResponse;
   } catch (error) {
     console.error("Error fetching communities data: ", error);
   }
 };
 
-const fetchCommunityChallengers = async (
+const fetchCommunityEventsChallenges = async (
   token: string,
   event: string,
 ): Promise<void> => {
@@ -207,5 +216,17 @@ onMounted(() => {
       height: 250px;
     }
   }
+}
+.title-name {
+  font-size: 1.3rem;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.header-button {
+  padding: 5px 10px;
+  font-size: 14px;
+  text-decoration: none;
+  margin-bottom: 5px;
 }
 </style>

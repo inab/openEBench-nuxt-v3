@@ -14,6 +14,7 @@
         class="challenge-metrics-categories__category"
       >
         <UCard
+          class="shadowless-card"
           :ui="{
             base: '',
             background: 'bg-white dark:bg-gray-900',
@@ -47,14 +48,13 @@
           <div class="challenge-metrics-categories__category__description">
             {{ metric[0].description }}
           </div>
-
           <div class="challenge-metrics-categories__category__metrics row">
             <div
               v-for="(m, i) in metric[0].metrics"
               :key="i"
               class="col-4 challenge-metrics-categories__category__metric"
             >
-              <CommunityMetric :metric="m" :is-loading-data="isLoadingData" />
+              <ChallengeMetric :metric="m" :is-loading-data="isLoadingData" />
             </div>
           </div>
         </UCard>
@@ -65,7 +65,7 @@
 
 <script setup lang="ts">
 import { defineProps, computed, ref } from "vue";
-import CommunityMetric from "@/components/Dashboard/entries/events/challenges/ChallengeMetric.vue";
+import ChallengeMetric from "@/components/Dashboard/entries/events/challenges/ChallengeMetric.vue";
 import CustomSubtitle from "@/components/Common/CustomSubtitle.vue";
 import CustomBorder from "@/components/Common/CustomBorder.vue";
 import CustomSearcherLoader from "@/components/Common/CustomSearcherLoader.vue";
@@ -190,5 +190,12 @@ const metrics_by_categories = computed(() => {
   font-size: 14px;
   text-decoration: none;
   margin-bottom: 5px;
+}
+.shadowless-card {
+  box-shadow:
+    rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
+    rgba(0, 0, 0, 0.08) 0px 0px 0px 1px !important;
+  display: flex;
+  flex-direction: column;
 }
 </style>

@@ -8,273 +8,272 @@
         </div>
       </div>
       <div v-else class="dashboard-community-event-edit__content">
-        <div class="w-100">
+        <div class="w-100 tab-wrapper">
           <CustomTab
             :items="items"
             :selected="selectedTab"
             @change-selected="changeSelected"
           >
           </CustomTab>
-          <div v-if="selectedTab == '0'">
-            <UForm
-              :schema="schema"
-              :state="state"
-              class="space-y-4"
-              @submit="onSubmitCommunityEvent"
-            >
-              <div class="w-100 form-card">
-                <div class="form-card__row">
-                  <div class="form-card__row__box w-100">
-                    <div class="row">
-                      <div class="col-4 typeOptions">
-                        <div class="form-group">
-                          <label for="id">
-                            ID
-                            <span class="text-red-400 required">*</span>
-                          </label>
-                          <div class="w-100">
-                            <input
-                              id="id"
-                              v-model="eventData._id"
-                              type="text"
-                              class="form-control custom-entry-input"
-                              placeholder="Event id"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-4 typeOptions">
-                        <div class="form-group">
-                          <label for="id">
-                            Community ID
-                            <span class="text-red-400 required">*</span>
-                          </label>
-                          <div class="w-100">
-                            <input
-                              id="id"
-                              v-model="eventData.community_id"
-                              type="text"
-                              class="form-control custom-entry-input"
-                              placeholder="Community id"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-4">
-                        <div class="form-group">
-                          <label for="dates">
-                            Event Start Date
-                            <span class="text-red-400 required">*</span>
-                          </label>
-                          {{ localDates.dates.benchmark_start }}
-                          <VueDatePicker
-                            v-model="localDates.dates.benchmark_start"
-                          ></VueDatePicker>
-                        </div>
-                      </div>
-                      <div class="col-4">
-                        <div class="form-group">
-                          <label for="dates">
-                            Event End Date
-                            <span class="text-red-400 required">*</span>
-                          </label>
-                          <VueDatePicker
-                            v-model="localDates.dates.benchmark_stop"
-                          ></VueDatePicker>
-                        </div>
-                      </div>
-                      <div class="col-4">
-                        <div class="form-group">
-                          <label for="dates">Is Automated Event</label>
-                          <USelect
-                            v-model="localAutomated"
-                            class="selector"
-                            :options="automatedOptions"
-                            option-attribute="label"
-                            value-attribute="value"
-                          />
-                        </div>
-                      </div>
-                      <div class="col-8">
-                        <div class="form-group">
-                          <label for="name">
-                            Name
-                            <span class="text-red-400 required">*</span>
-                          </label>
-                          <input
-                            id="name"
-                            v-model="state.name"
-                            type="text"
-                            class="form-control custom-entry-input"
-                            placeholder="Event name"
-                            :disabled="!eventPrivileges.event.update"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="form-card__row">
-                  <div class="form-card__row__box w-100">
-                    <div class="row">
-                      <div class="col-12">
-                        <div class="form-group">
-                          <label for="schema">
-                            Schema
-                            <span class="text-red-400 required">*</span>
-                          </label>
-                          <input
-                            id="schema"
-                            v-model="state._schema"
-                            type="text"
-                            class="form-control custom-entry-input"
-                            placeholder="https://www.elixir-europe.org/excelerate/WP2/json-schemas/1.0/Challenge"
-                            :disabled="!eventPrivileges.event.update"
-                          />
-                        </div>
-                      </div>
-                      <div class="col-6">
-                        <div class="form-group">
-                          <label for="url">URL</label>
-                          <input
-                            id="url"
-                            v-model="state.url"
-                            type="text"
-                            class="form-control custom-entry-input"
-                            placeholder="URL"
-                            :disabled="!eventPrivileges.event.update"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="form-card__row">
-                  <div class="w-100">
-                    <div class="row">
-                      <div class="col-6">
-                        <div class="form-card__row__box">
+          <CustomTabBody>
+            <div v-if="selectedTab == '0'">
+              <UForm
+                :schema="schema"
+                :state="state"
+                class="space-y-4"
+                @submit="onSubmitCommunityEvent"
+              >
+                <div class="w-100 form-card">
+                  <div class="form-card__row">
+                    <div class="form-card__row__box w-100">
+                      <div class="row">
+                        <div class="col-4 typeOptions">
                           <div class="form-group">
+                            <label for="id">
+                              ID
+                              <span class="text-red-400 required">*</span>
+                            </label>
                             <div class="w-100">
-                              <label for="contacts" class="form-group-row">
-                                <span class="label-text"> References </span>
-                                <button
-                                  class="btn-form-add btn-primary"
-                                  :disabled="
-                                    !eventPrivileges.event.update ||
-                                    isView ||
-                                    checkEmptyReferences
-                                  "
-                                  @click="onAddElement(localReferences)"
-                                >
-                                  <font-awesome-icon :icon="['fas', 'plus']" />
-                                </button>
-                              </label>
+                              <input
+                                id="id"
+                                v-model="eventData._id"
+                                type="text"
+                                class="form-control custom-entry-input"
+                                placeholder="Event id"
+                                disabled
+                              />
                             </div>
-                            <div class="w-100 row no-space">
-                              <div
-                                v-for="(reference, index) in localReferences"
-                                v-if="localReferences.length > 0"
-                                :key="index"
-                                class="col-12 pt-0 pb-1"
-                              >
-                                <div class="input-wrapper">
-                                  <input
-                                    v-model="localReferences[index]"
-                                    type="text"
-                                    class="form-control"
+                          </div>
+                        </div>
+                        <div class="col-4 typeOptions">
+                          <div class="form-group">
+                            <label for="id">
+                              Community ID
+                              <span class="text-red-400 required">*</span>
+                            </label>
+                            <div class="w-100">
+                              <input
+                                id="id"
+                                v-model="eventData.community_id"
+                                type="text"
+                                class="form-control custom-entry-input"
+                                placeholder="Community id"
+                                disabled
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-4">
+                          <div class="form-group">
+                            <label for="dates">
+                              Event Start Date
+                              <span class="text-red-400 required">*</span>
+                            </label>
+                            <VueDatePicker
+                              v-model="localDates.dates.benchmark_start"
+                            ></VueDatePicker>
+                          </div>
+                        </div>
+                        <div class="col-4">
+                          <div class="form-group">
+                            <label for="dates">
+                              Event End Date
+                              <span class="text-red-400 required">*</span>
+                            </label>
+                            <VueDatePicker
+                              v-model="localDates.dates.benchmark_stop"
+                            ></VueDatePicker>
+                          </div>
+                        </div>
+                        <div class="col-4">
+                          <div class="form-group">
+                            <label for="dates">Is Automated Event</label>
+                            <USelect
+                              v-model="localAutomated"
+                              class="selector"
+                              :options="automatedOptions"
+                              option-attribute="label"
+                              value-attribute="value"
+                            />
+                          </div>
+                        </div>
+                        <div class="col-8">
+                          <div class="form-group">
+                            <label for="name">
+                              Name
+                              <span class="text-red-400 required">*</span>
+                            </label>
+                            <input
+                              id="name"
+                              v-model="state.name"
+                              type="text"
+                              class="form-control custom-entry-input"
+                              placeholder="Event name"
+                              :disabled="!eventPrivileges.event.update"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-card__row">
+                    <div class="form-card__row__box w-100">
+                      <div class="row">
+                        <div class="col-6">
+                          <div class="form-group">
+                            <label for="url">
+                              URL
+                              <span v-if="state.url && state.url.length > 0">
+                                <a :href="state.url" target="_blank">
+                                  <font-awesome-icon :icon="['fas', 'link']" />
+                                  Open</a
+                                >
+                              </span>
+                            </label>
+                            <input
+                              id="url"
+                              v-model="state.url"
+                              type="text"
+                              class="form-control custom-entry-input"
+                              placeholder="URL"
+                              :disabled="!eventPrivileges.event.update"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-card__row">
+                    <div class="w-100">
+                      <div class="row">
+                        <div class="col-6">
+                          <div class="form-card__row__box">
+                            <div class="form-group">
+                              <div class="w-100">
+                                <label for="contacts" class="form-group-row">
+                                  <span class="label-text"> References </span>
+                                  <button
+                                    class="btn-form-add btn-primary"
                                     :disabled="
-                                      !eventPrivileges.event.update || isView
+                                      !eventPrivileges.event.update ||
+                                      isView ||
+                                      checkEmptyReferences
                                     "
-                                  />
-                                  <button
-                                    v-if="
-                                      eventPrivileges.event.update && !isView
-                                    "
-                                    class="btn-delete-input"
+                                    @click="onAddElement(localReferences)"
                                   >
                                     <font-awesome-icon
-                                      :icon="['far', 'trash-can']"
+                                      :icon="['fas', 'plus']"
                                     />
                                   </button>
-                                </div>
+                                </label>
                               </div>
-                              <div v-else class="col-12 pt-0">
+                              <div class="w-100 row no-space">
                                 <div
-                                  class="w-100 empty-elements text-slate-400"
+                                  v-for="(reference, index) in localReferences"
+                                  v-if="localReferences.length > 0"
+                                  :key="index"
+                                  class="col-12 pt-0 pb-1"
                                 >
-                                  <span
-                                    >There are no reference associated with this
-                                    event</span
+                                  <div class="input-wrapper">
+                                    <input
+                                      v-model="localReferences[index]"
+                                      type="text"
+                                      class="form-control"
+                                      :disabled="
+                                        !eventPrivileges.event.update || isView
+                                      "
+                                    />
+                                    <button
+                                      v-if="
+                                        eventPrivileges.event.update && !isView
+                                      "
+                                      class="btn-delete-input"
+                                    >
+                                      <font-awesome-icon
+                                        :icon="['far', 'trash-can']"
+                                      />
+                                    </button>
+                                  </div>
+                                </div>
+                                <div v-else class="col-12 pt-0">
+                                  <div
+                                    class="w-100 empty-elements text-slate-400"
                                   >
+                                    <span
+                                      >There are no reference associated with
+                                      this event</span
+                                    >
+                                  </div>
                                 </div>
                               </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                      <div class="col-6">
-                        <div class="form-card__row__box">
-                          <div class="form-group">
-                            <div class="w-100">
-                              <label for="contacts" class="form-group-row">
-                                <span class="label-text"> Contacts </span>
-                                <button
-                                  class="btn-form-add btn-primary"
-                                  :disabled="
-                                    !eventPrivileges.event.update ||
-                                    isView ||
-                                    checkEmptyContacts
-                                  "
-                                  @click="onAddElement(localContacts)"
-                                >
-                                  <font-awesome-icon :icon="['fas', 'plus']" />
-                                </button>
-                              </label>
-                            </div>
-                            <div class="w-100 row no-space">
-                              <div
-                                v-for="(contact, index) in localContacts"
-                                v-if="localContacts.length > 0"
-                                :key="index"
-                                class="col-12 pt-0 pb-1"
-                              >
-                                <div class="input-wrapper big d-flex">
-                                  <USelectMenu
-                                    :ref="`contact_${index}`"
-                                    v-model="localContacts[index]"
-                                    class="w-full lg:w-100"
-                                    searchable
-                                    selected-icon="i-heroicons-check-16-solid"
-                                    placeholder="Select a contact"
-                                    :options="contactsData"
-                                    value-attribute="id"
-                                    option-attribute="name"
-                                  >
-                                  </USelectMenu>
+                        <div class="col-6">
+                          <div class="form-card__row__box">
+                            <div class="form-group">
+                              <div class="w-100">
+                                <label for="contacts" class="form-group-row">
+                                  <span class="label-text"> Contacts </span>
                                   <button
-                                    class="btn-delete-input"
-                                    type="button"
-                                    @click="
-                                      onDeleteElement(index, localContacts)
+                                    class="btn-form-add btn-primary"
+                                    :disabled="
+                                      !eventPrivileges.event.update ||
+                                      isView ||
+                                      checkEmptyContacts
                                     "
+                                    @click="onAddElement(localContacts)"
                                   >
                                     <font-awesome-icon
-                                      :icon="['far', 'trash-can']"
+                                      :icon="['fas', 'plus']"
                                     />
                                   </button>
-                                </div>
+                                </label>
                               </div>
-                              <div v-else class="col-12 pt-0">
+                              <div class="w-100 row no-space">
                                 <div
-                                  class="w-100 empty-elements text-slate-400"
+                                  v-for="(contact, index) in localContacts"
+                                  v-if="localContacts.length > 0"
+                                  :key="index"
+                                  class="col-12 pt-0 pb-1"
                                 >
-                                  <span
-                                    >There are no contacts associated with this
-                                    event</span
+                                  <div class="input-wrapper big d-flex">
+                                    <USelectMenu
+                                      :ref="`contact_${index}`"
+                                      v-model="localContacts[index]"
+                                      class="w-full lg:w-100"
+                                      searchable
+                                      selected-icon="i-heroicons-check-16-solid"
+                                      placeholder="Select a contact"
+                                      :options="contactsData"
+                                      value-attribute="id"
+                                      option-attribute="name"
+                                    >
+                                    </USelectMenu>
+                                    <button
+                                      class="btn-delete-input"
+                                      type="button"
+                                      @click="
+                                        onDeleteElement(index, localContacts)
+                                      "
+                                    >
+                                      <font-awesome-icon
+                                        :icon="['far', 'trash-can']"
+                                      />
+                                    </button>
+                                  </div>
+                                </div>
+                                <div v-else class="col-12 pt-0">
+                                  <div
+                                    class="w-100 empty-elements text-slate-400"
                                   >
+                                    <span
+                                      >There are no contacts associated with
+                                      this event</span
+                                    >
+                                  </div>
                                 </div>
                               </div>
                             </div>
@@ -282,46 +281,46 @@
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div class="row w-100">
-                    <div v-if="oks" class="ok-response">
-                      <div class="alert alert-success text-center">
-                        {{ oks }}
+                    <div class="row w-100">
+                      <div v-if="oks" class="ok-response">
+                        <div class="alert alert-success text-center">
+                          {{ oks }}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                <div v-if="errors.length > 0" class="row errors">
-                  <div class="col-12">
-                    <div class="alert alert-danger" v-html="getErrors"></div>
+                  <div v-if="errors.length > 0" class="row errors">
+                    <div class="col-12">
+                      <div class="alert alert-danger" v-html="getErrors"></div>
+                    </div>
+                  </div>
+                  <div class="form-footer">
+                    <UButton type="button" variant="secondary" @click="goBack">
+                      Cancel
+                    </UButton>
+                    <UButton
+                      v-if="eventPrivileges.event.update && !isView"
+                      type="submit"
+                      :disabled="!eventPrivileges.event.update || isView"
+                    >
+                      Submit
+                    </UButton>
                   </div>
                 </div>
-                <div class="form-footer">
-                  <UButton type="button" variant="secondary" @click="goBack">
-                    Cancel
-                  </UButton>
-                  <UButton
-                    v-if="eventPrivileges.event.update && !isView"
-                    type="submit"
-                    :disabled="!eventPrivileges.event.update || isView"
-                  >
-                    Submit
-                  </UButton>
-                </div>
-              </div>
-            </UForm>
-          </div>
-          <div v-else-if="selectedTab == '1'">
-            <div>
-              <EventChallengesList
-                :challenges="challenges"
-                :is-loading-challenges="isLoadinChallenges"
-                :commmunity-privileges="eventPrivileges"
-                :event-id="id"
-                :community-id="communityId"
-              />
+              </UForm>
             </div>
-          </div>
+            <div v-else-if="selectedTab == '1'">
+              <div>
+                <EventChallengesList
+                  :challenges="challenges"
+                  :is-loading-challenges="isLoadinChallenges"
+                  :commmunity-privileges="eventPrivileges"
+                  :event-id="id"
+                  :community-id="communityId"
+                />
+              </div>
+            </div>
+          </CustomTabBody>
         </div>
       </div>
     </div>
@@ -372,6 +371,7 @@ import type { CommunityPrivilegeActions } from "@/constants/privileges";
 import EventChallengesList from "@/components/Dashboard/entries/events/EventChallengesList.vue";
 import CustomDialog from "@/components/Common/CustomDialog.vue";
 import CustomTab from "@/components/Common/CustomTab.vue";
+import CustomTabBody from "@/components/Common/CustomTabBody.vue";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 import {
@@ -678,7 +678,7 @@ async function updateBenchmarkingEvent() {
       ).toISOString(),
     },
   };
-  
+
   try {
     const response = await fetch(
       `/api/staged/BenchmarkingEvent/${state.value._id}`,
@@ -699,7 +699,9 @@ async function updateBenchmarkingEvent() {
     const responseData = await response.json();
     if (responseData.status == 200) {
       errors.value = [];
-      router.push(`/dashboard/projects_communities/${state.value.community_id}?events=true`);
+      router.push(
+        `/dashboard/projects_communities/${state.value.community_id}?events=true`,
+      );
     } else {
       const errorResponse = JSON.parse(responseData.body);
       errors.value = errorResponse.error.map((error: any) => {
@@ -939,14 +941,10 @@ watch(
     }
   }
   .form-card {
-    padding: 10px 15px;
-    border-radius: 5px;
-    background-color: rgba(233, 236, 239, 0.2);
-    box-shadow:
-      rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
-      rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
     &__row {
       padding: 10px 15px;
+      column-gap: 10px;
+      row-gap: 20px;
       &:last-child {
         width: 100%;
       }
@@ -957,7 +955,7 @@ watch(
         padding: 10px 20px;
         border: 1px solid rgba(233, 236, 239);
         background-color: white;
-        border-radius: 7px;
+        border-radius: 3px;
         .content-box {
           border: 1px solid rgba(233, 236, 239);
         }

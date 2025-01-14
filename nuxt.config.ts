@@ -57,11 +57,11 @@ export default defineNuxtConfig({
   },
 
   css: [
-    "~/assets/styles/main.scss",
     "bootstrap/dist/css/bootstrap.min.css",
     "@fortawesome/fontawesome-svg-core/styles.css",
     "aos/dist/aos.css",
     "vue-multiselect/dist/vue-multiselect.min.css",
+    "~/assets/styles/main.scss",
   ],
 
   ssr: false,

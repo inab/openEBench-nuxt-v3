@@ -2,13 +2,9 @@
   <div class="challenge-metric">
     <UAccordion color="primary" variant="soft" size="sm" :items="item">
       <template #header="{ item }">
-        <div class="flex flex-row items-center">
-          <div class="flex flex-col">
-            <div class="text-sm font-semibold text-gray-600">Metric</div>
-            <div class="text-sm text-gray-400">
-              {{ item.metrics_id }}
-            </div>
-          </div>
+        <div class="flex flex-col">
+          <span class="font-bold">Metric: {{ item.metrics_id }}</span>
+          <span class="text-sm">Tool: {{ item.tool_id }}</span>
         </div>
       </template>
       <template #content="{ item }">
@@ -37,7 +33,7 @@ const metricData = computed(() => {
 
 const item = ref([
   {
-    label: `Metric: ${metricData.value.metrics_id}; Tool: ${metricData.value.tool_id}`,
+    label: `Metric:${metricData.value.metrics_id} | Tool:${metricData.value.tool_id}`,
     content: "Metric",
     icon: "i-heroicons-information-circle",
     defaultOpen: false,
