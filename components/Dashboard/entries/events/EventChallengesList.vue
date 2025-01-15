@@ -116,6 +116,7 @@
       </div>
       <UPagination
         v-model="page"
+        class="pagination"
         :page-count="pageCount"
         :total="_total"
         :ui="{
