@@ -1,6 +1,6 @@
 <template>
   <div>
-    <BreadcrumbsBar />
+    <BreadcrumbsBar :breadcrumbs-array="routeArray" />
     <div class="container">
       <UTabs :items="tabsItems" class="w-full" :ui="{ list: { tab: { active: 'text-primaryOeb-500' } } }"
         :defaultIndex="activeTabIndex">
@@ -98,6 +98,12 @@ watch(route, (newRoute) => {
 });
 
 activeTabIndex.value = tabsItems.findIndex(item => item.path === route.path);
+
+const routeArray = [
+  { label: "Observatory", isActualRoute: true },
+  { label: route.path.split('/').pop(), isActualRoute: true }
+];
+
 
 </script>
 
