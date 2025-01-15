@@ -1,6 +1,5 @@
 <template>
   <div class="container ms-3 ">
-    <h2>Metafield</h2>
     <div :col="n_cols">
       <div>
         <HeaderAvatar
@@ -16,9 +15,12 @@
         <button
           v-if="increasable"
           class="btn btn-icon btn-light ms-2"
-          @click="addEntry(valueType)"
+          @click="addEntry(valueType)" 
         >
-          <i class="bi bi-plus-circle text-muted"></i>
+          <UIcon
+            name="i-heroicons-x-circle-20-solid"
+            class="mx-2 bg-gray-400"
+          />
         </button>
       </div>
 
@@ -47,7 +49,6 @@ const props = defineProps<{
 const addEntry = (addedValue) => {
   // addedvalue is the value of the input field, which is always empty
 	// sometimes it is an object, sometimes it is an array
-
   const payload = {
     field: props.field,
     value: addedValue,
@@ -65,10 +66,12 @@ const removeEntry = (index) => {
   this.$forceUpdate();
 
 }
+
 </script>
 <style scoped>
 #title {
 	font-size: 1rem;
-	color: #0b579f;
+	color: #0b579f !important;
 }
+
 </style>
