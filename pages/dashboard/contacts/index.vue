@@ -1,38 +1,28 @@
 <template>
   <div class="dashboard-contacts">
     <BreadcrumbsBar :breadcrumbs-array="routeArray" />
-
     <div class="w-100 container">
-      <div class="text-primaryOeb-500 border-slate-200 border-b mb-3">
-        <div class="flex justify-content-between gap-3">
-          <h2>Contacts</h2>
-          <NuxtLink
-            id="dashboard-create-community"
-            to="/dashboard/contacts/add"
-            class="btn custom-btn btn-primary mb-2"
-            title="Create new community"
-          >
-            Create New Contact
-          </NuxtLink>
+      <div v-if="status == 'authenticated'">
+        <div class="dashboard__header__title">
+          <h2 class="text-primaryOeb-500">Contacts</h2>
         </div>
-      </div>
-      <div v-if="status === 'pending'">Loading ...</div>
-      <div v-else-if="status === 'error'">Errors</div>
-      <div v-else>
-        <div class="dashboard__description text-gray-500">
-          It is a long established fact that a reader will be distracted by the
-          readable content of a page when looking at its layout. The point of
-          using Lorem Ipsum is that it has a more-or-less normal distribution of
-          letters, as opposed to using 'Content here, content here', making it
-          look like readable English.
+        <div class="contacts__body">
+          <div class="dashboard__description text-gray-500">
+            Communities in OpenEBench utilize a centralized contact register to
+            facilitate connections and collaboration among members. This
+            platform allows participants to easily identify and connect with
+            experts in specific areas, fostering knowledge sharing,
+            partnerships, and the growth of the OpenEBench community.
+          </div>
+          <ContactsList :contacts-data="constactsList" />
         </div>
-        <ContactsList :contacts-data="dataContacts" />
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref } from "vue";
 import ContactsList from "@/components/Dashboard/contacts/ContactsList.vue";
 import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
 
@@ -44,27 +34,49 @@ definePageMeta({
   },
 });
 
-const { data } = useAuth();
+const { data, status } = useAuth();
 const runtimeConfig = useRuntimeConfig();
+
 const routeArray: Array = [
   { label: "Dashboard", isActualRoute: false, route: "/dashboard" },
   { label: "Contacts", isActualRoute: true },
 ];
 
-let token: string | undefined;
-if (data.value) {
-  token = data.value.accessToken;
-}
+const token: string = data?.value.accessToken;
+const isLoadingContacts = ref(false);
+const constactsList = ref<string[]>([]);
 
-const { data: dataContacts, status } = await useAsyncData(
-  "contactsResult",
-  () =>
-    $fetch(`${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Contact`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: "application/json",
+await fetchContacts(token);
+async function fetchContacts(token: string): Promise<Metric[]> {
+  isLoadingContacts.value = true;
+  try {
+    const response = await fetch(
+      `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Contact`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+        },
       },
-      method: "GET",
-    }),
-);
+    );
+    const data = await response.json();
+    data.map((contact) => {
+      contact.fullName = `${contact.givenName} ${contact.surname}`;
+      if (!contact.notes || contact.notes === "Unknown") {
+        contact.notes = null;
+      }
+      if (contact.community_id) {
+        contact.community_id = contact.community_id.split(",");
+      }
+      return contact;
+    });
+    constactsList.value = data;
+    return data;
+  } catch (error) {
+    return [];
+  } finally {
+    isLoadingContacts.value = false;
+  }
+}
 </script>

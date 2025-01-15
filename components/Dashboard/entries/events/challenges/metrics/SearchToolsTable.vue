@@ -38,11 +38,21 @@
           </button>
         </template>
       </UTable>
-      <div
-        class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700"
-      >
+      <div class="flex flex-wrap justify-between items-center pt-2">
+        <div>
+          <span class="text-sm leading-5">
+            Showing
+            <span class="font-medium">{{ pageFrom }}</span>
+            to
+            <span class="font-medium">{{ pageTo }}</span>
+            of
+            <span class="font-medium">{{ _total }}</span>
+            results
+          </span>
+        </div>
         <UPagination
           v-model="page"
+          class="pagination"
           :page-count="pageCount"
           :total="rowTool.length"
         />
@@ -52,7 +62,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, computed, defineEmits, watch, onMounted } from "vue";
+import { ref, defineProps, computed, defineEmits, onMounted } from "vue";
 import { useMetrics } from "@/stores/metrics.ts";
 import type { Challenge } from "@/types/challenge";
 import type {
@@ -77,8 +87,10 @@ const selectedToolsTmp = computed({
 });
 
 const page = ref(1);
-const pageCount = 10;
+const pageCount = ref(5);
+
 const rowTool = ref<Tool[]>([]);
+const _total = computed(() => rowTool.value.length);
 const isTableLoading = ref(false);
 const metricsStore = useMetrics();
 const challengeDataList = ref<Challenge[]>([]);
@@ -104,11 +116,26 @@ const columns = [
   },
 ];
 
+const pageFrom = computed(
+  () => (Number(page.value) - 1) * Number(pageCount.value) + 1,
+);
+
+const pageTo = computed(() =>
+  Math.min(
+    Number(page.value) * Number(pageCount.value),
+    Number(totalPages.value),
+  ),
+);
+
 const rows = computed(() => {
   return rowTool.value.slice(
-    (page.value - 1) * pageCount,
-    page.value * pageCount,
+    (page.value - 1) * pageCount.value,
+    page.value * pageCount.value,
   );
+});
+
+const totalPages = computed(() => {
+  return Math.ceil(Number(_total.value) / Number(pageCount.value));
 });
 
 function select(row) {
@@ -160,7 +187,7 @@ async function fetchTools(token: string): Promise<Metric[]> {
       }
     });
   }
-  
+
   if (preSelectedTools.length > 0) {
     preSelectedTools.forEach((toolId) => {
       const foundTool = toolsData.find((t: Tool) => t._id === toolId);

@@ -1,8 +1,23 @@
 <template>
   <div class="dashboard-contacts-list">
+    <div
+      v-if="filteredRows.length > 0"
+      class="flex justify-content-end py-2.5 dark:border-gray-700"
+    >
+      <UInput
+        v-model="search"
+        color="white"
+        variant="outline"
+        icon="i-heroicons-magnifying-glass-20-solid"
+        placeholder="Search ..."
+        class="input-search"
+      />
+    </div>
     <UTable
       :columns="columns"
-      :rows="rows"
+      :loading="isLoading"
+      :rows="filteredRows"
+      :sort="sort"
       :ui="{
         tr: {
           base: 'hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer',
@@ -16,24 +31,62 @@
         },
         td: {
           base: '',
-          padding: 'px-3 py-3',
+          padding: 'px-2.5 py-2.5',
           font: '',
           size: 'text-sm',
         },
       }"
     >
+      <template #email-data="{ row }">
+        <p v-for="(email, index) in row.email" :key="index">{{ email }}</p>
+      </template>
+      <template #communities-data="{ row }">
+        <p v-for="(community, index) in row.community_id" :key="index">
+          {{ community }}
+          <NuxtLink
+            :to="`/dashboard/projects_communities/${community}`"
+            class="text-primaryOeb-950"
+          >
+            <font-awesome-icon :icon="['fas', 'external-link-alt']" />
+          </NuxtLink>
+        </p>
+      </template>
+      <template #contact_type-data="{ row }">
+        <div class="d-flex">
+          <span v-if="row.contact_type === 'person'" class="mr-1">
+            <font-awesome-icon :icon="['fas', 'user']" />
+          </span>
+          <span v-else-if="row.contact_type === 'helpdesk'" class="mr-1">
+            <font-awesome-icon :icon="['fas', 'person-shelter']" />
+          </span>
+          <span v-else class="mr-1">
+            <font-awesome-icon :icon="['fas', 'users']" />
+          </span>
+          {{ row.contact_type }}
+        </div>
+      </template>
       <template #view-data="{ row }">
         <button class="btn-custom-badget text-sm" @click="openModal(row._id)">
-          <font-awesome-icon :icon="['far', 'calendar-check']" />
-          View <font-awesome-icon :icon="['fas', 'pencil']" />
+          <font-awesome-icon :icon="['fas', 'pencil']" />
+          Edit
         </button>
       </template>
     </UTable>
-    <div
-      class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700"
-    >
+    <div class="flex flex-wrap justify-between items-center pt-2">
+      <div>
+        <span class="text-sm leading-5">
+          Showing
+          <span class="font-medium">{{ pageFrom }}</span>
+          to
+          <span class="font-medium">{{ pageTo }}</span>
+          of
+          <span class="font-medium">{{ _total }}</span>
+          results
+        </span>
+      </div>
       <UPagination
         v-model="page"
+        class="pagination"
         :page-count="pageCount"
         :total="props.contactsData.length"
       />
@@ -176,33 +229,17 @@
 <script setup lang="ts">
 import type { Ref } from "vue";
 import { computed, ref } from "vue";
-import CustomModal from "@/components/Common/CustomModal.vue";
 import { useUser } from "@/stores/user.ts";
 import type { Community } from "@/types/communities";
-
-import {
-  object,
-  string,
-  array,
-  safeParse,
-  boolean,
-  optional,
-  date,
-} from "valibot";
-import type { FormSubmitEvent, FormErrorEvent } from "#ui/types";
+import type { Contact } from "@/types/contact";
+import CustomModal from "@/components/Common/CustomModal.vue";
 
 const props = defineProps<{
-  contactsData: {
-    _id: string;
-    givenName: string;
-    surname: string;
-    email: string;
-    notes: string;
-    _schema: string;
-    contact_type: string;
-    community_id: string;
-  }[];
+  contactsData: Contact[];
+  isLoading: boolean;
 }>();
+
+console.log("props.contactsData: ", props.contactsData);
 
 const { data } = useAuth();
 const runtimeConfig = useRuntimeConfig();
@@ -211,62 +248,119 @@ if (data.value) {
   token = data.value.accessToken;
 }
 
-const page = ref(1);
-const pageCount = 15;
 const isModalOpened = ref(false);
 const communities = ref<Community[]>([]);
 const userStore = useUser();
 
 const defaultCommunity: Ref<string> = ref("");
 const defaultNotes: Ref<string> = ref("");
+const search = ref("");
+const _total = ref(0);
+const page = ref<number>(1);
+const pageCount = ref<number>(10);
 
-const state = ref({
-  _id: "",
-  givenName: "",
-  surname: "",
-  email: "",
-  notes: "",
-  _schema:
-    "https://www.elixir-europe.org/excelerate/WP2/json-schemas/1.0/Contact",
-  contact_type: "",
-  community_id: "",
-});
+const pageFrom = computed(
+  () => (Number(page.value) - 1) * Number(pageCount.value) + 1,
+);
+const pageTo = computed(() =>
+  Math.min(
+    Number(page.value) * Number(pageCount.value),
+    Number(totalPages.value),
+  ),
+);
 
-const schema = object({
-  _id: string(),
-  givenName: string(),
-  surname: string(),
-  email: string(),
-  notes: string(),
-  _schema: string(),
-  contact_type: string(),
-  community_id: string(),
-});
+// const state = ref({
+//   _id: "",
+//   givenName: "",
+//   surname: "",
+//   email: "",
+//   notes: "",
+//   _schema:
+//     "https://www.elixir-europe.org/excelerate/WP2/json-schemas/1.0/Contact",
+//   contact_type: "",
+//   community_id: "",
+// });
+
+// const schema = object({
+//   _id: string(),
+//   givenName: string(),
+//   surname: string(),
+//   email: string(),
+//   notes: string(),
+//   _schema: string(),
+//   contact_type: string(),
+//   community_id: string(),
+// });
 
 const columns = [
   {
-    key: "givenName",
-    label: "Name",
-  },
-  {
-    key: "surname",
-    label: "Surname",
+    key: "fullName",
+    label: "NAME",
+    sortable: true,
   },
   {
     key: "contact_type",
-    label: "type",
+    label: "TYPE",
+    sortable: true,
+  },
+  {
+    key: "email",
+    label: "EMAIL",
+    sortable: true,
+  },
+  {
+    key: "notes",
+    label: "NOTES",
+    sortable: true,
+  },
+  {
+    key: "communities",
+    label: "COMMUNITIES",
+    sortable: true,
   },
   {
     key: "view",
-    label: "View",
+    label: "ACTIONS",
   },
 ];
 
+const sort = ref({
+  column: "fullName",
+  direction: "asc",
+});
+
 const rows = computed(() => {
   return props.contactsData.slice(
-    (page.value - 1) * pageCount,
-    page.value * pageCount,
+    (page.value - 1) * pageCount.value,
+    page.value * pageCount.value,
   );
+});
+
+const filteredRows = computed(() => {
+  if (!search.value) {
+    _total.value = props.contactsData.length;
+    return props.contactsData.slice(
+      (page.value - 1) * pageCount.value,
+      page.value * pageCount.value,
+    );
+  }
+
+  const filteredSearcher = props.contactsData.filter((metric: any) => {
+    return Object.values(metric).some((value) => {
+      return String(value).toLowerCase().includes(search.value.toLowerCase());
+    });
+  });
+
+  _total.value = filteredSearcher.length;
+
+  return filteredSearcher.slice(
+    (Number(page.value) - 1) * Number(pageCount.value),
+    Number(page.value) * Number(pageCount.value),
+  );
+});
+
+const totalPages = computed(() => {
+  return Math.ceil(Number(_total.value) / Number(pageCount.value));
 });
 
 const contactTypeOptions = ["person", "helpdesk", "other"];

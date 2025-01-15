@@ -1074,11 +1074,7 @@ watchEffect(() => {
       align-items: baseline;
     }
   }
-  .form-footer {
-    display: flex;
-    justify-content: end;
-    gap: 10px;
-  }
+  
   .form-group-row {
     display: flex;
     justify-content: space-between;
@@ -1192,5 +1188,13 @@ input[type="file"] {
   font-size: 14px;
   text-decoration: none;
   margin-bottom: 5px;
+}
+</style>
+
+<style>
+.form-footer {
+  display: flex;
+  justify-content: end;
+  gap: 10px;
 }
 </style>

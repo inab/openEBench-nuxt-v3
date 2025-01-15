@@ -48,7 +48,7 @@
           </div>
           <UInput
             v-model="search"
-            color="primary"
+            color="white"
             variant="outline"
             icon="i-heroicons-magnifying-glass-20-solid"
             placeholder="Search ..."
@@ -226,6 +226,7 @@
           </div>
           <UPagination
             v-model="page"
+            class="pagination"
             :page-count="pageCount"
             :total="_total"
             :ui="{

@@ -8,16 +8,17 @@
         </div>
         <div class="metrics__body">
           <div class="dashboard__description text-gray-500">
-            It is a long established fact that a reader will be distracted by
-            the readable content of a page when looking at its layout. The point
-            of using Lorem Ipsum is that it has a more-or-less normal
-            distribution of letters, as opposed to using 'Content here, content
-            here', making it look like readable English.
+            Communities in OpenEBench define standardized metrics to ensure fair
+            and transparent comparisons during benchmarking events and
+            challenges. These carefully selected metrics quantify specific
+            aspects of software performance, providing objective measures for
+            evaluating tool capabilities and driving innovation across diverse
+            domains.
           </div>
-          <div class="dashboard-tabs">
+          <div class="dashboard-tabs pt-4">
             <MetricsList
               :metric-rows="metricsList"
-              :is-searching="isSearchingMetrics"
+              :is-loading="isLoadingMetrics"
               :token="token"
             />
           </div>
@@ -44,14 +45,14 @@ definePageMeta({
 
 const userStore = useUser();
 const { data, status } = useAuth();
-const isSearchingMetrics = ref(false);
+const isLoadingMetrics = ref(false);
 const runtimeConfig = useRuntimeConfig();
 const metricsList = ref<Metric[]>([]);
 const token: string = data?.value.accessToken;
 
 await fetchMetrics(token);
 async function fetchMetrics(token: string): Promise<Metric[]> {
-  isSearchingMetrics.value = true;
+  isLoadingMetrics.value = true;
   try {
     const response = await fetch(
       `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Metrics`,
@@ -65,11 +66,12 @@ async function fetchMetrics(token: string): Promise<Metric[]> {
     );
     const data = await response.json();
     metricsList.value = data;
-    isSearchingMetrics.value = false;
+
     return data;
   } catch (error) {
-    isSearchingMetrics.value = false;
     return [];
+  } finally {
+    isLoadingMetrics.value = false;
   }
 }
 

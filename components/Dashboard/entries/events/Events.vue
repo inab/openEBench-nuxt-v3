@@ -60,21 +60,27 @@
               >
                 <template v-if="row.actions.event.read">
                   <button title="View Entry" class="btn-event">
-                    <NuxtLink :to="`/dashboard/projects_communities/${row._id}?view`">
+                    <NuxtLink
+                      :to="`/dashboard/projects_communities/${row._id}?view`"
+                    >
                       <font-awesome-icon :icon="['fas', 'eye']" />
                     </NuxtLink>
                   </button>
                 </template>
                 <template v-if="row.actions.event.create">
                   <button title="Create Entry" class="btn-event">
-                    <NuxtLink :to="`/dashboard/projects_communities/${row._id}`">
+                    <NuxtLink
+                      :to="`/dashboard/projects_communities/${row._id}`"
+                    >
                       <font-awesome-icon :icon="['fas', 'plus']" />
                     </NuxtLink>
                   </button>
                 </template>
                 <template v-if="row.actions.event.update">
                   <button title="Edit Entry" class="btn-event">
-                    <NuxtLink :to="`/dashboard/projects_communities/${row._id}/edit`">
+                    <NuxtLink
+                      :to="`/dashboard/projects_communities/${row._id}/edit`"
+                    >
                       <font-awesome-icon :icon="['fas', 'pencil']" />
                     </NuxtLink>
                   </button>
@@ -118,6 +124,7 @@
           </div>
           <UPagination
             v-model="page"
+            class="pagination"
             :page-count="pageCount"
             :total="_total"
             :ui="{
