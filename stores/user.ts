@@ -332,7 +332,11 @@ export const useUser = defineStore("user", {
         event.privileges = "None";
         if (userPrivileges.length > 0) {
           userPrivileges.some((value: { role: string; community: string }) => {
-            if (
+            if (value.role === "admin") {
+              event.actions = privileges.owner;
+              event.privileges = "Owner";
+              return true;
+            } else if (
               value.role === "owner" &&
               value.community === event.community_id
             ) {
@@ -364,7 +368,11 @@ export const useUser = defineStore("user", {
         event.privileges = "None";
         if (userPrivileges.length > 0) {
           userPrivileges.some((value: { role: string; community: string }) => {
-            if (
+            if (value.role === "admin") {
+              event.actions = privileges.owner;
+              event.privileges = "Owner";
+              return true;
+            } else if (
               value.role === "owner" &&
               value.community === event.community_id
             ) {
@@ -386,6 +394,7 @@ export const useUser = defineStore("user", {
           });
         }
       });
+      console.log(data);
       return data;
     },
   },

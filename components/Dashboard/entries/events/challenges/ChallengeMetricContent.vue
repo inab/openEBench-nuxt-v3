@@ -3,7 +3,7 @@
     <div v-if="isFetchingData" class="">
       <div class="spinner">Loading...</div>
     </div>
-    <div v-else class="">
+    <div v-else class="challenge-metric-box">
       <div class="challenge-metric-content">
         <div class="challenge-metric-content__header">
           <div class="challenge-metric-content__header__title font-bold">
@@ -11,6 +11,20 @@
           </div>
           <div class="challenge-metric-content__header__description">
             {{ metricData.description }}
+          </div>
+          <div
+            v-if="metricData.representation_hints"
+            class="challenge-metric-content__header__visualization"
+          >
+            This metric is often represented with a chart type:
+            <b>{{ getVisualizationType().name }}</b>
+            <div class="w-100 visualization-image">
+              <img
+                :src="getVisualizationType().image"
+                alt="Visualization type"
+                class="w-100"
+              />
+            </div>
           </div>
           <UButton
             label="View Metric"
@@ -116,6 +130,14 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
+import type { MetricData } from "@/types/challenge_metric";
+import type { ChartDefault } from "@/types/visualizations";
+import {
+  ChartBar,
+  ChartBox,
+  ChartRadar,
+  ChartScatter,
+} from "@/constants/visualization_const";
 
 const props = defineProps<{
   isLoadingData: boolean;
@@ -126,6 +148,8 @@ const props = defineProps<{
 const metricId = computed(() => {
   return props.metricId;
 });
+
+const metricVisualizationDefault = ref({});
 
 const metricTool = computed(() => {
   return props.metricTool;
@@ -138,16 +162,6 @@ const { data } = useAuth();
 const isFetchingData = ref(true);
 const token: string = data?.value.accessToken;
 
-interface MetricData {
-  title: string;
-  description: string;
-  metrics_contact_ids: string[];
-  formal_definition: string;
-  references: string[];
-  orig_id: string;
-  _metadata: Record<string, string>;
-}
-
 const metricData = ref<MetricData>({
   title: "",
   description: "",
@@ -156,6 +170,7 @@ const metricData = ref<MetricData>({
   references: [],
   orig_id: "",
   _metadata: {},
+  representation_hints: {},
 });
 
 const formatContact = (contact: string): string => {
@@ -182,6 +197,12 @@ const fetchMetricData = async (): Promise<void> => {
   }
 };
 
+function getVisualizationType(): ChartDefault {
+  return metricData.value.representation_hints?.visualization
+    ? new ChartBar()
+    : new ChartScatter();
+}
+
 onMounted(() => {
   fetchMetricData();
 });
@@ -190,5 +211,24 @@ onMounted(() => {
 <style scoped lang="scss">
 .challenge-metric-content__header__description {
   text-transform: capitalize;
+}
+.visualization-image {
+  max-height: 190px;
+  padding: 10px 0 30px;
+  display: flex;
+  justify-content: center;
+  img {
+    max-height: 150px;
+    max-width: 150px;
+  }
+}
+.challenge-metric-box {
+  box-shadow:
+    rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
+    rgba(0, 0, 0, 0.08) 0px 0px 0px 1px !important;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 15px;
+  border-radius: 0.375rem;
 }
 </style>

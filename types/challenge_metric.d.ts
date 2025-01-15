@@ -3,6 +3,12 @@ export interface ChallengeCommonMetric {
   tool_id?: string;
 }
 
+export interface ChallengeMetricCategory {
+  category: string;
+  description: string;
+  metrics: ChallengeCommonMetric[];
+}
+
 export interface Metadata {
   "level_2:metric_id": string;
 }
@@ -21,7 +27,6 @@ export interface Metric {
   _metadata?: Metadata;
 }
 
-
 export interface Tool {
   _id: string;
   _schema: string;
@@ -36,4 +41,15 @@ export interface Tool {
   community_ids?: string[];
   orig_id: string;
   registry_tool_id: string;
+}
+
+export interface MetricData {
+  title: string;
+  description: string;
+  metrics_contact_ids: string[];
+  formal_definition: string;
+  references: string[];
+  orig_id: string;
+  _metadata: Record<string, string>;
+  representation_hints?: object
 }

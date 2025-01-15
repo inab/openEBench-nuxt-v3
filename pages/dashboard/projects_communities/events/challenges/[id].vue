@@ -5,31 +5,35 @@
       <div class="w-100">
         <div class="community-event-challenge__title">
           <h2 class="text-primaryOeb-500">
-            <span class=""
-              >Challenge : <i>{{ challengeId }} </i></span
-            >
-            <span class="span-title">
-              <NuxtLink
-                class="btn-primary hover_effect"
-                :to="`/benchmarking/${communityId}`"
+            <div class="w-100">
+              OEB Challenge Code: {{ challengeId }}
+              <span class="title-name"
+                ><i>( {{ challengeData?.name }} )</i></span
               >
-                View Community
-              </NuxtLink>
-              <NuxtLink
-                class="btn-primary hover_effect"
-                :to="`/benchmarking/${communityId}?event=${eventId}`"
-              >
-                View Event
-              </NuxtLink>
-            </span>
+            </div>
           </h2>
+          <div class="w-100 d-flex justify-content-end">
+            <NuxtLink
+              class="btn-primary hover_effect mr-1 header-button"
+              :to="`/benchmarking/${communityId}`"
+            >
+              View Community
+            </NuxtLink>
+            <NuxtLink
+              class="btn-primary hover_effect header-button"
+              :to="`/benchmarking/${communityId}?event=${eventId}`"
+            >
+              View Event
+            </NuxtLink>
+          </div>
         </div>
-        <div class="community-event-challenge__description text-gray-500">
-          It is a long established fact that a reader will be distracted by the
-          readable content of a page when looking at its layout. The point of
-          using Lorem Ipsum is that it has a more-or-less normal distribution of
-          letters, as opposed to using 'Content here, content here', making it
-          look like readable English.
+        <div class="community-event-challenge__description text-gray-500 pb-4">
+          Communities in OpenEBench create focused challenges within their
+          benchmarking events. Each challenge centers around a specific
+          category, utilizing predefined reference datasets and evaluation
+          metrics to compare tools, pipelines, services, or products. These
+          tailored competitions drive innovation and allow for in-depth analysis
+          of performance within specific domains.
         </div>
       </div>
       <div class="w-100">
@@ -112,12 +116,12 @@ const routeArray: Array = ref([
   {
     label: `Community ${communityId}`,
     isActualRoute: false,
-    route: `/dashboard/entries/${communityId}`,
+    route: `/dashboard/projects_communities/${communityId}`,
   },
   {
     label: `Event ${eventId}`,
     isActualRoute: false,
-    route: `/dashboard/entries/${communityId}/events/${eventId}`,
+    route: `/dashboard/projects_communities/${communityId}/events/${eventId}`,
   },
   {
     label: `Challenge ${challengeId}`,
@@ -199,5 +203,17 @@ onMounted(() => {
       height: 250px;
     }
   }
+}
+.title-name {
+  font-size: 1.3rem;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.header-button {
+  padding: 5px 10px;
+  font-size: 14px;
+  text-decoration: none;
+  margin-bottom: 5px;
 }
 </style>

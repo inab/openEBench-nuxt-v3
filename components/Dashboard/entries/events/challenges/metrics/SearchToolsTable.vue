@@ -52,7 +52,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, computed, defineEmits, onMounted } from "vue";
+import { ref, defineProps, computed, defineEmits, watch, onMounted } from "vue";
 import { useMetrics } from "@/stores/metrics.ts";
 import type { Challenge } from "@/types/challenge";
 import type {

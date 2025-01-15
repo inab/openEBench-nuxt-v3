@@ -5,8 +5,8 @@
       class="w-100 flex justify-content-end gap-3 py-3"
     >
       <NuxtLink
-        :to="`/dashboard/entries/${communityId}/events/${eventId}/add`"
-        class="btn custom-btn btn-primary"
+        :to="`/dashboard/projects_communities/${communityId}/events/${eventId}/add`"
+        class="btn custom-btn btn-primary header-button"
         title="Create New Event"
       >
         Create New Challenge
@@ -38,7 +38,15 @@
       <template #dates-data="{ row }">
         <div>
           <div class="w-100">
-            Benchmark start: {{ row.dates.benchmark_start }}
+            <div class="w-100">
+              Benchmark start: {{ formatClientDate(row.dates.benchmark_start) }}
+            </div>
+            <div
+              v-if="row.dates.benchmark_stop && row.dates.benchmark_stop != ''"
+              class="w-100"
+            >
+              Benchmark end: {{ formatClientDate(row.dates.benchmark_stop) }}
+            </div>
           </div>
         </div>
       </template>
@@ -47,10 +55,11 @@
           <button class="btn-custom-badget text-sm">
             <NuxtLink
               :to="`/benchmarking/${communityId}/${row._id}`"
-              title="View community events"
+              title="Visit challenge"
               class="text-sm"
             >
-              Live <font-awesome-icon :icon="['far', 'eye']" />
+              <font-awesome-icon :icon="['far', 'eye']" />
+              Visit
             </NuxtLink>
           </button>
           <div
@@ -59,9 +68,10 @@
               commmunityPrivileges.challenge.update
             "
           >
-            <button title="Edit community" class="btn-custom-badget text-sm">
+            <button title="Edit challenge" class="btn-custom-badget text-sm">
               <NuxtLink :to="getCommunityChallengeEditLink(row)">
-                Edit <font-awesome-icon :icon="['fas', 'pencil']" />
+                <font-awesome-icon :icon="['fas', 'pencil']" />
+                Edit 
               </NuxtLink>
             </button>
           </div>
@@ -73,7 +83,8 @@
           >
             <button title="Edit challenge" class="btn-custom-badget text-sm">
               <NuxtLink :to="getCommunityChallengeEditLink(row)">
-                Edit <font-awesome-icon :icon="['fas', 'pencil']" />
+                <font-awesome-icon :icon="['fas', 'pencil']" />
+                Edit 
               </NuxtLink>
             </button>
           </div>
@@ -125,6 +136,14 @@
 import { computed, ref } from "vue";
 import type { CommunityPrivilegeActions } from "@/constants/privileges";
 import type { Challenge } from "@/types/challenge";
+import { getLocaleDateString } from "@/constants/global_const";
+import { date } from "valibot";
+
+const lang = window.navigator.userLanguage || window.navigator.language;
+const dateFormat = computed(() => getLocaleDateString(lang));
+console.log(lang);
+
+console.log(dateFormat.value);
 
 const props = defineProps<{
   challenges?: Array<Challenge>;
@@ -135,6 +154,10 @@ const props = defineProps<{
 }>();
 
 const columns = [
+  {
+    label: "ID",
+    key: "_id",
+  },
   {
     label: "Acronym",
     key: "acronym",
@@ -214,8 +237,17 @@ const challengePrivileges = computed(() => {
   return props.commmunityPrivileges.challenge;
 });
 
+function formatClientDate(date: string) {
+  const formattedDate = new Date(date);
+  return formattedDate.toLocaleDateString(lang, {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+}
+
 const getCommunityChallengeEditLink = (row) => {
-  return `/dashboard/entries/${props.communityId}/events/${props.eventId}/challenges/${row._id}`;
+  return `/dashboard/projects_communities/${props.communityId}/events/${props.eventId}/challenges/${row._id}`;
 };
 </script>
 
@@ -231,5 +263,11 @@ const getCommunityChallengeEditLink = (row) => {
 .action-btn-group {
   display: flex;
   gap: 10px;
+}
+.header-button {
+  padding: 5px 10px;
+  font-size: 14px;
+  text-decoration: none;
+  margin-bottom: 5px;
 }
 </style>
