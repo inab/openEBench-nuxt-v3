@@ -7,16 +7,20 @@
       persistent-hint
       class="text-body-2 mt-2 border-1 rounded-md px-0"
       :inputClass="inputClass"
-      @blur="addValueIfNotExists"
+      @blur="handleBlur"
       @keypress.enter="addValueIfNotExists"
     />
     <span class="text-xs ps-1 mt-2">Select/introduce the version this metadata applies to</span>
+    <span v-if="errorMessage" class="text-red-500 text-xs ps-1 mt-2">{{ errorMessage }}</span>
   </div>
 </template>
 
 <script setup>
 import { ref, watch, onMounted } from 'vue';
 import { useMetadataStore } from '@/stores/observatory/evaluation/metadata';
+
+// Store
+const metadataStore = useMetadataStore();
 
 // Props
 const props = defineProps({
@@ -38,12 +42,10 @@ const props = defineProps({
   }
 });
 
-// Store
-const metadataStore = useMetadataStore();
-
 // Reactive variables
 const selectedVersion = ref(props.initialSelectedVersion);
 const versions = ref([...props.versions]);
+const errorMessage = ref(""); // Mensaje de error reactivo
 
 // Watcher para sincronizar cambios en initialSelectedVersion
 watch(
@@ -54,11 +56,31 @@ watch(
 );
 
 // Methods
+const isValidVersion = (version) => {
+  const versionRegex = /^\d+\.\d+\.\d+$/;
+  return versionRegex.test(version) && version.trim() !== '';
+};
+
 const addValueIfNotExists = () => {
-  if (selectedVersion.value && !versions.value.includes(selectedVersion.value)) {
-    versions.value.push(selectedVersion.value);
+  if (isValidVersion(selectedVersion.value)) {
+    if (!versions.value.includes(selectedVersion.value)) {
+      versions.value.push(selectedVersion.value);
+      errorMessage.value = ""; // Limpiar el mensaje de error si el valor es válido
+    }
+    changeValue();
+  } else {
+    errorMessage.value = "Invalid version format. Use '1.0.0'."
   }
-  changeValue();
+};
+
+// Nuevo método para manejar el evento blur
+const handleBlur = () => {
+  if (selectedVersion.value === '' || selectedVersion.value === null) {
+    errorMessage.value = "";
+    changeValue();
+  } else {
+    addValueIfNotExists();
+  }
 };
 
 const changeValue = () => {
@@ -66,7 +88,7 @@ const changeValue = () => {
     field: props.field,
     value: selectedVersion.value,
   };
-  metadataStore.updateSelectorEntry(payload); // Usando el método de Pinia
+  metadataStore.updateSelectorEntry(payload);
 };
 
 // Sincronizar al montar el componente
@@ -78,5 +100,8 @@ onMounted(() => {
 <style scoped>
 .text-body-2 {
   @apply text-sm text-gray-700;
+}
+.text-red-500 {
+  color: red !important;
 }
 </style>
