@@ -1,16 +1,16 @@
 <template>
-  <div class="row">
-    <USelectMenu
-      searchable
+  <div class="row mx-1">
+    <UInputMenu
       v-model="selectedVersion"
+      v-model:query="selectedVersion"
       :options="versions"
       persistent-hint
-      class="text-body-2 mt-2"
-      @update:model-value="changeValue"
-      small-chips
-      deletable-chips
+      class="text-body-2 mt-2 border-1 rounded-md px-0"
+      :inputClass="inputClass"
+      @blur="addValueIfNotExists"
+      @keypress.enter="addValueIfNotExists"
     />
-    <span class="text-xs">Select/introduce the version this metadata applies to</span>
+    <span class="text-xs ps-1 mt-2">Select/introduce the version this metadata applies to</span>
   </div>
 </template>
 
@@ -32,6 +32,10 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  inputClass: {
+    type: String,
+    default: ''
+  }
 });
 
 // Store
@@ -39,6 +43,7 @@ const metadataStore = useMetadataStore();
 
 // Reactive variables
 const selectedVersion = ref(props.initialSelectedVersion);
+const versions = ref([...props.versions]);
 
 // Watcher para sincronizar cambios en initialSelectedVersion
 watch(
@@ -49,6 +54,13 @@ watch(
 );
 
 // Methods
+const addValueIfNotExists = () => {
+  if (selectedVersion.value && !versions.value.includes(selectedVersion.value)) {
+    versions.value.push(selectedVersion.value);
+  }
+  changeValue();
+};
+
 const changeValue = () => {
   const payload = {
     field: props.field,
@@ -68,4 +80,3 @@ onMounted(() => {
   @apply text-sm text-gray-700;
 }
 </style>
-  

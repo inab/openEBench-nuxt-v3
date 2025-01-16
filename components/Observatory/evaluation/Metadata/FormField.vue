@@ -1,17 +1,16 @@
 <template>
-  <div class="row">
+  <div class="row mx-1">
     <UInput
     v-model="model" 
     :label="label"
-    
-		:class="['', ...textClass]"
+		:class="['border-1 rounded-md px-0', ...textClass]"
       placeholder="Enter text"
       @input="changeValue">
     
       <template #append>
         <button
           v-if="increasable"
-          class="btn btn-outline-secondary"
+          class="btn btn-outline-secondary3"
           @click="$emit('remove', index)"
         >
           <NUIcon name="mdi-close-circle" class="text-gray-500 text-sm"></NUIcon>
