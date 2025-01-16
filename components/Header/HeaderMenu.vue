@@ -150,7 +150,7 @@
               <div class="nav-list-items-direct top-full hidden sm:flex">
                 <button
                   id="btn-benchmark"
-                  class="text-primaryOeb-500 border-1 border-primaryOeb-800 hover:bg-primaryOeb-50 font-medium rounded-md text-sm px-2.5 py-2 me-2"
+                  class="text-primaryOeb-500 border-1 border-primaryOeb-800 hover:bg-primaryOeb-50 font-medium rounded-md text-base px-3 py-2 me-2"
                 >
                   <a
                     :href="runtimeConfig.public.VRE_URI"
@@ -249,7 +249,7 @@
                 <template v-else>
                   <button
                     id="btn-login"
-                    class="ripple text-white bg-primaryOeb-500 hover:bg-primaryOeb-400 font-medium rounded-md text-sm px-2.5 py-2"
+                    class="ripple text-white bg-primaryOeb-500 hover:bg-primaryOeb-400 font-medium rounded-md text-base  px-3 py-2"
                     @click="handleLogin"
                   >
                     <font-awesome-icon
