@@ -1,7 +1,7 @@
 <template>
   <div class="container ms-3 ">
     <div :col="n_cols">
-      <div>
+      <div class="d-flex">
         <HeaderAvatar
           :field="field"
           :field_name="title"
