@@ -75,7 +75,7 @@ const addValueIfNotExists = () => {
 
 // Nuevo método para manejar el evento blur
 const handleBlur = () => {
-  if (selectedVersion.value === '' || selectedVersion.value === null) {
+  if (selectedVersion.value === '' || selectedVersion.value === null || selectedVersion.value === undefined) {
     errorMessage.value = "";
     changeValue();
   } else {
