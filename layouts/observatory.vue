@@ -86,9 +86,14 @@ const tabsItems = [
 
 
 const activeTabIndex = ref(0);
+
 function setActiveTab(index: number, path: string) {
-  activeTabIndex.value = index;
-  router.push(path);
+  if (activeTabIndex.value !== index) {
+    activeTabIndex.value = index;
+    if (route.path !== path) {
+      router.push(path);
+    }
+  }
 }
 
 watch(route, (newRoute) => {
