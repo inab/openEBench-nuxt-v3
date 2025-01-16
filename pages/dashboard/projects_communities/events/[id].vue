@@ -137,7 +137,6 @@ const fetchUserCommunitiesEvents = async (token: string): Promise<void> => {
       token,
       eventId,
     );
-    console.log(communityResponse);
     eventChallenge.value = communityResponse;
   } catch (error) {
     console.error("Error fetching communities data: ", error);

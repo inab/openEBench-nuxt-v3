@@ -6,7 +6,7 @@
           <h2 class="text-primaryOeb-500">Dashboard</h2>
         </div>
         <div class="dashboard__header__description text-gray-500">
-          ¡Welcome to the OpenEBench Dashboard! Here you can monitor, optimize
+          Welcome to the OpenEBench Dashboard! Here you can monitor, optimize
           and administer your applications in real-time with an intuitive
           interface that allows you to explore various indicators and metrics
           for improving efficiency. Don't hesitate to navigate through the
@@ -75,7 +75,7 @@
               <div class="col-5">
                 <img
                   src="assets/images/dashboard/contacts.jpg"
-                  alt="User profile picture"
+                  alt="Metrics image"
                   class=""
                 />
               </div>

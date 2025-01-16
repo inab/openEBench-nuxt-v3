@@ -480,7 +480,6 @@ const elementToDelete = ref({
 });
 
 const challengeData = computed(() => {
-  console.log(props.challengeObj);
   state.value = {
     _id: props.challengeObj?._id?.toString() || "",
     community_id: props.communityId || "",
@@ -506,7 +505,6 @@ const challengeData = computed(() => {
     is_automated: props.challengeObj?.is_automated || false,
   };
 
-  console.log(state.value);
   return state;
 });
 

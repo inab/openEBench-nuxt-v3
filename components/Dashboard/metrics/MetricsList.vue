@@ -17,7 +17,7 @@
       :columns="columns"
       :loading="isLoading"
       :rows="filteredRows"
-      :sort="sort" 
+      :sort="sort"
       :ui="{
         tr: {
           base: 'hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer',
@@ -36,6 +36,7 @@
           size: 'text-sm',
         },
       }"
+      @update:sort="handleUpdateSort"
     >
       <template #view-data="{ row }">
         <div class="action-btn-group">
@@ -89,264 +90,21 @@
         }"
       />
     </div>
-    <CustomModal :is-open="isModalOpen" width="700" @modal-close="closeModal">
-      <template #header>
-        <div class="modal-title">{{ modalTitle }}</div>
-        <button
-          class="modal-close"
-          aria-label="Close modal"
-          @click="isModalOpen = false"
-        >
-          <UIcon name="i-heroicons-x-mark-16-solid" />
-        </button>
-      </template>
-      <template #content>
-        <div class="w-100">
-          <div
-            v-if="isSearchingMetric"
-            class="flex justify-content-center items-center"
-          >
-            <div class="space-y-2 pt-4">
-              <USkeleton class="h-8 w-[400px]" />
-              <USkeleton class="h-8 w-[400px]" />
-              <USkeleton class="h-20 w-[400px]" />
-            </div>
-          </div>
-          <div v-else>
-            <div
-              v-if="metricObj?._id"
-              class="flex flex-col gap-3 metric__modal pt-3"
-            >
-              <UForm
-                :schema="schema"
-                :state="state"
-                class="space-y-4"
-                @submit="onSubmitNewMetric"
-              >
-                <div class="form-card__row__box row">
-                  <div class="col-6">
-                    <label for="metric_id">
-                      Metric ID
-                      <span class="text-red-400 required">*</span>
-                    </label>
-                    <div class="w-100">
-                      <input
-                        id="metric_id"
-                        v-model="metricObj._id"
-                        type="text"
-                        class="form-control custom-entry-input"
-                        :disabled="!isMetricEditable"
-                      />
-                    </div>
-                  </div>
-                  <div class="col-6">
-                    <label for="orig_id">
-                      Original ID
-                      <span class="text-red-400 required">*</span>
-                    </label>
-                    <div class="w-100">
-                      <input
-                        id="orig_id"
-                        v-model="metricObj.orig_id"
-                        type="text"
-                        class="form-control custom-entry-input"
-                        :disabled="!isMetricEditable"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div class="form-card__row__box row">
-                  <div class="col-6">
-                    <label for="formal_definition">
-                      Formal definition
-                      <span class="text-red-400 required">*</span>
-                    </label>
-                    <div class="w-100">
-                      <input
-                        id="formal_definition"
-                        v-model="metricObj.formal_definition"
-                        type="text"
-                        class="form-control custom-entry-input"
-                        :disabled="!isMetricEditable"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div class="form-card__row__box row">
-                  <div class="col-12">
-                    <label for="title">
-                      Title
-                      <span class="text-red-400 required">*</span>
-                    </label>
-                    <div class="w-100">
-                      <input
-                        id="title"
-                        v-model="metricObj.title"
-                        type="text"
-                        class="form-control custom-entry-input"
-                        :disabled="!isMetricEditable"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div class="form-card__row__box row">
-                  <div class="col-12">
-                    <label for="description">
-                      Description
-                      <span class="text-red-400 required">*</span>
-                    </label>
-                    <div class="w-100">
-                      <textarea
-                        v-model="metricObj.description"
-                        class="form-control custom-entry-input"
-                        placeholder="Description..."
-                        :disabled="!isMetricEditable"
-                      ></textarea>
-                    </div>
-                  </div>
-                </div>
-                <div class="form-card__row__box row">
-                  <div class="col-12">
-                    <label for="title">References</label>
-                    <div
-                      v-if="
-                        metricObj.references && metricObj.references.length > 0
-                      "
-                      class="w-100"
-                    >
-                      <div class="row">
-                        <div
-                          v-for="(reference, index) in metricObj.references"
-                          :key="index"
-                          class="col-6 pt-0 pb-1"
-                        >
-                          <div class="input-wrapper big d-flex">
-                            <span>{{ index + 1 }}.</span>
-                            <input
-                              v-model="metricObj.references[index]"
-                              type="text"
-                              class="form-control"
-                              :disabled="!isMetricEditable"
-                            />
-                            <button
-                              class="btn-delete-input"
-                              type="button"
-                              @click="
-                                onDeleteElement(index, metricObj.references)
-                              "
-                            >
-                              <font-awesome-icon :icon="['far', 'trash-can']" />
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="form-card__row__box row">
-                  <div class="col-12">
-                    <label for="title">Contacts</label>
-                    <div
-                      v-if="
-                        metricObj.metrics_contact_ids &&
-                        metricObj.metrics_contact_ids.length > 0
-                      "
-                      class="w-100"
-                    >
-                      <div class="row">
-                        <div
-                          v-for="(
-                            contacts, index
-                          ) in metricObj.metrics_contact_ids"
-                          :key="index"
-                          class="col-6 pt-0 pb-1"
-                        >
-                          <div class="input-wrapper big d-flex">
-                            <span>{{ index + 1 }}.</span>
-                            <input
-                              v-model="metricObj.metrics_contact_ids[index]"
-                              type="text"
-                              class="form-control"
-                              :disabled="!isMetricEditable"
-                            />
-                            <button
-                              class="btn-delete-input"
-                              type="button"
-                              @click="
-                                onDeleteElement(
-                                  index,
-                                  metricObj.metrics_contact_ids,
-                                )
-                              "
-                            >
-                              <font-awesome-icon :icon="['far', 'trash-can']" />
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div v-if="metricObj.representation_hints" class="w-100">
-                  <UFormGroup label="Representation hints">
-                    <div class="form-text">
-                      <div
-                        v-if="metricObj.representation_hints.visualization"
-                        class="d-flex"
-                      >
-                        Usually found in:
-                        <span class="pl-2"><b>Bar plots</b></span>
-                        <NuxtLink
-                          to="/dashboard/plots?type=box"
-                          class="btn custom-btn btn-primary mb-2 small ml-5"
-                        >
-                          View Box Plot
-                        </NuxtLink>
-                      </div>
-                      <div
-                        v-else-if="metricObj.representation_hints.optimization"
-                        class="d-flex"
-                      >
-                        Usually found in:
-                        <span class="pl-2"><b>Scatter plots</b></span>
-                        <NuxtLink
-                          to="/dashboard/plots?type=scatter"
-                          class="btn custom-btn btn-primary mb-2 small ml-5"
-                        >
-                          View Scatter Plot
-                        </NuxtLink>
-                      </div>
-                    </div>
-                  </UFormGroup>
-                </div>
-              </UForm>
-            </div>
-            <div v-else class="flex justify-content-center items-center">
-              <div class="text-red-500">No data found</div>
-            </div>
-          </div>
-        </div>
-      </template>
-      <template #footer>
-        <div class="form-footer">
-          <UButton
-            type="button"
-            variant="secondary"
-            @click="isModalOpen = false"
-          >
-            Cancel
-          </UButton>
-          <UButton type="submit"> Submit </UButton>
-        </div>
-      </template>
-    </CustomModal>
+    <MetricModal
+      :is-modal-open="isModalOpen"
+      :modal-title="modalTitle"
+      :metric-id="metricIdOpen"
+      :is-metric-editable="isMetricEditable"
+      :token="token"
+      @close-modal="closeModal"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import type { Metric } from "@/types/challenge_metric";
 import { ref, computed } from "vue";
-import CustomModal from "@/components/Common/CustomModal.vue";
+import MetricModal from "@/components/Dashboard/metrics/MetricModal.vue";
 
 const props = defineProps<{
   metricRows: Metric[];
@@ -357,23 +115,20 @@ const props = defineProps<{
 const runtimeConfig = useRuntimeConfig();
 const isModalOpen = ref(false);
 const isSearchingMetric = ref(false);
-const metricObj = ref<Metric | null>(null);
 const modalTitle = ref("");
 const isMetricEditable = ref(false);
 const search = ref("");
 const _total = ref(0);
 const page = ref<number>(1);
 const pageCount = ref<number>(10);
+const metricIdOpen = ref("");
 
 const pageFrom = computed(
   () => (Number(page.value) - 1) * Number(pageCount.value) + 1,
 );
 
 const pageTo = computed(() =>
-  Math.min(
-    Number(page.value) * Number(pageCount.value),
-    Number(totalPages.value),
-  ),
+  Math.min(Number(page.value) * Number(pageCount.value), Number(_total.value)),
 );
 
 const columns = [
@@ -424,7 +179,7 @@ const filteredRows = computed(() => {
     });
   });
 
-  _total.value = filteredSearcher.length;
+  _total.value = props.metricRows.length;
 
   return filteredSearcher.slice(
     (Number(page.value) - 1) * Number(pageCount.value),
@@ -436,24 +191,13 @@ const totalPages = computed(() => {
   return Math.ceil(Number(_total.value) / Number(pageCount.value));
 });
 
-const openModal = async (row: Metric) => {
-  isModalOpen.value = true;
-  metricObj.value = await fetchMetric(row._id);
-  if (metricObj.value) {
-    metricObj.value.metrics_contact_ids = cleanContacts(
-      metricObj.value.metrics_contact_ids,
-    );
-  }
-};
-
 const closeModal = () => {
   isModalOpen.value = false;
-  metricObj.value = null;
   isSearchingMetric.value = true;
+  metricIdOpen.value = "";
 };
 
 function cloneMetric(metric: Metric) {
-  console.log("Clone metric", metric);
   modalTitle.value = "Clone & create new metric";
   isMetricEditable.value = true;
   openModal(metric);
@@ -465,30 +209,34 @@ function viewMetric(metric: Metric) {
   openModal(metric);
 }
 
+const openModal = async (row: Metric) => {
+  isModalOpen.value = true;
+  metricIdOpen.value = row._id;
+};
+
 function onDeleteElement(index: number, list: any[]) {
   list.splice(index, 1);
 }
 
-async function fetchMetric(id: string): Promise<Metric | null> {
-  isSearchingMetric.value = true;
-  try {
-    const response = await fetch(
-      `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Metrics/${id}`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${props.token}`,
-          Accept: "application/json",
-        },
-      },
-    );
-    const data = await response.json();
-    isSearchingMetric.value = false;
-    return data._id ? data : null;
-  } catch (error) {
-    isSearchingMetric.value = false;
-    return null;
-  }
+function handleUpdateSort({
+  column,
+  direction,
+}: {
+  column: string;
+  direction: string;
+}) {
+  sort.value.column = column;
+  sort.value.direction = direction;
+
+  const sortedRows = props.metricRows.sort((a, b) => {
+    if (direction === "asc") {
+      return a[column as keyof Metric] > b[column as keyof Metric] ? 1 : -1;
+    } else {
+      return a[column as keyof Metric] < b[column as keyof Metric] ? 1 : -1;
+    }
+  });
+
+  return sortedRows;
 }
 </script>
 
@@ -507,32 +255,5 @@ async function fetchMetric(id: string): Promise<Metric | null> {
     border: 1px solid #00caa4;
     color: white;
   }
-}
-
-.input-wrapper {
-  background-color: theme("colors.primary.50");
-  padding: 0.6rem 0.8rem;
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  line-height: 1;
-  padding-bottom: 10px;
-  display: flex;
-  gap: 10px;
-  justify-content: start;
-  align-items: baseline;
-  input {
-    border: none;
-    background-color: rgba(255, 255, 255, 0.8);
-    width: 100%;
-  }
-  &.big {
-    margin-bottom: 5px;
-    width: 100%;
-  }
-}
-
-.input-wrapper input:disabled {
-  background-color: #e9ecef !important;
-  opacity: 1;
 }
 </style>

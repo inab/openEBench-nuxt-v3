@@ -143,8 +143,6 @@ const props = defineProps<{
   communityId: string;
 }>();
 
-console.log(props.events);
-
 const columns = [
   {
     label: "Name",
