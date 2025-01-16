@@ -381,22 +381,26 @@
             </div>
           </div>
         </div>
-        <CustomModal :is-open="isModalOpened" width="800">
+        <CustomModal :is-open="isModalOpened" width="800" @modal-close="closeModal">
           <template #header>
-            <div class="modal-header">
-              <div class="modal-title">Create new metric</div>
-              <button
-                class="modal-close"
-                aria-label="Close modal"
-                @click="isModalOpened = false"
-              >
-                <UIcon name="i-heroicons-x-mark-16-solid" />
-              </button>
-            </div>
+            <div class="modal-title">Create new metric</div>
+            <button
+              class="modal-close"
+              aria-label="Close modal"
+              @click="isModalOpened = false"
+            >
+              <UIcon name="i-heroicons-x-mark-16-solid" />
+            </button>
           </template>
           <template #content>
             <div class="modal-content">
-              <CreateMetric />
+              <CreateMetric
+                @modal-close="closeModal" />
+            </div>
+          </template>
+          <template #footer>
+            <div class="">
+
             </div>
           </template>
         </CustomModal>
@@ -409,11 +413,9 @@
 import { ref, watch } from "vue";
 import type { Metric, Tool, ChallengeMetricCategory } from "@/types/challenge_metric";
 import type { ChartDefault } from "@/types/visualizations";
-
 import { useMetrics } from "@/stores/metrics.ts";
 
 import metricsSearcher from "@/utils/metricsMatch";
-import CustomBorder from "@/components/Common/CustomBorder.vue";
 import SearchMetricTable from "@/components/Dashboard/entries/events/challenges/metrics/SearchMetricTable.vue";
 import SearchToolsTable from "@/components/Dashboard/entries/events/challenges/metrics/SearchToolsTable.vue";
 import SearchVisualizationTable from "@/components/Dashboard/entries/events/challenges/metrics/SearchVisualizationTable.vue";
@@ -647,6 +649,10 @@ function handleSelectedTools(selectedToolsData: Tool[]) {
 
 function handleSelectedVisualization(selectedVisualizationData: any) {
   selectedVisualization.value = selectedVisualizationData;
+}
+
+function closeModal() {
+  isModalOpened.value = false;
 }
 
 watch(props.contactsData, (newVal: string[]) => {

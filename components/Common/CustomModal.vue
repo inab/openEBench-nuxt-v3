@@ -11,7 +11,7 @@
         <div class="modal-footer">
           <slot name="footer">
             <div>
-              <button @click.stop="emit('modal-close')">Submit</button>
+              <button @click.stop="emit('modal-close')">Close</button>
             </div>
           </slot>
         </div>
@@ -20,7 +20,8 @@
   </div>
 </template>
 <script setup lang="ts">
-import { defineProps, defineEmits, ref, computed } from "vue";
+import { defineProps, defineEmits, ref } from "vue";
+import { onClickOutside } from '@vueuse/core'
 
 const props = defineProps({
   isOpen: Boolean,
@@ -31,14 +32,13 @@ const props = defineProps({
 });
 
 const modalWith = `${props.width}px`;
-
 const emit = defineEmits(["modal-close"]);
+const target = ref(null);
 
-const target = ref(null)
-//onClickOutside(target, ()=>emit('modal-close'))
+onClickOutside(target, ()=>emit('modal-close'))
 
 </script>
-<style scoped>
+<style lang="scss">
 .modal-mask {
   position: fixed;
   z-index: 9998;
@@ -58,7 +58,7 @@ const target = ref(null)
   margin: 150px auto;
   padding: 20px 30px;
   background-color: #fff;
-  border-radius: 2px;
+  border-radius: 5px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
 }
 
@@ -68,5 +68,17 @@ const target = ref(null)
   justify-content: space-between;
   width: 100%;
   border-bottom: 1px solid rgb(226, 232, 240);
+  margin-bottom: 20px;
+  .modal-title {
+    font-size: 18px;
+  }
+  .modal-close {
+    color: black;
+    font-size: 22px;
+  }
+}
+
+.modal-body {
+  padding-bottom: 20px;
 }
 </style>

@@ -294,3 +294,17 @@ $colorSecondary: #f47c21;
     box-shadow: none;
   }
 }
+
+.form-control:has(textarea:disabled) {
+  background-color: #e9ecef !important;
+  opacity: 1;
+}
+
+.pagination button {
+  color: #6c757d;
+  border: 1px solid #dee2e6;
+  &:hover {
+    background-color: #e9ecef;
+    color: #495057;
+  }
+}
