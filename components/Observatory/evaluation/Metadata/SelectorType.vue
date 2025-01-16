@@ -1,9 +1,9 @@
 <template>
-  <div class="row">
+  <div class="row mx-1">
     <USelectMenu
       v-model="selectedType"
       :options="typeItems"
-      class="mt-2 border-none"
+      class="mt-2 border-1 rounded-md px-0"
       bordered="false"
       @update:model-value="changeValue"
     >
