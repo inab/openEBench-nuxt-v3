@@ -66,7 +66,7 @@
         </div>
       </template>
       <template #view-data="{ row }">
-        <button class="btn-custom-badget text-sm" @click="openModal(row._id)">
+        <button class="btn-custom-badget text-sm" @click="viewContact(row._id)">
           <font-awesome-icon :icon="['fas', 'pencil']" />
           Edit
         </button>
@@ -91,155 +91,25 @@
         :total="props.contactsData.length"
       />
     </div>
-    <CustomModal :is-open="isModalOpened" width="600" @modal-close="closeModal">
-      <template #header>
-        <h2>Edit contact</h2>
-        <UButton
-          color="bg-slate-300"
-          variant="ghost"
-          icon="i-heroicons-x-mark-20-solid"
-          class=""
-          @click="isModalOpened = false"
-        />
-      </template>
-      <template #content>
-        <div class="w-100">
-          <UForm
-            :schema="schema"
-            :state="state"
-            class="space-y-4"
-            @submit="onSubmitContactUpdate"
-            @error="onError"
-          >
-            <div class="w-100 form-card">
-              <div class="form-card__row">
-                <div class="form-card__row__box w-100">
-                  <div class="row">
-                    <div class="col-6 typeOptions">
-                      <div class="form-group">
-                        <label for="id">
-                          Name
-                          <span class="text-red-400 required">*</span>
-                        </label>
-                        <div class="w-100">
-                          <input
-                            id="id"
-                            v-model="state.givenName"
-                            type="text"
-                            class="form-control custom-entry-input"
-                            placeholder="Contact Name"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-6 typeOptions">
-                      <div class="form-group">
-                        <label for="id">
-                          Surname
-                          <span class="text-red-400 required">*</span>
-                        </label>
-                        <div class="w-100">
-                          <input
-                            id="id"
-                            v-model="state.surname"
-                            type="text"
-                            class="form-control custom-entry-input"
-                            placeholder="Contact Surname"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-6 typeOptions">
-                      <div class="form-group">
-                        <label for="type">
-                          Type
-                          <span class="text-red-400 required">*</span>
-                        </label>
-                        <div class="w-100">
-                          <USelect
-                            v-model="state.contact_type"
-                            :options="contactTypeOptions"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-6 typeOptions">
-                      <div class="form-group">
-                        <label for="id">
-                          Community
-                          <span class="text-red-400 required">*</span>
-                        </label>
-                        <div class="w-100">
-                          <USelect
-                            v-model="defaultCommunity"
-                            :options="communities"
-                            value-attribute="_id"
-                            option-attribute="name"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-12 typeOptions">
-                      <div class="form-group">
-                        <label for="email">
-                          Email
-                          <span class="text-red-400 required">*</span>
-                        </label>
-                        <div class="w-100">
-                          <input
-                            id="email"
-                            v-model="state.email[0]"
-                            type="text"
-                            class="form-control custom-entry-input"
-                            placeholder="Contact Email"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-12 typeOptions">
-                      <div class="form-group">
-                        <label for="notes">
-                          Notes
-                          <span class="text-red-400 required">*</span>
-                        </label>
-                        <div class="w-100">
-                          <UTextarea v-model="defaultNotes" />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </UForm>
-        </div>
-      </template>
-      <template #footer>
-        <button class="btn btn-primary">Save</button>
-      </template>
-    </CustomModal>
+    <ContactModal
+      :is-modal-open="isModalOpen"
+      :contact-id="contactIdOpen"
+      :token="token"
+      @close-modal="closeModal"
+    />
   </div>
 </template>
 <script setup lang="ts">
-import type { Ref } from "vue";
 import { computed, ref } from "vue";
-import { useUser } from "@/stores/user.ts";
 import type { Community } from "@/types/communities";
 import type { Contact } from "@/types/contact";
-import CustomModal from "@/components/Common/CustomModal.vue";
+import ContactModal from "@/components/Dashboard/contacts/ContactModal.vue";
 
 const props = defineProps<{
   contactsData: Contact[];
   isLoading: boolean;
+  token: string;
 }>();
-
-console.log("props.contactsData: ", props.contactsData);
 
 const { data } = useAuth();
 const runtimeConfig = useRuntimeConfig();
@@ -247,17 +117,13 @@ let token: string | undefined;
 if (data.value) {
   token = data.value.accessToken;
 }
-
-const isModalOpened = ref(false);
-const communities = ref<Community[]>([]);
-const userStore = useUser();
-
-const defaultCommunity: Ref<string> = ref("");
-const defaultNotes: Ref<string> = ref("");
+const isModalOpen = ref(false);
+const isSearchingContact = ref(false);
 const search = ref("");
 const _total = ref(0);
 const page = ref<number>(1);
 const pageCount = ref<number>(10);
+const contactIdOpen = ref("");
 
 const pageFrom = computed(
   () => (Number(page.value) - 1) * Number(pageCount.value) + 1,
@@ -265,32 +131,9 @@ const pageFrom = computed(
 const pageTo = computed(() =>
   Math.min(
     Number(page.value) * Number(pageCount.value),
-    Number(totalPages.value),
+    Number(_total.value),
   ),
 );
-
-// const state = ref({
-//   _id: "",
-//   givenName: "",
-//   surname: "",
-//   email: "",
-//   notes: "",
-//   _schema:
-//     "https://www.elixir-europe.org/excelerate/WP2/json-schemas/1.0/Contact",
-//   contact_type: "",
-//   community_id: "",
-// });
-
-// const schema = object({
-//   _id: string(),
-//   givenName: string(),
-//   surname: string(),
-//   email: string(),
-//   notes: string(),
-//   _schema: string(),
-//   contact_type: string(),
-//   community_id: string(),
-// });
 
 const columns = [
   {
@@ -363,64 +206,23 @@ const totalPages = computed(() => {
   return Math.ceil(Number(_total.value) / Number(pageCount.value));
 });
 
-const contactTypeOptions = ["person", "helpdesk", "other"];
 
-async function openModal(id: string) {
-  const contact = await fetchContactData(id);
-  if (contact) {
-    state.value = { ...contact };
-    isModalOpened.value = true;
-  }
+function viewContact(contact: Contact) {
+  openModal(contact);
 }
 
-async function onError(event: FormErrorEvent) {
-  // console.log("state: ", state.value);
-  // console.log("event: ", event);
-}
-
-async function SubmitContactUpdate(event: FormSubmitEvent<Schema>) {
-  const result = safeParse(schema, state.value);
-}
-
-const fetchContactData = async (id: string): Promise<void> => {
-  try {
-    const response = await fetch(
-      `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Contact/${id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-        },
-        method: "GET",
-      },
-    );
-    const data = await response.json();
-    isModalOpened.value = true;
-    defaultCommunity.value = data.community_id ?? "";
-    defaultNotes.value =
-      data.notes && data.notes != "Unknown" ? data.notes : "";
-    if (token) {
-      await fetchUserCommunities(token);
-    } else {
-      console.error("Token is undefined");
-    }
-    return data;
-  } catch (error) {
-    console.error(error);
-  }
+const closeModal = () => {
+  isModalOpen.value = false;
+  isSearchingContact.value = true;
+  contactIdOpen.value = "";
 };
 
-const fetchUserCommunities = async (token: string): Promise<void> => {
-  try {
-    communities.value = await userStore.fetchCommunities(token);
-    communities.value = communities.value.map((community) => {
-      return {
-        ...community,
-        name: `${community._id} - ${community.name}`,
-      };
-    });
-  } catch (error) {
-    console.error("Error fetching communities data:", error);
-  }
+
+const openModal = async (row: Contact) => {
+  isModalOpen.value = true;
+  contactIdOpen.value = row;
+  console.log(row)
+  console.log(contactIdOpen.value);
 };
+
 </script>
