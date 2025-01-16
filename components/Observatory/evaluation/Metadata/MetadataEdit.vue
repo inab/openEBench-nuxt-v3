@@ -34,23 +34,62 @@
 
         <!-- Content 0. Identity -->
         <div v-if="item.label == '0. Identity'" class="p-4">
-          <!-- Name -->
-          <MetaField
-            title="Name"
-            field="label"
-            value-type=""
-            n_cols="4"
-            :increasable="false"
-          >
-            <template #inputField>
-              <FormField
-                field="label"
-                :increasable="false"
-                :item="toolMetadata.label[0]"
-                :text-class="nameTextClass()"
-              />
-            </template>
-          </MetaField>
+          <div class="mt-0 ml-3 d-flex flex-row justify-space-between">
+            
+            <!-- Name -->
+            <MetaField
+              title="Name"
+              field="label"
+              value-type=""
+              n_cols="4"
+              :increasable="false"
+            >
+              <template #inputField>
+                <FormField
+                  field="label"
+                  :increasable="false"
+                  :item="toolMetadata.label[0]"
+                  :text-class="nameTextClass()"
+                />
+              </template>
+            </MetaField>
+
+            <!-- Type -->
+            <MetaField
+              title="Type of Software"
+              field="type"
+              value-type=""
+              n_cols="3"
+              :increasable="false"
+            >
+              <template #inputField>
+                <SelectorType
+                  field="type"
+                  :initialSelectedType="toolMetadata.type"
+                />
+              </template>
+            </MetaField>
+
+            <!-- Version -->
+            <MetaField
+              title="Version"
+              field="version"
+              value-type=""
+              n_cols="4"
+              :increasable="false"
+            >
+              <template #inputField>
+                <VersionCombo
+                  field="version"
+                  :initialSelectedVersion="toolMetadata.version"
+									:versions="toolMetadata.other_versions"
+                />
+              </template>
+            </MetaField>
+
+
+          </div>
+          
         </div>
         <div>
           <p class="italic text-gray-900 dark:text-white text-center">
@@ -86,6 +125,10 @@ import { useResultStore } from '@/stores/observatory/evaluation/results';
 import { useStepperStore } from '@/stores/observatory/evaluation/index';
 import MetaField from "./Metafield.vue";
 import FormField from './FormField.vue';
+import SelectorType from './SelectorType.vue';
+import VersionCombo from './VersionCombo.vue';
+import MetaRegistriesCombo from './MetaRegistriesCombo.vue';
+
 
 const metadataStore = useMetadataStore();
 const resultsStore = useResultStore();
@@ -230,7 +273,7 @@ const cancel = () => {
 };
 
 const nameTextClass = () => {
-  return ["text-body", "mt-3"];
+  return ["text-body", "mt-2"];
 };
 </script>
 <style scoped></style>
