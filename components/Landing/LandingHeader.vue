@@ -149,10 +149,10 @@ import CommunityImg from "../../public/images/illustrations/chart-person.svg?com
 .welcome-header-btn {
   width: 100%;
   min-height: 40px;
-  padding: 12px 30px;
   color: white;
   text-decoration: none;
-  padding: 5px;
+  padding-top: 8px;
+  padding-bottom: 8px;
   cursor: pointer;
   transition: 0.5s;
   border: 1px solid #0b579f;
