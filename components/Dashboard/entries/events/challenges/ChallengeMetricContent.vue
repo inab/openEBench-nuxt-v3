@@ -74,6 +74,38 @@
 
         <div class="challenge-metric-content__data text-neutral-500">
           <div class="challenge-metric-content__data__value pb-2">
+            <span class="font-bold">ID: </span>
+            <span
+              class="challenge-metric-content__data__value__contact text-neutral-500"
+            >
+              {{ metricData._id }}
+            </span>
+          </div>
+          <div class="challenge-metric-content__data__value pb-2">
+            <span class="font-bold">Title: </span>
+            <span
+              class="challenge-metric-content__data__value__contact text-neutral-500"
+            >
+              {{ metricData.title }}
+            </span>
+          </div>
+          <div class="challenge-metric-content__data__value pb-2">
+            <span class="font-bold">Description: </span>
+            <span
+              class="challenge-metric-content__data__value__contact text-neutral-500"
+            >
+              {{ metricData.description }}
+            </span>
+          </div>
+          <div class="challenge-metric-content__data__value pb-2">
+            <span class="font-bold">Original ID: </span>
+            <span
+              class="challenge-metric-content__data__value__contact text-neutral-500"
+            >
+              {{ metricData.orig_id }}
+            </span>
+          </div>
+          <div class="challenge-metric-content__data__value pb-2">
             <span class="font-bold">Contacts: </span>
             <span
               v-for="contact in metricData.metrics_contact_ids"
@@ -92,11 +124,20 @@
               </span>
             </span>
           </div>
-          <div class="challenge-metric-content__data__unit pb-2">
+          <div
+            v-if="
+              metricData.formal_definition &&
+              metricData.formal_definition !== ''
+            "
+            class="challenge-metric-content__data__unit pb-2"
+          >
             <span class="font-bold">Formal Definition:</span>
             {{ metricData.formal_definition }}
           </div>
-          <div class="challenge-metric-content__data__references pb-2">
+          <div
+            v-if="metricData.references && metricData.references.length > 0"
+            class="challenge-metric-content__data__references pb-2"
+          >
             <span class="font-bold">References: </span>
             <span v-for="reference in metricData.references" :key="reference">
               <span
@@ -112,7 +153,13 @@
           <div class="challenge-metric-content__data__references pb-2">
             <span class="font-bold">Orig ID: </span> {{ metricData.orig_id }}
           </div>
-          <div class="challenge-metric-content__data__metadata pb-2">
+          <div
+            v-if="
+              metricData._metadata &&
+              Object.keys(metricData._metadata).length > 0
+            "
+            class="challenge-metric-content__data__metadata pb-2"
+          >
             <span class="font-bold">Metadata: </span>
             <div
               v-for="(value, key) in metricData._metadata"
