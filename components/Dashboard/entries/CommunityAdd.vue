@@ -162,13 +162,11 @@
                 <div class="form-card__row__box">
                   <div class="col-12">
                     <label for="description">Description</label>
-                    <textarea
-                      id="description"
+                    <ckeditor
                       v-model="state.description"
-                      class="form-control"
-                      rows="10"
-                    >
-                    </textarea>
+                      :editor="ClassicEditor"
+                      :config="config"
+                    />
                   </div>
                 </div>
               </div>
@@ -437,6 +435,31 @@ import type { FormSubmitEvent } from "#ui/types";
 import CustomDialog from "@/components/Common/CustomDialog.vue";
 import { object, string, array, safeParse, nonEmpty, is } from "valibot";
 import CustomBorder from "@/components/Common/CustomBorder.vue";
+import {
+  ClassicEditor,
+  Essentials,
+  Paragraph,
+  Bold,
+  Italic,
+  Underline,
+  Strikethrough,
+  Code,
+  Indent,
+  IndentBlock,
+  List,
+  Link,
+  Table,
+  TableToolbar,
+  BlockQuote,
+  CodeBlock,
+  HorizontalLine,
+  SpecialCharacters,
+  SpecialCharactersEssentials,
+  Heading,
+  SourceEditing,
+} from "ckeditor5";
+import { Ckeditor } from "@ckeditor/ckeditor5-vue";
+import "ckeditor5/ckeditor5.css";
 
 const runtimeConfig = useRuntimeConfig();
 const userStore = useUser();
@@ -504,6 +527,60 @@ const schema = object({
       role: string(),
     }),
   ),
+});
+
+const config = computed(() => {
+  return {
+    licenseKey: "GPL",
+    plugins: [
+      Essentials,
+      Paragraph,
+      Bold,
+      Italic,
+      Underline,
+      Strikethrough,
+      Code,
+      Indent,
+      IndentBlock,
+      List,
+      Link,
+      Table,
+      TableToolbar,
+      BlockQuote,
+      CodeBlock,
+      HorizontalLine,
+      SpecialCharacters,
+      SpecialCharactersEssentials,
+      Heading,
+      SourceEditing,
+    ],
+    toolbar: [
+      "undo",
+      "redo",
+      "|",
+      "heading",
+      "|",
+      "sourceEditing",
+      "|",
+      "bold",
+      "italic",
+      "underline",
+      "strikethrough",
+      "code",
+      "|",
+      "bulletedList",
+      "numberedList",
+      "bulletedList ",
+      "|",
+      "link",
+      "insertTable",
+      "blockQuote",
+      "codeBlock",
+      "horizontalLine",
+      "formatPainter",
+      "specialCharacters",
+    ],
+  };
 });
 
 const dialogTitle = ref("");
