@@ -242,6 +242,7 @@ export const useMetadataStore = defineStore('metadata', {
     addEntry(payload) {
       const field = payload.field;
       const value = payload.value;
+  		let id = 0;
 
       // the id is needed for v_for loops to keep proper track of items
       if (this.toolMetadata[field].length > 0) {
@@ -252,12 +253,19 @@ export const useMetadataStore = defineStore('metadata', {
         term: value,
         id,
       };
-      this.toolMetadata[field].push(newItem);
+
+      // If the value is empty, it is not added
+      if (value !== '') {
+        this.toolMetadata[field].push(newItem);
+      }
     },
 
     removeEntry(payload) {
 		  // remove item to force update of reactive properties depending on it
-      this.toolMetadata[payload.field].splice(payload.index, 1);
+      // remove only if index greater than 0?
+      if (payload.index < 0 ){
+        this.toolMetadata[payload.field].splice(payload.index, 1);
+      }
     },
 
     updateLoadedMetadata(payload) {
