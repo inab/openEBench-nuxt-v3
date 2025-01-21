@@ -4,7 +4,6 @@
     v-model="model" 
     :label="label"
 		:class="['border-1 rounded-md px-0', ...textClass]"
-      placeholder="Enter text"
       @input="changeValue">
     
       <template #append>
