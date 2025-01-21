@@ -394,7 +394,6 @@ export const useUser = defineStore("user", {
           });
         }
       });
-      console.log(data);
       return data;
     },
   },

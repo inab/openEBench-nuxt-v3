@@ -1,0 +1,142 @@
+{
+    "_id": "OEBDTEST0000003",
+    "dates": {
+        "modification": "2023-12-05T13:09:13Z"
+    },
+    "inline_data": {
+        "challenge_participants": [
+            {
+                "tool_id": "Tool_1",
+                "metric_x": 220046,
+                "stderr_x": 0,
+                "metric_y": 0.91590127,
+                "stderr_y": 0.00081763741
+            },
+            {
+                "tool_id": "Tool_2",
+                "metric_x": 99657,
+                "stderr_x": 0,
+                "metric_y": 0.97144131,
+                "stderr_y": 0.00071919219
+            },
+            {
+                "tool_id": "Tool_3",
+                "metric_x": 148769,
+                "stderr_x": 0,
+                "metric_y": 0.95148883,
+                "stderr_y": 0.00076355016
+            },
+            {
+                "tool_id": "Tool_4",
+                "metric_x": 156000,
+                "stderr_x": 0,
+                "metric_y": 0.9522027,
+                "stderr_y": 0.00072990772
+            },
+            {
+                "tool_id": "Tool_5",
+                "metric_x": 169100,
+                "stderr_x": 0,
+                "metric_y": 0.94775585,
+                "stderr_y": 0.00072908329
+            },
+            {
+                "tool_id": "Tool_6",
+                "metric_x": 308308,
+                "stderr_x": 0,
+                "metric_y": 0.82919834,
+                "stderr_y": 0.00092230463
+            },
+            {
+                "tool_id": "Tool_7",
+                "metric_x": 310556,
+                "stderr_x": 0,
+                "metric_y": 0.84030014,
+                "stderr_y": 0.00095862579
+            },
+            {
+                "tool_id": "Tool_8",
+                "metric_x": 211602,
+                "stderr_x": 0,
+                "metric_y": 0.92194777,
+                "stderr_y": 0.00080572484
+            },
+            {
+                "tool_id": "Tool_9",
+                "metric_x": 156810,
+                "stderr_x": 0,
+                "metric_y": 0.94258052,
+                "stderr_y": 0.00082567668
+            },
+            {
+                "tool_id": "Tool_10",
+                "metric_x": 116336,
+                "stderr_x": 0,
+                "metric_y": 0.96057284,
+                "stderr_y": 0.00077123133
+            },
+            {
+                "tool_id": "Tool_11",
+                "metric_x": 211063,
+                "stderr_x": 0,
+                "metric_y": 0.92286736,
+                "stderr_y": 0.00082757083
+            },
+            {
+                "tool_id": "Tool_12",
+                "metric_x": 221966,
+                "stderr_x": 0,
+                "metric_y": 0.90615722,
+                "stderr_y": 0.00085609679
+            },
+            {
+                "tool_id": "Tool_13",
+                "metric_x": 198053,
+                "stderr_x": 0,
+                "metric_y": 0.92710496,
+                "stderr_y": 0.00080756375
+            },
+            {
+                "tool_id": "Tool_14",
+                "metric_x": 258798,
+                "stderr_x": 0,
+                "metric_y": 0.86448181,
+                "stderr_y": 0.00095600557
+            },
+            {
+                "tool_id": "Tool_15",
+                "metric_x": 167097,
+                "stderr_x": 0,
+                "metric_y": 0.89194798,
+                "stderr_y": 0.0011011518
+            },
+            {
+                "tool_id": "Tool_16",
+                "metric_x": 143045,
+                "stderr_x": 0,
+                "metric_y": 0.94676903,
+                "stderr_y": 0.00082307491
+            },
+            {
+                "tool_id": "Tool_17",
+                "metric_x": 157049,
+                "stderr_x": 0,
+                "metric_y": 0.92778738,
+                "stderr_y": 0.00095394192
+            },
+            {
+                "tool_id": "Tool_18",
+                "metric_x": 204355,
+                "stderr_x": 0,
+                "metric_y": 0.93114653,
+                "stderr_y": 0.00077708592
+            }
+        ],
+        "visualization": {
+            "type": "2D-plot",
+            "x_axis": "Recall - Number of Ortholog Relations",
+            "y_axis": "Precision - Avg. Schlicker Similarity",
+            "optimization": "top-right"
+        }
+    }
+}

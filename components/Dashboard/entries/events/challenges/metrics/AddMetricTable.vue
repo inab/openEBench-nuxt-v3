@@ -24,12 +24,16 @@
         }"
       >
         <template #view-data="{ row }">
-          <button class="btn-custom-badget text-sm">
-            <NuxtLink :to="`${to}/metrics/add`" class="text-primaryOeb-950">
-              <font-awesome-icon :icon="['far', 'calendar-check']" />
-              View <font-awesome-icon :icon="['fas', 'pencil']" />
-            </NuxtLink>
-          </button>
+          <div class="action-btn-group">
+            <button
+              class="btn-custom-badget text-sm text-primaryOeb-950"
+              title="View metric"
+              @click="viewMetric(row)"
+            >
+              <font-awesome-icon :icon="['far', 'eye']" />
+              View
+            </button>
+          </div>
         </template>
       </UTable>
       <div
@@ -43,17 +47,31 @@
         />
       </div>
     </div>
+    <MetricModal
+      :is-modal-open="isModalOpen"
+      :modal-title="modalTitle"
+      :metric-id="metricIdOpen"
+      :is-metric-editable="isMetricEditable"
+      :token="token"
+      @close-modal="closeModal"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, defineProps, computed } from "vue";
+import MetricModal from "@/components/Dashboard/metrics/MetricModal.vue";
 
 const props = defineProps<{
   challengeRows: [];
   challengeId: string;
 }>();
 
+const { data } = useAuth();
+const isModalOpen = ref(false);
+const modalTitle = ref("View Metric");
+const isMetricEditable = ref(false);
+const token: string = data?.value.accessToken;
 const page = ref(1);
 const pageCount = 5;
 
@@ -78,4 +96,22 @@ const rows = computed(() => {
     page.value * pageCount,
   );
 });
+
+function viewMetric(metric: Metric) {
+  modalTitle.value = "View metric";
+  isMetricEditable.value = false;
+  openModal(metric);
+}
+
+const closeModal = () => {
+  isModalOpen.value = false;
+  isSearchingMetric.value = true;
+  metricIdOpen.value = "";
+};
+
+
+const openModal = async (row: Metric) => {
+  isModalOpen.value = true;
+  metricIdOpen.value = row._id;
+};
 </script>

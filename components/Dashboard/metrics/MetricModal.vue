@@ -206,7 +206,7 @@
                       Usually found in:
                       <span class="pl-2"><b>Bar plots</b></span>
                       <NuxtLink
-                        to="/dashboard/plots?type=box"
+                        to="/dashboard/metrics/plots"
                         class="btn custom-btn btn-primary mb-2 small ml-5"
                       >
                         View Box Plot
@@ -219,7 +219,7 @@
                       Usually found in:
                       <span class="pl-2"><b>Scatter plots</b></span>
                       <NuxtLink
-                        to="/dashboard/plots?type=scatter"
+                        to="/dashboard/metrics/plots"
                         class="btn custom-btn btn-primary mb-2 small ml-5"
                       >
                         View Scatter Plot

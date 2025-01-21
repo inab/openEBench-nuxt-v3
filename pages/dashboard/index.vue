@@ -27,8 +27,11 @@
             }"
           >
             <template #header>
-              <div class="dashboard__body__card__header">
+              <div
+                class="dashboard__body__card__header d-flex justify-content-between"
+              >
                 Projects & Communities
+                <span class="text-gray-500">Total: {{ totalCommunities }}</span>
               </div>
             </template>
             <div class="row">
@@ -69,7 +72,12 @@
             }"
           >
             <template #header>
-              <div class="dashboard__body__card__header">Contacts</div>
+              <div
+                class="dashboard__body__card__header d-flex justify-content-between"
+              >
+                Contacts
+                <span class="text-gray-500">Total: {{ totalContacts }}</span>
+              </div>
             </template>
             <div class="row">
               <div class="col-5">
@@ -97,7 +105,7 @@
         </div>
       </div>
       <div class="dashboard__body row">
-        <div class="col-6">
+        <div class="col-12">
           <UCard
             class="dashboard__body__card"
             :ui="{
@@ -109,119 +117,93 @@
             }"
           >
             <template #header>
-              <div class="dashboard__body__card__header">Metrics stats</div>
-            </template>
-            <div class="">
-              <div class="row">
-                <div class="col-6 card-row">
-                  <div class="card-row-wrapper">
-                    <div class="card-plot-title">
-                      <h3>Bar plots</h3>
-                      <div class="card-plot-title-sub">
-                        <span>{{ metricsByType[0].total }} plots</span>
-                        <div class="card-plot-img">
-                          <BarSvg />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-6 card-row">
-                  <div class="card-row-wrapper">
-                    <div class="card-plot-title">
-                      <h3>Scatter plot</h3>
-                      <div class="card-plot-title-sub">
-                        <span>{{ metricsByType[1].total }} plots</span>
-                        <div class="card-plot-img">
-                          <ScatterSvg />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-6 card-row">
-                  <div class="card-row-wrapper">
-                    <div class="card-plot-title">
-                      <h3>Line plot</h3>
-                      <div class="card-plot-title-sub">
-                        <span>{{ metricsByType[2].total }} plots</span>
-                        <div class="card-plot-img">
-                          <LineSvg />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-6 card-row">
-                  <div class="card-row-wrapper">
-                    <div class="card-plot-title">
-                      <h3>Box plot</h3>
-                      <div class="card-plot-title-sub">
-                        <span>{{ metricsByType[3].total }} plots</span>
-                        <div class="card-plot-img">
-                          <BoxSvg />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+              <div
+                class="dashboard__body__card__header d-flex justify-content-between"
+              >
+                Metrics
+                <span class="text-gray-500">Total: {{ totalMetrics }}</span>
               </div>
-              <!-- <div class="row">
-                <div class="">
-                  <div class="dashboard__body__card__link">
-                    <button class="ripple custom-button-primary">
-                      <NuxtLink
-                        to="/dashboard/metrics-playground"
-                        class="dashboard-link"
-                        >Metrics playground</NuxtLink
-                      >
-                    </button>
-                  </div>
-                </div>
-              </div> -->
-            </div>
-          </UCard>
-        </div>
-        <div class="col-6">
-          <UCard
-            class="dashboard__body__card"
-            :ui="{
-              header: {
-                base: '',
-                background: '',
-                padding: 'px-4 py-3 sm:px-6',
-              },
-            }"
-          >
-            <template #header>
-              <div class="dashboard__body__card__header">Metrics</div>
             </template>
-
-            <div class="">
+            <div class="w-100">
               <div class="row">
-                <div class="col-6">
-                  <img
-                    src="assets/images/dashboard/22821946_Na_Dec_02.jpg"
-                    alt="User profile picture"
-                    class=""
-                  />
-                </div>
-                <div class="col-6">
-                  <div class="">
-                    <div class="">
-                      Total metrics: <span>{{ totalMetrics }}</span>
+                <div class="col-6 row">
+                  <div class="col-6">
+                    <img
+                      src="assets/images/dashboard/22821946_Na_Dec_02.jpg"
+                      alt="User profile picture"
+                      class=""
+                    />
+                  </div>
+                  <div class="col-6">
+                    <div class="w-100">
+                      <div class="">
+                        Here you can find information about the communities you
+                        are part of and the tools you have access to.
+                      </div>
                     </div>
-                    <div class="">
-                      Here you can find information about the communities you
-                      are part of and the tools you have access to.
+                    <div class="dashboard__body__card__link">
+                      <button class="ripple custom-button-primary">
+                        <NuxtLink to="/dashboard/metrics" class="dashboard-link"
+                          >Explore Metrics</NuxtLink
+                        >
+                      </button>
                     </div>
                   </div>
-                  <div class="dashboard__body__card__link">
-                    <button class="ripple custom-button-primary">
-                      <NuxtLink to="/dashboard/metrics" class="dashboard-link"
-                        >Explore Metrics</NuxtLink
-                      >
-                    </button>
+                </div>
+                <div class="col-6">
+                  <div class="row">
+                    <div class="col-6 card-row">
+                      <div class="card-row-wrapper">
+                        <div class="card-plot-title">
+                          <h3>Bar plots</h3>
+                          <div class="card-plot-title-sub">
+                            <span>{{ metricsByType[0].total }} plots</span>
+                            <div class="card-plot-img">
+                              <BarSvg />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-6 card-row">
+                      <div class="card-row-wrapper">
+                        <div class="card-plot-title">
+                          <h3>Scatter plot</h3>
+                          <div class="card-plot-title-sub">
+                            <span>{{ metricsByType[1].total }} plots</span>
+                            <div class="card-plot-img">
+                              <ScatterSvg />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-6 card-row">
+                      <div class="card-row-wrapper">
+                        <div class="card-plot-title">
+                          <h3>Line plot</h3>
+                          <div class="card-plot-title-sub">
+                            <span>{{ metricsByType[2].total }} plots</span>
+                            <div class="card-plot-img">
+                              <LineSvg />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-6 card-row">
+                      <div class="card-row-wrapper">
+                        <div class="card-plot-title">
+                          <h3>Box plot</h3>
+                          <div class="card-plot-title-sub">
+                            <span>{{ metricsByType[3].total }} plots</span>
+                            <div class="card-plot-img">
+                              <BoxSvg />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -255,6 +237,8 @@ const userStore = useUser();
 const runtimeConfig = useRuntimeConfig();
 const totalMetrics = ref(0);
 const totalTools = ref(0);
+const totalCommunities = ref(0);
+const totalContacts = ref(0);
 const metricsByType = ref([
   { name: "Bar Plot", total: 0 },
   { name: "Scatter Plot", total: 0 },
@@ -323,6 +307,48 @@ async function countTotalTools() {
 
     const data = await response;
     totalTools.value = data.length;
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}
+
+await countTotalCommunities();
+async function countTotalCommunities() {
+  try {
+    const response = await $fetch(
+      `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Community`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+        },
+        method: "GET",
+      },
+    );
+
+    const data = await response;
+    totalCommunities.value = data.length;
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}
+
+await countTotalContacts();
+async function countTotalContacts() {
+  try {
+    const response = await $fetch(
+      `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Contact`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+        },
+        method: "GET",
+      },
+    );
+
+    const data = await response;
+    totalContacts.value = data.length;
   } catch (error) {
     console.error("Error:", error);
   }
@@ -398,6 +424,11 @@ async function getMetricsByType(metrics) {
         font-size: 20px;
         font-weight: 600;
         color: theme("colors.primary.500");
+        & span {
+          font-size: 18px;
+          font-weight: 500;
+          color: theme("colors.gray.500");
+        }
       }
       &__link {
         padding-top: 25px;

@@ -39,12 +39,25 @@
                   />
                 </div>
                 <div class="dashboard__description__text">
-                  Communities in OpenEBench utilize a centralized contact
-                  register to facilitate connections and collaboration among
-                  members. This platform allows participants to easily identify
-                  and connect with experts in specific areas, fostering
-                  knowledge sharing, partnerships, and the growth of the
-                  OpenEBench community.
+                  <div class="w-100">
+                    Communities in OpenEBench utilize a centralized contact
+                    register to facilitate connections and collaboration among
+                    members. This platform allows participants to easily
+                    identify and connect with experts in specific areas,
+                    fostering knowledge sharing, partnerships, and the growth of
+                    the OpenEBench community.
+                  </div>
+                  <div class="w-100 d-flex justify-content-end pt-5">
+                    <NuxtLink
+                      id="dashboard-create-contact"
+                      to="/dashboard/contacts/add"
+                      class="btn custom-btn btn-primary mb-2 small"
+                      title="Create new contact"
+                    >
+                      <font-awesome-icon :icon="['fas', 'plus']" />
+                      Create New Contact
+                    </NuxtLink>
+                  </div>
                 </div>
               </div>
             </div>
