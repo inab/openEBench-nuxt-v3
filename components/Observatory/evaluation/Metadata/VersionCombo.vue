@@ -65,7 +65,7 @@ const addValueIfNotExists = () => {
   if (isValidVersion(selectedVersion.value)) {
     if (!versions.value.includes(selectedVersion.value)) {
       versions.value.push(selectedVersion.value);
-      errorMessage.value = ""; // Limpiar el mensaje de error si el valor es válido
+      errorMessage.value = ""; // Clear error message if the value is valid
     }
     changeValue();
   } else {
@@ -73,7 +73,7 @@ const addValueIfNotExists = () => {
   }
 };
 
-// Nuevo método para manejar el evento blur
+// New method to handle the blur event
 const handleBlur = () => {
   if (selectedVersion.value === '' || selectedVersion.value === null || selectedVersion.value === undefined) {
     errorMessage.value = "";
@@ -91,7 +91,7 @@ const changeValue = () => {
   metadataStore.updateSelectorEntry(payload);
 };
 
-// Sincronizar al montar el componente
+// Synchronise when mounting the component
 onMounted(() => {
   changeValue();
 });
