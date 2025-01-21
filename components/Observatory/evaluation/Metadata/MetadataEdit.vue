@@ -87,19 +87,53 @@
             </MetaField>
           </div>
 
-          <div class="mt-0 ml-3.5 d-flex flex-row justify-space-between">
+          <div class="mt-0 ml-3.5 d-flex">
             <!-- Description -->
             <MetaTextArea
               title="Description"
               field="description"
               :value="toolMetadata.description"
-              n_cols="9"
-              class="mr-auto mb-0">
+              n_cols="col-8">
             </MetaTextArea>
-
-            <!-- Webpage -->
+            <!-- Alert -->
+            <div v-if="toolMetadata.description.length > 1 > 0" class="col-3 mt-4 pt-1.5 me-3">
+              <UAlert
+                :ui="{gap:'gap-2', shadow: 'shadow-md'}"
+                icon="mdi-alert-circle"
+                color="sky"
+                variant="soft"
+                description="Only the first description will appear in the exported
+									metadata."
+                class="p-2 text-gray-900"
+              />
+            </div>
           </div>
-          
+
+          <div class="mt-3 ml-3.5 d-flex">
+            <!-- Webpage -->
+            <MetaFieldURLField
+              title="Webpage"
+              :value="toolMetadata.webpage"
+              field="webpage"
+							value-type="string"
+							n_cols="col-8"
+							label="URL"
+							increasable="true"
+            />
+
+            <!-- Alert -->
+            <div v-if="toolMetadata.webpage.length > 1 > 0" class="col-3 mt-4 pt-1.5 me-3">
+              <UAlert
+                :ui="{gap:'gap-2', shadow: 'shadow-md'}"
+                icon="mdi-alert-circle"
+                color="sky"
+                variant="soft"
+                description="Only the first URL will appear in the exported
+									metadata."
+                class="p-2 text-gray-900"
+              />
+            </div>
+          </div>
         </div>
         <div>
           <p class="italic text-gray-900 dark:text-white text-center">
@@ -135,6 +169,7 @@ import { useResultStore } from '@/stores/observatory/evaluation/results';
 import { useStepperStore } from '@/stores/observatory/evaluation/index';
 import MetaField from "./Metafield.vue";
 import MetaTextArea from "./MetaTextArea.vue";
+import MetaFieldURLField from "./MetaFieldURLField.vue";
 import FormField from './FormField.vue';
 import SelectorType from './SelectorType.vue';
 import VersionCombo from './VersionCombo.vue';
