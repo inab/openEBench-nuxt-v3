@@ -35,7 +35,6 @@
         <!-- Content 0. Identity -->
         <div v-if="item.label == '0. Identity'" class="p-4">
           <div class="mt-0 ml-3 d-flex flex-row justify-space-between">
-            
             <!-- Name -->
             <MetaField
               title="Name"
@@ -86,8 +85,19 @@
                 />
               </template>
             </MetaField>
+          </div>
 
+          <div class="mt-0 ml-3.5 d-flex flex-row justify-space-between">
+            <!-- Description -->
+            <MetaTextArea
+              title="Description"
+              field="description"
+              :value="toolMetadata.description"
+              n_cols="9"
+              class="mr-auto mb-0">
+            </MetaTextArea>
 
+            <!-- Webpage -->
           </div>
           
         </div>
@@ -124,6 +134,7 @@ import { useMetadataStore } from '@/stores/observatory/evaluation/metadata';
 import { useResultStore } from '@/stores/observatory/evaluation/results';
 import { useStepperStore } from '@/stores/observatory/evaluation/index';
 import MetaField from "./Metafield.vue";
+import MetaTextArea from "./MetaTextArea.vue";
 import FormField from './FormField.vue';
 import SelectorType from './SelectorType.vue';
 import VersionCombo from './VersionCombo.vue';
@@ -135,6 +146,7 @@ const resultsStore = useResultStore();
 const stepperStore = useStepperStore();
 
 import PanelHeader from "./PanelHeader.vue";
+import { value } from "valibot";
 
 const items = [
   { label: "0. Identity" },
