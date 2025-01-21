@@ -1,6 +1,6 @@
 <template>
   <div class="container ms-3 ">
-    <div :col="n_cols">
+    <div>
       <div class="d-flex">
         <HeaderAvatar
           :field="field"
@@ -54,7 +54,7 @@ const addEntry = (addedValue) => {
     value: addedValue,
   };
   metadataStore.addEntry(payload);
-  this.$forceUpdate();
+  // this.$forceUpdate();
 };
 
 const removeEntry = (index) => {
@@ -63,8 +63,7 @@ const removeEntry = (index) => {
     index,
   };
   metadataStore.removeEntry(payload);
-  this.$forceUpdate();
-
+  // this.$forceUpdate();
 }
 
 </script>
