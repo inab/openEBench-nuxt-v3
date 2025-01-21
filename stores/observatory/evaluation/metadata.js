@@ -255,17 +255,17 @@ export const useMetadataStore = defineStore('metadata', {
       };
 
       // If the value is empty, it is not added
-      if (value !== '') {
+      // if (value !== '') {
         this.toolMetadata[field].push(newItem);
-      }
+      // }
     },
 
     removeEntry(payload) {
 		  // remove item to force update of reactive properties depending on it
       // remove only if index greater than 0?
-      if (payload.index < 0 ){
+      // if (payload.index < 0 ){
         this.toolMetadata[payload.field].splice(payload.index, 1);
-      }
+      // }
     },
 
     updateLoadedMetadata(payload) {
