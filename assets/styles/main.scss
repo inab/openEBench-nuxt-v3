@@ -306,6 +306,12 @@ $colorSecondary: #f47c21;
   opacity: 1;
 }
 
+.input-row-group .custom-entry-input:has(input:disabled),
+.input-row-group .custom-entry-input input:disabled {
+  background-color: #e9ecef !important;
+  opacity: 1;
+}
+
 .pagination button {
   color: #6c757d;
   border: 1px solid #dee2e6;

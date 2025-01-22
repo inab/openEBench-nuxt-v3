@@ -30,11 +30,16 @@
         @select="select"
       >
         <template #view-data="{ row }">
-          <button class="btn-custom-badget text-sm">
-            <NuxtLink :to="`${to}/metrics/add`" class="text-primaryOeb-950">
-              View <font-awesome-icon :icon="['fas', 'eye']" />
-            </NuxtLink>
-          </button>
+          <div class="action-btn-group">
+            <button
+              class="btn-custom-badget text-sm text-primaryOeb-950"
+              title="View metric"
+              @click="viewMetric(row)"
+            >
+              <font-awesome-icon :icon="['far', 'eye']" />
+              View
+            </button>
+          </div>
         </template>
       </UTable>
       <div class="flex flex-wrap justify-between items-center pt-2">
@@ -57,11 +62,21 @@
         />
       </div>
     </div>
+    <MetricModal
+      :is-modal-open="isModalOpen"
+      :modal-title="modalTitle"
+      :metric-id="metricIdOpen"
+      :is-metric-editable="isMetricEditable"
+      :token="token"
+      @close-modal="closeModal"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, defineProps, computed, defineEmits, watch } from "vue";
+import type { Metric } from "@/types/challenge_metric";
+import MetricModal from "@/components/Dashboard/metrics/MetricModal.vue";
 
 const props = defineProps<{
   metricRows: [];
@@ -69,6 +84,14 @@ const props = defineProps<{
 }>();
 
 const emits = defineEmits(["handleSelectedMetrics"]);
+
+const { data } = useAuth();
+const isModalOpen = ref(false);
+const isSearchingMetric = ref(false);
+const modalTitle = ref("View Metric");
+const isMetricEditable = ref(false);
+const token: string = data?.value.accessToken;
+const metricIdOpen = ref("");
 
 const selectedMetric = computed({
   get: () => props.selectedMetrics,
@@ -124,6 +147,25 @@ function select(row) {
     selectedMetric.value.splice(index, 1);
   }
 }
+
+function viewMetric(metric: Metric) {
+  modalTitle.value = "View metric";
+  isMetricEditable.value = false;
+  console.log("view metric")
+  openModal(metric);
+}
+
+const closeModal = () => {
+  isModalOpen.value = false;
+  isSearchingMetric.value = true;
+  metricIdOpen.value = "";
+};
+
+
+const openModal = async (row: Metric) => {
+  isModalOpen.value = true;
+  metricIdOpen.value = row._id;
+};
 
 watch(selectedMetric, (value) => {
   emits("handleSelectedMetrics", value);
