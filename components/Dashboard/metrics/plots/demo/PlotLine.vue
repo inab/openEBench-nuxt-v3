@@ -1,12 +1,12 @@
 <template>
   <div class="bar-plot">
     <div class="bar-description pb-4">
-      Bar plots are visual representations used in OpenEBench to compare
-      distinct categories or groups. Each category is represented by a bar, and
-      the length of each bar corresponds to the measured value (e.g.,
-      performance score, execution time). This simple yet effective
-      visualization allows for quick comparisons between different options,
-      highlighting strengths and weaknesses at a glance.
+      Line plots in OpenEBench illustrate trends and changes over time or across
+      a continuous variable. Each data point is connected by a line, revealing
+      patterns, growth, or fluctuations in performance. This visualization helps
+      users understand how software behavior evolves under different conditions
+      or over time intervals, facilitating analysis of dynamic performance
+      characteristics.
     </div>
     <div class="w-100 pt-1">
       <div v-if="isLoadingGraphBar" class="loader-container mt-5">
@@ -18,7 +18,8 @@
       </div>
       <div v-else>
         <div class="row">
-          <div class="col-8">
+          <div class="">This graph is not available for this demo.</div>
+          <!-- <div class="col-8">
             <widget-element
               :key="widgetKey"
               :data="preparedBar"
@@ -35,27 +36,51 @@
             >
               <UFormGroup
                 v-for="participant in state.challenge_participants"
-                :key="participant.tool_id"
-                :label="`Tool Name: ${participant.tool_id}`"
+                :key="participant.id"
+                :label="`Tool Name: ${participant.id}`"
                 name="tool"
                 class="form-group__block"
               >
                 <div class="input-row">
                   <div class="input-row-group">
-                    <div class="mr-2 input-row-group__title">value:</div>
+                    <div class="mr-2 input-row-group__title">Value:</div>
                     <UInput
-                      v-model="participant.metric_value"
+                      v-model="participant.value"
+                      class="form-control custom-entry-input"
+                      autocomplete="off"
+                    />
+                  </div>
+                  <div class="input-row-group">
+                    <div class="mr-2 input-row-group__title">Error:</div>
+                    <UInput
+                      v-model="participant.error"
                       class="form-control custom-entry-input"
                       autocomplete="off"
                     />
                   </div>
                 </div>
+                <div class="input-row">
+                  <div class="input-row-group">
+                    <div class="mr-2 input-row-group__title">Label:</div>
+                    <UInput
+                      v-model="participant.label"
+                      class="form-control custom-entry-input"
+                      autocomplete="off"
+                      disabled
+                    />
+                  </div>
+                </div>
               </UFormGroup>
+              <div v-if="hasDataError" class="w-100">
+                <div class="alert alert-danger" role="alert">
+                  {{ hasDataErrorMessage }}
+                </div>
+              </div>
               <div class="form-footer pt-3">
                 <UButton class="" type="submit"> Generate plot </UButton>
               </div>
             </UForm>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -64,13 +89,16 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import { array, object, string, safeParse } from "valibot";
+import { array, object, safeParse } from "valibot";
 
-import demo_bar from "./templates/BARPLOT.json";
+import demo_bar from "./templates/LINEPLOT.json";
 const isLoadingGraphBar = ref(true);
 
 const preparedBar = ref<any>({});
-const type: string = ref("bar-plot");
+const initialValues = ref<any>({});
+const type: string = ref("line-plot");
+const hasDataError = ref(false);
+const hasDataErrorMessage = ref("");
 const widgetKey = ref(0);
 
 const state = ref({
@@ -81,13 +109,10 @@ const schema = object({
   challenge_participants: array(object()),
 });
 
-getPreparedData();
+//getPreparedData();
 function getPreparedData() {
-  console.log("demo_bar", demo_bar);
-
-  // Load demo data
   const bar = demo_bar;
-  const barVisualization = bar.inline_data.visualization;
+  const barVisualization = bar.visualization;
   preparedBar.value = {
     _id: bar._id,
     name: bar.name,
@@ -95,20 +120,27 @@ function getPreparedData() {
     inline_data: {
       challenge_participants: [],
       visualization: {
-        metric: barVisualization.metric,
+        dates: barVisualization.dates,
         type: barVisualization.type,
+        schema_url: barVisualization.schema_url,
       },
     },
   };
-  preparedBar.value.inline_data.challenge_participants =
-    bar.inline_data.challenge_participants.map((participant: any) => {
-      const preparedParticipant = {
-        tool_id: participant.tool_id,
-        metric_value: participant.metric_value,
-        stderr: participant.stderr,
-      };
-      return preparedParticipant;
-    });
+  for (const [_key, value] of Object.entries(bar.assessments)) {
+    const preparedParticipant = {
+      id: value._id,
+      label: value.label,
+      value: value.value,
+      error: value.error,
+    };
+    preparedBar.value.inline_data.challenge_participants.push(
+      preparedParticipant,
+    );
+  }
+
+  initialValues.value = JSON.parse(
+    JSON.stringify(preparedBar.value.inline_data.challenge_participants),
+  );
   state.value.challenge_participants =
     preparedBar.value.inline_data.challenge_participants;
   preparedBar.value = JSON.stringify(preparedBar.value);
@@ -131,21 +163,32 @@ async function onError(event: FormErrorEvent) {
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   const result = safeParse(schema, state.value);
+  hasDataError.value = false;
+  hasDataErrorMessage.value = "";
+
   if (result.success) {
     const data = state.value.challenge_participants.map((item) => {
       const metricValueString =
-        typeof item.metric_value === "string"
-          ? item.metric_value
-          : String(item.metric_value || "");
+        typeof item.value === "string" ? item.value : String(item.value || "");
       const itemMetric = metricValueString.replace(",", ".");
       const metricValue = parseFloat(itemMetric);
 
+      const metricErrorString =
+        typeof item.error === "string" ? item.error : String(item.error || "");
+      const itemMetricError = metricErrorString.replace(",", ".");
+      const metricValueError = parseFloat(itemMetricError);
+
       return {
-        tool_id: item.tool_id,
-        metric_value: isNaN(metricValue) ? null : metricValue, // Handle parse errors gracefully
-        stderr: item.stderr,
+        id: item.id,
+        label: item.label,
+        value: isNaN(metricValue) ? null : metricValue,
+        error: metricValueError,
       };
     });
+
+    if (hasDataError.value) {
+      return;
+    }
     regeneratePlot(data);
   }
 }
@@ -158,6 +201,21 @@ onMounted(async () => {
 </script>
 
 <style lang="scss" scoped>
+.input-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  &-group {
+    display: block;
+    align-items: center;
+    gap: 10px;
+    &__title {
+      font-weight: 500;
+      font-size: 13px;
+    }
+  }
+}
 .form-group__block {
   font-size: 16px;
   border: 1px solid #e5e7eb;

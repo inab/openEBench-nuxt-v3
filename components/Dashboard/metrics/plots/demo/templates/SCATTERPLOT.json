@@ -67,69 +67,6 @@
                 "stderr_x": 0,
                 "metric_y": 0.94258052,
                 "stderr_y": 0.00082567668
-            },
-            {
-                "tool_id": "Tool_10",
-                "metric_x": 116336,
-                "stderr_x": 0,
-                "metric_y": 0.96057284,
-                "stderr_y": 0.00077123133
-            },
-            {
-                "tool_id": "Tool_11",
-                "metric_x": 211063,
-                "stderr_x": 0,
-                "metric_y": 0.92286736,
-                "stderr_y": 0.00082757083
-            },
-            {
-                "tool_id": "Tool_12",
-                "metric_x": 221966,
-                "stderr_x": 0,
-                "metric_y": 0.90615722,
-                "stderr_y": 0.00085609679
-            },
-            {
-                "tool_id": "Tool_13",
-                "metric_x": 198053,
-                "stderr_x": 0,
-                "metric_y": 0.92710496,
-                "stderr_y": 0.00080756375
-            },
-            {
-                "tool_id": "Tool_14",
-                "metric_x": 258798,
-                "stderr_x": 0,
-                "metric_y": 0.86448181,
-                "stderr_y": 0.00095600557
-            },
-            {
-                "tool_id": "Tool_15",
-                "metric_x": 167097,
-                "stderr_x": 0,
-                "metric_y": 0.89194798,
-                "stderr_y": 0.0011011518
-            },
-            {
-                "tool_id": "Tool_16",
-                "metric_x": 143045,
-                "stderr_x": 0,
-                "metric_y": 0.94676903,
-                "stderr_y": 0.00082307491
-            },
-            {
-                "tool_id": "Tool_17",
-                "metric_x": 157049,
-                "stderr_x": 0,
-                "metric_y": 0.92778738,
-                "stderr_y": 0.00095394192
-            },
-            {
-                "tool_id": "Tool_18",
-                "metric_x": 204355,
-                "stderr_x": 0,
-                "metric_y": 0.93114653,
-                "stderr_y": 0.00077708592
             }
         ],
         "visualization": {

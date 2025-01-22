@@ -1,12 +1,11 @@
 <template>
-  <div class="bar-plot">
-    <div class="bar-description pb-4">
-      Bar plots are visual representations used in OpenEBench to compare
-      distinct categories or groups. Each category is represented by a bar, and
-      the length of each bar corresponds to the measured value (e.g.,
-      performance score, execution time). This simple yet effective
-      visualization allows for quick comparisons between different options,
-      highlighting strengths and weaknesses at a glance.
+  <div class="scatter-plot">
+    <div class="scatter-description pb-4">
+      Scatter plots in OpenEBench display the relationship between two
+      variables. Each data point is represented as a marker on a graph, with its
+      position determined by the values of the two variables. This visualization
+      helps identify trends, correlations, and potential outliers, allowing
+      users to gain deeper insights into complex performance patterns.
     </div>
     <div class="w-100 pt-1">
       <div v-if="isLoadingGraphBar" class="loader-container mt-5">
@@ -21,7 +20,7 @@
           <div class="col-8">
             <widget-element
               :key="widgetKey"
-              :data="preparedBar"
+              :data="preparedScatter"
               :type="type"
             ></widget-element>
           </div>
@@ -42,9 +41,17 @@
               >
                 <div class="input-row">
                   <div class="input-row-group">
-                    <div class="mr-2 input-row-group__title">value:</div>
+                    <div class="mr-2 input-row-group__title">value X:</div>
                     <UInput
-                      v-model="participant.metric_value"
+                      v-model="participant.metric_x"
+                      class="form-control custom-entry-input"
+                      autocomplete="off"
+                    />
+                  </div>
+                  <div class="input-row-group">
+                    <div class="mr-2 input-row-group__title">value Y:</div>
+                    <UInput
+                      v-model="participant.metric_y"
                       class="form-control custom-entry-input"
                       autocomplete="off"
                     />
@@ -66,11 +73,10 @@
 import { onMounted, ref } from "vue";
 import { array, object, string, safeParse } from "valibot";
 
-import demo_bar from "./templates/BARPLOT.json";
+import demo_scatter from "./templates/SCATTERPLOT.json";
 const isLoadingGraphBar = ref(true);
-
-const preparedBar = ref<any>({});
-const type: string = ref("bar-plot");
+const preparedScatter = ref<any>({});
+const type: string = "2D-plot";
 const widgetKey = ref(0);
 
 const state = ref({
@@ -83,42 +89,37 @@ const schema = object({
 
 getPreparedData();
 function getPreparedData() {
-  console.log("demo_bar", demo_bar);
-
-  // Load demo data
-  const bar = demo_bar;
-  const barVisualization = bar.inline_data.visualization;
-  preparedBar.value = {
-    _id: bar._id,
-    name: bar.name,
-    dates: bar.dates,
+  const scatter = demo_scatter;
+  const barVisualization = scatter.inline_data.visualization;
+  preparedScatter.value = {
+    _id: scatter._id,
+    dates: scatter.dates,
     inline_data: {
       challenge_participants: [],
-      visualization: {
-        metric: barVisualization.metric,
-        type: barVisualization.type,
-      },
+      visualization: barVisualization,
     },
   };
-  preparedBar.value.inline_data.challenge_participants =
-    bar.inline_data.challenge_participants.map((participant: any) => {
+  preparedScatter.value.inline_data.challenge_participants =
+    scatter.inline_data.challenge_participants.map((participant: any) => {
       const preparedParticipant = {
         tool_id: participant.tool_id,
-        metric_value: participant.metric_value,
-        stderr: participant.stderr,
+        metric_x: participant.metric_x,
+        stderr_x: participant.stderr_x,
+        metric_y: participant.metric_y,
+        stderr_y: participant.stderr_y,
       };
       return preparedParticipant;
     });
   state.value.challenge_participants =
-    preparedBar.value.inline_data.challenge_participants;
-  preparedBar.value = JSON.stringify(preparedBar.value);
+    preparedScatter.value.inline_data.challenge_participants;
+  preparedScatter.value = JSON.stringify(preparedScatter.value);
 }
 
 function regeneratePlot(newData: any) {
-  const preparedObj = JSON.parse(preparedBar.value);
+  const preparedObj = JSON.parse(preparedScatter.value);
   if (preparedObj.inline_data) {
     preparedObj.inline_data.challenge_participants = newData;
-    preparedBar.value = JSON.stringify(preparedObj);
+    preparedScatter.value = JSON.stringify(preparedObj);
   }
 
   widgetKey.value++;
@@ -131,23 +132,34 @@ async function onError(event: FormErrorEvent) {
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   const result = safeParse(schema, state.value);
+  console.log(result);
   if (result.success) {
     const data = state.value.challenge_participants.map((item) => {
-      const metricValueString =
-        typeof item.metric_value === "string"
-          ? item.metric_value
-          : String(item.metric_value || "");
-      const itemMetric = metricValueString.replace(",", ".");
-      const metricValue = parseFloat(itemMetric);
+      const metricValueStringX =
+        typeof item.metric_x === "string"
+          ? item.metric_x
+          : String(item.metric_x || "");
+      const itemMetricX = metricValueStringX.replace(",", ".");
+      const metricValueX = parseFloat(itemMetricX);
+
+      const metricValueStringY =
+        typeof item.metric_y === "string"
+          ? item.metric_y
+          : String(item.metric_y || "");
+      const itemMetricY = metricValueStringX.replace(",", ".");
+      const metricValueY = parseFloat(itemMetricY);
 
       return {
         tool_id: item.tool_id,
-        metric_value: isNaN(metricValue) ? null : metricValue, // Handle parse errors gracefully
-        stderr: item.stderr,
+        metric_x: isNaN(itemMetricX) ? null : metricValueX,
+        metric_y: isNaN(itemMetricY) ? null : metricValueY,
+        stderr_x: item.stderr_x,
+        stderr_y: item.stderr_y,
       };
     });
     regeneratePlot(data);
   }
+  console.log("onSubmit");
 }
 
 onMounted(async () => {
@@ -158,14 +170,31 @@ onMounted(async () => {
 </script>
 
 <style lang="scss" scoped>
+.input-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  &-group {
+    display: block;
+    align-items: center;
+    gap: 10px;
+    &__title {
+      font-weight: 500;
+      font-size: 13px;
+    }
+  }
+}
 .form-group__block {
   font-size: 16px;
+  font-weight: 700;
   border: 1px solid #e5e7eb;
   padding: 10px 14px 10px 10px;
   border-radius: 5px;
   margin-top: 2px !important;
   label {
     font-size: 16px;
+    font-weight: 700;
   }
 }
 .loader-container {

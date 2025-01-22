@@ -56,9 +56,18 @@
           </template>
         </UAccordion>
         <div class="metrics__body">
+          <div class="metric-filter d-flex justify-content-end">
+            <div class="col-3">
+              <USelect
+                v-model="plotSelected"
+                :options="plotTypes"
+                option-attribute="name"
+                class="custom-select-input"
+              />
+            </div>
+          </div>
           <div class="dashboard-tabs pt-4">
-            <Plots 
-              :type-selected="plotSelected"/>
+            <Plots :type-selected="plotSelected" />
           </div>
         </div>
       </div>
@@ -82,7 +91,29 @@ definePageMeta({
 
 const { data, status } = useAuth();
 const route = useRoute();
-const plotSelected = ref(route.query.type ?? "bar-plot");
+const plotTypes = [
+  {
+    name: "Bar Plot",
+    value: "bar-plot",
+  },
+  {
+    name: "Scatter Plot",
+    value: "2D-plot",
+  },
+  {
+    name: "Box Plot",
+    value: "box-plot",
+  },
+  {
+    name: "Radar Plot",
+    value: "radar-plot",
+  },
+  {
+    name: "Line Plot",
+    value: "line-plot",
+  },
+];
+const plotSelected = ref(route.query.type ?? plotTypes[0].value);
 const HEADER_ITEM = [
   {
     label: "Plots",

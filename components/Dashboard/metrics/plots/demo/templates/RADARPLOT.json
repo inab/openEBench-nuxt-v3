@@ -31,36 +31,6 @@
             "label": "AD",
             "value": -0.04999999999999999,
             "error": 0
-        },
-        {
-            "_id": "Tool_6",
-            "label": "OA",
-            "value": 0.2222222222222222,
-            "error": 0
-        },
-        {
-            "_id": "Tool_7",
-            "label": "FNR",
-            "value": 0.75,
-            "error": 0
-        },
-        {
-            "_id": "Tool_8",
-            "label": "SP",
-            "value": 0.5555555555555556,
-            "error": 0
-        },
-        {
-            "_id": "Tool_9",
-            "label": "DCR",
-            "value": -3.6666666666666665,
-            "error": 0
-        },
-        {
-            "_id": "Tool_10",
-            "label": "DI",
-            "value": 0.5333333333333333,
-            "error": 0
         }
     ],
     "visualization": {
