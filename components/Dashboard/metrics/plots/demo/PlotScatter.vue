@@ -132,7 +132,6 @@ async function onError(event: FormErrorEvent) {
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   const result = safeParse(schema, state.value);
-  console.log(result);
   if (result.success) {
     const data = state.value.challenge_participants.map((item) => {
       const metricValueStringX =
@@ -159,7 +158,6 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     });
     regeneratePlot(data);
   }
-  console.log("onSubmit");
 }
 
 onMounted(async () => {

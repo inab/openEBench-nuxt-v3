@@ -83,9 +83,6 @@ const schema = object({
 
 getPreparedData();
 function getPreparedData() {
-  console.log("demo_bar", demo_bar);
-
-  // Load demo data
   const bar = demo_bar;
   const barVisualization = bar.inline_data.visualization;
   preparedBar.value = {
