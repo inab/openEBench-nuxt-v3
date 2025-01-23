@@ -19,7 +19,7 @@
       <div v-else>
         <div class="row">
           <div class="">This graph is not available for this demo.</div>
-          <!-- <div class="col-8">
+          <div class="col-8">
             <widget-element
               :key="widgetKey"
               :data="preparedBar"
@@ -31,43 +31,45 @@
               :schema="schema"
               :state="state"
               class="space-y-4"
-              @error="onError"
               @submit="onSubmit"
             >
               <UFormGroup
                 v-for="participant in state.challenge_participants"
-                :key="participant.id"
-                :label="`Tool Name: ${participant.id}`"
+                :key="participant.name"
+                :label="`Tool Name: ${participant.name}`"
                 name="tool"
                 class="form-group__block"
               >
-                <div class="input-row">
-                  <div class="input-row-group">
-                    <div class="mr-2 input-row-group__title">Value:</div>
-                    <UInput
-                      v-model="participant.value"
-                      class="form-control custom-entry-input"
-                      autocomplete="off"
-                    />
-                  </div>
-                  <div class="input-row-group">
-                    <div class="mr-2 input-row-group__title">Error:</div>
-                    <UInput
-                      v-model="participant.error"
-                      class="form-control custom-entry-input"
-                      autocomplete="off"
-                    />
+                <div class="row">
+                  <label for="x_value" class="form-label form-label-title">X Value</label>
+                  <div
+                    v-for="(p, indexX) in participant.x_value"
+                    :key="indexX"
+                    class="input-row col-4"
+                  >
+                    <div class="input-row-group pt-1">
+                      <UInput
+                        v-model="participant.x_value[indexX]"
+                        class="form-control custom-entry-input"
+                        autocomplete="off"
+                      />
+                    </div>
                   </div>
                 </div>
-                <div class="input-row">
-                  <div class="input-row-group">
-                    <div class="mr-2 input-row-group__title">Label:</div>
-                    <UInput
-                      v-model="participant.label"
-                      class="form-control custom-entry-input"
-                      autocomplete="off"
-                      disabled
-                    />
+                <div class="row pt-3">
+                  <label for="y_value" class="form-label form-label-title">Y Value</label>
+                  <div
+                    v-for="(py, indexY) in participant.y_value"
+                    :key="indexY"
+                    class="input-row col-4"
+                  >
+                    <div class="input-row-group pt-1">
+                      <UInput
+                        v-model="participant.y_value[indexY]"
+                        class="form-control custom-entry-input"
+                        autocomplete="off"
+                      />
+                    </div>
                   </div>
                 </div>
               </UFormGroup>
@@ -76,11 +78,11 @@
                   {{ hasDataErrorMessage }}
                 </div>
               </div>
-              <div class="form-footer pt-3">
+              <div class="form-footer pt-3 d-flex justify-content-end">
                 <UButton class="" type="submit"> Generate plot </UButton>
               </div>
             </UForm>
-          </div> -->
+          </div>
         </div>
       </div>
     </div>
@@ -109,10 +111,10 @@ const schema = object({
   challenge_participants: array(object()),
 });
 
-//getPreparedData();
+getPreparedData();
 function getPreparedData() {
   const bar = demo_bar;
-  const barVisualization = bar.visualization;
+  const barVisualization = bar.inline_data.visualization;
   preparedBar.value = {
     _id: bar._id,
     name: bar.name,
@@ -122,21 +124,22 @@ function getPreparedData() {
       visualization: {
         dates: barVisualization.dates,
         type: barVisualization.type,
-        schema_url: barVisualization.schema_url,
+        x_axis: barVisualization.x_axis,
+        y_axis: barVisualization.y_axis,
       },
     },
   };
-  for (const [_key, value] of Object.entries(bar.assessments)) {
-    const preparedParticipant = {
-      id: value._id,
-      label: value.label,
-      value: value.value,
-      error: value.error,
-    };
-    preparedBar.value.inline_data.challenge_participants.push(
-      preparedParticipant,
-    );
-  }
+  preparedBar.value.inline_data.challenge_participants =
+    bar.inline_data.challenge_participants.map((participant: any) => {
+      const preparedParticipant = {
+        name: participant.name,
+        metric_id: participant.metric_id,
+        x_value: participant.x_value,
+        y_value: participant.y_value,
+        t_error: participant.t_error,
+      };
+      return preparedParticipant;
+    });
 
   initialValues.value = JSON.parse(
     JSON.stringify(preparedBar.value.inline_data.challenge_participants),
@@ -156,11 +159,6 @@ function regeneratePlot(newData: any) {
   widgetKey.value++;
 }
 
-async function onError(event: FormErrorEvent) {
-  console.log("state: ", state.value);
-  console.log("event: ", event);
-}
-
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   const result = safeParse(schema, state.value);
   hasDataError.value = false;
@@ -168,21 +166,24 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 
   if (result.success) {
     const data = state.value.challenge_participants.map((item) => {
-      const metricValueString =
-        typeof item.value === "string" ? item.value : String(item.value || "");
-      const itemMetric = metricValueString.replace(",", ".");
-      const metricValue = parseFloat(itemMetric);
+      const xValues = item.x_value.map((x) => {
+        const xValueString =
+          typeof x === "string" ? x : x === 0 ? "0" : String(x || "");
+        return parseFloat(xValueString);
+      });
 
-      const metricErrorString =
-        typeof item.error === "string" ? item.error : String(item.error || "");
-      const itemMetricError = metricErrorString.replace(",", ".");
-      const metricValueError = parseFloat(itemMetricError);
+      const yValues = item.y_value.map((y) => {
+        const yValueString =
+          typeof y === "string" ? y : y === 0 ? "0" : String(y || "");
+        return parseFloat(yValueString);
+      });
 
       return {
-        id: item.id,
-        label: item.label,
-        value: isNaN(metricValue) ? null : metricValue,
-        error: metricValueError,
+        name: item.name,
+        metric_id: item.metric_id,
+        x_value: xValues,
+        y_value: yValues,
+        t_error: item.t_error,
       };
     });
 
@@ -234,5 +235,9 @@ onMounted(async () => {
   .loader {
     max-height: 130px;
   }
+}
+.form-label-title {
+  font-size: 14px !important;
+  text-decoration: underline;
 }
 </style>

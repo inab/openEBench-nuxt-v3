@@ -29,7 +29,6 @@
               :schema="schema"
               :state="state"
               class="space-y-4"
-              @error="onError"
               @submit="onSubmit"
             >
               <UFormGroup
@@ -58,7 +57,7 @@
                   </div>
                 </div>
               </UFormGroup>
-              <div class="form-footer pt-3">
+              <div class="form-footer pt-3 d-flex justify-content-end">
                 <UButton class="" type="submit"> Generate plot </UButton>
               </div>
             </UForm>
@@ -71,7 +70,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import { array, object, string, safeParse } from "valibot";
+import { array, object, safeParse } from "valibot";
 
 import demo_scatter from "./templates/SCATTERPLOT.json";
 const isLoadingGraphBar = ref(true);
@@ -123,11 +122,6 @@ function regeneratePlot(newData: any) {
   }
 
   widgetKey.value++;
-}
-
-async function onError(event: FormErrorEvent) {
-  console.log("state: ", state.value);
-  console.log("event: ", event);
 }
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {

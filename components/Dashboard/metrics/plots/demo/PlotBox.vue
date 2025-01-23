@@ -30,7 +30,6 @@
               :schema="schema"
               :state="state"
               class="space-y-4"
-              @error="onError"
               @submit="onSubmit"
             >
               <UFormGroup
@@ -104,7 +103,7 @@
                   {{ hasDataErrorMessage }}
                 </div>
               </div>
-              <div class="form-footer pt-3">
+              <div class="form-footer pt-3 d-flex justify-content-end">
                 <UButton class="" type="submit"> Generate plot </UButton>
               </div>
             </UForm>
@@ -223,11 +222,6 @@ function recalculateMedians(params) {
       preparedObj.inline_data.challenge_participants;
     widgetKey.value++;
   }
-}
-
-async function onError(event: FormErrorEvent) {
-  console.log("state: ", state.value);
-  console.log("event: ", event);
 }
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {

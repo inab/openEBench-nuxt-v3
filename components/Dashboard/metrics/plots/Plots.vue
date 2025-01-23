@@ -1,17 +1,24 @@
 <template>
   <UCard
-  :ui="{
-    header: {
+    :ui="{
       base: '',
-      background: '',
-      padding: 'px-4 py-3 sm:px-6',
-    },
-    body: {
-      base: '',
-      background: '',
-      padding: 'px-4 pt-2 pb-3 sm:p-6'
-    },
-  }">
+      background: 'bg-white dark:bg-gray-900',
+      divide: 'divide-y divide-gray-200 dark:divide-gray-800',
+      ring: 'ring-1 ring-gray-200 dark:ring-gray-800',
+      rounded: 'rounded-lg',
+      shadow: 'shadow',
+      body: {
+        base: '',
+        background: '',
+        padding: 'p-4 sm:p-6',
+      },
+      header: {
+        base: '',
+        background: '',
+        padding: 'px-4 py-2 sm:p-6',
+      },
+    }"
+  >
     <template #header>
       <div class="card-title card-header">
         {{ plotName }}
@@ -74,5 +81,4 @@ const plotName = computed(() => {
   font-weight: 600;
   color: theme("colors.primary.500");
 }
-
 </style>

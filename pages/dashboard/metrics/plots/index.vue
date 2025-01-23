@@ -44,25 +44,40 @@
                   </div>
                 </div>
                 <div class="dashboard__description__text">
-                  Communities in OpenEBench leverage powerful visualization
-                  tools to present benchmarking results in clear and insightful
-                  ways. These interactive plots enable users to explore
-                  performance trends, compare tool effectiveness across
-                  different datasets, and gain valuable insights into software
-                  capabilities.
+                  <div class="dashboard__description__text__extension">
+                    Communities in OpenEBench leverage powerful visualization
+                    tools to present benchmarking results in clear and
+                    insightful ways. These interactive plots enable users to
+                    explore performance trends, compare tool effectiveness
+                    across different datasets, and gain valuable insights into
+                    software capabilities.
+                  </div>
+
+                  <div class="dashboard__description__text__extension">
+                    <p>
+                      The plots available in OpenEBench include bar plots,
+                      scatter plots, box plots, radar plots, and line plots.
+                      Each plot type offers unique advantages for visualizing
+                      and interpreting benchmarking data, allowing users to
+                      tailor their analysis to specific research questions or
+                      performance evaluation needs.
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
           </template>
         </UAccordion>
-        <div class="metrics__body">
-          <div class="metric-filter d-flex justify-content-end">
-            <div class="col-3">
+        <div class="metrics__body pt-4">
+          <div class="metric-filter d-flex justify-content-start">
+            <div class="metric-filter__col col-3 d-flex">
+              <label for="plotType" class="form-label">Select Plot Type:</label>
               <USelect
                 v-model="plotSelected"
                 :options="plotTypes"
                 option-attribute="name"
                 class="custom-select-input"
+                size="xl"
               />
             </div>
           </div>
@@ -113,7 +128,16 @@ const plotTypes = [
     value: "line-plot",
   },
 ];
-const plotSelected = ref(route.query.type ?? plotTypes[0].value);
+const plotSelected = ref(route.query.plot ?? plotTypes[0].value);
+
+if (plotSelected.value == "scatter") {
+  plotSelected.value = "2D-plot";
+} else if (plotSelected.value == "bar") {
+  plotSelected.value = "bar-plot";
+}
+
+console.log(plotSelected.value);
+
 const HEADER_ITEM = [
   {
     label: "Plots",
@@ -153,6 +177,21 @@ const routeArray: Array = [
   }
   span {
     font-size: 30px;
+  }
+}
+.dashboard__description__text {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.metric-filter__col {
+  align-items: center;
+  label {
+    padding-right: 30px;
+    min-width: 150px;
+  }
+  .custom-select-input {
+    min-width: 170px;
   }
 }
 </style>

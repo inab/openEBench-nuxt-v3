@@ -151,7 +151,6 @@ function select(row) {
 function viewMetric(metric: Metric) {
   modalTitle.value = "View metric";
   isMetricEditable.value = false;
-  console.log("view metric")
   openModal(metric);
 }
 
