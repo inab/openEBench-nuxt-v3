@@ -35,13 +35,14 @@
               <UFormGroup
                 v-for="participant in state.challenge_participants"
                 :key="participant.tool_id"
-                :label="`Tool Name: ${participant.tool_id}`"
                 name="tool"
                 class="form-group__block"
               >
+              <div class="form-group__block__title">
+                {{ `Tool Name: ${participant.tool_id}` }}
+              </div>
                 <div class="input-row">
                   <div class="input-row-group">
-                    <div class="mr-2 input-row-group__title">value:</div>
                     <UInput
                       v-model="participant.metric_value"
                       class="form-control custom-entry-input"
@@ -155,7 +156,12 @@ onMounted(async () => {
   padding: 10px 14px 10px 10px;
   border-radius: 5px;
   margin-top: 2px !important;
+  box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px;
   label {
+    font-size: 16px;
+  }
+  &__title {
+    font-weight: 700;
     font-size: 16px;
   }
 }

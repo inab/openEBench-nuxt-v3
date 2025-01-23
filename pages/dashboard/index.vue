@@ -428,6 +428,7 @@ async function getMetricsByType(metrics) {
       min-height: 320px;
       display: flex;
       flex-direction: column;
+      transition: transform 0.4s;
       &__header {
         font-size: 20px;
         font-weight: 600;
@@ -445,6 +446,9 @@ async function getMetricsByType(metrics) {
       }
       & img {
         max-height: 150px;
+      }
+      &:hover {
+        transform: scale(1.05);
       }
     }
   }

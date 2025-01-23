@@ -18,7 +18,6 @@
       </div>
       <div v-else>
         <div class="row">
-          <div class="">This graph is not available for this demo.</div>
           <div class="col-8">
             <widget-element
               :key="widgetKey"
@@ -36,10 +35,12 @@
               <UFormGroup
                 v-for="participant in state.challenge_participants"
                 :key="participant.name"
-                :label="`Tool Name: ${participant.name}`"
                 name="tool"
                 class="form-group__block"
               >
+                <div class="form-group__block__title">
+                  {{ `Tool Name: ${participant.name}` }}
+                </div>
                 <div class="row">
                   <label for="x_value" class="form-label form-label-title">X Value</label>
                   <div
@@ -223,7 +224,12 @@ onMounted(async () => {
   padding: 10px 14px 10px 10px;
   border-radius: 5px;
   margin-top: 2px !important;
+  box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px;
   label {
+    font-size: 16px;
+  }
+  &__title {
+    font-weight: 700;
     font-size: 16px;
   }
 }

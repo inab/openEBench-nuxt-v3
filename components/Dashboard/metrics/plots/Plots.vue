@@ -1,12 +1,7 @@
 <template>
   <UCard
+    class="custom-card-box"
     :ui="{
-      base: '',
-      background: 'bg-white dark:bg-gray-900',
-      divide: 'divide-y divide-gray-200 dark:divide-gray-800',
-      ring: 'ring-1 ring-gray-200 dark:ring-gray-800',
-      rounded: 'rounded-lg',
-      shadow: 'shadow',
       body: {
         base: '',
         background: '',
@@ -80,5 +75,10 @@ const plotName = computed(() => {
   font-size: 20px;
   font-weight: 600;
   color: theme("colors.primary.500");
+}
+.custom-card-box {
+  box-shadow:
+    rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
+    rgba(0, 0, 0, 0.08) 0px 0px 0px 1px !important;
 }
 </style>
