@@ -153,9 +153,6 @@ export const useMetadataStore = defineStore('metadata', {
     // Other Functions
     // ----------------------------------------------------------------
 
-    test(result){
-      console.log('test ',result);
-    },
     prepareMetadata(result){
       /* ---Modifications to the metadata are needed to make it compatible with the UI ---- */
       result.source.push('observatory') // add observatory as source
@@ -255,17 +252,14 @@ export const useMetadataStore = defineStore('metadata', {
       };
 
       // If the value is empty, it is not added
-      // if (value !== '') {
-        this.toolMetadata[field].push(newItem);
-      // }
+      this.toolMetadata[field].push(newItem);
     },
 
     removeEntry(payload) {
 		  // remove item to force update of reactive properties depending on it
       // remove only if index greater than 0?
-      // if (payload.index < 0 ){
-        this.toolMetadata[payload.field].splice(payload.index, 1);
-      // }
+
+      this.toolMetadata[payload.field].splice(payload.index, 1);
     },
 
     updateLoadedMetadata(payload) {

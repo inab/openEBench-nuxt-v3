@@ -29,7 +29,7 @@
         </UButton>
       </template>
 
-      <!-- Content -->
+      <!-- Contents -->
       <template #item="{ item }">
 
         <!-- Content 0. Identity -->
@@ -135,6 +135,50 @@
             </div>
           </div>
         </div>
+
+        <!-- Content 1. Accessibility / License -->
+        <div v-if="item.label == '1. Accessibility / License'" class="p-4">
+          <div class="mt-0 ml-3 d-flex flex-row justify-space-between">
+            <!-- License  -->
+             <MetaFieldLicense
+              title="License"
+              :value="toolMetadata.license"
+              field="license"
+              :increasable="true"
+             />
+          </div>
+        </div>
+
+        <!-- Content 2. Documentation -->
+        <div v-if="item.label == '2. Documentation'" class="p-4">
+
+        </div>
+
+        <!-- Content 3. Test data -->
+        <div v-if="item.label == '3. Test data'" class="p-4">
+
+        </div>
+
+        <!-- Content 4. Interoperability -->
+        <div v-if="item.label == '4. Interoperability'" class="p-4">
+
+        </div>
+
+        <!-- Content 5. Versioning -->
+        <div v-if="item.label == '5. Versioning'" class="p-4">
+
+        </div>
+
+        <!-- Content 6. Reproducibility -->
+        <div v-if="item.label == '6. Reproducibility'" class="p-4">
+
+        </div>
+
+        <!-- Content 7. Recognition -->
+        <div v-if="item.label == '7. Recognition'" class="p-4">
+
+        </div>
+        <!-- Borrar al terminar -->
         <div>
           <p class="italic text-gray-900 dark:text-white text-center">
             {{ item.label }}
@@ -170,6 +214,7 @@ import { useStepperStore } from '@/stores/observatory/evaluation/index';
 import MetaField from "./Metafield.vue";
 import MetaTextArea from "./MetaTextArea.vue";
 import MetaFieldURLField from "./MetaFieldURLField.vue";
+import MetaFieldLicense from "./MetaFieldLicense.vue";
 import FormField from './FormField.vue';
 import SelectorType from './SelectorType.vue';
 import VersionCombo from './VersionCombo.vue';
