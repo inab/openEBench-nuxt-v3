@@ -142,9 +142,6 @@ import { date } from "valibot";
 
 const lang = window.navigator.userLanguage || window.navigator.language;
 const dateFormat = computed(() => getLocaleDateString(lang));
-console.log(lang);
-
-console.log(dateFormat.value);
 
 const props = defineProps<{
   challenges?: Array<Challenge>;

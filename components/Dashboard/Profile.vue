@@ -87,9 +87,9 @@
               </USelectMenu>
             </UFormGroup>
 
-            <div class="d-flex justify-content-end">
+            <!-- <div class="d-flex justify-content-end">
               <UButton type="submit" disabled> Submit </UButton>
-            </div>
+            </div> -->
           </UForm>
         </div>
         <div v-else>

@@ -54,7 +54,7 @@ watchEffect(() => {
     border-radius: 0.5rem;
     font-size: 14px;
     /* border: 1px solid theme("colors.gray.200"); */
-    background-color: theme("colors.gray.50");
+    background-color: theme("colors.gray.200");
     .tab-item {
       cursor: pointer;
       display: flex;

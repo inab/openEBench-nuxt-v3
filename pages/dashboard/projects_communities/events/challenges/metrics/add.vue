@@ -108,7 +108,6 @@ const fetchChallengeMetrics = async (token: string): Promise<void> => {
 
     const data = await response.json();
     challengeMetrics.value = data.metrics_categories;
-    console.log("Challenge metrics data:", challengeMetrics.value);
   } catch (error) {
     console.error("Error fetching challenge metrics data:", error);
   } finally {

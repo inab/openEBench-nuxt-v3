@@ -1,0 +1,44 @@
+{
+  "_id": "OEBDTEST0000006",
+  "dates": {
+    "modification": "2023-05-27T19:18:32Z"
+  },
+  "inline_data": {
+    "challenge_participants": [
+      {
+        "y_value": [
+          0.0, 0.0417, 0.0833, 0.1250, 0.1667, 0.2083, 0.25, 0.2917, 0.3333
+        ],
+        "x_value": [
+          0.00, 0.2143, 0.2887, 0.3636, 0.3882, 0.4564, 0.52,   0.5501, 0.5673
+        ],
+        "t_error": [
+          0.023, 0.038, 0.029, 0.045, 0.032, 0.052, 0.041, 0.034, 0.028
+        ],
+        "name": "Tool_1",
+        "metric_id": "True Positive Rate (TPR)"
+      },
+      {
+        "y_value": [
+          0.0, 0.0417, 0.0833, 0.1250, 0.1667, 0.2083, 0.25, 0.2917, 0.3333
+        ],
+        "x_value": [
+          0.03,   0.0417, 0.0633, 0.1350, 0.2067, 0.2583, 0.22,   0.2817, 0.3533
+        ],
+        "t_error": [
+          0.065, 0.049, 0.074, 0.058, 0.033, 0.081, 0.046, 0.029, 0.090
+        ],
+        "name": "Tool_2",
+        "metric_id": "True Positive Rate (TPR)"
+      }
+    ],
+    "visualization": {
+      "type": "line-plot",
+      "x_axis": "False Positive Rate (FPR)",
+      "y_axis": "True Positive Rate (TPR)",
+      "dates": {
+        "modification": "2024-04-09T13:44:20Z"
+      }
+    }
+  }
+}

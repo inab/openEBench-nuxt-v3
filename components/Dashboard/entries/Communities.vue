@@ -2,8 +2,8 @@
   <div class="user-communities">
     <div class="user-communities__body">
       <div class="user-communities__body__table">
-        <div class="flex items-center justify-between gap-3 py-3">
-          <div class="col-5">
+        <div class="flex items-center justify-content-end gap-3 py-3">
+          <div class="col-4">
             <multiselect
               v-model="selectedStatus"
               :options="todoStatus"
@@ -275,7 +275,7 @@ const pageFrom = computed(
 const pageTo = computed(() =>
   Math.min(
     Number(page.value) * Number(pageCount.value),
-    Number(totalPages.value),
+    Number(_total.value),
   ),
 );
 const search = ref<string>("");

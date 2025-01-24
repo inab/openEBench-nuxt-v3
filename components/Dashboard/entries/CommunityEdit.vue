@@ -212,20 +212,15 @@
                       </div>
                     </div>
                   </div>
-                  <div class="row form-card__full_row">
+                  <div class="row form-card__full_row pt-2">
                     <div class="form-card__row__box">
                       <div class="col-12">
                         <label for="description">Description</label>
-                        <textarea
-                          id="description"
+                        <ckeditor
                           v-model="communityData.description"
-                          class="form-control"
-                          rows="10"
-                          :disabled="
-                            !commmunityPrivileges.community.update || isView
-                          "
-                        >
-                        </textarea>
+                          :editor="ClassicEditor"
+                          :config="config"
+                        />
                       </div>
                     </div>
                   </div>
@@ -531,6 +526,33 @@ import CustomBorder from "@/components/Common/CustomBorder.vue";
 import CustomTab from "@/components/Common/CustomTab.vue";
 import CustomTabBody from "@/components/Common/CustomTabBody.vue";
 
+import {
+  ClassicEditor,
+  Essentials,
+  Paragraph,
+  Bold,
+  Italic,
+  Underline,
+  Strikethrough,
+  Code,
+  Indent,
+  IndentBlock,
+  List,
+  Link,
+  Table,
+  TableToolbar,
+  BlockQuote,
+  CodeBlock,
+  HorizontalLine,
+  SpecialCharacters,
+  SpecialCharactersEssentials,
+  Heading,
+  SourceEditing,
+} from "ckeditor5";
+import { Ckeditor } from "@ckeditor/ckeditor5-vue";
+
+import "ckeditor5/ckeditor5.css";
+
 const router = useRouter();
 const runtimeConfig = useRuntimeConfig();
 const { data } = useAuth();
@@ -602,6 +624,60 @@ const inputLinkRefs = ref<(HTMLInputElement | null)[]>([]);
 const inputContactsRefs = ref<(HTMLInputElement | null)[]>([]);
 const inputKeywordsRefs = ref<(HTMLInputElement | null)[]>([]);
 const itemRefs = useTemplateRef("itemsContact");
+
+const config = computed(() => {
+  return {
+    licenseKey: "GPL",
+    plugins: [
+      Essentials,
+      Paragraph,
+      Bold,
+      Italic,
+      Underline,
+      Strikethrough,
+      Code,
+      Indent,
+      IndentBlock,
+      List,
+      Link,
+      Table,
+      TableToolbar,
+      BlockQuote,
+      CodeBlock,
+      HorizontalLine,
+      SpecialCharacters,
+      SpecialCharactersEssentials,
+      Heading,
+      SourceEditing,
+    ],
+    toolbar: [
+      "undo",
+      "redo",
+      "|",
+      "heading",
+      "|",
+      "sourceEditing",
+      "|",
+      "bold",
+      "italic",
+      "underline",
+      "strikethrough",
+      "code",
+      "|",
+      "bulletedList",
+      "numberedList",
+      "bulletedList ",
+      "|",
+      "link",
+      "insertTable",
+      "blockQuote",
+      "codeBlock",
+      "horizontalLine",
+      "formatPainter",
+      "specialCharacters",
+    ],
+  };
+});
 
 const items = ref([
   {
@@ -751,7 +827,8 @@ async function onSubmitCommunity(event: FormSubmitEvent<Schema>) {
   //event.preventDefault();
 
   const result = safeParse(schema, state.value);
-  console.log(result);
+
+  console.log(state.value);
 
   if (result.success) {
     const customErrors = validateRequiredFields(state.value);
@@ -1074,7 +1151,7 @@ watchEffect(() => {
       align-items: baseline;
     }
   }
-  
+
   .form-group-row {
     display: flex;
     justify-content: space-between;
