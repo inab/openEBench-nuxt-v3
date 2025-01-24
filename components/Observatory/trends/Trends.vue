@@ -1,8 +1,7 @@
 <template>
   <div>
-    <NuxtLayout :name="layout">
-      <template #trends>
-        <div class="p-4">
+        <!-- Main Content -->
+        <div class="content p-4">
           <div class="row my-4">
             <h3 class="">FAIRness Trends Analysis</h3>
             <p style="line-height: 1.9" class="mb-2 mt-0">
@@ -10,8 +9,7 @@
             </p>
           </div>
 
-
-          <!-- collectionSelector -->
+          <!-- Collection Selector -->
           <div class="row mt-4">
             <div class="col-2"></div>
             <div class="col-8">
@@ -19,6 +17,8 @@
             </div>
             <div class="col-2"></div>
           </div>
+
+          <!-- Licenses Section -->
           <div class="row mt-4">
             <div class="col-12">
               <div
@@ -27,6 +27,8 @@
               </div>
             </div>
           </div>
+
+          <!-- Versioning & Version Control -->
           <div class="row justify-center mt-4 d-flex align-items-stretch">
             <div class="col-5 d-flex">
               <div
@@ -43,6 +45,7 @@
             </div>
           </div>
 
+          <!-- Publications Section -->
           <div class="row mt-4">
             <div class="col-12">
               <div
@@ -52,20 +55,47 @@
             </div>
           </div>
         </div>
-      </template>
-    </NuxtLayout>
-  </div>
+      </div>
 </template>
+
 <script setup lang="ts">
-import collectionSelector from "@/components/Observatory/CollectionSelector.vue"
-import LicensesMain from "@/components/Observatory/trends/licenses/LicensesMain.vue"
-import VersioningMain from '@/components/Observatory/trends/versioning/VersioningMain.vue';
-import VersionControl from '@/components/Observatory/trends/versionControl/VersionControl.vue';
-import PublicationsMain from '@/components/Observatory/trends/publications/PublicationsMain.vue';
-
-const layout = 'observatory'
-
-
-
+import collectionSelector from "@/components/Observatory/CollectionSelector.vue";
+import LicensesMain from "./licenses/LicensesMain.vue";
+import VersioningMain from "./versioning/VersioningMain.vue";
+import VersionControl from "./versionControl/VersionControl.vue";
+import PublicationsMain from "./publications/PublicationsMain.vue";
 
 </script>
+
+<style scoped>
+
+.content {
+  margin-top: 20px;
+}
+
+.title {
+  font-size: 1.5rem !important;
+  font-weight: 400;
+  line-height: 2rem;
+  letter-spacing: normal !important;
+}
+
+.highlight-info {
+  color: #0b579f;
+  font-weight: 600;
+}
+
+.citation-article {
+  font-size: 1rem !important;
+}
+
+a {
+  color: #0b579f;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+  color: #6a98c4;
+}
+</style>
