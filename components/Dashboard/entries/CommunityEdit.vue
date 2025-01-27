@@ -435,7 +435,7 @@
                     </div>
                   </div>
                   <div class="form-footer">
-                    <UButton type="button" variant="secondary" @click="goBack">
+                    <UButton type="button" @click="goBack">
                       Cancel
                     </UButton>
                     <UButton

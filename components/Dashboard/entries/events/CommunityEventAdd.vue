@@ -294,9 +294,7 @@
                 </div>
               </div>
               <div class="form-footer">
-                <UButton type="button" variant="secondary" @click="goBack">
-                  Cancel
-                </UButton>
+                <UButton type="button" @click="goBack"> Cancel </UButton>
                 <UButton
                   v-if="eventPrivileges.event.create"
                   type="submit"
@@ -526,7 +524,9 @@ async function createBenchmarkingEvent() {
     const responseData = await response.json();
     if (responseData.status == 200) {
       errors.value = [];
-      router.push(`/dashboard/projects_communities/${state.value.community_id}?events=true`);
+      router.push(
+        `/dashboard/projects_communities/${state.value.community_id}?events=true`,
+      );
     } else {
       let errorResponse = JSON.parse(responseData.body);
       errorResponse = errorResponse.error || [];

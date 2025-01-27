@@ -344,9 +344,7 @@
               <div class="form-card__row">
                 <div class="col-12">
                   <div class="form-footer">
-                    <UButton type="button" variant="secondary" @click="goBack">
-                      Cancel
-                    </UButton>
+                    <UButton type="button" @click="goBack"> Cancel </UButton>
                     <UButton
                       v-if="challengePrivileges.challenge.create"
                       type="submit"
@@ -367,11 +365,8 @@
 
 <script setup lang="ts">
 import { computed, ref, watch, onMounted } from "vue";
-import type { Challenge } from "@/types/challenge";
 import { useUser } from "@/stores/user.ts";
-import { ChallengeDates } from "@/types/challenge";
 import type { CommunityPrivilegeActions } from "@/constants/privileges";
-import CustomDialog from "@/components/Common/CustomDialog.vue";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 import {

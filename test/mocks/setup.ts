@@ -5,15 +5,6 @@ import { useNuxtApp } from "#app";
 
 import { createResolver, defineNuxtModule } from "@nuxt/kit";
 
-// // Mockear useNuxtApp para devolver el mock de $graphql
-// vi.mock("#app", () => ({
-//   useNuxtApp: () => mockNuxtApp,
-// }));
-
-// // Configura Pinia
-// const pinia = createPinia();
-// setActivePinia(pinia);
-
 export default defineNuxtModule({
   setup: (_options, nuxt) => {
     const { resolve } = createResolver(import.meta.url);
@@ -33,6 +24,3 @@ export default defineNuxtModule({
     });
   },
 });
-
-// Exportar Pinia para uso en pruebas
-//export { pinia };

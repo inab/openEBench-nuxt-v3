@@ -344,9 +344,7 @@
                     </div>
                   </div>
                   <div class="form-footer">
-                    <UButton type="button" variant="secondary" @click="goBack">
-                      Cancel
-                    </UButton>
+                    <UButton type="button" @click="goBack"> Cancel </UButton>
                     <UButton
                       v-if="challengePrivileges.challenge.update && !isView"
                       type="submit"
@@ -717,17 +715,14 @@ async function updateBenchmarkingCommunity() {
   };
 
   try {
-    const response = await fetch(
-      `/api/staged/Community/${state.value._id}`,
-      {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body),
+    const response = await fetch(`/api/staged/Community/${state.value._id}`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
-    );
+      body: JSON.stringify(body),
+    });
 
     if (!response.ok) {
       throw new Error("Error in API response");
@@ -741,7 +736,7 @@ async function updateBenchmarkingCommunity() {
       );
     } else {
       const errorResponse = JSON.parse(responseData.body);
-      if(typeof errorResponse.error === 'string') {
+      if (typeof errorResponse.error === "string") {
         errors.value.push(errorResponse.error);
       } else {
         errors.value = errorResponse.error.map((error: any) => {

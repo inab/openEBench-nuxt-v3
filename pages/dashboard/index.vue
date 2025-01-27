@@ -154,7 +154,6 @@
                           >Explore Metrics</NuxtLink
                         >
                       </button>
-                      
                     </div>
                   </div>
                 </div>
@@ -224,7 +223,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref, onMounted } from "vue";
 import { useUser } from "@/stores/user.ts";
 
 import BarSvg from "../../public/images/plots/bar-chart.svg?component";
@@ -238,6 +237,10 @@ definePageMeta({
     authenticatedOnly: true, // Solo permite acceso a usuarios autenticados
     navigateUnauthenticatedTo: "/login-required", // Redirige a los no autenticados
   },
+});
+
+defineExpose({
+  countTotalMetrics,
 });
 
 const { data, status } = useAuth();
@@ -277,7 +280,6 @@ if (status.value == "authenticated") {
   userName.value = "";
 }
 
-await countTotalMetrics();
 async function countTotalMetrics() {
   try {
     const response = await $fetch(
@@ -294,12 +296,12 @@ async function countTotalMetrics() {
     const data = await response;
     totalMetrics.value = data.length;
     await getMetricsByType(data);
+    return data;
   } catch (error) {
     console.error("Error:", error);
   }
 }
 
-await countTotalTools();
 async function countTotalTools() {
   try {
     const response = await $fetch(
@@ -320,7 +322,6 @@ async function countTotalTools() {
   }
 }
 
-await countTotalCommunities();
 async function countTotalCommunities() {
   try {
     const response = await $fetch(
@@ -341,7 +342,6 @@ async function countTotalCommunities() {
   }
 }
 
-await countTotalContacts();
 async function countTotalContacts() {
   try {
     const response = await $fetch(
@@ -363,42 +363,45 @@ async function countTotalContacts() {
 }
 
 async function getMetricsByType(metrics) {
+  console.log("Metricss", metrics);
+  const typeMap = {
+    visualization: "Bar Plot",
+    optimization: "Scatter Plot",
+    visualizationBox: "Box Plot",
+    visualizationLine: "Line Plot",
+  };
+
   metrics.forEach((metric) => {
     if (
       metric.representation_hints &&
       metric.representation_hints.visualization
     ) {
       const type = metricsByType.value.filter(
-        (item) => item.name === "Bar Plot",
+        (item) => item.name === typeMap.visualization,
       );
       type[0].total += 1;
+      console.log("Bar Plot", type[0].total);
     } else if (
       metric.representation_hints &&
       metric.representation_hints.optimization
     ) {
       const type = metricsByType.value.filter(
-        (item) => item.name === "Scatter Plot",
-      );
-      type[0].total += 1;
-    } else if (
-      metric.representation_hints &&
-      metric.representation_hints.visualization
-    ) {
-      const type = metricsByType.value.filter(
-        (item) => item.name === "Box Plot",
-      );
-      type[0].total += 1;
-    } else if (
-      metric.representation_hints &&
-      metric.representation_hints.visualization
-    ) {
-      const type = metricsByType.value.filter(
-        (item) => item.name === "Line Plot",
+        (item) => item.name === typeMap.optimization,
       );
       type[0].total += 1;
     }
   });
+
+  console.log("metricsByType: " , metricsByType.value);
 }
+
+onMounted(() => {
+  countTotalMetrics();
+  countTotalTools();
+  countTotalCommunities();
+  countTotalContacts();
+});
+
 </script>
 
 <style lang="scss">

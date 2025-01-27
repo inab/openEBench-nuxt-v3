@@ -3,7 +3,7 @@
     <div class="w-100 container">
       <div class="dashboard-community-add__title">
         <h2 class="text-primaryOeb-500">
-          <span class="">New Community</span>
+          <span class="w-100">New Community</span>
         </h2>
         <p>
           It is a long established fact that a reader will be distracted by the
@@ -376,9 +376,7 @@
                 </div>
               </div>
               <div class="form-footer">
-                <UButton type="button" variant="secondary" @click="goBack">
-                  Cancel
-                </UButton>
+                <UButton type="button" @click="goBack"> Cancel </UButton>
                 <UButton type="submit"> Submit </UButton>
               </div>
             </div>

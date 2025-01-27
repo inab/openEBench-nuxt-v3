@@ -114,7 +114,7 @@
                     v-model="communitiesSelected"
                     class="w-full custom-select-input"
                     :options="communities"
-                    multiple 
+                    multiple
                     searchable
                     searchable-placeholder="Search a community..."
                     placeholder="Select a community"
@@ -139,9 +139,7 @@
               </div>
             </div>
             <div class="form-footer pt-3">
-              <UButton type="button" variant="secondary" @click="goBack">
-                Cancel
-              </UButton>
+              <UButton type="button" @click="goBack"> Cancel </UButton>
               <UButton class="" type="submit"> Submit </UButton>
             </div>
           </div>
@@ -191,7 +189,7 @@ const state = ref({
     "https://www.elixir-europe.org/excelerate/WP2/json-schemas/1.0/Contact",
   contact_type: contactTypeOptions[0],
   community_id: "",
-  orcid: ""
+  orcid: "",
 });
 
 const schema = object({
@@ -203,7 +201,7 @@ const schema = object({
   _schema: string(),
   contact_type: string(),
   community_id: string(),
-  orcid: string()
+  orcid: string(),
 });
 
 const getErrors = computed(() => errors.value.join(", "));

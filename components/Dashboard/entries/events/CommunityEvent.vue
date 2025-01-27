@@ -295,9 +295,7 @@
                     </div>
                   </div>
                   <div class="form-footer">
-                    <UButton type="button" variant="secondary" @click="goBack">
-                      Cancel
-                    </UButton>
+                    <UButton type="button" @click="goBack"> Cancel </UButton>
                     <UButton
                       v-if="eventPrivileges.event.update && !isView"
                       type="submit"
@@ -704,7 +702,7 @@ async function updateBenchmarkingEvent() {
       );
     } else {
       const errorResponse = JSON.parse(responseData.body);
-      if(typeof errorResponse.error === 'string') {
+      if (typeof errorResponse.error === "string") {
         errors.value.push(errorResponse.error);
       } else {
         errors.value = errorResponse.error.map((error: any) => {

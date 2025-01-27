@@ -246,9 +246,7 @@
           </div>
         </div>
         <div class="form-footer">
-          <UButton type="button" variant="secondary" @click="closeModal">
-            Cancel
-          </UButton>
+          <UButton type="button" @click="closeModal"> Cancel </UButton>
           <UButton v-if="isMetricEditable" class="" type="submit">
             Submit
           </UButton>
@@ -256,8 +254,7 @@
       </UForm>
     </template>
     <template #footer>
-      <div class="form-footer">
-      </div>
+      <div class="form-footer"></div>
     </template>
   </CustomModal>
 </template>
