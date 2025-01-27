@@ -443,7 +443,6 @@ const schema = object({
   }),
   orig_id: string(),
   _schema: string(),
-  benchmarking_event_id: string(),
   challenge_contact_ids: array(string()),
   url: string(),
   references: array(string()),
@@ -562,14 +561,6 @@ function validateRequiredFields(data: any): string[] {
       errorMessages.push(`${field} cannot be empty`);
     }
   });
-
-  if (data["_id"] && !checkIdPattern(data["_id"])) {
-    const communityText = communityId.value.slice(0, 3); // Gets the first part
-    const communityIdNumber = communityId.value.slice(4);
-    errorMessages.push(
-      `_id is not in the correct format. Example: <b><i>${communityText}X${communityIdNumber}000000A</i></b>`,
-    );
-  }
 
   if (localContacts.value.length == 0) {
     errorMessages.push(`challenge_contact_ids cannot be empty`);

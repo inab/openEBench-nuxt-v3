@@ -704,12 +704,16 @@ async function updateBenchmarkingEvent() {
       );
     } else {
       const errorResponse = JSON.parse(responseData.body);
-      errors.value = errorResponse.error.map((error: any) => {
-        if (error.pointer) {
-          return `${error.message}`;
-        }
-        return error.message;
-      });
+      if(typeof errorResponse.error === 'string') {
+        errors.value.push(errorResponse.error);
+      } else {
+        errors.value = errorResponse.error.map((error: any) => {
+          if (error.pointer) {
+            return `${error.message}`;
+          }
+          return error.message;
+        });
+      }
     }
   } catch (error) {
     console.error("Error fetching communities data:", error);
