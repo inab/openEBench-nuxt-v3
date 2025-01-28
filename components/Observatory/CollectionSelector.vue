@@ -56,7 +56,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, watch, computed } from 'vue';
 import { useObservatory } from '@/stores/observatory/index.js';
 import { useFairness } from '@/stores/observatory/fairness';
 import { useTrends } from '@/stores/observatory/trends';
@@ -69,38 +69,48 @@ const trendsStore = useTrends();
 const dataStore = useData();
 
 // Collections
-const collections = observatoryStore.getCollections;
-const selectedCollection = ref<number | null>(null);
+const collections = computed(() => observatoryStore.getCollections);
+const selectedCollection = computed(() => observatoryStore.selectedCollection);
 
 // Auto-scroll logic
 function scrollToButton(index: number) {
-  const buttons = document.querySelectorAll('.carousel__item button');
-  if (buttons[index]) {
+  nextTick(() => {
+    const buttons = document.querySelectorAll('.carousel__item button');
+
+    if (!buttons || !buttons[index]) {
+      console.warn(`Button at index ${index} not found.`);
+      return;
+    }
+
+    // Scroll to the button
     buttons[index].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-  }
+  });
 }
 
 
+function setCollection(index: number | null) {
+  if (observatoryStore.selectedCollection !== index) {
+    observatoryStore.selectCollection(index);
 
-function setCollection(index: number) {
-  if (selectedCollection.value !== index) {
-    selectedCollection.value = index;
-
-    // Change the current collection
-    const collectionId = collections[selectedCollection.value].id;
-    observatoryStore.changeCurrentCollection(collectionId);
+    if (index !== null) {
+      const collectionId = collections.value[index].id;
+      observatoryStore.changeCurrentCollection(collectionId);
+    } else {
+      observatoryStore.changeCurrentCollection(null);
+    }
 
     triggerDataRefresh();
-
-    // Auto-scroll to the button
-    scrollToButton(index);
+    if (index !== null) {
+      scrollToButton(index);
+    }
   } else {
-    // Reset the current collection
-    selectedCollection.value = null;
+    // Unselect the collection if the same one is clicked again
+    observatoryStore.selectCollection(null);
     observatoryStore.changeCurrentCollection('tools');
     triggerDataRefresh();
   }
 }
+
 
 // Watch to trigger auto-scroll on selection near edges
 watch(selectedCollection, (newIndex) => {
@@ -202,7 +212,8 @@ function getImagePath(image: string) {
   transform: scale(1.05);
 }
 
-::v-deep .carousel__next--disabled, ::v-deep .carousel__prev--disabled {
+::v-deep .carousel__next--disabled,
+::v-deep .carousel__prev--disabled {
   cursor: not-allowed !important;
   opacity: 0.5;
 }
