@@ -141,8 +141,12 @@ export default {
     },
 
     goToObservatory(index) {
-      activeTabIndex.value = index; // Update the global state for the active tab
-      this.$router.push("/observatory"); // Use `this.$router` to navigate
+      activeTabIndex.value = index;
+      this.$router.push("/observatory");
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
     },
   },
 };
