@@ -1,12 +1,12 @@
 <template>
   <div>
-        <div class="p-4">
+        <div class="content p-4">
           <div class="row my-4">
-            <h3 class="">Explore Data Integration at the Software Observatory</h3>
+            <h3 class="fw-bold mb-3">Explore Data Integration at the Software Observatory</h3>
           </div>
-          <div class="row my-4">
+          <div class="row">
             <div class="col-6">
-              <p style="line-height: 1.9" class="mb-0 mt-0">
+              <p style="line-height: 1.9" class="mb-0 ">
                 Our system periodically pulls metadata from
                 <strong>eight diverse sources</strong>, enriched further with dynamic
                 data on repository activity, website availability, and trends in
@@ -223,6 +223,5 @@ onUnmounted(() => {
 
 p {
   line-height: 22px;
-  font-size: 14px;
 }
 </style>

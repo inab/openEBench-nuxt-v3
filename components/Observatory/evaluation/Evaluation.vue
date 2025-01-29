@@ -1,14 +1,14 @@
 <template>
   <div>
-        <div class="p-4">
+        <div class="content p-4">
           <div class="row my-4">
             <div class="col-12">
-              <h3 class="mb-3">Welcome to the FAIRsoft Evaluator!</h3>
+              <h3 class="fw-bold mb-3">Welcome to the FAIRsoft Evaluator!</h3>
               <p style="line-height: 1.9" class="mb-0 mt-0">
                 Enhance the FAIRness of your software. Here’s how you can use our tool:
               </p>
 
-              <ul style="line-height: 1.9" class="mb-0 mt-0 text-sm list-disc">
+              <ul style="line-height: 1.9" class="mb-0 mt-0  list-disc">
                 <li>
                   <strong class="text-primaryOeb-600">Retrieve Metadata:</strong>
                   Automatically pull data from either the Software Ecosystem database

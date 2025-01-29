@@ -4,7 +4,7 @@
     <div class="content p-4">
       <div class="row my-4">
         <div class="col-8">
-          <h3 class="mb-3">FAIRsoft Indicator Scoreboard</h3>
+          <h3 class="fw-bold mb-3">FAIRsoft Indicator Scoreboard</h3>
           <p style="line-height: 1.9" class="mb-0 mt-0">
             This page brings to light the <strong>collective insights</strong>
             from our FAIRsoft indicators, providing a clear snapshot of trends and scores across various software.

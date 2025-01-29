@@ -3,7 +3,7 @@
         <!-- Main Content -->
         <div class="content p-4">
           <div class="row my-4">
-            <h3 class="">FAIRness Trends Analysis</h3>
+            <h3 class="fw-bold mb-3">FAIRness Trends Analysis</h3>
             <p style="line-height: 1.9" class="mb-2 mt-0">
               Explore trends in key aspects to the FAIRness of research software.
             </p>
