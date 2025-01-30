@@ -2,8 +2,9 @@
 	<div id="plot_23"></div>
 </template>
 <script setup lang="ts">
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, watch, nextTick } from 'vue';
 import Plotly from 'plotly.js-dist';
+import { activeTabIndex } from '@/components/Common/state.js';
 
 // Datos reactivos
 const data_types = {
@@ -85,6 +86,11 @@ function updatePlot() {
 
 onMounted(() => {
   updatePlot();
+});
+
+watch(activeTabIndex, async () => {
+    await nextTick(); 
+    Plotly.relayout('plot_23', { autosize: true });
 });
 </script>
 

@@ -3,8 +3,9 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, watch } from 'vue';
+import { onMounted, watch, nextTick } from 'vue';
 import Plotly from 'plotly.js-dist';
+import { activeTabIndex } from '@/components/Common/state.js';
 
 // Define props
 const props = defineProps<{
@@ -35,7 +36,7 @@ const layout: Partial<Plotly.Layout> = {
         ticktext: props.yValues.map(
             (value) => (labels[value] || value) + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' //  Adding manual space to separete from the axis, standoff not working
         ),
-        showLine : true,
+        showLine: true,
 
     },
     xaxis: {
@@ -90,6 +91,11 @@ function plotChart() {
     // Pass the data and layout directly to Plotly
     Plotly.newPlot('plot_4', data, layout, config);
 }
+
+watch(activeTabIndex, async () => {
+    await nextTick();
+    Plotly.relayout('plot_4', { autosize: true });
+});
 </script>
 
 <style scoped></style>

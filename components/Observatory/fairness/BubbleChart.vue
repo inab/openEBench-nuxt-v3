@@ -5,8 +5,10 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, watch, nextTick } from 'vue';
 import Plotly from 'plotly.js-dist';
+import { activeTabIndex } from '@/components/Common/state.js';
+
 
 const props = defineProps<{
   div_id: string;
@@ -75,7 +77,7 @@ const build_trace = (
 };
 
 const build_control_collection_traces = () => {
-  let controlCollectionTraces:any[] = [];
+  let controlCollectionTraces: any[] = [];
 
   // control scores
   if (props.collection !== 'tools') {
@@ -135,6 +137,11 @@ onMounted(() => {
     data: traces,
     layout,
     config,
+  });
+
+  watch(activeTabIndex, async () => {
+    await nextTick();
+    Plotly.relayout(props.div_id, { autosize: true });
   });
 });
 </script>

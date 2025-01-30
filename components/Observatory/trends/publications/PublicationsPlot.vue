@@ -3,8 +3,9 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, onMounted } from 'vue';
+import { defineProps, onMounted, watch, nextTick } from 'vue';
 import Plotly from 'plotly.js-dist';
+import { activeTabIndex } from '@/components/Common/state.js';
 
 // Define props with TypeScript types
 const props = defineProps<{
@@ -28,7 +29,7 @@ const layout: Partial<Plotly.Layout> = {
         roworder: 'top to bottom',
     },
     yaxis: {
-        title: {text: 'Percentage', standoff: 15},
+        title: { text: 'Percentage', standoff: 15 },
         tickformat: '.2%',
     },
     xaxis: {
@@ -42,7 +43,7 @@ const layout: Partial<Plotly.Layout> = {
         autoexpand: true,
         t: 10,
         l: 90
-    
+
     },
     hoverlabel: {
         bgcolor: '#FFF',
@@ -125,5 +126,10 @@ const plotChart = () => {
 // Mount the chart when the component is mounted
 onMounted(() => {
     plotChart();
+});
+
+watch(activeTabIndex, async () => {
+    await nextTick();
+    Plotly.relayout('plot_5', { autosize: true });
 });
 </script>

@@ -3,8 +3,9 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, watch } from 'vue';
+import { onMounted, watch, nextTick } from 'vue';
 import Plotly from 'plotly.js-dist';
+import { activeTabIndex } from '@/components/Common/state.js';
 
 // Define props
 const props = defineProps<{
@@ -66,6 +67,11 @@ function plotChart() {
     };
     Plotly.newPlot('plot_3', [trace], layout, config);
 }
+
+watch(activeTabIndex, async () => {
+    await nextTick(); 
+    Plotly.relayout('plot_3', { autosize: true });
+});
 
 </script>
 

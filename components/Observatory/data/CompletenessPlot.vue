@@ -3,9 +3,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, watch, nextTick } from 'vue';
 import { useData } from '@/stores/observatory/data';
 import Plotly from 'plotly.js-dist';
+import { activeTabIndex } from '@/components/Common/state.js';
 
 // Store
 const dataStore = useData();
@@ -81,6 +82,11 @@ function updatePlot() {
 // OnMounted
 onMounted(() => {
   updatePlot();
+});
+
+watch(activeTabIndex, async () => {
+    await nextTick(); 
+    Plotly.relayout('plot_22', { autosize: true });
 });
 
 </script>

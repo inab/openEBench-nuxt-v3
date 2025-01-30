@@ -5,9 +5,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, onMounted } from 'vue';
+import { computed, reactive, onMounted, watch, nextTick } from 'vue';
 import { useData } from '@/stores/observatory/data.js';
 import Plotly from 'plotly.js-dist';
+import { activeTabIndex } from '@/components/Common/state.js';
 
 // Store
 const dataStore = useData();
@@ -244,6 +245,11 @@ onMounted(() => {
   };
 
   Plotly.newPlot('plot', data, layout, config); 
+});
+
+watch(activeTabIndex, async () => {
+    await nextTick(); 
+    Plotly.relayout('plot', { autosize: true });
 });
 
 </script>

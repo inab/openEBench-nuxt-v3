@@ -3,9 +3,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, watch, onMounted } from 'vue';
+import { computed, watch, onMounted, nextTick } from 'vue';
 import { useData } from '@/stores/observatory/data';
 import Plotly from 'plotly.js-dist';
+import { activeTabIndex } from '@/components/Common/state.js';
 
 // Store
 const dataStore = useData();
@@ -97,8 +98,8 @@ function build_bar_traces(colors) {
 
 // Function to construct the line trace
 function build_line_trace(n) {
-  return coverageSources.value.data && coverageSources.value.data.counts_cummulative 
-    ? coverageSources.value.data.counts_cummulative[n] 
+  return coverageSources.value.data && coverageSources.value.data.counts_cummulative
+    ? coverageSources.value.data.counts_cummulative[n]
     : 0;
 }
 
@@ -148,8 +149,13 @@ watch(() => coverageSources.value.data, (newVal) => {
 onMounted(() => {
   updatePlot();
 });
+
+watch(activeTabIndex, async () => {
+  await nextTick();
+  Plotly.relayout('plot_21', { autosize: true });
+});
 </script>
-  
+
 <style scoped>
 #plot_21 {
   padding: 0%;
@@ -164,4 +170,3 @@ onMounted(() => {
   width: 100% !important;
 }
 </style>
-  

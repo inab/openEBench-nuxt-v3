@@ -3,8 +3,9 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, computed } from 'vue';
+import { onMounted, computed, watch, nextTick } from 'vue';
 import Plotly from 'plotly.js-dist';
+import { activeTabIndex } from '@/components/Common/state.js';
 
 // Define props
 const props = defineProps<{
@@ -135,6 +136,11 @@ onMounted(() => {
     if (props.licenses_data.length > 0) traces.push(trace3.value);
 
     Plotly.newPlot('plot_2', traces, layout, config);
+});
+
+watch(activeTabIndex, async () => {
+    await nextTick();
+    Plotly.relayout('plot_2', { autosize: true });
 });
 </script>
 
