@@ -29,7 +29,6 @@
                   ? 'i-heroicons-minus-16-solid'
                   : 'i-heroicons-plus-16-solid'
               "
-              c
             />
           </span>
         </p>
@@ -41,15 +40,16 @@
       </div>
     </div>
 
-    <div v-if="papers.length === 0" class="no-papers text-center">
-      <NuxtImg src="/images/illustrations/empty-state.svg" alt="working" />
-      <span>There are no papers available.<br />We are working on it!</span>
+    <div v-if="papers.length === 0" class="no-papers text-center" >
+      <emptyImg  alt="working" viewBox="0 0 650 900"/>
+      <span style="margin-top:-100px">There are no papers available.<br />We are working on it!</span>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import emptyImg from "../../public/images/illustrations/empty-state.svg?component";
 
 // Types
 interface Paper {
@@ -190,6 +190,14 @@ onMounted(async () => {
   align-items: center;
   justify-content: center;
   text-align: center;
+  padding: 20px;
+}
+
+.empty-img {
+  max-height: 300px; /* Prevents the image from becoming too tall */
+  width: auto; /* Maintains the aspect ratio */
+  object-fit: contain; /* Ensures no part of the image is cut off */
+  margin-bottom: 16px; /* Adds spacing between the image and text */
 }
 
 h5 a {
@@ -214,7 +222,4 @@ h5 a:hover {
   height: 100px;
 }
 
-img {
-  height: 300px;
-}
 </style>

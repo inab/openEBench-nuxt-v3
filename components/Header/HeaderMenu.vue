@@ -5,22 +5,14 @@
         <div class="flex items-center nav-wrapper px-3">
           <div class="text-lg font-bold">
             <NuxtLink to="/" class="navbar-brand">
-              <img
-                src="/assets/images/opeb_logo.gif"
-                alt="OpenEBench"
-                width="80"
-                class="navbar-logo d-inline-block align-top"
-              />
+              <img src="/assets/images/opeb_logo.gif" alt="OpenEBench" width="80"
+                class="navbar-logo d-inline-block align-top" />
             </NuxtLink>
           </div>
           <nav class="flex-grow">
             <div class="nav-mobile">
-              <button
-                id="navbar-toggle"
-                class="navbar-burger flex items-center text-blue-600 p-3"
-                :class="[toggleMenu ? 'active' : 'collapsing']"
-                @click="handleToggleMenu"
-              >
+              <button id="navbar-toggle" class="navbar-burger flex items-center text-blue-600 p-3"
+                :class="[toggleMenu ? 'active' : 'collapsing']" @click="handleToggleMenu">
                 <span></span>
               </button>
             </div>
@@ -28,118 +20,64 @@
               <div class="nav-list-items top-full">
                 <ul class="nav-list-items-ul w-100">
                   <li>
-                    <NuxtLink
-                      to="/benchmarking"
-                      class="nav-link flex md:inline-flex items-center hover:bg-gray-50"
-                      :class="{ active: isActive('/benchmarking') }"
-                      @click="closeMenu"
-                    >
+                    <NuxtLink to="/benchmarking" class="nav-link flex md:inline-flex items-center hover:bg-gray-50"
+                      :class="{ active: isActive('/benchmarking') }" @click="closeMenu">
                       <span>Benchmarking</span>
                     </NuxtLink>
                   </li>
                   <li>
-                    <NuxtLink
-                      to="/projects"
-                      class="nav-link flex md:inline-flex items-center hover:bg-gray-50"
-                      :class="{ active: isActive('/projects') }"
-                      @click="closeMenu"
-                    >
+                    <NuxtLink to="/projects" class="nav-link flex md:inline-flex items-center hover:bg-gray-50"
+                      :class="{ active: isActive('/projects') }" @click="closeMenu">
                       <span>Projects</span>
                     </NuxtLink>
                   </li>
                   <li>
-                    <NuxtLink
-                      to="/tool"
-                      class="nav-link flex md:inline-flex items-center hover:bg-gray-50"
-                      :class="{ active: isActive('/tool') }"
-                      @click="closeMenu"
-                    >
+                    <NuxtLink to="/tool" class="nav-link flex md:inline-flex items-center hover:bg-gray-50"
+                      :class="{ active: isActive('/tool') }" @click="closeMenu">
                       <span>Tools</span>
                     </NuxtLink>
                   </li>
                   <!-- Dropdown para Observatory -->
                   <li class="nav-item dropdown">
-                    <a
-                      id="observatoryDropdown"
-                      class="nav-link dropdown-toggle md:inline-flex items-center hover:bg-gray-50 space-x-1"
-                      href="#"
-                      role="button"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
-                      :class="{ active: isActiveObservatory }"
-                    >
+                    <a id="observatoryDropdown"
+                      class="nav-link dropdown-toggle md:inline-flex items-center hover:bg-gray-50 space-x-1" href="#"
+                      role="button" data-bs-toggle="dropdown" aria-expanded="false">
                       <span>Observatory</span>
-                      <UIcon
-                        name="i-heroicons-chevron-right-20-solid"
+                      <UIcon name="i-heroicons-chevron-right-20-solid"
                         class="transform transition-transform duration-200 text-2xl"
-                        :class="{ 'rotate-90': dropdownStates.observatory }"
-                      />
+                        :class="{ 'rotate-90': dropdownStates.observatory }" />
                     </a>
-                    <ul
-                      class="dropdown-menu submenu-observatory shadow-xl"
-                      aria-labelledby="observatoryDropdown"
-                    >
-                      <li
-                        v-for="(item, index) in subMenuEntriesObservatory"
-                        :key="index"
-                        class="hover:bg-gray-100 text-sm py-2"
-                      >
-                        <NuxtLink
-                          :to="item.to"
-                          class="flex items-center w-full h-full"
-                          @click="closeMenu"
-                        >
-                          {{ item.title }}
-                        </NuxtLink>
+                    <ul class="dropdown-menu submenu-observatory shadow-xl">
+                      <li v-for="(item, index) in subMenuEntriesObservatory" :key="index"
+                        class="hover:bg-gray-100 text-sm py-2">
+                        <a href="#" class="flex items-center w-full h-full" @click.prevent="goToObservatory(index)">
+                          {{ item.label }}
+                        </a>
                       </li>
                     </ul>
                   </li>
                   <li>
-                    <NuxtLink
-                      to="https://openebench.readthedocs.io/en/latest/introduction/1_overview.html"
-                      target="blanck"
-                      class="nav-link flex md:inline-flex items-center hover:bg-gray-50 space-x-2"
-                      @click="closeMenu"
-                    >
+                    <NuxtLink to="https://openebench.readthedocs.io/en/latest/introduction/1_overview.html"
+                      target="blanck" class="nav-link flex md:inline-flex items-center hover:bg-gray-50 space-x-2"
+                      @click="closeMenu">
                       <span>Docs</span>
-                      <font-awesome-icon
-                        :icon="['fas', 'arrow-up-right-from-square']"
-                        size="xs"
-                      />
+                      <font-awesome-icon :icon="['fas', 'arrow-up-right-from-square']" size="xs" />
                     </NuxtLink>
                   </li>
                   <!-- Dropdown para About -->
                   <li class="nav-item dropdown">
-                    <a
-                      id="aboutDropdown"
-                      class="nav-link dropdown-toggle md:inline-flex items-center hover:bg-gray-50 space-x-1"
-                      href="#"
-                      role="button"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
-                      :class="{ active: isActiveAbout }"
-                    >
+                    <a id="aboutDropdown"
+                      class="nav-link dropdown-toggle md:inline-flex items-center hover:bg-gray-50 space-x-1" href="#"
+                      role="button" data-bs-toggle="dropdown" aria-expanded="false" :class="{ active: isActiveAbout }">
                       <span>About</span>
-                      <UIcon
-                        name="i-heroicons-chevron-right-20-solid"
+                      <UIcon name="i-heroicons-chevron-right-20-solid"
                         class="transform transition-transform duration-200 text-2xl"
-                        :class="{ 'rotate-90': dropdownStates.about }"
-                      />
+                        :class="{ 'rotate-90': dropdownStates.about }" />
                     </a>
-                    <ul
-                      class="dropdown-menu submenu-about shadow-xl md:rounded-b"
-                      aria-labelledby="aboutDropdown"
-                    >
-                      <li
-                        v-for="(item, index) in subMenuEntriesAbout"
-                        :key="index"
-                        class="hover:bg-gray-100 text-sm py-2"
-                      >
-                        <NuxtLink
-                          :to="item.to"
-                          class="flex items-center w-full h-full"
-                          @click="closeMenu"
-                        >
+                    <ul class="dropdown-menu submenu-about shadow-xl md:rounded-b" aria-labelledby="aboutDropdown">
+                      <li v-for="(item, index) in subMenuEntriesAbout" :key="index"
+                        class="hover:bg-gray-100 text-sm py-2">
+                        <NuxtLink :to="item.to" class="flex items-center w-full h-full" @click="closeMenu">
                           {{ item.title }}
                         </NuxtLink>
                       </li>
@@ -148,97 +86,55 @@
                 </ul>
               </div>
               <div class="nav-list-items-direct top-full hidden sm:flex">
-                <button
-                  id="btn-benchmark"
-                  class="text-primaryOeb-500 border-1 border-primaryOeb-800 hover:bg-primaryOeb-50 font-medium rounded-md text-sm px-2.5 py-2 me-2"
-                >
-                  <a
-                    :href="runtimeConfig.public.VRE_URI"
-                    target="_blank"
-                    class="text-primaryOeb-500"
-                    style="text-decoration: none"
-                    @click="closeMenu"
-                  >
+                <button id="btn-benchmark"
+                  class="text-primaryOeb-500 border-1 border-primaryOeb-800 hover:bg-primaryOeb-50 font-medium rounded-md text-base px-3 py-2 me-2">
+                  <a :href="runtimeConfig.public.VRE_URI" target="_blank" class="text-primaryOeb-500"
+                    style="text-decoration: none" @click="closeMenu">
                     Benchmark your tool
-                    <font-awesome-icon
-                      :icon="['fas', 'arrow-up-right-from-square']"
-                      size="sm"
-                      class="ml-1"
-                    />
+                    <font-awesome-icon :icon="['fas', 'arrow-up-right-from-square']" size="sm" class="ml-1" />
                   </a>
                 </button>
 
                 <template v-if="data">
                   <div id="profile" class="nav-item dropdown-login dropdown">
-                    <a
-                      id="loginDropdown"
-                      color="white"
+                    <a id="loginDropdown" color="white"
                       class="nav-link dropdown-toggle md:inline-flex items-center space-x-0 text-primaryOeb-500 hover:bg-primaryOeb-50"
-                      trailing-icon="i-heroicons-chevron-down-20-solid"
-                      href="#"
-                      role="button"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
-                    >
-                      <UIcon
-                        name="i-heroicons-user-circle-solid"
-                        class="w-5 h-5"
-                      />
+                      trailing-icon="i-heroicons-chevron-down-20-solid" href="#" role="button" data-bs-toggle="dropdown"
+                      aria-expanded="false">
+                      <UIcon name="i-heroicons-user-circle-solid" class="w-5 h-5" />
                       <span>{{ getUserNameIcon() }}</span>
-                      <UIcon
-                        name="i-heroicons-chevron-right-20-solid"
-                        class="transform transition-transform duration-200 text-2xl chevron-menu"
-                      />
+                      <UIcon name="i-heroicons-chevron-right-20-solid"
+                        class="transform transition-transform duration-200 text-2xl chevron-menu" />
                     </a>
-                    <ul
-                      class="dropdown-menu submenu-login shadow-xl md:rounded-b w-100"
-                      aria-labelledby="loginDropdown"
-                    >
-                      <li
-                        v-for="(item, index) in logInItems"
-                        :key="index"
+                    <ul class="dropdown-menu submenu-login shadow-xl md:rounded-b w-100"
+                      aria-labelledby="loginDropdown">
+                      <li v-for="(item, index) in logInItems" :key="index"
                         class="p-1 hover:bg-gray-100 text-sm py-2 divide-gray-200"
-                        :class="[item.slot ? 'item-border' : '']"
-                      >
+                        :class="[item.slot ? 'item-border' : '']">
                         <template v-if="item.slot && item.slot == 'account'">
-                          <div
-                            class="menu-item-header text-left disabled opacity-50"
-                          >
+                          <div class="menu-item-header text-left disabled opacity-50">
                             <div>Signed in as</div>
-                            <div
-                              class="truncate font-medium text-gray-900 dark:text-white"
-                            >
+                            <div class="truncate font-medium text-gray-900 dark:text-white">
                               {{ item.label }}
                             </div>
                           </div>
                         </template>
                         <template v-else>
                           <template v-if="item.href">
-                            <NuxtLink
-                              :to="item.href"
-                              class="flex items-center w-full h-full"
-                              @click="closeMenu"
-                            >
+                            <NuxtLink :to="item.href" class="flex items-center w-full h-full" @click="closeMenu">
                               <div class="menu-login-item w-100">
                                 <span class="truncate">{{ item.label }}</span>
-                                <UIcon
-                                  :name="item.icon"
-                                  class="flex-shrink-0 h-4 w-4 text-gray-400 dark:text-gray-500 ms-auto"
-                                />
+                                <UIcon :name="item.icon"
+                                  class="flex-shrink-0 h-4 w-4 text-gray-400 dark:text-gray-500 ms-auto" />
                                 <span class="ripple-effect"></span>
                               </div>
                             </NuxtLink>
                           </template>
                           <template v-else>
-                            <div
-                              class="menu-login-item"
-                              @click="item.click ? item.click() : ''"
-                            >
+                            <div class="menu-login-item" @click="item.click ? item.click() : ''">
                               <span class="truncate">{{ item.label }}</span>
-                              <UIcon
-                                :name="item.icon"
-                                class="flex-shrink-0 h-4 w-4 text-gray-400 dark:text-gray-500 ms-auto"
-                              />
+                              <UIcon :name="item.icon"
+                                class="flex-shrink-0 h-4 w-4 text-gray-400 dark:text-gray-500 ms-auto" />
                             </div>
                           </template>
                         </template>
@@ -247,16 +143,10 @@
                   </div>
                 </template>
                 <template v-else>
-                  <button
-                    id="btn-login"
-                    class="ripple text-white bg-primaryOeb-500 hover:bg-primaryOeb-400 font-medium rounded-md text-sm px-2.5 py-2"
-                    @click="handleLogin"
-                  >
-                    <font-awesome-icon
-                      :icon="['fas', 'arrow-right-to-bracket']"
-                      size="sm"
-                      class="mr-1"
-                    />
+                  <button id="btn-login"
+                    class="ripple text-white bg-primaryOeb-500 hover:bg-primaryOeb-400 font-medium rounded-md text-base  px-3 py-2"
+                    @click="handleLogin">
+                    <font-awesome-icon :icon="['fas', 'arrow-right-to-bracket']" size="sm" class="mr-1" />
                     Login
                     <span class="ripple-effect"></span>
                   </button>
@@ -264,11 +154,7 @@
               </div>
             </div>
             <!-- Overlay div -->
-            <div
-              v-if="toggleMenu"
-              class="nav-overlay"
-              @click="handleToggleMenu"
-            ></div>
+            <div v-if="toggleMenu" class="nav-overlay" @click="handleToggleMenu"></div>
           </nav>
         </div>
       </div>
@@ -278,10 +164,19 @@
 
 <script setup lang="ts">
 import { ref, watch, computed } from "vue";
-import { useRoute } from "vue-router";
-import menuEntries from "~/components/Header/HeaderMenu/menuEntries";
+import { useRouter } from "vue-router";
 import subMenuEntriesObservatory from "./HeaderMenu/subMenuEntriesObservatory";
 import subMenuEntriesAbout from "./HeaderMenu/subMenuEntriesAbout";
+import { activeTabIndex } from '@/components/Common/state.js';
+
+
+const router = useRouter();
+
+function goToObservatory(index: number) {
+  activeTabIndex.value = index;
+  router.push("/observatory");
+}
+
 
 const { data, signIn, signOut } = useAuth();
 
@@ -417,6 +312,7 @@ function closeMenu() {
 
   .navbar-brand {
     height: 65px;
+
     img {
       width: 85px;
     }
@@ -429,9 +325,11 @@ function closeMenu() {
     display: flex;
     color: rgba(0, 0, 0, 0.65);
     cursor: pointer;
+
     &:hover {
       color: #0b579f;
     }
+
     &.active {
       color: #0b579f;
     }
@@ -516,7 +414,7 @@ function closeMenu() {
     opacity: 0;
   }
 
-  .nav-offcanvas.show + .nav-overlay {
+  .nav-offcanvas.show+.nav-overlay {
     transition:
       width 0.3s ease-in-out,
       opacity 0.3s ease-in-out;
@@ -584,8 +482,10 @@ function closeMenu() {
     text-decoration: none;
     color: rgb(33, 37, 41);
   }
+
   .dropdown-menu li:hover {
     color: theme("colors.primaryOeb.500");
+
     a {
       color: theme("colors.primaryOeb.500");
     }
@@ -625,8 +525,10 @@ function closeMenu() {
     text-decoration: none;
     color: rgb(33, 37, 41);
   }
+
   .dropdown-menu li:hover {
     color: theme("colors.primaryOeb.500");
+
     a {
       color: theme("colors.primaryOeb.500");
     }
@@ -714,9 +616,11 @@ function closeMenu() {
     #btn-benchmark {
       margin-left: 16px;
     }
+
     #profile {
       left: -16px;
     }
+
     #btn-login {
       margin-top: 16px;
     }
@@ -791,6 +695,7 @@ function closeMenu() {
 
     .nav-list-items-direct {
       padding: 0;
+
       .dropdown-login {
         width: 100%;
       }

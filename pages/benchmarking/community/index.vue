@@ -114,7 +114,7 @@ import CommunityDataset from "@/components/Community/CommunityDataset/CommunityD
 import CommunityTools from "@/components/Community/CommunityTools/CommunityTools.vue";
 import CommunityEventSummary from "@/components/Community/CommunityEvent/CommunityEventSummary.vue";
 import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
-import noDataAvailable from "@/layouts/noDataAvailable.vue";
+import noDataAvailable from "@/layouts/noDataAvailableCard.vue";
 import { useCommunity } from "@/stores/community";
 
 const route = useRoute();

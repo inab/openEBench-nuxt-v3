@@ -2,20 +2,13 @@
   <div class="container mx-auto">
     <!-- Loader -->
     <div v-if="loading" class="loader-container">
-      <img
-        src="~/assets/images/201805.OpenEBench.logo.Animated.0050secs.gif"
-        alt="Loader GIF"
-        class="loader"
-      />
+      <img src="~/assets/images/201805.OpenEBench.logo.Animated.0050secs.gif" alt="Loader GIF" class="loader" />
     </div>
 
     <!-- No Posters Available -->
-    <div
-      v-if="!loading && paginatedPosters.length === 0"
-      class="no-posters text-center"
-    >
-      <NuxtImg src="/images/illustrations/empty-state.svg" alt="working" />
-      <span>There are no posters available.<br />We are working on it!</span>
+    <div v-if="!loading && paginatedPosters.length === 0" class="no-posters text-center">
+      <emptyImg alt="working" viewBox="0 0 650 900" />
+      <span style="margin-top:-100px">There are no posters available.<br />We are working on it!</span>
     </div>
 
     <!-- Posters Section -->
@@ -28,28 +21,17 @@
         </div>
 
         <div class="selected-poster-details">
-          <embed
-            :src="getPosterPath(selectedPoster.poster)"
-            type="application/pdf"
-            class="poster-embed"
-          />
+          <embed :src="getPosterPath(selectedPoster.poster)" type="application/pdf" class="poster-embed" />
           <h3 class="poster-title mt-4">
             <a :href="selectedPoster.link" target="_blank" class="poster-link">
               {{ selectedPoster.title }}
-              <font-awesome-icon
-                :icon="['fas', 'arrow-up-right-from-square']"
-                size="xs"
-                class="mx-2"
-              />
+              <font-awesome-icon :icon="['fas', 'arrow-up-right-from-square']" size="xs" class="mx-2" />
             </a>
           </h3>
           <br />
           <p v-if="selectedPoster.authors && selectedPoster.authors.length > 0">
             <b>Authors:</b>
-            <span
-              v-for="(author, index) in selectedPoster.authors"
-              :key="index"
-            >
+            <span v-for="(author, index) in selectedPoster.authors" :key="index">
               {{ author }}
               <span v-if="index < selectedPoster.authors.length - 1">, </span>
             </span>
@@ -60,28 +42,19 @@
           </p>
           <p>
             <b>Abstract:</b><br />
-            <span
-              v-html="
-                sanitizeHtml(
-                  getFormattedAbstract(
-                    selectedPoster.abstract,
-                    showFullAbstract,
-                  ),
-                )
-              "
-            ></span>
-            <span
-              v-if="shouldShowExpandIcon(selectedPoster.abstract)"
-              class="cursor-pointer text-primary ml-2"
-              @click="toggleShowFullAbstract"
-            >
-              <UIcon
-                :name="
-                  showFullAbstract
-                    ? 'i-heroicons-minus-16-solid'
-                    : 'i-heroicons-plus-16-solid'
-                "
-              />
+            <span v-html="sanitizeHtml(
+              getFormattedAbstract(
+                selectedPoster.abstract,
+                showFullAbstract,
+              ),
+            )
+              "></span>
+            <span v-if="shouldShowExpandIcon(selectedPoster.abstract)" class="cursor-pointer text-primary ml-2"
+              @click="toggleShowFullAbstract">
+              <UIcon :name="showFullAbstract
+                  ? 'i-heroicons-minus-16-solid'
+                  : 'i-heroicons-plus-16-solid'
+                " />
             </span>
           </p>
           <p>
@@ -92,9 +65,7 @@
       </div>
 
       <div v-else class="mt-8">
-        <div
-          class="license-text p-4 bg-light rounded text-center font-weight-bold mb-4"
-        >
+        <div class="license-text p-4 bg-light rounded text-center font-weight-bold mb-4">
           This is an open access work distributed under the terms of the
           Creative Commons Attribution License, which permits unrestricted use,
           distribution, and reproduction in any medium, provided the original
@@ -102,53 +73,26 @@
         </div>
 
         <div class="row">
-          <div
-            v-for="poster in paginatedPosters"
-            :key="poster.title"
-            class="col-12 col-md-6 mb-4"
-          >
+          <div v-for="poster in paginatedPosters" :key="poster.title" class="col-12 col-md-6 mb-4">
             <div class="card h-100 shadow-sm d-flex flex-column">
               <!-- Thumbnail -->
-              <embed
-                :src="getPosterPath(poster.poster)"
-                type="application/pdf"
-                class="card-img-top"
-              />
+              <embed :src="getPosterPath(poster.poster)" type="application/pdf" class="card-img-top" />
 
               <div class="card-body d-flex flex-column justify-content-between">
                 <!-- Title -->
-                <h5
-                  class="card-title cursor-pointer text-center"
-                  @click="selectPoster(poster)"
-                >
-                  <span
-                    v-html="sanitizeHtml(formattedTitle(poster.title))"
-                  ></span>
+                <h5 class="card-title cursor-pointer text-center" @click="selectPoster(poster)">
+                  <span v-html="sanitizeHtml(formattedTitle(poster.title))"></span>
                 </h5>
               </div>
 
               <!-- Buttons (CC & DOI) and Date at the Bottom -->
-              <div
-                class="card-footer mt-auto d-flex flex-column align-items-center"
-              >
+              <div class="card-footer mt-auto d-flex flex-column align-items-center">
                 <div class="mx-2 chip">
-                  <a
-                    class="chip-icon"
-                    target="_blank"
-                    href="https://creativecommons.org/licenses/by/4.0/deed.en"
-                  >
-                    <img
-                      src="@/static/posters/cc.png"
-                      alt="CC"
-                      class="logo chip-with-logo"
-                    />
+                  <a class="chip-icon" target="_blank" href="https://creativecommons.org/licenses/by/4.0/deed.en">
+                    <img src="@/static/posters/cc.png" alt="CC" class="logo chip-with-logo" />
                   </a>
                   <a target="_blank" :href="poster.link" class="chip-icon">
-                    <img
-                      src="@/static/posters/doi.png"
-                      alt="doi"
-                      class="logo chip-with-logo"
-                    />
+                    <img src="@/static/posters/doi.png" alt="doi" class="logo chip-with-logo" />
                   </a>
                 </div>
                 <p class="card-date text-muted text-center m-0">
@@ -161,13 +105,8 @@
 
         <!-- Pagination using Nuxt UI -->
         <div v-if="pageCount > 1" class="pagination-container">
-          <UPagination
-            :active-button="{ variant: 'outline' }"
-            :inactive-button="{ color: 'gray' }"
-            :model-value="currentPage"
-            :total="sortedPosters.length"
-            @update:model-value="changePage"
-          />
+          <UPagination :active-button="{ variant: 'outline' }" :inactive-button="{ color: 'gray' }"
+            :model-value="currentPage" :total="sortedPosters.length" @update:model-value="changePage" />
         </div>
       </div>
     </div>
@@ -176,6 +115,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
+import emptyImg from "../../public/images/illustrations/empty-state.svg?component";
 import DOMPurify from "dompurify";
 
 // Define the type for a poster

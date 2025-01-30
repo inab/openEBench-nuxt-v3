@@ -2,6 +2,7 @@
   <div>
     <HeaderMenu />
     <div class="py-4 my-3"></div>
+    <ScrollToTop/>
     <NuxtPage />
     <TheFooter />
     <div>
@@ -16,7 +17,7 @@
 
 <script setup lang="ts">
 import HeaderMenu from "~/components/Header/HeaderMenu.vue";
-import BreadcrumbsBar from "~/components/Common/BreadcrumbsBar.vue";
+import ScrollToTop from '~/components/Common/ArrowUp.vue';
 import TheFooter from "~/components/TheFooter.vue";
 // useHead({
 //   title:

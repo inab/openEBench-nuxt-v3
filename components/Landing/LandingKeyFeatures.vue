@@ -60,7 +60,7 @@ AOS.init();
     display: flex;
     font-size: 18px;
     align-items: center;
-    cursor: pointer;
+    cursor: default;
     position: relative;
     padding-bottom: 20px;
     text-align: center;

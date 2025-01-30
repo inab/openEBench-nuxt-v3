@@ -1,36 +1,41 @@
 // Displayed in Header and Footer
 
-const subMenuEntriesObservatory = [
+const tabsItems = [
   {
-    title: "Trends",
-    title_hide: "Trends",
-    to: "/observatory/Trends",
-    icon: "mdi-chart-line",
+    label: "Trends",
+    slot: "trends",
+    icon: "i-charm-chart-line",
+    path: "observatory/",
+    index: 0,
   },
   {
-    title: "FAIRness Scoreboard",
-    title_hide: "FAIRness Scoreboard",
-    to: "/observatory/FAIRness",
-    icon: "mdi-bullseye",
+    label: "FAIRness Scoreboard",
+    slot: "fairness",
+    icon: "i-charm-disc",
+    path: "observatory/",
+    index: 1,
   },
   {
-    title: "FAIR Evaluator",
-    title_hide: "FAIR Evaluator",
-    to: "/observatory/Evaluation",
-    icon: "mdi-check-circle-outline",
+    label: "FAIRsoft Evaluator",
+    slot: "fairsoft",
+    icon: "i-cil-check-circle",
+    path: "observatory/",
+    index: 2,
   },
   {
-    title: "Data",
-    title_hide: "Observatory Data",
-    to: "/observatory/Data",
-    icon: "mdi-database",
+    label: "Data",
+    slot: "data",
+    icon: "i-dashicons-database",
+    path: "observatory/",
+    index: 3,
   },
   {
-    title: "About",
-    title_hide: "Observatory About",
-    to: "/observatory/About",
-    icon: "mdi-information",
+    label: "About",
+    slot: "about",
+    icon: "i-zondicons-information-solid",
+    path: "observatory/",
+    index: 4,
   },
 ];
 
-export default subMenuEntriesObservatory;
+export default tabsItems;

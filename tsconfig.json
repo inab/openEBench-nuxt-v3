@@ -2,12 +2,15 @@
   "compilerOptions": {
     "target": "esnext",
     "module": "esnext",
+    "typeRoots": ["./types", "./node_modules/@types"],
     "moduleResolution": "node",
     "strict": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "#app": ["./.nuxt/types/app"]
     }
   },
+  "include": ["src/**/*", "types/**/*.d.ts", "shims-vue.d.ts"],
   "exclude": ["node_modules", ".nuxt", "dist"]
 }

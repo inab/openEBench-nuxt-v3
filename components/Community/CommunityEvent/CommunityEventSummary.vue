@@ -31,6 +31,7 @@ const markup = computed(() =>
     h1 {
       padding-top: 0;
       color: #396fba;
+      font-size: 38px;
     }
     a {
       color: #0b579f;
@@ -39,6 +40,9 @@ const markup = computed(() =>
         text-decoration: underline;
         color: #6a98c4;
       }
+    }
+    strong{
+      font-weight: 500;
     }
     h2,
     h3 {
