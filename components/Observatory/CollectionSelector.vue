@@ -8,7 +8,8 @@
 
       <!-- Carousel -->
       <div class="relative">
-        <Carousel :items-to-show="5" :wrap-around="false" :snap-align="'center'" :transition="500" :scrollPerPage="true"
+        <Carousel :key="carouselKey" :items-to-show="5" :wrap-around="false" :snap-align="'center'" :transition="500"
+          :scrollPerPage="true" :mouse-drag="true" :touch-drag="true"
           class="my-3 relative px-4 md:px-8 custom-carousel">
           <Slide v-for="(slide, index) in collections" :key="index">
             <div class="carousel__item mt-3 mx-1">
@@ -23,7 +24,7 @@
 
           <!-- Navigation Arrows -->
           <template #addons>
-            <Navigation prev-class="carousel__prev" next-class="carousel__next" />
+            <Navigation prev-class="carousel__prev" next-class="carousel__next" @click="forceUpdate" />
           </template>
 
 
@@ -56,11 +57,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue';
+import { watch, computed, nextTick } from 'vue';
 import { useObservatory } from '@/stores/observatory/index.js';
 import { useFairness } from '@/stores/observatory/fairness';
 import { useTrends } from '@/stores/observatory/trends';
 import { useData } from '@/stores/observatory/data';
+import { activeTabIndex } from '@/components/Common/state.js';
 
 // Store
 const observatoryStore = useObservatory();
@@ -72,20 +74,36 @@ const dataStore = useData();
 const collections = computed(() => observatoryStore.getCollections);
 const selectedCollection = computed(() => observatoryStore.selectedCollection);
 
+const carouselKey = ref(0);
+
+watch(activeTabIndex, () => {
+  carouselKey.value += 1;
+});
+
 // Auto-scroll logic
 function scrollToButton(index: number) {
   nextTick(() => {
+    const carousel = document.querySelector(".carousel__track");
     const buttons = document.querySelectorAll('.carousel__item button');
 
-    if (!buttons || !buttons[index]) {
-      console.warn(`Button at index ${index} not found.`);
-      return;
-    }
+    if (carousel && buttons[index]) {
+      const button = buttons[index];
+      const buttonLeft = button.getBoundingClientRect().left;
+      const carouselLeft = carousel.getBoundingClientRect().left;
 
-    // Scroll to the button
-    buttons[index].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      // Check if the button is outside the visible area
+      if (buttonLeft < carouselLeft || buttonLeft > window.innerWidth) {
+        carousel.scrollBy({ left: buttonLeft - carouselLeft, behavior: "smooth" });
+      }
+    }
   });
 }
+
+watch(selectedCollection, (newIndex) => {
+  nextTick(() => {
+    scrollToButton(newIndex);
+  });
+});
 
 
 function setCollection(index: number | null) {
@@ -140,6 +158,15 @@ function triggerDataRefresh() {
 function getImagePath(image: string) {
   return new URL(`/assets/images/collections/${image}`, import.meta.url).href;
 }
+
+function forceUpdate() {
+  nextTick(() => {
+    const carousel = document.querySelector(".carousel__track");
+    if (carousel) {
+      carousel.scrollBy({ left: 200, behavior: "smooth" });
+    }
+  });
+}
 </script>
 
 <style scoped>
@@ -163,7 +190,6 @@ function getImagePath(image: string) {
   background-color: white !important;
   top: 50% !important;
   margin: 0 20px !important;
-  /* Added margin to separate from buttons */
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -242,7 +268,6 @@ function getImagePath(image: string) {
 .collection-image {
   width: 100%;
   max-width: 100px;
-  /* Adjusted size for smaller screens */
   transition: transform 0.3s ease;
 }
 
