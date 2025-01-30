@@ -56,6 +56,7 @@
   </div>
 </template>
 
+
 <script setup lang="ts">
 import { watch, computed, nextTick } from 'vue';
 import { useObservatory } from '@/stores/observatory/index.js';
