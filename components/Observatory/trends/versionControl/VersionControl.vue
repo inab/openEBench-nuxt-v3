@@ -7,7 +7,7 @@
         <div class="text-center mt-4">
             <div class="flex flex-wrap lg:flex-nowrap lg:h-full"> <!-- Left Column: Description -->
                 <div class="flex-1 lg:w-2/3  flex flex-col justify-center lg:h-full">
-                    <h6 class="text-2xl font-semibold text-center lg:text-left"> Repositories and Version Control </h6>
+                    <h6 class="text-2xl font-semibold text-center lg:text-left "> Repositories and Version Control </h6>
                     <p class="text-sm text-gray-700 mt-2 card-content-vs leading-relaxed text-center lg:text-left">
                         Making software available through any of the main software repositories makes it more <span
                             class="highlight">Findable</span> and <span class="highlight">Accessible</span>. </p>
