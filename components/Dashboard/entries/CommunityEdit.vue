@@ -119,7 +119,7 @@
                                 <label for="status">Status</label>
                                 <USelectMenu
                                   v-model="localStatus.value"
-                                  class="custom-select-input"
+                                  class="w-full custom-select-input"
                                   selected-icon="i-heroicons-hand-thumb-up-solid"
                                   :options="CommunityStatusLabels"
                                   :disabled="
@@ -160,7 +160,7 @@
                                 <label for="type">Type</label>
                                 <USelect
                                   v-model="state.type"
-                                  class="custom-select-input"
+                                  class="w-full custom-select-input"
                                   :options="typeOptions"
                                   option-attribute="label"
                                   :disabled="
@@ -435,9 +435,6 @@
                     </div>
                   </div>
                   <div class="form-footer">
-                    <UButton type="button" @click="goBack">
-                      Cancel
-                    </UButton>
                     <UButton
                       v-if="commmunityPrivileges.community.update && !isView"
                       type="submit"
@@ -446,6 +443,9 @@
                       "
                     >
                       Submit
+                    </UButton>
+                    <UButton type="button" @click="goBack" color="white" variant="solid">
+                      Cancel
                     </UButton>
                   </div>
                 </div>
@@ -468,7 +468,6 @@
     <CustomDialog
       :is-dialog-open="isDialogOpened"
       :width="400"
-      @modal-close="dialogShow"
     >
       <template #header>
         {{ dialogTitle }}
@@ -478,21 +477,22 @@
       </template>
       <template #footer>
         <template v-if="dialogType && dialogType === 'yesno'">
+          <button type="button" class="btn-primary dialog-btn" @click="deleteElement">
+            Yes
+          </button>
           <button
             type="button"
-            class="btn-primary"
+            class="btn-primary dialog-btn dialog-btn--no"
+            color="gray" variant="solid"
             @click="isDialogOpened = false"
           >
             No
-          </button>
-          <button type="button" class="btn-primary" @click="deleteElement">
-            Yes
           </button>
         </template>
         <template v-else>
           <button
             type="button"
-            class="btn-primary"
+            class="btn-primary dialog-btn"
             @click="isDialogOpened = false"
           >
             Cancel
@@ -521,7 +521,7 @@ import EventsList from "@/components/Dashboard/entries/EventsList.vue";
 import CustomSubtitle from "@/components/Common/CustomSubtitle.vue";
 import { useRouter } from "vue-router";
 import CustomDialog from "@/components/Common/CustomDialog.vue";
-import { object, string, array, safeParse, optional } from "valibot";
+import { object, string, array, safeParse } from "valibot";
 import CustomBorder from "@/components/Common/CustomBorder.vue";
 import CustomTab from "@/components/Common/CustomTab.vue";
 import CustomTabBody from "@/components/Common/CustomTabBody.vue";
@@ -825,11 +825,7 @@ function goBack() {
 
 async function onSubmitCommunity(event: FormSubmitEvent<Schema>) {
   //event.preventDefault();
-
   const result = safeParse(schema, state.value);
-
-  console.log(state.value);
-
   if (result.success) {
     const customErrors = validateRequiredFields(state.value);
 

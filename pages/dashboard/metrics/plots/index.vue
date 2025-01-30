@@ -136,8 +136,6 @@ if (plotSelected.value == "scatter") {
   plotSelected.value = "bar-plot";
 }
 
-console.log(plotSelected.value);
-
 const HEADER_ITEM = [
   {
     label: "Plots",

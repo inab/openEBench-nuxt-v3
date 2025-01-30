@@ -297,7 +297,6 @@ export const useUser = defineStore("user", {
 
     setCommunityPrivileges(data: Community[]): Community[] {
       const userPrivileges = this.getUserCommunitiesRoles;
-      console.log(userPrivileges);
       data.forEach((community: Community) => {
         community.actions = [];
         community.privileges = "None";

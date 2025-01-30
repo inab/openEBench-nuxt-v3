@@ -40,8 +40,6 @@ vi.mock("#app", () => ({
 
 global.$fetch = vi.fn(() => Promise.resolve([])); 
 
-const totalMetrics = ref(0);
-const getMetricsByType = vi.fn();
 const runtimeConfig = {
   public: {
     SCIENTIFIC_SERVICE_URL_API:

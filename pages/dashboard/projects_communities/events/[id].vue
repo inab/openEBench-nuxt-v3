@@ -106,9 +106,9 @@ if (userPrivileges.value.length == 0) {
 }
 
 const eventPrivileges = computed(() => {
-  const isAdmin = userPrivileges.value.filter(
-    (privilege) => privilege.role === "admin",
-  );
+  const isAdmin = userPrivileges.value.filter((privilege) => {
+    privilege.role === "admin";
+  });
   if (isAdmin.length > 0) {
     return privileges.admin;
   }

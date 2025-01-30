@@ -36,16 +36,16 @@ export interface CommunityMetadata {
 }
 
 export interface Community {
-  _id: number;
+  _id: string;
   name: string;
-  acronym: string;
-  logo: string;
-  links: Array<string>;
-  keywords: Array<string>;
-  description: string;
+  acronym?: string;
+  logo?: string;
+  links?: Array<string>;
+  keywords?: Array<string>;
+  description?: string;
   status: CommunityStatus;
-  community_contact_ids: Array<string>;
-  to: string;
+  community_contact_ids?: Array<string>;
+  to?: string;
   _metadata: CommunityMetadata;
   privileges?: string;
   actions?: Array<CommunityPrivileges>;

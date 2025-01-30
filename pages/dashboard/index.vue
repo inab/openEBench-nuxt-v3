@@ -363,7 +363,6 @@ async function countTotalContacts() {
 }
 
 async function getMetricsByType(metrics) {
-  console.log("Metricss", metrics);
   const typeMap = {
     visualization: "Bar Plot",
     optimization: "Scatter Plot",
@@ -380,7 +379,6 @@ async function getMetricsByType(metrics) {
         (item) => item.name === typeMap.visualization,
       );
       type[0].total += 1;
-      console.log("Bar Plot", type[0].total);
     } else if (
       metric.representation_hints &&
       metric.representation_hints.optimization
@@ -391,8 +389,6 @@ async function getMetricsByType(metrics) {
       type[0].total += 1;
     }
   });
-
-  console.log("metricsByType: " , metricsByType.value);
 }
 
 onMounted(() => {
