@@ -82,6 +82,7 @@ export default defineNuxtConfig({
   plugins: [
     "~/plugins/useGraphql",
     "~/plugins/useObservatory",
+    "~/plugins/useGithubapp",
     "~/plugins/useApi",
   ],
 
@@ -108,7 +109,7 @@ export default defineNuxtConfig({
         "https://observatory.openebench.bsc.es/api",
       GITHUBAPP_API_URL:
         process.env.GITHUBAPP_API_URL ||
-        "https://observatory.openebench.bsc.es/githubapp/api",
+        "https://observatory.openebench.bsc.es/github-metadata-api",
       MONITORING: {
         baseURL:
           process.env.REST_API_URL ||

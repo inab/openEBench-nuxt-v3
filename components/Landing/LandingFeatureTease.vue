@@ -3,18 +3,11 @@
     <div class="container">
       <h2 class="text-h4 mb-15">What can you do in OpenEBench?</h2>
       <div class="row landing-feature-tease__container">
-        <div
-          class="col-12 col-md-6 col-lg-3 landing-feature-tease__col"
-          data-aos="fade-up"
-          data-aos-duration="1000"
-        >
+        <div class="col-12 col-md-6 col-lg-3 landing-feature-tease__col" data-aos="fade-up" data-aos-duration="1000">
           <div class="landing-feature-tease__box">
-            <div class="landing-feature-tease__box__image">
-              <div
-                class="landing-feature-tease__box__image__1"
-                title="Scientific Benchmarking"
-              ></div>
-            </div>
+            <NuxtLink to="/benchmarking" class="landing-feature-tease__box__image">
+              <div class="landing-feature-tease__box__image__1" title="Scientific Benchmarking"></div>
+            </NuxtLink>
           </div>
           <div class="landing-feature-tease__text-container-box">
             <div class="landing-feature-tease__title">Benchmarks</div>
@@ -22,30 +15,20 @@
               Explore existing community-driven scientific benchmark results for
               Life Sciences software
             </p>
-            <NuxtLink
-              to="/benchmarking"
-              class="custom-btn primary btn-empty-filled landing-feature-btn"
-              title="Go to Benchmarks"
-            >
+            <NuxtLink to="/benchmarking" class="custom-btn primary btn-empty-filled landing-feature-btn"
+              title="Go to Benchmarks">
               Explore
             </NuxtLink>
           </div>
         </div>
-        <div
-          class="col-12 col-md-6 col-lg-3 landing-feature-tease__col"
-          data-aos="fade-up"
-          data-aos-duration="1000"
-          data-aos-delay="300"
-        >
+        <div class="col-12 col-md-6 col-lg-3 landing-feature-tease__col" data-aos="fade-up" data-aos-duration="1000"
+          data-aos-delay="300">
           <div class="landing-feature-tease__box">
-            <div class="landing-feature-tease__box__image">
-              <div
-                class="landing-feature-tease__box__image__2"
-                title="Scientific Benchmarking"
-              >
+            <NuxtLink to="/tool"  class="landing-feature-tease__box__image">
+              <div class="landing-feature-tease__box__image__2" title="Scientific Benchmarking">
                 <font-awesome-icon :icon="['fas', 'list-ol']" />
               </div>
-            </div>
+            </NuxtLink>
           </div>
           <div class="landing-feature-tease__text-container-box">
             <div class="landing-feature-tease__title">Tools & Metrics</div>
@@ -53,28 +36,18 @@
               Individually browse technical metrics for popular research
               software in Life Sciences
             </p>
-            <NuxtLink
-              to="/tool"
-              class="custom-btn primary btn-empty-filled landing-feature-btn"
-              title="Go to Tools & Metrics"
-            >
+            <NuxtLink to="/tool" class="custom-btn primary btn-empty-filled landing-feature-btn"
+              title="Go to Tools & Metrics">
               Explore
             </NuxtLink>
           </div>
         </div>
-        <div
-          class="col-12 col-md-6 col-lg-3 landing-feature-tease__col"
-          data-aos="fade-up"
-          data-aos-duration="1000"
-          data-aos-delay="400"
-        >
+        <div class="col-12 col-md-6 col-lg-3 landing-feature-tease__col" data-aos="fade-up" data-aos-duration="1000"
+          data-aos-delay="400">
           <div class="landing-feature-tease__box">
-            <div class="landing-feature-tease__box__image">
-              <div
-                class="landing-feature-tease__box__image__3"
-                title="Scientific Benchmarking"
-              ></div>
-            </div>
+            <NuxtLink to="/observatory/Trends"  class="landing-feature-tease__box__image">
+              <div class="landing-feature-tease__box__image__3" title="Scientific Benchmarking"></div>
+            </NuxtLink>
           </div>
           <div class="landing-feature-tease__text-container-box">
             <div class="landing-feature-tease__title">Tools Observatory</div>
@@ -82,28 +55,18 @@
               Quantitative monitoring of the technical quality of software in
               Life Sciences
             </p>
-            <NuxtLink
-              to="/observatory/Trends"
-              class="custom-btn primary btn-empty-filled landing-feature-btn"
-              title="Go to Tools Observatory"
-            >
+            <NuxtLink to="/observatory/Trends" class="custom-btn primary btn-empty-filled landing-feature-btn"
+              title="Go to Tools Observatory">
               Explore
             </NuxtLink>
           </div>
         </div>
-        <div
-          class="col-12 col-md-6 col-lg-3 landing-feature-tease__col"
-          data-aos="fade-up"
-          data-aos-duration="1000"
-          data-aos-delay="500"
-        >
+        <div class="col-12 col-md-6 col-lg-3 landing-feature-tease__col" data-aos="fade-up" data-aos-duration="1000"
+          data-aos-delay="500">
           <div class="landing-feature-tease__box">
-            <div class="landing-feature-tease__box__image">
-              <div
-                class="landing-feature-tease__box__image__4"
-                title="Scientific Benchmarking"
-              ></div>
-            </div>
+            <NuxtLink to="/projects" class="landing-feature-tease__box__image">
+              <div class="landing-feature-tease__box__image__4" title="Scientific Benchmarking"></div>
+            </NuxtLink>
           </div>
           <div class="landing-feature-tease__text-container-box">
             <div class="landing-feature-tease__title">Project Spaces</div>
@@ -111,11 +74,8 @@
               Community spaces for projects to collaborate on software in life
               sciences
             </p>
-            <NuxtLink
-              to="/projects"
-              class="custom-btn primary btn-empty-filled landing-feature-btn"
-              title="Go to Project Spaces"
-            >
+            <NuxtLink to="/projects" class="custom-btn primary btn-empty-filled landing-feature-btn"
+              title="Go to Project Spaces">
               Explore
             </NuxtLink>
           </div>
@@ -174,6 +134,23 @@ AOS.init();
         }
       }
 
+      &__1 {
+        margin-top: -2px;
+        margin-left: -2px;
+      }
+
+      &__3 {
+        -webkit-mask: url("~/assets/icons/observatory.svg") no-repeat center;
+        mask: url("~/assets/icons/observatory.svg") no-repeat center;
+      }
+
+      &__4 {
+        -webkit-mask: url("~/assets/icons/projects.svg") no-repeat center;
+        mask: url("~/assets/icons/projects.svg") no-repeat center;
+        margin-top: -2px;
+        margin-left: -1px;
+      }
+
       &__2 {
         height: 50px;
         width: 50px;
@@ -182,6 +159,8 @@ AOS.init();
         justify-content: center;
         align-items: center;
         font-size: 24px;
+        margin-top: -1px;
+        margin-left: -1px;
 
         &:hover {
           color: #0b579f;
@@ -235,6 +214,7 @@ AOS.init();
     width: 100%;
     text-align: center;
     padding-bottom: 5px;
+    padding-top: 5px;
   }
 }
 

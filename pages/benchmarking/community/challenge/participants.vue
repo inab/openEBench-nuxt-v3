@@ -52,7 +52,7 @@ import { ref } from "vue";
 import ChallengeParticipantMetricsTable from "@/components/Challenges/ChallengeParticipantMetricsTable.vue";
 import { challengeAPI } from "@/api/challengeAPI";
 import ChallengeObj from "@/models/ChallengeObj";
-import noDataAvailable from "@/layouts/noDataAvailable.vue";
+import noDataAvailable from "@/layouts/noDataAvailableCard.vue";
 import CustomTabs from "@/components/Widgets/CustomTabs.vue";
 import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
 

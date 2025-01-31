@@ -10,64 +10,38 @@
         </div>
       </div>
       <div v-else>
-        <CommunityInfo
-          :community="summaryObj"
-          :community-references="communityReferences"
-        />
-        <div class="community-tabs md:flex">
-          <UTabs
-            :items="tabsItems"
-            class="w-full"
-            :ui="{ list: { tab: { active: 'text-primaryOeb-500' } } }"
-          >
+        <CommunityInfo :community="summaryObj" :community-references="communityReferences" />
+        <div class="community-tabs md:flex ">
+          <UTabs :items="tabsItems" class="w-full" :ui="{ list: { tab: { active: 'text-primaryOeb-500' } } }">
             <template #default="{ item, index, selected }">
               <div class="flex items-center gap-2 relative truncate">
                 <span class="">{{ item.label }}</span>
-                <UBadge
-                  v-if="item.label == 'Datasets' && datasetsObj.length > 0"
-                  color="gray"
-                  variant="solid"
-                  :ui="{ rounded: 'rounded-full' }"
-                  >{{ datasetsObj.length }}</UBadge
-                >
-                <UBadge
-                  v-if="item.label == 'Tools' && toolsObj.length > 0"
-                  color="gray"
-                  variant="solid"
-                  :ui="{ rounded: 'rounded-full' }"
-                  >{{ toolsObj.length }}</UBadge
-                >
-                <span
-                  v-if="selected"
-                  class="absolute -right-4 w-2 h-2 rounded-full bg-primary-500 dark:bg-primary-400"
-                />
+                <UBadge v-if="item.label == 'Datasets' && datasetsObj.length > 0" color="gray" variant="solid"
+                  :ui="{ rounded: 'rounded-full' }">{{ datasetsObj.length }}</UBadge>
+                <UBadge v-if="item.label == 'Tools' && toolsObj.length > 0" color="gray" variant="solid"
+                  :ui="{ rounded: 'rounded-full' }">{{ toolsObj.length }}</UBadge>
+                <span v-if="selected"
+                  class="absolute -right-4 w-2 h-2 rounded-full bg-primary-500 dark:bg-primary-400" />
               </div>
             </template>
             <template #summary="{ item }">
-              <div class="p-4 custom-tab">
+              <div class="p-5 custom-tab">
                 <CommunityEventSummary :markdown="eventData">
                 </CommunityEventSummary>
               </div>
             </template>
             <template #results="{ item }">
-              <div class="p-4 custom-tab">
-                <CommunityEvent
-                  :current-event="currentEvent"
-                  :events="eventsObj"
-                  :community-id="communityId"
-                />
+              <div class="p-5 custom-tab">
+                <CommunityEvent :current-event="currentEvent" :events="eventsObj" :community-id="communityId" />
               </div>
             </template>
             <template #datasets="{ item }">
-              <div class="p-4">
-                <CommunityDataset
-                  :datasets="datasetsObj"
-                  :community-id="communityId"
-                />
+              <div class="p-5 custom-tab">
+                <CommunityDataset :datasets="datasetsObj" :community-id="communityId" />
               </div>
             </template>
             <template #tools="{ item }">
-              <div class="p-4">
+              <div class="p-5 custom-tab">
                 <CommunityTools :tools="toolsObj" :community-id="communityId" />
               </div>
             </template>
@@ -135,3 +109,10 @@ const routeArray: Array = [
   { label: community.value?.acronym, isActualRoute: true },
 ];
 </script>
+
+<style scoped>
+.custom-tab {
+  border: 1px solid rgba(243, 244, 246);
+  border-radius: 0.5rem;
+}
+</style>
