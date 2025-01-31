@@ -1,5 +1,6 @@
 import { customRoutes } from "./router.options";
 import svgLoader from "vite-svg-loader";
+const mockAuthModule = process.env.VITEST ? ['./test/mocks/setup.ts'] : []
 
 export default defineNuxtConfig({
   devtools: {
@@ -156,6 +157,7 @@ export default defineNuxtConfig({
     "@nuxt/test-utils/module",
     "vue3-carousel-nuxt",
     "@sidebase/nuxt-auth",
+    ...mockAuthModule,
   ],
 
   buildModules: [

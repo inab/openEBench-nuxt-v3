@@ -344,9 +344,7 @@
               <div class="form-card__row">
                 <div class="col-12">
                   <div class="form-footer">
-                    <UButton type="button" variant="secondary" @click="goBack">
-                      Cancel
-                    </UButton>
+                    <UButton type="button" @click="goBack"> Cancel </UButton>
                     <UButton
                       v-if="challengePrivileges.challenge.create"
                       type="submit"
@@ -367,11 +365,8 @@
 
 <script setup lang="ts">
 import { computed, ref, watch, onMounted } from "vue";
-import type { Challenge } from "@/types/challenge";
 import { useUser } from "@/stores/user.ts";
-import { ChallengeDates } from "@/types/challenge";
 import type { CommunityPrivilegeActions } from "@/constants/privileges";
-import CustomDialog from "@/components/Common/CustomDialog.vue";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 import {
@@ -443,7 +438,6 @@ const schema = object({
   }),
   orig_id: string(),
   _schema: string(),
-  benchmarking_event_id: string(),
   challenge_contact_ids: array(string()),
   url: string(),
   references: array(string()),
@@ -562,14 +556,6 @@ function validateRequiredFields(data: any): string[] {
       errorMessages.push(`${field} cannot be empty`);
     }
   });
-
-  if (data["_id"] && !checkIdPattern(data["_id"])) {
-    const communityText = communityId.value.slice(0, 3); // Gets the first part
-    const communityIdNumber = communityId.value.slice(4);
-    errorMessages.push(
-      `_id is not in the correct format. Example: <b><i>${communityText}X${communityIdNumber}000000A</i></b>`,
-    );
-  }
 
   if (localContacts.value.length == 0) {
     errorMessages.push(`challenge_contact_ids cannot be empty`);

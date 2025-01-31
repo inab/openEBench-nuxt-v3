@@ -344,13 +344,13 @@
                     </div>
                   </div>
                   <div class="form-footer">
-                    <UButton type="button" variant="secondary" @click="goBack">
-                      Cancel
-                    </UButton>
+                    <UButton type="button" @click="goBack"> Cancel </UButton>
                     <UButton
-                      v-if="challengePrivileges.update && !isView"
+                      v-if="challengePrivileges.challenge.update && !isView"
                       type="submit"
-                      :disabled="!challengePrivileges.update || isView"
+                      :disabled="
+                        !challengePrivileges.challenge.update || isView
+                      "
                     >
                       Submit
                     </UButton>
@@ -377,7 +377,7 @@ import { computed, ref, watch, onMounted } from "vue";
 import type { Challenge } from "@/types/challenge";
 import type { CommunityPrivilegeActions } from "@/constants/privileges";
 import "@vuepic/vue-datepicker/dist/main.css";
-import { object, string, boolean, date } from "valibot";
+import { object, string, boolean, date, safeParse } from "valibot";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import { getLocaleDateString } from "@/constants/global_const";
 import CustomTab from "@/components/Common/CustomTab.vue";
@@ -417,6 +417,8 @@ const localDates = ref({
 });
 
 const metricData = ref<string[]>([]);
+
+const getErrors = computed(() => errors.value.join(", "));
 
 const state = ref({
   _id: "",
@@ -465,7 +467,6 @@ const schema = object({
   _schema: string(),
   url: string(),
   orig_id: string(),
-  is_automated: boolean(),
 });
 
 const lang = window.navigator.userLanguage || window.navigator.language;
@@ -566,6 +567,189 @@ function goBack() {
   router.push(
     `/dashboard/communities/${props.communityId}/events/${props.eventId}/challenges`,
   );
+}
+
+function validateRequiredFields(data: any): string[] {
+  const requiredFields = [
+    "_id",
+    "_schema",
+    "name",
+    "benchmarking_event_id",
+    "is_automated",
+    "challenge_contact_ids",
+  ];
+  const errorMessages: string[] = [];
+
+  requiredFields.forEach((field) => {
+    if (typeof data[field] === "string" && data[field].trim() === "") {
+      errorMessages.push(`${field} cannot be empty`);
+    }
+  });
+
+  if (localContacts.value.length == 0) {
+    errorMessages.push(`community_contact_ids cannot be empty`);
+  } else {
+    localContacts.value.forEach((contact: string, index: number) => {
+      if (contact.trim() === "") {
+        errorMessages.push(`community_contact_ids  cannot be empty`);
+      }
+    });
+  }
+
+  if (!state.value.dates.benchmark_start) {
+    errorMessages.push("benchmark_start date is required");
+  }
+  if (!state.value.dates.benchmark_stop) {
+    errorMessages.push("benchmark_end date is required");
+  }
+
+  return errorMessages;
+}
+
+function deleteEmptyElements(array: string[]): string[] {
+  return array.filter((element) => element.trim() !== "");
+}
+
+async function onSubmitChallenge(event: FormSubmitEvent<Schema>) {
+  const result = safeParse(schema, state.value);
+  if (result.success) {
+    const customErrors = validateRequiredFields(state.value);
+    if (customErrors.length > 0) {
+      errors.value = errorClean(customErrors);
+    } else {
+      errors.value = [];
+      await updateBenchmarkingCommunity();
+    }
+  } else {
+    errors.value = result.error.issues.map((issue) => issue.message);
+  }
+}
+
+function errorClean(errors: string[]): string[] {
+  const cleanedErrors = errors.map((element: string) =>
+    elementTranslator(element.trim()),
+  );
+  return cleanedErrors;
+}
+
+function elementTranslator(element: string) {
+  // Define a mapping of field names to their replacements
+  const fieldMap: { [key: string]: string } = {
+    challenge_contact_ids: "Contacts",
+    references: "References",
+    _id: "ID",
+    _schema: "Schema",
+    name: "Name",
+    benchmark_end: "Event End",
+    benchmark_start: "Event Start",
+  };
+
+  // Replace the field name in the error message if it exists in the fieldMap
+  for (const [field, replacement] of Object.entries(fieldMap)) {
+    const regex = new RegExp(`\\b${field}\\b`, "g");
+    element = element.replace(regex, `<b>${replacement}</b>`);
+  }
+
+  return element;
+}
+
+async function updateBenchmarkingCommunity() {
+  const cleanContacts = deleteEmptyElements(localContacts.value);
+  const cleanReferences = deleteEmptyElements(localReferences.value);
+
+  const body = {
+    _id: state.value._id,
+    name: state.value.name,
+    community_id: state.value.community_id,
+    bench_contact_ids: cleanContacts.map((element) => {
+      return element;
+    }),
+    _schema: state.value._schema,
+    references: cleanReferences.map((element) => {
+      return element;
+    }),
+    url: state.value.url,
+    is_automated: state.value.is_automated,
+    dates: {
+      benchmark_start: new Date(
+        Date.UTC(
+          localDates.value.dates.benchmark_start.getUTCFullYear(),
+          localDates.value.dates.benchmark_start.getUTCMonth(),
+          localDates.value.dates.benchmark_start.getUTCDate(),
+          localDates.value.dates.benchmark_start.getUTCHours(),
+          localDates.value.dates.benchmark_start.getUTCMinutes(),
+          localDates.value.dates.benchmark_start.getUTCSeconds(),
+        ),
+      ).toISOString(),
+      benchmark_stop: new Date(
+        Date.UTC(
+          localDates.value.dates.benchmark_stop.getUTCFullYear(),
+          localDates.value.dates.benchmark_stop.getUTCMonth(),
+          localDates.value.dates.benchmark_stop.getUTCDate(),
+          localDates.value.dates.benchmark_stop.getUTCHours(),
+          localDates.value.dates.benchmark_stop.getUTCMinutes(),
+          localDates.value.dates.benchmark_stop.getUTCSeconds(),
+        ),
+      ).toISOString(),
+      creation: new Date(
+        Date.UTC(
+          localDates.value.dates.creation.getUTCFullYear(),
+          localDates.value.dates.creation.getUTCMonth(),
+          localDates.value.dates.creation.getUTCHours(),
+          localDates.value.dates.creation.getUTCDate(),
+          localDates.value.dates.creation.getUTCMinutes(),
+          localDates.value.dates.creation.getUTCSeconds(),
+        ),
+      ).toISOString(),
+      modification: new Date(
+        Date.UTC(
+          localDates.value.dates.modification.getUTCMonth(),
+          localDates.value.dates.modification.getUTCFullYear(),
+          localDates.value.dates.modification.getUTCDate(),
+          localDates.value.dates.modification.getUTCHours(),
+          localDates.value.dates.modification.getUTCMinutes(),
+          localDates.value.dates.modification.getUTCSeconds(),
+        ),
+      ).toISOString(),
+    },
+  };
+
+  try {
+    const response = await fetch(`/api/staged/Community/${state.value._id}`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+
+    if (!response.ok) {
+      throw new Error("Error in API response");
+    }
+
+    const responseData = await response.json();
+    if (responseData.status == 200) {
+      errors.value = [];
+      router.push(
+        `/dashboard/projects_communities/${state.value.community_id}?events=true`,
+      );
+    } else {
+      const errorResponse = JSON.parse(responseData.body);
+      if (typeof errorResponse.error === "string") {
+        errors.value.push(errorResponse.error);
+      } else {
+        errors.value = errorResponse.error.map((error: any) => {
+          if (error.pointer) {
+            return `${error.message}`;
+          }
+          return error.message;
+        });
+      }
+    }
+  } catch (error) {
+    console.error("Error fetching communities data:", error);
+  }
 }
 
 watch(

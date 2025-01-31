@@ -93,9 +93,7 @@
               </UFormGroup>
             </div>
             <div class="form-footer">
-              <UButton type="button" variant="secondary" @click="goBack">
-                Cancel
-              </UButton>
+              <UButton type="button" @click="goBack"> Cancel </UButton>
             </div>
           </div>
         </div>
@@ -108,7 +106,6 @@
 import type { Metric } from "@/types/challenge_metric";
 import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
-
 
 const props = defineProps<{
   metric: Metric;

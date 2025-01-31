@@ -47,7 +47,10 @@
                       start your own project to collaborate with other users and
                       advance the development of OpenEBench.
                     </div>
-                    <div class="w-100 d-flex justify-content-end pt-5">
+                    <div
+                      v-if="isAdmin"
+                      class="w-100 d-flex justify-content-end pt-5"
+                    >
                       <NuxtLink
                         id="dashboard-create-community"
                         to="/dashboard/projects_communities/add"
@@ -90,7 +93,6 @@ definePageMeta({
 const userStore = useUser();
 const { data, status } = useAuth();
 const isLoadingData = ref(true);
-
 const HEADER_ITEM = [
   {
     label: "Projects & Communities",
@@ -99,10 +101,7 @@ const HEADER_ITEM = [
   },
 ];
 
-let token: string | undefined;
-if (data.value) {
-  token = data.value.accessToken;
-}
+const token = computed(() => data.value?.accessToken || ""); // ← Ahora reacciona a cambios en `data.value`
 
 const routeArray: Array = [
   { label: "Dashboard", isActualRoute: false, route: "/dashboard" },
@@ -120,7 +119,7 @@ const isAdmin = computed(() => {
 
 const fetchUserCommunities = async (token: string): Promise<void> => {
   try {
-    const comData = await userStore.fetchCommunities(token);
+    await userStore.fetchCommunities(token);
     isLoadingData.value = false;
   } catch (error) {
     console.error("Error fetching communities data:", error);
@@ -128,7 +127,11 @@ const fetchUserCommunities = async (token: string): Promise<void> => {
 };
 
 onMounted(() => {
-  fetchUserCommunities(token);
+  if (token.value) {
+    fetchUserCommunities(token.value);
+  } else {
+    console.error("Token is undefined");
+  }
 });
 </script>
 

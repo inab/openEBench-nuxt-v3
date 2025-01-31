@@ -148,9 +148,7 @@
               </div>
             </div>
             <div class="form-footer pt-3">
-              <UButton type="button" variant="secondary" @click="closeModal">
-                Cancel
-              </UButton>
+              <UButton type="button" @click="closeModal"> Cancel </UButton>
               <UButton class="" type="submit"> Submit </UButton>
             </div>
           </div>
@@ -236,7 +234,7 @@ async function fetchContact(id: string): Promise<Contact> {
       },
     );
     const data = await response.json();
-    if(!data.notes) {
+    if (!data.notes) {
       data.notes = "";
     }
     contactObj.value = data;

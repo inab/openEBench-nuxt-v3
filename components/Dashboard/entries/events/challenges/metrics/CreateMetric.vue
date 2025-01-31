@@ -90,9 +90,7 @@
         </div>
       </div>
       <div class="form-footer">
-        <UButton type="button" variant="secondary" @click="closeModal">
-          Cancel
-        </UButton>
+        <UButton type="button" @click="closeModal"> Cancel </UButton>
         <UButton type="submit"> Submit </UButton>
       </div>
     </div>
@@ -101,8 +99,8 @@
 
 <script setup lang="ts">
 import { ref, computed, defineEmits } from "vue";
-import type { FormErrorEvent, FormSubmitEvent } from "#ui/types";
-import { object, string, array, safeParse, nonEmpty, is } from "valibot";
+import type { FormSubmitEvent } from "#ui/types";
+import { object, string, array, safeParse } from "valibot";
 
 const state = ref({
   title: "",

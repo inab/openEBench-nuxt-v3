@@ -249,10 +249,7 @@
 import { ref, computed } from "vue";
 import { useUser } from "@/stores/user.ts";
 import {
-  CommunityStatusColors,
   CommunityStatusLabels,
-  CommunityStatusTextColors,
-  CommunityStatusBackgroundColors,
 } from "@/constants/community_const";
 import {
   CommunityColumnsDashboard,
@@ -273,11 +270,14 @@ const pageFrom = computed(
 );
 
 const pageTo = computed(() =>
-  Math.min(
+{
+  return Math.min(
     Number(page.value) * Number(pageCount.value),
     Number(_total.value),
-  ),
+  );
+}
 );
+
 const search = ref<string>("");
 const selectedStatus = ref(<Array<CommunityStatus>>[]);
 const todoStatus = ref<Array<{ value: string; label: string }>>(
@@ -320,6 +320,7 @@ const filteredRows = computed(() => {
   if (!communitiesData.value || communitiesData.value.length == 0) {
     return [];
   }
+
   if (!search.value && selectedStatus.value.length === 0) {
     _total.value = communitiesData.value.length;
     return communitiesData.value.slice(

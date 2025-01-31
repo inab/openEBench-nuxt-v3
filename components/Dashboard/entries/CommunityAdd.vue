@@ -3,7 +3,7 @@
     <div class="w-100 container">
       <div class="dashboard-community-add__title">
         <h2 class="text-primaryOeb-500">
-          <span class="">New Community</span>
+          <span class="w-100">New Community</span>
         </h2>
         <p>
           It is a long established fact that a reader will be distracted by the
@@ -85,6 +85,7 @@
                             <USelectMenu
                               v-model="localStatus.value"
                               :options="CommunityStatusLabels"
+                              class="w-full custom-select-input"
                               @change="onChangeStatus"
                             >
                               <template #label>
@@ -113,6 +114,7 @@
                               v-model="state.type"
                               :options="typeOptions"
                               option-attribute="label"
+                              class="w-full custom-select-input"
                             />
                           </div>
                         </div>
@@ -190,10 +192,12 @@
                           </button>
                         </label>
                       </div>
-                      <div class="w-100 row no-space">
+                      <div
+                        v-if="localLinks.length > 0"
+                        class="w-100 row no-space"
+                      >
                         <div
                           v-for="(link, index) in localLinks"
-                          v-if="localLinks.length > 0"
                           :key="index"
                           class="col-12 d-flex pl-0"
                         >
@@ -207,7 +211,7 @@
                               class="form-control"
                             />
                             <button
-                              class="btn-delete-input"
+                              class="btn-delete-input btn-remove-link"
                               type="button"
                               @click="onDeleteElement(index, localLinks)"
                             >
@@ -215,13 +219,13 @@
                             </button>
                           </div>
                         </div>
-                        <div v-else class="col-12 pt-0">
-                          <div class="w-100 empty-elements text-slate-400">
-                            <span
-                              >There are no links associated with this
-                              community</span
-                            >
-                          </div>
+                      </div>
+                      <div v-else class="col-12 pt-0">
+                        <div class="w-100 empty-elements text-slate-400">
+                          <span
+                            >There are no links associated with this
+                            community</span
+                          >
                         </div>
                       </div>
                     </div>
@@ -376,10 +380,15 @@
                 </div>
               </div>
               <div class="form-footer">
-                <UButton type="button" variant="secondary" @click="goBack">
+                <UButton type="submit"> Submit </UButton>
+                <UButton
+                  type="button"
+                  color="white"
+                  variant="solid"
+                  @click="goBack"
+                >
                   Cancel
                 </UButton>
-                <UButton type="submit"> Submit </UButton>
               </div>
             </div>
           </UForm>
@@ -883,6 +892,10 @@ const fetchContacts = async (token: string): Promise<void> => {
     console.error("Error fetching contacts data:", error);
   }
 };
+
+defineExpose({
+  localLinks,
+});
 
 onMounted(() => {
   fetchContacts(token);
