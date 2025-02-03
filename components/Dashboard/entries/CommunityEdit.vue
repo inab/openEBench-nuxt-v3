@@ -562,7 +562,7 @@ const imageDefault = "~/assets/images/dashboards/empty-logo.jpg";
 
 const props = defineProps<{
   id: string;
-  communityObj: Community | null;
+  communityObj?: Community | null;
   loadingData: boolean;
   commmunityPrivileges: CommunityPrivilegeActions;
   isView: boolean;

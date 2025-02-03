@@ -332,3 +332,11 @@ $colorSecondary: #f47c21;
 .inline-grid {
   display: inline-grid;
 }
+
+.end-0 {
+  inset-inline-end: 0px;
+}
+.inset-y-0 {
+  top: 0px;
+  bottom: 0px;
+}
