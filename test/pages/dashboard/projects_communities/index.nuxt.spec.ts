@@ -51,7 +51,7 @@ const mockUserStore = {
   }),
 };
 
-describe("Entries Page Dashboard", () => {
+describe("Dashboard Entries Page Dashboard", () => {
   it("should display 'Create New Entry' when the user is admin", async () => {
     const wrapper = mount(Index, {
       global: {

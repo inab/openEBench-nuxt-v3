@@ -5,7 +5,8 @@ export const MOCKED_USER = {
   role: "admin",
   email: "hi@sidebase.io",
   name: "John Doe",
-  accessToken: "aaaa"
+  accessToken: "aaaa",
+  oeb_roles: [{ role: "manager", community: "OEBC000" }]
 };
 
 const userData = ref(MOCKED_USER); 

@@ -40,5 +40,3 @@ const routeArray: Array = ref([
   },
 ]);
 </script>
-
-<style scoped lang="scss"></style>
