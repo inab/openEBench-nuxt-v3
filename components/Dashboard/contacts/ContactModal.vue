@@ -1,5 +1,10 @@
 <template>
-  <CustomModal :is-open="isModalOpen" width="600" @modal-close="closeModal">
+  <CustomModal
+    :is-open="isModalOpen"
+    width="600"
+    class="dashboard-contacts-modal"
+    @modal-close="closeModal"
+  >
     <template #header>
       <div class="modal-title">Edit contact</div>
       <button class="modal-close" aria-label="Close modal" @click="closeModal">
@@ -222,6 +227,9 @@ const closeModal = () => {
 
 async function fetchContact(id: string): Promise<Contact> {
   isSearchingContact.value = true;
+
+  console.log("Calling for fetch contact in component");
+
   try {
     const response = await fetch(
       `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Contact/${id}`,
@@ -239,12 +247,16 @@ async function fetchContact(id: string): Promise<Contact> {
     }
     contactObj.value = data;
 
+    console.log("fetch contact has change: ", contactObj.value);
+
     communities.value = await fetchUserCommunities(props.token);
     return data;
   } catch (error) {
     console.error(error);
+    console.error(error);
     return null;
   } finally {
+    console.log("finally")
     isSearchingContact.value = false;
   }
 }
@@ -269,11 +281,13 @@ async function onError(event: FormErrorEvent) {
 }
 
 function validateRequiredFields(data: any): string[] {
-  const requiredFields = ["givenName", "surname	", "email"];
+  const requiredFields = ["givenName", "surname", "email"];
   const errorMessages: string[] = [];
-
   requiredFields.forEach((field) => {
-    if (typeof data[field] === "string" && data[field].trim() === "") {
+    if (
+      (typeof data[field] === "string" && data[field].trim() === "") ||
+      (Array.isArray(data[field]) && data[field].length === 0)
+    ) {
       errorMessages.push(`${field} cannot be empty`);
     }
   });

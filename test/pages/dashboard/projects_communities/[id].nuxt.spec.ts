@@ -79,10 +79,10 @@ describe("Dashboard Edit entry", () => {
 
   it("renders BreadcrumbsBar and CommunityEdit components", () => {
     expect(wrapper.findComponent(BreadcrumbsBar).exists()).toBe(true);
-    //expect(wrapper.findComponent(CommunityEdit).exists()).toBe(true);
+    expect(wrapper.findComponent(CommunityEdit).exists()).toBe(true);
   });
 
-  it.skip("should initialize routeArray correctly", () => {
+  it("should initialize routeArray correctly", () => {
     wrapper.vm.routeName = "Edit";
 
     const expectedRoutes = [

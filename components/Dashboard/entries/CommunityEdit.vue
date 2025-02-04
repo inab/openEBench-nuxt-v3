@@ -516,6 +516,7 @@ import type { Community } from "@/types/communities";
 import type { FormErrorEvent, FormSubmitEvent } from "#ui/types";
 import type { CommunityPrivilegeActions } from "@/constants/privileges";
 import type { Event } from "@/types/events";
+import type { Contact } from "@/types/contact";
 
 import EventsList from "@/components/Dashboard/entries/EventsList.vue";
 import CustomSubtitle from "@/components/Common/CustomSubtitle.vue";
@@ -1017,7 +1018,7 @@ function onFileChange(event: Event) {
   }
 }
 
-const fetchContacts = async (token: string): Promise<void> => {
+async function fetchContacts(token: string): Promise<Contact[]> {
   try {
     if (userStore.getContactsList && userStore.getContactsList.length > 0) {
       contactsData.value = userStore.getContactsList;
@@ -1030,7 +1031,9 @@ const fetchContacts = async (token: string): Promise<void> => {
 };
 
 onMounted(() => {
-  fetchContacts(token);
+  if (token.value) {
+    fetchContacts(token.value);
+  }
 });
 
 watch(
