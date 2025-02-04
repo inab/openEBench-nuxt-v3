@@ -64,7 +64,7 @@ onMounted(()=>{
 })
 
 // Reactive variables
-const selectLicense = ref(props.item.name.split(' License')[0]);
+const selectLicense = ref(props.item.name);
 const URL = ref(props.item.url);
 
 // Computed property para acceder a las licencias desde la store
