@@ -138,14 +138,39 @@
 
         <!-- Content 1. Accessibility / License -->
         <div v-if="item.label == '1. Accessibility / License'" class="p-4">
-          <div class="mt-0 ml-3 d-flex flex-row justify-space-between">
+          <div class="mt-0 ml-3 d-flex flex-col justify-space-between">
             <!-- License  -->
-             <MetaFieldLicense
-              title="License"
-              :value="toolMetadata.license"
-              field="license"
-              :increasable="true"
-             />
+            <div class="mt-0 ml-3.5 d-flex">
+              <MetaFieldLicense
+                title="License"
+                :value="toolMetadata.license"
+                field="license"
+                :increasable="true"
+              />
+                <!-- Alert -->
+                <div v-if="toolMetadata.license.length > 1 &&
+                  toolMetadata.license[1].length > 0" class="col-3 mt-4 pt-1.5 ms-4">
+                  <UAlert
+                    :ui="{gap:'gap-2', shadow: 'shadow-md'}"
+                    icon="mdi-alert-circle"
+                    color="sky"
+                    variant="soft"
+                    description="Several licenses"
+                    class="p-2 text-gray-900"
+                  />
+                </div>
+            </div>
+            
+            <!-- Registries / Package managers -->
+            <div class="mt-3 ml-3.5 d-flex">
+              <MetaRegistriesCombo
+                title="Registries / Package managers"
+                field="registries"
+                :selected="toolMetadata.registries"
+                :registries="registries"
+              />
+            </div>
+            
           </div>
         </div>
 
