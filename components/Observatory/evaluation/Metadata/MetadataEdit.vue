@@ -169,6 +169,14 @@
                 :selected="toolMetadata.registries"
                 :registries="registries"
               />
+
+              <!-- E-Infrastructures -->
+              <MetaRegistriesCombo
+                title="E-Infrastructures"
+                field="e_infrastructures"
+                :selected="toolMetadata.e_infrastructures"
+                :registries="eInfrastructures"
+              />
             </div>
             
           </div>

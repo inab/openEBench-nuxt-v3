@@ -9,9 +9,9 @@
       <span class="text-body title">{{ title }}</span>
     </div>
 
-    <div class="row mx-1 mt-1">
+    <div class="row ms-1 mt-1">
       <!-- Registries / Package managers -->
-      <div class="col-6">
+      <div>
         <USelectMenu
           v-model="selectedItem"
           :options="registries"
@@ -60,9 +60,6 @@
         </USelectMenu>
       </div>
 
-      <!-- E-Infrastructures -->
-      <div class="col-6">
-      </div>
     </div>
   </div>
 </template>
