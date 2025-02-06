@@ -1,5 +1,5 @@
 <template>
-  <div class="container ms-3">
+  <div class="container mx-0">
     <div class="d-flex mb-2">
       <HeaderAvatar
         :field="field"
@@ -16,8 +16,7 @@
           v-model="selectedItem"
           :options="registries"
           multiple
-          :ui="{ option: { default: { selectedIcon: 'i-heroicons-shield-check' } } }"
-          class="border-1 rounded-md px-0 select-menu"
+          class="border-0 px-0 select-menu border-bottom"
           @update:model-value="changeValue"
         >
           <template #label>
@@ -121,6 +120,10 @@ const removeItem = (item: string) => {
   min-height: 40px; /* Ajusta el tamaño mínimo del USelectMenu */
   display: flex;
   align-items: center;
+}
+
+.border-bottom{
+  border-bottom: 1px solid !important;
 }
 
 .min-height {

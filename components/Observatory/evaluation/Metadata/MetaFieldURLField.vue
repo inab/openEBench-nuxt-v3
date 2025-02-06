@@ -46,13 +46,13 @@ const metadataStore = useMetadataStore();
 
 // PROPS
 const props = defineProps<{
-  title: String,
-  field: String,
+  title: string,
+  field: string,
   valueType: Array,
-  n_cols: String,
+  n_cols: string,
   increasable: Boolean,
   value: Array,
-  label: String,
+  label: string,
 }>();
 
 // Local copy of the value prop
