@@ -236,7 +236,13 @@
         <div v-if="item.label == '2. Documentation'" class="p-4">
           <!-- Documentation -->
 
-          
+          <MetaFieldDocumentation
+            title="Documentation"
+						:value="toolMetadata.documentation"
+						field="documentation"
+						n_cols="12"
+            increable="true"
+          />
         </div>
 
         <!-- Content 3. Test data -->
@@ -305,6 +311,7 @@ import FormField from './FormField.vue';
 import SelectorType from './SelectorType.vue';
 import VersionCombo from './VersionCombo.vue';
 import MetaRegistriesCombo from './MetaRegistriesCombo.vue';
+import MetaFieldDocumentation from './MetaFieldDocumentation.vue';
 
 
 const metadataStore = useMetadataStore();
