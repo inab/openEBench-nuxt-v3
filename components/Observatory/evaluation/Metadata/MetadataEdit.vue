@@ -34,7 +34,7 @@
 
         <!-- Content 0. Identity -->
         <div v-if="item.label == '0. Identity'" class="p-4">
-          <div class="mt-0 ml-3 d-flex flex-row justify-space-between">
+          <div class="mt-0 d-flex flex-row justify-space-between">
             <!-- Name -->
             <MetaField
               title="Name"
@@ -87,7 +87,7 @@
             </MetaField>
           </div>
 
-          <div class="mt-0 ml-3.5 d-flex">
+          <div class="mt-4 ml-0.5 d-flex">
             <!-- Description -->
             <MetaTextArea
               title="Description"
@@ -109,7 +109,7 @@
             </div>
           </div>
 
-          <div class="mt-3 ml-3.5 d-flex">
+          <div class="mt-5 ml-0.5 d-flex">
             <!-- Webpage -->
             <MetaFieldURLField
               title="Webpage"
@@ -118,7 +118,7 @@
 							value-type="string"
 							n_cols="col-8"
 							label="URL"
-							increasable="true"
+							:increasable="true"
             />
 
             <!-- Alert -->
@@ -138,9 +138,9 @@
 
         <!-- Content 1. Accessibility / License -->
         <div v-if="item.label == '1. Accessibility / License'" class="p-4">
-          <div class="mt-0 ml-3 d-flex flex-col justify-space-between">
             <!-- License  -->
-            <div class="mt-0 ml-3.5 d-flex">
+          <div class="mt-0 d-flex flex-col justify-space-between">
+            <div class="mt-0 ml-0.5 d-flex">
               <MetaFieldLicense
                 title="License"
                 :value="toolMetadata.license"
@@ -160,31 +160,83 @@
                   />
                 </div>
             </div>
-            
-            <!-- Registries / Package managers -->
-            <div class="mt-3 ml-3.5 d-flex">
-              <MetaRegistriesCombo
-                title="Registries / Package managers"
-                field="registries"
-                :selected="toolMetadata.registries"
-                :registries="registries"
-              />
+          </div>
+          <!-- Registries / Package managers -->
+          <div class="mt-5 ml-0.5 d-flex">
+            <MetaRegistriesCombo
+              title="Registries / Package managers"
+              field="registries"
+              :selected="toolMetadata.registries"
+              :registries="registries"
+              class="ms-3"
+            />
 
-              <!-- E-Infrastructures -->
-              <MetaRegistriesCombo
-                title="E-Infrastructures"
-                field="e_infrastructures"
-                :selected="toolMetadata.e_infrastructures"
-                :registries="eInfrastructures"
-              />
-            </div>
-            
+            <!-- E-Infrastructures -->
+            <MetaRegistriesCombo
+              title="E-Infrastructures"
+              field="e_infrastructures"
+              :selected="toolMetadata.e_infrastructures"
+              :registries="eInfrastructures"
+              class=""
+            />
+          </div>
+          <!-- Source Code -->
+          <div class="mt-5 ml-0.5 d-flex">
+            <MetaFieldURLField
+              title="Source Code"
+              :value="toolMetadata.src"
+              field="src"
+							value-type="string"
+							n_cols="col-9"
+							label="URL"
+							:increasable="true"
+            />
+          </div>
+
+          <!-- Other Download Link -->
+          <div class="mt-5 ml-0.5 d-flex">
+            <MetaFieldURLField
+              title="Other Download Link"
+              :value="toolMetadata.links"
+              field="links"
+							value-type="string"
+							n_cols="col-9"
+							label="URL"
+							:increasable="true"
+            />
+          </div>
+
+          <!-- Registration not mandatory -->
+          <div class="mt-5 ml-0.5 d-flex">
+            <MetaCheckbox
+              :item="toolMetadata.registration_not_mandatory"
+              label="Registration is NOT mandatory to use the software or obtain a working version of it."
+              color="primary"
+              field="registration_not_mandatory"
+              title="Registration Not Mandatory"
+              n_cols="12"
+            />
+          </div>
+
+          <!-- Availility as library or API -->
+          <div class="mt-5 ml-0.5 d-flex">
+            <MetaCheckbox
+            v-if="toolMetadata.type != 'lib' && toolMetadata.type != 'api'"
+              :item="toolMetadata.api_lib"
+              label="This software is available as a library or/and API."
+              color="primary"
+              field="api_lib"
+              title="Availability as library or API"
+              n_cols="12"
+            />
           </div>
         </div>
 
         <!-- Content 2. Documentation -->
         <div v-if="item.label == '2. Documentation'" class="p-4">
+          <!-- Documentation -->
 
+          
         </div>
 
         <!-- Content 3. Test data -->
@@ -245,6 +297,7 @@ import { useMetadataStore } from '@/stores/observatory/evaluation/metadata';
 import { useResultStore } from '@/stores/observatory/evaluation/results';
 import { useStepperStore } from '@/stores/observatory/evaluation/index';
 import MetaField from "./Metafield.vue";
+import MetaCheckbox from "./MetaCheckbox.vue";
 import MetaTextArea from "./MetaTextArea.vue";
 import MetaFieldURLField from "./MetaFieldURLField.vue";
 import MetaFieldLicense from "./MetaFieldLicense.vue";
