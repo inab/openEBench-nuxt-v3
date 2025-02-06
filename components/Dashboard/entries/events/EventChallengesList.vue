@@ -1,7 +1,7 @@
 <template>
   <div class="community-event-challenges">
     <div
-      v-if="commmunityPrivileges.challenge.create"
+      v-if="commmunityPrivileges.create"
       class="w-100 flex justify-content-end gap-3 py-3"
     >
       <NuxtLink
@@ -62,29 +62,23 @@
               Visit
             </NuxtLink>
           </button>
-          <div
-            v-if="
-              row.privileges === 'Owner' ||
-              commmunityPrivileges.challenge.update
-            "
-          >
+          <div v-if="row.privileges === 'Owner' || commmunityPrivileges.update">
             <button title="Edit challenge" class="btn-custom-badget text-sm">
               <NuxtLink :to="getCommunityChallengeEditLink(row)">
                 <font-awesome-icon :icon="['fas', 'pencil']" />
-                Edit 
+                Edit
               </NuxtLink>
             </button>
           </div>
           <div
             v-else-if="
-              row.privileges === 'Manager' ||
-              commmunityPrivileges.challenge.update
+              row.privileges === 'Manager' || commmunityPrivileges.update
             "
           >
             <button title="Edit challenge" class="btn-custom-badget text-sm">
               <NuxtLink :to="getCommunityChallengeEditLink(row)">
                 <font-awesome-icon :icon="['fas', 'pencil']" />
-                Edit 
+                Edit
               </NuxtLink>
             </button>
           </div>

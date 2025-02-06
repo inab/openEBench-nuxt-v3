@@ -111,7 +111,7 @@
                               type="text"
                               class="form-control custom-entry-input"
                               placeholder="Event name"
-                              :disabled="!eventPrivileges.event.update"
+                              :disabled="!eventPrivileges.update"
                             />
                           </div>
                         </div>
@@ -138,7 +138,7 @@
                               type="text"
                               class="form-control custom-entry-input"
                               placeholder="URL"
-                              :disabled="!eventPrivileges.event.update"
+                              :disabled="!eventPrivileges.update"
                             />
                           </div>
                         </div>
@@ -157,7 +157,7 @@
                                   <button
                                     class="btn-form-add btn-primary"
                                     :disabled="
-                                      !eventPrivileges.event.update ||
+                                      !eventPrivileges.update ||
                                       isView ||
                                       checkEmptyReferences
                                     "
@@ -182,12 +182,12 @@
                                       type="text"
                                       class="form-control"
                                       :disabled="
-                                        !eventPrivileges.event.update || isView
+                                        !eventPrivileges.update || isView
                                       "
                                     />
                                     <button
                                       v-if="
-                                        eventPrivileges.event.update && !isView
+                                        eventPrivileges.update && !isView
                                       "
                                       class="btn-delete-input"
                                     >
@@ -220,7 +220,7 @@
                                   <button
                                     class="btn-form-add btn-primary"
                                     :disabled="
-                                      !eventPrivileges.event.update ||
+                                      !eventPrivileges.update ||
                                       isView ||
                                       checkEmptyContacts
                                     "
@@ -297,9 +297,9 @@
                   <div class="form-footer">
                     <UButton type="button" @click="goBack"> Cancel </UButton>
                     <UButton
-                      v-if="eventPrivileges.event.update && !isView"
+                      v-if="eventPrivileges.update && !isView"
                       type="submit"
-                      :disabled="!eventPrivileges.event.update || isView"
+                      :disabled="!eventPrivileges.update || isView"
                     >
                       Submit
                     </UButton>
@@ -399,6 +399,8 @@ const props = defineProps<{
   isLoadinChallenges: boolean;
   tabIndex: string;
 }>();
+
+console.log("eventPrivileges: " , props.eventPrivileges)
 
 const dialogTitle = ref("");
 const dialogType = ref("yesno");
