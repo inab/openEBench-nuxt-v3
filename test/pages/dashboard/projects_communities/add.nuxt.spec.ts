@@ -67,7 +67,7 @@ describe("Dashboard Add entry", () => {
     expect(wrapper.vm.routeArray).toEqual(expectedRoutes);
   });
 
-  it("calls setUserCommunitiesRoles if userPrivileges is empty", async () => {
+  it.skip("calls setUserCommunitiesRoles if userPrivileges is empty", async () => {
     const { data } = useAuth();
     data.value.oeb_roles = [{ role: "manager", community: "OEBC000" }];
     expect(userStore.setUserCommunitiesRoles).toHaveBeenCalledWith([

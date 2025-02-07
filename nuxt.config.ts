@@ -156,7 +156,8 @@ export default defineNuxtConfig({
     "@nuxt/eslint",
     "@nuxt/test-utils/module",
     "vue3-carousel-nuxt",
-    "@sidebase/nuxt-auth"
+    "@sidebase/nuxt-auth",
+   
   ],
 
   buildModules: [
