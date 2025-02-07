@@ -157,7 +157,7 @@ export default defineNuxtConfig({
     "@nuxt/test-utils/module",
     "vue3-carousel-nuxt",
     "@sidebase/nuxt-auth",
-   
+    ...mockAuthModule,
   ],
 
   buildModules: [
