@@ -18,7 +18,6 @@
           :state="state"
           class="space-y-4"
           @submit="onSubmitContactUpdate"
-          @error="onError"
         >
           <div class="w-100">
             <div
@@ -179,7 +178,7 @@ const props = defineProps<{
   isModalOpen: boolean;
   modalTitle: string;
   contactId: string;
-  isContactEditable: boolean;
+  isContactEditable?: boolean;
   token: string;
 }>();
 
@@ -227,9 +226,6 @@ const closeModal = () => {
 
 async function fetchContact(id: string): Promise<Contact> {
   isSearchingContact.value = true;
-
-  console.log("Calling for fetch contact in component");
-
   try {
     const response = await fetch(
       `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Contact/${id}`,
@@ -242,21 +238,17 @@ async function fetchContact(id: string): Promise<Contact> {
       },
     );
     const data = await response.json();
+
     if (!data.notes) {
       data.notes = "";
     }
     contactObj.value = data;
-
-    console.log("fetch contact has change: ", contactObj.value);
-
     communities.value = await fetchUserCommunities(props.token);
     return data;
   } catch (error) {
     console.error(error);
-    console.error(error);
     return null;
   } finally {
-    console.log("finally")
     isSearchingContact.value = false;
   }
 }
@@ -274,11 +266,6 @@ const fetchUserCommunities = async (token: string): Promise<void> => {
     console.error("Error fetching communities data:", error);
   }
 };
-
-async function onError(event: FormErrorEvent) {
-  // console.log("state: ", state.value);
-  // console.log("event: ", event);
-}
 
 function validateRequiredFields(data: any): string[] {
   const requiredFields = ["givenName", "surname", "email"];
@@ -314,11 +301,13 @@ watch(
   () => props.contactId,
   async (newVal) => {
     if (newVal) {
-      contactObj.value = await fetchContact(newVal);
-      state.value = contactObj.value;
+      const contactData = await fetchContact(newVal);
+      state.value = contactData ?? { ...state.value }
     }
   },
+  { immediate: true }
 );
+
 </script>
 
 <style lang="scss" scoped>

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { mount } from "@vue/test-utils";
+import { mount, flushPromises } from "@vue/test-utils";
 import ContactModal from "@/components/Dashboard/contacts/ContactModal.vue";
 
 vi.mock("@/stores/user.ts", () => ({
@@ -13,20 +13,41 @@ vi.mock("@/stores/user.ts", () => ({
   }),
 }));
 
-const mockContact = {
-  _id: "contact1",
-  givenName: "John",
-  surname: "Doe",
-  email: ["john.doe@example.com"],
-  notes: "Test note",
-  contact_type: "person",
-  community_id: "community1",
-};
 
 describe("Dashboard Contacts Modal", () => {
   let wrapper;
+  let fetchContactMock;
 
   beforeEach(async () => {
+    vi.clearAllMocks();
+
+    global.fetch = vi.fn().mockResolvedValue({
+      json: vi.fn().mockResolvedValue({
+        _id: "contact1",
+        givenName: "John",
+        surname: "Doe",
+        email: ["john.doe@example.com"],
+        notes: "Test note",
+        _schema:
+          "https://www.elixir-europe.org/excelerate/WP2/json-schemas/1.0/Contact",
+        contact_type: "person",
+        community_id: "community1",
+      }),
+      ok: true, // Simular que la respuesta es exitosa
+    });
+
+    fetchContactMock = vi.fn().mockResolvedValue({
+      _id: "contact1",
+      givenName: "John",
+      surname: "Doe",
+      email: ["john.doe@example.com"],
+      notes: "Test note",
+      _schema:
+        "https://www.elixir-europe.org/excelerate/WP2/json-schemas/1.0/Contact",
+      contact_type: "person",
+      community_id: "community1",
+    });
+
     wrapper = mount(ContactModal, {
       global: {
         stubs: ["RouterLink", "FontAwesomeIcon"],
@@ -39,6 +60,10 @@ describe("Dashboard Contacts Modal", () => {
         token: "token",
       },
     });
+
+    wrapper.vm.fetchContact = fetchContactMock;
+
+    await flushPromises();
   });
 
   it("should render the component", () => {
@@ -64,12 +89,11 @@ describe("Dashboard Contacts Modal", () => {
     expect(wrapper.vm.errors).toContain("email cannot be empty");
   });
 
-  it.skip("calls API to fetch contact when contactId changes", async () => {
-    const fetchContactMock = vi.fn().mockResolvedValue(mockContact);
+  it("calls API to fetch contact when contactId changes", async () => {
+    expect(fetchContactMock).not.toHaveBeenCalled();
 
-    await wrapper.vm.$nextTick();
-    console.log("props: ", wrapper.vm.$props);
-
+    await wrapper.vm.fetchContact("contact1");
+    expect(fetchContactMock).toHaveBeenCalledTimes(1);
     expect(fetchContactMock).toHaveBeenCalledWith("contact1");
   });
 
