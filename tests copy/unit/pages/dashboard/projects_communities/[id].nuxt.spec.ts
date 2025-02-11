@@ -7,7 +7,7 @@ import CommunityEdit from "@/components/Dashboard/entries/CommunityEdit.vue";
 import { useUser } from "@/stores/user.ts";
 import { privileges } from "@/constants/privileges";
 import { ref } from "vue";
-import { mockDashboardLinks } from "@/test/mocks/dashboardMoks";
+import { mockDashboardLinks } from "@/tests/unit/mocks/dashboardMoks";
 
 vi.mock("@/middleware/auth", () => ({
   default: vi.fn((context) => {

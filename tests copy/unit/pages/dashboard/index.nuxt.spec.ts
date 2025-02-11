@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import Index from "@/pages/dashboard/index.vue";
 import { ref } from "vue";
 import { nuxtTestUtilSetup } from "../../utils";
-import authMiddleware from "../../../middleware/auth";
+import authMiddleware from "../../../../middleware/auth";
 
 await nuxtTestUtilSetup();
 

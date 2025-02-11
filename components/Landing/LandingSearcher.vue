@@ -1,5 +1,5 @@
 <template>
-  <div class="landing-searcher">
+  <section class="landing-searcher">
     <div class="container">
       <UInput
         v-model="searchValue"
@@ -35,7 +35,7 @@
         </template>
       </UInput>
     </div>
-  </div>
+  </section>
 </template>
 
 <script setup lang="ts">

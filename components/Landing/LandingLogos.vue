@@ -1,5 +1,5 @@
 <template>
-  <div class="landing-logos">
+  <section class="landing-logos">
     <div class="container">
       <div class="landing-logos__title">
         <h2 class="text-h4 mb-15">Our partners</h2>
@@ -25,7 +25,7 @@
         </template>
       </Carousel>
     </div>
-  </div>
+  </section>
 </template>
 
 <script setup lang="ts">

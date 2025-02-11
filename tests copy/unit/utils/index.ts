@@ -1,5 +1,5 @@
 //import { nuxtTestUtilSetup, renderPage } from '@nuxt/test-utils'
-import { nuxtTestUtilSetup, renderPage } from "../utils";
+import { nuxtTestUtilSetup, renderPage } from ".";
 
 export async function setupTest() {
   await nuxtTestUtilSetup(); // Prepara el entorno para las pruebas

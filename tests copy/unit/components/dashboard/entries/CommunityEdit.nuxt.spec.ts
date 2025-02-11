@@ -4,7 +4,7 @@ import CommunityEdit from "@/components/Dashboard/entries/CommunityEdit.vue";
 import { createTestingPinia, } from "@pinia/testing";
 import { setActivePinia, defineStore, createPinia  } from "pinia";
 import { computed, ref } from "vue";
-import { mockDashboardLinks } from "@/test/mocks/dashboardMoks";
+import { mockDashboardLinks } from "@/tests/unit/mocks/dashboardMoks";
 import { CommunityPrivileges } from "@/types/communities";
 
 const mockUseRouter = vi.fn();

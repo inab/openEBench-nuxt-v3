@@ -1,22 +1,22 @@
 <template>
-  <div class="langing-numbers">
+  <section class="landing-numbers">
     <div class="container h-100">
       <div class="row h-100 align-items-center">
-        <div class="col-12 col-sm-6 col-lg-3 mb-3 mb-lg-0 h-100">
+        <div class="col-12 col-sm-6 col-lg-3 mb-3 mb-lg-0 h-100 landing-numbers-box">
           <AnimateNumber description="Communities" :number="communitiesCount" />
         </div>
-        <div class="col-12 col-sm-6 col-lg-3 mb-3 mb-lg-0 h-100">
+        <div class="col-12 col-sm-6 col-lg-3 mb-3 mb-lg-0 h-100 landing-numbers-box">
           <AnimateNumber description="Tools" :number="toolsCount" />
         </div>
-        <div class="col-12 col-sm-6 col-lg-3 mb-3 mb-lg-0 h-100">
+        <div class="col-12 col-sm-6 col-lg-3 mb-3 mb-lg-0 h-100 landing-numbers-box">
           <AnimateNumber description="Resources" :number="resourcesCount" />
         </div>
-        <div class="col-12 col-sm-6 col-lg-3 mb-3 mb-lg-0 h-100">
+        <div class="col-12 col-sm-6 col-lg-3 mb-3 mb-lg-0 h-100 landing-numbers-box">
           <AnimateNumber description="Project Spaces" :number="projectsCount" />
         </div>
       </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <script setup lang="ts">
@@ -136,7 +136,7 @@ async function getResourcesCount() {
 </script>
 
 <style scoped lang="scss">
-.langing-numbers {
+.landing-numbers {
   min-height: 170px;
   color: white;
   background-image: url("~/assets/images/backgrounds/material2_parallax.webp");

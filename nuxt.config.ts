@@ -1,6 +1,6 @@
 import { customRoutes } from "./router.options";
 import svgLoader from "vite-svg-loader";
-const mockAuthModule = process.env.VITEST ? ['./test/mocks/setup.ts'] : []
+const mockAuthModule = process.env.VITEST ? ['./tests/unit/mocks/setup.ts'] : []
 
 export default defineNuxtConfig({
   devtools: {

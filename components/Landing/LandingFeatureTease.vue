@@ -1,5 +1,5 @@
 <template>
-  <div class="landing-feature-tease">
+  <section class="landing-feature-tease">
     <div class="container">
       <h2 class="text-h4 mb-15">What can you do in OpenEBench?</h2>
       <div class="row landing-feature-tease__container">
@@ -82,7 +82,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <script setup lang="ts">

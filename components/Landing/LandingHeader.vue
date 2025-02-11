@@ -1,5 +1,5 @@
 <template>
-  <div class="w-100">
+  <section class="w-100">
     <div class="welcome-header-box">
       <div class="container container-padding">
         <div class="row">
@@ -47,7 +47,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <script setup>
