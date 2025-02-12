@@ -271,7 +271,19 @@
 
         <!-- Content 3. Test data -->
         <div v-if="item.label == '3. Test data'" class="p-4">
+          <div class="mt-0 d-flex flex-col justify-space-between">
+            <!-- Test -->
+            <MetaFieldURLField
+              title="Test Data"
+              :value="toolMetadata.test"
+              field="test"
+							value-type="string"
+							n_cols="col-9"
+							label="URL"
+							:increasable="true"
+            />
 
+          </div>
         </div>
 
         <!-- Content 4. Interoperability -->
