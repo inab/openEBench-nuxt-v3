@@ -255,6 +255,18 @@
             type-label="topic"
             :accepted-vocabularies="['EDAM']"
           />
+
+          <!-- Operations -->
+          <MetaFieldTopicOperation 
+           title="Operations / Functions performed by the software"
+            :value="toolMetadata.operations"
+            field="operations"
+            value-type=""
+            n_cols="12"
+            class="mr-auto mt-4"
+            type-label="operation"
+            :accepted-vocabularies="['EDAM']"
+          />
         </div>
 
         <!-- Content 3. Test data -->
