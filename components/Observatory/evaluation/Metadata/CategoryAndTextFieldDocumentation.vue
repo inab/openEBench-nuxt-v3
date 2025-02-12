@@ -46,12 +46,12 @@
       </UButton>
     </UInput>
 
-<span class="text-xs ps-1 mt-2" :class="{ 'text-red-500': urlErrorMessage }">
-  {{ urlErrorMessage }}
-</span>
+    <span class="text-xs ps-1 mt-2" :class="{ 'text-red-500': urlErrorMessage }">
+      {{ urlErrorMessage }}
+    </span>
 
   </div>
-  </div>
+</div>
 </template>
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
@@ -60,7 +60,7 @@ import { useMetadataStore } from '@/stores/observatory/evaluation/metadata';
 const metadataStore = useMetadataStore();
 // PROPS
 const props = defineProps<{
-  item: Array,
+  item: any,
   field: string,
   id: string,
   index: number,
