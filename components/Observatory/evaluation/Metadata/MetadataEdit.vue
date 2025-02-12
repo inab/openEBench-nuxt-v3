@@ -234,14 +234,26 @@
 
         <!-- Content 2. Documentation -->
         <div v-if="item.label == '2. Documentation'" class="p-4">
+          
           <!-- Documentation -->
-
           <MetaFieldDocumentation
             title="Documentation"
 						:value="toolMetadata.documentation"
 						field="documentation"
 						n_cols="12"
-            increable="true"
+            :increable="true"
+          />
+          
+          <!-- Topics -->
+          <MetaFieldTopicOperation
+            title="Topics / Domains of application"
+            :value="toolMetadata.topics"
+            field="topics"
+            value-type=""
+            n_cols="12"
+            class="mr-auto mt-4"
+            type-label="topic"
+            :accepted-vocabularies="['EDAM']"
           />
         </div>
 
@@ -312,6 +324,7 @@ import SelectorType from './SelectorType.vue';
 import VersionCombo from './VersionCombo.vue';
 import MetaRegistriesCombo from './MetaRegistriesCombo.vue';
 import MetaFieldDocumentation from './MetaFieldDocumentation.vue';
+import MetaFieldTopicOperation from './MetaFieldTopicOperation.vue';
 
 
 const metadataStore = useMetadataStore();

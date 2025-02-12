@@ -23,7 +23,7 @@
           />
         </UButton>
     </div>
-    <div v-for="(item, index) in value" :key="item.id" class="row">
+    <div v-for="(item, index) in value" :key="item.id">
       <CategoryAndTextFieldDocumentation 
         :id="item.id"
         :item="item.term"

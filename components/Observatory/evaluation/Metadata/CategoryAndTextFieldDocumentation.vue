@@ -19,6 +19,10 @@
       </template>
     </USelectMenu>
   </div>
+
+
+  <!-- MIRA EL INPUT DEL PRIMER PASO Y COPIA LOS ESTILOS. -->
+
   <div class="col-7">
     <span :class="{ 'text-red-500': urlErrorMessage }">{{ textLabel }}</span>
     <UInput
