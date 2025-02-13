@@ -300,6 +300,18 @@
 							type-label="format"
 							:accepted-vocabularies="['EDAM']"
             />
+
+            <!-- Output Data formats -->
+            <MetaFieldFormat
+              title="Output Data formats"
+              :value="toolMetadata.output"
+							field="output"
+							value-type=""
+              n_cols="col-12"
+							class=""
+							type-label="format"
+							:accepted-vocabularies="['EDAM']"
+            />
           </div>
         </div>
 
