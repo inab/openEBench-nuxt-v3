@@ -317,7 +317,45 @@
 
         <!-- Content 5. Versioning -->
         <div v-if="item.label == '5. Versioning'" class="p-4">
+          <div class="mt-0 d-flex flex-col justify-space-between">
+            <!-- Repository -->
+            <MetaFieldURLField
+              title="Repository"
+              :value="toolMetadata.repository"
+              field="repository"
+							value-type="string"
+							n_cols="col-9"
+							label="URL"
+							:increasable="true"
+            />
 
+            <!-- Version Control -->
+            <div class="col-12 flex items-stretch">
+              <div class="self-start">
+                <UCheckbox
+                  v-if="toolMetadata.repository.length > 0"
+                  v-model="versionControl" 
+                  color="primary"
+                  class="mt-3 mx-4 animated-checkbox"
+                >
+                  <template #label>
+                    <span class="ms-1">Version Control is used to develop the software.</span>
+                  </template>
+                </UCheckbox>
+                <UIcon
+                  v-if="toolMetadata.repository.length > 0"
+                  name="i-heroicons-information-circle"
+                  class="bg-black"
+                  size="xs"
+                />
+                <span v-if="toolMetadata.repository.length > 0">
+                  Please, check this box if any fo the previos links corresponds
+								  to a repository that uses version control.
+                </span>
+              </div>
+
+            </div>
+          </div>
         </div>
 
         <!-- Content 6. Reproducibility -->
