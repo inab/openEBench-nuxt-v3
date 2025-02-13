@@ -240,7 +240,7 @@
             title="Documentation"
 						:value="toolMetadata.documentation"
 						field="documentation"
-						n_cols="12"
+						n_cols="col-12"
             :increable="true"
           />
           
@@ -288,7 +288,19 @@
 
         <!-- Content 4. Interoperability -->
         <div v-if="item.label == '4. Interoperability'" class="p-4">
-
+          <div class="mt-0 d-flex flex-col justify-space-between">
+            <!-- Input Data formats -->
+            <MetaFieldFormat
+              title="Input Data formats"
+              :value="toolMetadata.input"
+							field="input"
+							value-type=""
+              n_cols="col-12"
+							class=""
+							type-label="format"
+							:accepted-vocabularies="['EDAM']"
+            />
+          </div>
         </div>
 
         <!-- Content 5. Versioning -->
@@ -346,6 +358,7 @@ import MetaFieldLicense from "./MetaFieldLicense.vue";
 import FormField from './FormField.vue';
 import SelectorType from './SelectorType.vue';
 import VersionCombo from './VersionCombo.vue';
+import MetaFieldFormat from './MetaFieldFormat.vue'
 import MetaRegistriesCombo from './MetaRegistriesCombo.vue';
 import MetaFieldDocumentation from './MetaFieldDocumentation.vue';
 import MetaFieldTopicOperation from './MetaFieldTopicOperation.vue';
