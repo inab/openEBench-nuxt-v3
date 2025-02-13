@@ -360,7 +360,30 @@
 
         <!-- Content 6. Reproducibility -->
         <div v-if="item.label == '6. Reproducibility'" class="p-4">
+          <div class="mt-0 d-flex flex-col justify-space-between">
+            <!-- Dependencies -->
+            <MetaFieldSimpleField
+              title="Dependencies"
+							:value="toolMetadata.dependencies"
+							field="dependencies"
+							value-type=""
+							n_cols="col-4"
+							class=""
+            />
 
+						<!-- Empty column -->
+            <div class="col-1"></div>
+
+            <!-- Operating System -->
+            <MetaFieldSimpleField
+							title="Operating System"
+							:value="toolMetadata.os"
+							field="os"
+							value-type=""
+							n_cols="col-4"
+							class="mr-auto"
+						/>
+          </div>
         </div>
 
         <!-- Content 7. Recognition -->
@@ -412,6 +435,7 @@ import MetaFieldFormat from './MetaFieldFormat.vue'
 import MetaRegistriesCombo from './MetaRegistriesCombo.vue';
 import MetaFieldDocumentation from './MetaFieldDocumentation.vue';
 import MetaFieldTopicOperation from './MetaFieldTopicOperation.vue';
+import MetaFieldSimpleField from './MetaFieldSimpleField.vue';
 
 
 const metadataStore = useMetadataStore();
