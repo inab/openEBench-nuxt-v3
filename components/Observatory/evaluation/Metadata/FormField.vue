@@ -65,7 +65,7 @@ onMounted(() => {
   model.value = props.item;
 });
 
-// Continuar con los metodos
+// Methods
 const changeValue = () => {
   const newValue = {
     id: props.id,
