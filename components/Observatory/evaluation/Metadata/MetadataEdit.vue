@@ -388,7 +388,24 @@
 
         <!-- Content 7. Recognition -->
         <div v-if="item.label == '7. Recognition'" class="p-4">
-
+          <div class="mt-0 d-flex flex-col justify-space-between">
+						<!-- Publication -->
+            <MetaFieldPublication
+							title="Associated Publication"
+              field="pubication"
+							:value="toolMetadata.publication"
+							value-type=""
+							n_cols="col-12"
+							class=""
+						/>
+            <!-- Authors -->
+            <MetaFieldAuthors
+							title="Authors / Developers"
+							:value="toolMetadata.authors"
+							field="authors"
+							class=""
+						/>
+          </div>
         </div>
         <!-- Borrar al terminar -->
         <div>
@@ -436,6 +453,8 @@ import MetaRegistriesCombo from './MetaRegistriesCombo.vue';
 import MetaFieldDocumentation from './MetaFieldDocumentation.vue';
 import MetaFieldTopicOperation from './MetaFieldTopicOperation.vue';
 import MetaFieldSimpleField from './MetaFieldSimpleField.vue';
+import MetaFieldPublication from './MetaFieldPublication.vue'
+import MetaFieldAuthors from './MetaFieldAuthors.vue'
 
 
 const metadataStore = useMetadataStore();
