@@ -96,7 +96,7 @@ export default defineNuxtConfig({
       OBSERVATORY_URI:
         process.env.OBSERVATORY_URI || "https://observatory.openebench.bsc.es",
       SCIENTIFIC_SERVICE_URL:
-        process.env.NUXT_SCIENTIFIC_SERVICE_URL ||
+        process.env.SCIENTIFIC_SERVICE_URL ||
         "https://dev-openebench.bsc.es/api/scientific",
       SCIENTIFIC_SERVICE_URL_API:
         process.env.SCIENTIFIC_SERVICE_URL_API ||

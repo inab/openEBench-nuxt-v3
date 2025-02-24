@@ -21,44 +21,64 @@
             class="space-y-4 row"
             @submit="onSubmit"
           >
-            <UFormGroup label="User name" name="username" class="col-4 mt-0">
-              <UInput
-                v-model="state.username"
-                disabled
-                color="gray"
-                variant="outline"
-                class="custom-input"
-                placeholder="User Name"
-              />
-            </UFormGroup>
-
-            <UFormGroup label="Name" name="name" class="col-4 mt-0">
-              <UInput
-                v-model="state.name"
-                class="custom-input"
-                placeholder="Name"
-              />
-            </UFormGroup>
-
-            <UFormGroup label="Surname" name="surname" class="col-4 mt-0">
-              <UInput
-                v-model="state.surname"
-                class="custom-input"
-                placeholder="Surname"
-              />
-            </UFormGroup>
-
-            <UFormGroup label="Email" name="email" class="col-4">
-              <UInput
-                v-model="state.email"
-                disabled
-                class="custom-input"
-                color="gray"
-                variant="outline"
-                placeholder="Email"
-              />
-            </UFormGroup>
-
+            <div class="row">
+              <UFormGroup label="Name" name="name" class="col-4 mt-0">
+                <UInput
+                  v-model="state.name"
+                  disabled
+                  color="gray"
+                  variant="outline"
+                  class="custom-input"
+                  placeholder="Account Name"
+                />
+              </UFormGroup>
+              <UFormGroup label="ORCID" name="orcid	" class="col-4 mt-0">
+                <UInput
+                  v-model="state.orcid"
+                  disabled
+                  color="gray"
+                  variant="outline"
+                  class="custom-input"
+                  placeholder="ORCID"
+                />
+              </UFormGroup>
+            </div>
+            <div class="row pt-2">
+              <UFormGroup label="User name" name="username" class="col-4 mt-0 pb-3">
+                <UInput
+                  v-model="state.name"
+                  disabled
+                  color="gray"
+                  variant="outline"
+                  class="custom-input"
+                  placeholder="User Name"
+                />
+              </UFormGroup>
+              <UFormGroup label="Given name" name="given_name" class="col-4 mt-0">
+                <UInput
+                  v-model="state.given_name"
+                  class="custom-input"
+                  placeholder="Given name"
+                />
+              </UFormGroup>
+              <UFormGroup label="Surname" name="surname" class="col-4 mt-0">
+                <UInput
+                  v-model="state.surname"
+                  class="custom-input"
+                  placeholder="Surname"
+                />
+              </UFormGroup>
+              <UFormGroup label="Email" name="email" class="col-4">
+                <UInput
+                  v-model="state.email"
+                  disabled
+                  class="custom-input"
+                  color="gray"
+                  variant="outline"
+                  placeholder="Email"
+                />
+              </UFormGroup>
+            </div>
             <div class="pt-4">
               <CustomSubtitle text="Roles" />
             </div>
@@ -112,17 +132,22 @@ const runtimeConfig = useRuntimeConfig();
 
 const state = reactive({
   username: undefined,
+  given_name: undefined,
+  orcid: undefined,
   name: undefined,
-  supername: undefined,
+  surname: undefined,
   email: undefined,
   roles: undefined,
 });
 
 const schema = v.object({
   username: v.pipe(v.string()),
+  given_name: v.pipe(v.string()),
+  orcid: v.pipe(v.string()),
   name: v.pipe(v.string()),
   surname: v.pipe(v.string()),
   email: v.pipe(v.string(), v.email()),
+  roles: v.pipe(v.string())
 });
 
 const selectedRoles = ref([]);
@@ -146,11 +171,13 @@ const fetchUserInfo = async () => {
 
       if (response.ok) {
         userInfo.value = await response.json();
-        state.name = userInfo.value.given_name;
+        state.given_name = userInfo.value.given_name;
+        state.username = userInfo.value.name;
+        state.orcid = userInfo.value.orcid;
         state.surname = userInfo.value.family_name;
         state.email = userInfo.value.email;
-        state.username = userInfo.value.preferred_username;
-        state.roles = userInfo.value.resource_access?.account?.roles;
+        state.name = userInfo.value.preferred_username;
+        state.roles = userInfo.value.resource_access?.account?.roles ? userInfo.value.resource_access?.account?.roles : userInfo.value["oeb:roles"];
       } else {
         console.error(
           "Error al obtener la información del usuario:",
@@ -165,12 +192,10 @@ const fetchUserInfo = async () => {
 };
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  // Do something with event.data
   console.log(event.data);
   /* TODO */
 }
 
-// Llama a la función para obtener la información del usuario cuando el componente se monta
 onMounted(fetchUserInfo);
 </script>
 

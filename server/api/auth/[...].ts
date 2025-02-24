@@ -1,14 +1,9 @@
 import { NuxtAuthHandler } from "#auth";
 import KeycloakProvider from "next-auth/providers/keycloak";
-
 const runtimeConfig = useRuntimeConfig();
 
-console.log("Starting NuxtAuthHandler configuration...");
-
 const refreshAccessToken = async (token: JWT) => {
-  console.log("7 - refreshing token ...");
   try {
-    //if (Date.now() > token.refreshTokenExpired) throw Error;
     const details = {
       client_id: runtimeConfig.public.KEYCLOAK_CLIENT_ID,
       client_secret: "secrettt", 
@@ -25,9 +20,6 @@ const refreshAccessToken = async (token: JWT) => {
     });
 
     const formData = formBody.join("&");
-
-    console.log("8 - calling to token ...");
-
     const url = `${runtimeConfig.public.KEYCLOAK_HOST}/auth/realms/${runtimeConfig.public.KEYCLOAK_REALM}/protocol/openid-connect/token`;
     const response = await fetch(url, {
       method: "POST",
@@ -36,8 +28,6 @@ const refreshAccessToken = async (token: JWT) => {
       },
       body: formData,
     });
-
-    console.log("9 - token response: ", response);
 
     const refreshedTokens = await response.json();
 
@@ -131,8 +121,9 @@ export default NuxtAuthHandler({
       if (account && user) {
         token.accessToken = account.access_token;
         token.id_token = account.id_token;
-        token["oeb:roles"] = user["oeb:roles"] || account["oeb:roles"]; // Guarda el campo "oeb:roles" en el token        token.accessTokenExpires = Date.now() + account.expires_in * 1000; // Guardar tiempo de expiración
-        token.refreshToken = account.refresh_token; // Guardar el refresh token
+        token.orcid = account.orcid ?? null;
+        token["oeb:roles"] = user["oeb:roles"] || account["oeb:roles"];
+        token.refreshToken = account.refresh_token;
         const decodedAccessToken = JSON.parse(
           atob(account.access_token.split(".")[1]),
         );
@@ -143,6 +134,9 @@ export default NuxtAuthHandler({
 
       if (user) {
         token["oeb:roles"] = user["oeb:roles"] ?? token["oeb:roles"];
+        if(user.orcid) {
+          token.orcid = user.orcid;
+        }
       }
 
       if (Date.now() < token.accessTokenExpires) {
@@ -157,6 +151,7 @@ export default NuxtAuthHandler({
       session.token = token.id_token;
       session.preferred_username = token.preferred_username;
       session.resource_access = token.resource_access;
+      session.orcid = token.orcid ?? '';
       session.oeb_roles = token["oeb:roles"];
       session.user["oeb:roles"] = token["oeb:roles"];
       return session;
@@ -164,4 +159,3 @@ export default NuxtAuthHandler({
   },
   debug: true,
 });
-console.log("NuxtAuthHandler configuration complete");

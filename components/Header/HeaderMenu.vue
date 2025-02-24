@@ -281,6 +281,7 @@ function handleLogout() {
 }
 
 function getUserNameIcon() {
+  console.log(data.value)
   if (data?.value?.user?.name) {
     return data.value.user.name;
   }
