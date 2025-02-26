@@ -83,6 +83,9 @@
                       </li>
                     </ul>
                   </li>
+                  <li>
+                    <NavbarStatus />
+                  </li>
                 </ul>
               </div>
               <div class="nav-list-items-direct top-full hidden sm:flex">
@@ -168,6 +171,7 @@ import { useRouter } from "vue-router";
 import subMenuEntriesObservatory from "./HeaderMenu/subMenuEntriesObservatory";
 import subMenuEntriesAbout from "./HeaderMenu/subMenuEntriesAbout";
 import { activeTabIndex } from '@/components/Common/state.js';
+import NavbarStatus from "@/components/status/NavbarStatus";
 
 
 const router = useRouter();
@@ -281,7 +285,6 @@ function handleLogout() {
 }
 
 function getUserNameIcon() {
-  console.log(data.value)
   if (data?.value?.user?.name) {
     return data.value.user.name;
   }
