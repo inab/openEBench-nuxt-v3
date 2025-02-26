@@ -518,9 +518,11 @@ async function search() {
   searchList.value = [];
 
   const searchFilter = metricDataList.value.filter((metric) => {
-    return metric.title
+    if(metric.title) {
+      return metric.title
       .toLowerCase()
       .includes(searchMetric.value.toLowerCase());
+    }
   });
   loadingInput.value = false;
   isShowSearchTable.value = true;
