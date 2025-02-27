@@ -30,7 +30,6 @@
             class="w-full text-sm px-4 py-3 cursor-pointer flex items-center"
           >
 
-
             <!-- File Selection Display -->
             <UBadge v-if="fileName" color="gray" variant="soft">{{ fileName }}</UBadge>
             <span v-else>Select your metadata file</span>
@@ -48,12 +47,27 @@
                 :class="clearButtonClasses"
               />
             </button>
-
         </div>
         <!-- Error Message -->
         <div class="text-xs text-red-500 mt-1 ml-11" v-if="showError">
-            {{ errorMessage }}
-          </div>
+          {{ errorMessage }}
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Form Action Buttons -->
+    <div class="row justify-center">
+      <div class="col-10 text-right">
+        <UButton class="mr-2" color="gray" variant="ghost" size="md" :ui="{color:{gray:{ghost:'text-gray-900 hover:bg-gray-100'}},}" @click="goBack">
+          Back
+        </UButton>
+        <UButton class="bg-primaryOeb-500" variant="solid" size="md" 
+        :ui="{color:{variant:{solid:'hover:bg-{blue}-500'}}}"
+        :disabled="!file || showError"
+        @click="submitFile">
+          Continue
+        </UButton>
       </div>
     </div>
   </form>
@@ -62,6 +76,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useFileStore } from '@/stores/observatory/evaluation/file';
+import { useStepperStore } from '@/stores/observatory/evaluation/index';
 
 const fileStore = useFileStore();
 
@@ -101,7 +116,6 @@ const inputClasses = computed(() => [
 ]);
 
 
-
 const clearButtonClasses = computed(() => [
   'text-2xl',
   { 'text-red-500': showError.value, 'text-gray-500': !showError.value },
@@ -136,10 +150,9 @@ const handleFileUpload = (event: Event) => {
     fileName.value = null;
     return;
   }
-
   const selectedFile = input.files[0];
 
-  // Validación adicional: evitar carpetas vacías (type vacío) y verificar extensión
+  // Aditional Validation: avoid empty folders (type: empty) and check extension·
   const validExtensions = ["json", "jsonld"];
   const fileExtension = selectedFile.name.split(".").pop()?.toLowerCase();
   
@@ -151,11 +164,10 @@ const handleFileUpload = (event: Event) => {
     return;
   }
 
-  // Si todo está correcto, almacenar el archivo
+  // If everything is correct, store the file
   file.value = selectedFile;
   fileName.value = selectedFile.name;
   showError.value = false;
-  console.log("File selected:", file.value);
 };
 
 const submitFile = () => {
@@ -165,7 +177,20 @@ const submitFile = () => {
     return;
   }
   fileStore.parseMetadataFile(file.value)
-  console.log('File uploaded:', file.value);
+
+  // IF ALL OK, COMPLETE STEP
+  completeStep();
+};
+
+// Stepper
+const stepperStore = useStepperStore();
+const goBack = () => {
+  const currentStepIndex = 1; // Update with the index of the current step
+  stepperStore.goBack(currentStepIndex);
+};
+const completeStep = () => {
+  const currentStepIndex = 1; // Update with the index of the current step
+  stepperStore.completeStep(currentStepIndex);
 };
 
 </script>
