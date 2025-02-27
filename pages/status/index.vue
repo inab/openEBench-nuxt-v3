@@ -262,8 +262,6 @@ const checkKeycloakServices = async () => {
     },
   })
     .then(async (response) => {
-      console.log(response);
-
       const text = await response.text();
       isKeycloakServiceUp.value = response.ok && text.trim().length > 0;
       performance.mark(markEnd);
