@@ -45,14 +45,11 @@ const globalStatus = computed(() => {
 
 const checkVreServices = async () => {
   return fetch(`https://api.allorigins.win/raw?url=${vreServicesUrl}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "text/html",
-    },
+    method: "HEAD",
+    mode: "no-cors"
   })
-    .then(async (response) => {
-      const text = await response.text();
-      isVreServicesUp.value = response.ok && text.trim().length > 0;
+    .then(async () => {
+      isVreServicesUp.value = true;
     })
     .catch((error) => {
       return false;
@@ -61,14 +58,11 @@ const checkVreServices = async () => {
 
 const checkScientificServices = async () => {
   return fetch(`https://api.allorigins.win/raw?url=${scientificUrl}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "text/html",
-    },
+    method: "HEAD",
+    mode: "no-cors",
   })
-    .then(async (response) => {
-      const text = await response.text();
-      isScientificServicesUp.value = response.ok && text.trim().length > 0;
+    .then(async () => {
+      isScientificServicesUp.value = true
     })
     .catch((error) => {
       console.log("Error on fetch");
@@ -77,14 +71,11 @@ const checkScientificServices = async () => {
 };
 const checkKeycloakServices = async () => {
   return fetch(`https://api.allorigins.win/raw?url=${keycloakUrl}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "text/html",
-    },
+    method: "HEAD",
+    mode: "no-cors",
   })
-    .then(async (response) => {
-      const text = await response.text();
-      isKeycloakServiceUp.value = response.ok && text.trim().length > 0;
+    .then(async () => {
+      isKeycloakServiceUp.value = true;
     })
     .catch((error) => {
       return false;

@@ -201,16 +201,22 @@ const checkVreServices = async () => {
     },
   })
     .then(async (response) => {
-      const text = await response.text();
-      isVreServicesUp.value = response.ok && text.trim().length > 0;
+      console.log(response);
+
+      const status = await response.status;
+      isVreServicesUp.value = response.ok && status === 200;
       performance.mark(markEnd);
       performance.measure(measureName, markStart, markEnd);
 
-      vreLatency.value = performance.getEntriesByName(measureName)[0].duration;
-      realTraces.value.vre =
-        performance.getEntriesByName(measureName)[0].duration;
+      vreLatency.value = performance
+        .getEntriesByName(measureName)[0]
+        .duration.toFixed(3);
+      realTraces.value.vre = performance
+        .getEntriesByName(measureName)[0]
+        .duration.toFixed(3);
     })
     .catch((error) => {
+      console.log("error on VRE fetch: ", error);
       return false;
     });
 };
@@ -223,26 +229,23 @@ const checkScientificServices = async () => {
   performance.mark(markStart);
 
   return fetch(`https://api.allorigins.win/raw?url=${scientificUrl}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "text/html",
-    },
+    method: "HEAD",
+    mode: "no-cors",
   })
     .then(async (response) => {
-      const text = await response.text();
-      isScientificServicesUp.value = response.ok && text.trim().length > 0;
+      isScientificServicesUp.value = true
       performance.mark(markEnd);
       performance.measure(measureName, markStart, markEnd);
 
       scientificLatency.value = performance
         .getEntriesByName(measureName)[0]
-        .duration.toFixed(2);
+        .duration.toFixed(3);
       realTraces.value.scientific = performance
         .getEntriesByName(measureName)[0]
-        .duration.toFixed(2);
+        .duration.toFixed(3);
     })
     .catch((error) => {
-      console.log("Error on API: fetch: " , error);
+      console.log("Error on API: fetch: ", error);
       return false;
     });
 };
@@ -256,26 +259,23 @@ const checkKeycloakServices = async () => {
   performance.mark(markStart);
 
   return fetch(`https://api.allorigins.win/get?url=${keycloakUrl}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
+    method: "HEAD",
+    mode: "no-cors",
   })
-    .then(async (response) => {
-      const text = await response.text();
-      isKeycloakServiceUp.value = response.ok && text.trim().length > 0;
+    .then(async () => {
+      isKeycloakServiceUp.value = true;
       performance.mark(markEnd);
       performance.measure(measureName, markStart, markEnd);
 
       keycloakLatency.value = performance
         .getEntriesByName(measureName)[0]
-        .duration.toFixed(2);
+        .duration.toFixed(3);
       realTraces.value.keycloak = performance
         .getEntriesByName(measureName)[0]
-        .duration.toFixed(2);
+        .duration.toFixed(3);
     })
     .catch((error) => {
-      console.log("Error on Auth fetch: " , error);
+      console.log("Error on Auth fetch: ", error);
       return false;
     });
 };
@@ -301,10 +301,10 @@ const checkObservatoryServices = async () => {
 
       observatoryLatency.value = performance
         .getEntriesByName(measureName)[0]
-        .duration.toFixed(2);
+        .duration.toFixed(3);
       realTraces.value.observatory = performance
         .getEntriesByName(measureName)[0]
-        .duration.toFixed(2);
+        .duration.toFixed(3);
     })
     .catch((error) => {
       console.log("Observatory error: ", error);
@@ -323,7 +323,7 @@ const fetchAndPlot = async () => {
   };
 
   await Promise.all([
-    //checkVreServices(),
+    checkVreServices(),
     checkScientificServices(),
     checkObservatoryServices(),
     checkKeycloakServices(),
