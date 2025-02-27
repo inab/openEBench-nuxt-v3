@@ -76,7 +76,7 @@ const checkScientificServices = async () => {
     });
 };
 const checkKeycloakServices = async () => {
-  return fetch(`https://thingproxy.freeboard.io/fetch/${keycloakUrl}`, {
+  return fetch(`https://api.allorigins.win/raw?url=${keycloakUrl}`, {
     method: "GET",
     headers: {
       "Content-Type": "text/html",

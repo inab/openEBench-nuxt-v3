@@ -18,7 +18,8 @@
                   >All systems operational
                 </div>
                 <div class="subtitle">
-                  System Update: No Ongoing Issues, All Services Are Performing Normally
+                  System Update: No Ongoing Issues, All Services Are Performing
+                  Normally
                 </div>
               </div>
             </div>
@@ -233,13 +234,15 @@ const checkScientificServices = async () => {
       performance.mark(markEnd);
       performance.measure(measureName, markStart, markEnd);
 
-      scientificLatency.value =
-        performance.getEntriesByName(measureName)[0].duration;
-      realTraces.value.scientific =
-        performance.getEntriesByName(measureName)[0].duration;
+      scientificLatency.value = performance
+        .getEntriesByName(measureName)[0]
+        .duration.toFixed(2);
+      realTraces.value.scientific = performance
+        .getEntriesByName(measureName)[0]
+        .duration.toFixed(2);
     })
     .catch((error) => {
-      console.log("Error on fetch");
+      console.log("Error on API: fetch: " , error);
       return false;
     });
 };
@@ -252,24 +255,29 @@ const checkKeycloakServices = async () => {
 
   performance.mark(markStart);
 
-  return fetch(`https://thingproxy.freeboard.io/fetch/${keycloakUrl}`, {
+  return fetch(`https://api.allorigins.win/raw?url=${keycloakUrl}`, {
     method: "GET",
     headers: {
       "Content-Type": "text/html",
     },
   })
     .then(async (response) => {
+      console.log(response);
+
       const text = await response.text();
       isKeycloakServiceUp.value = response.ok && text.trim().length > 0;
       performance.mark(markEnd);
       performance.measure(measureName, markStart, markEnd);
 
-      keycloakLatency.value =
-        performance.getEntriesByName(measureName)[0].duration;
-      realTraces.value.keycloak =
-        performance.getEntriesByName(measureName)[0].duration;
+      keycloakLatency.value = performance
+        .getEntriesByName(measureName)[0]
+        .duration.toFixed(2);
+      realTraces.value.keycloak = performance
+        .getEntriesByName(measureName)[0]
+        .duration.toFixed(2);
     })
     .catch((error) => {
+      console.log("Error on Auth fetch: " , error);
       return false;
     });
 };
@@ -293,10 +301,12 @@ const checkObservatoryServices = async () => {
       performance.mark(markEnd);
       performance.measure(measureName, markStart, markEnd);
 
-      observatoryLatency.value =
-        performance.getEntriesByName(measureName)[0].duration;
-      realTraces.value.observatory =
-        performance.getEntriesByName(measureName)[0].duration;
+      observatoryLatency.value = performance
+        .getEntriesByName(measureName)[0]
+        .duration.toFixed(2);
+      realTraces.value.observatory = performance
+        .getEntriesByName(measureName)[0]
+        .duration.toFixed(2);
     })
     .catch((error) => {
       console.log("Observatory error: ", error);
@@ -315,7 +325,7 @@ const fetchAndPlot = async () => {
   };
 
   await Promise.all([
-    checkVreServices(),
+    //checkVreServices(),
     checkScientificServices(),
     checkObservatoryServices(),
     checkKeycloakServices(),
