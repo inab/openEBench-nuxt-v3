@@ -2,6 +2,7 @@ import { EDAMDict } from './EDAM_forFE_1.25.js';
 
 import { defineStore } from 'pinia';
 import { useNuxtApp } from 'nuxt/app';
+import { useMetadataStore } from'@/stores/observatory/evaluation/metadata.js';
 
 export const useFileStore = defineStore('file',{
   state: () => ({
@@ -66,23 +67,21 @@ export const useFileStore = defineStore('file',{
 	    return [];
     },
 
-    buildFeLicense(licenses){
+    buildFeLicense(licenses) {
       const newLicenses = [];
-      if (licenses){
-        for (let i = 0; i < licenses.length; i++){
+      if (licenses) {
+        for (let i = 0; i < licenses.length; i++) {
           const license = licenses[i];
-          const newLicenses = {
+          const newLicense = {
             name: license['schema:name'],
             url: '',
-          }
-          newLicenses.push(newLicenses);
+          };
+          newLicenses.push(newLicense);
         }
-        return newLicenses;
-      } else {
-        return [];
       }
+      return newLicenses;
     },
-
+    
     buildFeAuthors(authors){
       const newAuthors = [];
       if (authors){
@@ -447,39 +446,39 @@ export const useFileStore = defineStore('file',{
       const metadataStore = useMetadataStore();
       
       let metadata = {
-        topics: buildFeTopicsOperations(
+        topics: this.buildFeTopicsOperations(
           parsedContent?.['schema:applicationSubcategory'] || []
         ),
         name: parsedContent?.['schema:name'] || '',
         webpage: parsedContent?.['schema:url'] || [],
-        description: buildFeDescription(
+        description: this.buildFeDescription(
           parsedContent?.['schema:description'] || []
         ),
         os: parsedContent?.['schema:operatingSystem'] || [],
-        license: buildFeLicense(parsedContent?.['schema:license'] || []),
-        authors: buildFeAuthors(parsedContent?.['schema:author'] || []),
-        version: buildFeVersion(parsedContent?.['schema:softwareVersion'] || ''),
+        license: this.buildFeLicense(parsedContent?.['schema:license'] || []),
+        authors: this.buildFeAuthors(parsedContent?.['schema:author'] || []),
+        version: this.buildFeVersion(parsedContent?.['schema:softwareVersion'] || ''),
         repository: parsedContent?.['schema:codeRepository'] || [],
-        operations: buildFeTopicsOperations(
+        operations: this.buildFeTopicsOperations(
           parsedContent?.['schema:featureList'] || []
         ),
-        input: buildFeInputOutput(parsedContent?.['bioschemas:input'] || []),
-        output: buildFeInputOutput(parsedContent?.['bioschemas:output'] || []),
+        input: this.buildFeInputOutput(parsedContent?.['bioschemas:input'] || []),
+        output: this.buildFeInputOutput(parsedContent?.['bioschemas:output'] || []),
         download: parsedContent?.['schema:downloadURL'] || [],
-        documentation: buildFeHelp(parsedContent?.['schema:softwareHelp'] || []),
+        documentation: this.buildFeHelp(parsedContent?.['schema:softwareHelp'] || []),
         dependencies: parsedContent?.['schema:requirements'] || [],
         registration_not_mandatory:
           parsedContent?.['schema:isAccessibleForFree'] === 'true' || false,
-        edam_topics: buildFeEdamTopicsOperations(
+        edam_topics: this.buildFeEdamTopicsOperations(
           parsedContent?.['schema:applicationSubcategory'] || []
         ),
-        edam_operations: buildFeEdamTopicsOperations(
+        edam_operations: this.buildFeEdamTopicsOperations(
           parsedContent?.['schema:featureList'] || []
         ),
         label: [parsedContent?.['schema:name']] || [],
         src: parsedContent?.['schema:codeRepository'] || [],
-        links: buildFeLinks(parsedContent || {}),
-        publication: buildFePublication(
+        links: this.buildFeLinks(parsedContent || {}),
+        publication: this.buildFePublication(
           parsedContent?.['codemeta:referencePublication'] || []
         ),
         api_lib: false,
