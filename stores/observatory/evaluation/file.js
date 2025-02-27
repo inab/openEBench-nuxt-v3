@@ -382,15 +382,12 @@ export const useFileStore = defineStore('file',{
       const { $observatory } = useNuxtApp();
 
       try {
-        const URL = '/downloads/download-content/';
-
+        const URL = 'api/downloads/download-content/';
         const data = {
           url: payload.url,
         };
 
-        console.log(data);
-
-        const response = await $observatory.post(URL, {
+        const response = await $observatory(URL, {
           method: "POST",
           body: data,
           headers: {
@@ -398,9 +395,8 @@ export const useFileStore = defineStore('file',{
           },
         });
 
-        let fileContent = response.data.content.trim();
+        let fileContent = response.content.trim();
         fileContent = JSON.parse(fileContent);
-
         console.log('name', fileContent['schema:name']);
         this.mapMetadata(fileContent);
         console.debug('Downloaded file content:', fileContent);
