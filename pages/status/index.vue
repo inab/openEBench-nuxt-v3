@@ -255,10 +255,10 @@ const checkKeycloakServices = async () => {
 
   performance.mark(markStart);
 
-  return fetch(`https://api.allorigins.win/raw?url=${keycloakUrl}`, {
+  return fetch(`https://api.allorigins.win/get?url=${keycloakUrl}`, {
     method: "GET",
     headers: {
-      "Content-Type": "text/html",
+      "Content-Type": "application/x-www-form-urlencoded",
     },
   })
     .then(async (response) => {
