@@ -15,6 +15,7 @@
           variant="solid"
           :ui="{ rounded: 'rounded-full' }"
           class="p-1.5 mx-2"
+          v-if="increasable"
           @click="addEntry" 
         >
           <UIcon
@@ -26,15 +27,16 @@
 
     <!--  -->
     <div v-for="(item, index) in value" :key="item.id">
+   
       <CategoryAndTextFieldTopic
         :id="item.id"
 				:item="item.term"
 				:index="index"
 				:field="field"
-				vocabulary-label="Vocabulary/Ontology"
-				:type-label="typeLabel"
-				text-label="Term"
-				:accepted-vocabularies="acceptedVocabularies"
+				vocabularyLabel="Vocabulary/Ontology"
+				:typeLabel="typeLabel"
+				textLabel="Term"
+				:acceptedVocabularies="acceptedVocabularies"
 				class="mt-2 ml-3"
 				@remove="removeEntry(index)"
 				@change="changeEntry"
@@ -69,7 +71,7 @@ const props = withDefaults(defineProps<{
 const addEntry = () => {
   const payload = {
     field: props.field,
-    value: { type: '', url: '', vocabulary: 'EDAM',}
+    value: { term: '', uri: '', vocabulary: 'EDAM',}
   }
   metadataStore.addEntry(payload);
 }
