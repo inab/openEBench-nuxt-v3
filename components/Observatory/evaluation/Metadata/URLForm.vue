@@ -3,6 +3,7 @@
     <UInput
       v-model="localValue"
       :label="label"
+      :placeholder="label"
       class="border-1 rounded-md px-0 text-sm"
       :error-messages="urlErrorMessage"
       @input="onURLChange"

@@ -1,7 +1,7 @@
 <template>
   <div class="row mx-1 mt-1">
   <div class="col-4">
-    <span>{{ vocabularyLabel }}</span>
+    <span class="ml-0.5">{{ vocabularyLabel }}</span>
     <USelectMenu
       v-model="selectCategory"
       :options="categoryItems"
@@ -24,7 +24,7 @@
   <!-- MIRA EL INPUT DEL PRIMER PASO Y COPIA LOS ESTILOS. -->
 
   <div class="col-7">
-    <span :class="{ 'text-red-500': urlErrorMessage }">{{ textLabel }}</span>
+    <span class="ml-0.5" :class="{ 'text-red-500': urlErrorMessage }">{{ textLabel }}</span>
     <UInput
       v-model="model"
       :label="textLabel"
