@@ -28,7 +28,7 @@
     "@fortawesome/free-regular-svg-icons": "6.5.2",
     "@fortawesome/free-solid-svg-icons": "6.5.2",
     "@fortawesome/vue-fontawesome": "3.0.8",
-    "@inb/oeb-classification-table": "^1.4.0",
+    "@inb/oeb-classification-table": "^1.3.4",
     "@inb/oeb-widgets-graphs": "^1.0.9",
     "@nuxt/image": "1.7.0",
     "@nuxt/ui": "^2.21.0",
