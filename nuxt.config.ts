@@ -7,11 +7,14 @@ export default defineNuxtConfig({
     enabled: true,
   },
   app: {
-    baseURL: '/', // Tu aplicación está en la raíz del dominio
+    baseURL: '/',
   },
   nitro: {
-    serveStatic: true, // Asegúrate de que Nitro sirva los recursos estáticos
+    serveStatic: true,
     compressPublicAssets: false,
+    externals: {
+      inline: ['@inb/oeb-classification-table']
+    }
   },
   build: {
     publicPath: '/_nuxt/',
