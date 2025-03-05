@@ -29,7 +29,7 @@ const props = defineProps<{
 const runtimeConfig = useRuntimeConfig();
 
 const apiUrl = runtimeConfig.public
-  ? runtimeConfig.public.SCIENTIFIC_SERVICE_URL + "/graphql"
+  ? runtimeConfig.public.SCIENTIFIC_SERVICE_URL + "graphql"
   : "https://dev-openebench.bsc.es/api/scientific/graphql";
 const benchEventApiUrl = runtimeConfig.public
   ? runtimeConfig.public.BENCH_EVENT_API_URL
