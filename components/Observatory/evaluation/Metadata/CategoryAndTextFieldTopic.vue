@@ -3,25 +3,24 @@
 		<!-- This sets the vocabulary used -->
     <div class="col-2">
       <span class="">{{ vocabularyLabel }}</span>
-      <!-- EMPEZAR POR VER PORQUE CUANDO SE AÑADE UNA ENTRY NO SE SELECCIONA BIEN EN EL SELECT -->
-      <!-- {{ selectVocabulary }} -->
+      <!-- LABEL FLOTANTE, EMPEZAR POR AQUI. -->
       <USelectMenu
         v-model="selectVocabulary"
         :options="acceptedVocabularies"
-        :placeholder="vocabularyLabel"
-        class="border-1 rounded-md px-0"
-        @change="changeValue"
+        placeholder=""
+        class="border-1 rounded-md px-0 w-full peer"
+        @focus="isFocused = true"
+        @blur="isFocused = false"
       >
         <template #selected="{ option }">
           {{ option }}
         </template>
         <template class="mt-2 border-none" #option="{ option }">
-          <div class="text-caption ">
+          <div class="text-caption">
             {{ option }}
           </div>
         </template>
       </USelectMenu>
-			<!----------------------------------->
     </div>
 
     <!-- --------------------------- -->
@@ -46,15 +45,19 @@
       </USelectMenu>
     </div>
     <div v-if="!customVocabulary" class="col-5 ml-1">
-      <span :class="{ 'text-red-500': uriErrorMessage }">URI</span>
       <UInput
         v-model="modelURI"
-        label="URI"
+        placeholder=""
         class="border-1 rounded-md px-0 text-sm"
         :class="{ 'border-red-500': uriErrorMessage }"
         @update:modelValue="onURIChange"
-
       >
+        <!-- Floating Label -->
+        <label class="pointer-events-none absolute left-0 -top-2.5 text-(--ui-text-dimmed) text-xs px-1.5 transition-all peer-focus:-top-2.5 
+          peer-focus:text-xs peer-placeholder-shown:text-sm peer-placeholder-shown:text-(--ui-text-dimmed) peer-placeholder-shown:top-1.5"
+        >
+          <span class="inline-flex bg-white px-1" :class="{ 'text-red-500': uriErrorMessage }">URI</span>
+        </label>
         <UButton
           color="gray"
           variant="solid"
@@ -78,23 +81,35 @@
     <!-- --------------------------- -->
 		<!-- If vocabulary is CUSTOM -->
     <div v-if="customVocabulary" class="col-4">
-      <span>{{ textLabel }}</span>
       <UInput
         v-model="model"
-        label="term"
+        placeholder="" 
+        :ui="{ base: 'peer' }"
         class="border-1 rounded-md px-0 text-sm"
-      />
+      >
+        <!-- Floating Label -->
+        <label class="pointer-events-none absolute left-0 -top-2.5 text-(--ui-text-dimmed) text-xs px-1.5 transition-all peer-focus:-top-2.5 
+          peer-focus:text-xs peer-placeholder-shown:text-sm peer-placeholder-shown:text-(--ui-text-dimmed) peer-placeholder-shown:top-1.5"
+        >
+          <span class="inline-flex bg-white px-1">{{ textLabel }}</span>
+        </label>
+      </UInput>
     </div>
     <div v-if="customVocabulary" class="col-5 ml-1">
-      <span :class="{ 'text-red-500': uriErrorMessage }">URI</span>
       <UInput
         v-model="modelURI"
-        label="URI"
+        placeholder=""
         :disabled="!customVocabulary"
         class="border-1 rounded-md px-0 text-sm"
         :class="{ 'border-red-500': uriErrorMessage }"
         @update:modelValue="onURIChange"
-      >
+        >
+        <!-- Floating Label -->
+        <label class="pointer-events-none absolute left-0 -top-2.5 text-(--ui-text-dimmed) text-xs px-1.5 transition-all peer-focus:-top-2.5 
+          peer-focus:text-xs peer-placeholder-shown:text-sm peer-placeholder-shown:text-(--ui-text-dimmed) peer-placeholder-shown:top-1.5"
+        >
+          <span class="inline-flex bg-white px-1" :class="{ 'text-red-500': uriErrorMessage }">URI</span>
+        </label>
         <UButton
           color="gray"
           variant="solid"
