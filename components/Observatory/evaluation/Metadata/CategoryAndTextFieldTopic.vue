@@ -3,9 +3,12 @@
 		<!-- This sets the vocabulary used -->
     <div class="col-2">
       <span class="">{{ vocabularyLabel }}</span>
+      <!-- EMPEZAR POR VER PORQUE CUANDO SE AÑADE UNA ENTRY NO SE SELECCIONA BIEN EN EL SELECT -->
+      <!-- {{ selectVocabulary }} -->
       <USelectMenu
         v-model="selectVocabulary"
         :options="acceptedVocabularies"
+        :placeholder="vocabularyLabel"
         class="border-1 rounded-md px-0"
         @change="changeValue"
       >
@@ -49,7 +52,8 @@
         label="URI"
         class="border-1 rounded-md px-0 text-sm"
         :class="{ 'border-red-500': uriErrorMessage }"
-        @input="onURIChange"
+        @update:modelValue="onURIChange"
+
       >
         <UButton
           color="gray"
@@ -89,7 +93,7 @@
         :disabled="!customVocabulary"
         class="border-1 rounded-md px-0 text-sm"
         :class="{ 'border-red-500': uriErrorMessage }"
-        @input="onURIChange"
+        @update:modelValue="onURIChange"
       >
         <UButton
           color="gray"
@@ -152,7 +156,7 @@ const customVocabulary = computed(() => {
 });
 
 const comboboxItems = computed(() => {
-  console.log(selectVocabulary.value)
+  // console.log(selectVocabulary.value)
   if (props.acceptedVocabularies.includes(selectVocabulary.value)) {
     return vocabulariesItems.value[selectVocabulary.value][props.typeLabel];
   }
@@ -160,7 +164,7 @@ const comboboxItems = computed(() => {
 });
 
 onMounted(() => {
-  selectVocabulary.value = props.vocabularyLabel;
+  selectVocabulary.value = props.item.vocabulary;
   model.value = props.item.term;
   modelURI.value = props.item.uri;
 });
@@ -175,8 +179,10 @@ const validateURI = (uri: string): boolean => {
 };
 
 const onURIChange = () => {
-  if (validateURI(modelURI.value)) {
-    uriErrorMessage.value = ''; // Limpiar mensaje de error si la URI es válida
+  if (!modelURI.value) {
+    uriErrorMessage.value = 'Please enter a valid URI';
+  } else if (validateURI(modelURI.value)) {
+    uriErrorMessage.value = '';
     changeValue();
   } else {
     uriErrorMessage.value = 'Please enter a valid URI';
