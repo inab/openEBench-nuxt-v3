@@ -1,21 +1,27 @@
 <template>
   <div class="row mx-1 mt-1">
 		<!-- This sets the vocabulary used -->
-    <div class="col-2">
-      <span class="">{{ vocabularyLabel }}</span>
-      <!-- LABEL FLOTANTE, EMPEZAR POR AQUI. -->
+    <div class="col-2 relative" 
+      @focusin="isFocused = true"
+      @focusout="isFocused = false">
+      <!-- Etiqueta flotante -->
+      <label class="floatingLabel absolute top-[-10px] bg-white text-xs ms-2" 
+      :class="{ 'text-primaryOeb-500': isFocused }">
+        {{ vocabularyLabel }}
+      </label>
+
+      <!-- Select con bordes dinámicos -->
       <USelectMenu
         v-model="selectVocabulary"
         :options="acceptedVocabularies"
         placeholder=""
-        class="border-1 rounded-md px-0 w-full peer"
-        @focus="isFocused = true"
-        @blur="isFocused = false"
+        class="border rounded-md w-full peer"
+        :class="selectClasses"
       >
         <template #selected="{ option }">
           {{ option }}
         </template>
-        <template class="mt-2 border-none" #option="{ option }">
+        <template #option="{ option }">
           <div class="text-caption">
             {{ option }}
           </div>
@@ -25,12 +31,19 @@
 
     <!-- --------------------------- -->
 		<!-- If vocabulary is NOT CUSTOM -->
-    <div v-if="!customVocabulary" class="col-4">
-      <span class="">{{ textLabel }}</span>
+    <div v-if="!customVocabulary" class="col-4 relative"
+      @focusin="isFocusedSelect = true"
+      @focusout="isFocusedSelect = false">
+      <span class="floatingLabel absolute top-[-10px] bg-white text-xs ms-2 px-1 "
+      :class="{ 'text-primaryOeb-500': isFocusedSelect }">
+        {{ textLabel }}
+      </span>
       <USelectMenu
         v-model="model"
         :options="comboboxItems"
-        class="border-1 rounded-md px-0"
+        placeholder=""
+        class="border rounded-md px-0 w-full peer"
+        :class="{ 'border-primaryOeb-500 ring-1 ring-primaryOeb-500': isFocusedSelect }"
         @input="changeValue"
         @change="changeValue"
       >
@@ -161,10 +174,20 @@ const modelURICustom = ref('');
 const modelURI = ref('');
 const edamReversed = ref(EDAMreversed);
 const uriErrorMessage = ref('');
+const isFocused = ref(false);
+const isFocusedSelect = ref(false);
 
-// Obtener datos del store usando `computed`
+
+// Dynamic classes
+const selectClasses = computed(() => [
+  "outline-none border-gray-300",
+  {
+    "border-primaryOeb-500 ring-1 ring-primaryOeb-500": isFocused.value, 
+  }
+]);
+
+// Get data from the store
 const vocabulariesItems = computed(() => metadataStore.getVocabulariesItems);
-
 // Computed properties
 const customVocabulary = computed(() => {
   return !props.acceptedVocabularies?.includes(selectVocabulary.value);
@@ -252,3 +275,19 @@ const changeValue = () => {
 };
 
 </script>
+<style scoped>
+.floatingLabel{
+  z-index: 1;
+  transition: all 0.2s ease-in-out;
+}
+
+.truncated-label {
+  display: block; /* Asegura que la etiqueta ocupe todo el ancho */
+  max-width: 60%; /* Limita el ancho para que no sobrepase su contenedor */
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+
+</style>
