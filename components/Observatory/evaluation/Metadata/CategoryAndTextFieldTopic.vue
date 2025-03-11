@@ -61,7 +61,7 @@
       <UInput
         v-model="modelURI"
         placeholder=""
-        class="border-1 rounded-md px-0 text-sm"
+        class="relative border-1 rounded-md px-0 text-sm focus-within:ring-1 focus-within:ring-primaryOeb-500 focus-within:text-primaryOeb-500"
         :class="{ 'border-red-500': uriErrorMessage }"
         @update:modelValue="onURIChange"
       >
@@ -78,17 +78,13 @@
           class="p-1.5 mx-3 absolute right-[-55px] top-0.5"
           @click="emitRemove" 
         >
-          <UIcon
-            name="i-heroicons-x-circle-20-solid"
-            class="bg-gray-400"
-          />
+          <UIcon name="i-heroicons-x-circle-20-solid" class="bg-gray-400" />
         </UButton>
       </UInput>
 
       <span class="text-xs ps-1 mt-2" :class="{ 'text-red-500': uriErrorMessage }">
         {{ uriErrorMessage }}
       </span>
-      
     </div>
 
     <!-- --------------------------- -->
@@ -98,7 +94,7 @@
         v-model="model"
         placeholder="" 
         :ui="{ base: 'peer' }"
-        class="border-1 rounded-md px-0 text-sm"
+        class="border-1 rounded-md px-0 text-sm focus-within:ring-1 focus-within:ring-primaryOeb-500 focus-within:text-primaryOeb-500"
       >
         <!-- Floating Label -->
         <label class="pointer-events-none absolute left-0 -top-2.5 text-(--ui-text-dimmed) text-xs px-1.5 transition-all peer-focus:-top-2.5 
@@ -113,7 +109,7 @@
         v-model="modelURI"
         placeholder=""
         :disabled="!customVocabulary"
-        class="border-1 rounded-md px-0 text-sm"
+        class="border-1 rounded-md px-0 text-sm focus-within:ring-1 focus-within:ring-primaryOeb-500 focus-within:text-primaryOeb-500"
         :class="{ 'border-red-500': uriErrorMessage }"
         @update:modelValue="onURIChange"
         >
@@ -289,5 +285,9 @@ const changeValue = () => {
   text-overflow: ellipsis;
 }
 
+.custom-input:focus-within {
+  border-color: #3b82f6; /* Cambia el color del borde */
+  
+}
 
 </style>
