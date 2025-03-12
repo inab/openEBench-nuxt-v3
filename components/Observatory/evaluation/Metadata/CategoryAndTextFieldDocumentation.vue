@@ -1,12 +1,20 @@
 <template>
-  <div class="row mx-1 mt-1">
-  <div class="col-4">
-    <span class="ml-0.5">{{ vocabularyLabel }}</span>
+  <div class="row mx-1 mt-4">
+    <!-- Type -->
+  <div class="col-4 relative" 
+    @focusin="isFocusedSelect = true"
+    @focusout="isFocusedSelect = false"
+  >
+    <span class="floatingLabel absolute top-[-10px] bg-white text-xs ms-2 px-1 "
+    :class="{ 'text-primaryOeb-500': isFocusedSelect }">
+    {{ vocabularyLabel }}</span>
     <USelectMenu
       v-model="selectCategory"
       :options="categoryItems"
       :label="vocabularyLabel"
-      class="border-1 rounded-md px-0"
+      placeholder=""
+      class="border rounded-md px-0 w-full peer"
+      :class="{ 'border-primaryOeb-500 ring-1 ring-primaryOeb-500': isFocusedSelect }"
       @change="changeValue"
     >
       <template #selected="{ option }">
@@ -20,18 +28,28 @@
     </USelectMenu>
   </div>
 
-
-  <!-- MIRA EL INPUT DEL PRIMER PASO Y COPIA LOS ESTILOS. -->
-
+  <!-- URL -->
   <div class="col-7">
-    <span class="ml-0.5" :class="{ 'text-red-500': urlErrorMessage }">{{ textLabel }}</span>
     <UInput
       v-model="model"
-      :label="textLabel"
+      placeholder=""
+      :ui="{ base: 'peer' }"
       class="border-1 rounded-md px-0 text-sm"
-      :class="{ 'border-red-500': urlErrorMessage }"
-      @input="onInputChange"
+      :class="{
+        'border-red-500 ring-red-500': urlErrorMessage, // If error → Red
+        ' focus-within:ring-primaryOeb-500 focus-within:border-primaryOeb-500 focus-within:text-primaryOeb-500': !urlErrorMessage // If NO error → Blue
+      }"
+      @update:modelValue="onInputChange"
     >
+      <!-- Floating Label -->
+      <label class="pointer-events-none absolute left-0 -top-2.5 text-(--ui-text-dimmed) text-xs px-1.5 transition-all peer-focus:-top-2.5 
+        peer-focus:text-xs peer-placeholder-shown:text-sm peer-placeholder-shown:text-(--ui-text-dimmed) peer-placeholder-shown:top-1.5"
+      >
+        <span class="inline-flex bg-white px-1" :class="{ 'text-red-500': urlErrorMessage }">
+          {{ textLabel }}
+        </span>
+      </label>
+
       <UButton
         color="gray"
         variant="solid"
@@ -39,10 +57,7 @@
         class="p-1.5 mx-3 absolute right-[-55px] top-0.5"
         @click="emitRemove" 
       >
-        <UIcon
-          name="i-heroicons-x-circle-20-solid"
-          class="bg-gray-400"
-        />
+        <UIcon name="i-heroicons-x-circle-20-solid" class="bg-gray-400" />
       </UButton>
     </UInput>
 
@@ -88,6 +103,7 @@ const categoryItems = [
     'contribution policy',
     'other',
 ]
+const isFocusedSelect = ref(false);
 
 onMounted(() => {
   selectCategory.value = props.item.type
@@ -132,3 +148,9 @@ const emitRemove = () => {
   emit('remove', props.index);
 };
 </script>
+<style scoped>
+.floatingLabel{
+  z-index: 1;
+  transition: all 0.2s ease-in-out;
+}
+</style>

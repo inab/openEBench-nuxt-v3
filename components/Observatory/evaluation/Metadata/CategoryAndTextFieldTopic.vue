@@ -61,8 +61,12 @@
       <UInput
         v-model="modelURI"
         placeholder=""
-        class="relative border-1 rounded-md px-0 text-sm focus-within:ring-1 focus-within:ring-primaryOeb-500 focus-within:text-primaryOeb-500"
-        :class="{ 'border-red-500': uriErrorMessage }"
+        :ui="{ base: 'peer' }"
+        class="relative border-1 rounded-md px-0 text-sm"
+        :class="{
+          'border-red-500 ring-red-500': uriErrorMessage, // If error → Red
+          ' focus-within:ring-primaryOeb-500 focus-within:border-primaryOeb-500 focus-within:text-primaryOeb-500': !uriErrorMessage // If NO error → Blue
+        }"
         @update:modelValue="onURIChange"
       >
         <!-- Floating Label -->
@@ -108,9 +112,13 @@
       <UInput
         v-model="modelURI"
         placeholder=""
+        :ui="{ base: 'peer' }"
         :disabled="!customVocabulary"
-        class="border-1 rounded-md px-0 text-sm focus-within:ring-1 focus-within:ring-primaryOeb-500 focus-within:text-primaryOeb-500"
-        :class="{ 'border-red-500': uriErrorMessage }"
+        class="border-1 rounded-md px-0 text-sm"
+        :class="{
+          'border-red-500 ring-red-500': uriErrorMessage, // If error → Red
+          ' focus-within:ring-primaryOeb-500 focus-within:border-primaryOeb-500 focus-within:text-primaryOeb-500': !uriErrorMessage // If NO error → Blue
+        }"
         @update:modelValue="onURIChange"
         >
         <!-- Floating Label -->
@@ -283,11 +291,6 @@ const changeValue = () => {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-}
-
-.custom-input:focus-within {
-  border-color: #3b82f6; /* Cambia el color del borde */
-  
 }
 
 </style>
