@@ -1,5 +1,5 @@
 <template>
-  <div class="row mx-1 mt-1">
+  <div class="row mx-1 mt-3">
 		<!-- This sets the vocabulary used -->
     <div class="col-2 relative" 
       @focusin="isFocused = true"

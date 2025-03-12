@@ -1,5 +1,5 @@
 <template>
-  <div class="row mx-1 mt-4">
+  <div class="row mx-1 mt-3">
     <!-- Type -->
   <div class="col-4 relative" 
     @focusin="isFocusedSelect = true"

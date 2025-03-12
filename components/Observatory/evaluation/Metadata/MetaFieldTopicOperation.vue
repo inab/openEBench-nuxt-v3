@@ -1,6 +1,6 @@
 <template>
   <div class="container ms-3" :class="n_cols">
-    <div class="d-flex mb-2">
+    <div class="d-flex mb-4">
       <HeaderAvatar
           :field="field"
           :field_name="title"
