@@ -3,7 +3,7 @@
     <USelectMenu
       v-model="selectedType"
       :options="typeItems"
-      class="mt-2 border-1 rounded-md px-0"
+      class="mt-2 border-1 rounded-md px-0 focus-within:ring-primaryOeb-500 focus-within:border-primaryOeb-500 focus-within:text-primaryOeb-500"
       bordered="false"
       @update:model-value="changeValue"
     >

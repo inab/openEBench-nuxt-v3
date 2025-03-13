@@ -25,7 +25,7 @@
         v-for="(item, index) in description"
         :key="item.id"
         :value="item.term"
-        class=" d-flex border-1 rounded-md p-1"
+        class=" d-flex border-1 rounded-md p-1 focus-within:ring-primaryOeb-500 focus-within:border-primaryOeb-500 focus-within:text-primaryOeb-500"
       >
         <!-- clear description -->
         <button

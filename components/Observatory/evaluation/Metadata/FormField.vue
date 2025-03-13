@@ -3,6 +3,8 @@
     <UInput
     v-model="model" 
     :label="label"
+    :ui="{ base: 'peer' }"
+    class="focus-within:ring-1 focus-within:ring-primaryOeb-500 focus-within:text-primaryOeb-500"
 		:class="['border-1 rounded-md px-0', ...textClass]"
       @input="changeValue">
     

@@ -29,7 +29,7 @@
         </UButton>
       </template>
 
-      <!-- Contents -->
+      <!-- CONTENTS -->
       <template #item="{ item }">
 
         <!-- Content 0. Identity -->
