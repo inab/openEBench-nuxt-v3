@@ -1,5 +1,5 @@
 <template>
-  <div class="row mx-1">
+  <div class="row mx-1 mt-2">
     <UInputMenu
       v-model="selectedVersion"
       v-model:query="selectedVersion"

@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-0">
+  <div class="container">
     <div class="d-flex mb-2">
       <HeaderAvatar
         :field="field"
@@ -9,14 +9,15 @@
       <span class="text-body title">{{ title }}</span>
     </div>
 
-    <div class="row ms-1 mt-1">
+    <div class="row mt-1 px-3">
       <!-- Registries / Package managers -->
-      <div>
+      <div class="border-bottom px-">
         <USelectMenu
           v-model="selectedItem"
           :options="registries"
           multiple
-          class="border-0 px-0 select-menu border-bottom"
+          :ui="{ base: 'peer' }"
+          class="border-0 px-0 mx-0 select-menu" 
           @update:model-value="changeValue"
         >
           <template #label>
@@ -117,13 +118,18 @@ const removeItem = (item: string) => {
 }
 
 .select-menu {
-  min-height: 40px; /* Ajusta el tamaño mínimo del USelectMenu */
+  min-height: 40px;
   display: flex;
   align-items: center;
 }
 
 .border-bottom{
-  border-bottom: 1px solid !important;
+  border-bottom: 2px solid !important;
+  border-color: #e2e1e1 !important;
+}
+
+.border-bottom:hover {
+  border-bottom-color: #0b579f !important;
 }
 
 .min-height {

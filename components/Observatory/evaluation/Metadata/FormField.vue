@@ -1,5 +1,5 @@
 <template>
-  <div class="row mx-1">
+  <div class="row mx-1 mt-2">
     <UInput
     v-model="model" 
     :label="label"

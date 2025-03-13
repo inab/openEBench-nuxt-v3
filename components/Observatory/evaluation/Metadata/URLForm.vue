@@ -1,5 +1,5 @@
 <template>
-  <div class="row mx-0">
+  <div class="row mx-0 mt-3 ms-1">
     <UInput
       v-model="localValue"
       placeholder=""

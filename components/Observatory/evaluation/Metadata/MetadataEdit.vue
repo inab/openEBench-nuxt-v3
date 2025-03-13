@@ -109,7 +109,7 @@
             </div>
           </div>
 
-          <div class="mt-5 ml-0.5 d-flex">
+          <div class="mt-4 ml-0.5 d-flex">
             <!-- Webpage -->
             <MetaFieldURLField
               title="Webpage"
@@ -177,7 +177,7 @@
               field="e_infrastructures"
               :selected="toolMetadata.e_infrastructures"
               :registries="eInfrastructures"
-              class=""
+              class="me-3"
             />
           </div>
           <!-- Source Code -->
@@ -411,12 +411,7 @@
 						/>
           </div>
         </div>
-        <!-- Borrar al terminar -->
-        <div>
-          <p class="italic text-gray-900 dark:text-white text-center">
-            {{ item.label }}
-          </p>
-        </div>
+        
       </template>
     </UAccordion>
     <!-- Buttons -->

@@ -1,12 +1,12 @@
 <template>
-  <div class="row mx-1 mt-1">
+  <div class="row me-2 mt-3">
     <div class="col-6">
       <USelectMenu
         v-model="selectLicense"
         :options="SPDXLicenses"
         searchable
         placeholder="License"
-        class="border-1 rounded-md px-0"
+        class="border-1 rounded-md px-0 peer focus-within:ring-primaryOeb-500 focus-within:border-primaryOeb-500 focus-within:text-primaryOeb-500"
         @update:model-value="changeValueName"
       >
         <template #selected="{ option }">
@@ -23,14 +23,15 @@
       <UInput
         v-model="URL"
         placeholder="URL"
-        class="border-1 rounded-md px-0 text-sm"
+        :ui="{ base: 'peer' }"
+        class="border-1 rounded-md px-0 text-sm focus-within:ring-primaryOeb-500 focus-within:border-primaryOeb-500 focus-within:text-primaryOeb-500"
         @input="changeValue"
       >
         <UButton
           color="gray"
           variant="solid"
           :ui="{ rounded: 'rounded-full' }"
-          class="p-1.5 mx-3 absolute right-[-55px] top-0.5"
+          class="p-1.5 mx-4 absolute right-[-55px] top-0.5"
           @click="emitRemove" 
         >
           <UIcon
