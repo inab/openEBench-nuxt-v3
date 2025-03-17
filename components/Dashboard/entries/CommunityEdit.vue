@@ -232,7 +232,7 @@
                       <div class="col-12">
                         <div class="form-group">
                           <div class="w-100">
-                            <label for="contacts" class="form-group-row">
+                            <label for="links" class="form-group-row">
                               <span class="label-text"> Links </span>
                               <button
                                 class="btn-form-add btn-primary"
@@ -557,7 +557,8 @@ import "ckeditor5/ckeditor5.css";
 const router = useRouter();
 const runtimeConfig = useRuntimeConfig();
 const { data } = useAuth();
-const token: string = data?.value.accessToken;
+const token = ref(data?.value.accessToken);
+
 const userStore = useUser();
 const imageDefault = "~/assets/images/dashboards/empty-logo.jpg";
 
@@ -1021,6 +1022,7 @@ function onFileChange(event: Event) {
 async function fetchContacts(token: string): Promise<Contact[]> {
   try {
     if (userStore.getContactsList && userStore.getContactsList.length > 0) {
+      console.log("userStore.getContactsList: " , userStore.getContactsList)
       contactsData.value = userStore.getContactsList;
     } else {
       contactsData.value = await userStore.fetchContacts(token);
@@ -1046,15 +1048,16 @@ watch(
     }
     if (newVal && newVal.links) {
       localLinks.value = newVal.links
-        .filter((link: { comment?: string }) => {
-          return !link.comment || link.comment !== "@logo";
-        })
-        .map((link: { uri: string }) => link.uri)
+        .filter((link: { label?: string }) => link.label && link.label.toLowerCase() !== "logo")
+        .map((link: { uri?: string }) => link.uri)
         .filter((uri: string | undefined): uri is string => uri !== undefined);
+
       localLogo.value =
-        newVal.links.find((link: { comment?: string }) => {
-          return link.comment && link.comment === "@logo";
+        newVal.links.find((link: { label?: string }) => {
+          return link.label && (link.label === "Logo" || link.label === "logo");
         })?.uri || "";
+
+        console.log(localLogo.value)
     }
     if (newVal && newVal.community_contact_ids) {
       localContacts.value =

@@ -156,6 +156,18 @@
               </button>
             </div>
           </template>
+          <template #contacts-data="{ row }">
+            <span v-for="(contact, index) in row.community_contact" :key="index">
+              <a
+                :href="`https://orcid.org/${contact.id}`"
+                target="_blank"
+                class="text-primaryOeb-500"
+                >
+                {{ contact.name }}
+              </a>
+              <br/>
+            </span>
+          </template>
           <template #type-data="{ row }">
             <div class="inline-block rounded-full text-left not-inline">
               <template v-if="row._metadata && row._metadata != ''">
@@ -297,7 +309,7 @@ const columns: Array<CommunityColumnsDashboard> = [
     label: "ROLE",
   },
   {
-    key: "community_contact",
+    key: "contacts",
     label: "CONTACTS",
   },
   {
