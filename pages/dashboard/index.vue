@@ -223,7 +223,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onMounted } from "vue";
+import { computed, ref, watch } from "vue";
 import { useUser } from "@/stores/user.ts";
 
 import BarSvg from "../../public/images/plots/bar-chart.svg?component";
@@ -257,10 +257,7 @@ const metricsByType = ref([
   { name: "Box Plot Plot", total: 0 },
 ]);
 
-let token: string | undefined;
-if (data.value) {
-  token = data.value.accessToken;
-}
+const token = computed(() => data.value?.accessToken || "");
 
 const userName = computed(() => {
   return data.value && data.value.statusCode != "404" ? data.value.name : "";
@@ -286,7 +283,7 @@ async function countTotalMetrics() {
       `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Metrics`,
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token.value}`,
           Accept: "application/json",
         },
         method: "GET",
@@ -308,7 +305,7 @@ async function countTotalTools() {
       `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Tool`,
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token.value}`,
           Accept: "application/json",
         },
         method: "GET",
@@ -328,7 +325,7 @@ async function countTotalCommunities() {
       `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Community`,
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token.value}`,
           Accept: "application/json",
         },
         method: "GET",
@@ -336,6 +333,8 @@ async function countTotalCommunities() {
     );
 
     const data = await response;
+    console.log(data);
+
     totalCommunities.value = data.length;
   } catch (error) {
     console.error("Error:", error);
@@ -343,19 +342,24 @@ async function countTotalCommunities() {
 }
 
 async function countTotalContacts() {
+  console.log("Token usado en countTotalContacts:", token.value);
+  
   try {
     const response = await $fetch(
       `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Contact`,
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token.value}`,
           Accept: "application/json",
         },
         method: "GET",
+        mode: "cors",
+        credentials: "include"
       },
     );
 
     const data = await response;
+    console.log(data);
     totalContacts.value = data.length;
   } catch (error) {
     console.error("Error:", error);
@@ -391,13 +395,24 @@ async function getMetricsByType(metrics) {
   });
 }
 
-onMounted(() => {
-  countTotalMetrics();
-  countTotalTools();
-  countTotalCommunities();
-  countTotalContacts();
-});
+// onMounted(async () => {
+//   if(token.value) {
+// //countTotalMetrics();
+//   //countTotalTools();
+//   //countTotalCommunities();
+//   //countTotalContacts();
+//   }
+  
+// });
 
+watch(token, (newValue) => {
+  console.log("token has change!")
+  if (newValue) {
+    console.log("Token listo, ejecutando funciones...");
+    countTotalCommunities();
+    countTotalContacts();
+  }
+}, { immediate: true });
 </script>
 
 <style lang="scss">

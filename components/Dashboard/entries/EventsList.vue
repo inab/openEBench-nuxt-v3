@@ -13,8 +13,8 @@
       </div>
     </div>
     <div class="w-100">
-      <div class="flex items-center justify-between gap-3 py-3">
-        <div class="col-5">
+      <div class="flex items-center justify-content-end gap-3 py-3">
+        <div class="col-4">
           <UInput
             v-model="search"
             color="primary"
@@ -55,6 +55,18 @@
             </div>
           </div>
         </template>
+        <template #bench_contact-data="{ row }">
+          <span v-for="(contact, index) in row.bench_contact" :key="index">
+            <a
+              :href="`https://orcid.org/${contact.id}`"
+              target="_blank"
+              class="text-primaryOeb-500"
+            >
+              {{ contact.name }}
+            </a>
+            <br />
+          </span>
+        </template>
         <template #actions-data="{ row }">
           <div class="action-btn-group">
             <button class="btn-custom-badget text-sm">
@@ -64,14 +76,14 @@
                 class="text-sm"
               >
                 <font-awesome-icon :icon="['far', 'eye']" />
-                Visit 
+                Visit
               </NuxtLink>
             </button>
             <div v-if="row.privileges === 'Owner' && row.actions.community">
               <button title="Edit Event" class="btn-custom-badget text-sm">
                 <NuxtLink :to="getCommunityEventEditLink(row)">
                   <font-awesome-icon :icon="['fas', 'pencil']" />
-                  Edit 
+                  Edit
                 </NuxtLink>
               </button>
             </div>
@@ -81,7 +93,7 @@
               <button title="Edit Event" class="btn-custom-badget text-sm">
                 <NuxtLink :to="getCommunityEventEditLink(row)">
                   <font-awesome-icon :icon="['fas', 'pencil']" />
-                  Edit 
+                  Edit
                 </NuxtLink>
               </button>
             </div>
@@ -142,6 +154,8 @@ const props = defineProps<{
   commmunityPrivileges: CommunityPrivilegeActions;
   communityId: string;
 }>();
+
+console.log("events: " , props.events);
 
 const columns = [
   {

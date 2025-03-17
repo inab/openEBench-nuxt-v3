@@ -201,8 +201,6 @@ const checkVreServices = async () => {
     },
   })
     .then(async (response) => {
-      console.log(response);
-
       const status = await response.status;
       isVreServicesUp.value = response.ok && status === 200;
       performance.mark(markEnd);
