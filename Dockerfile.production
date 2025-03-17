@@ -1,5 +1,5 @@
 # Fase de construcción
-FROM node:20 as build
+FROM node:20-alpine as build
 WORKDIR /app
 
 # Definir vars de entorno
@@ -11,8 +11,8 @@ ARG OBSERVATORY_URI=https://observatory.openebench.bsc.es
 ARG REST_API_URL=https://dev-openebench.bsc.es/monitor/rest/
 ARG SCIENTIFIC_SERVICE_URL=https://dev-openebench.bsc.es/api/scientific/
 ARG SCIENTIFIC_SERVICE_URL_API=https://dev-openebench.bsc.es/api/scientific/
-#ARG SCIENTIFIC_SERVICE_URL_API=https://dev.openebench.bsc.es/api/scientific/
-ARG BENCH_EVENT_API_URL=https://dev-openebench.bsc.es/rest/bench_event_api
+#ARG SCIENTIFIC_SERVICE_URL_API=https://dev.openebench.bsc.es/api/scientific
+ARG BENCH_EVENT_API_URL=https://openebench.bsc.es/rest/bench_event_api
 ARG KEYCLOAK_HOST=https://inb.bsc.es
 ARG KEYCLOAK_REALM=dev-openebench
 #ARG KEYCLOAK_REALM=oeb2dev
@@ -45,9 +45,10 @@ COPY package*.json ./
 RUN npm install
 
 COPY . .
+#ENV NODE_OPTIONS="--max-old-space-size=8192 --expose-gc"
 RUN npm run build
 
-FROM node:20
+FROM node:20-alpine
 COPY --from=build /app/.output /app/.output
 
 EXPOSE 3000
