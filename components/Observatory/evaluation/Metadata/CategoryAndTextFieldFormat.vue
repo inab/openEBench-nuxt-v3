@@ -1,6 +1,5 @@
 <template>
-  <div class="row mx-1 mt-1">
-    <!--  -->
+  <div class="row mx-1 mt-3">
     <div class="col-2">
       <span>{{ vocabularyLabel }}</span>
       <USelectMenu
@@ -12,21 +11,38 @@
       </USelectMenu>
     </div>
 		<!----------------------------------->
-    <div v-if="!customVocabulary" cols="4">
-      <span>Data Format</span>
+    <div v-if="!customVocabulary" class="col-4 relative mx-2"
+      @focusin="isFocusedSelect = true"
+      @focusout="isFocusedSelect = false"
+      >
+      <span class="floatingLabel absolute top-[-9px] bg-white text-xs ms-2 px-1 "
+        :class="{ 'text-primaryOeb-500': isFocusedSelect }">
+        Data Format
+      </span>
       <USelectMenu
         v-model="model"
         :options="comboboxItemsFormat"
-        label="Data Format"
-        class="border-1 rounded-md px-0"
+        placeholder=""
+        class="border rounded-md px-0 w-full peer"
+        :class="{ 'border-primaryOeb-500 ring-1 ring-primaryOeb-500': isFocusedSelect }"
       >
       </USelectMenu>
     </div>
-    <div v-if="!customVocabulary" cols="6">
+    <div v-if="!customVocabulary" class="col-5 relative focus-within:text-primaryOeb-500">
+      <span class="floatingLabel absolute top-[-9px] bg-white text-xs ms-2 px-1 "
+      :class="{ 'text-red-500': uriErrorMessage }">
+        URL
+      </span>
       <UInput
         v-model="modelURI"
-        label="URI"
-        class="border-1 rounded-md px-0 text-sm"
+        placeholder=""
+        :ui="{ base: 'peer' }"
+        class="relative border-1 rounded-md px-0 text-sm"
+        :class="{
+          'border-red-500 ring-red-500': uriErrorMessage, // If error → Red
+          ' focus-within:ring-primaryOeb-500 focus-within:border-primaryOeb-500 focus-within:text-primaryOeb-500': !uriErrorMessage // If NO error → Blue
+        }"
+        @update:modelValue="onURLChange"
       >
         <UButton
           color="gray"
@@ -41,24 +57,40 @@
           />
         </UButton>
       </UInput>
+      <span class="text-xs ps-1 mt-2" :class="{ 'text-red-500': uriErrorMessage }">
+        {{ uriErrorMessage }}
+      </span>
     </div>
 
 		<!----------------------------------->
-    <div v-if="customVocabulary" cols="4">
+    <div v-if="customVocabulary" class="col-4 relative focus-within:text-primaryOeb-500">
+      <span class="floatingLabel absolute top-[-9px] bg-white text-xs ms-2 px-1 "
+      >
+      Data Format
+      </span>
       <UInput
         v-model="model"
-        label="Data Format"
-        class="border-1 rounded-md px-0 text-sm"
+        placeholder=""
+        :ui="{ base: 'peer' }"
+        class="border-1 rounded-md px-0 text-sm focus-within:ring-1 focus-within:ring-primaryOeb-500 focus-within:text-primaryOeb-500"
       >
       </UInput>
     </div>
-
-    <div v-if="customVocabulary" cols="6">
+    <div v-if="customVocabulary" class="col-5 relative focus-within:text-primaryOeb-500">
+      <span class="floatingLabel absolute top-[-9px] bg-white text-xs ms-2 px-1 "
+      :class="{ 'text-red-500': uriErrorMessage }">
+        URL
+      </span>
       <UInput
         v-model="modelURI"
-        :rules="[urlRule]"
-        label="URI"
+        placeholder=""
+        :ui="{ base: 'peer' }"
         class="border-1 rounded-md px-0 text-sm"
+        :class="{
+          'border-red-500 ring-red-500': uriErrorMessage, // If error → Red
+          ' focus-within:ring-primaryOeb-500 focus-within:border-primaryOeb-500 focus-within:text-primaryOeb-500': !uriErrorMessage // If NO error → Blue
+        }"
+        @update:modelValue="onURLChange"
       >
         <UButton
           color="gray"
@@ -73,6 +105,9 @@
           />
         </UButton>
       </UInput>
+      <span class="text-xs ps-1 mt-2" :class="{ 'text-red-500': uriErrorMessage }">
+        {{ uriErrorMessage }}
+      </span>
     </div>
 
   </div>
@@ -101,22 +136,56 @@ const model = ref('');
 const modelURI = ref('');
 const selectVocabulary = ref('');
 const edamReversed = ref(EDAMreversed);
+const uriErrorMessage = ref('Invalid URL');
+const isFocusedSelect = ref(false);
+
+onMounted(() => {
+  initializeData();
+});
 
 // REGLA DE VALIDACIÓN PARA URL
-const urlRule = (value: string): boolean | string => {
-  const urlPattern = /^(https?:\/\/)?([a-z\d.-]+)\.([a-z]{2,6})([/\w .-]*)*\/?$/;
-  return urlPattern.test(value) || 'Invalid URL';
+const validateURI = (uri: string): boolean => {
+  const uriPattern =
+    /^(https?:\/\/)?([a-z\d.-]+)\.([a-z]{2,6})([/\w .-]*)*\/?$/;
+  return uriPattern.test(uri);
+};
+const onURLChange = () => {
+  if (!modelURI.value) {
+    uriErrorMessage.value = 'Invalid URL';
+  } else if (validateURI(modelURI.value)) {
+    uriErrorMessage.value = '';
+    updateStore();
+  } else {
+    uriErrorMessage.value = 'Invalid URL';
+  }
 };
 
-// GETTER: Obtener los vocabularios desde el store
-const vocabulariesItems = computed(() => metadataStore.getVocabulariesItems);
+// WATCH
+watch(modelURI, (newValue) => {
+  if (!newValue) {
+    uriErrorMessage.value = 'Invalid URL';
+  }else{
+    uriErrorMessage.value = '';
+  }
+});
 
-// Computed para verificar si el vocabulario es personalizado
+// Watch `selectVocabulary` and run `updateStore`.
+watch(selectVocabulary, () => {
+  updateStore();
+});
+
+watch(model, (newValue) => {
+  if (selectVocabulary.value === 'EDAM') {
+    modelURI.value = edamReversed.value.format[newValue] || '';
+  }
+  updateStore();
+});
+
+// COMPUTED
+const vocabulariesItems = computed(() => metadataStore.getVocabulariesItems);
 const customVocabulary = computed(() => {
   return !props.acceptedVocabularies?.includes(selectVocabulary.value);
 });
-
-// Computed para obtener los items del combobox basados en el vocabulario seleccionado
 const comboboxItemsFormat = computed(() => {
   if (props.acceptedVocabularies?.includes(selectVocabulary.value)) {
     return vocabulariesItems.value?.[selectVocabulary.value]?.format ?? [];
@@ -124,26 +193,8 @@ const comboboxItemsFormat = computed(() => {
   return [];
 });
 
-// WATCHERS: Reactividad automática con `watchEffect`
-watchEffect(() => {
-  if (selectVocabulary.value === 'EDAM' && model.value) {
-    modelURI.value = edamReversed.value?.format?.[model.value] || '';
-  }
-  updateStore();
-});
-
-watchEffect(() => {
-  updateStore();
-});
-
-
-// Inicializar datos al montar el componente
-onMounted(() => {
-  initializeData();
-});
-
 // METHODS
-// Método para actualizar el store (se activa con los watchers)
+// Method to update the store (activated with the watchers)
 const updateStore = () => {
   const payload = {
     field: props.field,
@@ -151,7 +202,7 @@ const updateStore = () => {
     value: {
       id: props.index,
       term: {
-        term: props.model,
+        term: model.value,
         uri: modelURI.value,
         vocabulary: selectVocabulary.value
       }
@@ -159,7 +210,7 @@ const updateStore = () => {
   }
   metadataStore.changeEntry(payload);
 }
-  // Método para inicializar datos
+// Method for initialising data
 const initializeData = () => {
   selectVocabulary.value = props.item.vocabulary;
 	model.value = props.item.term;
@@ -172,3 +223,10 @@ const emitRemove = () => {
 };
 
 </script>
+<style scoped>
+.floatingLabel{
+  z-index: 1;
+  transition: all 0.2s ease-in-out;
+}
+
+</style>

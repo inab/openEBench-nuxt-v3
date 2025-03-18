@@ -232,8 +232,6 @@
           </div>
         </div>
         
-        <!-- Aqui me falta el placeholder. Empezar por aquí-->
-
         <!-- Content 2. Documentation -->
         <div v-if="item.label == '2. Documentation'" class="p-4">
           
@@ -272,8 +270,6 @@
         </div>
 
         <!-- Content 3. Test data -->
-         <!-- Aqui me falta el placeholder. Empezar por aquí-->
-
         <div v-if="item.label == '3. Test data'" class="p-4">
           <div class="mt-0 d-flex flex-col justify-space-between">
             <!-- Test -->
@@ -300,7 +296,7 @@
 							field="input"
 							value-type=""
               n_cols="col-12"
-							class=""
+							class="mb-4"
 							type-label="format"
 							:accepted-vocabularies="['EDAM']"
             />
