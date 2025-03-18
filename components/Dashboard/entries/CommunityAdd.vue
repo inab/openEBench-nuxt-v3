@@ -65,6 +65,18 @@
                         <div class="col-12 typeOptions">
                           <div class="form-group">
                             <label for="id">
+                              <UTooltip
+                                :ui="{
+                                  width: 'max-w-lg',
+                                  base: 'whitespace-normal break-words',
+                                }"
+                              >
+                                <template #text>
+                                  Community concept (OpenEBench Benchmarking
+                                  Data Model schemas)
+                                </template>
+                                <UIcon name="i-heroicons-information-circle" />
+                              </UTooltip>
                               ID
                               <span class="text-red-400 required">*</span>
                             </label>
@@ -128,7 +140,10 @@
                 <div class="form-card__row__box">
                   <div class="form-group">
                     <label for="acronym">
-                      Acronym
+                      <UTooltip text="Unique community acronym">
+                        <UIcon name="i-heroicons-information-circle" />
+                      </UTooltip>
+                      {{ inputLabels[state.type].acronym }}
                       <span class="text-red-400 required">*</span>
                     </label>
                     <div class="w-100">
@@ -145,7 +160,7 @@
                 <div class="form-card__row__box">
                   <div class="form-group">
                     <label for="name">
-                      Name
+                      {{ inputLabels[state.type].name }}
                       <span class="text-red-400 required">*</span>
                     </label>
                     <div class="w-100">
@@ -231,7 +246,6 @@
                     </div>
                   </div>
                 </div>
-
                 <div class="form-card__row__box">
                   <div class="col-12">
                     <div class="form-group">
@@ -479,6 +493,17 @@ const typeOptions = [
   { value: "Community", label: "Community" },
   { value: "Project", label: "Project" },
 ];
+
+const inputLabels = {
+  Community: {
+    acronym: "Community Acronym",
+    name: "Community Name",
+  },
+  Project: {
+    acronym: "Project Acronym",
+    name: "Project Name",
+  },
+};
 
 const localLogo = ref<string | null>(null);
 const localLinks = ref<string[]>([]);
@@ -884,9 +909,13 @@ function onFileChange(event: Event) {
 const fetchContacts = async (token: string): Promise<void> => {
   try {
     if (userStore.getContactsList && userStore.getContactsList.length > 0) {
+      console.log("A");
       contactsData.value = userStore.getContactsList;
     } else {
+      console.log("B");
+
       contactsData.value = await userStore.fetchContacts(token);
+      console.log("a: ", contactsData.value);
     }
   } catch (error) {
     console.error("Error fetching contacts data:", error);
