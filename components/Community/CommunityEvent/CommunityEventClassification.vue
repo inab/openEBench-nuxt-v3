@@ -49,7 +49,9 @@ const debouncedFilterArrayWatch = debounce(() => {
 const loadTable = () => {
   try {
     run_summary_table(props.filterArray, props.id);
-  } catch (error) {}
+  } catch (error) {
+    console.log("Error load table: " , error);
+  }
 };
 
 watch(
