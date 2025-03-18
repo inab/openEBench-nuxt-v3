@@ -1,6 +1,6 @@
 <template>
   <div class="container ms-3 col-12">
-    <div class="d-flex mb-2">
+    <div class="d-flex">
       <HeaderAvatar
           :field="field"
           :field_name="title"
@@ -25,7 +25,7 @@
         </UButton>
     </div>
 
-    <div v-for="(item, index) in value" :key="item.id">
+    <div v-for="(item, index) in value" :key="item.id" class="mt-4">
       <TextFieldsAuthors
         :id="item.id"
 				:item="item.term"

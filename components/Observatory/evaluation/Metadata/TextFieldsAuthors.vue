@@ -1,23 +1,36 @@
 <template>
-  <div class="row mx-1 d-flex aling-center">
-    <div class="col-3">
-      <span>Type</span>
+  <div class="row my-3" >
+    <div class="col-3 relative"
+      @focusin="isFocusedSelect = true"
+      @focusout="isFocusedSelect = false">
+      <span class="floatingLabel absolute top-[-10px] bg-white text-xs ms-2 px-1 "
+      :class="{ 'text-primaryOeb-500': isFocusedSelect }">
+        Type
+      </span>
       <USelectMenu
         v-model="modelType"
         :options="types"
-        label="Type"
-        class="border-1 rounded-md px-0"
+        placeholder=""
+        class="border rounded-md px-0 w-full peer"
+        :class="{ 'border-primaryOeb-500 ring-1 ring-primaryOeb-500': isFocusedSelect }"
         @change="changeValue"
       />
     </div>
     <div class="col-8">
-      <span>Name</span>
       <UInput
         v-model="modelName" 
-        label="Name"
-        class="border-1 rounded-md px-0 text-sm"
+        placeholder="" 
+        :ui="{ base: 'peer' }"
+        class="border-1 rounded-md px-0 text-sm focus-within:ring-1 focus-within:ring-primaryOeb-500 focus-within:text-primaryOeb-500"
         @input="changeValue"
-      />
+      >
+        <!-- Floating Label -->
+        <label class="pointer-events-none absolute left-0 -top-2.5 text-(--ui-text-dimmed) text-xs px-1.5 transition-all peer-focus:-top-2.5 
+          peer-focus:text-xs peer-placeholder-shown:text-sm peer-placeholder-shown:text-(--ui-text-dimmed) peer-placeholder-shown:top-1.5"
+        >
+          <span class="inline-flex bg-white px-1">Name</span>
+        </label>
+      </UInput>
     </div>
     <div class="col-1">
       <UTooltip text="Remove entry" :ui="{
@@ -31,7 +44,7 @@
           color="gray"
           variant="solid"
           :ui="{ rounded: 'rounded-full' }"
-          class="p-1.5 mx-3 absolute right-[-55px] top-0.5"
+          class="p-1.5 mx-3"
           @click="emitRemove" 
         >
           <UIcon
@@ -42,31 +55,37 @@
       </UTooltip>
     </div>
   </div>
-  <div class="row mx-1 d-flex aling-center">
+  <div class="row mb-5">
     <div class="col-3"></div>
-    <div class="col-5">
-      <span>Email</span>
+    <div class="col-5 mt-2">
       <UInput
         v-model="modelEmail" 
-        label="Email"
-        :rules="[rules.email]"
-        class="border-1 rounded-md px-0 text-sm"
-        @input="changeValue"
-      />
-    </div>
-    <div class="co-1"></div>
-    <div class="co-2">
-      <USelectMenu
-        v-model="modelMaintainer"
-        :options="types"
-        label="Maintainer"
-        class="border-1 rounded-md px-0"
-        @change="changeValue"
+        placeholder=""
+        :ui="{ base: 'peer' }"
+        class="border-1 rounded-md px-0 text-sm" 
+        :class="{
+          'border-red-500 ring-red-500': emailErrorMessage, // If error → Red
+          ' focus-within:ring-primaryOeb-500 focus-within:border-primaryOeb-500 focus-within:text-primaryOeb-500': !emailErrorMessage // If NO error → Blue
+        }"
+        @update:modelValue="onEmailChange"
       >
-        <template #label>
-					<span class="text-body-2 black--text">Maintainer</span>
-				</template>
-      </USelectMenu>
+        <!-- Floating Label -->
+        <label class="pointer-events-none absolute left-0 -top-2.5 text-(--ui-text-dimmed) text-xs px-1.5 transition-all peer-focus:-top-2.5 
+          peer-focus:text-xs peer-placeholder-shown:text-sm peer-placeholder-shown:text-(--ui-text-dimmed) peer-placeholder-shown:top-1.5"
+        >
+          <span class="inline-flex bg-white px-1" :class="{ 'text-red-500': emailErrorMessage }">Email</span>
+        </label>
+      </UInput>
+    </div>
+    <div class="col-2">
+      <UCheckbox
+        v-model="modelMaintainer"
+        size="xl" 
+        label="Maintainer"
+        color="primary"
+        class="mt-3 mx-4 animated-checkbox"
+        @change="changeValue"
+      />
     </div>
     
   </div>
@@ -93,13 +112,24 @@ const modelEmail = ref('');
 const modelType = ref('');
 const modelMaintainer = ref(false);
 const types = ['person', 'organization'];
-const rules = {
-    required: (value) => !!value || 'Required.',
-    email: (value) => {
-      const pattern = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/i;
-      return pattern.test(value) || 'Invalid e-mail.';
-    },
-}
+const isFocusedSelect = ref(false);
+const emailErrorMessage = ref('');
+
+const validateEmail = (email: string): boolean => {
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailPattern.test(email);
+};
+const onEmailChange = () => {
+  if (!modelEmail.value) {
+    emailErrorMessage.value = 'Invalid e-mail.';
+  } else if (validateEmail(modelEmail.value)) {
+    emailErrorMessage.value = '';
+    changeValue();
+  } else {
+    emailErrorMessage.value = 'Invalid e-mail.';
+  }
+};
+
 
 // onMounted
 onMounted(() => {
@@ -125,6 +155,8 @@ const changeValue = () => {
     }
   };
 
+  console.log(payload.value.term)
+
   metadataStore.changeEntry(payload);
 };
 
@@ -134,3 +166,10 @@ const emitRemove = () => {
 };
 
 </script>
+<style scoped>
+.floatingLabel{
+  z-index: 1;
+  transition: all 0.2s ease-in-out;
+}
+
+</style>

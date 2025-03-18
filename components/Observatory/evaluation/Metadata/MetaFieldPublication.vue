@@ -35,13 +35,13 @@
         class="mt-2 ml-3"
         />
       </div>
-      <div class="col-1" v-for="(item, index) in value" :key="item.id">
+      <div class="col-1">
         <UButton
-          color="gray"
-          variant="solid"
-          :ui="{ rounded: 'rounded-full' }"
-          class="p-1.5 mx-3 absolute right-[-55px] top-0.5"
-          @click="removeEntry(index)" 
+        color="gray"
+        variant="solid"
+        :ui="{ rounded: 'rounded-full' }"
+        class="p-1.5 top-0.5"
+        @click="removeEntry(index)"
         >
           <UIcon
             name="i-heroicons-x-circle-20-solid"

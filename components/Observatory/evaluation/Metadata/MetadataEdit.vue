@@ -389,18 +389,18 @@
 						<!-- Publication -->
             <MetaFieldPublication
 							title="Associated Publication"
-              field="pubication"
+              field="publication"
 							:value="toolMetadata.publication"
 							value-type=""
 							n_cols="col-12"
-							class=""
+							class="mb-4"
 						/>
             <!-- Authors -->
             <MetaFieldAuthors
 							title="Authors / Developers"
 							:value="toolMetadata.authors"
 							field="authors"
-							class=""
+							class="my-2"
 						/>
           </div>
         </div>

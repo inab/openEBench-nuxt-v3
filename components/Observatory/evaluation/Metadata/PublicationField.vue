@@ -1,46 +1,86 @@
 <template>
-  <div class="row mx-1">
+  <div class="row mx-1 mt-2 mb-4">
     <div class="col-10">
       <UInput
         v-model="title" 
-        label="Title"
-        class="'border-1 rounded-md px-0 text-sm'"
-        @input="changeValue">
+        placeholder=""
+        :ui="{ base: 'peer' }"
+        class="border-1 rounded-md px-0 text-sm focus-within:ring-1 focus-within:ring-primaryOeb-500 focus-within:text-primaryOeb-500"
+        @input="changeValue"
+      >
+        <!-- Floating Label -->
+        <label class="pointer-events-none absolute left-0 -top-2.5 text-(--ui-text-dimmed) text-xs px-1.5 transition-all peer-focus:-top-2.5 
+          peer-focus:text-xs peer-placeholder-shown:text-sm peer-placeholder-shown:text-(--ui-text-dimmed) peer-placeholder-shown:top-1.5"
+        >
+          <span class="inline-flex bg-white px-1">Title</span>
+        </label>
       </UInput>
     </div>
-    <div class="col-2">
+    <div class="col-2 mt">
       <UInput
         v-model="year" 
-        label="Year"
-        class="'border-1 rounded-md px-0 text-sm'"
-        @input="changeValue">
+        placeholder=""
+        :ui="{ base: 'peer' }"
+        class="border-1 rounded-md px-0 text-sm focus-within:ring-1 focus-within:ring-primaryOeb-500 focus-within:text-primaryOeb-500"
+        @input="changeValue"
+      >
+        <!-- Floating Label -->
+        <label class="pointer-events-none absolute left-0 -top-2.5 text-(--ui-text-dimmed) text-xs px-1.5 transition-all peer-focus:-top-2.5 
+          peer-focus:text-xs peer-placeholder-shown:text-sm peer-placeholder-shown:text-(--ui-text-dimmed) peer-placeholder-shown:top-1.5"
+        >
+          <span class="inline-flex bg-white px-1">Year</span>
+        </label>
       </UInput>
     </div>
   </div>
 
   <div class="row mx-1">
-    <div class="col-4">
+    <div class="col-6">
       <UInput
         v-model="doi" 
-        label="DOI"
-        class="'border-1 rounded-md px-0 text-sm'"
-        @input="changeValue">
+        placeholder=""
+        :ui="{ base: 'peer' }"
+        class="border-1 rounded-md px-0 text-sm focus-within:ring-1 focus-within:ring-primaryOeb-500 focus-within:text-primaryOeb-500"
+        @input="changeValue"
+      >
+        <!-- Floating Label -->
+        <label class="pointer-events-none absolute left-0 -top-2.5 text-(--ui-text-dimmed) text-xs px-1.5 transition-all peer-focus:-top-2.5 
+          peer-focus:text-xs peer-placeholder-shown:text-sm peer-placeholder-shown:text-(--ui-text-dimmed) peer-placeholder-shown:top-1.5"
+        >
+          <span class="inline-flex bg-white px-1">DOI</span>
+        </label>
       </UInput>
     </div>
-    <div class="col-2">
+    <div class="col-3">
       <UInput
         v-model="pmid" 
-        label="PMID"
-        class="'border-1 rounded-md px-0 text-sm'"
-        @input="changeValue">
+        placeholder=""
+        :ui="{ base: 'peer' }"
+        class="border-1 rounded-md px-0 text-sm focus-within:ring-1 focus-within:ring-primaryOeb-500 focus-within:text-primaryOeb-500"
+        @input="changeValue"
+      >
+        <!-- Floating Label -->
+        <label class="pointer-events-none absolute left-0 -top-2.5 text-(--ui-text-dimmed) text-xs px-1.5 transition-all peer-focus:-top-2.5 
+          peer-focus:text-xs peer-placeholder-shown:text-sm peer-placeholder-shown:text-(--ui-text-dimmed) peer-placeholder-shown:top-1.5"
+        >
+          <span class="inline-flex bg-white px-1">PMID</span>
+        </label>
       </UInput>
     </div>
-    <div class="col-2">
+    <div class="col-3">
       <UInput
         v-model="pmcid" 
-        label="PMCID"
-        class="'border-1 rounded-md px-0 text-sm'"
-        @input="changeValue">
+        placeholder=""
+        :ui="{ base: 'peer' }"
+        class="border-1 rounded-md px-0 text-sm focus-within:ring-1 focus-within:ring-primaryOeb-500 focus-within:text-primaryOeb-500"
+        @input="changeValue"
+      >
+        <!-- Floating Label -->
+        <label class="pointer-events-none absolute left-0 -top-2.5 text-(--ui-text-dimmed) text-xs px-1.5 transition-all peer-focus:-top-2.5 
+          peer-focus:text-xs peer-placeholder-shown:text-sm peer-placeholder-shown:text-(--ui-text-dimmed) peer-placeholder-shown:top-1.5"
+        >
+          <span class="inline-flex bg-white px-1">PMCID</span>
+        </label>
       </UInput>
     </div>
   </div>
