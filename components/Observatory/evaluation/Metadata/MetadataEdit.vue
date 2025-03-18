@@ -318,6 +318,7 @@
         <!-- Content 5. Versioning -->
         <div v-if="item.label == '5. Versioning'" class="p-4">
           <div class="mt-0 d-flex flex-col justify-space-between">
+
             <!-- Repository -->
             <MetaFieldURLField
               title="Repository"
@@ -331,7 +332,7 @@
 
             <!-- Version Control -->
             <div class="col-12 flex items-stretch">
-              <div class="self-start">
+              <div class="self-start ms-2">
                 <UCheckbox
                   v-if="toolMetadata.repository.length > 0"
                   v-model="versionControl" 
@@ -339,16 +340,16 @@
                   class="mt-3 mx-4 animated-checkbox"
                 >
                   <template #label>
-                    <span class="ms-1">Version Control is used to develop the software.</span>
+                    <span>Version Control is used to develop the software.</span>
                   </template>
                 </UCheckbox>
                 <UIcon
                   v-if="toolMetadata.repository.length > 0"
                   name="i-heroicons-information-circle"
-                  class="bg-black"
+                  class="bg-black ms-4 mt-3"
                   size="xs"
                 />
-                <span v-if="toolMetadata.repository.length > 0">
+                <span v-if="toolMetadata.repository.length > 0" class="ms-1">
                   Please, check this box if any fo the previos links corresponds
 								  to a repository that uses version control.
                 </span>
@@ -357,6 +358,10 @@
             </div>
           </div>
         </div>
+
+
+
+
 
         <!-- Content 6. Reproducibility -->
         <div v-if="item.label == '6. Reproducibility'" class="p-4">

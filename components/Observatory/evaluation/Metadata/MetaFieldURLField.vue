@@ -1,5 +1,5 @@
 <template>
-  <div class="container ms-3" :class="n_cols">
+  <div class="container ms-3 mb-3" :class="n_cols">
     <div class="d-flex">
       <HeaderAvatar
         :field="field"
