@@ -2,21 +2,25 @@
   <div class="row mx-1 mt-2">
     <UInput
     v-model="model" 
-    :label="label"
+    placeholder=""
     :ui="{ base: 'peer' }"
     class="focus-within:ring-1 focus-within:ring-primaryOeb-500 focus-within:text-primaryOeb-500"
 		:class="['border-1 rounded-md px-0', ...textClass]"
-      @input="changeValue">
-    
-      <template #append>
-        <button
-          v-if="increasable"
-          class="btn btn-outline-secondary3"
-          @click="$emit('remove', index)"
-        >
-          <NUIcon name="mdi-close-circle" class="text-gray-500 text-sm"></NUIcon>
-        </button>
-      </template>
+    @input="changeValue"
+    >
+      <UButton
+        v-if="increasable"
+        color="gray"
+        variant="solid"
+        :ui="{ rounded: 'rounded-full' }"
+        class="p-1.5 mx-3 absolute right-[-55px] top-0.5"
+        @click="emitRemove"
+      >
+        <UIcon
+          name="i-heroicons-x-circle-20-solid"
+          class="bg-gray-400"
+        />
+      </UButton>
     </UInput>
 
   </div>
@@ -58,6 +62,12 @@ const props = defineProps({
     default: '',
   },
 });
+
+const emit = defineEmits(['remove']);
+
+const emitRemove = () => {
+  emit('remove', props.index);
+};
 
 // State and logic
 const model = ref('');
