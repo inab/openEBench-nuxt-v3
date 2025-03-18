@@ -15,6 +15,7 @@
         variant="solid"
         :ui="{ rounded: 'rounded-full' }"
         class="p-1.5 mx-2"
+        v-if="increasable"
         @click="addEntry" 
       >
         <UIcon

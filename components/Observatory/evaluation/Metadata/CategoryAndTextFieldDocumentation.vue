@@ -6,8 +6,9 @@
     @focusout="isFocusedSelect = false"
   >
     <span class="floatingLabel absolute top-[-10px] bg-white text-xs ms-2 px-1 "
-    :class="{ 'text-primaryOeb-500': isFocusedSelect }">
-    {{ vocabularyLabel }}</span>
+      :class="{ 'text-primaryOeb-500': isFocusedSelect }">
+      {{ vocabularyLabel }}
+    </span>
     <USelectMenu
       v-model="selectCategory"
       :options="categoryItems"

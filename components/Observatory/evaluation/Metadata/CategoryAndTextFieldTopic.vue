@@ -285,12 +285,4 @@ const changeValue = () => {
   transition: all 0.2s ease-in-out;
 }
 
-.truncated-label {
-  display: block; /* Asegura que la etiqueta ocupe todo el ancho */
-  max-width: 60%; /* Limita el ancho para que no sobrepase su contenedor */
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
 </style>
