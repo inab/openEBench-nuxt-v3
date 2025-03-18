@@ -1,12 +1,17 @@
 <template>
   <div class="container px-5 my-5">
-    <UAccordion :items="items" :ui="{ wrapper: 'flex flex-col w-full' }" class="shadow-md">
+    <UAccordion 
+    :items="items"
+    class="shadow-md"
+    :ui="{ wrapper: 'flex flex-col w-full' }"
+    >
       <template #default="{ item, index, open }">
         <UButton
           color="gray"
           variant="ghost"
           class="border-b border-gray-200 dark:border-gray-700"
           :ui="{ rounded: 'rounded-none', padding: { sm: 'p-4' } }"
+          @click="togglePanel(index)"
         >
           <span class="truncate font-semibold ms-3">{{ item.label }}</span>
 
@@ -33,7 +38,7 @@
       <template #item="{ item }">
 
         <!-- Content 0. Identity -->
-        <div v-if="item.label == '0. Identity'" class="p-4">
+        <div v-if="item.label == '0. Identity'" class="p-4 ">
           <div class="mt-0 d-flex flex-row justify-space-between">
             <!-- Name -->
             <MetaField
@@ -468,6 +473,7 @@ const items = [
 ];
 const versionControl = ref(false);
 const openPanels = ref<number[]>([]);
+  const openIndex = ref<number | null>(null);
 const selectedType = '';
 const selectedVersion = '';
 const registries = [
@@ -559,9 +565,24 @@ onMounted(() => {
 // Crear una lista de claves
 const metadataKeys = Object.keys(metadataFields);
 
+// Toggle header panel
+const togglePanel = (index: number) => {
+  if (openIndex.value === index) {
+    openIndex.value = null;
+    openPanels.value = [];
+  } else {
+    openIndex.value = index;
+    openPanels.value = [index];
+  }
+};
 const visibleTicks = (i: number) => {
   return !openPanels.value.includes(i);
 };
+
+// Observamos cambios en `openPanels`
+watch(openPanels, (newPanels) => {
+  console.log("openPanels actualizado:", newPanels);
+});
 
 const initialVersionControl = () => {
   if (toolMetadata.value.repository.length > 0) {
