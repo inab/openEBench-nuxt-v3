@@ -99,6 +99,20 @@
                             <div class="col-12 typeOptions">
                               <div class="form-group">
                                 <label for="id">
+                                  <UTooltip
+                                    :ui="{
+                                      width: 'max-w-lg',
+                                      base: 'whitespace-normal break-words',
+                                    }"
+                                  >
+                                    <template #text>
+                                      Community concept (OpenEBench Benchmarking
+                                      Data Model schemas)
+                                    </template>
+                                    <UIcon
+                                      name="i-heroicons-information-circle"
+                                    />
+                                  </UTooltip>
                                   ID
                                   <span class="text-red-400 required">*</span>
                                 </label>
@@ -180,7 +194,10 @@
                     <div class="form-card__row__box">
                       <div class="form-group">
                         <label for="acronym">
-                          Acronym
+                          <UTooltip text="Unique community acronym">
+                            <UIcon name="i-heroicons-information-circle" />
+                          </UTooltip>
+                          {{ inputLabels[state.type].acronym }}
                           <span class="text-red-400 required">*</span>
                         </label>
                         <input
@@ -197,7 +214,7 @@
                     <div class="form-card__row__box">
                       <div class="form-group">
                         <label for="description">
-                          Name
+                          {{ inputLabels[state.type].name }}
                           <span class="text-red-400 required">*</span>
                         </label>
                         <input
@@ -444,7 +461,12 @@
                     >
                       Submit
                     </UButton>
-                    <UButton type="button" @click="goBack" color="white" variant="solid">
+                    <UButton
+                      type="button"
+                      color="white"
+                      variant="solid"
+                      @click="goBack"
+                    >
                       Cancel
                     </UButton>
                   </div>
@@ -465,10 +487,7 @@
         </div>
       </div>
     </div>
-    <CustomDialog
-      :is-dialog-open="isDialogOpened"
-      :width="400"
-    >
+    <CustomDialog :is-dialog-open="isDialogOpened" :width="400">
       <template #header>
         {{ dialogTitle }}
       </template>
@@ -477,13 +496,18 @@
       </template>
       <template #footer>
         <template v-if="dialogType && dialogType === 'yesno'">
-          <button type="button" class="btn-primary dialog-btn" @click="deleteElement">
+          <button
+            type="button"
+            class="btn-primary dialog-btn"
+            @click="deleteElement"
+          >
             Yes
           </button>
           <button
             type="button"
             class="btn-primary dialog-btn dialog-btn--no"
-            color="gray" variant="solid"
+            color="gray"
+            variant="solid"
             @click="isDialogOpened = false"
           >
             No
@@ -561,6 +585,17 @@ const token = ref(data?.value.accessToken);
 
 const userStore = useUser();
 const imageDefault = "~/assets/images/dashboards/empty-logo.jpg";
+
+const inputLabels = {
+  Community: {
+    acronym: "Community Acronym",
+    name: "Community Name",
+  },
+  Project: {
+    acronym: "Project Acronym",
+    name: "Project Name",
+  },
+};
 
 const props = defineProps<{
   id: string;
@@ -892,7 +927,7 @@ async function updateCommunity() {
       {
         method: "PATCH",
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token.value}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(body),
@@ -1022,7 +1057,7 @@ function onFileChange(event: Event) {
 async function fetchContacts(token: string): Promise<Contact[]> {
   try {
     if (userStore.getContactsList && userStore.getContactsList.length > 0) {
-      console.log("userStore.getContactsList: " , userStore.getContactsList)
+      console.log("userStore.getContactsList: ", userStore.getContactsList);
       contactsData.value = userStore.getContactsList;
     } else {
       contactsData.value = await userStore.fetchContacts(token);
@@ -1030,7 +1065,7 @@ async function fetchContacts(token: string): Promise<Contact[]> {
   } catch (error) {
     console.error("Error fetching contacts data:", error);
   }
-};
+}
 
 onMounted(() => {
   if (token.value) {
@@ -1048,7 +1083,10 @@ watch(
     }
     if (newVal && newVal.links) {
       localLinks.value = newVal.links
-        .filter((link: { label?: string }) => link.label && link.label.toLowerCase() !== "logo")
+        .filter(
+          (link: { label?: string }) =>
+            link.label && link.label.toLowerCase() !== "logo",
+        )
         .map((link: { uri?: string }) => link.uri)
         .filter((uri: string | undefined): uri is string => uri !== undefined);
 
@@ -1056,8 +1094,6 @@ watch(
         newVal.links.find((link: { label?: string }) => {
           return link.label && (link.label === "Logo" || link.label === "logo");
         })?.uri || "";
-
-        console.log(localLogo.value)
     }
     if (newVal && newVal.community_contact_ids) {
       localContacts.value =

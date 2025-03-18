@@ -41,8 +41,8 @@
             size: 'text-sm',
           },
           td: {
-            base: '',
-            padding: 'px-3 py-3',
+            base: 'whitespace-nowrap',
+            padding: 'py-3',
             font: '',
             size: 'text-sm',
           },
@@ -56,13 +56,13 @@
           </div>
         </template>
         <template #bench_contact-data="{ row }">
-          <span v-for="(contact, index) in row.bench_contact" :key="index">
+          <span v-for="(contact, index) in getContactsArray(row.bench_contact)" :key="index">
             <a
-              :href="`https://orcid.org/${contact.id}`"
+              :href="`https://orcid.org/${getContactORCID(contact)}`"
               target="_blank"
               class="text-primaryOeb-500"
             >
-              {{ contact.name }}
+              {{ contact }}
             </a>
             <br />
           </span>
@@ -236,6 +236,15 @@ const getCommunityEventEditLink = (row: any, isChallenge: boolean = false) => {
   }
   return `/dashboard/projects_communities/${row.community_id}/events/${row._id}`;
 };
+
+
+function getContactsArray(contacts) {
+  return contacts.split(",");
+}
+function getContactORCID(orcid) {
+  return orcid.split(":")[1];
+}
+
 </script>
 
 <style scoped lang="scss">

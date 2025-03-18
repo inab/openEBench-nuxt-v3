@@ -333,17 +333,13 @@ async function countTotalCommunities() {
     );
 
     const data = await response;
-    console.log(data);
-
     totalCommunities.value = data.length;
   } catch (error) {
     console.error("Error:", error);
   }
 }
 
-async function countTotalContacts() {
-  console.log("Token usado en countTotalContacts:", token.value);
-  
+async function countTotalContacts() {  
   try {
     const response = await $fetch(
       `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Contact`,
@@ -352,14 +348,11 @@ async function countTotalContacts() {
           Authorization: `Bearer ${token.value}`,
           Accept: "application/json",
         },
-        method: "GET",
-        mode: "cors",
-        credentials: "include"
+        method: "GET"
       },
     );
 
     const data = await response;
-    console.log(data);
     totalContacts.value = data.length;
   } catch (error) {
     console.error("Error:", error);
@@ -406,11 +399,11 @@ async function getMetricsByType(metrics) {
 // });
 
 watch(token, (newValue) => {
-  console.log("token has change!")
   if (newValue) {
-    console.log("Token listo, ejecutando funciones...");
     countTotalCommunities();
     countTotalContacts();
+    countTotalTools();
+    countTotalMetrics();
   }
 }, { immediate: true });
 </script>
