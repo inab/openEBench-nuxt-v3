@@ -120,18 +120,20 @@ const installDialogParameters = ref(
 
 // Input Validation
 const validateInput = () => {
-  const pattern = /^(https?:\/\/)?(www\.)?github\.[a-z]+\/[^/]+\/[^/]+\/?$/i;
-  if (url.value === '') {
+  // Accepts any valid URL
+  const pattern = /^(https?:\/\/)[^\s$.?#].[^\s]*$/i
+  if (url.value.trim() === '') {
     showError.value = true;
     errorMessage.value = 'Required.';
-  } else if (!pattern.test(url.value)) {
+  } else if (!pattern.test(url.value.trim())) {
     showError.value = true;
-    errorMessage.value = 'Please enter a valid link.';
+    errorMessage.value = 'Please enter a valid URL.';
   } else {
     showError.value = false;
     errorMessage.value = '';
   }
 };
+
 
 // UI State / Clases
 const iconClasses = computed(() => {
