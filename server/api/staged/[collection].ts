@@ -4,10 +4,10 @@ import { defineEventHandler, readBody } from "h3";
 export default defineEventHandler(async (event) => {
   const runtimeConfig = useRuntimeConfig();
 
-  const { collection } = event.context.params; // Obtener la colección de la ruta
-  const method = event.req.method; // Obtener el método HTTP
-  const body = await readBody(event); // Leer el cuerpo de la solicitud
-  const token = event.req.headers["authorization"]; // Extraer el token de autorización
+  const { collection } = event.context.params;
+  const method = event.req.method;
+  const body = await readBody(event);
+  const token = event.req.headers["authorization"];
   const community_id = body.community_id;
 
   console.log("Colección:", collection);
@@ -48,8 +48,9 @@ export default defineEventHandler(async (event) => {
       }
 
       const data = await response.json();
-      console.log("Respuesta:", data);
       console.log("Estado:", response.status);
+      
+      const status = data.Response.status;
       if (data[0] && data[0].errors) {
         console.log("Error:", data[0].errors);
         return {
@@ -59,7 +60,7 @@ export default defineEventHandler(async (event) => {
       }
 
       return {
-        status: 200,
+        status: status,
         body: JSON.stringify({
           message: "Community added successfully",
           data: {

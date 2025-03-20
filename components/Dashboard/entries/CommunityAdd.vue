@@ -389,12 +389,11 @@
                 </div>
               </div>
               <div v-if="errors.length > 0" class="errors">
-                <div class="alert alert-danger">
+                <div class="alert alert-danger text-center">
                   {{ getErrors }}
                 </div>
               </div>
               <div class="form-footer">
-                <UButton type="submit"> Submit </UButton>
                 <UButton
                   type="button"
                   color="white"
@@ -403,6 +402,7 @@
                 >
                   Cancel
                 </UButton>
+                <UButton type="submit"> Submit </UButton>
               </div>
             </div>
           </UForm>
@@ -801,22 +801,42 @@ async function createCommunity() {
       throw new Error("Error in API response");
     }
 
-    const responseData = await response.json();
-    if (responseData.status == 200) {
+    const data = await response.json();
+
+    if (data.status == 200) {
       errors.value = [];
-      router.push("/dashboard/projects_communities");
-    } else {
-      const errorResponse = JSON.parse(responseData.body);
-      errors.value = errorResponse.error.map((error: any) => {
-        if (error.pointer) {
-          return `${error.message}`;
-        }
-        return error.message;
+      const msg = "We've saved your community changes.";
+      await showOkMessage(msg).then(() => {
+        router.push("/dashboard/projects_communities");
       });
+    } else {
+      const responseData = JSON.parse(data.body);
+      if(responseData.message) {
+        errors.value = [responseData.message];
+      } else if(responseData.error) {
+        errors.value = [responseData.error];
+      } else {
+        errors.value = data.error.map((error: any) => {
+          if (error.pointer) {
+            return `${error.message}`;
+          }
+          return error.message;
+        });
+      }
     }
   } catch (error) {
-    console.error("Error fetching communities data:", error);
+    console.error("Error adding communities data:", error);
   }
+}
+
+async function showOkMessage(msg: string) {
+  oks.value = msg;
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      oks.value = "";
+      resolve("done");
+    }, 5000);
+  });
 }
 
 function goBack() {
@@ -909,13 +929,9 @@ function onFileChange(event: Event) {
 const fetchContacts = async (token: string): Promise<void> => {
   try {
     if (userStore.getContactsList && userStore.getContactsList.length > 0) {
-      console.log("A");
       contactsData.value = userStore.getContactsList;
     } else {
-      console.log("B");
-
       contactsData.value = await userStore.fetchContacts(token);
-      console.log("a: ", contactsData.value);
     }
   } catch (error) {
     console.error("Error fetching contacts data:", error);

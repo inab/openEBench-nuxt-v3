@@ -288,13 +288,20 @@
                   </div>
                 </div>
               </div>
-              <div v-if="errors.length > 0" class="row errors">
+              <div v-if="errors.length > 0" class="row errors text-center">
                 <div class="col-12">
                   <div class="alert alert-danger" v-html="getErrors"></div>
                 </div>
               </div>
               <div class="form-footer">
-                <UButton type="button" @click="goBack"> Cancel </UButton>
+                <UButton
+                  type="button"
+                  color="white"
+                  variant="solid"
+                  @click="goBack"
+                >
+                  Cancel
+                </UButton>
                 <UButton
                   v-if="eventPrivileges.event.create"
                   type="submit"
@@ -385,7 +392,7 @@ const state = ref({
   community_id: props.communityId,
   bench_contact_ids: [],
   _schema:
-    "https://www.elixir-europe.org/excelerate/WP2/json-schemas/1.0/BenchmarkingEvent",
+    "https://w3id.org/openebench/scientific-schemas/2.0/BenchmarkingEvent",
   references: [],
   url: "",
   is_automated: false,
@@ -507,6 +514,8 @@ async function createBenchmarkingEvent() {
     },
   };
 
+  console.log(JSON.stringify(body))
+
   try {
     const response = await fetch(`/api/staged/BenchmarkingEvent`, {
       method: "POST",
@@ -522,6 +531,7 @@ async function createBenchmarkingEvent() {
     }
 
     const responseData = await response.json();
+    
     if (responseData.status == 200) {
       errors.value = [];
       router.push(
@@ -682,10 +692,6 @@ const fetchContacts = async (token: string): Promise<void> => {
 function checkIdPattern(id: string) {
   const pattern = new RegExp(`^${state.value.community_id}[A-Z0-9]{7}$`);
   return pattern.test(id);
-}
-
-async function onError(event: FormErrorEvent) {
-  // TO CHECK
 }
 
 onMounted(() => {

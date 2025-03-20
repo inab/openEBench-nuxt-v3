@@ -111,19 +111,6 @@ const rows = computed(() => {
   );
 });
 
-function select(row) {
-  const index = selectedToolsTmp.value.findIndex(
-    (item) => item._id === row._id,
-  );
-  const newSelected = [...selectedToolsTmp.value];
-  if (index === -1) {
-    newSelected.push(row);
-  } else {
-    newSelected.splice(index, 1);
-  }
-  selectedToolsTmp.value = newSelected;
-}
-
 async function fetchTools(token: string): Promise<Metric[]> {
   isTableLoading.value = true;
   const response = await fetch(

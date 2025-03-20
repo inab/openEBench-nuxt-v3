@@ -507,7 +507,7 @@ async function searchMetricResults() {
       () => false,
     );
   } catch (error) {
-    console.error("Error fetching contacts data:", error);
+    console.error("Error fetching metric data:", error);
   }
 
   isSearchingSelectedMetric.value = false;

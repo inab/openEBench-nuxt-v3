@@ -186,9 +186,7 @@
                                       "
                                     />
                                     <button
-                                      v-if="
-                                        eventPrivileges.update && !isView
-                                      "
+                                      v-if="eventPrivileges.update && !isView"
                                       class="btn-delete-input"
                                     >
                                       <font-awesome-icon
@@ -289,13 +287,20 @@
                       </div>
                     </div>
                   </div>
-                  <div v-if="errors.length > 0" class="row errors">
+                  <div v-if="errors.length > 0" class="row errors text-center">
                     <div class="col-12">
                       <div class="alert alert-danger" v-html="getErrors"></div>
                     </div>
                   </div>
                   <div class="form-footer">
-                    <UButton type="button" @click="goBack"> Cancel </UButton>
+                    <UButton
+                      type="button"
+                      color="white"
+                      variant="solid"
+                      @click="goBack"
+                    >
+                      Cancel
+                    </UButton>
                     <UButton
                       v-if="eventPrivileges.update && !isView"
                       type="submit"
@@ -400,7 +405,7 @@ const props = defineProps<{
   tabIndex: string;
 }>();
 
-console.log("eventPrivileges: " , props.eventPrivileges)
+console.log("eventPrivileges: ", props.eventPrivileges);
 
 const dialogTitle = ref("");
 const dialogType = ref("yesno");
@@ -696,18 +701,22 @@ async function updateBenchmarkingEvent() {
       throw new Error("Error in API response");
     }
 
-    const responseData = await response.json();
-    if (responseData.status == 200) {
+    const data = await response.json();
+
+    if (data.status == 200) {
       errors.value = [];
-      router.push(
-        `/dashboard/projects_communities/${state.value.community_id}?events=true`,
-      );
+      const msg = "We've saved your event changes.";
+      await showOkMessage(msg).then(() => {
+        router.push("/dashboard/projects_communities/${state.value.community_id}?events=true");
+      });
     } else {
-      const errorResponse = JSON.parse(responseData.body);
-      if (typeof errorResponse.error === "string") {
-        errors.value.push(errorResponse.error);
+      const responseData = JSON.parse(data.body);
+      if(responseData.message) {
+        errors.value = [responseData.message];
+      } else if(responseData.error) {
+        errors.value = [responseData.error];
       } else {
-        errors.value = errorResponse.error.map((error: any) => {
+        errors.value = data.error.map((error: any) => {
           if (error.pointer) {
             return `${error.message}`;
           }
@@ -716,8 +725,19 @@ async function updateBenchmarkingEvent() {
       }
     }
   } catch (error) {
-    console.error("Error fetching communities data:", error);
+    console.log(error);
+    errors.value = [error];
   }
+}
+
+async function showOkMessage(msg: string) {
+  oks.value = msg;
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      oks.value = "";
+      resolve("done");
+    }, 5000);
+  });
 }
 
 const checkEmptyContacts = computed(() => {

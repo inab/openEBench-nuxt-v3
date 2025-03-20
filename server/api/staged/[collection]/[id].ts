@@ -20,7 +20,7 @@ export default defineEventHandler(async (event) => {
 
     switch (method) {
       case "PATCH":
-        console.log("PATCH");
+        console.log("-*-PATCH");
         console.log(body);
         if (!body._id) {
           console.error("Error: ID faltante en el cuerpo para POST");
@@ -44,8 +44,8 @@ export default defineEventHandler(async (event) => {
           },
         );
 
-        console.log("Respuesta:", response);
-        console.log(token);
+        console.log("-*-Respuesta:", response);
+        // console.log(token);
 
         if (!response.ok) {
           const errorData = await response.json();
@@ -55,20 +55,22 @@ export default defineEventHandler(async (event) => {
           );
         }
 
+        console.log("reponse ok till here!");
+        
         const data = await response.json();
+        const status = data.Response.status;
         console.log("Respuesta ok:", data);
 
         return {
-          status: 200,
+          status: status,
           body: JSON.stringify({
             message: "Community updated successfully",
             data: {
-              id: body.id, // ID proporcionado
-              ...body, // Incluye el cuerpo que se envió
+              id: body.id,
+              ...body,
             },
           }),
         };
-        break;
       default:
         return {
           status: 405,
@@ -88,7 +90,7 @@ export default defineEventHandler(async (event) => {
     };
   } catch (error) {
     return {
-      status: 500,
+      status: response.status,
       body: JSON.stringify({ error: error.message }),
     };
   }

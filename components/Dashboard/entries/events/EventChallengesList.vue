@@ -262,4 +262,9 @@ const getCommunityChallengeEditLink = (row) => {
   text-decoration: none;
   margin-bottom: 5px;
 }
+.btn-custom-badget a {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
 </style>

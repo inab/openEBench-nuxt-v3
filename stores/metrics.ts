@@ -1,7 +1,6 @@
 import { defineStore } from "pinia";
 import type { Metric } from "@/types/challenge_metric";
 import type { Challenge } from "@/types/challenge";
-import { set } from "valibot";
 
 const runtimeConfig = useRuntimeConfig();
 
@@ -46,9 +45,8 @@ export const useMetrics = defineStore("metrics", {
         return metric.representation_hints;
       });
 
-
       dataFiltered.forEach((metric: Metric) => {
-        metric.title = metric._id + " - " + metric.title;
+        metric.title = metric._id + " - " + metric.name;
       });
 
       this.setMetricsData(dataFiltered);
