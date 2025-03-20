@@ -267,4 +267,8 @@ function getContactORCID(orcid) {
   display: block;
   min-width: 100px;
 }
+.btn-custom-badget a {
+  width: 100%;
+  height: 100%;
+}
 </style>

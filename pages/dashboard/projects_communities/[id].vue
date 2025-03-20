@@ -182,7 +182,6 @@ const fetchUserCommunitiesEvents = async (
       return item; // Si `bench_contact` no es un array, devuelve el objeto sin cambios
     });
 
-    console.log(formatResponse);
     isLoadingEvents.value = false;
     return data;
   } catch (error) {

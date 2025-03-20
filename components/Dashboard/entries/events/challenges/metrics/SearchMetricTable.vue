@@ -139,15 +139,6 @@ const totalPages = computed(() => {
   return Math.ceil(Number(_total.value) / Number(pageCount.value));
 });
 
-function select(row) {
-  const index = selectedMetric.value.findIndex((item) => item.id === row.id);
-  if (index === -1) {
-    selectedMetric.value.push(row);
-  } else {
-    selectedMetric.value.splice(index, 1);
-  }
-}
-
 function viewMetric(metric: Metric) {
   modalTitle.value = "View metric";
   isMetricEditable.value = false;
@@ -160,15 +151,18 @@ const closeModal = () => {
   metricIdOpen.value = "";
 };
 
-
 const openModal = async (row: Metric) => {
   isModalOpen.value = true;
   metricIdOpen.value = row._id;
 };
 
-watch(selectedMetric, (value) => {
-  emits("handleSelectedMetrics", value);
-});
+watch(
+  selectedMetric,
+  (value) => {
+    emits("handleSelectedMetrics", value);
+  },
+  { deep: true, flush: "post" },
+);
 </script>
 
 <style lang="scss" scoped></style>

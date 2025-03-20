@@ -107,7 +107,7 @@
                               <span class="text-red-400 required">*</span>
                             </label>
                             <VueDatePicker
-                              v-model="localDates.dates.benchmark_start"
+                              v-model="localDates.dates.challenge_start"
                               :format="dateFormat"
                               locale="en"
                             ></VueDatePicker>
@@ -120,7 +120,7 @@
                               <span class="text-red-400 required">*</span>
                             </label>
                             <VueDatePicker
-                              v-model="localDates.dates.benchmark_stop"
+                              v-model="localDates.dates.challenge_stop"
                               :format="dateFormat"
                               locale="en"
                             >
@@ -338,13 +338,20 @@
                       </div>
                     </div>
                   </div>
-                  <div v-if="errors.length > 0" class="row errors">
+                  <div v-if="errors.length > 0" class="row errors text-center">
                     <div class="col-12">
                       <div class="alert alert-danger" v-html="getErrors"></div>
                     </div>
                   </div>
                   <div class="form-footer">
-                    <UButton type="button" @click="goBack"> Cancel </UButton>
+                    <UButton
+                      type="button"
+                      color="white"
+                      variant="solid"
+                      @click="goBack"
+                    >
+                      Cancel
+                    </UButton>
                     <UButton
                       v-if="challengePrivileges.challenge.update && !isView"
                       type="submit"
@@ -409,8 +416,8 @@ const oks = ref<string>("");
 const selectedTab = ref("0");
 const localDates = ref({
   dates: {
-    benchmark_start: new Date(),
-    benchmark_stop: new Date(),
+    challenge_start: new Date(),
+    challenge_stop: new Date(),
     creation: new Date(),
     modification: new Date(),
   },
@@ -429,8 +436,8 @@ const state = ref({
   benchmarking_event_id: "",
   challenge_contact_ids: [],
   dates: {
-    benchmark_start: "",
-    benchmark_stop: "",
+    challenge_start: "",
+    challenge_stop: "",
   },
   is_automated: false,
   url: "",
@@ -461,8 +468,8 @@ const schema = object({
   acronym: string(),
   is_automated: boolean(),
   dates: object({
-    benchmark_start: date(),
-    benchmark_stop: date(),
+    challenge_start: date(),
+    challenge_stop: date(),
   }),
   _schema: string(),
   url: string(),
@@ -491,11 +498,11 @@ const challengeData = computed(() => {
     challenge_contact_ids:
       props.challengeObj?.challenge_contact_ids || ([] as string[]),
     dates: {
-      benchmark_start: props.challengeObj?.dates?.benchmark_start
-        ? new Date(props.challengeObj.dates.benchmark_start)
+      challenge_start: props.challengeObj?.dates?.challenge_start
+        ? new Date(props.challengeObj.dates.challenge_start)
         : new Date(),
-      benchmark_stop: props.challengeObj?.dates?.benchmark_stop
-        ? new Date(props.challengeObj.dates.benchmark_stop)
+      challenge_stop: props.challengeObj?.dates?.challenge_stop
+        ? new Date(props.challengeObj.dates.challenge_stop)
         : new Date(),
     },
     url: props.challengeObj?.url || "",
@@ -528,8 +535,8 @@ if (props.challengeObj && props.challengeObj.challenge_contact_ids) {
 
 if (props.challengeObj && props.challengeObj.dates) {
   localDates.value.dates = {
-    benchmark_start: new Date(props.challengeObj.dates.benchmark_start),
-    benchmark_stop: new Date(props.challengeObj.dates.benchmark_stop),
+    challenge_start: new Date(props.challengeObj.dates.challenge_start),
+    challenge_stop: new Date(props.challengeObj.dates.challenge_stop),
     creation: new Date(props.challengeObj.dates.creation),
     modification: new Date(props.challengeObj.dates.modification),
   };
@@ -572,7 +579,6 @@ function goBack() {
 function validateRequiredFields(data: any): string[] {
   const requiredFields = [
     "_id",
-    "_schema",
     "name",
     "benchmarking_event_id",
     "is_automated",
@@ -596,11 +602,11 @@ function validateRequiredFields(data: any): string[] {
     });
   }
 
-  if (!state.value.dates.benchmark_start) {
-    errorMessages.push("benchmark_start date is required");
+  if (!state.value.dates.challenge_start) {
+    errorMessages.push("Challenge start date is required");
   }
-  if (!state.value.dates.benchmark_stop) {
-    errorMessages.push("benchmark_end date is required");
+  if (!state.value.dates.challenge_stop) {
+    errorMessages.push("Challenge end date is required");
   }
 
   return errorMessages;
@@ -671,24 +677,24 @@ async function updateBenchmarkingCommunity() {
     url: state.value.url,
     is_automated: state.value.is_automated,
     dates: {
-      benchmark_start: new Date(
+      challenge_start: new Date(
         Date.UTC(
-          localDates.value.dates.benchmark_start.getUTCFullYear(),
-          localDates.value.dates.benchmark_start.getUTCMonth(),
-          localDates.value.dates.benchmark_start.getUTCDate(),
-          localDates.value.dates.benchmark_start.getUTCHours(),
-          localDates.value.dates.benchmark_start.getUTCMinutes(),
-          localDates.value.dates.benchmark_start.getUTCSeconds(),
+          localDates.value.dates.challenge_start.getUTCFullYear(),
+          localDates.value.dates.challenge_start.getUTCMonth(),
+          localDates.value.dates.challenge_start.getUTCDate(),
+          localDates.value.dates.challenge_start.getUTCHours(),
+          localDates.value.dates.challenge_start.getUTCMinutes(),
+          localDates.value.dates.challenge_start.getUTCSeconds(),
         ),
       ).toISOString(),
-      benchmark_stop: new Date(
+      challenge_stop: new Date(
         Date.UTC(
-          localDates.value.dates.benchmark_stop.getUTCFullYear(),
-          localDates.value.dates.benchmark_stop.getUTCMonth(),
-          localDates.value.dates.benchmark_stop.getUTCDate(),
-          localDates.value.dates.benchmark_stop.getUTCHours(),
-          localDates.value.dates.benchmark_stop.getUTCMinutes(),
-          localDates.value.dates.benchmark_stop.getUTCSeconds(),
+          localDates.value.dates.challenge_stop.getUTCFullYear(),
+          localDates.value.dates.challenge_stop.getUTCMonth(),
+          localDates.value.dates.challenge_stop.getUTCDate(),
+          localDates.value.dates.challenge_stop.getUTCHours(),
+          localDates.value.dates.challenge_stop.getUTCMinutes(),
+          localDates.value.dates.challenge_stop.getUTCSeconds(),
         ),
       ).toISOString(),
       creation: new Date(
@@ -714,6 +720,8 @@ async function updateBenchmarkingCommunity() {
     },
   };
 
+  console.log(JSON.stringify(body));
+
   try {
     const response = await fetch(`/api/staged/Community/${state.value._id}`, {
       method: "PATCH",
@@ -728,14 +736,19 @@ async function updateBenchmarkingCommunity() {
       throw new Error("Error in API response");
     }
 
-    const responseData = await response.json();
-    if (responseData.status == 200) {
+    const data = await response.json();
+    console.log("Response: " , data);
+
+    if (data.status == 200) {
       errors.value = [];
-      router.push(
-        `/dashboard/projects_communities/${state.value.community_id}?events=true`,
-      );
+      const msg = "We've saved your challenge changes.";
+      await showOkMessage(msg).then(() => {
+        router.push(
+          "/dashboard/communities/${props.communityId}/events/${props.eventId}?challenges=true",
+        );
+      });
     } else {
-      const errorResponse = JSON.parse(responseData.body);
+      const errorResponse = JSON.parse(data.body);
       if (typeof errorResponse.error === "string") {
         errors.value.push(errorResponse.error);
       } else {
@@ -748,8 +761,18 @@ async function updateBenchmarkingCommunity() {
       }
     }
   } catch (error) {
-    console.error("Error fetching communities data:", error);
+    errors.value = [error];
   }
+}
+
+async function showOkMessage(msg: string) {
+  oks.value = msg;
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      oks.value = "";
+      resolve("done");
+    }, 5000);
+  });
 }
 
 watch(
@@ -769,8 +792,8 @@ watch(
     }
     if (newVal && newVal.dates) {
       localDates.value.dates = {
-        benchmark_start: new Date(newVal.dates.benchmark_start),
-        benchmark_stop: new Date(newVal.dates.benchmark_stop),
+        challenge_start: new Date(newVal.dates.challenge_start),
+        challenge_stop: new Date(newVal.dates.challenge_stop),
         creation: new Date(newVal.dates.creation),
         modification: new Date(newVal.dates.modification),
       };

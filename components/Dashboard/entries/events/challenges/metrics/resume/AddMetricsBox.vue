@@ -4,42 +4,52 @@
       <h4 class="add-metrics-box__header__title">Metrics</h4>
     </div>
     <div class="add-metrics-box__contents">
-      <div
-        v-for="(selectedMetric, index) in selectedMetrics"
-        :key="index"
-        class="add-metrics-box__contents__items"
-      >
-        <div class="add-metrics-box__contents__items__item">
-          <label>ID: </label>
-          <label>{{ selectedMetric._id }}</label>
-        </div>
-        <div class="add-metrics-box__contents__items__item">
-          <label>Title: </label>
-          <label>{{ selectedMetric.title }}</label>
-        </div>
-        <div class="add-metrics-box__contents__items__item">
-          <label>Description: </label>
-          <label>{{ selectedMetric.description }}</label>
-        </div>
-        <div class="add-metrics-box__contents__items__item">
-          <label>Formal definition: </label>
-          <label>{{ selectedMetric.formal_definition }}</label>
-        </div>
-        <div class="add-metrics-box__contents__items__item">
-          <label>Original ID: </label>
-          <label>{{ selectedMetric.orig_id }}</label>
-        </div>
-      </div>
+      <UAccordion :items="items">
+        <template #body_custom="{ item }">
+          <div class="add-metrics-box__contents__items__item">
+            <label class="title-label">ID: </label>
+            <label>{{ item.content._id }}</label>
+          </div>
+          <div class="add-metrics-box__contents__items__item">
+            <label class="title-label">Title: </label>
+            <label>{{ item.content.title }}</label>
+          </div>
+          <div class="add-metrics-box__contents__items__item">
+            <label class="title-label">Description: </label>
+            <label>{{ item.content.description }}</label>
+          </div>
+          <div class="add-metrics-box__contents__items__item">
+            <label class="title-label">Formal definition: </label>
+            <label>{{ item.content.formal_definition }}</label>
+          </div>
+          <div class="add-metrics-box__contents__items__item">
+            <label class="title-label">Original ID: </label>
+            <label>{{ item.content.orig_id }}</label>
+          </div>
+        </template>
+      </UAccordion>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
 import type { Metric } from "@/types/challenge_metric";
 
-defineProps<{
+const props = defineProps<{
   selectedMetrics: Metric[];
 }>();
+
+const items = computed(() => {
+  return props.selectedMetrics.map((item) => {
+    return {
+      label: "Metric: " + item._id,
+      icon: "i-lucide-box",
+      slot: "body_custom",
+      content: item,
+    };
+  });
+});
 </script>
 
 <style lang="scss" scoped>
@@ -51,5 +61,20 @@ defineProps<{
     border-bottom: 1px solid theme("colors.gray.200");
     margin-bottom: 20px;
   }
+  &__contents__items {
+    &:not(:last-child) {
+      border-bottom: 1px solid theme("colors.gray.200");
+    }
+    &:not(:first-child) {
+      padding-top: 10px;
+    }
+    &__item {
+      padding-bottom: 20px;
+    }
+  }
+}
+.title-label {
+  font-weight: bold;
+  padding-right: 5px;
 }
 </style>

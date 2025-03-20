@@ -453,6 +453,14 @@
                   </div>
                   <div class="form-footer">
                     <UButton
+                      type="button"
+                      color="white"
+                      variant="solid"
+                      @click="goBack"
+                    >
+                      Cancel
+                    </UButton>
+                    <UButton
                       v-if="commmunityPrivileges.community.update && !isView"
                       type="submit"
                       :disabled="
@@ -460,14 +468,6 @@
                       "
                     >
                       Submit
-                    </UButton>
-                    <UButton
-                      type="button"
-                      color="white"
-                      variant="solid"
-                      @click="goBack"
-                    >
-                      Cancel
                     </UButton>
                   </div>
                 </div>
@@ -617,8 +617,7 @@ const state = ref({
   description: "",
   links: [],
   keywords: [],
-  _schema:
-    "https://www.elixir-europe.org/excelerate/WP2/json-schemas/1.0/Community",
+  _schema: props.communityObj?._schema,
   community_contact_ids: [],
   type: "",
   privileges: "",
@@ -748,8 +747,7 @@ const communityData = computed(() => {
     name: props.communityObj?.name,
     description: props.communityObj?.description,
     _metadata: props.communityObj?._metadata ?? "",
-    _schema:
-      "https://www.elixir-europe.org/excelerate/WP2/json-schemas/1.0/Community",
+    _schema: props.communityObj?._schema ?? "",
     community_contact_ids:
       props.communityObj?.community_contact_ids.map((contact: string) => {
         return {
@@ -921,6 +919,8 @@ async function updateCommunity() {
     });
   }
 
+  console.log("JSON.stringify(body): " , JSON.stringify(body));
+
   try {
     const response = await fetch(
       `/api/staged/Community/${props.communityObj._id}`,
@@ -946,7 +946,13 @@ async function updateCommunity() {
       });
     } else {
       const responseData = JSON.parse(data.body);
-      errors.value = [responseData.message];
+      if(responseData.message) {
+        errors.value = [responseData.message];
+      } else if(responseData.error) {
+        errors.value = [responseData.error];
+      } else {
+        errors.value = [responseData];
+      }
     }
   } catch (error) {
     console.error("Error fetching communities data:", error);
