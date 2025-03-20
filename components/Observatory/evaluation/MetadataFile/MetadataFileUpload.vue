@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="submitFile">
+  <form @submit.prevent="submitFile" class="my-3">
     <!-- Input Section -->
     <div class="row justify-center mb-4 relative">
       <div class="col-10">

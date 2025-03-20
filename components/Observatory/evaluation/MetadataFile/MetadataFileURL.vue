@@ -1,6 +1,5 @@
 <template>
-<div class="container mx-auto p-4">
-  <form @submit.prevent="submitURL">
+  <form @submit.prevent="submitURL" class="my-3">
     <!-- Input Section -->
     <div class="row justify-center mb-4 relative">
       <div class="col-10">
@@ -87,7 +86,6 @@
       @ready="submitURL"
     />
   </form>
-</div>
 </template>
 <script setup lang="ts">
 import { ref, computed } from 'vue';
