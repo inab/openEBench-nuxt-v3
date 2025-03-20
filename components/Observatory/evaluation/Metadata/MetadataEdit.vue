@@ -562,7 +562,6 @@ onMounted(() => {
 });
 
 // Methods
-// Crear una lista de claves
 const metadataKeys = Object.keys(metadataFields);
 
 // Toggle header panel
@@ -578,11 +577,6 @@ const togglePanel = (index: number) => {
 const visibleTicks = (i: number) => {
   return !openPanels.value.includes(i);
 };
-
-// Observamos cambios en `openPanels`
-watch(openPanels, (newPanels) => {
-  console.log("openPanels actualizado:", newPanels);
-});
 
 const initialVersionControl = () => {
   if (toolMetadata.value.repository.length > 0) {

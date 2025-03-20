@@ -55,7 +55,6 @@ const props = withDefaults(defineProps<{
   value: () => []
 });
 
-
 // Methods
 const addEntry = () => {
   const payload = {
@@ -78,3 +77,9 @@ const removeEntry = (index) => {
   metadataStore.removeEntry(payload);
 }
 </script>
+<style scoped>
+#title {
+	font-size: 1rem;
+	color: #0b579f;
+}
+</style>

@@ -96,8 +96,7 @@ export const useFileStore = defineStore('file',{
               email: author['schema:email'],
               maintainer: false,
             };
-    				newAuthors.push(removeEmptyValues(newAuthor));
-
+    				newAuthors.push(newAuthor);
           } catch (error) {
             console.debug('Author type not found, skipping author');
           }
