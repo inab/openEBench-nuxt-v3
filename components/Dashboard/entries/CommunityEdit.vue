@@ -919,8 +919,6 @@ async function updateCommunity() {
     });
   }
 
-  console.log("JSON.stringify(body): " , JSON.stringify(body));
-
   try {
     const response = await fetch(
       `/api/staged/Community/${props.communityObj._id}`,
@@ -939,16 +937,18 @@ async function updateCommunity() {
     }
 
     const data = await response.json();
+
     if (data.status === 200) {
-      const msg = "We've saved your community changes.";
+      const msg =
+        "Your community changes have been saved. Redirecting to the communities list...";
       await showOkMessage(msg).then(() => {
         router.push("/dashboard/projects_communities");
       });
     } else {
       const responseData = JSON.parse(data.body);
-      if(responseData.message) {
+      if (responseData.message) {
         errors.value = [responseData.message];
-      } else if(responseData.error) {
+      } else if (responseData.error) {
         errors.value = [responseData.error];
       } else {
         errors.value = [responseData];
@@ -1063,7 +1063,6 @@ function onFileChange(event: Event) {
 async function fetchContacts(token: string): Promise<Contact[]> {
   try {
     if (userStore.getContactsList && userStore.getContactsList.length > 0) {
-      console.log("userStore.getContactsList: ", userStore.getContactsList);
       contactsData.value = userStore.getContactsList;
     } else {
       contactsData.value = await userStore.fetchContacts(token);
@@ -1090,16 +1089,16 @@ watch(
     if (newVal && newVal.links) {
       localLinks.value = newVal.links
         .filter(
-          (link: { label?: string }) =>
-            link.label && link.label.toLowerCase() !== "logo",
+          (link: { comment?: string }) =>
+            link.comment && link.comment.toLowerCase() !== "@logo",
         )
         .map((link: { uri?: string }) => link.uri)
         .filter((uri: string | undefined): uri is string => uri !== undefined);
 
-      localLogo.value =
-        newVal.links.find((link: { label?: string }) => {
-          return link.label && (link.label === "Logo" || link.label === "logo");
-        })?.uri || "";
+        localLogo.value = 
+          newVal.links.find((link: { comment?: string; label?: string }) => {
+            return link.label === "Logo" || link.comment === "@logo";
+          })?.uri || "";
     }
     if (newVal && newVal.community_contact_ids) {
       localContacts.value =

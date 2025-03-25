@@ -45,48 +45,30 @@ export default defineEventHandler(async (event) => {
         );
 
         console.log("-*-Respuesta:", response);
-        // console.log(token);
 
-        if (!response.ok) {
-          const errorData = await response.json();
-          console.error("Error en la respuesta de la API:", errorData);
-          throw new Error(
-            `Error en la respuesta de la API: ${response.statusText}. Detalles: ${errorData.error}`,
-          );
+        const data = await response.json();
+        console.log("📦 JSON recibido:", JSON.stringify(data, null, 2));
+
+        const status = response.status; // tomamos el status directamente del response
+
+        // Si quieres validar que la respuesta trae un ID válido o algo mínimo
+        if (!data || !data._id) {
+          console.error("❌ Respuesta inesperada de la API:", data);
+          throw new Error(`Error en la respuesta de la API: ${response.statusText}`);
         }
 
-        console.log("reponse ok till here!");
-        
-        const data = await response.json();
-        const status = data.Response.status;
-        console.log("Respuesta ok:", data);
+        console.log("✅ Respuesta válida, todo ok");
 
         return {
           status: status,
           body: JSON.stringify({
             message: "Community updated successfully",
             data: {
-              id: body.id,
-              ...body,
+              id: data._id,
+              ...data,
             },
           }),
         };
-      default:
-        return {
-          status: 405,
-          body: JSON.stringify({ error: "Método no permitido" }),
-        };
-    }
-
-    if (!response.ok) {
-      throw new Error("Error en la respuesta de la API externa");
-    }
-
-    const data = await response.json();
-
-    return {
-      status: response.status,
-      body: JSON.stringify(data),
     };
   } catch (error) {
     return {
