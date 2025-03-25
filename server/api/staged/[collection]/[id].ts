@@ -16,8 +16,6 @@ export default defineEventHandler(async (event) => {
   console.log("Cuerpo de la solicitud:", body);
 
   try {
-    let response;
-
     switch (method) {
       case "PATCH":
         console.log("-*-PATCH");
@@ -49,9 +47,8 @@ export default defineEventHandler(async (event) => {
         const data = await response.json();
         console.log("📦 JSON recibido:", JSON.stringify(data, null, 2));
 
-        const status = response.status; // tomamos el status directamente del response
+        const status = response.status;
 
-        // Si quieres validar que la respuesta trae un ID válido o algo mínimo
         if (!data || !data._id) {
           console.error("❌ Respuesta inesperada de la API:", data);
           throw new Error(`Error en la respuesta de la API: ${response.statusText}`);

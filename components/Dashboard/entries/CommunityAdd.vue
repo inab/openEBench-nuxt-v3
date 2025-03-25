@@ -743,12 +743,6 @@ async function createCommunity() {
     name: state.value.name,
     acronym: state.value.acronym,
     status: state.value.status,
-    links: cleanLinks.map((element) => {
-      return {
-        uri: element,
-        label: "MainSite",
-      };
-    }),
     keywords: cleanKeywords.map((element) => {
       return element;
     }),
@@ -758,7 +752,17 @@ async function createCommunity() {
     description: markdownDescription,
   };
 
+  if (cleanLinks.length > 0) {
+    body.links = cleanLinks.map((uri) => ({
+      uri,
+      label: "MainSite",
+    }));
+  }
+
   if (localLogo.value) {
+    if (!body.links) {
+      body.links = [];
+    }
     body.links.push({
       label: "other",
       comment: "@logo",

@@ -550,6 +550,7 @@ import { object, string, array, safeParse } from "valibot";
 import CustomBorder from "@/components/Common/CustomBorder.vue";
 import CustomTab from "@/components/Common/CustomTab.vue";
 import CustomTabBody from "@/components/Common/CustomTabBody.vue";
+import TurndownService from 'turndown';
 
 import {
   ClassicEditor,
@@ -577,6 +578,7 @@ import {
 import { Ckeditor } from "@ckeditor/ckeditor5-vue";
 
 import "ckeditor5/ckeditor5.css";
+const turndownService = new TurndownService();
 
 const router = useRouter();
 const runtimeConfig = useRuntimeConfig();
@@ -890,35 +892,39 @@ async function updateCommunity() {
   const cleanKeywords = deleteEmptyElements(localKeywords.value);
   const cleanContacts = deleteEmptyElements(localContacts.value);
 
+  const markdownDescription = turndownService.turndown(state.value.description);
+
   const body = {
     _id: state.value._id,
     _schema: state.value._schema,
     name: state.value.name,
     acronym: state.value.acronym,
     status: localStatus.value.value,
-    links: cleanLinks.map((element) => {
-      return {
-        uri: element,
-        label: "MainSite",
-      };
-    }),
     keywords: cleanKeywords.map((element) => {
       return element;
     }),
     community_contact_ids: cleanContacts.map((element) => {
       return element;
     }),
-    description: state.value.description,
+    description: markdownDescription,
   };
 
+  if (cleanLinks.length > 0) {
+    body.links = cleanLinks.map((uri) => ({
+      uri,
+      label: "MainSite",
+    }));
+  }
   if (localLogo.value) {
+    if (!body.links) {
+      body.links = [];
+    }
     body.links.push({
       label: "other",
       comment: "@logo",
       uri: localLogo.value,
     });
   }
-
   try {
     const response = await fetch(
       `/api/staged/Community/${props.communityObj._id}`,
