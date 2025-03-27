@@ -2,16 +2,16 @@
   <div class="my-5">
     <div v-if="data != true" class="flex flex-wrap content-around">
       <div class="col-6 py-3 px-5">
-        <USkeleton class="h-52 w-full" />
+        <USkeleton class="h-64 w-full" />
       </div>
       <div class="col-6 py-3 px-5">
-        <USkeleton class="h-52 w-full" />
+        <USkeleton class="h-64 w-full" />
       </div>
       <div class="col-6 py-3 px-5">
-        <USkeleton class="h-52 w-full" />
+        <USkeleton class="h-64 w-full" />
       </div>
       <div class="col-6 py-3 px-5">
-        <USkeleton class="h-52 w-full" />
+        <USkeleton class="h-64 w-full" />
       </div>
     </div>
     <div v-else class="flex flex-wrap content-around">
