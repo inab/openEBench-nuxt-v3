@@ -16,11 +16,10 @@ export default defineEventHandler(async (event) => {
   console.log("Cuerpo de la solicitud:", body);
 
   try {
-    let response;
-
     switch (method) {
+      case "PUT":
       case "PATCH":
-        console.log("-*-PATCH");
+        console.log(`-*-${method}`);
         console.log(body);
         if (!body._id) {
           console.error("Error: ID faltante en el cuerpo para POST");
@@ -35,7 +34,7 @@ export default defineEventHandler(async (event) => {
         const response = await fetch(
           `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/${collection}/${id}`,
           {
-            method: "PATCH",
+            method: method,
             headers: {
               Authorization: token,
               "Content-Type": "application/json",
@@ -45,48 +44,37 @@ export default defineEventHandler(async (event) => {
         );
 
         console.log("-*-Respuesta:", response);
-        // console.log(token);
 
-        if (!response.ok) {
-          const errorData = await response.json();
-          console.error("Error en la respuesta de la API:", errorData);
-          throw new Error(
-            `Error en la respuesta de la API: ${response.statusText}. Detalles: ${errorData.error}`,
-          );
+        const data = await response.json();
+        console.log("📦 JSON recibido:", JSON.stringify(data, null, 2));
+
+        const status = response.status;
+
+        if (!data || !data._id) {
+          console.error("❌ Respuesta inesperada de la API:", data);
         }
 
-        console.log("reponse ok till here!");
-        
-        const data = await response.json();
-        const status = data.Response.status;
-        console.log("Respuesta ok:", data);
-
-        return {
-          status: status,
-          body: JSON.stringify({
-            message: "Community updated successfully",
-            data: {
-              id: body.id,
-              ...body,
-            },
-          }),
-        };
-      default:
-        return {
-          status: 405,
-          body: JSON.stringify({ error: "Método no permitido" }),
-        };
-    }
-
-    if (!response.ok) {
-      throw new Error("Error en la respuesta de la API externa");
-    }
-
-    const data = await response.json();
-
-    return {
-      status: response.status,
-      body: JSON.stringify(data),
+        if (status >= 200 && status < 300) {
+          return {
+            status: status,
+            body: JSON.stringify({
+              message: "Community updated successfully",
+              data: {
+                id: body._id
+              },
+            }),
+          };
+        } else {
+          return {
+            status: status,
+            body: JSON.stringify({
+              message: "Community updated successfully",
+              data: {
+                id: body._id,
+              },
+            }),
+          };
+        }
     };
   } catch (error) {
     return {

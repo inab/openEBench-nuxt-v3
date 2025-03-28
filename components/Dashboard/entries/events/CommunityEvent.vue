@@ -697,6 +697,9 @@ async function updateBenchmarkingEvent() {
       },
     );
 
+    console.log("response: " , response);
+    console.log(JSON.stringify(body));
+
     if (!response.ok) {
       throw new Error("Error in API response");
     }

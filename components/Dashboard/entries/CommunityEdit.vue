@@ -550,6 +550,7 @@ import { object, string, array, safeParse } from "valibot";
 import CustomBorder from "@/components/Common/CustomBorder.vue";
 import CustomTab from "@/components/Common/CustomTab.vue";
 import CustomTabBody from "@/components/Common/CustomTabBody.vue";
+import TurndownService from 'turndown';
 
 import {
   ClassicEditor,
@@ -577,6 +578,7 @@ import {
 import { Ckeditor } from "@ckeditor/ckeditor5-vue";
 
 import "ckeditor5/ckeditor5.css";
+const turndownService = new TurndownService();
 
 const router = useRouter();
 const runtimeConfig = useRuntimeConfig();
@@ -890,37 +892,39 @@ async function updateCommunity() {
   const cleanKeywords = deleteEmptyElements(localKeywords.value);
   const cleanContacts = deleteEmptyElements(localContacts.value);
 
+  const markdownDescription = turndownService.turndown(state.value.description);
+
   const body = {
     _id: state.value._id,
     _schema: state.value._schema,
     name: state.value.name,
     acronym: state.value.acronym,
     status: localStatus.value.value,
-    links: cleanLinks.map((element) => {
-      return {
-        uri: element,
-        label: "MainSite",
-      };
-    }),
     keywords: cleanKeywords.map((element) => {
       return element;
     }),
     community_contact_ids: cleanContacts.map((element) => {
       return element;
     }),
-    description: state.value.description,
+    description: markdownDescription,
   };
 
+  if (cleanLinks.length > 0) {
+    body.links = cleanLinks.map((uri) => ({
+      uri,
+      label: "MainSite",
+    }));
+  }
   if (localLogo.value) {
+    if (!body.links) {
+      body.links = [];
+    }
     body.links.push({
       label: "other",
       comment: "@logo",
       uri: localLogo.value,
     });
   }
-
-  console.log("JSON.stringify(body): " , JSON.stringify(body));
-
   try {
     const response = await fetch(
       `/api/staged/Community/${props.communityObj._id}`,
@@ -939,16 +943,18 @@ async function updateCommunity() {
     }
 
     const data = await response.json();
+
     if (data.status === 200) {
-      const msg = "We've saved your community changes.";
+      const msg =
+        "Your community changes have been saved. Redirecting to the communities list...";
       await showOkMessage(msg).then(() => {
         router.push("/dashboard/projects_communities");
       });
     } else {
       const responseData = JSON.parse(data.body);
-      if(responseData.message) {
+      if (responseData.message) {
         errors.value = [responseData.message];
-      } else if(responseData.error) {
+      } else if (responseData.error) {
         errors.value = [responseData.error];
       } else {
         errors.value = [responseData];
@@ -1063,7 +1069,6 @@ function onFileChange(event: Event) {
 async function fetchContacts(token: string): Promise<Contact[]> {
   try {
     if (userStore.getContactsList && userStore.getContactsList.length > 0) {
-      console.log("userStore.getContactsList: ", userStore.getContactsList);
       contactsData.value = userStore.getContactsList;
     } else {
       contactsData.value = await userStore.fetchContacts(token);
@@ -1090,16 +1095,16 @@ watch(
     if (newVal && newVal.links) {
       localLinks.value = newVal.links
         .filter(
-          (link: { label?: string }) =>
-            link.label && link.label.toLowerCase() !== "logo",
+          (link: { comment?: string }) =>
+            link.comment && link.comment.toLowerCase() !== "@logo",
         )
         .map((link: { uri?: string }) => link.uri)
         .filter((uri: string | undefined): uri is string => uri !== undefined);
 
-      localLogo.value =
-        newVal.links.find((link: { label?: string }) => {
-          return link.label && (link.label === "Logo" || link.label === "logo");
-        })?.uri || "";
+        localLogo.value = 
+          newVal.links.find((link: { comment?: string; label?: string }) => {
+            return link.label === "Logo" || link.comment === "@logo";
+          })?.uri || "";
     }
     if (newVal && newVal.community_contact_ids) {
       localContacts.value =

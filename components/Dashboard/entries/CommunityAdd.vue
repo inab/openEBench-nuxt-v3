@@ -458,6 +458,7 @@ import type { FormSubmitEvent } from "#ui/types";
 import CustomDialog from "@/components/Common/CustomDialog.vue";
 import { object, string, array, safeParse, nonEmpty, is } from "valibot";
 import CustomBorder from "@/components/Common/CustomBorder.vue";
+import TurndownService from 'turndown';
 import {
   ClassicEditor,
   Essentials,
@@ -517,7 +518,7 @@ const localUsers = ref<
     role: string;
   }[]
 >([]);
-
+const turndownService = new TurndownService();
 const state = ref({
   _id: "",
   acronym: "",
@@ -526,8 +527,7 @@ const state = ref({
   description: "",
   links: [],
   keywords: [],
-  _schema:
-    "https://www.elixir-europe.org/excelerate/WP2/json-schemas/1.0/Community",
+  _schema: "https://w3id.org/openebench/scientific-schemas/2.0/Community",
   community_contact_ids: [],
   type: "Community",
   privileges: "owner",
@@ -735,28 +735,34 @@ async function createCommunity() {
   const cleanKeywords = deleteEmptyElements(localKeywords.value);
   const cleanContacts = deleteEmptyElements(localContacts.value);
 
+  const markdownDescription = turndownService.turndown(state.value.description);
+
   const body = {
     _id: state.value._id,
     _schema: state.value._schema,
     name: state.value.name,
     acronym: state.value.acronym,
     status: state.value.status,
-    links: cleanLinks.map((element) => {
-      return {
-        uri: element,
-        label: "MainSite",
-      };
-    }),
     keywords: cleanKeywords.map((element) => {
       return element;
     }),
     community_contact_ids: cleanContacts.map((element) => {
       return element;
     }),
-    description: state.value.description,
+    description: markdownDescription,
   };
 
+  if (cleanLinks.length > 0) {
+    body.links = cleanLinks.map((uri) => ({
+      uri,
+      label: "MainSite",
+    }));
+  }
+
   if (localLogo.value) {
+    if (!body.links) {
+      body.links = [];
+    }
     body.links.push({
       label: "other",
       comment: "@logo",
@@ -766,8 +772,9 @@ async function createCommunity() {
 
   // call to exist community
   let responseCommunity = null;
+  /*
   try {
-    responseCommunity = await fetch(
+    const res = await fetch(
       `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Community/${state.value._id}`,
       {
         headers: {
@@ -776,20 +783,29 @@ async function createCommunity() {
         method: "GET",
       },
     );
-    responseCommunity = await responseCommunity.json();
-    if (responseCommunity._id) {
-      errors.value = [
-        "Community ID already exists. Please, choose another one.",
-      ];
-      return true;
+    if (res.status === 404) {
+      responseCommunity = null;
+    } else if (!res.ok) {
+      throw new Error(`Error al comprobar la comunidad: ${res.status} ${res.statusText}`);
+    } else {
+      const data = await res.json();
+      if (data._id) {
+        errors.value = [
+          "Community ID already exists. Please, choose another one.",
+        ];
+        return true;
+      }
     }
   } catch (error) {
     console.error("Error fetching communities data:", error);
+    errors.value = ["Unexpected error when checking community ID"];
+    return true;
   }
+    */
 
   try {
     const response = await fetch(`/api/staged/Community`, {
-      method: "POST",
+      method: "PUT",
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -805,7 +821,7 @@ async function createCommunity() {
 
     if (data.status == 200) {
       errors.value = [];
-      const msg = "We've saved your community changes.";
+      const msg = "Your community has been successfully created. Redirecting to the communities list...";
       await showOkMessage(msg).then(() => {
         router.push("/dashboard/projects_communities");
       });
@@ -826,6 +842,7 @@ async function createCommunity() {
     }
   } catch (error) {
     console.error("Error adding communities data:", error);
+    errors.value = ["Unexpected error when creating the community"];
   }
 }
 
