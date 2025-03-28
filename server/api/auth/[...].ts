@@ -61,7 +61,7 @@ export default NuxtAuthHandler({
           type: "oauth2",
           version: "2.0",
           response_type: "code",
-          scope: "openid email orcid profile offline_access",
+          scope: "openid email profile offline_access",
           response_mode: "query",
           state: "state",
           grand_type: "authorization_code",

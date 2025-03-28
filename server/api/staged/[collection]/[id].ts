@@ -17,8 +17,9 @@ export default defineEventHandler(async (event) => {
 
   try {
     switch (method) {
+      case "PUT":
       case "PATCH":
-        console.log("-*-PATCH");
+        console.log(`-*-${method}`);
         console.log(body);
         if (!body._id) {
           console.error("Error: ID faltante en el cuerpo para POST");
@@ -33,7 +34,7 @@ export default defineEventHandler(async (event) => {
         const response = await fetch(
           `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/${collection}/${id}`,
           {
-            method: "PATCH",
+            method: method,
             headers: {
               Authorization: token,
               "Content-Type": "application/json",
@@ -51,21 +52,29 @@ export default defineEventHandler(async (event) => {
 
         if (!data || !data._id) {
           console.error("❌ Respuesta inesperada de la API:", data);
-          throw new Error(`Error en la respuesta de la API: ${response.statusText}`);
         }
 
-        console.log("✅ Respuesta válida, todo ok");
-
-        return {
-          status: status,
-          body: JSON.stringify({
-            message: "Community updated successfully",
-            data: {
-              id: data._id,
-              ...data,
-            },
-          }),
-        };
+        if (status >= 200 && status < 300) {
+          return {
+            status: status,
+            body: JSON.stringify({
+              message: "Community updated successfully",
+              data: {
+                id: body._id
+              },
+            }),
+          };
+        } else {
+          return {
+            status: status,
+            body: JSON.stringify({
+              message: "Community updated successfully",
+              data: {
+                id: body._id,
+              },
+            }),
+          };
+        }
     };
   } catch (error) {
     return {

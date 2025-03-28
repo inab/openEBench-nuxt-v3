@@ -772,6 +772,7 @@ async function createCommunity() {
 
   // call to exist community
   let responseCommunity = null;
+  /*
   try {
     const res = await fetch(
       `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Community/${state.value._id}`,
@@ -800,10 +801,11 @@ async function createCommunity() {
     errors.value = ["Unexpected error when checking community ID"];
     return true;
   }
+    */
 
   try {
     const response = await fetch(`/api/staged/Community`, {
-      method: "POST",
+      method: "PUT",
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
