@@ -16,14 +16,15 @@ export const customRoutes = [
     path: "/benchmarking/:community/events",
     file: resolve(__dirname, "pages/benchmarking/community/events"),
   },
-  {
-    name: "scientific-community-challenge",
-    path: "/benchmarking/:community/:challenge",
-    file: resolve(__dirname, "pages/benchmarking/community/challenge"),
-  },
+ 
   {
     name: "scientific-community-challenge",
     path: "/scientific/:community/:challenge",
+    file: resolve(__dirname, "pages/benchmarking/community/challenge"),
+  },
+  {
+    name: "benchmarking-community-challenge",
+    path: "/benchmarking/:community/:challenge",
     file: resolve(__dirname, "pages/benchmarking/community/challenge"),
   },
   {

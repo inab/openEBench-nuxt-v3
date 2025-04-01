@@ -50,9 +50,9 @@ export default defineEventHandler(async (event) => {
 
         const status = response.status;
 
-        if (!data || !data._id) {
-          console.error("❌ Respuesta inesperada de la API:", data);
-        }
+        // if (!data || !data._id) {
+        //   console.error("❌ Respuesta inesperada de la API:", data);
+        // }
 
         if (status >= 200 && status < 300) {
           return {

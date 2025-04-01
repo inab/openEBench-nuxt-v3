@@ -63,9 +63,6 @@ const tab = ref(0);
 const itemSelected = ref(null);
 const items = ref([]);
 
-console.log("hey!");
-
-
 await challengeAPI(challengeId).then(async (response: any) => {
   const challengeObj = new ChallengeObj(challengeId, response.data);
   challengeObj.formatData();
