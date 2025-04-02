@@ -108,7 +108,8 @@
               <li>
                 <span class="font-semibold">How it is measured: </span>
                 <span>{{ indicatorsExplanation[row.id].how }}</span>
-                <span >
+
+                <span v-if="indicatorsExplanation[row.id].how === 'Not measured.'">
                   <a href="#not-measured">
                     <UIcon name="i-heroicons-information-circle" class="w-4 h-4 text-gray-600" />
                   </a>
@@ -124,12 +125,11 @@
                 <span v-if="indicatorsExplanation[row.id].types.length === 1">
                   "{{ indicatorsExplanation[row.id].types[0] }}"
                 </span>
-                <a href="#types">
+                <a href="#types"> 
                   <UIcon name="i-heroicons-information-circle" class="w-4 h-4 text-gray-600" />
                 </a>
               </li>
             </div>
-
           </div>
 
           <!------  ASSESSMENT SUMMARY  -------->
