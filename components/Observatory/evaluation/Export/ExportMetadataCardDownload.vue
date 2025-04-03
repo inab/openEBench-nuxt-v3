@@ -4,7 +4,7 @@
       <UAlert class="py-4">
         <template #icon>
           <div class="bg-gray-100 w-16 h-16 rounded-full flex justify-center flex-wrap content-center">
-            <UIcon :name="alert.icon" class="w-10 h-10 text-gray-500"/>
+            <UIcon :name="alert.icon" class="w-10 h-10 text-gray-400"/>
           </div>
         </template>
         <template #title>
