@@ -1,5 +1,5 @@
 <template>
-  <UModal v-model="test" 
+  <UModal v-model="dialogPRok" 
     prevent-close 
     :ui="{width:'w-96',overlay:{background:'bg-zinc-800/50'}}"
   >
@@ -11,7 +11,7 @@
       </div>
       <div class="row flex justify-center">
         <div class="col-12">
-          <h5 class="text-center my-2">Pull Request Created</h5>
+          <h6 class="text-center my-2">Pull Request Created</h6>
         </div>
         <div class="col-2 flex justify-center">
           <UButton 
@@ -42,11 +42,10 @@
 
 </template>
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
 import { useExport } from '@/stores/observatory/evaluation/export';
 const exportStore = useExport();
 
-const test = ref(true)
 const dialogPRok = computed (() => exportStore.getDialogPRok)
 const okURL = computed (() => exportStore.getOkURL)
 
