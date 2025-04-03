@@ -5,7 +5,7 @@
     :ui="{width:'w-96',overlay:{background:'bg-zinc-800/50'}}"
   >
     <div class="px-4 py-3">
-      <div class="row">
+      <div class="row mb-2">
         <h6>Making Pull Request</h6>
       </div>
       <div class="row">
@@ -14,16 +14,18 @@
           variant="outline"
           title="ERROR"
           description="Something went wrong while making the pull request."
+          class="py-2 px-3"
         />
       </div>
 
       <!-- Actions -->
-      <div class="mt-2">
+      <div class="mt-2 flex justify-end">
         <UButton 
           color="gray"
-          variant="soft"
+          variant="ghost"
           @click="close" 
-          class="mt-2"
+          class="mt-2 text-black bg-gray-100"
+          :ui="{color: { gray: {ghost:'hover:bg-gray-200'}}}"
         >
           Close
         </UButton>
