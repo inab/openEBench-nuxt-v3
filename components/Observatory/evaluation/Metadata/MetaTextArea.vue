@@ -20,12 +20,12 @@
         />
       </UButton>
     </div>
-    <div class="mt-1 relative">
+    <div class="mt-1 relative mt-2">
       <UTextarea
         v-for="(item, index) in description"
         :key="item.id"
         :value="item.term"
-        class=" d-flex border-1 rounded-md p-1"
+        class="mb-2 d-flex border-1 rounded-md p-1 focus-within:ring-primaryOeb-500 focus-within:border-primaryOeb-500 focus-within:text-primaryOeb-500"
       >
         <!-- clear description -->
         <button

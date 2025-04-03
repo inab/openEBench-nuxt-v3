@@ -1,12 +1,17 @@
 <template>
   <div class="container px-5 my-5">
-    <UAccordion :items="items" :ui="{ wrapper: 'flex flex-col w-full' }" class="shadow-md">
+    <UAccordion 
+    :items="items"
+    class="shadow-md"
+    :ui="{ wrapper: 'flex flex-col w-full' }"
+    >
       <template #default="{ item, index, open }">
         <UButton
           color="gray"
           variant="ghost"
           class="border-b border-gray-200 dark:border-gray-700"
           :ui="{ rounded: 'rounded-none', padding: { sm: 'p-4' } }"
+          @click="togglePanel(index)"
         >
           <span class="truncate font-semibold ms-3">{{ item.label }}</span>
 
@@ -29,12 +34,12 @@
         </UButton>
       </template>
 
-      <!-- Contents -->
+      <!-- CONTENTS -->
       <template #item="{ item }">
 
         <!-- Content 0. Identity -->
-        <div v-if="item.label == '0. Identity'" class="p-4">
-          <div class="mt-0 ml-3 d-flex flex-row justify-space-between">
+        <div v-if="item.label == '0. Identity'" class="p-4 ">
+          <div class="mt-0 d-flex flex-row justify-space-between">
             <!-- Name -->
             <MetaField
               title="Name"
@@ -87,7 +92,7 @@
             </MetaField>
           </div>
 
-          <div class="mt-0 ml-3.5 d-flex">
+          <div class="mt-4 ml-0.5 d-flex">
             <!-- Description -->
             <MetaTextArea
               title="Description"
@@ -109,7 +114,7 @@
             </div>
           </div>
 
-          <div class="mt-3 ml-3.5 d-flex">
+          <div class="mt-4 ml-0.5 d-flex">
             <!-- Webpage -->
             <MetaFieldURLField
               title="Webpage"
@@ -118,7 +123,7 @@
 							value-type="string"
 							n_cols="col-8"
 							label="URL"
-							increasable="true"
+							:increasable="true"
             />
 
             <!-- Alert -->
@@ -138,52 +143,273 @@
 
         <!-- Content 1. Accessibility / License -->
         <div v-if="item.label == '1. Accessibility / License'" class="p-4">
-          <div class="mt-0 ml-3 d-flex flex-row justify-space-between">
             <!-- License  -->
-             <MetaFieldLicense
-              title="License"
-              :value="toolMetadata.license"
-              field="license"
-              :increasable="true"
-             />
+          <div class="mt-0 d-flex flex-col justify-space-between">
+            <div class="mt-0 ml-0.5 d-flex">
+              <MetaFieldLicense
+                title="License"
+                :value="toolMetadata.license"
+                field="license"
+                :increasable="true"
+              />
+                <!-- Alert -->
+                <div v-if="toolMetadata.license.length > 1 &&
+                  toolMetadata.license[1].length > 0" class="col-3 mt-4 pt-1.5 ms-4">
+                  <UAlert
+                    :ui="{gap:'gap-2', shadow: 'shadow-md'}"
+                    icon="mdi-alert-circle"
+                    color="sky"
+                    variant="soft"
+                    description="Several licenses"
+                    class="p-2 text-gray-900"
+                  />
+                </div>
+            </div>
+          </div>
+          <!-- Registries / Package managers -->
+          <div class="mt-5 ml-0.5 d-flex">
+            <MetaRegistriesCombo
+              title="Registries / Package managers"
+              field="registries"
+              :selected="toolMetadata.registries"
+              :registries="registries"
+              class="ms-3"
+            />
+
+            <!-- E-Infrastructures -->
+            <MetaRegistriesCombo
+              title="E-Infrastructures"
+              field="e_infrastructures"
+              :selected="toolMetadata.e_infrastructures"
+              :registries="eInfrastructures"
+              class="me-3"
+            />
+          </div>
+          <!-- Source Code -->
+          <div class="mt-5 ml-0.5 d-flex">
+            <MetaFieldURLField
+              title="Source Code"
+              :value="toolMetadata.src"
+              field="src"
+							value-type="string"
+							n_cols="col-9"
+							label="URL"
+							:increasable="true"
+            />
+          </div>
+
+          <!-- Other Download Link -->
+          <div class="mt-5 ml-0.5 d-flex">
+            <MetaFieldURLField
+              title="Other Download Link"
+              :value="toolMetadata.links"
+              field="links"
+							value-type="string"
+							n_cols="col-9"
+							label="URL"
+							:increasable="true"
+            />
+          </div>
+
+          <!-- Registration not mandatory -->
+          <div class="mt-5 ml-0.5 d-flex">
+            <MetaCheckbox
+              :item="toolMetadata.registration_not_mandatory"
+              label="Registration is NOT mandatory to use the software or obtain a working version of it."
+              color="primary"
+              field="registration_not_mandatory"
+              title="Registration Not Mandatory"
+              n_cols="12"
+            />
+          </div>
+
+          <!-- Availility as library or API -->
+          <div class="mt-5 ml-0.5 d-flex">
+            <MetaCheckbox
+            v-if="toolMetadata.type != 'lib' && toolMetadata.type != 'api'"
+              :item="toolMetadata.api_lib"
+              label="This software is available as a library or/and API."
+              color="primary"
+              field="api_lib"
+              title="Availability as library or API"
+              n_cols="12"
+            />
           </div>
         </div>
-
+        
         <!-- Content 2. Documentation -->
         <div v-if="item.label == '2. Documentation'" class="p-4">
+          
+          <!-- Documentation -->
+          <MetaFieldDocumentation
+            title="Documentation"
+						:value="toolMetadata.documentation"
+						field="documentation"
+						n_cols="col-12"
+            :increable="true"
+          />
+          
+          <!-- Topics -->
+          <MetaFieldTopicOperation
+            title="Topics / Domains of application"
+            :value="toolMetadata.topics"
+            field="topics"
+            value-type=""
+            n_cols="12"
+            class="mr-auto mt-4"
+            type-label="topic"
+            :accepted-vocabularies="['EDAM']"
+          />
 
+          <!-- Operations -->
+          <MetaFieldTopicOperation 
+           title="Operations / Functions performed by the software"
+            :value="toolMetadata.operations"
+            field="operations"
+            value-type=""
+            n_cols="12"
+            class="mr-auto mt-4"
+            type-label="operation"
+            :accepted-vocabularies="['EDAM']"
+          />
         </div>
 
         <!-- Content 3. Test data -->
         <div v-if="item.label == '3. Test data'" class="p-4">
+          <div class="mt-0 d-flex flex-col justify-space-between">
+            <!-- Test -->
+            <MetaFieldURLField
+              title="Test Data"
+              :value="toolMetadata.test"
+              field="test"
+							value-type="string"
+							n_cols="col-9"
+							label="URL"
+							:increasable="true"
+            />
 
+          </div>
         </div>
 
         <!-- Content 4. Interoperability -->
         <div v-if="item.label == '4. Interoperability'" class="p-4">
+          <div class="mt-0 d-flex flex-col justify-space-between">
+            <!-- Input Data formats -->
+            <MetaFieldFormat
+              title="Input Data formats"
+              :value="toolMetadata.input"
+							field="input"
+							value-type=""
+              n_cols="col-12"
+							class="mb-4"
+							type-label="format"
+							:accepted-vocabularies="['EDAM']"
+            />
 
+            <!-- Output Data formats -->
+            <MetaFieldFormat
+              title="Output Data formats"
+              :value="toolMetadata.output"
+							field="output"
+							value-type=""
+              n_cols="col-12"
+							class=""
+							type-label="format"
+							:accepted-vocabularies="['EDAM']"
+            />
+          </div>
         </div>
 
         <!-- Content 5. Versioning -->
         <div v-if="item.label == '5. Versioning'" class="p-4">
+          <div class="mt-0 d-flex flex-col justify-space-between">
 
+            <!-- Repository -->
+            <MetaFieldURLField
+              title="Repository"
+              :value="toolMetadata.repository"
+              field="repository"
+							value-type="string"
+							n_cols="col-9"
+							label="URL"
+							:increasable="true"
+            />
+
+            <!-- Version Control -->
+            <div class="col-12 flex items-stretch">
+              <div class="self-start ms-2">
+                <UCheckbox
+                  v-if="toolMetadata.repository.length > 0"
+                  v-model="versionControl" 
+                  color="primary"
+                  class="mt-3 mx-4 animated-checkbox"
+                >
+                  <template #label>
+                    <span>Version Control is used to develop the software.</span>
+                  </template>
+                </UCheckbox>
+                <UIcon
+                  v-if="toolMetadata.repository.length > 0"
+                  name="i-heroicons-information-circle"
+                  class="bg-black ms-4 mt-3"
+                  size="xs"
+                />
+                <span v-if="toolMetadata.repository.length > 0" class="ms-1">
+                  Please, check this box if any fo the previos links corresponds
+								  to a repository that uses version control.
+                </span>
+              </div>
+
+            </div>
+          </div>
         </div>
 
         <!-- Content 6. Reproducibility -->
         <div v-if="item.label == '6. Reproducibility'" class="p-4">
+          <div class="mt-2 d-flex flex-row justify-space-between">
+            <!-- Dependencies -->
+            <MetaFieldSimpleField
+              title="Dependencies"
+							:value="toolMetadata.dependencies"
+							field="dependencies"
+							value-type=""
+							n_cols="col-5"
+            />
 
+            <!-- Operating System -->
+            <MetaFieldSimpleField
+							title="Operating System"
+							:value="toolMetadata.os"
+							field="os"
+							value-type=""
+							n_cols="col-5"
+							class="mr-auto"
+						/>
+          </div>
         </div>
 
         <!-- Content 7. Recognition -->
         <div v-if="item.label == '7. Recognition'" class="p-4">
-
+          <div class="mt-0 d-flex flex-col justify-space-between">
+						<!-- Publication -->
+            <MetaFieldPublication
+							title="Associated Publication"
+              field="publication"
+							:value="toolMetadata.publication"
+							value-type=""
+							n_cols="col-12"
+							class="mb-4"
+						/>
+            <!-- Authors -->
+            <MetaFieldAuthors
+							title="Authors / Developers"
+							:value="toolMetadata.authors"
+							field="authors"
+							class="my-2"
+						/>
+          </div>
         </div>
-        <!-- Borrar al terminar -->
-        <div>
-          <p class="italic text-gray-900 dark:text-white text-center">
-            {{ item.label }}
-          </p>
-        </div>
+        
       </template>
     </UAccordion>
     <!-- Buttons -->
@@ -212,13 +438,20 @@ import { useMetadataStore } from '@/stores/observatory/evaluation/metadata';
 import { useResultStore } from '@/stores/observatory/evaluation/results';
 import { useStepperStore } from '@/stores/observatory/evaluation/index';
 import MetaField from "./Metafield.vue";
+import MetaCheckbox from "./MetaCheckbox.vue";
 import MetaTextArea from "./MetaTextArea.vue";
 import MetaFieldURLField from "./MetaFieldURLField.vue";
 import MetaFieldLicense from "./MetaFieldLicense.vue";
 import FormField from './FormField.vue';
 import SelectorType from './SelectorType.vue';
 import VersionCombo from './VersionCombo.vue';
+import MetaFieldFormat from './MetaFieldFormat.vue'
 import MetaRegistriesCombo from './MetaRegistriesCombo.vue';
+import MetaFieldDocumentation from './MetaFieldDocumentation.vue';
+import MetaFieldTopicOperation from './MetaFieldTopicOperation.vue';
+import MetaFieldSimpleField from './MetaFieldSimpleField.vue';
+import MetaFieldPublication from './MetaFieldPublication.vue'
+import MetaFieldAuthors from './MetaFieldAuthors.vue'
 
 
 const metadataStore = useMetadataStore();
@@ -240,6 +473,7 @@ const items = [
 ];
 const versionControl = ref(false);
 const openPanels = ref<number[]>([]);
+  const openIndex = ref<number | null>(null);
 const selectedType = '';
 const selectedVersion = '';
 const registries = [
@@ -328,9 +562,18 @@ onMounted(() => {
 });
 
 // Methods
-// Crear una lista de claves
 const metadataKeys = Object.keys(metadataFields);
 
+// Toggle header panel
+const togglePanel = (index: number) => {
+  if (openIndex.value === index) {
+    openIndex.value = null;
+    openPanels.value = [];
+  } else {
+    openIndex.value = index;
+    openPanels.value = [index];
+  }
+};
 const visibleTicks = (i: number) => {
   return !openPanels.value.includes(i);
 };
