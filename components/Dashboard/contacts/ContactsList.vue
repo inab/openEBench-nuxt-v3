@@ -143,6 +143,7 @@
     </div>
     <ContactModal
       :is-modal-open="isModalOpen"
+      modal-title="Contact View"
       :contact-id="contactIdOpen"
       :token="token"
       @close-modal="closeModal"
@@ -162,12 +163,7 @@ const props = defineProps<{
   token: string;
 }>();
 
-const { data } = useAuth();
 const runtimeConfig = useRuntimeConfig();
-let token: string | undefined;
-if (data.value) {
-  token = data.value.accessToken;
-}
 const isModalOpen = ref(false);
 const isSearchingContact = ref(false);
 const search = ref("");
@@ -235,7 +231,7 @@ const filteredRows = computed(() => {
       page.value * pageCount.value,
     );
   }
-
+  
   const filteredSearcher = props.contactsData.filter((contact: Contact) => {
     const matchesSearch =
       !search.value ||

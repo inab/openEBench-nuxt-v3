@@ -4,10 +4,10 @@ import { defineEventHandler, readBody } from "h3";
 export default defineEventHandler(async (event) => {
   const runtimeConfig = useRuntimeConfig();
 
-  const { collection } = event.context.params; // Obtener la colección de la ruta
-  const method = event.req.method; // Obtener el método HTTP
-  const body = await readBody(event); // Leer el cuerpo de la solicitud
-  const token = event.req.headers["authorization"]; // Extraer el token de autorización
+  const { collection } = event.context.params;
+  const method = event.req.method;
+  let body = await readBody(event);
+  const token = event.req.headers["authorization"];
   const community_id = body.community_id;
 
   console.log("Colección:", collection);
@@ -25,6 +25,10 @@ export default defineEventHandler(async (event) => {
       const url = `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/${collection}`;
       console.log("URL:", url);
 
+      if (collection === "Community") {
+        body = [body];
+      }
+
       const response = await fetch(url, {
         method: "POST",
         headers: {
@@ -37,50 +41,32 @@ export default defineEventHandler(async (event) => {
       console.log("Respuesta:", response);
       console.log(token);
 
-      responseStatus = response.status;
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error("Error en la respuesta de la API:", errorData);
-        throw new Error(
-          `Error en la respuesta de la API: ${response.statusText}. Detalles: ${errorData.error}`,
-        );
-      }
-
       const data = await response.json();
-      console.log("Respuesta:", data);
-      console.log("Estado:", response.status);
-      if (data[0] && data[0].errors) {
-        console.log("Error:", data[0].errors);
-        return {
-          status: response.status,
-          body: { error: data[0].errors },
-        };
+      console.log("📦 JSON recibido:", JSON.stringify(data, null, 2));
+
+      const status = response.status;
+
+      console.log("data: " , data);
+
+      if (!data || !data._id) {
+        console.error("❌ Respuesta inesperada de la API:", data);
+        throw new Error(`Error en la respuesta de la API: ${response.statusText}`);
       }
 
       return {
-        status: 200,
+        status: status,
         body: JSON.stringify({
-          message: "Community added successfully",
+          message: "Community updated successfully",
           data: {
-            id: body.id,
-            ...body,
+            id: data._id,
+            ...data,
           },
         }),
       };
-    } else {
-      console.error("Error: Método no permitido");
-      return {
-        status: 405,
-        body: JSON.stringify({ error: "Método no permitido" }),
-      };
     }
   } catch (error) {
-    console.log(error)
-    console.log("responseStatus: " , responseStatus)
-    console.error("Error en el middleware:", error.message);
     return {
-      status: responseStatus || 500,
+      status: response.status,
       body: JSON.stringify({ error: error.message }),
     };
   }

@@ -154,7 +154,6 @@
                           >Explore Metrics</NuxtLink
                         >
                       </button>
-                      
                     </div>
                   </div>
                 </div>
@@ -224,7 +223,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { useUser } from "@/stores/user.ts";
 
 import BarSvg from "../../public/images/plots/bar-chart.svg?component";
@@ -238,6 +237,10 @@ definePageMeta({
     authenticatedOnly: true, // Solo permite acceso a usuarios autenticados
     navigateUnauthenticatedTo: "/login-required", // Redirige a los no autenticados
   },
+});
+
+defineExpose({
+  countTotalMetrics,
 });
 
 const { data, status } = useAuth();
@@ -254,10 +257,7 @@ const metricsByType = ref([
   { name: "Box Plot Plot", total: 0 },
 ]);
 
-let token: string | undefined;
-if (data.value) {
-  token = data.value.accessToken;
-}
+const token = computed(() => data.value?.accessToken || "");
 
 const userName = computed(() => {
   return data.value && data.value.statusCode != "404" ? data.value.name : "";
@@ -277,14 +277,13 @@ if (status.value == "authenticated") {
   userName.value = "";
 }
 
-await countTotalMetrics();
 async function countTotalMetrics() {
   try {
     const response = await $fetch(
       `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Metrics`,
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token.value}`,
           Accept: "application/json",
         },
         method: "GET",
@@ -294,19 +293,19 @@ async function countTotalMetrics() {
     const data = await response;
     totalMetrics.value = data.length;
     await getMetricsByType(data);
+    return data;
   } catch (error) {
     console.error("Error:", error);
   }
 }
 
-await countTotalTools();
 async function countTotalTools() {
   try {
     const response = await $fetch(
       `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Tool`,
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token.value}`,
           Accept: "application/json",
         },
         method: "GET",
@@ -320,14 +319,13 @@ async function countTotalTools() {
   }
 }
 
-await countTotalCommunities();
 async function countTotalCommunities() {
   try {
     const response = await $fetch(
       `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Community`,
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token.value}`,
           Accept: "application/json",
         },
         method: "GET",
@@ -341,17 +339,16 @@ async function countTotalCommunities() {
   }
 }
 
-await countTotalContacts();
-async function countTotalContacts() {
+async function countTotalContacts() {  
   try {
     const response = await $fetch(
       `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Contact`,
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token.value}`,
           Accept: "application/json",
         },
-        method: "GET",
+        method: "GET"
       },
     );
 
@@ -363,13 +360,20 @@ async function countTotalContacts() {
 }
 
 async function getMetricsByType(metrics) {
+  const typeMap = {
+    visualization: "Bar Plot",
+    optimization: "Scatter Plot",
+    visualizationBox: "Box Plot",
+    visualizationLine: "Line Plot",
+  };
+
   metrics.forEach((metric) => {
     if (
       metric.representation_hints &&
       metric.representation_hints.visualization
     ) {
       const type = metricsByType.value.filter(
-        (item) => item.name === "Bar Plot",
+        (item) => item.name === typeMap.visualization,
       );
       type[0].total += 1;
     } else if (
@@ -377,28 +381,31 @@ async function getMetricsByType(metrics) {
       metric.representation_hints.optimization
     ) {
       const type = metricsByType.value.filter(
-        (item) => item.name === "Scatter Plot",
-      );
-      type[0].total += 1;
-    } else if (
-      metric.representation_hints &&
-      metric.representation_hints.visualization
-    ) {
-      const type = metricsByType.value.filter(
-        (item) => item.name === "Box Plot",
-      );
-      type[0].total += 1;
-    } else if (
-      metric.representation_hints &&
-      metric.representation_hints.visualization
-    ) {
-      const type = metricsByType.value.filter(
-        (item) => item.name === "Line Plot",
+        (item) => item.name === typeMap.optimization,
       );
       type[0].total += 1;
     }
   });
 }
+
+// onMounted(async () => {
+//   if(token.value) {
+// //countTotalMetrics();
+//   //countTotalTools();
+//   //countTotalCommunities();
+//   //countTotalContacts();
+//   }
+  
+// });
+
+watch(token, (newValue) => {
+  if (newValue) {
+    countTotalCommunities();
+    countTotalContacts();
+    countTotalTools();
+    countTotalMetrics();
+  }
+}, { immediate: true });
 </script>
 
 <style lang="scss">

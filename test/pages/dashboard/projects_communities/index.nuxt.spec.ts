@@ -1,23 +1,38 @@
 import { mount } from "@vue/test-utils";
-import { describe, it, expect, vi, beforeEach, shallowMount } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import Index from "@/pages/dashboard/projects_communities/index.vue";
 import { createTestingPinia } from "@pinia/testing";
+import { setActivePinia } from "pinia";
+import { useUser } from "@/stores/user";
 
-const mockUseAuth = vi.fn();
-vi.mock("@/composables/auth", () => ({
-  useAuth: mockUseAuth,
-}));
 
 const mockUseRouter = vi.fn();
 vi.mock("vue-router", () => ({
   useRouter: () => mockUseRouter,
 }));
 
-vi.mock("@/stores/user", () => ({
-  useUser: () => mockUserStore,
+vi.mock("@/middleware/auth", () => ({
+  default: vi.fn((context) => {
+    const { auth } = context;
+    if (
+      !auth ||
+      (auth.authenticatedOnly && context.auth.status === "unauthenticated")
+    ) {
+      context.redirect("/login-required");
+    }
+  }),
 }));
 
-// Mockear useUser
+vi.mock("#app", () => ({
+  useRuntimeConfig: () => ({
+    public: {
+      SCIENTIFIC_SERVICE_URL_API:
+        "https://dev-openebench.bsc.es/api/scientific/staged/Metrics/",
+    },
+  }),
+  $fetch: vi.fn(() => Promise.resolve()),
+}));
+
 interface CommunityRole {
   role: string;
   community: string;
@@ -25,6 +40,7 @@ interface CommunityRole {
 
 const mockUserStore = {
   getUserCommunitiesRoles: [] as CommunityRole[],
+  communitiesRoles: [] as CommunityRole[],
   fetchCommunities: vi.fn(),
   setUserCommunitiesRoles: vi.fn((roles: string[] = []) => {
     mockUserStore.getUserCommunitiesRoles = roles.reduce((accumulator, rol) => {
@@ -35,125 +51,96 @@ const mockUserStore = {
   }),
 };
 
-describe("Entries Page Dashboard", () => {
-  let wrapper: ReturnType<typeof mount>;
-
-  beforeEach(() => {
-    mockUseRouter.mockReset();
-    //mockUseAuth.mockReset();
-
-    mockUseAuth.mockReturnValue({
-      data: {
-        value: {
-          name: "John Doe",
-          statusCode: 2000,
-          oeb_roles: ["admin:oeb"], // This should be a valid format
-        },
-      },
-      status: { value: "authenticated" },
-    });
-
-    wrapper = mount(Index, {
-      global: {
-        plugins: [createTestingPinia()], // Usa Pinia para manejar el estado
-        stubs: ["FontAwesomeIcon", "NuxtIcon", "RouterLink"], // Mockea componentes si es necesario
-      },
-    });
-  });
-
+describe("Dashboard Entries Page Dashboard", () => {
   it("should display 'Create New Entry' when the user is admin", async () => {
-    mockUserStore.getUserCommunitiesRoles = [
-      {
-        role: "admin",
-        community: "oeb",
-      },
-    ];
-
-    mockUseAuth.mockReturnValue({
-      data: ref({
-        name: "John Doe",
-        oeb_roles: [
-          {
-            role: "admin",
-            community: "oeb",
-          },
-        ],
-      }),
-      status: ref("authenticated"),
-    });
-
-    wrapper = mount(Index, {
-      global: {
-        plugins: [createTestingPinia()], // Usa Pinia para manejar el estado
-        stubs: ["FontAwesomeIcon", "NuxtIcon", "RouterLink"],
-        isAdmin: true,
-      },
-    });
-    //mockUserStore.getUserCommunitiesRoles = ["admin:oeb"];
-    mockUserStore.setUserCommunitiesRoles([
-      {
-        role: "admin",
-        community: "oeb",
-      },
-    ]);
-
-    // Wait for Vue to process updates
-    await wrapper.vm.$nextTick();
-
-    expect(wrapper.find("#dashboard-create-community").exists()).toBe(true);
-    expect(wrapper.vm.isAdmin).toBe(true);
-  });
-
-  it.skip("should not display the 'Create New Entry' button when the user is authenticated but not an admin", async () => {
-    mockUseAuth.mockReturnValue({
-      data: ref({ user: { name: "John Doe" }, oeb_roles: ["user"] }),
-      status: ref("authenticated"),
-      getSession: () => ({
-        user: { name: "John Doe" },
-        oeb_roles: ["owner:OEBC000"],
-      }),
-      signOut: () => {},
-    });
-
-    mockUserStore.setUserCommunitiesRoles(["owner:OEBC000"]);
-
     const wrapper = mount(Index, {
       global: {
-        plugins: [createTestingPinia()], // Usa Pinia para manejar el estado
-        stubs: ["FontAwesomeIcon", "NuxtIcon", "RouterLink"], // Mockea componentes si es necesario
+        plugins: [
+          createTestingPinia({
+            initialState: {
+              user: {
+                communitiesRoles: [{ role: "admin", community: "OEBC000" }],
+                getUserCommunitiesRoles: [
+                  { role: "admin", community: "OEBC000" },
+                ],
+              },
+            },
+            createSpy: vi.fn,
+          }),
+        ],
+        stubs: ["FontAwesomeIcon", "NuxtIcon", "RouterLink"],
       },
     });
 
-    // Wait for Vue to process updates
-    await wrapper.vm.$nextTick();
+    const userStore = useUser();
+
+    expect(userStore.getUserCommunitiesRoles).toEqual([
+      { role: "admin", community: "OEBC000" },
+    ]);
+
+    expect(userStore.communitiesRoles).toEqual([
+      { role: "admin", community: "OEBC000" },
+    ]);
+
+    expect(wrapper.find("#dashboard-create-community").exists()).toBe(true);
+  });
+
+  it("should not display the 'Create New Entry' button when the user is authenticated but not an admin", async () => {
+    const wrapper = mount(Index, {
+      global: {
+        plugins: [
+          createTestingPinia({
+            initialState: {
+              user: {
+                communitiesRoles: [{ role: "manager", community: "OEBC000" }],
+                getUserCommunitiesRoles: [
+                  { role: "manager", community: "OEBC000" },
+                ],
+              },
+            },
+            createSpy: vi.fn,
+          }),
+        ],
+        stubs: ["FontAwesomeIcon", "NuxtIcon", "RouterLink"],
+      },
+    });
 
     expect(wrapper.find("#dashboard-create-community").exists()).toBe(false);
   });
 
-  it.skip("should redirect to login-required when the user is not authenticated", async () => {
-    const push = vi.fn();
-    mockUseRouter.mockReturnValue({ push });
-    mockUseAuth.mockReturnValue({
-      data: ref(null),
-      status: ref("unauthenticated"),
-      getSession: () => null,
-      signOut: () => {},
-    });
+  it("should call fetchCommunities with the correct token on mount", async () => {
+    const pinia = createTestingPinia({ createSpy: vi.fn });
+    setActivePinia(pinia);
+    const userStore = useUser();
 
-    if (mockUseAuth().status.value === "unauthenticated") {
-      const router = mockUseRouter();
-      router.push("/login-required");
-    }
+    const mockResponse = {
+      data: [{ id: 1, name: "Community 1" }],
+    };
+  
+    const fetchCommunitiesMock = vi.fn().mockResolvedValue(mockResponse);
+    userStore.fetchCommunities = fetchCommunitiesMock;
+
+    const result = await userStore.fetchCommunities("mock-token");
+
+    const auth = useAuth();
+    auth.data.value = {
+      role: "admin",
+      email: "hi@sidebase.io",
+      name: "John Doe",
+      accessToken: "mock-token",
+    };
+    auth.status.value = "authenticated";
 
     const wrapper = mount(Index, {
       global: {
-        plugins: [createTestingPinia()],
+        plugins: [pinia],
         stubs: ["FontAwesomeIcon", "NuxtIcon", "RouterLink"],
       },
     });
 
     await wrapper.vm.$nextTick();
 
-    expect(push).toHaveBeenCalledWith("/login-required");
+    expect(fetchCommunitiesMock).toHaveBeenCalledWith("mock-token");
+    expect(result).toEqual(mockResponse);
   });
 });

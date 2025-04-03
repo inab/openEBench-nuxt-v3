@@ -126,6 +126,7 @@ const community = ref<any>(null);
 const communityId = route.params.community as string;
 const event = route.query.event as string;
 
+
 if (communityStore.communityId && communityStore.communityId == communityId) {
   community.value = communityStore.getCommunityData;
 } else {

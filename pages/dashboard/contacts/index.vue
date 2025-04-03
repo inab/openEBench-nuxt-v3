@@ -66,18 +66,21 @@
         <div class="contacts__body">
           <div class="dashboard__description text-gray-500"></div>
           <ContactsList
-            :contacts-data="constactsList"
+            :contacts-data="contactsList"
             :token="token"
             :is-loading="isLoadingContacts"
           />
         </div>
+      </div>
+      <div class="" v-else>
+        User is not authenticated
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import ContactsList from "@/components/Dashboard/contacts/ContactsList.vue";
 import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
 import type { Contact } from "@/types/contact";
@@ -108,9 +111,8 @@ const HEADER_ITEM = [
 
 const token: string = data?.value.accessToken;
 const isLoadingContacts = ref(false);
-const constactsList = ref<Contact[]>([]);
+const contactsList = ref<Contact[]>([]);
 
-await fetchContacts(token);
 async function fetchContacts(token: string): Promise<Contact[]> {
   isLoadingContacts.value = true;
   try {
@@ -146,7 +148,7 @@ async function fetchContacts(token: string): Promise<Contact[]> {
       }
       return contact;
     });
-    constactsList.value = data;
+    contactsList.value = data;
     return data;
   } catch (error) {
     return [];
@@ -154,6 +156,12 @@ async function fetchContacts(token: string): Promise<Contact[]> {
     isLoadingContacts.value = false;
   }
 }
+
+onMounted(async () => {
+  if (token) {
+    await fetchContacts(token);
+  }
+});
 </script>
 
 <style lang="scss" scoped>

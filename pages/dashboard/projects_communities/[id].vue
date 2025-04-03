@@ -51,37 +51,44 @@ const isLoadingEvents = ref<boolean>(true);
 const isAdmin = ref<boolean>(false);
 
 const isView = computed(() => {
-  const isAdmin = userPrivileges.value.filter(
+  if (!userPrivileges.value) return true;
+
+  const isAdmin = userPrivileges.value.some(
     (privilege) => privilege.role === "admin",
   );
-  if (isAdmin.length > 0) {
-    return false;
-  }
-  return (
-    userPrivileges.value.filter(
-      (privilege) => privilege.community === communityId,
-    ).role === "Owner"
+
+  if (isAdmin) return false;
+
+  const userPrivilege = userPrivileges.value.find(
+    (privilege) => privilege.community === communityId.value,
   );
+
+  return userPrivilege ? userPrivilege.role === "Owner" : true;
 });
 
 const userPrivileges: Array<string> = computed(
   () => userStore.getUserCommunitiesRoles,
 );
+
 if (userPrivileges.value.length == 0) {
   userStore.setUserCommunitiesRoles(data.value.oeb_roles);
 }
 
 const communityData = ref<Community>(null);
+
 const communityPrivileges = computed(() => {
   const isAdmin = userPrivileges.value.filter(
     (privilege) => privilege.role === "admin",
   );
+
   if (isAdmin.length > 0) {
     return privileges.admin;
   }
+
   const privilege = userPrivileges.value.find((privilege) => {
     return privilege.community === communityId;
   });
+
   return privilege ? privileges[privilege.role] : privileges.anyone;
 });
 
@@ -89,6 +96,7 @@ const privilegesType = computed(() => {
   const privilege = userPrivileges.value.find((privilege) => {
     return privilege.community === communityId;
   });
+
   return privilege
     ? privilege.role.charAt(0).toUpperCase() + privilege.role.slice(1)
     : "None";
@@ -155,6 +163,25 @@ const fetchUserCommunitiesEvents = async (
       communityId,
     );
     const data = await communityEventResponse;
+    const formatResponse = data.map((item) => {
+      if (Array.isArray(item.bench_contact)) {
+        return {
+          ...item,
+          bench_contact: item.bench_contact.map((contact) => {
+            if (typeof contact === "object" && contact !== null) {
+              return {
+                ...contact,
+                id: contact.id ? contact.id.replace(/\./g, " ").split(":")[1] || "" : "",
+                name: contact.name ? contact.name.replace(/\./g, " ") : ""
+              };
+            }
+            return contact;
+          })
+        };
+      }
+      return item; 
+    });
+
     isLoadingEvents.value = false;
     return data;
   } catch (error) {
@@ -163,9 +190,7 @@ const fetchUserCommunitiesEvents = async (
 };
 
 if (userStore.getUserCommunitiesRoles.length == 0) {
-  userStore.fetchUserPrivileges(token).then(() => {
-    // TDOO: Add the user privileges to the store
-  });
+  userStore.fetchUserPrivileges(token);
 }
 
 onMounted(async () => {

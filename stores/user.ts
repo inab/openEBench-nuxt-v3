@@ -128,15 +128,15 @@ export const useUser = defineStore("user", {
       const response = await fetch(
         `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Contact`,
         {
+          method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
             Accept: "application/json",
           },
-          method: "GET",
         },
       );
-
       const data = await response.json();
+
       if (!data) {
         [];
       }
@@ -229,7 +229,10 @@ export const useUser = defineStore("user", {
         const links = community.links ?? [];
         const logo =
           Array.isArray(links) && links.length > 0
-            ? links.find((link: any) => link.comment === "@logo")?.uri ||
+            ? links.find(
+                (link: any) =>
+                  link.comment === "@logo" || link.label === "Logo",
+              )?.uri ||
               "https://raw.githubusercontent.com/inab/openEBench-nuxt/refs/heads/master/static/OEB-minimal-logo-blue.svg"
             : "https://raw.githubusercontent.com/inab/openEBench-nuxt/refs/heads/master/static/OEB-minimal-logo-blue.svg";
         return {
@@ -240,9 +243,11 @@ export const useUser = defineStore("user", {
           status: community.status,
           community_contact: community.community_contact_ids
             .map((contact: string) => {
-              return contact.replace(/\./g, " ");
-            })
-            .join(", "),
+              return {
+                id: contact.replace(/\./g, " ").split(":")[1],
+                name: contact.replace(/\./g, " ")
+              }
+            }),
           _metadata: community._metadata ? community._metadata : "",
           to: `${runtimeConfig.public.BASE_URL}/benchmarking/${community._id}`,
           privileges: community.privileges,
@@ -297,7 +302,6 @@ export const useUser = defineStore("user", {
 
     setCommunityPrivileges(data: Community[]): Community[] {
       const userPrivileges = this.getUserCommunitiesRoles;
-      console.log(userPrivileges);
       data.forEach((community: Community) => {
         community.actions = [];
         community.privileges = "None";

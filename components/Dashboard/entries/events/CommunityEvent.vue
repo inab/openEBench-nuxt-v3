@@ -111,7 +111,7 @@
                               type="text"
                               class="form-control custom-entry-input"
                               placeholder="Event name"
-                              :disabled="!eventPrivileges.event.update"
+                              :disabled="!eventPrivileges.update"
                             />
                           </div>
                         </div>
@@ -138,7 +138,7 @@
                               type="text"
                               class="form-control custom-entry-input"
                               placeholder="URL"
-                              :disabled="!eventPrivileges.event.update"
+                              :disabled="!eventPrivileges.update"
                             />
                           </div>
                         </div>
@@ -157,7 +157,7 @@
                                   <button
                                     class="btn-form-add btn-primary"
                                     :disabled="
-                                      !eventPrivileges.event.update ||
+                                      !eventPrivileges.update ||
                                       isView ||
                                       checkEmptyReferences
                                     "
@@ -182,13 +182,11 @@
                                       type="text"
                                       class="form-control"
                                       :disabled="
-                                        !eventPrivileges.event.update || isView
+                                        !eventPrivileges.update || isView
                                       "
                                     />
                                     <button
-                                      v-if="
-                                        eventPrivileges.event.update && !isView
-                                      "
+                                      v-if="eventPrivileges.update && !isView"
                                       class="btn-delete-input"
                                     >
                                       <font-awesome-icon
@@ -220,7 +218,7 @@
                                   <button
                                     class="btn-form-add btn-primary"
                                     :disabled="
-                                      !eventPrivileges.event.update ||
+                                      !eventPrivileges.update ||
                                       isView ||
                                       checkEmptyContacts
                                     "
@@ -289,19 +287,24 @@
                       </div>
                     </div>
                   </div>
-                  <div v-if="errors.length > 0" class="row errors">
+                  <div v-if="errors.length > 0" class="row errors text-center">
                     <div class="col-12">
                       <div class="alert alert-danger" v-html="getErrors"></div>
                     </div>
                   </div>
                   <div class="form-footer">
-                    <UButton type="button" variant="secondary" @click="goBack">
+                    <UButton
+                      type="button"
+                      color="white"
+                      variant="solid"
+                      @click="goBack"
+                    >
                       Cancel
                     </UButton>
                     <UButton
-                      v-if="eventPrivileges.event.update && !isView"
+                      v-if="eventPrivileges.update && !isView"
                       type="submit"
-                      :disabled="!eventPrivileges.event.update || isView"
+                      :disabled="!eventPrivileges.update || isView"
                     >
                       Submit
                     </UButton>
@@ -401,6 +404,8 @@ const props = defineProps<{
   isLoadinChallenges: boolean;
   tabIndex: string;
 }>();
+
+console.log("eventPrivileges: ", props.eventPrivileges);
 
 const dialogTitle = ref("");
 const dialogType = ref("yesno");
@@ -692,28 +697,50 @@ async function updateBenchmarkingEvent() {
       },
     );
 
+    console.log("response: " , response);
+    console.log(JSON.stringify(body));
+
     if (!response.ok) {
       throw new Error("Error in API response");
     }
 
-    const responseData = await response.json();
-    if (responseData.status == 200) {
+    const data = await response.json();
+
+    if (data.status == 200) {
       errors.value = [];
-      router.push(
-        `/dashboard/projects_communities/${state.value.community_id}?events=true`,
-      );
-    } else {
-      const errorResponse = JSON.parse(responseData.body);
-      errors.value = errorResponse.error.map((error: any) => {
-        if (error.pointer) {
-          return `${error.message}`;
-        }
-        return error.message;
+      const msg = "We've saved your event changes.";
+      await showOkMessage(msg).then(() => {
+        router.push("/dashboard/projects_communities/${state.value.community_id}?events=true");
       });
+    } else {
+      const responseData = JSON.parse(data.body);
+      if(responseData.message) {
+        errors.value = [responseData.message];
+      } else if(responseData.error) {
+        errors.value = [responseData.error];
+      } else {
+        errors.value = data.error.map((error: any) => {
+          if (error.pointer) {
+            return `${error.message}`;
+          }
+          return error.message;
+        });
+      }
     }
   } catch (error) {
-    console.error("Error fetching communities data:", error);
+    console.log(error);
+    errors.value = [error];
   }
+}
+
+async function showOkMessage(msg: string) {
+  oks.value = msg;
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      oks.value = "";
+      resolve("done");
+    }, 5000);
+  });
 }
 
 const checkEmptyContacts = computed(() => {

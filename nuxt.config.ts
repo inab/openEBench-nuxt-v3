@@ -1,16 +1,20 @@
 import { customRoutes } from "./router.options";
 import svgLoader from "vite-svg-loader";
+const mockAuthModule = process.env.VITEST ? ['./test/mocks/setup.ts'] : []
 
 export default defineNuxtConfig({
   devtools: {
     enabled: true,
   },
   app: {
-    baseURL: '/', // Tu aplicación está en la raíz del dominio
+    baseURL: '/',
   },
   nitro: {
-    serveStatic: true, // Asegúrate de que Nitro sirva los recursos estáticos
+    serveStatic: true,
     compressPublicAssets: false,
+    externals: {
+      inline: ['@inb/oeb-classification-table']
+    }
   },
   build: {
     publicPath: '/_nuxt/',
@@ -95,7 +99,7 @@ export default defineNuxtConfig({
       OBSERVATORY_URI:
         process.env.OBSERVATORY_URI || "https://observatory.openebench.bsc.es",
       SCIENTIFIC_SERVICE_URL:
-        process.env.NUXT_SCIENTIFIC_SERVICE_URL ||
+        process.env.SCIENTIFIC_SERVICE_URL ||
         "https://dev-openebench.bsc.es/api/scientific",
       SCIENTIFIC_SERVICE_URL_API:
         process.env.SCIENTIFIC_SERVICE_URL_API ||
@@ -156,6 +160,7 @@ export default defineNuxtConfig({
     "@nuxt/test-utils/module",
     "vue3-carousel-nuxt",
     "@sidebase/nuxt-auth",
+    ...mockAuthModule,
   ],
 
   buildModules: [

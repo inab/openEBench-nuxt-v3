@@ -507,7 +507,7 @@ async function searchMetricResults() {
       () => false,
     );
   } catch (error) {
-    console.error("Error fetching contacts data:", error);
+    console.error("Error fetching metric data:", error);
   }
 
   isSearchingSelectedMetric.value = false;
@@ -518,9 +518,11 @@ async function search() {
   searchList.value = [];
 
   const searchFilter = metricDataList.value.filter((metric) => {
-    return metric.title
+    if(metric.title) {
+      return metric.title
       .toLowerCase()
       .includes(searchMetric.value.toLowerCase());
+    }
   });
   loadingInput.value = false;
   isShowSearchTable.value = true;

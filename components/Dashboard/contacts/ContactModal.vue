@@ -1,5 +1,10 @@
 <template>
-  <CustomModal :is-open="isModalOpen" width="600" @modal-close="closeModal">
+  <CustomModal
+    :is-open="isModalOpen"
+    width="600"
+    class="dashboard-contacts-modal"
+    @modal-close="closeModal"
+  >
     <template #header>
       <div class="modal-title">Edit contact</div>
       <button class="modal-close" aria-label="Close modal" @click="closeModal">
@@ -13,7 +18,6 @@
           :state="state"
           class="space-y-4"
           @submit="onSubmitContactUpdate"
-          @error="onError"
         >
           <div class="w-100">
             <div
@@ -148,9 +152,7 @@
               </div>
             </div>
             <div class="form-footer pt-3">
-              <UButton type="button" variant="secondary" @click="closeModal">
-                Cancel
-              </UButton>
+              <UButton type="button" @click="closeModal"> Cancel </UButton>
               <UButton class="" type="submit"> Submit </UButton>
             </div>
           </div>
@@ -176,7 +178,7 @@ const props = defineProps<{
   isModalOpen: boolean;
   modalTitle: string;
   contactId: string;
-  isContactEditable: boolean;
+  isContactEditable?: boolean;
   token: string;
 }>();
 
@@ -236,11 +238,11 @@ async function fetchContact(id: string): Promise<Contact> {
       },
     );
     const data = await response.json();
-    if(!data.notes) {
+
+    if (!data.notes) {
       data.notes = "";
     }
     contactObj.value = data;
-
     communities.value = await fetchUserCommunities(props.token);
     return data;
   } catch (error) {
@@ -265,17 +267,14 @@ const fetchUserCommunities = async (token: string): Promise<void> => {
   }
 };
 
-async function onError(event: FormErrorEvent) {
-  // console.log("state: ", state.value);
-  // console.log("event: ", event);
-}
-
 function validateRequiredFields(data: any): string[] {
-  const requiredFields = ["givenName", "surname	", "email"];
+  const requiredFields = ["givenName", "surname", "email"];
   const errorMessages: string[] = [];
-
   requiredFields.forEach((field) => {
-    if (typeof data[field] === "string" && data[field].trim() === "") {
+    if (
+      (typeof data[field] === "string" && data[field].trim() === "") ||
+      (Array.isArray(data[field]) && data[field].length === 0)
+    ) {
       errorMessages.push(`${field} cannot be empty`);
     }
   });
@@ -302,11 +301,13 @@ watch(
   () => props.contactId,
   async (newVal) => {
     if (newVal) {
-      contactObj.value = await fetchContact(newVal);
-      state.value = contactObj.value;
+      const contactData = await fetchContact(newVal);
+      state.value = contactData ?? { ...state.value }
     }
   },
+  { immediate: true }
 );
+
 </script>
 
 <style lang="scss" scoped>

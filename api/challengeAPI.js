@@ -87,13 +87,21 @@ export async function challengeAPI(challengeID) {
   });
 }
 export async function getGraphData(dataset) {
+  let log2Param = "";
+  if (
+    dataset.datalink.inline_data.visualization.type === "box-plot" &&
+    dataset.datalink.inline_data.visualization.axes_scale &&
+		dataset.datalink.inline_data.visualization.axes_scale === "?log2=true"
+  ) {
+    log2Param = "?log2=true";
+  }
   let response =
     dataset.datalink.inline_data.visualization.type === "bar-plot" ||
     dataset.datalink.inline_data.visualization.type === "box-plot"
       ? await useNuxtApp().$graphql(
           `/widget/${dataset.datalink.inline_data.visualization.type}/${dataset._id}${
             dataset.datalink.inline_data.visualization.type === "box-plot"
-              ? "?log2=true"
+              ? log2Param
               : ""
           }`,
           {

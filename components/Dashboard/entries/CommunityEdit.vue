@@ -26,6 +26,24 @@
         of software capabilities and promoting innovation through collective
         knowledge sharing.
       </div>
+      <div class="contribute-box">
+        <div class="row">
+          <div class="col-12">
+            <div class="w-100 p-1 text-gray-500 text-center">
+              I really like what this community is about, and I'm interested in
+              getting involved!
+              <div class="w-100 text-center pt-3">
+                <NuxtLink
+                  class="btn-primary hover_effect header-button"
+                  :to="'/dashboard/contribute/' + id"
+                >
+                  Contribute to community
+                </NuxtLink>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div v-if="loadingData" class="">
         <div class="space-y-2">
           <USkeleton class="dashboard-community-edit__skeleton__small" />
@@ -99,6 +117,20 @@
                             <div class="col-12 typeOptions">
                               <div class="form-group">
                                 <label for="id">
+                                  <UTooltip
+                                    :ui="{
+                                      width: 'max-w-lg',
+                                      base: 'whitespace-normal break-words',
+                                    }"
+                                  >
+                                    <template #text>
+                                      Community concept (OpenEBench Benchmarking
+                                      Data Model schemas)
+                                    </template>
+                                    <UIcon
+                                      name="i-heroicons-information-circle"
+                                    />
+                                  </UTooltip>
                                   ID
                                   <span class="text-red-400 required">*</span>
                                 </label>
@@ -119,7 +151,7 @@
                                 <label for="status">Status</label>
                                 <USelectMenu
                                   v-model="localStatus.value"
-                                  class="custom-select-input"
+                                  class="w-full custom-select-input"
                                   selected-icon="i-heroicons-hand-thumb-up-solid"
                                   :options="CommunityStatusLabels"
                                   :disabled="
@@ -160,7 +192,7 @@
                                 <label for="type">Type</label>
                                 <USelect
                                   v-model="state.type"
-                                  class="custom-select-input"
+                                  class="w-full custom-select-input"
                                   :options="typeOptions"
                                   option-attribute="label"
                                   :disabled="
@@ -180,7 +212,10 @@
                     <div class="form-card__row__box">
                       <div class="form-group">
                         <label for="acronym">
-                          Acronym
+                          <UTooltip text="Unique community acronym">
+                            <UIcon name="i-heroicons-information-circle" />
+                          </UTooltip>
+                          {{ inputLabels[state.type].acronym }}
                           <span class="text-red-400 required">*</span>
                         </label>
                         <input
@@ -197,7 +232,7 @@
                     <div class="form-card__row__box">
                       <div class="form-group">
                         <label for="description">
-                          Name
+                          {{ inputLabels[state.type].name }}
                           <span class="text-red-400 required">*</span>
                         </label>
                         <input
@@ -232,7 +267,7 @@
                       <div class="col-12">
                         <div class="form-group">
                           <div class="w-100">
-                            <label for="contacts" class="form-group-row">
+                            <label for="links" class="form-group-row">
                               <span class="label-text"> Links </span>
                               <button
                                 class="btn-form-add btn-primary"
@@ -435,7 +470,12 @@
                     </div>
                   </div>
                   <div class="form-footer">
-                    <UButton type="button" variant="secondary" @click="goBack">
+                    <UButton
+                      type="button"
+                      color="white"
+                      variant="solid"
+                      @click="goBack"
+                    >
                       Cancel
                     </UButton>
                     <UButton
@@ -465,11 +505,7 @@
         </div>
       </div>
     </div>
-    <CustomDialog
-      :is-dialog-open="isDialogOpened"
-      :width="400"
-      @modal-close="dialogShow"
-    >
+    <CustomDialog :is-dialog-open="isDialogOpened" :width="400">
       <template #header>
         {{ dialogTitle }}
       </template>
@@ -480,19 +516,25 @@
         <template v-if="dialogType && dialogType === 'yesno'">
           <button
             type="button"
-            class="btn-primary"
+            class="btn-primary dialog-btn"
+            @click="deleteElement"
+          >
+            Yes
+          </button>
+          <button
+            type="button"
+            class="btn-primary dialog-btn dialog-btn--no"
+            color="gray"
+            variant="solid"
             @click="isDialogOpened = false"
           >
             No
-          </button>
-          <button type="button" class="btn-primary" @click="deleteElement">
-            Yes
           </button>
         </template>
         <template v-else>
           <button
             type="button"
-            class="btn-primary"
+            class="btn-primary dialog-btn"
             @click="isDialogOpened = false"
           >
             Cancel
@@ -516,15 +558,17 @@ import type { Community } from "@/types/communities";
 import type { FormErrorEvent, FormSubmitEvent } from "#ui/types";
 import type { CommunityPrivilegeActions } from "@/constants/privileges";
 import type { Event } from "@/types/events";
+import type { Contact } from "@/types/contact";
 
 import EventsList from "@/components/Dashboard/entries/EventsList.vue";
 import CustomSubtitle from "@/components/Common/CustomSubtitle.vue";
 import { useRouter } from "vue-router";
 import CustomDialog from "@/components/Common/CustomDialog.vue";
-import { object, string, array, safeParse, optional } from "valibot";
+import { object, string, array, safeParse } from "valibot";
 import CustomBorder from "@/components/Common/CustomBorder.vue";
 import CustomTab from "@/components/Common/CustomTab.vue";
 import CustomTabBody from "@/components/Common/CustomTabBody.vue";
+import TurndownService from "turndown";
 
 import {
   ClassicEditor,
@@ -552,17 +596,30 @@ import {
 import { Ckeditor } from "@ckeditor/ckeditor5-vue";
 
 import "ckeditor5/ckeditor5.css";
+const turndownService = new TurndownService();
 
 const router = useRouter();
 const runtimeConfig = useRuntimeConfig();
 const { data } = useAuth();
-const token: string = data?.value.accessToken;
+const token = ref(data?.value.accessToken);
+
 const userStore = useUser();
 const imageDefault = "~/assets/images/dashboards/empty-logo.jpg";
 
+const inputLabels = {
+  Community: {
+    acronym: "Community Acronym",
+    name: "Community Name",
+  },
+  Project: {
+    acronym: "Project Acronym",
+    name: "Project Name",
+  },
+};
+
 const props = defineProps<{
   id: string;
-  communityObj: Community | null;
+  communityObj?: Community | null;
   loadingData: boolean;
   commmunityPrivileges: CommunityPrivilegeActions;
   isView: boolean;
@@ -580,8 +637,7 @@ const state = ref({
   description: "",
   links: [],
   keywords: [],
-  _schema:
-    "https://www.elixir-europe.org/excelerate/WP2/json-schemas/1.0/Community",
+  _schema: props.communityObj?._schema,
   community_contact_ids: [],
   type: "",
   privileges: "",
@@ -711,8 +767,7 @@ const communityData = computed(() => {
     name: props.communityObj?.name,
     description: props.communityObj?.description,
     _metadata: props.communityObj?._metadata ?? "",
-    _schema:
-      "https://www.elixir-europe.org/excelerate/WP2/json-schemas/1.0/Community",
+    _schema: props.communityObj?._schema ?? "",
     community_contact_ids:
       props.communityObj?.community_contact_ids.map((contact: string) => {
         return {
@@ -825,11 +880,7 @@ function goBack() {
 
 async function onSubmitCommunity(event: FormSubmitEvent<Schema>) {
   //event.preventDefault();
-
   const result = safeParse(schema, state.value);
-
-  console.log(state.value);
-
   if (result.success) {
     const customErrors = validateRequiredFields(state.value);
 
@@ -859,42 +910,46 @@ async function updateCommunity() {
   const cleanKeywords = deleteEmptyElements(localKeywords.value);
   const cleanContacts = deleteEmptyElements(localContacts.value);
 
+  const markdownDescription = turndownService.turndown(state.value.description);
+
   const body = {
     _id: state.value._id,
     _schema: state.value._schema,
     name: state.value.name,
     acronym: state.value.acronym,
     status: localStatus.value.value,
-    links: cleanLinks.map((element) => {
-      return {
-        uri: element,
-        label: "MainSite",
-      };
-    }),
     keywords: cleanKeywords.map((element) => {
       return element;
     }),
     community_contact_ids: cleanContacts.map((element) => {
       return element;
     }),
-    description: state.value.description,
+    description: markdownDescription,
   };
 
+  if (cleanLinks.length > 0) {
+    body.links = cleanLinks.map((uri) => ({
+      uri,
+      label: "MainSite",
+    }));
+  }
   if (localLogo.value) {
+    if (!body.links) {
+      body.links = [];
+    }
     body.links.push({
       label: "other",
       comment: "@logo",
       uri: localLogo.value,
     });
   }
-
   try {
     const response = await fetch(
       `/api/staged/Community/${props.communityObj._id}`,
       {
         method: "PATCH",
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token.value}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(body),
@@ -906,14 +961,22 @@ async function updateCommunity() {
     }
 
     const data = await response.json();
+
     if (data.status === 200) {
-      const msg = "We've saved your community changes.";
+      const msg =
+        "Your community changes have been saved. Redirecting to the communities list...";
       await showOkMessage(msg).then(() => {
         router.push("/dashboard/projects_communities");
       });
     } else {
       const responseData = JSON.parse(data.body);
-      errors.value = [responseData.message];
+      if (responseData.message) {
+        errors.value = [responseData.message];
+      } else if (responseData.error) {
+        errors.value = [responseData.error];
+      } else {
+        errors.value = [responseData];
+      }
     }
   } catch (error) {
     console.error("Error fetching communities data:", error);
@@ -1021,7 +1084,7 @@ function onFileChange(event: Event) {
   }
 }
 
-const fetchContacts = async (token: string): Promise<void> => {
+async function fetchContacts(token: string): Promise<Contact[]> {
   try {
     if (userStore.getContactsList && userStore.getContactsList.length > 0) {
       contactsData.value = userStore.getContactsList;
@@ -1031,10 +1094,12 @@ const fetchContacts = async (token: string): Promise<void> => {
   } catch (error) {
     console.error("Error fetching contacts data:", error);
   }
-};
+}
 
 onMounted(() => {
-  fetchContacts(token);
+  if (token.value) {
+    fetchContacts(token.value);
+  }
 });
 
 watch(
@@ -1047,14 +1112,16 @@ watch(
     }
     if (newVal && newVal.links) {
       localLinks.value = newVal.links
-        .filter((link: { comment?: string }) => {
-          return !link.comment || link.comment !== "@logo";
-        })
-        .map((link: { uri: string }) => link.uri)
+        .filter(
+          (link: { comment?: string }) =>
+            link.comment && link.comment.toLowerCase() !== "@logo",
+        )
+        .map((link: { uri?: string }) => link.uri)
         .filter((uri: string | undefined): uri is string => uri !== undefined);
+
       localLogo.value =
-        newVal.links.find((link: { comment?: string }) => {
-          return link.comment && link.comment === "@logo";
+        newVal.links.find((link: { comment?: string; label?: string }) => {
+          return link.label === "Logo" || link.comment === "@logo";
         })?.uri || "";
     }
     if (newVal && newVal.community_contact_ids) {
@@ -1265,6 +1332,14 @@ input[type="file"] {
   font-size: 14px;
   text-decoration: none;
   margin-bottom: 5px;
+}
+
+.contribute-box {
+  margin-top: 20px;
+  margin-bottom: 50px;
+  img {
+    max-height: 110px;
+  }
 }
 </style>
 

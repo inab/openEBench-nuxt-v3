@@ -3,7 +3,7 @@
     <div class="w-100 container">
       <div class="dashboard-community-add__title">
         <h2 class="text-primaryOeb-500">
-          <span class="">New Community</span>
+          <span class="w-100">New Community</span>
         </h2>
         <p>
           It is a long established fact that a reader will be distracted by the
@@ -65,6 +65,18 @@
                         <div class="col-12 typeOptions">
                           <div class="form-group">
                             <label for="id">
+                              <UTooltip
+                                :ui="{
+                                  width: 'max-w-lg',
+                                  base: 'whitespace-normal break-words',
+                                }"
+                              >
+                                <template #text>
+                                  Community concept (OpenEBench Benchmarking
+                                  Data Model schemas)
+                                </template>
+                                <UIcon name="i-heroicons-information-circle" />
+                              </UTooltip>
                               ID
                               <span class="text-red-400 required">*</span>
                             </label>
@@ -85,6 +97,7 @@
                             <USelectMenu
                               v-model="localStatus.value"
                               :options="CommunityStatusLabels"
+                              class="w-full custom-select-input"
                               @change="onChangeStatus"
                             >
                               <template #label>
@@ -113,6 +126,7 @@
                               v-model="state.type"
                               :options="typeOptions"
                               option-attribute="label"
+                              class="w-full custom-select-input"
                             />
                           </div>
                         </div>
@@ -126,7 +140,10 @@
                 <div class="form-card__row__box">
                   <div class="form-group">
                     <label for="acronym">
-                      Acronym
+                      <UTooltip text="Unique community acronym">
+                        <UIcon name="i-heroicons-information-circle" />
+                      </UTooltip>
+                      {{ inputLabels[state.type].acronym }}
                       <span class="text-red-400 required">*</span>
                     </label>
                     <div class="w-100">
@@ -143,7 +160,7 @@
                 <div class="form-card__row__box">
                   <div class="form-group">
                     <label for="name">
-                      Name
+                      {{ inputLabels[state.type].name }}
                       <span class="text-red-400 required">*</span>
                     </label>
                     <div class="w-100">
@@ -190,10 +207,12 @@
                           </button>
                         </label>
                       </div>
-                      <div class="w-100 row no-space">
+                      <div
+                        v-if="localLinks.length > 0"
+                        class="w-100 row no-space"
+                      >
                         <div
                           v-for="(link, index) in localLinks"
-                          v-if="localLinks.length > 0"
                           :key="index"
                           class="col-12 d-flex pl-0"
                         >
@@ -207,7 +226,7 @@
                               class="form-control"
                             />
                             <button
-                              class="btn-delete-input"
+                              class="btn-delete-input btn-remove-link"
                               type="button"
                               @click="onDeleteElement(index, localLinks)"
                             >
@@ -215,19 +234,18 @@
                             </button>
                           </div>
                         </div>
-                        <div v-else class="col-12 pt-0">
-                          <div class="w-100 empty-elements text-slate-400">
-                            <span
-                              >There are no links associated with this
-                              community</span
-                            >
-                          </div>
+                      </div>
+                      <div v-else class="col-12 pt-0">
+                        <div class="w-100 empty-elements text-slate-400">
+                          <span
+                            >There are no links associated with this
+                            community</span
+                          >
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-
                 <div class="form-card__row__box">
                   <div class="col-12">
                     <div class="form-group">
@@ -371,12 +389,17 @@
                 </div>
               </div>
               <div v-if="errors.length > 0" class="errors">
-                <div class="alert alert-danger">
+                <div class="alert alert-danger text-center">
                   {{ getErrors }}
                 </div>
               </div>
               <div class="form-footer">
-                <UButton type="button" variant="secondary" @click="goBack">
+                <UButton
+                  type="button"
+                  color="white"
+                  variant="solid"
+                  @click="goBack"
+                >
                   Cancel
                 </UButton>
                 <UButton type="submit"> Submit </UButton>
@@ -435,6 +458,7 @@ import type { FormSubmitEvent } from "#ui/types";
 import CustomDialog from "@/components/Common/CustomDialog.vue";
 import { object, string, array, safeParse, nonEmpty, is } from "valibot";
 import CustomBorder from "@/components/Common/CustomBorder.vue";
+import TurndownService from 'turndown';
 import {
   ClassicEditor,
   Essentials,
@@ -471,6 +495,17 @@ const typeOptions = [
   { value: "Project", label: "Project" },
 ];
 
+const inputLabels = {
+  Community: {
+    acronym: "Community Acronym",
+    name: "Community Name",
+  },
+  Project: {
+    acronym: "Project Acronym",
+    name: "Project Name",
+  },
+};
+
 const localLogo = ref<string | null>(null);
 const localLinks = ref<string[]>([]);
 const localKeywords = ref<string[]>([]);
@@ -483,7 +518,7 @@ const localUsers = ref<
     role: string;
   }[]
 >([]);
-
+const turndownService = new TurndownService();
 const state = ref({
   _id: "",
   acronym: "",
@@ -492,8 +527,7 @@ const state = ref({
   description: "",
   links: [],
   keywords: [],
-  _schema:
-    "https://www.elixir-europe.org/excelerate/WP2/json-schemas/1.0/Community",
+  _schema: "https://w3id.org/openebench/scientific-schemas/2.0/Community",
   community_contact_ids: [],
   type: "Community",
   privileges: "owner",
@@ -701,28 +735,34 @@ async function createCommunity() {
   const cleanKeywords = deleteEmptyElements(localKeywords.value);
   const cleanContacts = deleteEmptyElements(localContacts.value);
 
+  const markdownDescription = turndownService.turndown(state.value.description);
+
   const body = {
     _id: state.value._id,
     _schema: state.value._schema,
     name: state.value.name,
     acronym: state.value.acronym,
     status: state.value.status,
-    links: cleanLinks.map((element) => {
-      return {
-        uri: element,
-        label: "MainSite",
-      };
-    }),
     keywords: cleanKeywords.map((element) => {
       return element;
     }),
     community_contact_ids: cleanContacts.map((element) => {
       return element;
     }),
-    description: state.value.description,
+    description: markdownDescription,
   };
 
+  if (cleanLinks.length > 0) {
+    body.links = cleanLinks.map((uri) => ({
+      uri,
+      label: "MainSite",
+    }));
+  }
+
   if (localLogo.value) {
+    if (!body.links) {
+      body.links = [];
+    }
     body.links.push({
       label: "other",
       comment: "@logo",
@@ -732,8 +772,9 @@ async function createCommunity() {
 
   // call to exist community
   let responseCommunity = null;
+  /*
   try {
-    responseCommunity = await fetch(
+    const res = await fetch(
       `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Community/${state.value._id}`,
       {
         headers: {
@@ -742,20 +783,29 @@ async function createCommunity() {
         method: "GET",
       },
     );
-    responseCommunity = await responseCommunity.json();
-    if (responseCommunity._id) {
-      errors.value = [
-        "Community ID already exists. Please, choose another one.",
-      ];
-      return true;
+    if (res.status === 404) {
+      responseCommunity = null;
+    } else if (!res.ok) {
+      throw new Error(`Error al comprobar la comunidad: ${res.status} ${res.statusText}`);
+    } else {
+      const data = await res.json();
+      if (data._id) {
+        errors.value = [
+          "Community ID already exists. Please, choose another one.",
+        ];
+        return true;
+      }
     }
   } catch (error) {
     console.error("Error fetching communities data:", error);
+    errors.value = ["Unexpected error when checking community ID"];
+    return true;
   }
+    */
 
   try {
     const response = await fetch(`/api/staged/Community`, {
-      method: "POST",
+      method: "PUT",
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -767,22 +817,43 @@ async function createCommunity() {
       throw new Error("Error in API response");
     }
 
-    const responseData = await response.json();
-    if (responseData.status == 200) {
+    const data = await response.json();
+
+    if (data.status == 200) {
       errors.value = [];
-      router.push("/dashboard/projects_communities");
-    } else {
-      const errorResponse = JSON.parse(responseData.body);
-      errors.value = errorResponse.error.map((error: any) => {
-        if (error.pointer) {
-          return `${error.message}`;
-        }
-        return error.message;
+      const msg = "Your community has been successfully created. Redirecting to the communities list...";
+      await showOkMessage(msg).then(() => {
+        router.push("/dashboard/projects_communities");
       });
+    } else {
+      const responseData = JSON.parse(data.body);
+      if(responseData.message) {
+        errors.value = [responseData.message];
+      } else if(responseData.error) {
+        errors.value = [responseData.error];
+      } else {
+        errors.value = data.error.map((error: any) => {
+          if (error.pointer) {
+            return `${error.message}`;
+          }
+          return error.message;
+        });
+      }
     }
   } catch (error) {
-    console.error("Error fetching communities data:", error);
+    console.error("Error adding communities data:", error);
+    errors.value = ["Unexpected error when creating the community"];
   }
+}
+
+async function showOkMessage(msg: string) {
+  oks.value = msg;
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      oks.value = "";
+      resolve("done");
+    }, 5000);
+  });
 }
 
 function goBack() {
@@ -883,6 +954,10 @@ const fetchContacts = async (token: string): Promise<void> => {
     console.error("Error fetching contacts data:", error);
   }
 };
+
+defineExpose({
+  localLinks,
+});
 
 onMounted(() => {
   fetchContacts(token);

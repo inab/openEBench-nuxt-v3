@@ -156,6 +156,18 @@
               </button>
             </div>
           </template>
+          <template #contacts-data="{ row }">
+            <span v-for="(contact, index) in row.community_contact" :key="index">
+              <a
+                :href="`https://orcid.org/${contact.id}`"
+                target="_blank"
+                class="text-primaryOeb-500"
+                >
+                {{ contact.name }}
+              </a>
+              <br/>
+            </span>
+          </template>
           <template #type-data="{ row }">
             <div class="inline-block rounded-full text-left not-inline">
               <template v-if="row._metadata && row._metadata != ''">
@@ -249,10 +261,7 @@
 import { ref, computed } from "vue";
 import { useUser } from "@/stores/user.ts";
 import {
-  CommunityStatusColors,
   CommunityStatusLabels,
-  CommunityStatusTextColors,
-  CommunityStatusBackgroundColors,
 } from "@/constants/community_const";
 import {
   CommunityColumnsDashboard,
@@ -273,11 +282,14 @@ const pageFrom = computed(
 );
 
 const pageTo = computed(() =>
-  Math.min(
+{
+  return Math.min(
     Number(page.value) * Number(pageCount.value),
     Number(_total.value),
-  ),
+  );
+}
 );
+
 const search = ref<string>("");
 const selectedStatus = ref(<Array<CommunityStatus>>[]);
 const todoStatus = ref<Array<{ value: string; label: string }>>(
@@ -297,7 +309,7 @@ const columns: Array<CommunityColumnsDashboard> = [
     label: "ROLE",
   },
   {
-    key: "community_contact",
+    key: "contacts",
     label: "CONTACTS",
   },
   {
@@ -320,6 +332,7 @@ const filteredRows = computed(() => {
   if (!communitiesData.value || communitiesData.value.length == 0) {
     return [];
   }
+
   if (!search.value && selectedStatus.value.length === 0) {
     _total.value = communitiesData.value.length;
     return communitiesData.value.slice(
@@ -590,5 +603,10 @@ function getCommunityEditLink(row: any, isEvent: boolean = false) {
 }
 .not-inline {
   display: ruby;
+}
+.btn-custom-badget a {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 </style>

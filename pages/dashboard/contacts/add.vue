@@ -108,13 +108,16 @@
             </div>
             <div class="form-card__row__box row pb-3">
               <div class="col-6">
-                <label for="id"> Community </label>
+                <label for="id">
+                  Community
+                  <span class="text-red-400 required">*</span>
+                </label>
                 <div class="w-100">
                   <USelectMenu
                     v-model="communitiesSelected"
                     class="w-full custom-select-input"
                     :options="communities"
-                    multiple 
+                    multiple
                     searchable
                     searchable-placeholder="Search a community..."
                     placeholder="Select a community"
@@ -139,9 +142,7 @@
               </div>
             </div>
             <div class="form-footer pt-3">
-              <UButton type="button" variant="secondary" @click="goBack">
-                Cancel
-              </UButton>
+              <UButton type="button" @click="goBack"> Cancel </UButton>
               <UButton class="" type="submit"> Submit </UButton>
             </div>
           </div>
@@ -190,8 +191,8 @@ const state = ref({
   _schema:
     "https://www.elixir-europe.org/excelerate/WP2/json-schemas/1.0/Contact",
   contact_type: contactTypeOptions[0],
-  community_id: "",
-  orcid: ""
+  community_id: [],
+  orcid: "",
 });
 
 const schema = object({
@@ -202,8 +203,8 @@ const schema = object({
   notes: string(),
   _schema: string(),
   contact_type: string(),
-  community_id: string(),
-  orcid: string()
+  community_id: array(string()),
+  orcid: string(),
 });
 
 const getErrors = computed(() => errors.value.join(", "));
@@ -247,19 +248,23 @@ function valueToName(value: string): string {
       return "Surname";
     case "email ":
       return "Email ";
+    case "community_id":
+      return "Community";
     default:
       return value;
   }
 }
 
 function validateRequiredFields(data: any): string[] {
+  console.log("data: ", data);
   const requiredFields = ["givenName", "surname", "email"];
   const errorMessages: string[] = [];
   requiredFields.forEach((field) => {
     if (typeof data[field] === "string" && data[field].trim() === "") {
       errorMessages.push(`${valueToName(field)} cannot be empty`);
     }
-    if (Array.isArray(data[field]) && data[field].length === 0) {
+    if (typeof data[field] === "object" && data[field].length === 0) {
+      console.log("hereee");
       errorMessages.push(`${valueToName(field)} cannot be empty`);
     }
   });
@@ -270,15 +275,69 @@ async function onSubmitContactAdd(event: FormSubmitEvent<Schema>) {
   const result = safeParse(schema, state.value);
   if (result.success) {
     const customErrors = validateRequiredFields(state.value);
+    console.log(communitiesSelected.value);
+    if (communitiesSelected.value.length == 0) {
+      customErrors.push("Community cannot be empty");
+    }
+    console.log("customErrors: ", customErrors);
     if (customErrors.length > 0) {
       errors.value = customErrors;
     } else {
-      errors.value = [
-        "API Error: The new metric could not be added to the challenge.",
-      ];
+      // errors.value = [
+      //   "API Error: The new metric could not be added to the challenge.",
+      // ];
+      errors.value = [];
+      const response = await createContact();
     }
   } else {
     errors.value = result.error.issues.map((issue) => issue.message);
+  }
+}
+
+async function createContact() {
+  const body = {
+    _id: state.value.givenName + "." + state.value.surname,
+    _schema:
+      "https://www.elixir-europe.org/excelerate/WP2/json-schemas/1.0/Contact",
+    contact_type: state.value.contact_type,
+    email: state.value.email,
+    community_id: communitiesSelected.value[0].id,
+  };
+
+  console.log("body: ", body);
+  try {
+    const response = await fetch(`/api/staged/Contact`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+
+    if (!response.ok) {
+      throw new Error("Error in API response");
+    }
+
+    const responseData = await response.json();
+    if (responseData.status == 200) {
+      errors.value = [];
+      router.push("/dashboard/contacts");
+    } else {
+      const errorResponse = JSON.parse(responseData.body);
+      if (typeof errorResponse.error === "string") {
+        errors.value.push(errorResponse.error);
+      } else {
+        errors.value = errorResponse.error.map((error: any) => {
+          if (error.pointer) {
+            return `${error.message}`;
+          }
+          return error.message;
+        });
+      }
+    }
+  } catch (error) {
+    errors.value = error;
   }
 }
 </script>

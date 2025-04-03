@@ -41,7 +41,7 @@
           </div>
           <div class="col-lg-5 d-none d-lg-block">
             <div class="welcome-header-image">
-              <CommunityImg />
+              <HeaderImage />
             </div>
           </div>
         </div>
@@ -51,7 +51,8 @@
 </template>
 
 <script setup>
-import CommunityImg from "../../public/images/illustrations/chart-person.svg?component";
+import CommunityImg from "../../public/images/illustrations/chart-person_anim.svg?component";
+import HeaderImage from "@/components/Landing/HeaderImage";
 </script>
 
 <style scoped lang="scss">

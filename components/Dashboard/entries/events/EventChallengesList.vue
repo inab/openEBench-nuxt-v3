@@ -1,7 +1,7 @@
 <template>
   <div class="community-event-challenges">
     <div
-      v-if="commmunityPrivileges.challenge.create"
+      v-if="commmunityPrivileges.create"
       class="w-100 flex justify-content-end gap-3 py-3"
     >
       <NuxtLink
@@ -62,29 +62,34 @@
               Visit
             </NuxtLink>
           </button>
-          <div
-            v-if="
-              row.privileges === 'Owner' ||
-              commmunityPrivileges.challenge.update
-            "
-          >
+          <div v-if="row.privileges === 'Owner' || commmunityPrivileges.update">
             <button title="Edit challenge" class="btn-custom-badget text-sm">
               <NuxtLink :to="getCommunityChallengeEditLink(row)">
                 <font-awesome-icon :icon="['fas', 'pencil']" />
-                Edit 
+                Edit
               </NuxtLink>
             </button>
           </div>
           <div
             v-else-if="
-              row.privileges === 'Manager' ||
-              commmunityPrivileges.challenge.update
+              row.privileges === 'Manager' || commmunityPrivileges.update
             "
           >
             <button title="Edit challenge" class="btn-custom-badget text-sm">
               <NuxtLink :to="getCommunityChallengeEditLink(row)">
                 <font-awesome-icon :icon="['fas', 'pencil']" />
-                Edit 
+                Edit
+              </NuxtLink>
+            </button>
+          </div>
+          <div v-if="row.privileges === 'Owner' || commmunityPrivileges.update">
+            <button title="Participate" class="btn-custom-badget text-sm">
+              <NuxtLink
+                :to="getCommunityChallengeParticipant(row)"
+                class="btn-xxl"
+              >
+                <font-awesome-icon :icon="['fas', 'handshake-angle']" />
+                Participate
               </NuxtLink>
             </button>
           </div>
@@ -247,6 +252,10 @@ function formatClientDate(date: string) {
 const getCommunityChallengeEditLink = (row) => {
   return `/dashboard/projects_communities/${props.communityId}/events/${props.eventId}/challenges/${row._id}`;
 };
+
+const getCommunityChallengeParticipant = (row) => {
+  return `/dashboard/projects_communities/${props.communityId}/events/${props.eventId}/challenges/${row._id}/participant`;
+};
 </script>
 
 <style scoped lang="scss">
@@ -267,5 +276,13 @@ const getCommunityChallengeEditLink = (row) => {
   font-size: 14px;
   text-decoration: none;
   margin-bottom: 5px;
+}
+.btn-custom-badget a {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.btn-custom-badget a.btn-xxl {
+  min-width: 80px;
 }
 </style>

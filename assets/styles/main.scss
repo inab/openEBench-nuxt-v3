@@ -307,7 +307,8 @@ $colorSecondary: #f47c21;
 }
 
 .input-row-group .custom-entry-input:has(input:disabled),
-.input-row-group .custom-entry-input input:disabled {
+.input-row-group .custom-entry-input input:disabled,
+.input-row-group .custom-entry-input select:disabled  {
   background-color: #e9ecef !important;
   opacity: 1;
 }
@@ -319,4 +320,24 @@ $colorSecondary: #f47c21;
     background-color: #e9ecef;
     color: #495057;
   }
+}
+
+.dialog-btn {
+  padding: 5px 40px;
+}
+
+.dialog-btn--no {
+ 
+}
+
+.inline-grid {
+  display: inline-grid;
+}
+
+.end-0 {
+  inset-inline-end: 0px;
+}
+.inset-y-0 {
+  top: 0px;
+  bottom: 0px;
 }
