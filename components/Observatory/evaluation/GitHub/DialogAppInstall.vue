@@ -3,7 +3,7 @@
     <UModal v-model="dialogAppInstall" prevent-close :ui="{width:'w-96',overlay:{background:'bg-zinc-800/50'}}">
       <div class="px-4 py-3">
         <h6>{{ title }}</h6>
-        <span class="text-xs text-slate-600" v-html="text"></span><br>
+        <span class="text-xs text-slate-600" v-html="text" @click="handleLinkClick"></span><br>
         <!-- Buttons -->
           <UButton color="green" @click="openGitHubAppLink" class="mt-3 mr-2">
             Give Permissions 
@@ -32,6 +32,14 @@ const props = defineProps<{
 const githubStore = useGithub();
 const importProgressText = computed(() => githubStore.getImportProgressText);
 const repository = computed(() => githubStore.getRepository);
+
+const handleLinkClick = (event: MouseEvent) => {
+  const target = event.target as HTMLAnchorElement;
+  if (target.tagName === 'A') {
+    window.open(target.href, '_blank');
+  }
+};
+
 
 // STATE
 const dialogAppInstall = ref(props.initialDialogAppInstall);
