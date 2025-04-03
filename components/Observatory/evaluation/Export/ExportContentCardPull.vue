@@ -144,8 +144,17 @@
     </div>
 
     <DialogAppInstall
-
+      :initialDialogAppInstall="dialogAppInstall"
+			:title="installDialogParameters.title"
+			:text="installDialogParameters.text"
+			:installationUrl="installDialogParameters.installationURL"
+			@cancel="cancel"
     />
+
+    <DialogPR />
+		<DialogPRok />
+		<DialogPRfail />
+
   </div>
 </template>
 <script setup lang="ts">
@@ -244,14 +253,12 @@ const getFromBoxStatic = (param) => {
   return boxStatic.value[props.type][param]
 }
 
-
-
 const buildRepositoryURL = () => {
   return `https://github.com/${owner.value}/${repo.value}`;
 }
 
 const cancel = () => {
-  githubStore.cancelRequest()
+  exportStore.cancelRequest()
 }
 
 const toString = (object) => {
@@ -275,7 +282,7 @@ const makeRequest = async () => {
 
   // 1. Check if the app is installed in the repository
   // 1.1 Open dialog to show progress
-  githubStore.updateDialogPR(true)
+  exportStore.updateDialogPR(true)
 
   // 1.2 Get installation ID
   const repository = {
@@ -283,7 +290,7 @@ const makeRequest = async () => {
     repo: repo.value,
   };
 
-  await githubStore.getUpdaterInstallationID(repository);
+  await githubStore.getExtractorInstallationID(repository);
 
 	// 2. If the app is installed, make the request
   if (installationID.value) {
