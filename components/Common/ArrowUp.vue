@@ -53,6 +53,7 @@ onUnmounted(() => {
 button {
     transition: opacity 0.8s ease, transform 0.3s ease;
     opacity: 0;
+    z-index: 2;
 }
 
 button.opacity-100 {

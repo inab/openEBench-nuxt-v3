@@ -166,20 +166,20 @@ const fetchUserCommunitiesEvents = async (
     const formatResponse = data.map((item) => {
       if (Array.isArray(item.bench_contact)) {
         return {
-          ...item, // Mantiene todas las otras propiedades del objeto
+          ...item,
           bench_contact: item.bench_contact.map((contact) => {
             if (typeof contact === "object" && contact !== null) {
               return {
-                ...contact, // Mantiene las otras propiedades del objeto
+                ...contact,
                 id: contact.id ? contact.id.replace(/\./g, " ").split(":")[1] || "" : "",
                 name: contact.name ? contact.name.replace(/\./g, " ") : ""
               };
             }
-            return contact; // Si `contact` no es un objeto válido, lo deja sin cambios
+            return contact;
           })
         };
       }
-      return item; // Si `bench_contact` no es un array, devuelve el objeto sin cambios
+      return item; 
     });
 
     isLoadingEvents.value = false;

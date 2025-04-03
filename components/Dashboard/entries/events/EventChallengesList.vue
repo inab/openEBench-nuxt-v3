@@ -82,6 +82,17 @@
               </NuxtLink>
             </button>
           </div>
+          <div v-if="row.privileges === 'Owner' || commmunityPrivileges.update">
+            <button title="Participate" class="btn-custom-badget text-sm">
+              <NuxtLink
+                :to="getCommunityChallengeParticipant(row)"
+                class="btn-xxl"
+              >
+                <font-awesome-icon :icon="['fas', 'handshake-angle']" />
+                Participate
+              </NuxtLink>
+            </button>
+          </div>
         </div>
       </template>
       <template #view-data="{ row }">
@@ -241,6 +252,10 @@ function formatClientDate(date: string) {
 const getCommunityChallengeEditLink = (row) => {
   return `/dashboard/projects_communities/${props.communityId}/events/${props.eventId}/challenges/${row._id}`;
 };
+
+const getCommunityChallengeParticipant = (row) => {
+  return `/dashboard/projects_communities/${props.communityId}/events/${props.eventId}/challenges/${row._id}/participant`;
+};
 </script>
 
 <style scoped lang="scss">
@@ -266,5 +281,8 @@ const getCommunityChallengeEditLink = (row) => {
   width: 100%;
   height: 100%;
   display: block;
+}
+.btn-custom-badget a.btn-xxl {
+  min-width: 80px;
 }
 </style>
