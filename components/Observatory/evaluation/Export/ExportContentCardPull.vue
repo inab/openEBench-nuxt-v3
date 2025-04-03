@@ -144,7 +144,7 @@
     </div>
 
     <DialogAppInstall
-      
+
     />
   </div>
 </template>
@@ -153,7 +153,7 @@ import { ref, computed, onMounted } from 'vue';
 import { useGithub } from '@/stores/observatory/evaluation/github';
 import { useExport } from '@/stores/observatory/evaluation/export';
 import { useMetadataStore } from '@/stores/observatory/evaluation/metadata';
-import DialogAppInstall from 'components/Observatory/evaluation/GitHub/DialogAppInstall.vue'
+import DialogAppInstall from '~/components/Observatory/evaluation/GitHub/DialogAppInstall.vue'
 import DialogPR from './DialogPR.vue';
 import DialogPRok from './DialogPRok.vue';
 import DialogPRfail from './DialogPRfail.vue';
