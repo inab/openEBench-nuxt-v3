@@ -16,7 +16,7 @@ export const customRoutes = [
     path: "/benchmarking/:community/events",
     file: resolve(__dirname, "pages/benchmarking/community/events"),
   },
- 
+
   {
     name: "scientific-community-challenge",
     path: "/scientific/:community/:challenge",
@@ -109,5 +109,26 @@ export const customRoutes = [
     name: "dashboard-metrics-playground",
     path: "/dashboard/metrics-playground",
     file: resolve(__dirname, "pages/dashboard/metrics_playground/index.vue"),
+  },
+  {
+    name: "dashboard-community-event-community",
+    path: "/dashboard/projects_communities/:community_id/events/:event_id/challenges/:id",
+    file: resolve(
+      __dirname,
+      "pages/dashboard/projects_communities/events/challenges/[id].vue",
+    ),
+  },
+  {
+    name: "dashboard-challenge-participate",
+    path: "/dashboard/projects_communities/:community_id/events/:event_id/challenges/:challenge_id/participant",
+    file: resolve(
+      __dirname,
+      "pages/dashboard/projects_communities/events/challenges/participant/index.vue",
+    ),
+  },
+  {
+    name: "dashboard-community-contribute",
+    path: "/dashboard/contribute/:community_id",
+    file: resolve(__dirname, "pages/dashboard/contribute/[id].vue"),
   },
 ];

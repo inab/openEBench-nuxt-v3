@@ -307,7 +307,8 @@ $colorSecondary: #f47c21;
 }
 
 .input-row-group .custom-entry-input:has(input:disabled),
-.input-row-group .custom-entry-input input:disabled {
+.input-row-group .custom-entry-input input:disabled,
+.input-row-group .custom-entry-input select:disabled  {
   background-color: #e9ecef !important;
   opacity: 1;
 }

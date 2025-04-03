@@ -26,6 +26,24 @@
         of software capabilities and promoting innovation through collective
         knowledge sharing.
       </div>
+      <div class="contribute-box">
+        <div class="row">
+          <div class="col-12">
+            <div class="w-100 p-1 text-gray-500 text-center">
+              I really like what this community is about, and I'm interested in
+              getting involved!
+              <div class="w-100 text-center pt-3">
+                <NuxtLink
+                  class="btn-primary hover_effect header-button"
+                  :to="'/dashboard/contribute/' + id"
+                >
+                  Contribute to community
+                </NuxtLink>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div v-if="loadingData" class="">
         <div class="space-y-2">
           <USkeleton class="dashboard-community-edit__skeleton__small" />
@@ -550,7 +568,7 @@ import { object, string, array, safeParse } from "valibot";
 import CustomBorder from "@/components/Common/CustomBorder.vue";
 import CustomTab from "@/components/Common/CustomTab.vue";
 import CustomTabBody from "@/components/Common/CustomTabBody.vue";
-import TurndownService from 'turndown';
+import TurndownService from "turndown";
 
 import {
   ClassicEditor,
@@ -1101,10 +1119,10 @@ watch(
         .map((link: { uri?: string }) => link.uri)
         .filter((uri: string | undefined): uri is string => uri !== undefined);
 
-        localLogo.value = 
-          newVal.links.find((link: { comment?: string; label?: string }) => {
-            return link.label === "Logo" || link.comment === "@logo";
-          })?.uri || "";
+      localLogo.value =
+        newVal.links.find((link: { comment?: string; label?: string }) => {
+          return link.label === "Logo" || link.comment === "@logo";
+        })?.uri || "";
     }
     if (newVal && newVal.community_contact_ids) {
       localContacts.value =
@@ -1314,6 +1332,14 @@ input[type="file"] {
   font-size: 14px;
   text-decoration: none;
   margin-bottom: 5px;
+}
+
+.contribute-box {
+  margin-top: 20px;
+  margin-bottom: 50px;
+  img {
+    max-height: 110px;
+  }
 }
 </style>
 
