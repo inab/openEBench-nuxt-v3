@@ -89,7 +89,12 @@ const findMatchingLicense = async (license: string) => {
 
 // Method to change the value and look up the URL associated with the licence
 const changeValueName = async () => {
-  if (SPDXLicenses.value.length > 0 && SPDXLicenses.value.includes(selectLicense.value)) {
+  if (SPDXLicenses.value.length === 0) {
+    // SPDXLicenses has not yet been uploaded → do not check if it includes the licence
+    return;
+  }
+
+  if (SPDXLicenses.value.includes(selectLicense.value)) {
     try {
       const response = await metadataStore.GET_URL('api/spdx/SPDXLicenses/url/' + selectLicense.value);
       URL.value = response.URL;
@@ -100,7 +105,6 @@ const changeValueName = async () => {
     // Only if SPDXLicenses has data and does not include selectLicense then URL will be empty.
     URL.value = '';
   }
-
   changeValue();
 };
 
@@ -118,6 +122,7 @@ const changeValue = () => {
     index: props.index,
     value: newValue,
   };
+  console.log(payload)
   metadataStore.changeEntry(payload);
 };
 
