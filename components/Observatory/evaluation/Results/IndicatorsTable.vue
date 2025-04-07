@@ -137,7 +137,7 @@
           <div v-if="!idsMainIndicators.includes(row.id)" class="col-12 mb-0 pb-0 mt-0">
             <span class="text-sm font-semibold">Assessment summary: </span>
           </div>
-          <div v-if="!idsMainIndicators.includes(row.id)" class="col-11">
+          <div v-if="!idsMainIndicators.includes(row.id)" class="col-11 mb-4">
             <div v-if="!idsMainIndicators.includes(row.id)" class="my-3 ms-5 text-xs">
               <logsSection :logs="row.logs"/>
             </div>
@@ -155,13 +155,14 @@
           </div> -->
 
           <!------  NOTE  -------->
-          <div class="col-11">
+          <div class="col-11 pe-4">
             <UAlert
               v-if="!idsMainIndicators.includes(row.id) && indicatorsExplanation[row.id].note != ''"
-              color="red"
+              icon="i-heroicons-exclamation-circle"
+              color="orange"
               variant="soft"
               :description="indicatorsExplanation[row.id].note"
-              class="mt-2 mb-3 text-xs"
+              class="mt-2 mb-2 ms-5 py-3 text-xs"
             />
           </div>
 
