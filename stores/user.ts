@@ -142,7 +142,7 @@ export const useUser = defineStore("user", {
       }
       return data.map((d: any) => ({
         id: d._id,
-        name: d._id,
+        name: d.givenName + " " + d.surname,
       }));
     },
 

@@ -337,7 +337,7 @@
                                   cheEmptyContacts
                                 "
                                 type="button"
-                                @click="onAddElement(localContacts, itemRefs)"
+                                @click="onAddContact(localContacts, itemRefs)"
                               >
                                 <font-awesome-icon :icon="['fas', 'plus']" />
                               </button>
@@ -355,7 +355,7 @@
                                 <span>{{ index + 1 }}.</span>
                                 <USelectMenu
                                   :ref="`contact_${index}`"
-                                  v-model="localContacts[index]"
+                                  v-model="localContacts[index].id"
                                   class="w-full lg:w-100"
                                   searchable
                                   selected-icon="i-heroicons-check-16-solid"
@@ -369,6 +369,11 @@
                                   "
                                 >
                                 </USelectMenu>
+                                <USelect
+                                  v-model="localContacts[index].role"
+                                  :options="rolesObj"
+                                  class="w-48"
+                                />
                                 <button
                                   class="btn-delete-input"
                                   type="button"
@@ -680,6 +685,11 @@ const inputLinkRefs = ref<(HTMLInputElement | null)[]>([]);
 const inputContactsRefs = ref<(HTMLInputElement | null)[]>([]);
 const inputKeywordsRefs = ref<(HTMLInputElement | null)[]>([]);
 const itemRefs = useTemplateRef("itemsContact");
+const rolesObj = ref([
+  { label: "Owner", value: "owner" },
+  { label: "Manager", value: "manager" },
+  { label: "Contributor", value: "contributor" },
+]);
 
 const config = computed(() => {
   return {
@@ -809,7 +819,12 @@ const typeOptions = [
   { value: "Community", label: "Community" },
   { value: "Project", label: "Project" },
 ];
-const localContacts = ref<string[]>([]);
+const localContacts = ref<
+  {
+    id: string;
+    role: string;
+  }[]
+>([]);
 const localLinks = ref<string[]>([]);
 const localKeywords = ref<string[]>([]);
 const contactsData = ref<string[]>([]);
@@ -839,9 +854,13 @@ if (props.communityObj && typeof props.communityObj.status === "string") {
 }
 
 if (props.communityObj && props.communityObj.community_contact_ids) {
+  console.log("update!");
   localContacts.value =
     props.communityObj.community_contact_ids.map((contact: string) => {
-      return contact;
+      return {
+        id: contact,
+        role: "owner" as const,
+      };
     }) || [];
 }
 
@@ -879,7 +898,6 @@ function goBack() {
 }
 
 async function onSubmitCommunity(event: FormSubmitEvent<Schema>) {
-  //event.preventDefault();
   const result = safeParse(schema, state.value);
   if (result.success) {
     const customErrors = validateRequiredFields(state.value);
@@ -908,7 +926,7 @@ function deleteEmptyElements(array: string[]) {
 async function updateCommunity() {
   const cleanLinks = deleteEmptyElements(localLinks.value);
   const cleanKeywords = deleteEmptyElements(localKeywords.value);
-  const cleanContacts = deleteEmptyElements(localContacts.value);
+  const cleanContacts = deleteEmptyContact(localContacts.value);
 
   const markdownDescription = turndownService.turndown(state.value.description);
 
@@ -918,14 +936,17 @@ async function updateCommunity() {
     name: state.value.name,
     acronym: state.value.acronym,
     status: localStatus.value.value,
-    keywords: cleanKeywords.map((element) => {
-      return element;
-    }),
     community_contact_ids: cleanContacts.map((element) => {
-      return element;
+      return element.id;
     }),
     description: markdownDescription,
   };
+
+  if(cleanKeywords.length > 0) {
+    body.keywords = cleanKeywords.map((uri) => ({
+      uri
+    }));
+  }
 
   if (cleanLinks.length > 0) {
     body.links = cleanLinks.map((uri) => ({
@@ -955,14 +976,10 @@ async function updateCommunity() {
         body: JSON.stringify(body),
       },
     );
-
-    if (!response.ok) {
-      throw new Error("Error en la respuesta de la API");
-    }
-
+    
     const data = await response.json();
 
-    if (data.status === 200) {
+    if (data.status >= 200 && data.status < 300) {
       const msg =
         "Your community changes have been saved. Redirecting to the communities list...";
       await showOkMessage(msg).then(() => {
@@ -1013,8 +1030,12 @@ function validateRequiredFields(data: any): string[] {
   if (localContacts.value.length == 0) {
     errorMessages.push(`community_contact_ids cannot be empty`);
   } else {
-    localContacts.value.forEach((contact: string, index: number) => {
-      if (contact.trim() === "") {
+    localContacts.value.forEach((contact: {
+      id: string;
+      role: string;
+    }, index: number) => {
+      console.log(contact)
+      if (contact.id.trim() === "") {
         errorMessages.push(`community_contact_ids  cannot be empty`);
       }
     });
@@ -1029,6 +1050,26 @@ function onChangeStatus(newStatus: string) {
 
 function onAddElement(array: string[], arrayRef?: HTMLInputElement[]) {
   array.push("");
+  nextTick(() => {
+    const lastElementIndex = array.length - 1;
+    const inputElement = arrayRef ? arrayRef[lastElementIndex] : null;
+    if (inputElement) {
+      inputElement.focus();
+    }
+  });
+}
+
+function onAddContact(
+  contact: {
+    id: string;
+    role: string;
+  },
+  arrayRef?: HTMLInputElement[],
+) {
+  contact.push({
+    id: "",
+    role: rolesObj.value[0].value,
+  });
   nextTick(() => {
     const lastElementIndex = array.length - 1;
     const inputElement = arrayRef ? arrayRef[lastElementIndex] : null;
@@ -1066,6 +1107,10 @@ function deleteElement() {
     elementToDelete.value.element.splice(elementToDelete.value.index, 1);
     isDialogOpened.value = false;
   }
+}
+
+function deleteEmptyContact(array: { id: string; role: string}[]) {
+  return array.filter((element) => element.id !== "")
 }
 
 function changeSelected(index: string) {
@@ -1127,7 +1172,10 @@ watch(
     if (newVal && newVal.community_contact_ids) {
       localContacts.value =
         newVal.community_contact_ids.map((contact: string) => {
-          return contact;
+          return {
+            id: contact,
+            role: "owner" as const,
+          };
         }) || [];
     }
     if (newVal && newVal.keywords) {

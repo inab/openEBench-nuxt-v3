@@ -60,49 +60,6 @@
             </div>
           </UCard>
         </div>
-        <div class="col-6">
-          <UCard
-            class="dashboard__body__card"
-            :ui="{
-              header: {
-                base: '',
-                background: '',
-                padding: 'px-4 py-3 sm:px-6',
-              },
-            }"
-          >
-            <template #header>
-              <div
-                class="dashboard__body__card__header d-flex justify-content-between"
-              >
-                Contacts
-                <span class="text-gray-500">Total: {{ totalContacts }}</span>
-              </div>
-            </template>
-            <div class="row">
-              <div class="col-5">
-                <img
-                  src="assets/images/dashboard/contacts.jpg"
-                  alt="Metrics image"
-                  class=""
-                />
-              </div>
-              <div class="col-7 col-separator">
-                <div class="w-100">
-                  Access a registry of platform user contact information. Search
-                  and filter by various criteria.
-                </div>
-                <div class="dashboard__body__card__link pt-5">
-                  <button class="ripple custom-button-primary">
-                    <NuxtLink to="/dashboard/contacts" class="dashboard-link"
-                      >Contacts</NuxtLink
-                    >
-                  </button>
-                </div>
-              </div>
-            </div>
-          </UCard>
-        </div>
       </div>
       <div class="dashboard__body row">
         <div class="col-12">

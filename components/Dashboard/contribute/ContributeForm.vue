@@ -135,21 +135,42 @@
             </div>
           </div>
         </div>
-        <div class="row row-spacing-footer">
-          <div class="form-footer">
-            <UButton
-              type="button"
-              color="white"
-              variant="solid"
-              @click="goReset"
+      </div>
+      <div class="row row-spacing">
+        <div class="col-12 typeOptions d-flex">
+          <UCheckbox v-model="isAcceptedTerms" />
+          <label class="pl-2 terms"
+            >I Accept terms of use.
+            <span class="text-primaryOeb-500" @click="openModal"
+              >View terms of use</span
             >
-              Reset
-            </UButton>
-            <UButton type="submit"> Submit </UButton>
-          </div>
+          </label>
+        </div>
+      </div>
+      <div class="row row-spacing-footer">
+        <div class="form-footer">
+          <UButton type="button" color="white" variant="solid" @click="goReset">
+            Reset
+          </UButton>
+          <UButton type="submit"> Submit </UButton>
         </div>
       </div>
     </UForm>
+    <CustomModal :is-open="isModalOpen" width="700" @modal-close="closeModal">
+      <template #header>
+        <div class="modal-title">{{ modalTitle }}</div>
+        <button
+          class="modal-close"
+          aria-label="Close modal"
+          @click="closeModal"
+        >
+          <UIcon name="i-heroicons-x-mark-16-solid" />
+        </button>
+      </template>
+      <template #content>
+        {{ modalText }}
+      </template>
+    </CustomModal>
   </div>
 </template>
 
@@ -157,6 +178,7 @@
 import { ref, onMounted, computed } from "vue";
 import { useCommunities } from "@/stores/communities";
 import CustomSubtitle from "@/components/Common/CustomSubtitle.vue";
+import CustomModal from "@/components/Common/CustomModal.vue";
 import { ClassicEditor, Essentials, Paragraph, Bold } from "ckeditor5";
 import { Ckeditor } from "@ckeditor/ckeditor5-vue";
 import "ckeditor5/ckeditor5.css";
@@ -184,13 +206,18 @@ const requestOptions = [
   { label: "Request data publication", value: "publish_datasets" },
 ];
 
-const communities: Ref<any> = ref([]);
+const communities = ref([]);
 const communitiesStore = useCommunities();
 const loadingCommunity = ref(false);
-const eventsList: Ref<any> = ref([]);
+const eventsList = ref([]);
 const selectedEvent = ref("");
 const loadingEvent = ref(false);
 const description = ref("");
+const isAcceptedTerms = ref<boolean>(false);
+const isModalOpen = ref<boolean>(false);
+const modalTitle = "Terms of use";
+const modalText =
+  "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.";
 
 const subjectTextUpgrade = ref("Request to upgrade role for ##userfullname##");
 const detailsTextUpgrade = ref(
@@ -356,9 +383,27 @@ function goReset() {
   description.value = "";
 }
 
-function onSubmitContribute() {
-  console.log("submiting ....")
+async function onSubmitContribute() {
+  console.log("submiting ....");
+  const { data, error } = await useFetch("/api/email/mailer", {
+    method: "POST",
+    body: {
+      to: "jessica.fernandez@bsc.es",
+      subject: "test",
+      message: "test body",
+    },
+  });
+
+  console.log("there is an error: ", error);
 }
+
+function openModal() {
+  isModalOpen.value = true;
+}
+
+const closeModal = () => {
+  isModalOpen.value = false;
+};
 
 onMounted(fetchUserInfo);
 </script>
@@ -413,5 +458,9 @@ onMounted(fetchUserInfo);
 }
 .form-group label {
   font-size: 14px;
+}
+.terms span {
+  text-decoration: underline;
+  cursor: pointer;
 }
 </style>
