@@ -18,7 +18,6 @@
           :state="state"
           class="space-y-4"
           @submit="onSubmitContactUpdate"
-          @error="onError"
         >
           <div class="w-100">
             <div
@@ -98,11 +97,11 @@
               </div>
               <div class="form-card__row__box row pb-3">
                 <div class="col-6">
-                  <label for="id"> Provenance created:</label>
+                  <label for="provenance_created"> Provenance created:</label>
                   <div class="w-100">
                     <input
                       id="provenance_created"
-                      v-model="contactObj._provenance.created"
+                      v-model="state._provenance.created"
                       type="text"
                       disabled
                       class="form-control custom-entry-input"
@@ -111,11 +110,11 @@
                   </div>
                 </div>
                 <div class="col-6">
-                  <label for="id"> Provenance updated: </label>
+                  <label for="provenance_updated"> Provenance updated: </label>
                   <div class="w-100">
                     <input
                       id="provenance_updated"
-                      v-model="contactObj._provenance.updated"
+                      v-model="state._provenance.updated"
                       type="text"
                       disabled
                       class="form-control custom-entry-input"
@@ -222,11 +221,15 @@ const state = ref({
   _id: "",
   givenName: "",
   surname: "",
-  email: [],
+  email: "",
   notes: "",
   _schema:
     "https://www.elixir-europe.org/excelerate/WP2/json-schemas/1.0/Contact",
   initial_community_id: "",
+  _provenance: {
+    created: "",
+    updated: "",
+  },
 });
 
 const schema = object({
@@ -237,6 +240,10 @@ const schema = object({
   notes: string(),
   _schema: string(),
   initial_community_id: string(),
+  _provenance: object({
+    created: string(),
+    updated: string(),
+  }),
 });
 
 const getErrors = computed(() => errors.value.join(", "));
@@ -307,12 +314,8 @@ function validateRequiredFields(data: any): string[] {
 
 async function onSubmitContactUpdate(event: FormSubmitEvent<Schema>) {
   const result = safeParse(schema, state.value);
-  console.log(result);
   if (result.success) {
     const customErrors = validateRequiredFields(state.value);
-
-    console.log("customErrors: ", customErrors);
-
     if (customErrors.length > 0) {
       errors.value = customErrors;
     } else {
@@ -375,12 +378,6 @@ async function showOkMessage(msg: string) {
       resolve("done");
     }, 5000);
   });
-}
-
-
-async function onError(event: FormErrorEvent) {
-  // TODO check error
-  console.log(event);
 }
 
 watch(
