@@ -1,9 +1,6 @@
 <template>
   <div class="dashboard-contacts-list">
-    <div
-      v-if="filteredRows.length > 0"
-      class="flex justify-content-end py-2.5 dark:border-gray-700"
-    >
+    <div class="flex justify-content-end py-2.5 dark:border-gray-700">
       <div class="pr-3">
         <USelectMenu
           v-model="communitiesSelected"
@@ -82,22 +79,25 @@
       }"
     >
       <template #email-data="{ row }">
-        <div v-for="(email, index) in row.email" :key="index" class="d-flex">
-          {{ email }}
-        </div>
+        <template v-if="row.email.length > 0">
+          <div v-for="(email, index) in row.email" :key="index" class="d-flex">
+            {{ email }}
+          </div>
+        </template>
+        <template v-else>
+          {{ row.email }}
+        </template>
       </template>
       <template #communities-data="{ row }">
         <div
-          v-for="(community, index) in row.community_id"
-          :key="index"
-          :class="`${getCommunityColor(community)} no-hover community-row-badget`"
+          :class="`${getCommunityColor(row.initial_community_id)} no-hover community-row-badget`"
         >
-          {{ parseCommunity(community)?.name }}
+          <font-awesome-icon :icon="['fas', 'external-link-alt']" />
+          {{ parseCommunity(row.initial_community_id)?.name }}
           <NuxtLink
-            :to="`/dashboard/projects_communities/${community}`"
+            :to="`/dashboard/projects_communities/${row.initial_community_id}`"
             class="text-primaryOeb-950 pr-1"
           >
-            <font-awesome-icon :icon="['fas', 'external-link-alt']" />
           </NuxtLink>
         </div>
       </template>
@@ -151,7 +151,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref, onMounted } from "vue";
 import type { Community } from "@/types/communities";
 import type { Contact } from "@/types/contact";
 import { useUser } from "@/stores/user.ts";
@@ -186,11 +186,6 @@ const columns = [
   {
     key: "fullName",
     label: "NAME",
-    sortable: true,
-  },
-  {
-    key: "contact_type",
-    label: "TYPE",
     sortable: true,
   },
   {
@@ -231,7 +226,7 @@ const filteredRows = computed(() => {
       page.value * pageCount.value,
     );
   }
-  
+
   const filteredSearcher = props.contactsData.filter((contact: Contact) => {
     const matchesSearch =
       !search.value ||
@@ -242,19 +237,21 @@ const filteredRows = computed(() => {
     const matchesCommunity =
       communities.length === 0 ||
       communities.some((community) =>
-        Array.isArray(contact.community_id)
-          ? contact.community_id.includes(community.id)
+        contact.initial_community_id
+          ? contact.initial_community_id.includes(community.id)
           : false,
       );
-
     return matchesSearch && matchesCommunity;
   });
 
   _total.value = filteredSearcher.length;
-
   filteredSearcher.sort((a: Contact, b: Contact) => {
-    const aIds = Array.isArray(a.community_id) ? a.community_id.sort() : [];
-    const bIds = Array.isArray(b.community_id) ? b.community_id.sort() : [];
+    const aIds = Array.isArray(a.initial_community_id)
+      ? a.initial_community_id.sort()
+      : [];
+    const bIds = Array.isArray(b.initial_community_id)
+      ? b.initial_community_id.sort()
+      : [];
 
     const aMin = aIds.length > 0 ? aIds[0] : "";
     const bMin = bIds.length > 0 ? bIds[0] : "";
@@ -319,13 +316,9 @@ const parseCommunity = (communityRow: Community): Community | undefined => {
 
 const globalCommunities = ref<Community[]>([]);
 
-fetchUserCommunities().then((communities) => {
-  globalCommunities.value = communities;
-});
-
 function handleCommunityFilter() {
   if (communitiesSelected.value.length > 0) {
-    sort.value.column = "communities";
+    sort.value.column = "initial_community_id";
   } else {
     sort.value.column = "fullName";
   }
@@ -341,6 +334,14 @@ function getCommunityColor(communityId: string) {
   });
   return `${"status-" + row?.status}`;
 }
+
+onMounted(async () => {
+  if (props.token) {
+    await fetchUserCommunities().then((communities) => {
+      globalCommunities.value = communities;
+    });
+  }
+});
 </script>
 
 <style lang="css" scoped>
@@ -352,5 +353,6 @@ function getCommunityColor(communityId: string) {
   padding: 0.25rem 0.5rem;
   border-radius: 25px;
   text-align: center;
+  min-width: 200px;
 }
 </style>

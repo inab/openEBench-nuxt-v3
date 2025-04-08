@@ -26,26 +26,32 @@ describe("Dashboard Contacts Modal", () => {
         _id: "contact1",
         givenName: "John",
         surname: "Doe",
-        email: ["john.doe@example.com"],
+        email: "john.doe@example.com",
         notes: "Test note",
         _schema:
           "https://www.elixir-europe.org/excelerate/WP2/json-schemas/1.0/Contact",
-        contact_type: "person",
-        community_id: "community1",
+        initial_community_id: "community1",
+        _provenance: {
+          created: "2024-12-03T14:15:02Z",
+          updated: "2024-12-03T14:15:02Z",
+        },
       }),
-      ok: true, // Simular que la respuesta es exitosa
+      ok: true,
     });
 
     fetchContactMock = vi.fn().mockResolvedValue({
       _id: "contact1",
       givenName: "John",
       surname: "Doe",
-      email: ["john.doe@example.com"],
+      email: "john.doe@example.com",
       notes: "Test note",
       _schema:
         "https://www.elixir-europe.org/excelerate/WP2/json-schemas/1.0/Contact",
-      contact_type: "person",
-      community_id: "community1",
+      initial_community_id: "community1",
+      _provenance: {
+        created: "2024-12-03T14:15:02Z",
+        updated: "2024-12-03T14:15:02Z",
+      },
     });
 
     wrapper = mount(ContactModal, {
@@ -80,7 +86,7 @@ describe("Dashboard Contacts Modal", () => {
   it("displays error message if required fields are empty", async () => {
     wrapper.vm.state.givenName = "";
     wrapper.vm.state.surname = "";
-    wrapper.vm.state.email = [];
+    wrapper.vm.state.email = "";
 
     await wrapper.vm.onSubmitContactUpdate();
 

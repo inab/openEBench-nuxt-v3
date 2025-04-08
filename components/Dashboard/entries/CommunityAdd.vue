@@ -259,7 +259,7 @@
                             class="btn-form-add btn-primary"
                             type="button"
                             :disabled="checkEmptyContacts"
-                            @click="onAddElement(localContacts, itemRefs)"
+                            @click="onAddContact(localContacts, itemRefs)"
                           >
                             <font-awesome-icon :icon="['fas', 'plus']" />
                           </button>
@@ -276,7 +276,7 @@
                           <div class="input-wrapper big d-flex">
                             <USelectMenu
                               :ref="`contact_${index}`"
-                              v-model="localContacts[index]"
+                              v-model="localContacts[index].id"
                               class="w-full lg:w-100"
                               searchable
                               selected-icon="i-heroicons-check-16-solid"
@@ -286,6 +286,11 @@
                               option-attribute="name"
                             >
                             </USelectMenu>
+                            <USelect
+                              v-model="localContacts[index].role"
+                              :options="rolesObj"
+                              class="w-48"
+                            />
                             <button
                               class="btn-delete-input"
                               type="button"
@@ -458,7 +463,7 @@ import type { FormSubmitEvent } from "#ui/types";
 import CustomDialog from "@/components/Common/CustomDialog.vue";
 import { object, string, array, safeParse, nonEmpty, is } from "valibot";
 import CustomBorder from "@/components/Common/CustomBorder.vue";
-import TurndownService from 'turndown';
+import TurndownService from "turndown";
 import {
   ClassicEditor,
   Essentials,
@@ -494,6 +499,11 @@ const typeOptions = [
   { value: "Community", label: "Community" },
   { value: "Project", label: "Project" },
 ];
+const rolesObj = ref([
+  { label: "Owner", value: "owner" },
+  { label: "Manager", value: "manager" },
+  { label: "Contributor", value: "contributor" },
+]);
 
 const inputLabels = {
   Community: {
@@ -509,7 +519,12 @@ const inputLabels = {
 const localLogo = ref<string | null>(null);
 const localLinks = ref<string[]>([]);
 const localKeywords = ref<string[]>([]);
-const localContacts = ref<string[]>([]);
+const localContacts = ref<
+  {
+    id: string;
+    role: string;
+  }[]
+>([]);
 const contactsData = ref<string[]>([]);
 const localUsers = ref<
   {
@@ -641,11 +656,6 @@ const localStatus = ref({
   label: "Active",
 });
 
-const userAvailableRoles = [
-  { value: "owner", label: "Owner" },
-  { value: "manager", label: "Manager" },
-];
-
 state.value.status = localStatus.value.value;
 
 const localPrivilegesType = [
@@ -699,8 +709,11 @@ function validateRequiredFields(data: any): string[] {
   if (localContacts.value.length == 0) {
     errorMessages.push(`community_contact_ids cannot be empty`);
   } else {
-    localContacts.value.forEach((contact: string, index: number) => {
-      if (contact.trim() === "") {
+    localContacts.value.forEach((contact: {
+      id: string;
+      role: string;
+    }, index: number) => {
+      if (contact.id.trim() === "") {
         errorMessages.push(`community_contact_ids  cannot be empty`);
       }
     });
@@ -710,6 +723,10 @@ function validateRequiredFields(data: any): string[] {
 
 function deleteEmptyElements(array: string[]) {
   return array.filter((element: string) => element !== "");
+}
+
+function deleteEmptyContact(array: { id: string; role: string}[]) {
+  return array.filter((element) => element.id !== "")
 }
 
 async function onSubmitCommunity(event: FormSubmitEvent<Schema>) {
@@ -724,6 +741,12 @@ async function onSubmitCommunity(event: FormSubmitEvent<Schema>) {
     } else {
       errors.value = [];
       const response = await createCommunity();
+      let responseObj = response.json();
+      if (responseObj.status >= 200 && responseObj.status < 300) {
+        oks.value = "Community created successfully";
+      } else {
+        errors.value.push("Community could not be created")
+      }
     }
   } else {
     errors.value = result.error.issues.map((issue) => issue.message);
@@ -733,7 +756,7 @@ async function onSubmitCommunity(event: FormSubmitEvent<Schema>) {
 async function createCommunity() {
   const cleanLinks = deleteEmptyElements(localLinks.value);
   const cleanKeywords = deleteEmptyElements(localKeywords.value);
-  const cleanContacts = deleteEmptyElements(localContacts.value);
+  const cleanContacts = deleteEmptyContact(localContacts.value);
 
   const markdownDescription = turndownService.turndown(state.value.description);
 
@@ -743,11 +766,8 @@ async function createCommunity() {
     name: state.value.name,
     acronym: state.value.acronym,
     status: state.value.status,
-    keywords: cleanKeywords.map((element) => {
-      return element;
-    }),
     community_contact_ids: cleanContacts.map((element) => {
-      return element;
+      return element.id;
     }),
     description: markdownDescription,
   };
@@ -756,6 +776,12 @@ async function createCommunity() {
     body.links = cleanLinks.map((uri) => ({
       uri,
       label: "MainSite",
+    }));
+  }
+
+  if(cleanKeywords.length > 0) {
+    body.keywords = cleanKeywords.map((uri) => ({
+      uri
     }));
   }
 
@@ -770,9 +796,10 @@ async function createCommunity() {
     });
   }
 
+  console.log(JSON.stringify(body));
+
   // call to exist community
   let responseCommunity = null;
-  /*
   try {
     const res = await fetch(
       `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Community/${state.value._id}`,
@@ -801,11 +828,10 @@ async function createCommunity() {
     errors.value = ["Unexpected error when checking community ID"];
     return true;
   }
-    */
 
   try {
     const response = await fetch(`/api/staged/Community`, {
-      method: "PUT",
+      method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -821,15 +847,16 @@ async function createCommunity() {
 
     if (data.status == 200) {
       errors.value = [];
-      const msg = "Your community has been successfully created. Redirecting to the communities list...";
+      const msg =
+        "Your community has been successfully created. Redirecting to the communities list...";
       await showOkMessage(msg).then(() => {
         router.push("/dashboard/projects_communities");
       });
     } else {
       const responseData = JSON.parse(data.body);
-      if(responseData.message) {
+      if (responseData.message) {
         errors.value = [responseData.message];
-      } else if(responseData.error) {
+      } else if (responseData.error) {
         errors.value = [responseData.error];
       } else {
         errors.value = data.error.map((error: any) => {
@@ -869,6 +896,26 @@ function onChangeStatus(newStatus: string) {
 
 function onAddElement(array: string[], arrayRef?: HTMLInputElement[]) {
   array.push("");
+  nextTick(() => {
+    const lastElementIndex = array.length - 1;
+    const inputElement = arrayRef ? arrayRef[lastElementIndex] : null;
+    if (inputElement) {
+      inputElement.focus();
+    }
+  });
+}
+
+function onAddContact(
+  contact: {
+    id: string;
+    role: string;
+  },
+  arrayRef?: HTMLInputElement[],
+) {
+  contact.push({
+    id: "",
+    role: rolesObj.value[0].value,
+  });
   nextTick(() => {
     const lastElementIndex = array.length - 1;
     const inputElement = arrayRef ? arrayRef[lastElementIndex] : null;
@@ -949,6 +996,7 @@ const fetchContacts = async (token: string): Promise<void> => {
       contactsData.value = userStore.getContactsList;
     } else {
       contactsData.value = await userStore.fetchContacts(token);
+      console.log(contactsData.value);
     }
   } catch (error) {
     console.error("Error fetching contacts data:", error);

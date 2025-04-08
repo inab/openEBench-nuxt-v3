@@ -48,21 +48,29 @@ export default defineEventHandler(async (event) => {
 
       console.log("data: " , data);
 
-      if (!data || !data._id) {
-        console.error("❌ Respuesta inesperada de la API:", data);
-        throw new Error(`Error en la respuesta de la API: ${response.statusText}`);
+      if (status >= 200 && status < 300) {
+        return {
+          status: status,
+          body: JSON.stringify({
+            message: "created successfully",
+            data: {
+              id: data._id,
+              ...data,
+            },
+          }),
+        };
+      } else {
+        return {
+          status: status,
+          body: JSON.stringify({
+            message: "create error",
+            data: {
+              id: data._id,
+              ...data,
+            },
+          }),
+        };
       }
-
-      return {
-        status: status,
-        body: JSON.stringify({
-          message: "Community updated successfully",
-          data: {
-            id: data._id,
-            ...data,
-          },
-        }),
-      };
     }
   } catch (error) {
     return {

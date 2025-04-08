@@ -228,7 +228,7 @@
                                   !eventPrivileges.event.create ||
                                   cheEmptyContacts
                                 "
-                                @click="onAddElement(localContacts)"
+                                @click="onAddContact(localContacts)"
                               >
                                 <font-awesome-icon :icon="['fas', 'plus']" />
                               </button>
@@ -245,7 +245,7 @@
                               <div class="input-wrapper big d-flex">
                                 <USelectMenu
                                   :ref="`contact_${index}`"
-                                  v-model="localContacts[index]"
+                                  v-model="localContacts[index].id"
                                   class="w-full lg:w-100"
                                   searchable
                                   selected-icon="i-heroicons-check-16-solid"
@@ -255,6 +255,11 @@
                                   option-attribute="name"
                                 >
                                 </USelectMenu>
+                                <USelect
+                                  v-model="localContacts[index].role"
+                                  :options="rolesObj"
+                                  class="w-48"
+                                />
                                 <button
                                   class="btn-delete-input"
                                   type="button"
@@ -358,7 +363,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onMounted } from "vue";
+import { computed, ref, onMounted, nextTick } from "vue";
 import { useUser } from "@/stores/user.ts";
 import type { CommunityPrivilegeActions } from "@/constants/privileges";
 import CustomDialog from "@/components/Common/CustomDialog.vue";
@@ -443,18 +448,48 @@ const automatedOptions = [
   { label: "Yes", value: true },
   { label: "No", value: false },
 ];
+const rolesObj = ref([
+  { label: "Owner", value: "owner" },
+  { label: "Manager", value: "manager" },
+  { label: "Contributor", value: "contributor" },
+]);
 const errors = ref<string[]>([]);
 const oks = ref<string>("");
 const localReferences = ref<string[]>([]);
-const localContacts = ref<string[]>([]);
+const localContacts = ref<
+  {
+    id: string;
+    role: string;
+  }[]
+>([]);
 const contactsData = ref<string[]>([]);
 
 function onAddElement(array: string[]) {
   array.push("");
 }
 
+function onAddContact(
+  contact: {
+    id: string;
+    role: string;
+  },
+  arrayRef?: HTMLInputElement[],
+) {
+  contact.push({
+    id: "",
+    role: rolesObj.value[0].value,
+  });
+  nextTick(() => {
+    const lastElementIndex = array.length - 1;
+    const inputElement = arrayRef ? arrayRef[lastElementIndex] : null;
+    if (inputElement) {
+      inputElement.focus();
+    }
+  });
+}
+
 const cheEmptyContacts = computed(() => {
-  return localContacts.value.some((contact: string) => contact === "");
+  return localContacts.value.some((contact: any) => contact.id === "");
 });
 
 const checkEmptyReferences = computed(() => {
@@ -589,11 +624,19 @@ function validateRequiredFields(data: any): string[] {
   if (localContacts.value.length == 0) {
     errorMessages.push(`community_contact_ids cannot be empty`);
   } else {
-    localContacts.value.forEach((contact: string, index: number) => {
-      if (contact.trim() === "") {
-        errorMessages.push(`community_contact_ids  cannot be empty`);
-      }
-    });
+    localContacts.value.forEach(
+      (
+        contact: {
+          id: string;
+          role: string;
+        },
+        index: number,
+      ) => {
+        if (contact.id.trim() === "") {
+          errorMessages.push(`community_contact_ids  cannot be empty`);
+        }
+      },
+    );
   }
 
   if (!state.value.dates.benchmark_start) {

@@ -15,6 +15,8 @@ export default defineEventHandler(async (event) => {
   console.log("Método:", method);
   console.log("Cuerpo de la solicitud:", body);
 
+  let responseStatus = 0;
+
   try {
     switch (method) {
       case "PUT":
@@ -34,7 +36,7 @@ export default defineEventHandler(async (event) => {
         const response = await fetch(
           `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/${collection}/${id}`,
           {
-            method: method,
+            method,
             headers: {
               Authorization: token,
               "Content-Type": "application/json",
@@ -46,39 +48,36 @@ export default defineEventHandler(async (event) => {
         console.log("-*-Respuesta:", response);
 
         const data = await response.json();
-        console.log("📦 JSON recibido:", JSON.stringify(data, null, 2));
+        responseStatus = response.status;
 
-        const status = response.status;
-
-        // if (!data || !data._id) {
-        //   console.error("❌ Respuesta inesperada de la API:", data);
-        // }
-
-        if (status >= 200 && status < 300) {
+        if (responseStatus >= 200 && responseStatus < 300) {
           return {
-            status: status,
+            status: responseStatus,
             body: JSON.stringify({
-              message: "Community updated successfully",
+              message: "updated successfully.",
               data: {
-                id: body._id
+                id: body._id,
               },
             }),
           };
         } else {
           return {
-            status: status,
+            status: responseStatus,
             body: JSON.stringify({
-              message: "Community updated successfully",
+              message: data.statusText
+                ? data.statusText
+                : "could not be updated.",
               data: {
                 id: body._id,
               },
             }),
           };
         }
-    };
+    }
   } catch (error) {
+    console.log("An error ocurred: ", error);
     return {
-      status: response.status,
+      status: responseStatus && responseStatus != 0 ? responseStatus : 500,
       body: JSON.stringify({ error: error.message }),
     };
   }

@@ -131,4 +131,9 @@ export const customRoutes = [
     path: "/dashboard/contribute/:community_id",
     file: resolve(__dirname, "pages/dashboard/contribute/[id].vue"),
   },
+  {
+    name: "dashboard-users",
+    path: "/dashboard/users",
+    file: resolve(__dirname, "pages/dashboard/users/index.vue"),
+  }
 ];

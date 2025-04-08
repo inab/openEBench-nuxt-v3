@@ -65,30 +65,19 @@
               </div>
               <div class="form-card__row__box row pb-3">
                 <div class="col-6">
-                  <label for="type"> Type </label>
-                  <div class="w-100">
-                    <USelect
-                      v-model="state.contact_type"
-                      :options="contactTypeOptions"
-                      class="custom-select-input"
-                    />
-                  </div>
-                </div>
-                <div class="col-6">
                   <label for="id"> ORCID </label>
                   <div class="w-100">
                     <input
                       id="surname"
-                      v-model="state.orcid"
+                      v-model="state._id"
                       type="text"
+                      disabled
                       class="form-control custom-entry-input"
                       placeholder="ORCID"
                     />
                   </div>
                 </div>
-              </div>
-              <div class="form-card__row__box row pb-3">
-                <div class="col-12">
+                <div class="col-6">
                   <div class="form-group">
                     <label for="email">
                       Email
@@ -97,12 +86,40 @@
                     <div class="w-100">
                       <input
                         id="email"
-                        v-model="state.email[0]"
+                        v-model="state.email"
                         type="text"
                         class="form-control custom-entry-input"
                         placeholder="Contact Email"
                       />
                     </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-card__row__box row pb-3">
+                <div class="col-6">
+                  <label for="provenance_created"> Provenance created:</label>
+                  <div class="w-100">
+                    <input
+                      id="provenance_created"
+                      v-model="state._provenance.created"
+                      type="text"
+                      disabled
+                      class="form-control custom-entry-input"
+                      placeholder="Provenance created"
+                    />
+                  </div>
+                </div>
+                <div class="col-6">
+                  <label for="provenance_updated"> Provenance updated: </label>
+                  <div class="w-100">
+                    <input
+                      id="provenance_updated"
+                      v-model="state._provenance.updated"
+                      type="text"
+                      disabled
+                      class="form-control custom-entry-input"
+                      placeholder="Provenance updated"
+                    />
                   </div>
                 </div>
               </div>
@@ -125,7 +142,7 @@
                   <label for="id"> Community </label>
                   <div class="w-100">
                     <USelectMenu
-                      v-model="contactObj.community_id"
+                      v-model="contactObj.initial_community_id"
                       class="w-full custom-select-input"
                       :options="communities"
                       searchable
@@ -152,7 +169,14 @@
               </div>
             </div>
             <div class="form-footer pt-3">
-              <UButton type="button" @click="closeModal"> Cancel </UButton>
+              <UButton
+                type="button"
+                color="white"
+                variant="solid"
+                @click="closeModal"
+              >
+                Cancel
+              </UButton>
               <UButton class="" type="submit"> Submit </UButton>
             </div>
           </div>
@@ -173,6 +197,7 @@ import { useUser } from "@/stores/user.ts";
 import type { Community } from "@/types/communities";
 import type { Contact } from "@/types/contact";
 import { array, object, string, safeParse } from "valibot";
+import { useRouter } from "vue-router";
 
 const props = defineProps<{
   isModalOpen: boolean;
@@ -181,7 +206,6 @@ const props = defineProps<{
   isContactEditable?: boolean;
   token: string;
 }>();
-
 const emits = defineEmits(["close-modal"]);
 const userStore = useUser();
 const contactTypeOptions = ["person", "helpdesk", "other"];
@@ -191,28 +215,35 @@ const communities = ref<Community[]>([]);
 const isSearchingContact = ref(true);
 const errors = ref<string[]>([]);
 const oks = ref<string>("");
+const router = useRouter();
 
 const state = ref({
   _id: "",
   givenName: "",
   surname: "",
-  email: [],
+  email: "",
   notes: "",
   _schema:
     "https://www.elixir-europe.org/excelerate/WP2/json-schemas/1.0/Contact",
-  contact_type: "",
-  community_id: "",
+  initial_community_id: "",
+  _provenance: {
+    created: "",
+    updated: "",
+  },
 });
 
 const schema = object({
   _id: string(),
   givenName: string(),
   surname: string(),
-  email: array(string()),
+  email: string(),
   notes: string(),
   _schema: string(),
-  contact_type: string(),
-  community_id: string(),
+  initial_community_id: string(),
+  _provenance: object({
+    created: string(),
+    updated: string(),
+  }),
 });
 
 const getErrors = computed(() => errors.value.join(", "));
@@ -288,13 +319,65 @@ async function onSubmitContactUpdate(event: FormSubmitEvent<Schema>) {
     if (customErrors.length > 0) {
       errors.value = customErrors;
     } else {
-      errors.value = [
-        "API Error: The new metric could not be added to the challenge.",
-      ];
+      await updateContact();
     }
   } else {
     errors.value = result.error.issues.map((issue) => issue.message);
   }
+}
+
+async function updateContact() {
+  const body = {
+    _id: state.value._id,
+    givenName: state.value.givenName,
+    surname: state.value.surname,
+    email: state.value.email,
+    notes: state.value.notes,
+    _schema: state.value._schema,
+    initial_community_id: state.value.initial_community_id,
+  };
+
+  try {
+    const response = await fetch(`/api/staged/Contact/${props.contactId}`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${props.token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+
+    const data = await response.json();
+
+    if (data.status >= 200 && data.status < 300) {
+      const msg =
+        "Your user changes have been saved. Redirecting to the users list...";
+      await showOkMessage(msg).then(() => {
+        router.push("/dashboard/users");
+      });
+    } else {
+      const responseData = JSON.parse(data.body);
+      if (responseData.message) {
+        errors.value = [responseData.message];
+      } else if (responseData.error) {
+        errors.value = [responseData.error];
+      } else {
+        errors.value = [responseData];
+      }
+    }
+  } catch (error) {
+    console.error("Error fetching communities data:", error);
+  }
+}
+
+async function showOkMessage(msg: string) {
+  oks.value = msg;
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      oks.value = "";
+      resolve("done");
+    }, 5000);
+  });
 }
 
 watch(
@@ -302,12 +385,11 @@ watch(
   async (newVal) => {
     if (newVal) {
       const contactData = await fetchContact(newVal);
-      state.value = contactData ?? { ...state.value }
+      state.value = contactData ?? { ...state.value };
     }
   },
-  { immediate: true }
+  { immediate: true },
 );
-
 </script>
 
 <style lang="scss" scoped>
