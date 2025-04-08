@@ -12,8 +12,8 @@ export default defineEventHandler(async (event) => {
     port: 465,
     secure: true,
     auth: {
-      user: 'jessica.fernandez@bsc.es',
-      pass:'jessicaF1;',
+      user: 'user',
+      pass:'user',
     },
     tls: {
       rejectUnauthorized: false,
