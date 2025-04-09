@@ -45,6 +45,7 @@ export default defineEventHandler(async (event) => {
           },
         );
 
+        console.log("----token----:" , token)
         console.log("-*-Respuesta:", response);
 
         const data = await response.json();
