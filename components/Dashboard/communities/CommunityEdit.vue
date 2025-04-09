@@ -380,7 +380,7 @@ async function updateCommunity() {
   console.log(body)
   console.log(JSON.stringify(body));
 
-  return false;
+  //return false;
 
   try {
     await fetch(

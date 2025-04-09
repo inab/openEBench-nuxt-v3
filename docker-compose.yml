@@ -8,3 +8,4 @@ services:
     image: ghcr.io/inab/openebench-nuxt-v3:test2
     environment:
       - NODE_ENV=production
+    network_mode: host
