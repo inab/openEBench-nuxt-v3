@@ -41,6 +41,7 @@ export default defineEventHandler(async (event) => {
               Authorization: token,
               "Content-Type": "application/json",
             },
+            timeout: 30000,
             body: JSON.stringify(body),
           },
         );
