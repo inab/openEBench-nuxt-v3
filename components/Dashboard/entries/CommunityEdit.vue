@@ -1022,13 +1022,16 @@ function validateRequiredFields(data: any): string[] {
 }
 
 function consentTab(userPrivileges) {
+  if (!userPrivileges?.value || !Array.isArray(items.value)) return;
+
   const canConsent = userPrivileges.value.find(
     (privilege) =>
-      (privilege.role === "admin" || privilege.role === "owner") ?? true,
+      privilege.role === "admin" || privilege.role === "owner"
   );
 
-  let existItem = items.value.find((item) => item.index === 3);
-  if (canConsent && items.value && !existItem) {
+  const existItem = items.value.find((item) => item.index === 3);
+
+  if (canConsent && !existItem) {
     items.value.push({
       key: "terms",
       label: "Terms of use",
