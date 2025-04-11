@@ -1028,7 +1028,7 @@ function consentTab(userPrivileges) {
   );
 
   let existItem = items.value.find((item) => item.index === 3);
-  if (canConsent && !existItem) {
+  if (canConsent && items.value && !existItem) {
     items.value.push({
       key: "terms",
       label: "Terms of use",
