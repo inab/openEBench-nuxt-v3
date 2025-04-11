@@ -384,7 +384,6 @@ function goReset() {
 }
 
 async function onSubmitContribute() {
-  console.log("submiting ....");
   const { data, error } = await useFetch("/api/email/mailer", {
     method: "POST",
     body: {
@@ -394,7 +393,6 @@ async function onSubmitContribute() {
     },
   });
 
-  console.log("there is an error: ", error);
 }
 
 function openModal() {

@@ -338,14 +338,17 @@ async function updateContact() {
   };
 
   try {
-    const response = await fetch(`/api/staged/Contact/${props.contactId}`, {
-      method: "PATCH",
-      headers: {
-        Authorization: `Bearer ${props.token}`,
-        "Content-Type": "application/json",
+    const response = await fetch(
+      `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Contact/${props.contactId}`,
+      {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${props.token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
       },
-      body: JSON.stringify(body),
-    });
+    );
 
     const data = await response.json();
 

@@ -796,8 +796,6 @@ async function createCommunity() {
     });
   }
 
-  console.log(JSON.stringify(body));
-
   // call to exist community
   let responseCommunity = null;
   try {
@@ -830,7 +828,7 @@ async function createCommunity() {
   }
 
   try {
-    const response = await fetch(`/api/staged/Community`, {
+    const response = await fetch(`${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Community`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -996,7 +994,6 @@ const fetchContacts = async (token: string): Promise<void> => {
       contactsData.value = userStore.getContactsList;
     } else {
       contactsData.value = await userStore.fetchContacts(token);
-      console.log(contactsData.value);
     }
   } catch (error) {
     console.error("Error fetching contacts data:", error);

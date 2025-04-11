@@ -419,6 +419,7 @@ const localReferences = ref<string[]>([]);
 const localMetricsCategories = ref<string[]>([]);
 const errors = ref<string[]>([]);
 const oks = ref<string>("");
+const runtimeConfig = useRuntimeConfig();
 
 const state = ref({
   _id: "",
@@ -636,7 +637,7 @@ async function createChallenge() {
   };
 
   try {
-    const response = await fetch(`/api/staged/Challenge`, {
+    const response = await fetch(`${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Challenge`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,

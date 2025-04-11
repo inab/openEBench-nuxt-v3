@@ -400,6 +400,7 @@ const router = useRouter();
 const { data } = useAuth();
 const userStore = useUser();
 const token: string = data?.value.accessToken;
+const runtimeConfig = useRuntimeConfig();
 
 const props = defineProps<{
   id: string;
@@ -769,10 +770,8 @@ async function updateBenchmarkingCommunity() {
     },
   };
 
-  console.log(JSON.stringify(body));
-
   try {
-    const response = await fetch(`/api/staged/Community/${state.value._id}`, {
+    const response = await fetch(`${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Challenge/${state.value._id}`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -786,7 +785,6 @@ async function updateBenchmarkingCommunity() {
     }
 
     const data = await response.json();
-    console.log("Response: ", data);
 
     if (data.status == 200) {
       errors.value = [];

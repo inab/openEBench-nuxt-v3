@@ -135,5 +135,10 @@ export const customRoutes = [
     name: "dashboard-users",
     path: "/dashboard/users",
     file: resolve(__dirname, "pages/dashboard/users/index.vue"),
+  },
+  {
+    name: "dashboard-communications",
+    path: "/dashboard/communications",
+    file: resolve(__dirname, "pages/dashboard/communications/index.vue"),
   }
 ];
