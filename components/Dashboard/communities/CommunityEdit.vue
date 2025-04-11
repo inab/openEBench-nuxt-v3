@@ -376,12 +376,6 @@ async function updateCommunity() {
     description: state.value.description,
   };
 
-  console.log("updating ocommunity");
-  console.log(body)
-  console.log(JSON.stringify(body));
-
-  //return false;
-
   try {
     await fetch(
       `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Community/${props.communityObj._id}`,

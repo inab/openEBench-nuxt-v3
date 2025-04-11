@@ -415,6 +415,8 @@ const dialogType = ref("yesno");
 const isDialogOpened = ref(false);
 const dialogText = ref("");
 const selectedTab = ref(props.tabIndex);
+const runtimeConfig = useRuntimeConfig();
+
 const items = [
   {
     key: "summary",
@@ -722,7 +724,7 @@ async function updateBenchmarkingEvent() {
 
   try {
     const response = await fetch(
-      `/api/staged/BenchmarkingEvent/${state.value._id}`,
+      `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/BenchmarkingEvent/${state.value._id}`,
       {
         method: "PATCH",
         headers: {

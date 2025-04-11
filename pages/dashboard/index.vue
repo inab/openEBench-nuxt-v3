@@ -60,6 +60,51 @@
             </div>
           </UCard>
         </div>
+        <div class="col-6">
+          <UCard
+            class="dashboard__body__card"
+            :ui="{
+              header: {
+                base: '',
+                background: '',
+                padding: 'px-4 py-3 sm:px-6',
+              },
+            }"
+          >
+            <template #header>
+              <div
+                class="dashboard__body__card__header d-flex justify-content-between"
+              >
+                Communications
+                <span class="text-gray-500">Total: 2</span>
+              </div>
+            </template>
+            <div class="row">
+              <div class="col-6">
+                <img
+                  src="assets/images/dashboard/notifications.jpg"
+                  alt="User notification"
+                  class=""
+                />
+              </div>
+              <div class="col-6 col-separator">
+                <div class="">
+                  Here you can find information about the communities you are
+                  part of, as well as the tools available to you.
+                </div>
+                <div class="dashboard__body__card__link">
+                  <button class="ripple custom-button-primary">
+                    <NuxtLink
+                      to="/dashboard/communications"
+                      class="dashboard-link"
+                      >See Communications</NuxtLink
+                    >
+                  </button>
+                </div>
+              </div>
+            </div>
+          </UCard>
+        </div>
       </div>
       <div class="dashboard__body row">
         <div class="col-12">
@@ -296,7 +341,7 @@ async function countTotalCommunities() {
   }
 }
 
-async function countTotalContacts() {  
+async function countTotalContacts() {
   try {
     const response = await $fetch(
       `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Contact`,
@@ -305,7 +350,7 @@ async function countTotalContacts() {
           Authorization: `Bearer ${token.value}`,
           Accept: "application/json",
         },
-        method: "GET"
+        method: "GET",
       },
     );
 
@@ -352,17 +397,21 @@ async function getMetricsByType(metrics) {
 //   //countTotalCommunities();
 //   //countTotalContacts();
 //   }
-  
+
 // });
 
-watch(token, (newValue) => {
-  if (newValue) {
-    countTotalCommunities();
-    countTotalContacts();
-    countTotalTools();
-    countTotalMetrics();
-  }
-}, { immediate: true });
+watch(
+  token,
+  (newValue) => {
+    if (newValue) {
+      countTotalCommunities();
+      countTotalContacts();
+      countTotalTools();
+      countTotalMetrics();
+    }
+  },
+  { immediate: true },
+);
 </script>
 
 <style lang="scss">

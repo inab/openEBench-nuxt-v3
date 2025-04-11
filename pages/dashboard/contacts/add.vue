@@ -256,7 +256,6 @@ function valueToName(value: string): string {
 }
 
 function validateRequiredFields(data: any): string[] {
-  console.log("data: ", data);
   const requiredFields = ["givenName", "surname", "email"];
   const errorMessages: string[] = [];
   requiredFields.forEach((field) => {
@@ -264,7 +263,6 @@ function validateRequiredFields(data: any): string[] {
       errorMessages.push(`${valueToName(field)} cannot be empty`);
     }
     if (typeof data[field] === "object" && data[field].length === 0) {
-      console.log("hereee");
       errorMessages.push(`${valueToName(field)} cannot be empty`);
     }
   });
@@ -275,17 +273,12 @@ async function onSubmitContactAdd(event: FormSubmitEvent<Schema>) {
   const result = safeParse(schema, state.value);
   if (result.success) {
     const customErrors = validateRequiredFields(state.value);
-    console.log(communitiesSelected.value);
     if (communitiesSelected.value.length == 0) {
       customErrors.push("Community cannot be empty");
     }
-    console.log("customErrors: ", customErrors);
     if (customErrors.length > 0) {
       errors.value = customErrors;
     } else {
-      // errors.value = [
-      //   "API Error: The new metric could not be added to the challenge.",
-      // ];
       errors.value = [];
       const response = await createContact();
     }
@@ -304,16 +297,18 @@ async function createContact() {
     community_id: communitiesSelected.value[0].id,
   };
 
-  console.log("body: ", body);
   try {
-    const response = await fetch(`/api/staged/Contact`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
+    const response = await fetch(
+      `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Contact`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
       },
-      body: JSON.stringify(body),
-    });
+    );
 
     if (!response.ok) {
       throw new Error("Error in API response");

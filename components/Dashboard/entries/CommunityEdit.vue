@@ -64,7 +64,6 @@
                 :schema="schema"
                 :state="state"
                 class="space-y-4"
-                @error="onError"
                 @submit="onSubmitCommunity"
               >
                 <div class="w-100 form-card">
@@ -137,7 +136,7 @@
                                 <div class="w-100">
                                   <input
                                     id="id"
-                                    v-model="state._id"
+                                    v-model="state.id"
                                     type="text"
                                     class="form-control custom-entry-input"
                                     placeholder="Community id"
@@ -506,6 +505,11 @@
                 />
               </div>
             </div>
+            <div v-if="selectedTab == '3'">
+              <div>
+                <CommunityConsent :community-id="id" />
+              </div>
+            </div>
           </CustomTabBody>
         </div>
       </div>
@@ -551,7 +555,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, nextTick, onMounted, useTemplateRef, watch } from "vue";
+import { computed, ref, nextTick, onMounted, useTemplateRef, watch, watchEffect } from "vue";
 import { useUser } from "@/stores/user.ts";
 
 import {
@@ -574,6 +578,7 @@ import CustomBorder from "@/components/Common/CustomBorder.vue";
 import CustomTab from "@/components/Common/CustomTab.vue";
 import CustomTabBody from "@/components/Common/CustomTabBody.vue";
 import TurndownService from "turndown";
+import CommunityConsent from "@/components/Dashboard/entries/CommunityConsent.vue";
 
 import {
   ClassicEditor,
@@ -607,6 +612,7 @@ const router = useRouter();
 const runtimeConfig = useRuntimeConfig();
 const { data } = useAuth();
 const token = ref(data?.value.accessToken);
+const hasSetConsentTab = ref(false); 
 
 const userStore = useUser();
 const imageDefault = "~/assets/images/dashboards/empty-logo.jpg";
@@ -635,7 +641,7 @@ const props = defineProps<{
 }>();
 
 const state = ref({
-  _id: "",
+  id: "",
   acronym: "",
   status: "",
   name: "",
@@ -649,7 +655,7 @@ const state = ref({
 });
 
 const schema = object({
-  _id: string(),
+  id: string(),
   acronym: string(),
   status: string(),
   name: string(),
@@ -762,58 +768,26 @@ const userAvailableRoles = [
 const userPrivileges: Array<string> = computed(
   () => userStore.getUserCommunitiesRoles,
 );
-if (userPrivileges.value.length == 0) {
-  userStore.setUserCommunitiesRoles(data.value.oeb_roles);
-}
 
 const labelTitle = ref("");
 const labelButton = ref("");
 const labelType = ref("");
-const communityData = computed(() => {
-  state.value = {
-    _id: props.communityObj?._id,
-    acronym: props.communityObj?.acronym,
-    status: props.communityObj?.status,
-    name: props.communityObj?.name,
-    description: props.communityObj?.description,
-    _metadata: props.communityObj?._metadata ?? "",
-    _schema: props.communityObj?._schema ?? "",
-    community_contact_ids:
-      props.communityObj?.community_contact_ids.map((contact: string) => {
-        return {
-          id: contact,
-          name: contact,
-        };
-      }) || [],
-    keywords: props.communityObj?.keywords ?? [],
-    links: props.communityObj?.links ?? [],
-  };
-
-  if (props.communityObj && !props.communityObj._metadata) {
-    items.value.push({
-      key: "events",
-      label: "Events",
-      icon: "i-heroicons-calendar",
-      index: 1,
-    });
-    state.value.type = "Community";
-    labelTitle.value = "Edit Community";
-    labelButton.value = "View Community";
-    labelType.value = "Community";
-  } else if (props.communityObj && props.communityObj._metadata) {
-    items.value.push({
-      key: "summary",
-      label: "Summary",
-      icon: "i-heroicons-squares-2x2-16-solid",
-      index: 2,
-    });
-    state.value.type = "Project";
-    labelTitle.value = "Edit Project";
-    labelButton.value = "View Project";
-    labelType.value = "Project";
-  }
-  return state.value;
-});
+const communityData = computed(() => ({
+  id: props.communityObj?._id,
+  acronym: props.communityObj?.acronym,
+  status: props.communityObj?.status,
+  name: props.communityObj?.name,
+  description: props.communityObj?.description,
+  _metadata: props.communityObj?._metadata ?? "",
+  _schema: props.communityObj?._schema ?? "",
+  community_contact_ids:
+    props.communityObj?.community_contact_ids.map((contact: string) => ({
+      id: contact,
+      name: contact,
+    })) || [],
+  keywords: props.communityObj?.keywords ?? [],
+  links: props.communityObj?.links ?? [],
+}));
 
 const typeOptions = [
   { value: "Community", label: "Community" },
@@ -847,6 +821,7 @@ const localStatus = ref({
   value: "",
   label: "",
 });
+
 if (props.communityObj && typeof props.communityObj.status === "string") {
   localStatus.value.value =
     props.communityObj.status.charAt(0).toUpperCase() +
@@ -854,7 +829,6 @@ if (props.communityObj && typeof props.communityObj.status === "string") {
 }
 
 if (props.communityObj && props.communityObj.community_contact_ids) {
-  console.log("update!");
   localContacts.value =
     props.communityObj.community_contact_ids.map((contact: string) => {
       return {
@@ -942,9 +916,9 @@ async function updateCommunity() {
     description: markdownDescription,
   };
 
-  if(cleanKeywords.length > 0) {
+  if (cleanKeywords.length > 0) {
     body.keywords = cleanKeywords.map((uri) => ({
-      uri
+      uri,
     }));
   }
 
@@ -966,7 +940,7 @@ async function updateCommunity() {
   }
   try {
     const response = await fetch(
-      `/api/staged/Community/${props.communityObj._id}`,
+      `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Community/${props.communityObj._id}`,
       {
         method: "PATCH",
         headers: {
@@ -976,7 +950,7 @@ async function updateCommunity() {
         body: JSON.stringify(body),
       },
     );
-    
+
     const data = await response.json();
 
     if (data.status >= 200 && data.status < 300) {
@@ -1030,17 +1004,38 @@ function validateRequiredFields(data: any): string[] {
   if (localContacts.value.length == 0) {
     errorMessages.push(`community_contact_ids cannot be empty`);
   } else {
-    localContacts.value.forEach((contact: {
-      id: string;
-      role: string;
-    }, index: number) => {
-      console.log(contact)
-      if (contact.id.trim() === "") {
-        errorMessages.push(`community_contact_ids  cannot be empty`);
-      }
-    });
+    localContacts.value.forEach(
+      (
+        contact: {
+          id: string;
+          role: string;
+        },
+        index: number,
+      ) => {
+        if (contact.id.trim() === "") {
+          errorMessages.push(`community_contact_ids  cannot be empty`);
+        }
+      },
+    );
   }
   return errorMessages;
+}
+
+function consentTab(userPrivileges) {
+  const canConsent = userPrivileges.value.find(
+    (privilege) =>
+      (privilege.role === "admin" || privilege.role === "owner") ?? true,
+  );
+
+  let existItem = items.value.find((item) => item.index === 3);
+  if (canConsent && !existItem) {
+    items.value.push({
+      key: "terms",
+      label: "Terms of use",
+      icon: "i-heroicons-megaphone",
+      index: 3,
+    });
+  }
 }
 
 function onChangeStatus(newStatus: string) {
@@ -1109,8 +1104,8 @@ function deleteElement() {
   }
 }
 
-function deleteEmptyContact(array: { id: string; role: string}[]) {
-  return array.filter((element) => element.id !== "")
+function deleteEmptyContact(array: { id: string; role: string }[]) {
+  return array.filter((element) => element.id !== "");
 }
 
 function changeSelected(index: string) {
@@ -1187,7 +1182,44 @@ watch(
 );
 
 watchEffect(() => {
-  communityData.value;
+  const community = props.communityObj;
+  if (!community) return;
+  
+  state.value = communityData.value;
+
+  if (!community._metadata) {
+    items.value.push({
+      key: "events",
+      label: "Events",
+      icon: "i-heroicons-calendar",
+      index: 1,
+    });
+    state.value.type = "Community";
+    labelTitle.value = "Edit Community";
+    labelButton.value = "View Community";
+    labelType.value = "Community";
+  } else {
+    items.value.push({
+      key: "summary",
+      label: "Summary",
+      icon: "i-heroicons-squares-2x2-16-solid",
+      index: 2,
+    });
+    state.value.type = "Project";
+    labelTitle.value = "Edit Project";
+    labelButton.value = "View Project";
+    labelType.value = "Project";
+  }
+
+  if (!hasSetConsentTab.value) {
+    if (userPrivileges.value.length === 0) {
+      userStore.setUserCommunitiesRoles(data.value.oeb_roles);
+      consentTab(data.value.oeb_role);
+    } else {
+      consentTab(userPrivileges);
+    }
+    hasSetConsentTab.value = true;
+  }
 });
 </script>
 
@@ -1388,6 +1420,10 @@ input[type="file"] {
   img {
     max-height: 110px;
   }
+}
+.tab-wrapper {
+  border-top-left-radius: 9px;
+  border-top-right-radius: 9px;
 }
 </style>
 

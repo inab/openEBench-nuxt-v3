@@ -549,10 +549,8 @@ async function createBenchmarkingEvent() {
     },
   };
 
-  console.log(JSON.stringify(body))
-
   try {
-    const response = await fetch(`/api/staged/BenchmarkingEvent`, {
+    const response = await fetch(`${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/BenchmarkingEvent`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
