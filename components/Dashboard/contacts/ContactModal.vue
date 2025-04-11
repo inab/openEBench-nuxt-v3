@@ -247,7 +247,6 @@ const schema = object({
 });
 
 const getErrors = computed(() => errors.value.join(", "));
-const runtimeConfig = useRuntimeConfig();
 
 const closeModal = () => {
   isSearchingContact.value = true;
