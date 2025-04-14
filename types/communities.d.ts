@@ -50,3 +50,18 @@ export interface Community {
   privileges?: string;
   actions?: Array<CommunityPrivileges>;
 }
+
+export interface CommunityPrivileges {
+  _id: string;
+  roles: string[];
+}
+
+export interface UserCommunityRoles {
+  label: string;
+  value: string;
+}
+
+export interface UserCommunityPrivilege {
+  community: string,
+  role: UserCommunityRoles;
+}
