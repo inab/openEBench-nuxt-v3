@@ -470,7 +470,7 @@ const fetchUserCommunities = async (token: string): Promise<any[]> => {
 
 const fetchAllPrivileges = async (
   token: string,
-): Promise<CommunityPrivileges[]> => {
+): Promise<UserCommunityPrivilege[]> => {
   try {
     const privilegesResponse = await fetch(
       `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}query/privileges/${props.contactId}`,
@@ -531,7 +531,7 @@ function onDeleteElement(index: number, element: string[]) {
   } else {
     isValidatorOpened.value[index] = {
       index: index,
-      isOpened: true
+      isOpened: true,
     };
     elementToDelete.value = {
       index: index,
@@ -545,8 +545,8 @@ function deleteElement(index: number) {
     elementToDelete.value.element.splice(elementToDelete.value.index, 1);
     isValidatorOpened.value[index] = {
       index: index,
-      isOpened: false
-    }
+      isOpened: false,
+    };
   }
 }
 
@@ -568,7 +568,7 @@ function onAddContact(
 
     isValidatorOpened.value.push({
       index: lastElementIndex,
-      isOpened: false
+      isOpened: false,
     });
 
     if (inputElement) {
