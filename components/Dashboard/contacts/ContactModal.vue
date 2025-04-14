@@ -175,10 +175,12 @@
                         </button>
                       </label>
                     </div>
-                    <div class="w-100 row no-space">
+                    <div
+                      v-if="allCommunitiesPrivileges.length > 0"
+                      class="w-100 row no-space"
+                    >
                       <div
                         v-for="(contact, index) in allCommunitiesPrivileges"
-                        v-if="allCommunitiesPrivileges.length > 0"
                         :key="index"
                         ref="items"
                         class="col-12 pt-0 form-group-row"
@@ -237,13 +239,13 @@
                           </div>
                         </div>
                       </div>
-                      <div v-else class="col-12 pt-0">
-                        <div class="w-100 empty-elements text-slate-400">
-                          <span
-                            >There are no contacts associated with this
-                            community</span
-                          >
-                        </div>
+                    </div>
+                    <div v-else class="col-12 pt-0">
+                      <div class="w-100 empty-elements text-slate-400">
+                        <span
+                          >There are no contacts associated with this
+                          community</span
+                        >
                       </div>
                     </div>
                   </div>
@@ -352,7 +354,6 @@ const props = defineProps<{
 }>();
 const emits = defineEmits(["close-modal"]);
 const userStore = useUser();
-const contactTypeOptions = ["person", "helpdesk", "other"];
 const runtimeConfig = useRuntimeConfig();
 const contactObj = ref<Contact | null>(null);
 const communities = ref<Community[]>([]);
@@ -366,13 +367,9 @@ const rolesObj = ref<UserCommunityRoles[]>([
   { label: "Manager", value: "manager" },
   { label: "Contributor", value: "contributor" },
 ]);
-const dialogTitle = ref("");
-const dialogType = ref("yesno");
-const isDialogOpened = ref(false);
 const isValidatorOpened = ref([
   { index: null as number | null, isOpened: false },
 ]);
-const dialogText = ref("");
 const dialogElement = ref<{ element: string[]; index: number } | null>(null);
 const elementToDelete = ref({
   index: null as number | null,
@@ -442,7 +439,7 @@ async function fetchContact(id: string): Promise<Contact> {
     });
 
     fetchAllPrivileges(props.token).then((result) => {
-      allCommunitiesPrivileges.value = result;
+      allCommunitiesPrivileges.value = result || [];
     });
     return data;
   } catch (error) {
@@ -585,15 +582,17 @@ function restartElementToDelete() {
 }
 
 const checkEmptyContacts = computed(() => {
+  const privileges = allCommunitiesPrivileges.value;
+
+  if(!Array.isArray(privileges)) {
+    return false;
+  }
   if (allCommunitiesPrivileges.value.length == 0) {
     return false;
   }
-
-  const filter = allCommunitiesPrivileges.value.map((contact: string) => {
-    return contact === "";
-  });
-
-  return filter[0] ? filter[0] : false;
+  
+  const filter = privileges.map((contact) => contact);
+  return filter[0] ?? { community: "", role: "" };
 });
 
 async function updateContact() {
@@ -653,7 +652,6 @@ async function updateContact() {
       }
     }
   } catch (error) {
-    console.error("Error fetching communities data:", error);
     errors.value.push(error);
   }
 }
