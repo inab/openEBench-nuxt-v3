@@ -29,10 +29,17 @@
       <div class="contribute-box">
         <div class="row">
           <div class="col-12">
-            <div class="w-100 p-1 text-gray-500 text-center">
-              I really like what this community is about, and I'm interested in
-              getting involved!
-              <div class="w-100 text-center pt-3">
+            <div class="w-100 p-1 text-gray-500 text-center contribute-block">
+              <img
+                src="assets/images/dashboard/contribute_2.jpg"
+                alt="Contribute image"
+                class="metrics__body__img"
+              />
+              <p>
+                I really like what this community is about, and I'm interested
+                in getting involved!
+              </p>
+              <div class="w-100 text-center">
                 <NuxtLink
                   class="btn-primary hover_effect header-button"
                   :to="'/dashboard/contribute/' + id"
@@ -555,7 +562,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, nextTick, onMounted, useTemplateRef, watch, watchEffect } from "vue";
+import {
+  computed,
+  ref,
+  nextTick,
+  onMounted,
+  useTemplateRef,
+  watch,
+  watchEffect,
+} from "vue";
 import { useUser } from "@/stores/user.ts";
 
 import {
@@ -612,7 +627,7 @@ const router = useRouter();
 const runtimeConfig = useRuntimeConfig();
 const { data } = useAuth();
 const token = ref(data?.value.accessToken);
-const hasSetConsentTab = ref(false); 
+const hasSetConsentTab = ref(false);
 
 const userStore = useUser();
 const imageDefault = "~/assets/images/dashboards/empty-logo.jpg";
@@ -905,7 +920,7 @@ async function updateCommunity() {
   const markdownDescription = turndownService.turndown(state.value.description);
 
   const body = {
-    _id: state.value._id,
+    _id: props.communityObj._id,
     _schema: state.value._schema,
     name: state.value.name,
     acronym: state.value.acronym,
@@ -938,9 +953,12 @@ async function updateCommunity() {
       uri: localLogo.value,
     });
   }
+
+  console.log(body);
+
   try {
     const response = await fetch(
-      `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Community/${props.communityObj._id}`,
+      `/api/staged/Community/${props.communityObj._id}`,
       {
         method: "PATCH",
         headers: {
@@ -1025,8 +1043,7 @@ function consentTab(userPrivileges) {
   if (!userPrivileges?.value || !Array.isArray(items.value)) return;
 
   const canConsent = userPrivileges.value.find(
-    (privilege) =>
-      privilege.role === "admin" || privilege.role === "owner"
+    (privilege) => privilege.role === "admin" || privilege.role === "owner",
   );
 
   const existItem = items.value.find((item) => item.index === 3);
@@ -1187,7 +1204,7 @@ watch(
 watchEffect(() => {
   const community = props.communityObj;
   if (!community) return;
-  
+
   state.value = communityData.value;
 
   if (!community._metadata) {
@@ -1427,6 +1444,18 @@ input[type="file"] {
 .tab-wrapper {
   border-top-left-radius: 9px;
   border-top-right-radius: 9px;
+}
+.contribute-block {
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  grid-template-columns: 1fr 3fr 1fr;
+  gap: 5px;
+  width: fit-content;
+  margin: 0 auto; 
+  background-color: rgba(233, 236, 239, 0.2);
+  border: 1px solid #ddd;
+  border-radius: 10px;
 }
 </style>
 

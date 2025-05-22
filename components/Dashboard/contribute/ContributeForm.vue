@@ -87,6 +87,7 @@
           />
         </UFormGroup>
         <UFormGroup
+          v-if="eventsList.length > 0"
           label="Benchmarking event"
           name="event"
           class="col-6 input-row-group"
@@ -152,7 +153,7 @@
           <UButton type="button" color="white" variant="solid" @click="goReset">
             Reset
           </UButton>
-          <UButton type="submit"> Submit </UButton>
+          <UButton type="submit" :disabled="!isAcceptedTerms"> Submit </UButton>
         </div>
       </div>
     </UForm>
@@ -336,15 +337,18 @@ const fetchUserCommunitiesEvents = async (
     let data = await response.json();
     data = data.filter((event: any) => event.community_id === communityId);
 
-    const eventsArray = data.map((item) => {
-      return {
-        label: item._id + " - " + item.name,
-        value: item._id,
-      };
-    });
-    loadingEvent.value = false;
-    eventsList.value = eventsArray;
-    selectedEvent.value = eventsArray.length > 0 ? eventsArray[0].value : null;
+    if (data.length > 0) {
+      const eventsArray = data.map((item) => {
+        return {
+          label: item._id + " - " + item.name,
+          value: item._id,
+        };
+      });
+      loadingEvent.value = false;
+      eventsList.value = eventsArray;
+      selectedEvent.value =
+        eventsArray.length > 0 ? eventsArray[0].value : null;
+    }
 
     let details = detailsTextUpgrade.value;
 
@@ -355,14 +359,20 @@ const fetchUserCommunitiesEvents = async (
       getCommunityById(state.value.community),
     );
 
-    details = details.replaceAll(
-      "##eventfullname##",
-      getEventById(selectedEvent.value),
-    );
+    if (data.length > 0) {
+      details = details.replaceAll(
+        "##eventfullname##",
+        getEventById(selectedEvent.value),
+      );
+    } else {
+      details = details.replaceAll("##eventfullname##", "All events");
+    }
 
     description.value = details;
   } catch (error) {
-    console.error("Error fetching communities data: ", error);
+    console.error("Error fetching bench data: ", error);
+  } finally {
+    loadingEvent.value = false;
   }
 };
 
@@ -392,7 +402,6 @@ async function onSubmitContribute() {
       message: "test body",
     },
   });
-
 }
 
 function openModal() {
@@ -452,7 +461,11 @@ onMounted(fetchUserInfo);
 }
 .row-spacing-footer {
   padding-bottom: 20px;
-  padding-top: 80px;
+  padding-top: 50px;
+  .form-footer {
+    display: flex;
+    justify-content: end;
+  }
 }
 .form-group label {
   font-size: 14px;
