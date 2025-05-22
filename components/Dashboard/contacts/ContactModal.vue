@@ -352,6 +352,7 @@ const props = defineProps<{
   isContactEditable?: boolean;
   token: string;
 }>();
+
 const emits = defineEmits(["close-modal"]);
 const userStore = useUser();
 const runtimeConfig = useRuntimeConfig();

@@ -27,6 +27,7 @@ import { useUser } from "@/stores/user.ts";
 import { privileges } from "@/constants/privileges";
 import type { Community } from "@/types/communities";
 import type { Event } from "@/types/events";
+import type { Contact } from "@/types/contact";
 import parseDataURL from "data-urls";
 import { labelToName, decode } from "whatwg-encoding";
 
@@ -49,6 +50,8 @@ const userStore = useUser();
 const routeName = ref<string>("");
 const isLoadingEvents = ref<boolean>(true);
 const isAdmin = ref<boolean>(false);
+const isLoadingCommunityContacts = ref<boolean>(false);
+const communityContacts = ref<Contact[]>([]);
 
 const isView = computed(() => {
   if (!userPrivileges.value) return true;
@@ -148,6 +151,12 @@ const fetchUserCommunity = async (token: string): Promise<void> => {
       String(communityData.value._id),
     );
     communityEvents.value = eventResponse;
+
+    const communityContacts = await fetchCommunityContacts(
+      token,
+      String(communityData.value._id),
+    );
+    console.log(communityContacts);
   } catch (error) {
     console.error("Error fetching communities data:", error);
   }
@@ -171,15 +180,17 @@ const fetchUserCommunitiesEvents = async (
             if (typeof contact === "object" && contact !== null) {
               return {
                 ...contact,
-                id: contact.id ? contact.id.replace(/\./g, " ").split(":")[1] || "" : "",
-                name: contact.name ? contact.name.replace(/\./g, " ") : ""
+                id: contact.id
+                  ? contact.id.replace(/\./g, " ").split(":")[1] || ""
+                  : "",
+                name: contact.name ? contact.name.replace(/\./g, " ") : "",
               };
             }
             return contact;
-          })
+          }),
         };
       }
-      return item; 
+      return item;
     });
 
     isLoadingEvents.value = false;
@@ -200,4 +211,6 @@ onMounted(async () => {
     console.error("Error fetching communities data:", error);
   }
 });
+
+
 </script>

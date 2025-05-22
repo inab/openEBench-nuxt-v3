@@ -111,6 +111,8 @@ const contactsList = ref<Contact[]>([]);
 
 async function fetchContacts(token: string): Promise<Contact[]> {
   isLoadingContacts.value = true;
+
+  console.log(token);
   try {
     const response = await fetch(
       `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Contact`,
