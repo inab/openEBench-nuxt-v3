@@ -70,7 +70,9 @@
           <!----------------- STEP 4 ------------------->
           <!-------------------------------------------->
           <div v-if="index === 3">
-            <p>Step 4 is building</p>
+            <div>
+              <ResultsTabs />
+            </div>
             <div class="buttons mt-2 ml-5">
 
               <UButton variant="ghost" color="red" @click="stepperStore.cancelSteps" v-if="index === stepperStore.steps.length - 1">
@@ -99,6 +101,8 @@ import GitHubInput from "@/components/Observatory/evaluation/GitHub/GitHubInput.
 import ObservatoryInput from "@/components/Observatory/evaluation/Observatory/ObservatoryInput.vue"
 import MetadataFileInput from "@/components/Observatory/evaluation/MetadataFile/MetadataFileInput.vue"
 import MetadataEdit from "@/components/Observatory/evaluation/Metadata/MetadataEdit.vue"
+import ResultsTabs from "@/components/Observatory/evaluation/Results/ResultsTabs.vue"
+
 
 const stepperStore = useStepperStore();
 const metadataStore = useMetadataStore();

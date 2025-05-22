@@ -36,7 +36,7 @@ export const useGithub = defineStore('github', {
     getSocket:(state) => state.socket,
     // No tienen que tener el mismo nombre
     getInstallationID:(state) => state.extractorInstallationID,
-    getUpdaterInstallationId:(state) => state.updaterInstallationID,
+    getUpdaterInstallationID:(state) => state.updaterInstallationID,
   },
 
   actions: {
