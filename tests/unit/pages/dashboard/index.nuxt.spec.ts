@@ -5,6 +5,7 @@ import { nuxtTestUtilSetup } from "../../utils";
 import authMiddleware from "../../../../middleware/auth";
 
 await nuxtTestUtilSetup();
+let metricsByType;
 
 vi.mock("@/stores/user", () => ({
   useUser: () => ({
