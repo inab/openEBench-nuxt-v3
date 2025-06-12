@@ -36,7 +36,7 @@
         color="primary" 
         variant="outline"
         autoresize
-        :model-value="jsonContent" 
+        v-model="jsonContent"
         resize
         class="border-1 textTextarea rounded-md border-primaryOeb-500 max-h-[50vh] overflow-y-auto mb-3"
       >
@@ -75,7 +75,7 @@ const dialog = ref(false);
 const dialogAnimation = ref('an1');
 const jsonContent = ref(JSON.stringify(props.metadata, null, 2));
 
-// Sincroniza jsonContent con metadata cuando cambie
+// Synchronise jsonContent with metadata when it changes
 watch(() => props.metadata, (newValue) => {
   jsonContent.value = JSON.stringify(newValue, null, 2);
 }, { deep: true });
