@@ -37,7 +37,8 @@
           domains.
         </div>
       </div>
-      <div class="">
+      <div class="w-100">
+        E:{{ eventContacts }}
         <CommunityEvent
           :id="eventId"
           :community-id="communityId"
@@ -48,6 +49,7 @@
           :challenges="eventChallenge"
           :is-loadin-challenges="isLoadinChallenges"
           :tab-index="tabIndex"
+          :event-contacts="eventContacts"
         />
       </div>
     </div>
@@ -77,6 +79,7 @@ const route = useRoute();
 const isLoadingData = ref(true);
 const isLoadinChallenges = ref(true);
 const tabIndex: Ref<string> = ref(route.query.challenges ? "1" : "0");
+const eventContacts = ref(); 
 
 if (status.value !== "authenticated") {
   await navigateTo("/login-required");
@@ -139,6 +142,12 @@ const fetchUserCommunitiesEvents = async (token: string): Promise<void> => {
       eventId,
     );
     eventChallenge.value = communityResponse;
+
+    const communityContacts = await fetchCommunityContacts(
+      token,
+      String(eventId),
+    );
+    console.log(communityContacts);
   } catch (error) {
     console.error("Error fetching communities data: ", error);
   }
@@ -173,6 +182,41 @@ const routeArray: Array = ref([
     isActualRoute: true,
   },
 ]);
+
+const fetchCommunityContacts = async (
+  toke: string,
+  communityId: string,
+): Promise<void> => {
+  try {
+    const contactsResponse = await fetch(
+      `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}query/contacts/${communityId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+        },
+        method: "GET",
+      },
+    );
+
+    const data = await contactsResponse.json();
+
+    const managers = Array.isArray(data.manager) ? data.manager : [];
+    const owners = Array.isArray(data.owner) ? data.owner : [];
+
+    const uniqueManagers = [...new Set(managers)];
+    const uniqueOwners = [...new Set(owners)];
+
+    const contacts = [
+      ...uniqueManagers.map((orcid) => ({ orcid, role: "manager" })),
+      ...uniqueOwners.map((orcid) => ({ orcid, role: "owner" })),
+    ];
+    console.log(contacts);
+    eventContacts.value = contacts;
+  } catch (error) {
+    console.error("Error fetching communities data:", error);
+  }
+};
 
 onMounted(() => {
   fetchUserCommunitiesEvents(token);

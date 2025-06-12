@@ -13,7 +13,7 @@ export default defineVitestConfig({
       provider: "istanbul",
     },
     reporters: ["verbose"],
-    include: ["**/*.spec.ts", "**/*.test.ts"],
+    include: ["tests/unit/**/*.spec.ts", "tests/unit/**/*.test.ts"],
     exclude: ["node_modules/**", "**/migrations/**", "**/coverage/**"],
   },
 });

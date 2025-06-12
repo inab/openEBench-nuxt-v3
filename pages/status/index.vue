@@ -228,7 +228,7 @@ const checkScientificServices = async () => {
 
   return fetch(`https://api.allorigins.win/raw?url=${scientificUrl}`, {
     method: "HEAD",
-    mode: "no-cors",
+    mode: "cors",
   })
     .then(async (response) => {
       isScientificServicesUp.value = true

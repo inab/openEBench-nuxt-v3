@@ -130,6 +130,7 @@ const fetchCommunitiesData = async () => {
     } else {
       const data = await communitiesStore.requestCommunitiesData();
       communities.value = data || communitiesStore.getCommunities;
+
       statusRef.value = "success";
     }
   } catch (error) {

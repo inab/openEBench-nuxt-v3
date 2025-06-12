@@ -408,7 +408,10 @@ const props = defineProps<{
   challenges: Array<Challenge>;
   isLoadinChallenges: boolean;
   tabIndex: string;
+  eventContacts: Array<any>;
 }>();
+
+console.log(props.eventContacts);
 
 const dialogTitle = ref("");
 const dialogType = ref("yesno");
