@@ -820,12 +820,6 @@ function validateRequiredFields(data: any): string[] {
     }
   });
 
-  if (data["_id"] && !checkIdPattern(data["_id"])) {
-    errorMessages.push(
-      `_id is not in the correct format. Example: <b><i>${state.value.community_id}000000A</i></b>`,
-    );
-  }
-
   if (localContacts.value.length == 0) {
     errorMessages.push(`community_contact_ids cannot be empty`);
   } else {

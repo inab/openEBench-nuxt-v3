@@ -394,12 +394,36 @@ function goReset() {
 }
 
 async function onSubmitContribute() {
+  const subject = state.value.requestType;
+  const body = {
+    name: state.value.userName,
+    email: state.value.userEmail,
+  };
+
+  if (state.value.requestType && state.value.requestType != "") {
+    body.emailsSubject = state.value.requestType;
+  }
+
+  if (state.value.community && state.value.community != "") {
+    body.community = state.value.community; 
+  }
+
+  if (selectedEvent.value && selectedEvent.value != "") {
+    body.event = selectedEvent.value; 
+  }
+
+  if (description.value && description.value != "") {
+    body.details = description.value; 
+  }
+
+  body.subject = subject;
+
+  console.log(body);
+
   const { data, error } = await useFetch("/api/email/mailer", {
     method: "POST",
     body: {
-      to: "jessica.fernandez@bsc.es",
-      subject: "test",
-      message: "test body",
+      message: body,
     },
   });
 }
