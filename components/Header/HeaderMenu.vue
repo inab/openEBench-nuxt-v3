@@ -219,12 +219,19 @@
                               @click="closeMenu"
                             >
                               <div class="menu-login-item w-100">
-                                <span class="truncate">{{ item.label }}</span>
-                                <UIcon
-                                  :name="item.icon"
-                                  class="flex-shrink-0 h-4 w-4 text-gray-400 dark:text-gray-500 ms-auto"
-                                />
-                                <span class="ripple-effect"></span>
+                                <span class="truncate">{{ item.label }} </span>
+                                <div v-if="item.slot && item.slot === ahead">
+                                  <font-awesome-icon
+                                    :icon="['fas', 'hexagon-nodes']"
+                                  />
+                                </div>
+                                <div v-else>
+                                  <UIcon
+                                    :name="item.icon"
+                                    class="flex-shrink-0 h-4 w-4 text-gray-400 dark:text-gray-500 ms-auto"
+                                  />
+                                </div>
+                                <!--<span class="ripple-effect"></span> -->
                               </div>
                             </NuxtLink>
                           </template>

@@ -958,7 +958,7 @@ async function updateCommunity() {
 
   try {
     const response = await fetch(
-      `/api/staged/Community/${props.communityObj._id}`,
+      `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Community/${props.communityObj._id}`,
       {
         method: "PATCH",
         headers: {
