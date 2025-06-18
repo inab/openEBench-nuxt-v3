@@ -4,8 +4,9 @@
     <div class="content p-4">
       <div class="row my-4">
         <div class="col-8">
-          <h3 class="fw-bold mb-3">FAIRsoft Indicator Scoreboard</h3>
-          <p style="line-height: 1.9" class="mb-0 mt-0">
+          <h3 class="fw-bold">FAIRsoft Indicator Scoreboard</h3>
+
+          <!-- <p style="line-height: 1.9" class="mb-0 mt-0">
             This page brings to light the <strong>collective insights</strong>
             from our FAIRsoft indicators, providing a clear snapshot of trends and scores across various software.
             <br>
@@ -14,10 +15,11 @@
             <strong>Deep Dive:</strong>
             Each FAIRsoft indicator is explained in detail
             <a href="https://inab.github.io/FAIRsoft_indicators/" target="_blank">here.</a>
-          </p>
+          </p> -->
+
         </div>
         <!-- Alert -->
-        <div class="col-4">
+        <!-- <div class="col-4">
           <UAlert v-if="showAlert" :close-button="closeButtonOptions" @close="handleClose" color="sky" variant="soft"
             :ui="{ shadow: 'shadow-md', padding: 'p-3', gap: 'gap-0' }">
             <template #description>
@@ -30,7 +32,8 @@
               </span>
             </template>
           </UAlert>
-        </div>
+        </div> -->
+
       </div>
       <!-- collectionSelector -->
       <div class="row mt-4">
@@ -40,6 +43,29 @@
         </div>
         <div class="col-2"></div>
       </div>
+
+      <!-- New Text -->
+      <p class="mb-5 mt-4 mx-5 text-sm">
+        This scoreboard provides a visual summary of FAIRness scores for research software, based on the FAIRsoft indicators. 
+        Explore how different software collections perform across the four FAIR dimensions: Findable, Accessible, Interoperable, and Reusable.
+      </p>
+
+      <!-- Accordion - How to read this page -->
+      <div class="px-5 ">
+        <UAccordion color="white" variant="ghost" class="" :items="items" :ui="{ wrapper: 'flex flex-col w-full' }">
+          <template #item="{ item }">
+            <div class="mx-2.5 border-t border-gray-200 dark:border-gray-700">
+              <ul class="list-disc pl-5 space-y-2 text-xs mt-2 text-slate-800">
+                <li><strong>FAIR Dimensions:</strong> The page is structured around the four FAIR principles. Each one has associated indicators (e.g., “F1” for Identity Uniqueness).</li>
+                <li><strong>Size of bubbles:</strong> Indicates the percentage of tools that meet the indicator.</li>
+                <li><strong>Color coding:</strong> When you select a collection, its scores are shown in color, while the scores of all tools in the database appear in light grey — making it easy to compare your community with the overall landscape.</li>
+                <li><strong>Want to go deeper?</strong> Use the <a href="https://openebench.bsc.es/observatory/FAIRness/" class="text-primary underline" target="_blank">FAIRsoft Evaluator</a>to analyze a specific software or get improvement suggestions.</li>
+              </ul>
+            </div>
+          </template>
+        </UAccordion>
+      </div>
+
 
       <!-- Plots -->
       <div class="row justify-center mt-4">
@@ -157,6 +183,13 @@ onMounted(async () => {
   await storeFairness.getControlFAIRscores();
 });
 
+const items = [{
+  label: 'How to read this page',
+  icon: 'i-material-symbols-info-rounded',
+  defaultOpen: false,
+  content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed neque elit, tristique placerat feugiat ac, facilisis vitae arcu. Proin eget egestas augue. Praesent ut sem nec arcu pellentesque aliquet. Duis dapibus diam vel metus tempus vulputate.'
+},]
+
 // Constants
 const dialogItemsFindability = [embedCodes.findabilityBubble];
 const dialogItemsAccessibility = [embedCodes.accessibilityBubble];
@@ -202,5 +235,11 @@ a {
 a:hover {
   text-decoration: underline;
   color: #6a98c4;
+}
+
+.alin {
+  display: flex !important;
+  justify-content: flex-end !important;
+  align-items: flex-end !important;
 }
 </style>
