@@ -91,7 +91,6 @@ const build_control_collection_traces = () => {
       'markers'
     );
 
-    console.log(props.indicators_labels)
     controlCollectionTraces = controlCollectionTraces.concat(traceControl);
   }
 
@@ -111,11 +110,14 @@ const build_control_collection_traces = () => {
 };
 
 onMounted(() => {
-  const traces = build_control_collection_traces().reverse();
+  const traces = build_control_collection_traces()
+  const reversedLabels = Object.values(props.indicators_labels).reverse();
   const layout = {
     yaxis: {
       title: '',
       showline: false,
+      categoryorder: 'array',
+      categoryarray: reversedLabels,
     },
     xaxis: {
       title: 'Score',
