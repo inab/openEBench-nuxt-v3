@@ -92,6 +92,11 @@
             <h6 class="text-center mt-4 text-2xl font-semibold">
               Findability
             </h6>
+            <p class="m-4 text-sm text-center">
+              Findability refers to how easily software and its metadata can be
+							discovered by both humans and machines. It ensures that users can
+							identify, locate, and reference a tool reliably.
+            </p>
             <div class="row">
               <div class="col-12">
                 <!-- Loader -->
@@ -182,6 +187,10 @@
             class="my-4 p-4 max-full bg-white border border-gray-100 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
             <PlotWOptions class="copy-icon" :items="dialogItemsAccessibility" :currentCollection="current_collection" />
             <h6 class="text-center mt-4 text-2xl font-semibold"> Accessibility </h6>
+            <p class="m-4 text-sm text-center">
+              Accessibility evaluates whether users can obtain, install, and
+							run the software without barriers.
+            </p>
             <div class="row">
               <div class="col-12">
                 <!-- Loader -->
@@ -267,6 +276,10 @@
             <PlotWOptions class="copy-icon" :items="dialogItemsInteroperability"
               :currentCollection="current_collection" />
             <h6 class="text-center mt-4 text-2xl font-semibold"> Interoperability </h6>
+            <p class="m-4 text-sm text-center">
+              Interoperability assesses whether the software can work smoothly
+							with other tools, data formats, and platforms.
+            </p>
             <div class="row">
               <div class="col-12">
                 <!-- Loader -->
@@ -363,6 +376,10 @@
             class="my-4 p-4 max-full bg-white border border-gray-100 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
             <PlotWOptions class="copy-icon" :items="dialogItemsReusability" :currentCollection="current_collection" />
             <h6 class="text-center mt-4 text-2xl font-semibold"> Reusability </h6>
+            <p class="m-4 text-sm text-center">
+              Reusability evaluates whether the software is well-documented,
+							legally usable, and maintained in a way that supports future use.
+            </p>
             <div class="row">
               <div class="col-12">
                 <!-- Loader -->
