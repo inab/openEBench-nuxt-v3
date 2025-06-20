@@ -30,7 +30,95 @@
               <div
                 class="dashboard__body__card__header d-flex justify-content-between"
               >
-                Projects & Communities
+                Participant submissions
+              </div>
+            </template>
+            <div class="row">
+              <div class="col-6">
+                <img
+                  src="assets/images/dashboard/contribute.jpg"
+                  alt="User submissions"
+                  class=""
+                />
+              </div>
+              <div class="col-6 col-separator">
+                <div class="">
+                  Explore your submitted content, check approvals, and find
+                  resources for future contributions.
+                </div>
+                <div class="dashboard__body__card__link">
+                  <button class="ripple custom-button-primary">
+                    <NuxtLink
+                      to="/dashboard/projects_communities"
+                      class="dashboard-link"
+                      >View submission</NuxtLink
+                    >
+                  </button>
+                </div>
+              </div>
+            </div>
+          </UCard>
+        </div>
+        <div class="col-6">
+          <UCard
+            class="dashboard__body__card"
+            :ui="{
+              header: {
+                base: '',
+                background: '',
+                padding: 'px-4 py-3 sm:px-6',
+              },
+            }"
+          >
+            <template #header>
+              <div
+                class="dashboard__body__card__header d-flex justify-content-between"
+              >
+                Contribute to a community
+              </div>
+            </template>
+            <div class="row">
+              <div class="col-6">
+                <img
+                  src="assets/images/dashboard/contribute_2.jpg"
+                  alt="User contribute"
+                  class=""
+                />
+              </div>
+              <div class="col-6 col-separator">
+                <div class="">
+                  Become an active contributor! Apply to join a community and
+                  help drive innovation in software evaluation.
+                </div>
+                <div class="dashboard__body__card__link">
+                  <button class="ripple custom-button-primary">
+                    <NuxtLink to="/dashboard/contribute" class="dashboard-link"
+                      >Contribute</NuxtLink
+                    >
+                  </button>
+                </div>
+              </div>
+            </div>
+          </UCard>
+        </div>
+      </div>
+      <div class="dashboard__body row mb-5">
+        <div class="col-6">
+          <UCard
+            class="dashboard__body__card"
+            :ui="{
+              header: {
+                base: '',
+                background: '',
+                padding: 'px-4 py-3 sm:px-6',
+              },
+            }"
+          >
+            <template #header>
+              <div
+                class="dashboard__body__card__header d-flex justify-content-between"
+              >
+                Communities
                 <span class="text-gray-500">Total: {{ totalCommunities }}</span>
               </div>
             </template>
@@ -89,8 +177,8 @@
               </div>
               <div class="col-6 col-separator">
                 <div class="">
-                  Here you can find information about the communities you are
-                  part of, as well as the tools available to you.
+                  Here you can find information about your communications,
+                  including available tools and channels to stay connected.
                 </div>
                 <div class="dashboard__body__card__link">
                   <button class="ripple custom-button-primary">

@@ -954,8 +954,6 @@ async function updateCommunity() {
     });
   }
 
-  console.log(body);
-
   try {
     const response = await fetch(
       `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Community/${props.communityObj._id}`,
