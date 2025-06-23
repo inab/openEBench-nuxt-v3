@@ -49,7 +49,7 @@
                 <div class="dashboard__body__card__link">
                   <button class="ripple custom-button-primary">
                     <NuxtLink
-                      to="/dashboard/projects_communities"
+                      to="/dashboard/submission"
                       class="dashboard-link"
                       >View submission</NuxtLink
                     >

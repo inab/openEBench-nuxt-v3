@@ -32,7 +32,9 @@ const formProps = computed(() =>
 );
 
 const breadcrumbs = computed(() => {
-  const baseCrumbs = [{ label: "Dashboard", to: "/dashboard" }];
+  const baseCrumbs = [
+    { label: "Dashboard", isActualRoute: false, route: "/dashboard" },
+  ];
 
   const currentCrumb = { label: "Contribute", isActualRoute: true };
 
