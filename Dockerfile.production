@@ -18,7 +18,7 @@ ARG KEYCLOAK_HOST=https://inb.bsc.es
 ARG KEYCLOAK_REALM=oeb2dev
 ARG KEYCLOAK_CLIENT_ID=oeb-frontend
 ARG OBSERVATORY_API_URL=https://observatory.openebench.bsc.es/api
-ARG GITHUBAPP_API_URL=https://observatory.openebench.bsc.es/githubapp/api
+ARG GITHUBAPP_API_URL=https://observatory.openebench.bsc.es/github-metadata-api
 ARG AUTH_ORIGIN=https://inb.bsc.es
 
 ENV ENVIRONMENT $ENVIRONMENT
