@@ -54,13 +54,15 @@
       <div class="px-5 ">
         <UAccordion color="white" variant="ghost" class="" :items="items" :ui="{ wrapper: 'flex flex-col w-full' }">
           <template #item="{ item }">
-            <div class="mx-2.5 border-t border-gray-200 dark:border-gray-700">
+            <div class="mx-2.5">
+            <UDivider/>
               <ul class="list-disc pl-5 space-y-2 text-xs mt-2 text-slate-800">
                 <li><strong>FAIR Dimensions:</strong> The page is structured around the four FAIR principles. Each one has associated indicators (e.g., “F1” for Identity Uniqueness).</li>
                 <li><strong>Size of bubbles:</strong> Indicates the percentage of tools that meet the indicator.</li>
                 <li><strong>Color coding:</strong> When you select a collection, its scores are shown in color, while the scores of all tools in the database appear in light grey — making it easy to compare your community with the overall landscape.</li>
-                <li><strong>Want to go deeper?</strong> Use the <a href="https://openebench.bsc.es/observatory/Evaluation" class="text-primary underline" target="_blank">FAIRsoft Evaluator</a>to analyze a specific software or get improvement suggestions.</li>
+                <li><strong>Want to go deeper?</strong> Use the <a href="https://openebench.bsc.es/observatory/Evaluation" class="text-primary underline" target="_blank">FAIRsoft Evaluator</a> to analyze a specific software or get improvement suggestions.</li>
               </ul>
+              <UDivider/>
             </div>
           </template>
         </UAccordion>
