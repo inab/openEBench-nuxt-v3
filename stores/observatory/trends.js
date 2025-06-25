@@ -19,6 +19,7 @@ export const useTrends = defineStore("trends", {
     versionControlCount: [],
     versionControlRepositories: [],
     publications: [],
+    dependencies: [],
     unLoaded: {
       licensesSunburst: true,
       licensesOpenSource: true,
@@ -26,6 +27,7 @@ export const useTrends = defineStore("trends", {
       versionControlCount: true,
       versionControlRepositories: true,
       publications: true,
+      dependencies: true,
       FAIRscores: true,
     },
   }),
@@ -37,6 +39,7 @@ export const useTrends = defineStore("trends", {
     VersionControlCount: (state) => state.versionControlCount,
     VersionControlRepositories: (state) => state.versionControlRepositories,
     Publications: (state) => state.publications,
+    Dependencies: (state) => state.dependencies,
     Loaded: (state) => state.unLoaded,
   },
 
@@ -98,5 +101,26 @@ export const useTrends = defineStore("trends", {
     getPublications() {
       this.fetchData("publications", "publications_journals_IF");
     },
+    async getDependencies() {
+      // Mock data
+      const names = [
+        "numpy", "pandas", "requests", "matplotlib", "scikit-learn",
+        "flask", "tensorflow", "beautifulsoup4", "scipy", "django",
+        "seaborn", "sqlalchemy", "pytest", "jupyter", "torch"
+      ];
+    
+      const counts = [
+        240, 200, 185, 160, 150, 140, 130, 120,
+        110, 100, 95, 90, 85, 80, 75
+      ];
+    
+      const mockedDependencies = names.map((name, index) => ({
+        name,
+        count: counts[index] || 0
+      }));
+    
+      // Store data and mark as loaded
+      this.setData("dependencies", mockedDependencies);
+    }
   },
 });
