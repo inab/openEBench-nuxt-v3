@@ -290,7 +290,7 @@ const makeRequest = async () => {
     repo: repo.value,
   };
 
-  await githubStore.getExtractorInstallationID(repository);
+  await githubStore.getUpdateInstallationID(repository);
 
 	// 2. If the app is installed, make the request
   if (installationID.value) {

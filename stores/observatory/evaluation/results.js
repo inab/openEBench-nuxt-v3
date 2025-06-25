@@ -38,7 +38,7 @@ export const useResultStore = defineStore('result', {
         const result = await $observatory(URL, {
           method: "GET",
         });
-        console.log('results.js: ',result)
+        // console.log('results.js: ',result)
         return result;
       } catch (error) {
         console.error('Error fetching data from URL:', error);
@@ -136,7 +136,6 @@ export const useResultStore = defineStore('result', {
       console.log(payload)
 
       const result = await this.POST_DATA(payload);
-      console.log('result')
 
       console.log(result)
   		console.debug(result);

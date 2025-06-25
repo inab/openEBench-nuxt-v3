@@ -47,6 +47,8 @@ export const useExport = defineStore('export', {
     },
 
     async makePullRequest(payload) {
+      const { $githubapp } = useNuxtApp();
+
       const URL = '/metadata/pull';
       console.log('taget_brach: ', payload.branch);
       const parameters = {
