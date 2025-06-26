@@ -151,12 +151,7 @@ const fetchUserCommunity = async (token: string): Promise<void> => {
       String(communityData.value._id),
     );
     communityEvents.value = eventResponse;
-
-    const communityContacts = await fetchCommunityContacts(
-      token,
-      String(communityData.value._id),
-    );
-    console.log(communityContacts);
+    
   } catch (error) {
     console.error("Error fetching communities data:", error);
   }

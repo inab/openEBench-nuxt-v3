@@ -284,41 +284,6 @@
         <div class="form-footer"></div>
       </template>
     </CustomModal>
-    <!-- <CustomDialog :is-dialog-open="isValidatorOpened" :width="400">
-      <template #header>
-        {{ dialogTitle }}
-      </template>
-      <template #content>
-        {{ dialogText }}
-      </template>
-      <template #footer>
-        <template v-if="dialogType && dialogType === 'yesno'">
-          <button
-            type="button"
-            class="btn-dialog bg-slate-50"
-            @click="isValidatorOpened = false"
-          >
-            No
-          </button>
-          <button
-            type="button"
-            class="btn-dialog btn-primary btn-ok"
-            @click="deleteElement"
-          >
-            Yes
-          </button>
-        </template>
-        <template v-else>
-          <button
-            type="button"
-            class="btn-primary"
-            @click="isValidatorOpened = false"
-          >
-            Cancel
-          </button>
-        </template>
-      </template>
-    </CustomDialog> -->
   </div>
 </template>
 
@@ -331,7 +296,7 @@ import {
   useTemplateRef,
   nextTick,
 } from "vue";
-import type { FormErrorEvent, FormSubmitEvent } from "#ui/types";
+import type { FormSubmitEvent } from "#ui/types";
 import CustomModal from "@/components/Common/CustomModal.vue";
 import { useUser } from "@/stores/user.ts";
 import type {
