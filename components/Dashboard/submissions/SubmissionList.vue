@@ -113,21 +113,151 @@
             </p>
           </div>
 
-          <div class="mt-auto pt-3">
+          <div class="mt-auto pt-3 flex justify-between">
             <p class="text-xs text-gray-500 mb-0">
               Submitted on:
               {{ new Date(submission.submittedAt).toLocaleDateString() }}
             </p>
+            <button class="submission-btn" @click="openModal(submission)">
+              <UIcon name="i-heroicons-pencil-square-solid" class="w-4 h-4" />
+              Edit
+            </button>
           </div>
         </div>
       </div>
     </div>
+    <CustomModal
+      :is-open="isModalOpen"
+      width="600"
+      class="dashboard-contacts-modal"
+      @modal-close="closeModal"
+    >
+      <template #header>
+        <div class="modal-title">Edit Submission</div>
+        <button
+          class="modal-close"
+          aria-label="Close modal"
+          @click="closeModal"
+        >
+          <UIcon name="i-heroicons-x-mark-16-solid" />
+        </button>
+      </template>
+      <template #content>
+        <div class="w-100">
+          <UForm
+            :schema="schema"
+            :state="selectedSubmission"
+            class="space-y-4"
+            @submit="onSubmissionUpdate"
+          >
+            <div class="w-100">
+              <div class="row pb-3">
+                <div class="col-12">
+                  <label for="id">
+                    Title
+                    <span class="text-red-400 required">*</span>
+                  </label>
+                  <div class="w-100">
+                    <input
+                      id="title"
+                      v-model="selectedSubmission.title"
+                      name="title"
+                      type="text"
+                      class="form-control custom-entry-input"
+                      placeholder="Title"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="row pb-3">
+                <div class="col-6">
+                  <label for="id">
+                    Entity ID
+                    <span class="text-red-400 required">*</span>
+                  </label>
+                  <div class="w-100">
+                    <UInput
+                      id="entityId"
+                      v-model="selectedSubmission.entityId"
+                      name="entityId"
+                      type="text"
+                      class="form-control custom-entry-input"
+                      placeholder="Entity ID"
+                    />
+                  </div>
+                </div>
+                <div class="col-6">
+                  <label for="id">
+                    Entity name
+                    <span class="text-red-400 required">*</span>
+                  </label>
+                  <div class="w-100">
+                    <input
+                      id="entityName"
+                      v-model="selectedSubmission.entityName"
+                      name="entityName"
+                      type="text"
+                      class="form-control custom-entry-input"
+                      placeholder="Entity Name"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="row pb-3">
+                <div class="col-6">
+                  <label for="id">
+                    Status
+                    <span class="text-red-400 required">*</span>
+                  </label>
+                  <div class="w-100">
+                    <USelect
+                      v-model="selectedSubmission.status"
+                      class="w-full custom-select-input"
+                      :options="statusOptions"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="form-footer pt-3">
+                  <UButton
+                    type="button"
+                    color="white"
+                    variant="solid"
+                    @click="closeModal"
+                  >
+                    Cancel
+                  </UButton>
+                  <UButton class="" type="submit"> Submit </UButton>
+                </div>
+              </div>
+            </div>
+          </UForm>
+        </div>
+      </template>
+      <template #footer>
+        <div class="form-footer"></div>
+      </template>
+    </CustomModal>
   </div>
 </template>
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import Multiselect from "vue-multiselect";
-import CustomSubtitle from "@/components/Common/CustomSubtitle.vue";
+import { object, string, number, optional } from "valibot";
+import type { FormErrorEvent, FormSubmitEvent } from "#ui/types";
+import CustomModal from "@/components/Common/CustomModal.vue";
+
+interface Submission {
+  id: number;
+  entityType: string;
+  entityId: number;
+  entityName: string;
+  title: string;
+  status: number;
+  submittedAt: string;
+  feedback?: string;
+}
 
 const submissionStatus = [
   { value: "1", label: "Pending", color: "bg-amber-100 text-amber-800" },
@@ -136,6 +266,9 @@ const submissionStatus = [
   { value: "4", label: "Rejected", color: "bg-red-100 text-red-800" },
   { value: "5", label: "Implemented", color: "bg-purple-100 text-purple-800" },
 ];
+
+const isModalOpen = ref<boolean>(false);
+const selectedSubmission = ref<Submission>({});
 
 const statusOptions = [
   { value: "all", label: "All", color: "" },
@@ -146,14 +279,25 @@ const selectedStatus = ref<
   Array<{ value: string; label: string; color: string }>
 >([]);
 
-const mockSubmissions = ref([
+const schema = object({
+  id: number(),
+  entityType: string(),
+  entityId: number(),
+  entityName: string(),
+  title: string(),
+  status: number(),
+  submittedAt: string(),
+  feedback: optional(string()),
+});
+
+const mockSubmissions = ref<Submission[]>([
   {
     id: 1,
     entityType: "community",
     entityId: 1,
     entityName: "Community OEB002",
     title: "Submission to participate at Community OEB002",
-    status: "1",
+    status: 1,
     submittedAt: "2024-06-10T14:30:00Z",
   },
   {
@@ -162,7 +306,7 @@ const mockSubmissions = ref([
     entityId: 2,
     entityName: "AI Creators",
     title: "Application to join AI Creators",
-    status: "2",
+    status: 2,
     submittedAt: "2024-06-15T09:20:00Z",
   },
   {
@@ -171,7 +315,7 @@ const mockSubmissions = ref([
     entityId: 101,
     entityName: "Sustainability Hack",
     title: "Eco-friendly Dashboard Design",
-    status: "3",
+    status: 3,
     submittedAt: "2024-05-30T16:45:00Z",
   },
   {
@@ -180,11 +324,20 @@ const mockSubmissions = ref([
     entityId: 102,
     entityName: "Blockathon",
     title: "Decentralized Identity Solution",
-    status: "4",
+    status: 4,
     submittedAt: "2024-04-12T11:10:00Z",
     feedback: "Lack of technical details in the proposal.",
   },
 ]);
+
+const closeModal = () => {
+  isModalOpen.value = true;
+};
+
+const openModal = (item: Submission) => {
+  selectedSubmission.value = item;
+  isModalOpen.value = true;
+};
 
 const getStatusInfo = (statusId: string | number) => {
   const status = submissionStatus.find((s) => s.value === statusId.toString());
@@ -222,6 +375,18 @@ function removeTag(tag: any) {
 function getDotColor(statusValue: string) {
   const status = submissionStatus.find((s) => s.value === statusValue);
   return status?.color || "bg-gray-100 text-gray-800";
+}
+
+async function onSubmissionUpdate(event: FormSubmitEvent<Schema>) {
+  const index = mockSubmissions.value.findIndex(
+    (sub) => sub.id === selectedSubmission.value.id,
+  );
+
+  if (index !== -1) {
+    mockSubmissions.value[index] = selectedSubmission.value;
+  }
+
+  isModalOpen.value = false;
 }
 </script>
 
@@ -291,5 +456,31 @@ function getDotColor(statusValue: string) {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
+
+  .submission-btn {
+    border-radius: 20px;
+    background-color: theme("colors.primary.500");
+    border: 1px solid theme("colors.primary.500");
+    color: white;
+    font-size: 14px;
+    padding: 5px 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 7px;
+    span {
+      font-size: 10px;
+    }
+    &:hover {
+      background-color: white;
+      color: theme("colors.primary.500");
+    }
+  }
+}
+
+.form-footer {
+  display: flex;
+  justify-content: end;
+  gap: 10px;
 }
 </style>

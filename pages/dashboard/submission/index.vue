@@ -7,7 +7,6 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, onMounted, computed } from "vue";
 import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
 import SubmissionList from "@/components/Dashboard/submissions/SubmissionList.vue";
 
