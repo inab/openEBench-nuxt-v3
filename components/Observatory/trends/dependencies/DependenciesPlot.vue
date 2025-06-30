@@ -25,7 +25,7 @@
       y: [d.name, d.name],
       mode: 'lines',
       line: {
-        color: 'rgba(200,200,200,0.6)',
+        color: '#95b7de',
         width: 2,
       },
       hoverinfo: 'none',
@@ -39,8 +39,8 @@
       y: names,
       mode: 'markers+text',
       marker: {
-        color: 'steelblue',
-        size: 14,
+        color: '#3373bd',
+        size: 16,
         line: { color: 'white', width: 2 },
       },
       text: counts.map(String),

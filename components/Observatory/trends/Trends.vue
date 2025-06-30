@@ -57,11 +57,21 @@
 
 
           <!-- Dependencies -->
+          <div class="row mt-4 items-center justify-center">
+            <div class="col-10 d-flex ">
+              <div
+                class="my-4 p-4 max-full bg-white border border-gray-100 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                <DependenciesMain />
+              </div>
+            </div>
+          </div>
+
+          <!-- Documentation -->
           <div class="row mt-4">
             <div class="col-12">
               <div
                 class="my-4 p-4 max-full bg-white border border-gray-100 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                <DependenciesMain />
+                <DocumentationMain />
               </div>
             </div>
           </div>
@@ -76,8 +86,24 @@ import LicensesMain from "./licenses/LicensesMain.vue";
 import VersioningMain from "./versioning/VersioningMain.vue";
 import VersionControl from "./versionControl/VersionControl.vue";
 import PublicationsMain from "./publications/PublicationsMain.vue";
-import DependenciesMain from "./dependencies/DependenciesMain.vue"
+import DependenciesMain from "./dependencies/DependenciesMain.vue";
+import DocumentationMain from "./documentation/DocumentationMain.vue"
 
+</script>
+
+<script lang="ts">
+export default {
+  name: 'Trends',
+  components: {
+    collectionSelector,
+    LicensesMain,
+    VersioningMain,
+    VersionControl,
+    PublicationsMain,
+    DependenciesMain,
+    DocumentationMain
+  }
+};
 </script>
 
 <style scoped>
