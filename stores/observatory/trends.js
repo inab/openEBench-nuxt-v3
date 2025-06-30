@@ -21,6 +21,11 @@ export const useTrends = defineStore("trends", {
     publications: [],
     dependencies: [],
     documentation: [],
+    formats: {
+      inputData: { label: '', values: [] },
+      outputData: { label: '', values: [] },
+      sameDifferentData: { label: '', values: [] },
+    },
     unLoaded: {
       licensesSunburst: true,
       licensesOpenSource: true,
@@ -30,6 +35,7 @@ export const useTrends = defineStore("trends", {
       publications: true,
       dependencies: true,
       documentation: true,
+      formats: true,
       FAIRscores: true,
     },
   }),
@@ -43,6 +49,7 @@ export const useTrends = defineStore("trends", {
     Publications: (state) => state.publications,
     Dependencies: (state) => state.dependencies,
     Documentation: (state) => state.documentation,
+    Formats: (state) => state.formats,
     Loaded: (state) => state.unLoaded,
   },
 
@@ -146,6 +153,22 @@ export const useTrends = defineStore("trends", {
         ...doc_format_counts[type]
       }));
       this.setData("documentation", documentation);
+    },
+    async getFormats() {
+      // Mock data: sample from the JS files
+      const inputData = {
+        label: 'input',
+        values: ['FASTA', 'pepXML', 'BED', 'None', 'mzML', 'Thermo RAW', 'Matrix format', 'FASTQ', 'TSV', 'MGF']
+      };
+      const outputData = {
+        label: 'output',
+        values: ['pepXML', 'mzIdentML', 'TSV', 'BED', 'WIG', 'PNG', 'XML', 'JSON', 'YAML', 'HTML']
+      };
+      const sameDifferentData = {
+        label: 'same_different',
+        values: [1, 1, 1, 0, 1, 1, 0, 1, 1, 0]
+      };
+      this.setData('formats', { inputData, outputData, sameDifferentData });
     },
   },
 });
