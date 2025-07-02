@@ -43,8 +43,8 @@ const config = {
 // Methods
 function buildTraces() {
   const traceLine = {
-    y: completeness.value.cummulative_features.data.count_cumm,
-    x: completeness.value.cummulative_features.data.feat_cumm,
+    y: completeness.value.cummulative_features.count_cumm_pct,
+    x: completeness.value.cummulative_features.feat_cumm,
     type: 'scatter',
     mode: 'lines',
     marker: {
@@ -56,8 +56,8 @@ function buildTraces() {
   };
 
   const traceBar = {
-    y: completeness.value.distribution_features.data.x,
-    x: completeness.value.distribution_features.data.y,
+    y: completeness.value.distribution_features.x,
+    x: completeness.value.distribution_features.y,
     type: 'bar',
     marker: {
       color: '#ad3d32',
