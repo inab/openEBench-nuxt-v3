@@ -33,7 +33,7 @@
         <TotalCard :count="totalC" />
       </div>
       <div class="col-4 flex items-center justify-center pt-2">
-        <p class="card-caption-side">{{ mainCardCaption }}</p>
+        <p class="card-caption-side" v-html="mainCardCaption"></p>
       </div>
     </div>
   </div>
@@ -42,11 +42,13 @@
 <script setup lang="ts">
 import { computed, reactive } from 'vue';
 import { useData } from "@/stores/observatory/data";
+import { useObservatory } from '@/stores/observatory/index.js';
 import SourceCard from '@/components/Observatory/data/CountCards/SourceCard.vue';
 import TotalCard from '@/components/Observatory/data/CountCards/TotalCard.vue';
 
 // STORE
 const dataStore = useData();
+const observatoryStore = useObservatory();
 
 // Call the actions to load the data when mounting the component
 dataStore.getTotalCount();
@@ -56,6 +58,16 @@ dataStore.getCountsPerSource();
 const totalC = computed(() => dataStore.totalCount);
 const cardsC = computed(() => dataStore.countsPerSource);
 
+const currentCollection = computed(() => observatoryStore.getCurrentCollection);
+
+const defaultCaption = 'Each number represents the amount of metadata from that source included in the final integrated collection ("Total"), after processing through the full pipeline.';
+const scopedCaption = 'Each number shows the contribution of that source to this community’s integrated collection ("Total") after processing through the full pipeline.';
+
+const mainCardCaption = computed(() =>
+  currentCollection.value !== 'tools'
+    ? scopedCaption
+    : defaultCaption
+);
 
 // Cards Info
 const cards_info = reactive({
@@ -106,7 +118,6 @@ const cards_info = reactive({
   },
 });
 
-const mainCardCaption = "Count of metadata instances collected from various sources. 'Total' refers to the cumulative number of sources included in the Software Observatory's integrated collection.";
 </script>
 
 <style scoped>
