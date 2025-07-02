@@ -2,30 +2,9 @@
   <div>
     <div class="content p-4">
       <div class="row my-4">
-        <h3 class="fw-bold mb-3">Explore Data Integration at the Software Observatory</h3>
+        <h3 class="fw-bold">Data integration at the Software Observatory</h3>
       </div>
-      <div class="row">
-        <div class="col-6">
-          <p style="line-height: 1.9" class="mb-0 ">
-            Our system periodically pulls metadata from
-            <strong>eight diverse sources</strong>, enriched further with dynamic
-            data on repository activity, website availability, and trends in
-            publication citations. As each piece of metadata flows into our
-            system, it undergoes a meticulous harmonization process, ensuring
-            uniformity and relevance across varying data types and sources.
-            <br /><br />
-            On this page, you can <strong>Visualize the Integration</strong>: dive
-            into our enriched database and see firsthand the scope of each
-            source's contribution, the comprehensive depth of metadata, and the
-            overlaps that characterize our dataset.
-          </p>
-        </div>
-        <div class="col-6">
-          <img src="/images/observatory/observatory_illustration_5.svg" alt="Illustration_5" class="illustration5" />
-        </div>
-
-      </div>
-
+      
       <!-- collectionSelector -->
       <div class="row mt-4">
         <div class="col-2"></div>
@@ -59,18 +38,18 @@
                 <PlotOverview v-else />
               </div>
               <div class="col-lg-3 col-12">
-                <p class="mb-2">
+                <p class="m3-2">
                   <span class="text-primaryOeb-600 text-base">Features obtained from the different software metadata
-                    sources and total number of instances for which each feature
-                    exists in the dataset.</span>
+									  sources and total number of software for which each feature
+									  exists in the dataset.
+                  </span>
                 </p>
                 <p class="mb-5">
-                  Dots (green: primary sources, red: secondary sources, blue:
-                  OpenEbench) show the availability of such features in the
-                  indicated sources. <br />
-                  Bars indicate the actual number of retrieved metadata items.
-                  Variation of the amounts is a consequence of the lack of
-                  completeness of metadata annotation.
+                  Colored dots indicate the presence of each metadata feature in
+                  the corresponding source. <br />
+                  Bars represent the actual number of retrieved metadata records
+                  per feature. Differences in counts reflect variation in the
+                  completeness of metadata annotations across sources.
                 </p>
               </div>
             </div>
