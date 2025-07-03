@@ -61,7 +61,7 @@
           <div
             class="my-4 p-4 max-full bg-white border border-gray-100 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
             <h5 class="text-center mt-6 mb-4 text-2xl font-semibold">
-              Instances Coverage
+              Coverage
             </h5>
             <div class="row">
               <div class="col-lg-8 col-12">
@@ -73,18 +73,17 @@
               </div>
               <div class="col-lg-3 col-12">
                 <p class="mb-2">
-                  <span class="text-primaryOeb-600 text-base">Cumulative distribution of number of sources where
-                    individual
-                    instances are found (yellow).</span>
+                  <span class="text-primaryOeb-600 text-base">Cumulative distribution of the number of sources in which
+                    metadata for individual software are found (yellow).</span>
                 </p>
                 <p class="mb-5">
-                  Stacked bars represent the contribution of each source in terms
-                  of number of metadata entries. Sources used to discover software
-                  and build an initial collection of instances are coloured in
-                  shades of green, while those used to further enrich the initial
-                  collection are depicted in shades of red. OpenEBench, as an
-                  exception, is coloured in red while belonging to the latter
-                  category.
+                  The stacked bars show the contribution of each source to the
+                  total number of software metadata records. Sources used to
+                  discover software and build the initial metadata collection are
+                  shown in shades of green, while those used to enrich this
+                  collection are shown in shades of red. OpenEBench is an
+                  exception: although it belongs to the latter group, it is also
+                  displayed in red.
                 </p>
               </div>
             </div>
@@ -96,7 +95,7 @@
           <div
             class="pb-5 my-4 p-4 w-100 bg-white border border-gray-100 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 d-flex flex-column">
             <h5 class="text-center mt-6 mb-4 text-2xl font-semibold">
-              (Meta)data Completeness
+              (Meta)data completeness
             </h5>
             <div class="row flex-grow-1">
               <div class="col-12">
@@ -107,11 +106,11 @@
               <div class="col-12 flex-grow-1">
                 <p class="mb-2 mt-2">
                   <span class="text-primaryOeb-600 text-base">Distribution of number of features collected on individual
-                    instances.</span>
+                    software.</span>
                 </p>
                 <p class="mb-2">
-                  The higher the number of features for an instance, the more
-                  information gathered about that instance.
+                  The higher the number of features for a software, the more
+								  information gathered about that software.
                 </p>
               </div>
             </div>
@@ -123,7 +122,7 @@
           <div
             class="pb-5 my-4 p-4 w-100 bg-white border border-gray-100 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 d-flex flex-column">
             <h5 class="text-center mt-6 mb-4 text-2xl font-semibold">
-              Types Of Software
+              Types of software
             </h5>
             <div class="row flex-grow-1">
               <div class="col-12">
@@ -133,14 +132,12 @@
               </div>
               <div class="col-12 flex-grow-1">
                 <p class="mb-2 mt-2">
-                  <span class="text-primaryOeb-600 text-base">Distribution of the types of instances in the
+                  <span class="text-primaryOeb-600 text-base">Distribution of the types of software in the
                     collection.</span>
                 </p>
                 <p class="mb-2">
                   Research Software may be implemented or accessed in different
-                  ways via web interface, REST API, command line, workflow, etc.
-                  Current types captured are (<i>cmd, web, db, app, lib, ontology, workflow, plugin, sparql,
-                    soap, script, rest, workbench, suite</i>).
+								  ways via web interface, REST API, command line, workflow, etc.
                 </p>
               </div>
             </div>
