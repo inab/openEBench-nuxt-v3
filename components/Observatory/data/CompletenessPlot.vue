@@ -13,9 +13,9 @@ import { activeTabIndex } from '@/components/Common/state.js';
 const dataStore = useData();
 const observatoryStore = useObservatory();
 
+// Getters
 const completeness = computed(() => dataStore.completeness);
 const completenessControl = computed(() => dataStore.completenessControl);
-
 const currentCollection = computed(() => observatoryStore.getCurrentCollection);
 
 const layout = {
@@ -37,7 +37,7 @@ const layout = {
   },
   xaxis2: {
     title: 'Number of features',
-    tickformat: '%{x} ',
+    tickformat: '%{x}',
     ticksuffix: ' features',
     tickmode: 'array',
     showticksuffix: false,
