@@ -21,11 +21,10 @@
           <USkeleton class="h-52 mb-3 mx-10" />
         </div>
         <div v-else>
-          <DependenciesPlot v-if="checkData.value" :data="dependenciesData" />
+          <DependenciesPlot v-if="checkData.value" :data="dependenciesData.data" />
           <noDataAvailable info="dependencies" v-else />
         </div>
       </div>
-  
       <p class="mt-2 text-center mb-2 ml-8">
         <span class="text-sm highlight">
           Top dependencies used in research software tools in the Life Sciences.
@@ -52,14 +51,14 @@
   
   // Data
   const dependenciesData = computed(() => trendsStore.Dependencies || []);
-  const isDependenciesLoading = computed(() => trendsStore.Loaded.dependencies);
+  const isDependenciesLoading = computed(() => trendsStore.unLoaded.dependencies);
   
   const checkData = ref(false);
   
   // On mount, trigger data load
   onMounted(async () => {
-    await trendsStore.getDependencies();
-    checkData.value = computed(() => dependenciesData.value.length > 0);
+    trendsStore.getDependencies();
+    checkData.value = computed(() => dependenciesData !== []);
   });
   </script>
   

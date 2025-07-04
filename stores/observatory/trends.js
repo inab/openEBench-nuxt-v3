@@ -111,26 +111,8 @@ export const useTrends = defineStore("trends", {
     getPublications() {
       this.fetchData("publications", "publications_journals_IF");
     },
-    async getDependencies() {
-      // Mock data
-      const names = [
-        "numpy", "pandas", "requests", "matplotlib", "scikit-learn",
-        "flask", "tensorflow", "beautifulsoup4", "scipy", "django",
-        "seaborn", "sqlalchemy", "pytest", "jupyter", "torch"
-      ];
-    
-      const counts = [
-        240, 200, 185, 160, 150, 140, 130, 120,
-        110, 100, 95, 90, 85, 80, 75
-      ];
-    
-      const mockedDependencies = names.map((name, index) => ({
-        name,
-        count: counts[index] || 0
-      }));
-    
-      // Store data and mark as loaded
-      this.setData("dependencies", mockedDependencies);
+    getDependencies() {
+      this.fetchData("dependencies", "dependencies_count")
     },
     async getDocumentation() {
       // Mock data based on user example

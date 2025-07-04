@@ -13,16 +13,14 @@
   const plotContainer = ref<HTMLElement | null>(null);
   
   const drawPlot = () => {
-    if (!plotContainer.value || !props.data.length) return;
   
-    const names = props.data.map((d) => d.name);
-    const counts = props.data.map((d) => d.count);
+    const names = Object.keys(props.data);    // ["r-base", "methods", "stats", ...]
+    const counts = Object.values(props.data); // [3992, 1931, 1642, ...]
   
-    // Lollipop lines
-    const sticks = props.data.map((d) => ({
+    const sticks = Object.entries(props.data).map(([name, count]) => ({
       type: 'scatter',
-      x: [0, d.count],
-      y: [d.name, d.name],
+      x: [0, count],
+      y: [name, name],
       mode: 'lines',
       line: {
         color: '#95b7de',
@@ -31,7 +29,7 @@
       hoverinfo: 'none',
       showlegend: false,
     }));
-  
+      
     // Dots with labels
     const dots = {
       type: 'scatter',
