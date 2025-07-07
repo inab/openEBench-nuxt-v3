@@ -88,10 +88,6 @@ export const useFairness = defineStore("fairness", {
           return;
         }
 
-    		console.log('FAIRscores')
-    		console.log(FAIRscoresData.value.data)
-
-
         const results = {
           F: { fair_scores: FAIRscoresData.value.data.F, labels: labels.F, id: 'F' },
           A: { fair_scores: FAIRscoresData.value.data.A, labels: labels.A, id: 'A' },
