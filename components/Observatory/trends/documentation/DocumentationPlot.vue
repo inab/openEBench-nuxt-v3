@@ -1,5 +1,5 @@
 <template>
-  <div ref="plotContainer" class="w-full h-[700px]"></div>
+  <div ref="plotContainer" class="w-full"></div>
 </template>
 
 <script setup lang="ts">
@@ -10,13 +10,12 @@ import Plotly from 'plotly.js-dist';
 type DocFormat = 'web' | 'downloadable' | 'github' | 'gitlab' | 'total';
 
 const props = defineProps<{
-  data: Array<{
-    type: string;
-    web: number;
-    downloadable: number;
-    github: number;
-    gitlab: number;
-    total: number;
+  data: Record<string, {
+    web?: number;
+    downloadable?: number;
+    github?: number;
+    gitlab?: number;
+    total?: number;
   }>;
 }>();
 
@@ -33,12 +32,22 @@ const colorMap: Record<DocFormat, string> = {
 const formats: DocFormat[] = ['web', 'downloadable', 'github', 'gitlab', 'total'];
 
 const drawPlot = () => {
-  if (!plotContainer.value || !props.data.length) return;
+  if (!props.data || Object.keys(props.data).length === 0) {
+    console.warn("No data to plot.");
+    return;
+  }
 
-  const docTypes = props.data.map(d => d.type);
+  if (!plotContainer.value) {
+    console.warn("Plot container is not mounted.");
+    return;
+  }
+
+  const y = Object.keys(props.data);
+  const x = y.map(type => props.data[type]);
+
   const traces = formats.map(fmt => ({
-    y: docTypes,
-    x: props.data.map(d => d[fmt]),
+    y,
+    x: x.map(d => d?.[fmt] ?? 0),  // prevent crash if d is undefined
     name: fmt,
     type: 'bar',
     orientation: 'h',
@@ -60,9 +69,9 @@ const drawPlot = () => {
       l: 250,
       r: 40,
       t: 60,
-      b: 60
+      b: 100
     },
-    height: 700
+    height: 50 + y.length * 40 // dynamic height if needed
   };
 
   Plotly.newPlot(plotContainer.value, traces, layout, { responsive: true });

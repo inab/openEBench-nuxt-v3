@@ -114,27 +114,8 @@ export const useTrends = defineStore("trends", {
     getDependencies() {
       this.fetchData("dependencies", "dependencies_count")
     },
-    async getDocumentation() {
-      // Mock data based on user example
-      const doc_types = [
-        "general", "readme", "installation instructions",
-        "API specification", "manual", "FAQ", "tutorial"
-      ];
-      const doc_format_counts = {
-        "general":        {"web": 10, "downloadable": 5, "github": 8, "gitlab": 2, "total": 15},
-        "readme":         {"web": 3, "downloadable": 0, "github": 40, "gitlab": 2, "total": 42},
-        "installation instructions": {"web": 6, "downloadable": 4, "github": 10, "gitlab": 5, "total": 17},
-        "API specification": {"web": 5, "downloadable": 2, "github": 3, "gitlab": 1, "total": 7},
-        "manual":         {"web": 4, "downloadable": 10, "github": 0, "gitlab": 0, "total": 11},
-        "FAQ":            {"web": 6, "downloadable": 1, "github": 0, "gitlab": 0, "total": 6},
-        "tutorial":       {"web": 2, "downloadable": 3, "github": 0, "gitlab": 4, "total": 6}
-      };
-      // Transform to array of objects for easier plotting
-      const documentation = doc_types.map(type => ({
-        type,
-        ...doc_format_counts[type]
-      }));
-      this.setData("documentation", documentation);
+    getDocumentation() {
+      this.fetchData("documentation", "documentation")
     },
     async getFormats() {
       // Mock data: sample from the JS files

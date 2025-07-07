@@ -4,7 +4,7 @@
       <PlotWOptions v-if="checkData.value" class="copy-icon" :items="dialogItems" :currentCollection="current_collection" />
   
       <!-- Header -->
-      <div class="text-center mt-4">
+      <div class="text-center mt-4 mb-0">
         <h6 class="text-2xl font-semibold">Dependencies</h6>
         <p class="card-content-vs text-sm mt-4 text-gray-700" style="line-height: 1.8">
           Software packages often depend on other tools or libraries to function properly.
@@ -16,7 +16,7 @@
         </p>
       </div>
   
-      <div class="mt-4 mb-2">
+      <div class="mt-0 mb-2">
         <div v-if="isDependenciesLoading">
           <USkeleton class="h-52 mb-3 mx-10" />
         </div>
