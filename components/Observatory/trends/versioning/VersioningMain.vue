@@ -20,10 +20,10 @@
             <VersioningPlot v-else :labels="dataVersioningLabels" :values="dataVersioningValues" />
         </div>
         <p class="mt-4 mb-2 ml-8">
-            <span class="text-sm highlight"> Instances using semantics versionings</span>
+            <span class="text-sm highlight"> Software using semantic versioning</span>
         </p>
         <!-- Alert -->
-        <div class="flex items-center mt-8 mx-4 p-2 border-l-4 rounded bg-blue-50 border-blue-700">
+        <div class="flex items-center mt-8 mx-4 p-2 border-l-4 rounded border-blue-700">
             <!-- Icon -->
             <UIcon name="i-material-symbols-menu-book-rounded" class="w-7 h-7 icon" />
             <!-- Text -->
