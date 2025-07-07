@@ -55,7 +55,7 @@ dataStore.getTotalCount();
 dataStore.getCountsPerSource();
 
 // Computed
-const totalC = computed(() => dataStore.totalCount);
+const totalC = computed(() => dataStore.totalCount ?? 0);
 const cardsC = computed(() => dataStore.countsPerSource);
 
 const currentCollection = computed(() => observatoryStore.getCurrentCollection);

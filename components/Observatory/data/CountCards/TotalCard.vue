@@ -9,7 +9,7 @@
 <script setup lang="ts">
 // PROPS
 const props = defineProps<{
-  count: number,
+  count: null,
 }>();
 
 function formatNumber(value:number) {
