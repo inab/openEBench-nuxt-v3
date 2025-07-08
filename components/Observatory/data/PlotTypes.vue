@@ -3,28 +3,19 @@
 </template>
 <script setup lang="ts">
 import { computed, onMounted, watch, nextTick } from 'vue';
+import { useData } from '@/stores/observatory/data';
+import { useObservatory } from '@/stores/observatory/index.js';
 import Plotly from 'plotly.js-dist';
 import { activeTabIndex } from '@/components/Common/state.js';
 
-// Datos reactivos
-const data_types = {
-  cmd: 17170,
-  script: 716,
-  lib: 8191,
-  db: 1951,
-  unknown: 3087,
-  web: 6040,
-  workflow: 403,
-  app: 1779,
-  rest: 301,
-  plugin: 212,
-  soap: 565,
-  undefined: 2971,
-  ontology: 35,
-  suite: 332,
-  workbench: 223,
-  sparql: 11,
-};
+// Store
+const dataStore = useData();
+const observatoryStore = useObservatory();
+
+// Getters
+const types_data = computed(() => dataStore.types);
+const types_data_control = computed(() => dataStore.typesControl);
+const currentCollection = computed(() => observatoryStore.getCurrentCollection);
 
 const layout = {
   yaxis: {
@@ -32,13 +23,22 @@ const layout = {
     categoryorder: 'total ascending',
   },
   xaxis: {
-    title: 'Number of instances',
+    title: 'Percentage of software',
+    tickformat: ',.0%',
   },
-  showlegend: false,
   margin: {
     autoexpand: true,
     t: 0,
+    l: 130,
   },
+  legend: {
+    x: 0.8,
+    y: 1.1,
+    xanchor: 'center',
+    yanchor: 'top',
+    orientation: 'h',
+  },
+  hovermode: 'y unified',
 };
 
 const config = {
@@ -47,38 +47,79 @@ const config = {
 };
 
 // Methods
-function buildData() {
+function buildData(typesData) {
+
+  const typeLabels = {
+    cmd: 'Command-line tool',
+    web: 'Web application',
+    lib: 'Library',
+    app: 'Application',
+    db: 'Database',
+    undefined: 'Undefined',
+    soap: 'SOAP service',
+    rest: 'REST API',
+    plugin: 'Plugin',
+    suite: 'Software suite',
+    script: 'Script',
+    workbench: 'Workbench',
+    workflow: 'Workflow',
+    sparql: 'SPARQL endpoint',
+    ontology: 'Ontology',
+  };
+
   const newValues = {
     values: [],
     types: [],
   };
-  for (const [key, value] of Object.entries(data_types)) {
-    newValues.types.push(key);
+
+  for (const [key, value] of Object.entries(typesData)) {
+    const label = typeLabels[key] || key; // fallback to key if no mapping exists
+    newValues.types.push(label + '  ');
     newValues.values.push(value);
   }
+
   return newValues;
 }
 
 function updatePlot() {
-  const data = buildData();
+  const data = buildData(types_data.value);
+  const dataControl = buildData(types_data_control.value);
 
-  const labels = data.types;
-  const newLabels = labels.map((lab) => lab + '   ');
-
+  // 
   const trace = {
     x: data.values,
-    y: newLabels,
+    y: data.types,
     type: 'bar',
     orientation: 'h',
     marker: {
-      color: '#ebd471',
+      color: '#6fc765',
     },
-    hovertemplate: '%{y} <br> %{x:,d} instances <extra></extra>',
+    hovertemplate: '"%{x}" of software <extra></extra>',
+		name: currentCollection.value,
   };
+
+  // 
+  const traceControl = {
+    x: dataControl.values,
+    y: dataControl.types,
+    type: 'bar',
+    orientation: 'h',
+    marker: {
+      color: 'lightgrey',
+    },
+    hovertemplate: '"%{x}" of software <extra></extra>',
+    name: 'All tools',
+  };
+
+  const traces = [];
+  if (currentCollection.value !== 'tools') {
+    traces.push(traceControl);
+  }
+  traces.push(trace)
 
   const plotElement = document.getElementById('plot_23');
   if (plotElement) {
-    Plotly.newPlot(plotElement, [trace], layout, config);
+    Plotly.newPlot(plotElement, traces, layout, config);
   } else {
     console.error('No DOM element with id "plot_23" exists on the page.');
   }

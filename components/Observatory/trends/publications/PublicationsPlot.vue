@@ -9,17 +9,14 @@ import { activeTabIndex } from '@/components/Common/state.js';
 
 // Define props with TypeScript types
 const props = defineProps<{
-    xValues: string[];
-    yPercentageValues: number[];
-    yIFValues: number[];
-    textPercentageTools: number[];
-    textPercentageJournals: number[];
-    title?: string;
-    height?: number;
+  tools: object;
+  publications: object;
+  citations: object;
+  title?: string;
+  height?: number;
 }>();
 
 // Set default values for optional props
-const { title = '', height = 500 } = props;
 
 // Define layout and configuration objects
 const layout: Partial<Plotly.Layout> = {
@@ -29,28 +26,29 @@ const layout: Partial<Plotly.Layout> = {
         roworder: 'top to bottom',
     },
     yaxis: {
-        title: { text: 'Percentage', standoff: 15 },
-        tickformat: '.2%',
-    },
-    xaxis: {
-        title: '',
+        title: 'Number of publications',
     },
     yaxis2: {
-        title: 'Impact Factor (five years)',
+        title: 'Citations (last 3 years)',
+        side: 'left',
+        showgrid: false,
+        range: [0, props.citations.y[0] * 1.2],
+    },
+    xaxis: {
+        title: 'journal',
     },
     autosize: true,
     margin: {
         autoexpand: true,
         t: 10,
         l: 90
-
     },
     hoverlabel: {
         bgcolor: '#FFF',
     },
-    height,
+    height: props.height ?? 500,
     title: {
-        text: title,
+        text: props.title || '',
         font: {
             size: 16,
         },
@@ -64,61 +62,47 @@ const config: Partial<Plotly.Config> = {
 
 // Function to initialize the plot
 const plotChart = () => {
-    const tracePercentage: Partial<Plotly.PlotData> = {
-        x: props.xValues,
-        y: props.yPercentageValues,
+
+    const tracePublications : Partial<Plotly.PlotData> = {
+        x: props.publications.x,
+        y: props.publications.y,
         type: 'scatter',
         mode: 'lines+markers',
-        name: 'Percentage of publications',
+        name: 'Publications',
         marker: {
-            color: '#15264a',
+            color: '#0e3487',
             size: 6,
         },
         line: {
-            color: '#15264a',
+            color: '#0e3487',
             width: 1,
+            dash: 'dash',
         },
-        hovertemplate:
-            '%{text} publications about tools out of %{customdata} total publications <extra></extra>',
-        text: props.textPercentageTools,
-        customdata: props.textPercentageJournals,
-        textposition: [
-            'center right',
-            'bottom left',
-            'bottom left',
-            'bottom center',
-            'top center',
-            'bottom center',
-            'top center',
-            'bottom center',
-            'top center',
-            'top center',
-        ],
+        hovertemplate: '%{y} publications<extra></extra>',
         xaxis: 'x',
-        yaxis: 'y1',
+        yaxis: 'y',
         showlegend: false,
-    };
+    }
 
-    const traceIFTools: Partial<Plotly.PlotData> = {
-        x: props.xValues,
-        y: props.yIFValues,
-        name: 'Tools publications',
+    const traceCitations : Partial<Plotly.PlotData> = {
+        x: props.citations.x,
+        y: props.citations.y,
+        name: 'Citation',
         marker: {
-            color: '#eb9b34',
+            color: '#ff213f',
             size: 6,
         },
         line: {
-            color: '#eb9b34',
+            color: '#ff213f',
             width: 1,
         },
-        hovertemplate:
-            'Tool publications in %{x} <br> Impact factor: %{y:.2f} <extra></extra>',
+        hovertemplate: '%{y} citations in the last 3 years <extra></extra>',
         xaxis: 'x',
         yaxis: 'y2',
         showlegend: false,
-    };
-
-    const data: Partial<Plotly.PlotData>[] = [tracePercentage, traceIFTools];
+    }
+    
+    const data: Partial<Plotly.PlotData>[] = [tracePublications, traceCitations];
 
     Plotly.newPlot('plot_5', data, layout, config);
 };

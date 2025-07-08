@@ -64,7 +64,7 @@ export const useObservatory = defineStore("observatory", {
         image: "Logo_3D-Bioinfo.png",
       },
       {
-        id: "eucaim",
+        id: "EUCAIM",
         title: "EUCAIM",
         subtitle: "EUropean Federation for CAncer IMages",
         description:

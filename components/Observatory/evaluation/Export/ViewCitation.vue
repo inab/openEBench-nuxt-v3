@@ -31,11 +31,11 @@
       class="fixed z-30 inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex center-text items-center justify-center">
       <div :class="['relative mx-auto p-4 border w-11/12 md:w-2/3 shadow-lg rounded-md bg-white', dialogAnimation] ">
         <h5 class="mb-4">Preview and Edit</h5>
-        <UTextarea 
+        <UTextarea
+          v-model="yamlContent"
           color="primary" 
           variant="outline"
           autoresize
-          :model-value="yamlContent" 
           resize
           class="border-1 p-2 textTextarea rounded-md focus-within:ring-primaryOeb-500 focus-within:border-primaryOeb-500 focus-within:text-primaryOeb-500 max-h-[50vh] mb-3 relative"
         >
@@ -64,7 +64,7 @@ import { useMetadataStore } from '@/stores/observatory/evaluation/metadata';
 const metadataStore = useMetadataStore();
 
 const props = defineProps<{
-  citation: object;
+  citation: any;
 }>();
 
 const alert = ref({
@@ -74,7 +74,7 @@ const alert = ref({
   description: 'You can review and make changes to the metadata before saving. Click "Preview" to see the current metadata in CFF format.',
   iconText: 'Preview',
 });
-const yamlContent = ref(props.metadata)
+const yamlContent = ref(''); 
 const dialog = ref(false);
 const dialogAnimation = ref('an1');
 
@@ -90,15 +90,32 @@ const closeDialog = () => {
   }, 10);
 }
 
+// Discard changes
 const discardChanges = () => {
-  yamlContent.value = props.citation
+  yamlContent.value = yaml.dump(props.citation);
   dialog.value = false;
 };
 
+// Save changes
 const saveYaml = () => {
-  metadataStore.updateToolMetadataCFF(yaml.load(yamlContent.value));
-  dialog.value = false;
+  try {
+    const parsed = yaml.load(yamlContent.value);
+    metadataStore.updateToolMetadataCFF(parsed);
+    dialog.value = false;
+  } catch (err) {
+    console.error('Error parsing YAML:', err);
+  }
 };
+
+// Converts object to YAML when component is mounted or citation changes
+watch(() => props.citation, (newVal) => {
+  if (newVal) {
+    let rawYaml = yaml.dump(newVal);
+    // Remove first line break ONLY if it follows an ‘|’.
+    yamlContent.value = rawYaml.replace(/^\|\n/, '');
+  }
+}, { immediate: true });
+
 </script>
 <style scoped>
 .textTextarea {

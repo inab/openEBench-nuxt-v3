@@ -47,6 +47,8 @@ export const useExport = defineStore('export', {
     },
 
     async makePullRequest(payload) {
+      const { $githubapp } = useNuxtApp();
+
       const URL = '/metadata/pull';
       console.log('taget_brach: ', payload.branch);
       const parameters = {
@@ -64,17 +66,17 @@ export const useExport = defineStore('export', {
         method: 'POST',
         body: parameters
       });
-      console.debug(response);
+      console.debug(response)
 
       if (response.code === 200){
         this.setOkURL(response.url)
         this.setDialogPRok(true)
-        this.setDialogPR(true)
+        this.setDialogPR(false)
         this.setDialogAppInstall(false)
       }else{
         this.setOkURL(response.message)
         this.setDialogPRok(true)
-        this.setDialogPR(true)
+        this.setDialogPR(false)
         this.setDialogAppInstall(false)
       }
     },

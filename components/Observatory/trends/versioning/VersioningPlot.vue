@@ -16,7 +16,7 @@ const props = defineProps<{
 }>();
 
 // Set defaults for optional props
-const { title = '', height = 280 } = props;
+const { title = '', height = 250 } = props;
 
 // Define layout and config as reactive objects
 const layout = {
@@ -60,10 +60,10 @@ function plotChart() {
         direction: 'clockwise',
         sort: false,
         marker: {
-            colors: ['#15264a', '#4f71b8', '#bdc6d9'],
+            colors: ['#41388c', '#a29cd6', '#c9c5e3'],
         },
         hovertemplate:
-            '<b>%{label}</b><br>%{value:,d} instances<br>%{percent:.0%} of all instances<extra></extra>',
+            '<b>%{label}</b><br>%{value:,d} software<br>%{percent:.0%} of all software<extra></extra>',
     };
     Plotly.newPlot('plot_3', [trace], layout, config);
 }
@@ -74,5 +74,3 @@ watch(activeTabIndex, async () => {
 });
 
 </script>
-
-<style scoped></style>

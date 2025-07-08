@@ -37,17 +37,8 @@ const labs = {
 };
 
 const layout = {
-    legend: {
-        orientation: 'h', // Horizontal
-        x: 0.5,
-        xanchor: 'center',
-        y: 1.2, // Move the legend above the chart
-    },
     yaxis: {
-        title: {
-            text: 'Number of instances',
-            standoff: 15,
-        },
+        title: 'Number of software',
     },
     xaxis: {
         title: 'License Family/Type',
@@ -55,8 +46,8 @@ const layout = {
     },
     hoverlabel: { bgcolor: '#FFF' },
     autosize: true,
-    height,
-    margin: { b: 70, t: 40, r: 40, l: 60 },
+    height: height,
+    margin: { b: 70, t: 40, r: 0 },
     title: { text: title },
 };
 
@@ -81,7 +72,7 @@ function buildTrace(
         name,
         customdata: y.map((c) => (c / y.reduce((a, b) => a + b)) * 100),
         hovertemplate:
-            '%{x} <br> %{y:,d} instances <br> %{customdata:.1f}% of OpenSource <extra></extra>',
+            '%{x} <br> %{y:,d} software <br> %{customdata:.1f}% of OpenSource <extra></extra>',
         marker: {
             color,
             opacity: 0.9,
@@ -99,7 +90,7 @@ const trace1 = computed(() =>
         props.licenses_copyleft,
         props.counts_copyleft,
         'Copyleft',
-        '#eb9b34',
+        '#233757',
         '#ffffff',
         labs
     )
@@ -110,7 +101,7 @@ const trace2 = computed(() =>
         props.licenses_permissive,
         props.counts_permissive,
         'Permissive',
-        '#ffd299',
+        '#568bdb',
         '#ffffff',
         labs
     )
@@ -121,7 +112,7 @@ const trace3 = computed(() =>
         props.licenses_data,
         props.counts_data,
         'Data',
-        '#bfbfbf',
+        '#a2c3f5',
         '#ffffff',
         labs
     )

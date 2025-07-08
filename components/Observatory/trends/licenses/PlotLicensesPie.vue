@@ -18,7 +18,7 @@ const props = defineProps<{
 }>();
 
 // Defaults for optional props
-const { title = '', height = 280 } = props;
+const { title = '', height = 300 } = props;
 
 // Define layout and config as reactive objects
 const layout = {
@@ -26,7 +26,7 @@ const layout = {
     xaxis: { title: '' },
     height: height,
     autosize: true,
-    margin: { b: 30, t: 10, r: 50, l: 90 },
+    margin: { b: 40, t: 0, r: 0, l: 0 },
     title: { text: title, x: 0.5, xanchor: 'center', yanchor: 'top' },
     hoverlabel: { bgcolor: '#FFF' },
 };
@@ -59,12 +59,12 @@ function plotChart() {
         rotation: 152,
         marker: {
             autocolorscale: false,
-            colors: ['#ffffff', '#e0e0e0', '#273e6e', '#f5971b', '#faebbe', '#3a5ba1'],
+            colors: ['#ffffff', '#e0e0e0', '#649e64', '#f5971b', '#faebbe', '#87c787',],
         },
         text: props.text,
         hovertemplate:
             '<b>%{label}</b><br>' +
-            '%{value:,d} instances<br>' +
+            '%{value:,d} software<br>' +
             '%{percentParent:.1%} of %{text}<extra></extra>',
     };
     Plotly.newPlot('plot_1', [trace], layout, config);
