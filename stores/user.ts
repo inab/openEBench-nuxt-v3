@@ -136,13 +136,14 @@ export const useUser = defineStore("user", {
         },
       );
       const data = await response.json();
+      console.log("data: " , data)
 
       if (!data) {
         [];
       }
       return data.map((d: any) => ({
         id: d._id,
-        name: d._id,
+        name: d.givenName + " " + d.surname,
       }));
     },
 

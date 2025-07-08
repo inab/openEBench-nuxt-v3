@@ -100,7 +100,7 @@ const HEADER_ITEM = [
   },
 ];
 
-const token = computed(() => data.value?.accessToken || ""); // ← Ahora reacciona a cambios en `data.value`
+const token = computed(() => data.value?.accessToken || "");
 
 const routeArray: Array = [
   { label: "Dashboard", isActualRoute: false, route: "/dashboard" },

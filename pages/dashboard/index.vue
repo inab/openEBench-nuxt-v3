@@ -30,7 +30,95 @@
               <div
                 class="dashboard__body__card__header d-flex justify-content-between"
               >
-                Projects & Communities
+                Participant submissions
+              </div>
+            </template>
+            <div class="row">
+              <div class="col-6">
+                <img
+                  src="assets/images/dashboard/contribute.jpg"
+                  alt="User submissions"
+                  class=""
+                />
+              </div>
+              <div class="col-6 col-separator">
+                <div class="">
+                  Explore your submitted content, check approvals, and find
+                  resources for future contributions.
+                </div>
+                <div class="dashboard__body__card__link">
+                  <button class="ripple custom-button-primary">
+                    <NuxtLink
+                      to="/dashboard/submission"
+                      class="dashboard-link"
+                      >View submission</NuxtLink
+                    >
+                  </button>
+                </div>
+              </div>
+            </div>
+          </UCard>
+        </div>
+        <div class="col-6">
+          <UCard
+            class="dashboard__body__card"
+            :ui="{
+              header: {
+                base: '',
+                background: '',
+                padding: 'px-4 py-3 sm:px-6',
+              },
+            }"
+          >
+            <template #header>
+              <div
+                class="dashboard__body__card__header d-flex justify-content-between"
+              >
+                Contribute to a community
+              </div>
+            </template>
+            <div class="row">
+              <div class="col-6">
+                <img
+                  src="assets/images/dashboard/contribute_2.jpg"
+                  alt="User contribute"
+                  class=""
+                />
+              </div>
+              <div class="col-6 col-separator">
+                <div class="">
+                  Become an active contributor! Apply to join a community and
+                  help drive innovation in software evaluation.
+                </div>
+                <div class="dashboard__body__card__link">
+                  <button class="ripple custom-button-primary">
+                    <NuxtLink to="/dashboard/contribute" class="dashboard-link"
+                      >Contribute</NuxtLink
+                    >
+                  </button>
+                </div>
+              </div>
+            </div>
+          </UCard>
+        </div>
+      </div>
+      <div class="dashboard__body row mb-5">
+        <div class="col-6">
+          <UCard
+            class="dashboard__body__card"
+            :ui="{
+              header: {
+                base: '',
+                background: '',
+                padding: 'px-4 py-3 sm:px-6',
+              },
+            }"
+          >
+            <template #header>
+              <div
+                class="dashboard__body__card__header d-flex justify-content-between"
+              >
+                Communities
                 <span class="text-gray-500">Total: {{ totalCommunities }}</span>
               </div>
             </template>
@@ -75,27 +163,29 @@
               <div
                 class="dashboard__body__card__header d-flex justify-content-between"
               >
-                Contacts
-                <span class="text-gray-500">Total: {{ totalContacts }}</span>
+                Communications
+                <span class="text-gray-500">Total: 2</span>
               </div>
             </template>
             <div class="row">
-              <div class="col-5">
+              <div class="col-6">
                 <img
-                  src="assets/images/dashboard/contacts.jpg"
-                  alt="Metrics image"
+                  src="assets/images/dashboard/notifications.jpg"
+                  alt="User notification"
                   class=""
                 />
               </div>
-              <div class="col-7 col-separator">
-                <div class="w-100">
-                  Access a registry of platform user contact information. Search
-                  and filter by various criteria.
+              <div class="col-6 col-separator">
+                <div class="">
+                  Here you can find information about your communications,
+                  including available tools and channels to stay connected.
                 </div>
-                <div class="dashboard__body__card__link pt-5">
+                <div class="dashboard__body__card__link">
                   <button class="ripple custom-button-primary">
-                    <NuxtLink to="/dashboard/contacts" class="dashboard-link"
-                      >Contacts</NuxtLink
+                    <NuxtLink
+                      to="/dashboard/communications"
+                      class="dashboard-link"
+                      >See Communications</NuxtLink
                     >
                   </button>
                 </div>
@@ -339,7 +429,7 @@ async function countTotalCommunities() {
   }
 }
 
-async function countTotalContacts() {  
+async function countTotalContacts() {
   try {
     const response = await $fetch(
       `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Contact`,
@@ -348,7 +438,7 @@ async function countTotalContacts() {
           Authorization: `Bearer ${token.value}`,
           Accept: "application/json",
         },
-        method: "GET"
+        method: "GET",
       },
     );
 
@@ -395,17 +485,21 @@ async function getMetricsByType(metrics) {
 //   //countTotalCommunities();
 //   //countTotalContacts();
 //   }
-  
+
 // });
 
-watch(token, (newValue) => {
-  if (newValue) {
-    countTotalCommunities();
-    countTotalContacts();
-    countTotalTools();
-    countTotalMetrics();
-  }
-}, { immediate: true });
+watch(
+  token,
+  (newValue) => {
+    if (newValue) {
+      countTotalCommunities();
+      countTotalContacts();
+      countTotalTools();
+      countTotalMetrics();
+    }
+  },
+  { immediate: true },
+);
 </script>
 
 <style lang="scss">

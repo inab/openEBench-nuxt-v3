@@ -240,7 +240,7 @@
                                   <div class="input-wrapper big d-flex">
                                     <USelectMenu
                                       :ref="`contact_${index}`"
-                                      v-model="localContacts[index]"
+                                      v-model="localContacts[index].id"
                                       class="w-full lg:w-100"
                                       searchable
                                       selected-icon="i-heroicons-check-16-solid"
@@ -250,6 +250,11 @@
                                       option-attribute="name"
                                     >
                                     </USelectMenu>
+                                    <USelect
+                                      v-model="localContacts[index].role"
+                                      :options="rolesObj"
+                                      class="w-48"
+                                    />
                                     <button
                                       class="btn-delete-input"
                                       type="button"
@@ -366,7 +371,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onMounted, watch } from "vue";
+import { computed, ref, onMounted, watch, nextTick } from "vue";
 import { useUser } from "@/stores/user.ts";
 import type { Event } from "@/types/events";
 import type { Challenge } from "@/types/challenge";
@@ -403,15 +408,18 @@ const props = defineProps<{
   challenges: Array<Challenge>;
   isLoadinChallenges: boolean;
   tabIndex: string;
+  eventContacts: Array<any>;
 }>();
 
-console.log("eventPrivileges: ", props.eventPrivileges);
+console.log(props.eventContacts);
 
 const dialogTitle = ref("");
 const dialogType = ref("yesno");
 const isDialogOpened = ref(false);
 const dialogText = ref("");
 const selectedTab = ref(props.tabIndex);
+const runtimeConfig = useRuntimeConfig();
+
 const items = [
   {
     key: "summary",
@@ -475,7 +483,12 @@ const errors = ref<string[]>([]);
 const oks = ref<string>("");
 const contactsData = ref<string[]>([]);
 const localReferences = ref<string[]>([]);
-const localContacts = ref<string[]>([]);
+const localContacts = ref<
+  {
+    id: string;
+    role: string;
+  }[]
+>([]);
 const localAutomated = ref<boolean>(false);
 const localDates = ref({
   dates: {
@@ -485,6 +498,11 @@ const localDates = ref({
     modification: new Date(),
   },
 });
+const rolesObj = ref([
+  { label: "Owner", value: "owner" },
+  { label: "Manager", value: "manager" },
+  { label: "Contributor", value: "contributor" },
+]);
 
 const eventData = computed(() => {
   state.value = {
@@ -525,7 +543,10 @@ if (props.eventObj && props.eventObj.references) {
 if (props.eventObj && props.eventObj.bench_contact_ids) {
   localContacts.value =
     props.eventObj.bench_contact_ids.map((contact: string) => {
-      return contact;
+      return {
+        id: contact,
+        role: "owner" as const,
+      };
     }) || [];
 }
 
@@ -548,6 +569,26 @@ if (props.tabIndex) {
 
 function onAddElement(array: string[]) {
   array.push("");
+}
+
+function onAddContact(
+  contact: {
+    id: string;
+    role: string;
+  },
+  arrayRef?: HTMLInputElement[],
+) {
+  contact.push({
+    id: "",
+    role: rolesObj.value[0].value,
+  });
+  nextTick(() => {
+    const lastElementIndex = array.length - 1;
+    const inputElement = arrayRef ? arrayRef[lastElementIndex] : null;
+    if (inputElement) {
+      inputElement.focus();
+    }
+  });
 }
 
 const elementToDelete = ref<{ index: number; element: string[] } | null>(null);
@@ -686,7 +727,7 @@ async function updateBenchmarkingEvent() {
 
   try {
     const response = await fetch(
-      `/api/staged/BenchmarkingEvent/${state.value._id}`,
+      `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/BenchmarkingEvent/${state.value._id}`,
       {
         method: "PATCH",
         headers: {
@@ -696,9 +737,6 @@ async function updateBenchmarkingEvent() {
         body: JSON.stringify(body),
       },
     );
-
-    console.log("response: " , response);
-    console.log(JSON.stringify(body));
 
     if (!response.ok) {
       throw new Error("Error in API response");
@@ -744,7 +782,7 @@ async function showOkMessage(msg: string) {
 }
 
 const checkEmptyContacts = computed(() => {
-  return localContacts.value.some((contact: string) => contact === "");
+  return localContacts.value.some((contact: any) => contact.id === "");
 });
 
 const checkEmptyReferences = computed(() => {
@@ -782,20 +820,22 @@ function validateRequiredFields(data: any): string[] {
     }
   });
 
-  if (data["_id"] && !checkIdPattern(data["_id"])) {
-    errorMessages.push(
-      `_id is not in the correct format. Example: <b><i>${state.value.community_id}000000A</i></b>`,
-    );
-  }
-
   if (localContacts.value.length == 0) {
     errorMessages.push(`community_contact_ids cannot be empty`);
   } else {
-    localContacts.value.forEach((contact: string, index: number) => {
-      if (contact.trim() === "") {
-        errorMessages.push(`community_contact_ids  cannot be empty`);
-      }
-    });
+    localContacts.value.forEach(
+      (
+        contact: {
+          id: string;
+          role: string;
+        },
+        index: number,
+      ) => {
+        if (contact.id.trim() === "") {
+          errorMessages.push(`community_contact_ids  cannot be empty`);
+        }
+      },
+    );
   }
 
   if (!state.value.dates.benchmark_start) {
@@ -849,9 +889,12 @@ watch(
   () => props.eventObj,
   (newVal) => {
     if (newVal && newVal.bench_contact_ids) {
-      localContacts.value =
+        localContacts.value =
         newVal.bench_contact_ids.map((contact: string) => {
-          return contact;
+          return {
+            id: contact,
+            role: "owner" as const,
+          };
         }) || [];
     }
     if (newVal && newVal.references) {

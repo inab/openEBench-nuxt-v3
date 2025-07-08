@@ -29,10 +29,17 @@
       <div class="contribute-box">
         <div class="row">
           <div class="col-12">
-            <div class="w-100 p-1 text-gray-500 text-center">
-              I really like what this community is about, and I'm interested in
-              getting involved!
-              <div class="w-100 text-center pt-3">
+            <div class="w-100 p-1 text-gray-500 text-center contribute-block">
+              <img
+                src="assets/images/dashboard/contribute_2.jpg"
+                alt="Contribute image"
+                class="metrics__body__img"
+              />
+              <p>
+                I really like what this community is about, and I'm interested
+                in getting involved!
+              </p>
+              <div class="w-100 text-center">
                 <NuxtLink
                   class="btn-primary hover_effect header-button"
                   :to="'/dashboard/contribute/' + id"
@@ -64,7 +71,6 @@
                 :schema="schema"
                 :state="state"
                 class="space-y-4"
-                @error="onError"
                 @submit="onSubmitCommunity"
               >
                 <div class="w-100 form-card">
@@ -137,7 +143,7 @@
                                 <div class="w-100">
                                   <input
                                     id="id"
-                                    v-model="state._id"
+                                    v-model="state.id"
                                     type="text"
                                     class="form-control custom-entry-input"
                                     placeholder="Community id"
@@ -337,7 +343,7 @@
                                   cheEmptyContacts
                                 "
                                 type="button"
-                                @click="onAddElement(localContacts, itemRefs)"
+                                @click="onAddContact(localContacts, itemRefs)"
                               >
                                 <font-awesome-icon :icon="['fas', 'plus']" />
                               </button>
@@ -355,7 +361,7 @@
                                 <span>{{ index + 1 }}.</span>
                                 <USelectMenu
                                   :ref="`contact_${index}`"
-                                  v-model="localContacts[index]"
+                                  v-model="localContacts[index].id"
                                   class="w-full lg:w-100"
                                   searchable
                                   selected-icon="i-heroicons-check-16-solid"
@@ -369,6 +375,11 @@
                                   "
                                 >
                                 </USelectMenu>
+                                <USelect
+                                  v-model="localContacts[index].role"
+                                  :options="rolesObj"
+                                  class="w-48"
+                                />
                                 <button
                                   class="btn-delete-input"
                                   type="button"
@@ -501,6 +512,11 @@
                 />
               </div>
             </div>
+            <div v-if="selectedTab == '3'">
+              <div>
+                <CommunityConsent :community-id="id" />
+              </div>
+            </div>
           </CustomTabBody>
         </div>
       </div>
@@ -546,7 +562,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, nextTick, onMounted, useTemplateRef, watch } from "vue";
+import {
+  computed,
+  ref,
+  nextTick,
+  onMounted,
+  useTemplateRef,
+  watch,
+  watchEffect,
+} from "vue";
 import { useUser } from "@/stores/user.ts";
 
 import {
@@ -569,6 +593,7 @@ import CustomBorder from "@/components/Common/CustomBorder.vue";
 import CustomTab from "@/components/Common/CustomTab.vue";
 import CustomTabBody from "@/components/Common/CustomTabBody.vue";
 import TurndownService from "turndown";
+import CommunityConsent from "@/components/Dashboard/entries/CommunityConsent.vue";
 
 import {
   ClassicEditor,
@@ -602,6 +627,7 @@ const router = useRouter();
 const runtimeConfig = useRuntimeConfig();
 const { data } = useAuth();
 const token = ref(data?.value.accessToken);
+const hasSetConsentTab = ref(false);
 
 const userStore = useUser();
 const imageDefault = "~/assets/images/dashboards/empty-logo.jpg";
@@ -630,7 +656,7 @@ const props = defineProps<{
 }>();
 
 const state = ref({
-  _id: "",
+  id: "",
   acronym: "",
   status: "",
   name: "",
@@ -644,7 +670,7 @@ const state = ref({
 });
 
 const schema = object({
-  _id: string(),
+  id: string(),
   acronym: string(),
   status: string(),
   name: string(),
@@ -680,6 +706,11 @@ const inputLinkRefs = ref<(HTMLInputElement | null)[]>([]);
 const inputContactsRefs = ref<(HTMLInputElement | null)[]>([]);
 const inputKeywordsRefs = ref<(HTMLInputElement | null)[]>([]);
 const itemRefs = useTemplateRef("itemsContact");
+const rolesObj = ref([
+  { label: "Owner", value: "owner" },
+  { label: "Manager", value: "manager" },
+  { label: "Contributor", value: "contributor" },
+]);
 
 const config = computed(() => {
   return {
@@ -752,64 +783,37 @@ const userAvailableRoles = [
 const userPrivileges: Array<string> = computed(
   () => userStore.getUserCommunitiesRoles,
 );
-if (userPrivileges.value.length == 0) {
-  userStore.setUserCommunitiesRoles(data.value.oeb_roles);
-}
 
 const labelTitle = ref("");
 const labelButton = ref("");
 const labelType = ref("");
-const communityData = computed(() => {
-  state.value = {
-    _id: props.communityObj?._id,
-    acronym: props.communityObj?.acronym,
-    status: props.communityObj?.status,
-    name: props.communityObj?.name,
-    description: props.communityObj?.description,
-    _metadata: props.communityObj?._metadata ?? "",
-    _schema: props.communityObj?._schema ?? "",
-    community_contact_ids:
-      props.communityObj?.community_contact_ids.map((contact: string) => {
-        return {
-          id: contact,
-          name: contact,
-        };
-      }) || [],
-    keywords: props.communityObj?.keywords ?? [],
-    links: props.communityObj?.links ?? [],
-  };
-
-  if (props.communityObj && !props.communityObj._metadata) {
-    items.value.push({
-      key: "events",
-      label: "Events",
-      icon: "i-heroicons-calendar",
-      index: 1,
-    });
-    state.value.type = "Community";
-    labelTitle.value = "Edit Community";
-    labelButton.value = "View Community";
-    labelType.value = "Community";
-  } else if (props.communityObj && props.communityObj._metadata) {
-    items.value.push({
-      key: "summary",
-      label: "Summary",
-      icon: "i-heroicons-squares-2x2-16-solid",
-      index: 2,
-    });
-    state.value.type = "Project";
-    labelTitle.value = "Edit Project";
-    labelButton.value = "View Project";
-    labelType.value = "Project";
-  }
-  return state.value;
-});
+const communityData = computed(() => ({
+  id: props.communityObj?._id,
+  acronym: props.communityObj?.acronym,
+  status: props.communityObj?.status,
+  name: props.communityObj?.name,
+  description: props.communityObj?.description,
+  _metadata: props.communityObj?._metadata ?? "",
+  _schema: props.communityObj?._schema ?? "",
+  community_contact_ids:
+    props.communityObj?.community_contact_ids.map((contact: string) => ({
+      id: contact,
+      name: contact,
+    })) || [],
+  keywords: props.communityObj?.keywords ?? [],
+  links: props.communityObj?.links ?? [],
+}));
 
 const typeOptions = [
   { value: "Community", label: "Community" },
   { value: "Project", label: "Project" },
 ];
-const localContacts = ref<string[]>([]);
+const localContacts = ref<
+  {
+    id: string;
+    role: string;
+  }[]
+>([]);
 const localLinks = ref<string[]>([]);
 const localKeywords = ref<string[]>([]);
 const contactsData = ref<string[]>([]);
@@ -832,6 +836,7 @@ const localStatus = ref({
   value: "",
   label: "",
 });
+
 if (props.communityObj && typeof props.communityObj.status === "string") {
   localStatus.value.value =
     props.communityObj.status.charAt(0).toUpperCase() +
@@ -841,7 +846,10 @@ if (props.communityObj && typeof props.communityObj.status === "string") {
 if (props.communityObj && props.communityObj.community_contact_ids) {
   localContacts.value =
     props.communityObj.community_contact_ids.map((contact: string) => {
-      return contact;
+      return {
+        id: contact,
+        role: "owner" as const,
+      };
     }) || [];
 }
 
@@ -879,7 +887,6 @@ function goBack() {
 }
 
 async function onSubmitCommunity(event: FormSubmitEvent<Schema>) {
-  //event.preventDefault();
   const result = safeParse(schema, state.value);
   if (result.success) {
     const customErrors = validateRequiredFields(state.value);
@@ -908,24 +915,27 @@ function deleteEmptyElements(array: string[]) {
 async function updateCommunity() {
   const cleanLinks = deleteEmptyElements(localLinks.value);
   const cleanKeywords = deleteEmptyElements(localKeywords.value);
-  const cleanContacts = deleteEmptyElements(localContacts.value);
+  const cleanContacts = deleteEmptyContact(localContacts.value);
 
   const markdownDescription = turndownService.turndown(state.value.description);
 
   const body = {
-    _id: state.value._id,
+    _id: props.communityObj._id,
     _schema: state.value._schema,
     name: state.value.name,
     acronym: state.value.acronym,
     status: localStatus.value.value,
-    keywords: cleanKeywords.map((element) => {
-      return element;
-    }),
     community_contact_ids: cleanContacts.map((element) => {
-      return element;
+      return element.id;
     }),
     description: markdownDescription,
   };
+
+  if (cleanKeywords.length > 0) {
+    body.keywords = cleanKeywords.map((uri) => ({
+      uri,
+    }));
+  }
 
   if (cleanLinks.length > 0) {
     body.links = cleanLinks.map((uri) => ({
@@ -943,9 +953,10 @@ async function updateCommunity() {
       uri: localLogo.value,
     });
   }
+
   try {
     const response = await fetch(
-      `/api/staged/Community/${props.communityObj._id}`,
+      `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Community/${props.communityObj._id}`,
       {
         method: "PATCH",
         headers: {
@@ -956,13 +967,9 @@ async function updateCommunity() {
       },
     );
 
-    if (!response.ok) {
-      throw new Error("Error en la respuesta de la API");
-    }
-
     const data = await response.json();
 
-    if (data.status === 200) {
+    if (data.status >= 200 && data.status < 300) {
       const msg =
         "Your community changes have been saved. Redirecting to the communities list...";
       await showOkMessage(msg).then(() => {
@@ -970,6 +977,7 @@ async function updateCommunity() {
       });
     } else {
       const responseData = JSON.parse(data.body);
+
       if (responseData.message) {
         errors.value = [responseData.message];
       } else if (responseData.error) {
@@ -1013,13 +1021,40 @@ function validateRequiredFields(data: any): string[] {
   if (localContacts.value.length == 0) {
     errorMessages.push(`community_contact_ids cannot be empty`);
   } else {
-    localContacts.value.forEach((contact: string, index: number) => {
-      if (contact.trim() === "") {
-        errorMessages.push(`community_contact_ids  cannot be empty`);
-      }
-    });
+    localContacts.value.forEach(
+      (
+        contact: {
+          id: string;
+          role: string;
+        },
+        index: number,
+      ) => {
+        if (contact.id.trim() === "") {
+          errorMessages.push(`community_contact_ids  cannot be empty`);
+        }
+      },
+    );
   }
   return errorMessages;
+}
+
+function consentTab(userPrivileges) {
+  if (!userPrivileges?.value || !Array.isArray(items.value)) return;
+
+  const canConsent = userPrivileges.value.find(
+    (privilege) => privilege.role === "admin" || privilege.role === "owner",
+  );
+
+  const existItem = items.value.find((item) => item.index === 3);
+
+  if (canConsent && !existItem) {
+    items.value.push({
+      key: "terms",
+      label: "Terms of use",
+      icon: "i-heroicons-megaphone",
+      index: 3,
+    });
+  }
 }
 
 function onChangeStatus(newStatus: string) {
@@ -1029,6 +1064,26 @@ function onChangeStatus(newStatus: string) {
 
 function onAddElement(array: string[], arrayRef?: HTMLInputElement[]) {
   array.push("");
+  nextTick(() => {
+    const lastElementIndex = array.length - 1;
+    const inputElement = arrayRef ? arrayRef[lastElementIndex] : null;
+    if (inputElement) {
+      inputElement.focus();
+    }
+  });
+}
+
+function onAddContact(
+  contact: {
+    id: string;
+    role: string;
+  },
+  arrayRef?: HTMLInputElement[],
+) {
+  contact.push({
+    id: "",
+    role: rolesObj.value[0].value,
+  });
   nextTick(() => {
     const lastElementIndex = array.length - 1;
     const inputElement = arrayRef ? arrayRef[lastElementIndex] : null;
@@ -1066,6 +1121,10 @@ function deleteElement() {
     elementToDelete.value.element.splice(elementToDelete.value.index, 1);
     isDialogOpened.value = false;
   }
+}
+
+function deleteEmptyContact(array: { id: string; role: string }[]) {
+  return array.filter((element) => element.id !== "");
 }
 
 function changeSelected(index: string) {
@@ -1127,7 +1186,10 @@ watch(
     if (newVal && newVal.community_contact_ids) {
       localContacts.value =
         newVal.community_contact_ids.map((contact: string) => {
-          return contact;
+          return {
+            id: contact,
+            role: "owner" as const,
+          };
         }) || [];
     }
     if (newVal && newVal.keywords) {
@@ -1139,7 +1201,44 @@ watch(
 );
 
 watchEffect(() => {
-  communityData.value;
+  const community = props.communityObj;
+  if (!community) return;
+
+  state.value = communityData.value;
+
+  if (!community._metadata) {
+    items.value.push({
+      key: "events",
+      label: "Events",
+      icon: "i-heroicons-calendar",
+      index: 1,
+    });
+    state.value.type = "Community";
+    labelTitle.value = "Edit Community";
+    labelButton.value = "View Community";
+    labelType.value = "Community";
+  } else {
+    items.value.push({
+      key: "summary",
+      label: "Summary",
+      icon: "i-heroicons-squares-2x2-16-solid",
+      index: 2,
+    });
+    state.value.type = "Project";
+    labelTitle.value = "Edit Project";
+    labelButton.value = "View Project";
+    labelType.value = "Project";
+  }
+
+  if (!hasSetConsentTab.value) {
+    if (userPrivileges.value.length === 0) {
+      userStore.setUserCommunitiesRoles(data.value.oeb_roles);
+      consentTab(data.value.oeb_role);
+    } else {
+      consentTab(userPrivileges);
+    }
+    hasSetConsentTab.value = true;
+  }
 });
 </script>
 
@@ -1340,6 +1439,22 @@ input[type="file"] {
   img {
     max-height: 110px;
   }
+}
+.tab-wrapper {
+  border-top-left-radius: 9px;
+  border-top-right-radius: 9px;
+}
+.contribute-block {
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  grid-template-columns: 1fr 3fr 1fr;
+  gap: 5px;
+  width: fit-content;
+  margin: 0 auto;
+  background-color: rgba(233, 236, 239, 0.2);
+  border: 1px solid #ddd;
+  border-radius: 10px;
 }
 </style>
 

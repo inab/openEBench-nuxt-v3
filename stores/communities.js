@@ -70,8 +70,11 @@ export const useCommunities = defineStore("communities", {
         if (!community.links) {
           community.links = [];
         }
+
+        community.logo = "/opeb_logo.gif";
+
         community.links.forEach((link) => {
-          if (link.comment === "@logo") {
+          if (link.label === "Logo" || link.comment === "@logo") {
             community.logo = link.uri;
           }
         });

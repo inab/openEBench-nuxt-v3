@@ -25,7 +25,7 @@
               >
                 <div class="w-100 form-card">
                   <div class="form-card__row">
-                    <div class="form-card__row__box">
+                    <div class="form-card__row__box w-100">
                       <div class="row">
                         <div class="col-4 typeOptions">
                           <div class="form-group">
@@ -270,7 +270,7 @@
                                       isView ||
                                       checkEmptyContacts
                                     "
-                                    @click="onAddElement(localContacts)"
+                                    @click="onAddContact(localContacts)"
                                   >
                                     <font-awesome-icon
                                       :icon="['fas', 'plus']"
@@ -288,7 +288,7 @@
                                   <div class="input-wrapper big d-flex">
                                     <USelectMenu
                                       :ref="`contact_${index}`"
-                                      v-model="localContacts[index]"
+                                      v-model="localContacts[index].id"
                                       class="w-full lg:w-100"
                                       searchable
                                       selected-icon="i-heroicons-check-16-solid"
@@ -298,6 +298,11 @@
                                       option-attribute="name"
                                     >
                                     </USelectMenu>
+                                    <USelect
+                                      v-model="localContacts[index].role"
+                                      :options="rolesObj"
+                                      class="w-48"
+                                    />
                                     <button
                                       v-if="
                                         challengePrivileges.challenge.update &&
@@ -380,7 +385,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch, onMounted } from "vue";
+import { computed, ref, watch, onMounted, nextTick } from "vue";
 import type { Challenge } from "@/types/challenge";
 import type { CommunityPrivilegeActions } from "@/constants/privileges";
 import "@vuepic/vue-datepicker/dist/main.css";
@@ -395,6 +400,7 @@ const router = useRouter();
 const { data } = useAuth();
 const userStore = useUser();
 const token: string = data?.value.accessToken;
+const runtimeConfig = useRuntimeConfig();
 
 const props = defineProps<{
   id: string;
@@ -407,7 +413,12 @@ const props = defineProps<{
 }>();
 
 const localReferences = ref<string[]>([]);
-const localContacts = ref<string[]>([]);
+const localContacts = ref<
+  {
+    id: string;
+    role: string;
+  }[]
+>([]);
 const localMetricsCategories = ref<string[]>([]);
 const eventId = ref(props.eventId);
 const contactsData = ref<string[]>([]);
@@ -422,7 +433,11 @@ const localDates = ref({
     modification: new Date(),
   },
 });
-
+const rolesObj = ref([
+  { label: "Owner", value: "owner" },
+  { label: "Manager", value: "manager" },
+  { label: "Contributor", value: "contributor" },
+]);
 const metricData = ref<string[]>([]);
 
 const getErrors = computed(() => errors.value.join(", "));
@@ -529,7 +544,10 @@ if (props.challengeObj && props.challengeObj.metrics_categories) {
 if (props.challengeObj && props.challengeObj.challenge_contact_ids) {
   localContacts.value =
     props.challengeObj.challenge_contact_ids.map((contact: string) => {
-      return contact;
+      return {
+        id: contact,
+        role: "contributor" as const,
+      };
     }) || [];
 }
 
@@ -546,8 +564,28 @@ function onAddElement(array: []) {
   array.push("");
 }
 
+function onAddContact(
+  contact: {
+    id: string;
+    role: string;
+  },
+  arrayRef?: HTMLInputElement[],
+) {
+  contact.push({
+    id: "",
+    role: rolesObj.value[0].value,
+  });
+  nextTick(() => {
+    const lastElementIndex = array.length - 1;
+    const inputElement = arrayRef ? arrayRef[lastElementIndex] : null;
+    if (inputElement) {
+      inputElement.focus();
+    }
+  });
+}
+
 const checkEmptyContacts = computed(() => {
-  return localContacts.value.some((contact: string) => contact === "");
+  return localContacts.value.some((contact: any) => contact.id === "");
 });
 
 const checkEmptyReferences = computed(() => {
@@ -595,11 +633,19 @@ function validateRequiredFields(data: any): string[] {
   if (localContacts.value.length == 0) {
     errorMessages.push(`community_contact_ids cannot be empty`);
   } else {
-    localContacts.value.forEach((contact: string, index: number) => {
-      if (contact.trim() === "") {
-        errorMessages.push(`community_contact_ids  cannot be empty`);
-      }
-    });
+    localContacts.value.forEach(
+      (
+        contact: {
+          id: string;
+          role: string;
+        },
+        index: number,
+      ) => {
+        if (contact.id.trim() === "") {
+          errorMessages.push(`community_contact_ids  cannot be empty`);
+        }
+      },
+    );
   }
 
   if (!state.value.dates.challenge_start) {
@@ -614,6 +660,10 @@ function validateRequiredFields(data: any): string[] {
 
 function deleteEmptyElements(array: string[]): string[] {
   return array.filter((element) => element.trim() !== "");
+}
+
+function deleteEmptyContact(array: { id: string; role: string}[]) {
+  return array.filter((element) => element.id !== "")
 }
 
 async function onSubmitChallenge(event: FormSubmitEvent<Schema>) {
@@ -660,7 +710,7 @@ function elementTranslator(element: string) {
 }
 
 async function updateBenchmarkingCommunity() {
-  const cleanContacts = deleteEmptyElements(localContacts.value);
+  const cleanContacts = deleteEmptyContact(localContacts.value);
   const cleanReferences = deleteEmptyElements(localReferences.value);
 
   const body = {
@@ -720,10 +770,8 @@ async function updateBenchmarkingCommunity() {
     },
   };
 
-  console.log(JSON.stringify(body));
-
   try {
-    const response = await fetch(`/api/staged/Community/${state.value._id}`, {
+    const response = await fetch(`${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Challenge/${state.value._id}`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -737,7 +785,6 @@ async function updateBenchmarkingCommunity() {
     }
 
     const data = await response.json();
-    console.log("Response: " , data);
 
     if (data.status == 200) {
       errors.value = [];
@@ -784,7 +831,10 @@ watch(
     if (newVal && newVal.challenge_contact_ids) {
       localContacts.value =
         newVal.challenge_contact_ids.map((contact: string) => {
-          return contact;
+          return {
+            id: contact,
+            role: "owner" as const,
+          };
         }) || [];
     }
     if (newVal && newVal.metrics_categories) {

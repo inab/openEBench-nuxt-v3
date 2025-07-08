@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard-community-event-challenge-add">
+  <div class="dashboard-community-event-challenge-add mt-4">
     <div class="w-100 container">
       <div v-if="isLoadingData" class="w-100">
         <div class="space-y-2">
@@ -7,7 +7,7 @@
           <USkeleton class="dashboard-community-edit__skeleton__big" />
         </div>
       </div>
-      <div v-else class="dashboard-community-event-challenge-edit__content">
+      <div v-else class="dashboard-community-event-challenge-add__content pt-4">
         <div class="w-100">
           <UForm
             :schema="schema"
@@ -90,7 +90,6 @@
                   </div>
                 </div>
               </div>
-
               <div class="form-card__row">
                 <div class="form-card__row__box w-100">
                   <div class="row">
@@ -136,7 +135,6 @@
                   </div>
                 </div>
               </div>
-
               <div class="form-card__row">
                 <div class="form-card__row__box w-100">
                   <div class="row">
@@ -167,7 +165,6 @@
                   </div>
                 </div>
               </div>
-
               <div class="form-card__row">
                 <div class="form-card__row__box w-100">
                   <div class="row">
@@ -274,7 +271,7 @@
                                   isView ||
                                   checkEmptyContacts
                                 "
-                                @click="onAddElement(localContacts)"
+                                @click="onAddContact(localContacts)"
                               >
                                 <font-awesome-icon :icon="['fas', 'plus']" />
                               </button>
@@ -290,7 +287,7 @@
                               <div class="input-wrapper big d-flex">
                                 <USelectMenu
                                   :ref="`contact_${index}`"
-                                  v-model="localContacts[index]"
+                                  v-model="localContacts[index].id"
                                   class="w-full lg:w-100"
                                   searchable
                                   selected-icon="i-heroicons-check-16-solid"
@@ -300,12 +297,18 @@
                                   option-attribute="name"
                                 >
                                 </USelectMenu>
+                                <USelect
+                                  v-model="localContacts[index].role"
+                                  :options="rolesObj"
+                                  class="w-48"
+                                />
                                 <button
                                   v-if="
                                     challengePrivileges.challenge.update &&
                                     !isView
                                   "
                                   class="btn-delete-input"
+                                  type="button"
                                   @click="onDeleteElement(index, localContacts)"
                                 >
                                   <font-awesome-icon
@@ -401,11 +404,22 @@ const dialogText = ref("");
 const eventId = computed(() => props.eventId);
 const communityId = computed(() => props.communityId);
 const contactsData = ref<string[]>([]);
-const localContacts = ref<string[]>([]);
+const localContacts = ref<
+  {
+    id: string;
+    role: string;
+  }[]
+>([]);
+const rolesObj = ref([
+  { label: "Owner", value: "owner" },
+  { label: "Manager", value: "manager" },
+  { label: "Contributor", value: "contributor" },
+]);
 const localReferences = ref<string[]>([]);
 const localMetricsCategories = ref<string[]>([]);
 const errors = ref<string[]>([]);
 const oks = ref<string>("");
+const runtimeConfig = useRuntimeConfig();
 
 const state = ref({
   _id: "",
@@ -487,8 +501,28 @@ function onAddElement(array: []) {
   array.push("");
 }
 
+function onAddContact(
+  contact: {
+    id: string;
+    role: string;
+  },
+  arrayRef?: HTMLInputElement[],
+) {
+  contact.push({
+    id: "",
+    role: rolesObj.value[0].value,
+  });
+  nextTick(() => {
+    const lastElementIndex = array.length - 1;
+    const inputElement = arrayRef ? arrayRef[lastElementIndex] : null;
+    if (inputElement) {
+      inputElement.focus();
+    }
+  });
+}
+
 const checkEmptyContacts = computed(() => {
-  return localContacts.value.some((contact: string) => contact === "");
+  return localContacts.value.some((contact: any) => contact.id === "");
 });
 
 const checkEmptyReferences = computed(() => {
@@ -603,7 +637,7 @@ async function createChallenge() {
   };
 
   try {
-    const response = await fetch(`/api/staged/Challenge`, {
+    const response = await fetch(`${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Challenge`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -745,6 +779,9 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .dashboard-community-event-challenge-add {
+  background-color: rgba(233, 236, 239, 0.2);
+  border: 1px solid rgb(var(--color-gray-200) / 1);
+  border-radius:5px;
   &__title {
     padding-bottom: 20px;
     padding-top: 20px;
@@ -834,14 +871,10 @@ onMounted(() => {
     }
   }
   .form-card {
-    padding: 10px 15px;
-    border-radius: 5px;
-    background-color: rgba(233, 236, 239, 0.2);
-    box-shadow:
-      rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
-      rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
     &__row {
       padding: 10px 15px;
+      column-gap: 10px;
+      row-gap: 20px;
       &:last-child {
         width: 100%;
       }
@@ -853,18 +886,13 @@ onMounted(() => {
         border: 1px solid rgba(233, 236, 239);
         background-color: white;
         border-radius: 7px;
+        &:last-child {
+          width: 100%;
+          grid-column: span 2;
+        }
         .content-box {
           border: 1px solid rgba(233, 236, 239);
         }
-      }
-    }
-    &__box {
-      padding: 10px 20px;
-      border: 1px solid rgba(233, 236, 239);
-      background-color: white;
-      &:last-child {
-        width: 100%;
-        grid-column: span 2;
       }
     }
   }

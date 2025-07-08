@@ -7,4 +7,5 @@ export interface Contact {
   notes?: string;
   contactType?: string;
   community_ids?: Array<string>;
+  initial_community_id?: string;
 }

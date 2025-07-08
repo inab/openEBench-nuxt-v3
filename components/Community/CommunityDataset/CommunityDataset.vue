@@ -47,7 +47,7 @@
         <span>{{ row.type }}</span>
       </template>
       <template #download-data="{ row }">
-        <a v-if="row.datalink.uri" :href="row.datalink.uri" target="_blank"
+        <a v-if="row.datalink && row.datalink.uri" :href="row.datalink.uri" target="_blank"
           >Download
         </a>
         <span v-else>Not available</span>
