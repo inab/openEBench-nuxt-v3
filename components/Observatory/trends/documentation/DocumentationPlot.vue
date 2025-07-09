@@ -42,12 +42,23 @@ const drawPlot = () => {
     return;
   }
 
-  const y = Object.keys(props.data);
-  const x = y.map(type => props.data[type]);
+  // Convert object to array of [key, value] pairs and sort by total descending
+  const sortedEntries = Object.entries(props.data)
+  .sort(([, a], [, b]) => (a.total ?? 0) - (b.total ?? 0));
+
+  // Extract the sorted keys (category names)
+  const docTypes = sortedEntries.map(([key]) => key);
+
+  // Rebuild the data in the new order
+  const sortedData = sortedEntries.map(([, value]) => value);
+
+
+  //const y = Object.keys(props.data);
+  //const x = y.map(type => props.data[type]);
 
   const traces = formats.map(fmt => ({
-    y,
-    x: x.map(d => d?.[fmt] ?? 0),  // prevent crash if d is undefined
+    y: docTypes,
+    x: sortedData.map(d => d?.[fmt] ?? 0),  // prevent crash if d is undefined
     name: fmt,
     type: 'bar',
     orientation: 'h',
@@ -56,7 +67,7 @@ const drawPlot = () => {
   }));
 
   const layout = {
-    title: 'Documentation Formats by Type (Horizontal Grouped Bar)',
+    title: '',
     barmode: 'group',
     yaxis: {
       title: 'Documentation Type',
@@ -71,7 +82,7 @@ const drawPlot = () => {
       t: 60,
       b: 100
     },
-    height: 50 + y.length * 40 // dynamic height if needed
+    height: 50 + docTypes.length * 40 // dynamic height if needed
   };
 
   Plotly.newPlot(plotContainer.value, traces, layout, { responsive: true });
