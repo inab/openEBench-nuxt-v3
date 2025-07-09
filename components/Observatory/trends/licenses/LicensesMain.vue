@@ -14,7 +14,7 @@
         </div>
 
         <!-- Visualizations -->
-        <div class="grid grid-cols-12 gap-6 mt-6 pb-4">
+        <div class="grid grid-cols-12 gap-6 mt-6 pt-3 pb-4">
             <!-- Sunburst Chart -->
             <div class="col-span-4 flex justify-center items-center">
                 <div v-if="isLicensesSunburstLoading" class="w-full">

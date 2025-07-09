@@ -1,10 +1,7 @@
 <template>
   <div class="my-4">
     <div class="p-4 max-w-full bg-white border border-gray-100 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-      <h6 class="text-primaryOeb-500 uppercase text-sm text-center mb-2">Collections</h6>
-      <p class="mb-1 text-sm text-center">
-        Select a collection below to view the trends of the software associated with a specific project/organization.
-      </p>
+      <h6 class="text-primaryOeb-500 uppercase text-sm text-center mb-2">Filter by Project or Community</h6>
 
       <!-- Carousel -->
       <div class="relative">

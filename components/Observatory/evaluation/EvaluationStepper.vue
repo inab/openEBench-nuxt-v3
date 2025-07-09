@@ -5,10 +5,11 @@
         <div v-if="index < stepperStore.steps.length - 1" class="vertical-line" :class="{'short': !step.active}"></div>
         <div>
           <p class="flex items-center">
-            <span>
-              <UIcon v-if="step.completed" name="i-heroicons-check-circle-16-solid" class="text-primaryOeb-500 mr-3 text-2xl" />
-              <span v-else class="step-number text-sm mr-3">{{ index + 1 }}</span>
+            <span v-if="step.completed" class="step-number mr-3">
+              <UIcon  name="i-heroicons-check-16-solid" class="text-xl" />
             </span>
+            <span v-else class="step-number text-sm mr-3">{{ index + 1 }}</span>
+
             {{ step.title }}
           </p>
         </div>
@@ -122,6 +123,7 @@ const { steps, selectedSource, completeStep, goBack, cancelSteps, handleSourceSe
   display: flex;
   align-items: center;
   margin-bottom: 1rem;
+  margin-top: 1rem;
   position: relative;
 }
 .content {
@@ -141,8 +143,8 @@ const { steps, selectedSource, completeStep, goBack, cancelSteps, handleSourceSe
 }
 .step-number {
   color: white;
-  height: 22px;
-  width: 22px;
+  height: 25px;
+  width: 25px;
   background: #0b579f;
   border-radius: 50px;
   font-weight: bold;
@@ -152,13 +154,13 @@ const { steps, selectedSource, completeStep, goBack, cancelSteps, handleSourceSe
 }
 .vertical-line {
   position: absolute;
-  left: 22px; /* Adjust this value to align with your icons */
-  top: 30px; /* Adjust this value to align with your icons */
-  width: 1.5px;
+  left: 24px; /* Adjust this value to align with your icons */
+  top: 32px; /* Adjust this value to align with your icons */
+  width: 1px;
   background-color: #dfe3ea;
-  height: calc(100% - 30px); /* Adjust this value to align with your icons */
+  height: 100%; /* Adjust this value to align with your icons */
 }
 .vertical-line.short {
-  height: 1.5rem; /* Adjust this value as needed */
+  height: 2rem; /* Adjust this value as needed */
 }
 </style>
