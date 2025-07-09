@@ -52,7 +52,24 @@ const drawPlot = () => {
   // Rebuild the data in the new order
   const sortedData = sortedEntries.map(([, value]) => value);
 
-
+  const backgroundShapes = docTypes.map((label, index) => {
+    if (index % 2 === 0) {
+      return {
+        type: 'rect',
+        xref: 'paper',
+        yref: 'y',
+        x0: 0,
+        x1: 1,
+        y0: label,
+        y1: label,
+        fillcolor: '#f5f5f5',
+        opacity: 0.4,
+        layer: 'below',
+        line: { width: 0 }
+      };
+    }
+    return null;
+  }).filter(Boolean);
   //const y = Object.keys(props.data);
   //const x = y.map(type => props.data[type]);
 
@@ -76,6 +93,24 @@ const drawPlot = () => {
     xaxis: {
       title: 'Number of Documentation Links'
     },
+    shapes: docTypes.map((_, i) => {
+      if (i % 2 !== 0) {
+        return {
+          type: 'rect',
+          xref: 'paper',
+          yref: 'y',
+          x0: 0,
+          x1: 1,
+          y0: i - 0.5,
+          y1: i + 0.5,
+          fillcolor: '#a1d4a1',
+          opacity: 0.1,
+          layer: 'below',
+          line: { width: 0 }
+        };
+      }
+      return null;
+    }).filter(Boolean),
     margin: {
       l: 250,
       r: 40,
