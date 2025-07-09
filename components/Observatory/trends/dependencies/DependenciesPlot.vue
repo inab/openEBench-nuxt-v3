@@ -23,7 +23,7 @@
       y: [name, name],
       mode: 'lines',
       line: {
-        color: '#c1dec1',
+        color: '#ABC8F5',
         width: 2,
       },
       hoverinfo: 'none',
@@ -37,7 +37,7 @@
       y: names,
       mode: 'markers+text',
       marker: {
-        color: '#6FAD6F',
+        color: '#6696DE',
         size: 16,
         line: { color: 'white', width: 2 },
       },

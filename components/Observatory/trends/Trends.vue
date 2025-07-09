@@ -55,6 +55,15 @@
             </div>
           </div>
 
+          <!-- Documentation -->
+          <div class="row mt-4">
+            <div class="col-12">
+              <div
+                class="my-4 p-4 max-full bg-white border border-gray-100 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                <DocumentationMain />
+              </div>
+            </div>
+          </div>
 
           <!-- Dependencies -->
           <div class="row mt-4 items-center justify-center">
@@ -62,16 +71,6 @@
               <div
                 class="my-4 p-4 max-full bg-white border border-gray-100 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                 <DependenciesMain />
-              </div>
-            </div>
-          </div>
-
-          <!-- Documentation -->
-          <div class="row mt-4">
-            <div class="col-12">
-              <div
-                class="my-4 p-4 max-full bg-white border border-gray-100 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                <DocumentationMain />
               </div>
             </div>
           </div>

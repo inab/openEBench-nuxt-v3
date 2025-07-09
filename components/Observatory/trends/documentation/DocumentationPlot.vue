@@ -26,7 +26,7 @@ const colorMap: Record<DocFormat, string> = {
   downloadable: '#74c476',
   github: '#41AB5D',
   gitlab: '#238B45',
-  total: 'lightgrey',
+  total: '#366141',
 };
 
 const formats: DocFormat[] = ['web', 'downloadable', 'github', 'gitlab', 'total'];
@@ -103,7 +103,7 @@ const drawPlot = () => {
           x1: 1,
           y0: i - 0.5,
           y1: i + 0.5,
-          fillcolor: '#a1d4a1',
+          fillcolor: '#628062',
           opacity: 0.1,
           layer: 'below',
           line: { width: 0 }
