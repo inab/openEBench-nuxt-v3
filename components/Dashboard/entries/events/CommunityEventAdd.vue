@@ -367,7 +367,7 @@ import { computed, ref, onMounted, nextTick } from "vue";
 import { useUser } from "@/stores/user.ts";
 import type { CommunityPrivilegeActions } from "@/constants/privileges";
 import CustomDialog from "@/components/Common/CustomDialog.vue";
-import type { FormSubmitEvent, FormErrorEvent } from "#ui/types";
+import type { FormSubmitEvent } from "#ui/types";
 import {
   object,
   string,
@@ -612,12 +612,6 @@ function validateRequiredFields(data: any): string[] {
       errorMessages.push(`${field} cannot be empty`);
     }
   });
-
-  if (data["_id"] && !checkIdPattern(data["_id"])) {
-    errorMessages.push(
-      `_id is not in the correct format. Example: <b><i>${state.value.community_id}000000A</i></b>`,
-    );
-  }
 
   if (localContacts.value.length == 0) {
     errorMessages.push(`community_contact_ids cannot be empty`);

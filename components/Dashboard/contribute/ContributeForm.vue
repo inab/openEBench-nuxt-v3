@@ -9,19 +9,20 @@
       <div class="dashboard__description">
         <div class="dashboard__description__image">
           <img
-            src="assets/images/dashboard/contribute.jpg"
+            src="assets/images/dashboard/contribute_2.jpg"
             alt="metrics"
             class="metrics__body__img"
           />
         </div>
         <div class="dashboard__description__text">
-          Your input is invaluable to us. Whether it’s an idea, suggestion, or
+          Your input is invaluable to us. Whether it's an idea, suggestion, or
           direct contribution, your effort helps us grow and improve. Please
           take a moment to fill out this form. Every submission—big or small—is
           appreciated and carefully reviewed.
         </div>
       </div>
     </div>
+
     <CustomSubtitle text="Formulary" size="20px" />
     <UForm :state="state" class="space-y-4" @submit="onSubmitContribute">
       <div class="row row-spacing">
@@ -54,6 +55,7 @@
           />
         </UFormGroup>
       </div>
+
       <div class="row row-spacing">
         <UFormGroup
           label="Type of request"
@@ -70,45 +72,57 @@
           />
         </UFormGroup>
       </div>
-      <div v-if="state.requestType === 'roleUpgrade'" class="row row-spacing">
-        <UFormGroup
-          label="Community"
-          name="community"
-          class="col-6 input-row-group"
-        >
-          <USelect
-            v-model="state.community"
-            class="selector custom-entry-input"
-            :options="communities"
-            :loading="loadingCommunity"
-            option-attribute="label"
-            value-attribute="value"
-            disabled
-          />
-        </UFormGroup>
-        <UFormGroup
-          v-if="eventsList.length > 0"
-          label="Benchmarking event"
-          name="event"
-          class="col-6 input-row-group"
-        >
-          <USelect
-            v-model="selectedEvent"
-            class="selector custom-entry-input"
-            :loading="loadingEvent"
-            :options="eventsList"
-            option-attribute="label"
-            value-attribute="value"
-            @change="handleEventChange"
-          />
-        </UFormGroup>
-      </div>
+
+      <template v-if="state.requestType === 'roleUpgrade'">
+        <div class="row row-spacing flex">
+          <UFormGroup
+            label="Community"
+            name="community"
+            class="col-6 input-row-group"
+          >
+            <USelect
+              v-model="state.community"
+              class="selector custom-entry-input"
+              :options="communities"
+              :loading="loadingCommunity"
+              option-attribute="label"
+              value-attribute="value"
+              :disabled="!!requestCommunity"
+              @change="handleCommunityChange"
+            />
+          </UFormGroup>
+
+          <div
+            v-if="!loadingEvent && eventsList.length > 0"
+            class="col-6 input-row-group"
+          >
+            <UFormGroup label="Benchmarking event" name="event">
+              <USelect
+                v-model="selectedEvent"
+                class="selector custom-entry-input"
+                :loading="loadingEvent"
+                :options="eventsList"
+                option-attribute="label"
+                value-attribute="value"
+                @change="handleEventChange"
+              />
+            </UFormGroup>
+          </div>
+          <div v-else-if="loadingEvent" class="col-6 input-row-group">
+            <i>Loading events...</i>
+            <div class="space-y-2">
+              <USkeleton class="h-[40px] w-[450px]" />
+            </div>
+          </div>
+          <div v-else></div>
+        </div>
+      </template>
+
       <div class="row row-spacing">
         <div class="col-12 typeOptions row-spacing">
           <div class="form-group">
             <label for="subject" class="text-gray-700">
-              Subject
-              <span class="text-red-400 required">*</span>
+              Subject <span class="text-red-400 required">*</span>
             </label>
             <div class="w-100">
               <input
@@ -124,8 +138,7 @@
         <div class="col-12 typeOptions">
           <div class="form-group">
             <label for="details" class="text-gray-700">
-              Message details
-              <span class="text-red-400 required">*</span>
+              Message details <span class="text-red-400 required">*</span>
             </label>
             <div class="w-100">
               <ckeditor
@@ -137,26 +150,49 @@
           </div>
         </div>
       </div>
+
       <div class="row row-spacing">
         <div class="col-12 typeOptions d-flex">
           <UCheckbox v-model="isAcceptedTerms" />
-          <label class="pl-2 terms"
-            >I Accept terms of use.
+          <label class="pl-2 terms">
+            I Accept terms of use.
             <span class="text-primaryOeb-500" @click="openModal"
               >View terms of use</span
             >
           </label>
         </div>
       </div>
+
+      <div class="w-100">
+        <div v-if="oks" class="ok-response">
+          <div class="alert alert-success text-center">
+            {{ oks }}
+          </div>
+        </div>
+      </div>
+      <div class="w-100">
+        <div v-if="errors.length > 0" class="errors">
+          <div class="alert alert-danger text-center">
+            {{ getErrors }}
+          </div>
+        </div>
+      </div>
+      <div class="w-100">
+        <div v-if="submiting" class="submiting-response">
+          <div class="alert alert-dark text-center">Submiting form</div>
+        </div>
+      </div>
+
       <div class="row row-spacing-footer">
         <div class="form-footer">
           <UButton type="button" color="white" variant="solid" @click="goReset">
             Reset
           </UButton>
-          <UButton type="submit" :disabled="!isAcceptedTerms"> Submit </UButton>
+          <UButton type="submit" :disabled="!isAcceptedTerms">Submit</UButton>
         </div>
       </div>
     </UForm>
+
     <CustomModal :is-open="isModalOpen" width="700" @modal-close="closeModal">
       <template #header>
         <div class="modal-title">{{ modalTitle }}</div>
@@ -183,23 +219,36 @@ import CustomModal from "@/components/Common/CustomModal.vue";
 import { ClassicEditor, Essentials, Paragraph, Bold } from "ckeditor5";
 import { Ckeditor } from "@ckeditor/ckeditor5-vue";
 import "ckeditor5/ckeditor5.css";
-const config = computed(() => {
-  return {
-    licenseKey: "GPL",
-    plugins: [Essentials, Paragraph, Bold],
-    toolbar: ["undo", "redo", "|", "heading", "|", "bold"],
-  };
-});
+
+const config = computed(() => ({
+  licenseKey: "GPL",
+  plugins: [Essentials, Paragraph, Bold],
+  toolbar: ["undo", "redo", "|", "heading", "|", "bold"],
+}));
 
 const runtimeConfig = useRuntimeConfig();
 const { status, data } = useAuth();
-const token: string = data?.value.accessToken;
+const token = computed(() => data?.value?.accessToken || "");
 
 const props = defineProps<{
-  communityId: string;
+  communityId?: string;
 }>();
 
 const requestCommunity = computed(() => props.communityId);
+const communities = ref<Array<{ label: string; value: string }>>([]);
+const communitiesStore = useCommunities();
+const loadingCommunity = ref(false);
+const eventsList = ref<Array<{ label: string; value: string }>>([]);
+const selectedEvent = ref("");
+const loadingEvent = ref(false);
+const description = ref("");
+const isAcceptedTerms = ref(false);
+const isModalOpen = ref(false);
+const oks = ref<string>("");
+const errors = ref<string[]>([]);
+const submiting = ref<boolean>(false);
+const modalTitle = "Terms of use";
+const modalText = "Modal text";
 
 const requestOptions = [
   { label: "Register a new community", value: "community" },
@@ -207,122 +256,92 @@ const requestOptions = [
   { label: "Request data publication", value: "publish_datasets" },
 ];
 
-const communities = ref([]);
-const communitiesStore = useCommunities();
-const loadingCommunity = ref(false);
-const eventsList = ref([]);
-const selectedEvent = ref("");
-const loadingEvent = ref(false);
-const description = ref("");
-const isAcceptedTerms = ref<boolean>(false);
-const isModalOpen = ref<boolean>(false);
-const modalTitle = "Terms of use";
-const modalText =
-  "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.";
-
-const subjectTextUpgrade = ref("Request to upgrade role for ##userfullname##");
-const detailsTextUpgrade = ref(
-  "Dear user,</br></br>" +
-    "The user ##userfullname## would like to upgrade its role to contributor.</br>" +
-    "Community: <strong>##communityfullname##.</strong></br>" +
-    "BenchmarkingEvent: <strong>##eventfullname##.</strong></br>" +
-    "If you agree on that, please update the corresponding data (tool, role and contact) in OpenEBench database.</br>" +
-    "Regards,</br>" +
-    "OEB team.",
-);
-
 const state = ref({
   userName: "",
   userEmail: "",
   requestType: requestOptions[0].value,
-  community: requestCommunity,
+  community: requestCommunity.value || "",
   event: "",
   subject: "",
   details: "",
 });
 
-const fetchUserInfo = async () => {
-  if (status.value === "authenticated") {
-    try {
-      const token = data?.value.accessToken;
+const subjectTextUpgrade = ref("Request to upgrade role for ##userfullname##");
+const detailsTextUpgrade = ref(`
+  Dear user,</br></br>
+  The user ##userfullname## would like to upgrade its role to contributor.</br>
+  Community: <strong>##communityfullname##.</strong></br>
+  BenchmarkingEvent: <strong>##eventfullname##.</strong></br>
+  If you agree on that, please update the corresponding data (tool, role and contact) in OpenEBench database.</br>
+  Regards,</br>
+  OEB team.
+`);
 
+async function fetchUserInfo() {
+  if (status.value === "authenticated" && token.value) {
+    try {
       const response = await fetch(
         `${runtimeConfig.public.KEYCLOAK_HOST}/auth/realms/${runtimeConfig.public.KEYCLOAK_REALM}/protocol/openid-connect/userinfo`,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token.value}` },
           method: "GET",
         },
       );
 
       if (response.ok) {
         const responseData = await response.json();
-        state.value.userName =
-          responseData.given_name + " " + responseData.family_name;
+        state.value.userName = `${responseData.given_name} ${responseData.family_name}`;
         state.value.userEmail = responseData.email;
-      } else {
-        console.error(
-          "Error al obtener la información del usuario:",
-          response.status,
-          await response.text(),
-        );
       }
     } catch (error) {
-      console.error("Error en la solicitud de información de usuario:", error);
+      console.error("Error fetching user info:", error);
     }
   }
-};
+}
 
 function handleRequestTypeChange(selectedType: string) {
   if (selectedType === "roleUpgrade") {
     fetchCommunities();
+  } else {
+    state.value.community = requestCommunity.value || "";
+    eventsList.value = [];
+    selectedEvent.value = "";
   }
 }
 
-function handleEventChange(selectedEvent: string) {
-  state.value.subject = subjectTextUpgrade.value.replaceAll(
-    "##eventfullname##",
-    state.value.event,
-  );
-}
+const getErrors = computed(() => errors.value.join(", "));
 
 async function fetchCommunities() {
   loadingCommunity.value = true;
-  let communityObj = [];
   try {
-    if (
-      communitiesStore.getCommunities &&
-      Object.keys(communitiesStore.getCommunities).length > 0
-    ) {
-      communityObj = communitiesStore.getCommunities;
+    const communityObj =
+      communitiesStore.getCommunities?.length > 0
+        ? communitiesStore.getCommunities
+        : await communitiesStore.requestCommunitiesData();
+
+    communities.value = communityObj.map((item) => ({
+      label: `${item._id} - ${item.name}`,
+      value: item._id,
+    }));
+
+    if (requestCommunity.value) {
+      state.value.community = requestCommunity.value;
     } else {
-      communityObj = await communitiesStore.requestCommunitiesData();
+      state.value.community = communities.value[0].value;
     }
+    await fetchUserCommunitiesEvents(state.value.community);
   } catch (error) {
-    console.log("some error");
+    console.error("Error fetching communities:", error);
   } finally {
-    const communityArray = communityObj.map((item) => {
-      return {
-        label: item._id + " - " + item.name,
-        value: item._id,
-      };
-    });
     loadingCommunity.value = false;
-    communities.value = communityArray;
-    state.value.subject = subjectTextUpgrade.value.replaceAll(
-      "##userfullname##",
-      state.value.userName,
-    );
-    fetchUserCommunitiesEvents(requestCommunity.value);
   }
 }
 
-const fetchUserCommunitiesEvents = async (
-  communityId: string,
-): Promise<void> => {
+async function fetchUserCommunitiesEvents(communityId: string) {
+  if (!token.value) return;
+
+  loadingEvent.value = true;
   try {
-    loadingEvent.value = true;
     const response = await fetch(
       `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/BenchmarkingEvent`,
       {
@@ -337,70 +356,124 @@ const fetchUserCommunitiesEvents = async (
     let data = await response.json();
     data = data.filter((event: any) => event.community_id === communityId);
 
-    if (data.length > 0) {
-      const eventsArray = data.map((item) => {
-        return {
-          label: item._id + " - " + item.name,
-          value: item._id,
-        };
-      });
-      loadingEvent.value = false;
-      eventsList.value = eventsArray;
-      selectedEvent.value =
-        eventsArray.length > 0 ? eventsArray[0].value : null;
-    }
+    eventsList.value = data.map((item) => ({
+      label: `${item._id} - ${item.name}`,
+      value: item._id,
+    }));
 
-    let details = detailsTextUpgrade.value;
+    selectedEvent.value = eventsList.value[0]?.value || "";
 
-    details = details.replaceAll("##userfullname##", state.value.userName);
-
-    details = details.replaceAll(
-      "##communityfullname##",
-      getCommunityById(state.value.community),
-    );
-
-    if (data.length > 0) {
-      details = details.replaceAll(
-        "##eventfullname##",
-        getEventById(selectedEvent.value),
-      );
-    } else {
-      details = details.replaceAll("##eventfullname##", "All events");
-    }
-
-    description.value = details;
+    updateDescriptionText();
   } catch (error) {
-    console.error("Error fetching bench data: ", error);
+    console.error("Error fetching events:", error);
   } finally {
     loadingEvent.value = false;
   }
-};
+}
+
+async function handleCommunityChange() {
+  eventsList.value = [];
+  await fetchUserCommunitiesEvents(state.value.community);
+}
+
+async function handleEventChange() {
+  updateDescriptionText();
+}
+
+function updateDescriptionText() {
+  const details = detailsTextUpgrade.value
+    .replaceAll("##userfullname##", state.value.userName)
+    .replaceAll(
+      "##communityfullname##",
+      getCommunityById(state.value.community) || "Selected community",
+    )
+    .replaceAll(
+      "##eventfullname##",
+      eventsList.value.length > 0
+        ? getEventById(selectedEvent.value)
+        : "All events",
+    );
+
+  description.value = details;
+}
 
 function getCommunityById(communityId: string): string {
-  return communities.value.find(
-    (community: any) => community.value === communityId,
-  ).label;
+  return communities.value.find((c) => c.value === communityId)?.label || "";
 }
 
 function getEventById(eventId: string): string {
-  return eventsList.value.find((event: any) => event.value === eventId).label;
+  return eventsList.value.find((e) => e.value === eventId)?.label || "";
 }
 
 function goReset() {
-  eventsList.value = [];
   state.value.requestType = requestOptions[0].value;
   state.value.subject = "";
   description.value = "";
+  eventsList.value = [];
+  if (!requestCommunity.value) {
+    state.value.community = "";
+  }
 }
 
 async function onSubmitContribute() {
-  const { data, error } = await useFetch("/api/email/mailer", {
-    method: "POST",
-    body: {
-      to: "jessica.fernandez@bsc.es",
-      subject: "test",
-      message: "test body",
-    },
+  errors.value = [];
+  oks.value = "";
+  submiting.value = true;
+  if (state.value.subject === "") {
+    errors.value.push("Subject cannot be empty");
+  } else if (description.value === "") {
+    errors.value.push("Message details cannot be empty");
+  } else {
+    const body: Record<string, any> = {
+      name: state.value.userName,
+      email: state.value.userEmail,
+      requestType: state.value.requestType,
+      subject: state.value.subject,
+      details: description.value,
+    };
+
+    if (state.value.community) {
+      body.community = state.value.community;
+    }
+
+    if (selectedEvent.value) {
+      body.event = selectedEvent.value;
+    }
+
+    try {
+      const { data, error } = await useFetch("/api/email/mailer", {
+        method: "POST",
+        body: { message: body },
+      });
+
+      submiting.value = false;
+
+      if (error.value) {
+        errors.value.push(`Fetch error: ${error.value.message || error.value}`);
+        return;
+      }
+
+      if (data.value?.success === false) {
+        errors.value.push(`Server error: ${data.value.error}`);
+        return;
+      }
+
+      const msg = "Form submitted successfully";
+      await showOkMessage(msg);
+    } catch (error) {
+      errors.value.push(`Server error: ${data.value.error}`);
+      submiting.value = false;
+    }
+  }
+}
+
+async function showOkMessage(msg: string) {
+  oks.value = msg;
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      oks.value = "";
+      resolve("done");
+    }, 5000);
   });
 }
 
@@ -408,11 +481,17 @@ function openModal() {
   isModalOpen.value = true;
 }
 
-const closeModal = () => {
+function closeModal() {
   isModalOpen.value = false;
-};
+}
 
-onMounted(fetchUserInfo);
+onMounted(() => {
+  fetchUserInfo();
+  if (requestCommunity.value) {
+    state.value.requestType = "roleUpgrade";
+    fetchCommunities();
+  }
+});
 </script>
 
 <style scoped lang="scss">

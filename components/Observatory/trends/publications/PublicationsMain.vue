@@ -1,7 +1,7 @@
 <template>
     <div class="relative">
         <!-- Options Button -->
-        <PlotWOptions  v-if="checkData.value" class="copy-icon" :items="dialogItems"
+        <PlotWOptions  v-if="checkData" class="copy-icon" :items="dialogItems"
             :currentCollection="current_collection" />
         <!-- Header -->
         <div class="text-center mt-4">
@@ -22,17 +22,18 @@
                 <USkeleton class="h-52 mb-3 mx-10" />
             </div>
             <div v-else>
-                <PublicationsPlot v-if="checkData.value" :xValues="xvalues" :yPercentageValues="ypercentagevalues"
-                    :yIFValues="yifvalues" :textPercentageTools="textpercentagetools"
-                    :textPercentageJournals="textpercentagejournals" />
+                <PublicationsPlot v-if="data_plot"
+                    :tools="data_plot.tools"
+					:publications="data_plot.publications"
+					:citations="data_plot.citations" />
+
                 <noDataAvailable info="publications" v-else></noDataAvailable>
             </div>
 
         </div>
         <p class="mt-2 text-center mb-2 ml-8">
-            <span class="text-sm  highlight"> Percentage (top) and impact factor (bottom) of publications devoted
-                to software in the top publishers of software in the Life
-                Sciences.</span>
+            <span class="text-sm  highlight">Number of associated software tools, publications, and citations by
+                journal (citations counted over the last 3 years).</span>
         </p>
 
 
@@ -57,11 +58,7 @@ const dialogItems = [embedCodes.publications];
 // Computed Properties
 const current_collection = computed(() => observatoryStore.currentCollection);
 
-const xvalues = computed(() => trendsStore.Publications.data.IF_tools.x || []);
-const ypercentagevalues = computed(() => trendsStore.Publications.data.percentages.y || []);
-const yifvalues = computed(() => trendsStore.Publications.data.IF_tools.y || []);
-const textpercentagetools = computed(() => trendsStore.Publications.data.percentages.text_tools || []);
-const textpercentagejournals = computed(() => trendsStore.Publications.data.percentages.text_journals || []);
+const data_plot = computed(() => trendsStore.Publications.data);
 
 // Loading States
 const isPublicationsLoading = computed(() => trendsStore.Loaded.publications);
@@ -72,9 +69,7 @@ const checkData = ref(false)
 // Fetch Data on Mount
 onMounted(async () => {
     await trendsStore.getPublications();
-
     checkData.value = computed(() => trendsStore.Publications.data.IF_tools.x.length > 0);
-
 });
 
 </script>

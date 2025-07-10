@@ -6,24 +6,30 @@
         <!-- Header Section -->
         <div class="text-center mt-4">
             <div class="flex flex-wrap lg:flex-nowrap lg:h-full"> <!-- Left Column: Description -->
-                <div class="flex-1 lg:w-2/3  flex flex-col justify-center lg:h-full">
-                    <h6 class="text-2xl font-semibold text-center lg:text-left "> Repositories and Version Control </h6>
+                <div class="flex-1 lg:w-3/4  flex flex-col justify-center lg:h-full">
+                    <h6 class="text-2xl font-semibold text-center lg:text-left ">
+                        Repositories and Version Control
+                    </h6>
                     <p class="text-sm text-gray-700 mt-2 card-content-vs leading-relaxed text-center lg:text-left">
                         Making software available through any of the main software repositories makes it more <span
-                            class="highlight">Findable</span> and <span class="highlight">Accessible</span>. </p>
+                        class="highlight">Findable</span> and <span class="highlight">Accessible</span>.
+                    </p>
                     <p class="text-sm text-gray-700 mb-2 card-content-vs leading-relaxed text-center lg:text-left">
                         Version control offers a standardized record of source code changes, making it easier to be
                         <span class="highlight">Reused</span>.
                     </p>
-                </div> <!-- Right Column: Stats Card -->
-                <div class="lg:w-1/3 flex items-center  lg:h-full"> <!-- Loader -->
+                </div>
+
+                <!-- Right Column: Stats Card -->
+                <div class="lg:w-1/4 flex items-center lg:h-full ml-5"> <!-- Loader -->
                     <USkeleton v-if="isversionControlCountLoading" class="h-full w-full" />
+
                     <!-- Card with Percentage -->
                     <div v-else
-                        class="text-center bg-yellow-400 rounded flex flex-col justify-center items-center card-adjustment">
-                        <p class="percentage text-white">{{ percentage.toFixed(1) }}%</p>
-                        <p class="cardtext font-light text-white ">
-                            of instances use <span class="font-bold">version control</span>
+                        class="text-center bg-orange-100 rounded flex flex-col justify-center items-center p-2.5">
+                        <p class="text-4xl mb-1">{{ percentage.toFixed(1) }}%</p>
+                        <p class="font-light mb-0">
+                            of software use <span class="font-bold">version control</span>
                         </p>
                     </div>
                 </div>
@@ -39,7 +45,7 @@
             <div class="col-lg-11">
                 <p class="mt-8 ml-6 mb-0 text-center">
                     <span class="text-sm highlight">
-                        Number of instances in four widely used platforms for software distribution and development
+                        Software available on four major platforms for distribution and development.
                     </span>
                 </p>
             </div>
@@ -118,14 +124,10 @@ onBeforeMount(async () => {
     background-color: #F5A131 !important;
 }
 
-.card-adjustment {
-    margin-top: 5px;
-    ;
-    padding-top: 10px;
+/* .card-adjustment {
+    margin-top: 5px;;
+    padding: 15px;
     padding-bottom: 0px;
-    padding-left: 15px;
-    padding-right: 15px;
-
 }
 
 .percentage {
@@ -138,5 +140,5 @@ onBeforeMount(async () => {
 .cardtext {
     font-size: 18px;
     line-height: 25px;
-}
+} */
 </style>

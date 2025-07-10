@@ -11,12 +11,19 @@ export const useData = defineStore('data', {
     countsPerSource: {},
     totalCount: null,
     features: {},
+    featuresControl: {},
+    featuresLabels: [],
     coverageSources: reactive({ counts: {}, counts_cummulative: {}, }),
     completeness: {
       cummulative_features: {},
       distribution_features: {},
     },
+    completenessControl: {
+      cummulative_features: {},
+      distribution_features: {},
+    },
     types: {},
+    typesControl: {},
     unLoaded: {
       countsPerSource: true,
       totalCount: true,
@@ -31,9 +38,13 @@ export const useData = defineStore('data', {
     CountsPerSource: (state) => state.countsPerSource,
     TotalCount: (state) => state.totalCount,
     Features: (state) => state.features,
+    FeaturesControl: (state) => state.featuresControl,
+    FeaturesLabels: (state) => state.featuresLabels,
     CoverageSources: (state) => state.coverageSources,
     Completeness: (state) => state.completeness,
+    CompletenessControl: (state) => state.completenessControl,
     Types: (state) => state.types,
+    TypesControl: (state) => state.typesControl
   },
 
   actions: {
@@ -54,6 +65,14 @@ export const useData = defineStore('data', {
     setFeatures(features) {
       this.features = features;
     },
+    
+    setFeaturesControl(features) {
+      this.featuresControl = features;
+    },
+
+    setFeaturesLabels(features) {
+      this.featuresLabels = features;
+    },
 
     setCoverageSources(sources) {
       this.coverageSources = sources;
@@ -64,8 +83,17 @@ export const useData = defineStore('data', {
       this.completeness.distribution_features = result2;
     },
 
+    setCompletenessControl(result1, result2 ) {
+      this.completenessControl.cummulative_features = result1;
+      this.completenessControl.distribution_features = result2;
+    },
+
     setTypes(types) {
       this.types = types;
+    },
+
+    setTypesControl(types) {
+      this.typesControl = types;
     },
 
     // ------------------------------------------------------------------------
@@ -141,23 +169,29 @@ export const useData = defineStore('data', {
       const observatoryStore = useObservatory();
       const URL = `${BASE_URL}features?collection=${observatoryStore.currentCollection}`;
 
+      const URLLabels = `${BASE_URL}features_dots`;
+      const URLControl = `${BASE_URL}features?collection=tools`;
       try {
         this.setLoaded({ features: true });
-        const result = 
-          await useAsyncData('Features', () => 
-            $observatory(URL, {
-            method: "GET",
-          })
-        );
 
-        if(result.data === null) {
-          console.log('Features no data available');
-          this.setLoaded({ features: true });
+        const [result, resultLabels, resultControl] = await Promise.all([
+          $observatory(URL, { method: 'GET' }),
+          $observatory(URLLabels, { method: 'GET' }),
+          $observatory(URLControl, { method: 'GET' }),
+        ]);
+
+        // Verifica los datos antes de asignar
+        if (!result || !resultLabels || !resultControl) {
+          console.warn('Some features data could not be loaded');
         }else{
           this.setFeatures(result.data);
+          this.setFeaturesLabels(resultLabels.data);
+          this.setFeaturesControl(resultControl.data);
+
           // If no errors
           this.setLoaded({ features: false });
         }
+          
       } catch (error) {
         console.error('Error fetching Features:', error);
         this.setLoaded({ features: true });
@@ -193,33 +227,42 @@ export const useData = defineStore('data', {
     },
 
     async getCompleteness () {
-		// This plot uses two serires of data, one for the histogram and one for the line (cummulative distribution)
+      // This plot uses two serires of data, one for the histogram and one for the line (cummulative distribution)
       const { $observatory } = useNuxtApp();
       const observatoryStore = useObservatory();
-      const URLCummulativeFeatures = BASE_URL + 'features_cummulative';
-  		const URLDistributionFeatures = BASE_URL + 'distribution_features';
+      const currentCollection = observatoryStore.getCurrentCollection;
+
+      const URLCummulativeFeatures = `${BASE_URL}features_cummulative?collection=${currentCollection}`;
+      const URLDistributionFeatures = `${BASE_URL}distribution_features?collection=${currentCollection}`;
+      const URLCummulativeFeaturesControl = `${BASE_URL}features_cummulative?collection=tools`;
+      const URLDistributionFeaturesControl = `${BASE_URL}distribution_features?collection=tools`;
 
       try {
         this.setLoaded({ completeness : true});
-        const resultCummulativeFeatures =
-          await useAsyncData('completeness Cummulative', () =>
-            $observatory(URLCummulativeFeatures, {
-              method: "GET",
-          })
-        );
 
-        const resultDistributionFeatures =
-          await useAsyncData('completeness Distribution', () =>
-            $observatory(URLDistributionFeatures, {
-              method: "GET",
-          })
-        );
+        // Realiza todas las llamadas en paralelo
+        const [
+          resultCummulativeFeatures,
+          resultDistributionFeatures,
+          resultCummulativeFeaturesControl,
+          resultDistributionFeaturesControl
+        ] = await Promise.all([
+          $observatory(URLCummulativeFeatures, { method: 'GET' }),
+          $observatory(URLDistributionFeatures, { method: 'GET' }),
+          $observatory(URLCummulativeFeaturesControl, { method: 'GET' }),
+          $observatory(URLDistributionFeaturesControl, { method: 'GET' }),
+        ]);
 
         if(resultCummulativeFeatures.data === null && resultDistributionFeatures.data === data) {
           console.log('Completeness no data available');
           this.setLoaded({ completeness : true})
         }else{
           // If not error
+
+          // Setea datos de control
+          this.setCompletenessControl(resultCummulativeFeaturesControl.data, resultDistributionFeaturesControl.data);
+
+          // Setea datos principales
           this.setCompleteness(resultCummulativeFeatures.data, resultDistributionFeatures.data);
           this.setLoaded({ completeness : false});
         }
@@ -233,16 +276,19 @@ export const useData = defineStore('data', {
     async getTypes() {
       const { $observatory } = useNuxtApp();
       const observatoryStore = useObservatory();
-      const URL = `${BASE_URL}types_count?collection=${observatoryStore.currentCollection}`;
+      const currentCollection = observatoryStore.getCurrentCollection;
+
+      const URL = `${BASE_URL}types_count?collection=${currentCollection}`;
+      const URLControl = `${BASE_URL}types_count?collection=tools`;
 
       try {
         this.setLoaded({ types : true});
-        const result =
-          await useAsyncData('Types', () =>
-            $observatory(URL, {
-              method: "GET",
-          })
-        );
+
+        // Make both requests in parallel
+        const [result, resultControl] = await Promise.all([
+          $observatory(URL, { method: 'GET' }),
+          $observatory(URLControl, { method: 'GET' })
+        ]);
 
         if(result.data === null) {
           console.log('Types no data available');
@@ -250,6 +296,7 @@ export const useData = defineStore('data', {
         }else{
           // If not error
           this.setTypes(result.data);
+          this.setTypesControl(resultControl.data);
           this.setLoaded({ types : false});
         }
       } catch (error) {

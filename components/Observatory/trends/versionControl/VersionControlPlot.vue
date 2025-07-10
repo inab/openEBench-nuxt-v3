@@ -31,20 +31,14 @@ const layout: Partial<Plotly.Layout> = {
     showlegend: false,
     yaxis: {
         automargin: true,
-        standoff: 20,
-        tickvals: props.yValues.map((_, index) => index),
-        ticktext: props.yValues.map(
-            (value) => (labels[value] || value) + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' //  Adding manual space to separete from the axis, standoff not working
-        ),
-        showLine: true,
-
     },
     xaxis: {
-        title: 'Number of instances',
+        title: 'Number of software',
     },
     height: height,
     autosize: true,
     margin: {
+        autoexpand: true,
         t: 10,
         b: 50,
     },
@@ -78,13 +72,13 @@ function plotChart() {
         {
             type: 'bar',
             x: props.xValues,
-            y: props.yValues.map((value) => labels[value] || value),
+            y: props.yValues.map((value) => labels[value]),
             orientation: 'h',
             marker: {
-                color: '#4f71b8',
+                color: '#6fad6f',
             },
             hoverinfo: 'x',
-            hovertemplate: '%{x:,d} instances <extra></extra>',
+            hovertemplate: '%{x:,d} software <extra></extra>',
         },
     ];
 

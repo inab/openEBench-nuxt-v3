@@ -136,6 +136,7 @@ export const useUser = defineStore("user", {
         },
       );
       const data = await response.json();
+      console.log("data: " , data)
 
       if (!data) {
         [];

@@ -5,12 +5,18 @@
 <script setup lang="ts">
 import { computed, onMounted, watch, nextTick } from 'vue';
 import { useData } from '@/stores/observatory/data';
+import { useObservatory } from '@/stores/observatory/index.js';
 import Plotly from 'plotly.js-dist';
 import { activeTabIndex } from '@/components/Common/state.js';
 
 // Store
 const dataStore = useData();
+const observatoryStore = useObservatory();
+
+// Getters
 const completeness = computed(() => dataStore.completeness);
+const completenessControl = computed(() => dataStore.completenessControl);
+const currentCollection = computed(() => observatoryStore.getCurrentCollection);
 
 const layout = {
   grid: {
@@ -19,20 +25,41 @@ const layout = {
     roworder: 'bottom to top',
   },
   yaxis: {
-    title: 'Number of <br> instances',
+    title: 'Percentage of <br> software',
+		tickformat: ',.0%',
   },
   xaxis: {
+    tickformat: '%{x}',
+    ticksuffix: ' features or less',
+    tickmode: 'array',
+    showticksuffix: false,
+    showticklabels: false,
+  },
+  xaxis2: {
     title: 'Number of features',
+    tickformat: '%{x}',
+    ticksuffix: ' features',
+    tickmode: 'array',
+    showticksuffix: false,
   },
   yaxis2: {
-    title: 'Number of <br> instances',
+    title: 'Percentage of <br> software',
+    tickformat: ',.0%',
   },
-  showlegend: false,
+  showlegend: true,
+  legend: {
+    x: 0.8,
+    y: 1.2,
+    xanchor: 'center',
+    yanchor: 'top',
+    orientation: 'h',
+  },
   autosize: true,
   margin: {
     autoexpand: true,
     t: 0,
   },
+  hovermode: 'x unified',
 };
 
 const config = {
@@ -42,30 +69,76 @@ const config = {
 
 // Methods
 function buildTraces() {
+  // Trace Line
   const traceLine = {
-    y: completeness.value.cummulative_features.data.count_cumm,
-    x: completeness.value.cummulative_features.data.feat_cumm,
+    y: completeness.value.cummulative_features.count_cumm_pct,
+    x: completeness.value.cummulative_features.feat_num,
     type: 'scatter',
     mode: 'lines',
     marker: {
-      color: '#446fbd',
+      color: '#3978ed',
     },
     yaxis: 'y2',
-    hovertemplate:
-      '%{y:,d} instances have <br> %{x} features or less<extra></extra>',
+    xaxis: 'x',
+    legendgroup: currentCollection.value,
+    name: currentCollection.value,
+    hovertemplate: '%{y} of software<extra></extra>',
   };
 
-  const traceBar = {
-    y: completeness.value.distribution_features.data.x,
-    x: completeness.value.distribution_features.data.y,
-    type: 'bar',
+  // Trace Line Control
+  const traceLineControl = {
+    y: completenessControl.value.cummulative_features.count_cumm_pct,
+    x: completenessControl.value.cummulative_features.feat_num,
+    type: 'scatter',
+    mode: 'lines',
     marker: {
-      color: '#ad3d32',
+      color: 'lightgrey',
     },
-    hovertemplate: '%{y:,d} instances have <br> %{x} features<extra></extra>',
+    yaxis: 'y2',
+    xaxis: 'x',
+    name: 'All tools',
+    legendgroup: 'All tools',
+    hovertemplate: '%{y} of software<extra></extra>',
   };
 
-  return [traceBar, traceLine];
+  // Trace Bar
+  const traceBar = {
+    y: completeness.value.distribution_features.x,
+    x: completeness.value.distribution_features.y,
+    type: 'bar',
+    xaxis: 'x2',
+    name: currentCollection.value,
+    legendgroup: currentCollection.value,
+    marker: {
+      color: '#ff8957',
+    },
+    hovertemplate: '%{y} of software <extra></extra>',
+		
+  };
+
+  // Trace Bar Control
+  const traceBarControl = {
+    y: completenessControl.value.distribution_features.x,
+    x: completenessControl.value.distribution_features.y,
+    type: 'bar',
+    xaxis: 'x2',
+    legendgroup: 'All tools',
+    marker: {
+      color: 'lightgrey',
+    },
+    name: 'All tools',
+    hovertemplate: '%{y} of software have <br> %{x} features<extra></extra>',
+  };
+
+  let data;
+
+  if (currentCollection.value === 'tools') {
+    data = [traceBar, traceLine];
+  } else {
+    data = [traceBar, traceLine, traceBarControl, traceLineControl];
+  }
+
+  return data;
 }
 
 function updatePlot() {

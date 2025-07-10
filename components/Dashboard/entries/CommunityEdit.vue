@@ -954,11 +954,9 @@ async function updateCommunity() {
     });
   }
 
-  console.log(body);
-
   try {
     const response = await fetch(
-      `/api/staged/Community/${props.communityObj._id}`,
+      `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Community/${props.communityObj._id}`,
       {
         method: "PATCH",
         headers: {
@@ -979,6 +977,7 @@ async function updateCommunity() {
       });
     } else {
       const responseData = JSON.parse(data.body);
+
       if (responseData.message) {
         errors.value = [responseData.message];
       } else if (responseData.error) {
@@ -1452,7 +1451,7 @@ input[type="file"] {
   grid-template-columns: 1fr 3fr 1fr;
   gap: 5px;
   width: fit-content;
-  margin: 0 auto; 
+  margin: 0 auto;
   background-color: rgba(233, 236, 239, 0.2);
   border: 1px solid #ddd;
   border-radius: 10px;

@@ -38,7 +38,7 @@ export const useResultStore = defineStore('result', {
         const result = await $observatory(URL, {
           method: "GET",
         });
-        console.log('results.js: ',result)
+        // console.log('results.js: ',result)
         return result;
       } catch (error) {
         console.error('Error fetching data from URL:', error);
@@ -49,6 +49,28 @@ export const useResultStore = defineStore('result', {
     async POST_DATA(payload) {
       const { $observatory } = useNuxtApp(); // Acceso a NuxtApp para obtener $observatory
       try {
+        
+        // Utilidad para limpiar input/output si uri está vacío
+        const cleanEmptyUriTerms = (fieldName) => {
+          const field = payload.data.tool_metadata[fieldName];
+          if (Array.isArray(field)) {
+            payload.data.tool_metadata[fieldName] = field.map((item) => {
+              if (item.term && (!item.term.uri || item.term.uri.trim() === '')) {
+                const { uri, ...rest } = item.term;
+                return {
+                  ...item,
+                  term: { ...rest } // uri excluida
+                };
+              }
+              return item; // no se modifica si uri tiene contenido
+            });
+          }
+        };
+        
+
+        cleanEmptyUriTerms('input');
+        cleanEmptyUriTerms('output');
+        
         const result = await $observatory(payload.request_url, {
           method: "POST", // Método POST
           body: payload.data,
@@ -56,6 +78,7 @@ export const useResultStore = defineStore('result', {
             "Content-Type": "application/json",
           },
         });
+
         return result; // Devuelve la respuesta
       } catch (error) {
         console.error("Error in POST_DATA:", error);
@@ -109,7 +132,12 @@ export const useResultStore = defineStore('result', {
         },
       };
 
+      console.log(toolMetadata)
+      console.log(payload)
+
       const result = await this.POST_DATA(payload);
+
+      console.log(result)
   		console.debug(result);
 
       this.setFAIRIndicatorsToolResult(result);

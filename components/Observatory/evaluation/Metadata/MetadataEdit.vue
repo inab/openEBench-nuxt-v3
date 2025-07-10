@@ -13,7 +13,7 @@
           :ui="{ rounded: 'rounded-none', padding: { sm: 'p-4' } }"
           @click="togglePanel(index)"
         >
-          <span class="truncate font-semibold ms-3">{{ item.label }}</span>
+          <span class="text-base truncate ms-3">{{ item.label }}</span>
 
           <template #trailing>
             <div class="flex items-center ms-auto space-x-2">

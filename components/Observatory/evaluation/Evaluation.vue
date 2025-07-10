@@ -2,7 +2,7 @@
   <div>
         <div class="content p-4">
           <div class="row my-4">
-            <div class="col-12">
+            <div class="col-12 text-sm">
               <h3 class="fw-bold mb-3">Welcome to the FAIRsoft Evaluator!</h3>
               <p style="line-height: 1.9" class="mb-0 mt-0">
                 Enhance the FAIRness of your software. Here’s how you can use our tool:

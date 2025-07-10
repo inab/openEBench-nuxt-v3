@@ -19,14 +19,14 @@ const props = defineProps<{
 // Datos reactivos
 const nums = ['1', '2', '3', '4', '5'];
 const colors_primary = [
-  '#1d4421',
-  '#3d643f',
-  '#5d865e',
-  '#80aa80',
-  '#a3cfa3',
-  '#c9f5c8',
+  '#404040',
+  '#606060',
+  '#808080',
+  '#A0A0A0',
+  '#C0C0C0',
+  '#DADADA',
+  '#F0F0F0',
 ];
-const colors_secondary = ['#b72f1e', '#f88b69', '#f9d3c6', '#3669a3'];
 const titles = {
   github: 'GitHub',
   galaxy: 'Galaxy Europe',
@@ -35,7 +35,6 @@ const titles = {
   biotools: 'bio.tools',
   bioconductor: 'Bioconductor',
   sourceforge: 'SourceForge',
-  bitbucket: 'Bitbucket',
   opeb_metrics: 'OpenEBench',
 };
 
@@ -46,7 +45,7 @@ const layout_base = {
     title: 'Number of sources',
   },
   yaxis: {
-    title: 'Number of instances',
+    title: 'Number of software',
   },
   autosize: true,
   height: 300,
@@ -105,15 +104,13 @@ function build_line_trace(n) {
 
 function updatePlot() {
   const colors = {
-    github: colors_secondary[0],
+    github: colors_primary[0],
     galaxy: colors_primary[1],
-    bioconda: colors_primary[3],
-    toolshed: colors_primary[2],
-    biotools: colors_primary[0],
+    bioconda: colors_primary[2],
+    toolshed: colors_primary[3],
     bioconductor: colors_primary[4],
     sourceforge: colors_primary[5],
-    bitbucket: colors_secondary[1],
-    opeb_metrics: colors_secondary[3],
+    biotools: colors_primary[6],
   };
 
   const data = build_bar_traces(colors);

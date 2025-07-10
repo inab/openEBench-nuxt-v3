@@ -18,8 +18,10 @@
       @click.self="closeDialog">
       <div :class="['relative mx-auto p-4 border w-11/12 md:w-2/3 shadow-lg rounded-md bg-white', dialogAnimation]">
         <h5 class="mb-2">Plots Iframe Code</h5>
-        <p class="text-sm">Copy and paste the following code to embed the plots into your website. Change the width and
-          height of the iframe as needed.</p>
+        <p class="text-sm">
+          Copy and paste the following code to embed the plots into your website. Change the width and
+          height of the iframe as needed.
+        </p>
         <div class="space-y-4">
           <div v-for="(item, index) in props.items" :key="index">
             <h6 class="text-sm text-primaryOeb-600">{{ item.title }}</h6>
