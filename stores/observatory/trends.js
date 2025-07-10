@@ -64,11 +64,9 @@ export const useTrends = defineStore("trends", {
         //console.log(`Result for ${key}:`, result.data);
 
         if (result.data === null) {
-          console.log(`${key} -> no data available`);
           this.setLoaded(key, true);
         } else {
           this.setData(key, result.data);
-          console.log(`${key} data loaded successfully`);
         }
       } catch (error) {
         console.error(`Error fetching ${key}:`, error);
