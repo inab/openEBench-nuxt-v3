@@ -21,11 +21,8 @@ export const useTrends = defineStore("trends", {
     publications: [],
     dependencies: [],
     documentation: [],
-    formats: {
-      inputData: { label: '', values: [] },
-      outputData: { label: '', values: [] },
-      sameDifferentData: { label: '', values: [] },
-    },
+    inputFormats: {},
+    outputFormats: {},
     unLoaded: {
       licensesSunburst: true,
       licensesOpenSource: true,
@@ -35,7 +32,8 @@ export const useTrends = defineStore("trends", {
       publications: true,
       dependencies: true,
       documentation: true,
-      formats: true,
+      inputFormats: true,
+      outputFormats: true,
       FAIRscores: true,
     },
   }),
@@ -49,7 +47,8 @@ export const useTrends = defineStore("trends", {
     Publications: (state) => state.publications,
     Dependencies: (state) => state.dependencies,
     Documentation: (state) => state.documentation,
-    Formats: (state) => state.formats,
+    InputFormats: (state) => state.inputFormats,
+    OutputFormats: (state) => state.outputFormats,
     Loaded: (state) => state.unLoaded,
   },
 
@@ -116,21 +115,11 @@ export const useTrends = defineStore("trends", {
     getDocumentation() {
       this.fetchData("documentation", "documentation")
     },
-    async getFormats() {
-      // Mock data: sample from the JS files
-      const inputData = {
-        label: 'input',
-        values: ['FASTA', 'pepXML', 'BED', 'None', 'mzML', 'Thermo RAW', 'Matrix format', 'FASTQ', 'TSV', 'MGF']
-      };
-      const outputData = {
-        label: 'output',
-        values: ['pepXML', 'mzIdentML', 'TSV', 'BED', 'WIG', 'PNG', 'XML', 'JSON', 'YAML', 'HTML']
-      };
-      const sameDifferentData = {
-        label: 'same_different',
-        values: [1, 1, 1, 0, 1, 1, 0, 1, 1, 0]
-      };
-      this.setData('formats', { inputData, outputData, sameDifferentData });
+    async getInputFormats(){
+      await this.fetchData("inputFormats", "input_formats")
     },
+    async getOutputFormats(){
+      await this.fetchData("outputFormats", "output_formats")
+    }
   },
 });
