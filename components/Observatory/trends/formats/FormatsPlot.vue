@@ -8,9 +8,12 @@
   // @ts-ignore
   import Plotly from 'plotly.js-dist';
 
-  const props = defineProps<{
+  const props = withDefaults(defineProps<{
   data: Record<string, any>;
-}>();
+  color?: string;
+  }>(), {
+    color: 'blue'
+  });
   
   const plotContainer = ref<HTMLElement | null>(null);
   
@@ -34,8 +37,9 @@
       type: 'bar',
       orientation: 'h',
       marker: {
-        color: '#60a5fa'
+        color: props.color
       },
+      width: 0.6,
       hovertemplate: '<b>%{y}</b><br>Count: %{x}<extra></extra>'
     };
   
@@ -53,7 +57,8 @@
         t: 50,
         b: 0
       },
-      height: 50 + labels.length * 40
+      height: 50 + labels.length * 40,
+      hoverlabel: { bgcolor: '#FFF' }
     };
   
     Plotly.newPlot(container, [trace], layout, { responsive: true });

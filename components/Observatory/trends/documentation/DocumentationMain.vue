@@ -7,8 +7,10 @@
     <div class="text-center mt-4 mb-0">
         <h6 class="text-2xl font-semibold">Documentation</h6>
         <p class="card-content-vs text-sm mt-4 text-gray-700" style="line-height: 1.8">
-
-
+          Documentation plays a crucial role in making software understandable, installable, and usable by others.
+          Evaluating the presence and type of documentation—such as READMEs, user guides, or API references—helps assess a tool’s <span class="highlight">Findability</span>, <span class="highlight">Accessibility</span>, and <span class="highlight">Reusability</span>.
+          <br />
+          Good documentation is a cornerstone of FAIR and Open Science practices, enabling transparent use, adaptation, and integration of software across research contexts.
         </p>
     </div>
 

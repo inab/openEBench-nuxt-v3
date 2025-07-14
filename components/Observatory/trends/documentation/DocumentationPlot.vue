@@ -117,7 +117,8 @@ const drawPlot = () => {
       t: 60,
       b: 100
     },
-    height: 50 + docTypes.length * 40 // dynamic height if needed
+    height: 50 + docTypes.length * 40,
+    hoverlabel: { bgcolor: '#FFF' }
   };
 
   Plotly.newPlot(plotContainer.value, traces, layout, { responsive: true });

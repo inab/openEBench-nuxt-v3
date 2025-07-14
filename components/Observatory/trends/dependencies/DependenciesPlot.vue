@@ -65,6 +65,7 @@
         b: 60,
       },
       height: 700,
+      hoverlabel: { bgcolor: '#FFF' }
     };
   
     Plotly.newPlot(plotContainer.value, [...sticks, dots], layout, { responsive: true });
