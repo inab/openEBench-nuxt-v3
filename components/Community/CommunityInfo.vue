@@ -45,7 +45,8 @@
               <div
                 class="col-2 d-none d-md-flex community-info__header__body__left"
               >
-                <img :src="community.logo" alt="welcome-header-image" />
+                
+                <img :src="logo" alt="welcome-header-image" />
               </div>
               <!-- Col for Text: Full width on small screens, majority width on larger screens -->
               <div class="col-12 col-md-10 community-info__header__body__right">
@@ -114,6 +115,8 @@ const props = defineProps<{
   communityReferences: any[];
 }>();
 
+console.log(props.community);
+
 const HEADER_ITEM = [
   {
     label: props.community.acronym ? props.community.acronym : "",
@@ -122,6 +125,21 @@ const HEADER_ITEM = [
     slot: "acronym",
   },
 ];
+
+const logo = computed(() => {
+  const imgLogo = props.community?.logo;
+
+  if (imgLogo) {
+    return imgLogo;
+  }
+
+  const logoLink = props.community?.links?.find(
+    (link: { label?: string; comment?: string }) =>
+      link.label === "Logo" || link.comment === "@logo"
+  );
+
+  return logoLink?.uri ?? null;
+});
 
 const communityLinks = computed(() => {
   if (!props.community.links) return [];
