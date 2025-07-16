@@ -20,13 +20,16 @@ class ChallengeObj {
 
       challenge.participant_datasets.forEach((participant) => {
         if (
-          typeof participant.datalink.inline_data === "string" ||
-          participant.datalink.inline_data instanceof String
+          participant.datalink &&
+          participant.datalink.inline_data &&
+          (typeof participant.datalink.inline_data === "string" ||
+            participant.datalink.inline_data instanceof String)
         ) {
           participant.datalink.inline_data = JSON.parse(
             participant.datalink.inline_data,
           );
         }
+
         if (
           typeof participant._metadata === "string" ||
           participant._metadata instanceof String
@@ -37,8 +40,10 @@ class ChallengeObj {
 
       challenge.assessment_datasets.forEach((assessment) => {
         if (
-          typeof assessment.datalink.inline_data === "string" ||
-          assessment.datalink.inline_data instanceof String
+          assessment.datalink &&
+          assessment.datalink.inline_data &&
+          (typeof assessment.datalink.inline_data === "string" ||
+            assessment.datalink.inline_data instanceof String)
         ) {
           assessment.datalink.inline_data = JSON.parse(
             assessment.datalink.inline_data,
@@ -55,8 +60,10 @@ class ChallengeObj {
 
     this.data.getDatasets.forEach((aggregation) => {
       if (
-        typeof aggregation.datalink.inline_data === "string" ||
-        aggregation.datalink.inline_data instanceof String
+        aggregation.datalink &&
+        aggregation.datalink.inline_data &&
+        (typeof aggregation.datalink.inline_data === "string" ||
+          aggregation.datalink.inline_data instanceof String)
       ) {
         aggregation.datalink.inline_data = JSON.parse(
           aggregation.datalink.inline_data,

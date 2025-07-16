@@ -123,8 +123,6 @@ definePageMeta({
   },
 });
 
-console.log("hayyy");
-
 const route = useRoute();
 const eventId: string = route.params.event_id;
 const communityId: string = route.params.community_id;

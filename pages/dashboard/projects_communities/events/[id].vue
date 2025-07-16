@@ -38,7 +38,6 @@
         </div>
       </div>
       <div class="w-100">
-        E:{{ eventContacts }}
         <CommunityEvent
           :id="eventId"
           :community-id="communityId"
@@ -147,7 +146,6 @@ const fetchUserCommunitiesEvents = async (token: string): Promise<void> => {
       token,
       String(eventId),
     );
-    console.log(communityContacts);
   } catch (error) {
     console.error("Error fetching communities data: ", error);
   }
@@ -211,7 +209,6 @@ const fetchCommunityContacts = async (
       ...uniqueManagers.map((orcid) => ({ orcid, role: "manager" })),
       ...uniqueOwners.map((orcid) => ({ orcid, role: "owner" })),
     ];
-    console.log(contacts);
     eventContacts.value = contacts;
   } catch (error) {
     console.error("Error fetching communities data:", error);

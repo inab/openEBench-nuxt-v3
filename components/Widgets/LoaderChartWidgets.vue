@@ -36,28 +36,25 @@ const type: string = ref("");
 
 const schemaUrl = computed(() =>
   dataGraph.value.inline_data &&
-  dataGraph.value.inline_data.visualization &&
-  dataGraph.value.inline_data.visualization.schema_url
-    ? dataGraph.value.inline_data.visualization.schema_url
+  dataGraph.value.visualization &&
+  dataGraph.value.visualization.schema_url
+    ? dataGraph.value.visualization.schema_url
     : null,
 );
 
 getPreparedData();
 
 function getPreparedData() {
-  const visualization =
-    typeof dataGraph.value.data !== "undefined"
-      ? dataGraph.value.data.datalink.inline_data.visualization
-      : dataGraph.value.inline_data.visualization;
+  const visualization = dataGraph.value.visualization ?? {};
+  const graphType = visualization?.type ?? null;
 
-  const graphType = visualization.type;
   let prepared = {
     inline_data: {
       challenge_participants: [],
       visualization: {},
     },
   };
-
+  
   if (graphType == "radar-plot") {
     prepared = {
       _id: dataGraph.value._id,
@@ -70,7 +67,7 @@ function getPreparedData() {
     };
   } else {
     prepared = {
-      _id: dataGraph.value.data._id,
+      _id: dataGraph.value.key,
       dates: dataGraph.value.data.dates,
       dataset_contact_ids: dataGraph.value.data.dataset_contact_ids,
       inline_data: {
@@ -82,56 +79,45 @@ function getPreparedData() {
 
   if (graphType === "bar-plot") {
     // Process challenge_participants data for BarPlot
-    dataGraph.value.data.datalink.inline_data.challenge_participants.forEach(
-      (participant: any) => {
-        const preparedParticipant = {
-          tool_id: participant.toolname,
-          metric_value: participant.metric_value,
-          stderr: participant.stderr ? participant.stderr : null,
-        };
-        prepared.inline_data.challenge_participants.push(preparedParticipant);
-      },
-    );
+    const participants = dataGraph.value.challenge_participants ?? [];
+
+    participants.forEach((participant: any) => {
+      const preparedParticipant = {
+        tool_id: participant.tool_id,
+        metric_value: participant.metric_value,
+        stderr: participant.stderr ? participant.stderr : null,
+      };
+      prepared.inline_data.challenge_participants.push(preparedParticipant);
+    });
+
     // Process visualization data for BarPlot
-    const visualization =
-      dataGraph.value.data.datalink.inline_data.visualization;
     prepared.inline_data.visualization = {
       metric: visualization.metric,
       type: visualization.type,
     };
   } else if (graphType === "2D-plot") {
     // Process challenge_participants data for ScatterPlot
-    dataGraph.value.data.datalink.inline_data.challenge_participants.forEach(
-      (participant: any) => {
-        const preparedParticipant = {
-          tool_id: participant.tool_id,
-          metric_x: participant.metric_x,
-          stderr_x: participant.stderr_x,
-          metric_y: participant.metric_y,
-          stderr_y: participant.stderr_y,
-        };
-        prepared.inline_data.challenge_participants.push(preparedParticipant);
-      },
-    );
-    // Process visualization data for ScatterPlot
-    const visualization =
-      dataGraph.value.data.datalink.inline_data.visualization;
-    const optimization = visualization.optimization
-      ? visualization.optimization
-      : null;
+    const participants = dataGraph.value?.challenge_participants ?? [];
+    participants.forEach((participant: any) => {
+      const preparedParticipant = {
+        tool_id: participant.tool_id,
+        metric_x: participant.metric_x,
+        stderr_x: participant.stderr_x,
+        metric_y: participant.metric_y,
+        stderr_y: participant.stderr_y,
+      };
+      prepared.inline_data.challenge_participants.push(preparedParticipant);
+    });
 
-    let xAxis = null;
-    let yAxis = null;
+    const optimization = visualization.optimization ?? null;
+
+    let xAxis = visualization.x_axis;
+    let yAxis = visualization.y_axis;
+
     if (props.metrics.length > 0) {
-      const metricNames = getMetricsNames(
-        visualization.x_axis,
-        visualization.y_axis,
-      );
+      const metricNames = getMetricsNames(xAxis, yAxis);
       xAxis = metricNames.metricX;
       yAxis = metricNames.metricY;
-    } else {
-      xAxis = visualization.x_axis;
-      yAxis = visualization.y_axis;
     }
 
     prepared.inline_data.visualization = {
@@ -142,16 +128,16 @@ function getPreparedData() {
     };
   } else if (graphType === "box-plot") {
     // Process challenge_participants data for BoxPlot
-    dataGraph.value.data.datalink.inline_data.challenge_participants.forEach(
-      (participant) => {
-        const part = { ...participant };
-        const preparedParticipant = { ...part };
-        prepared.inline_data.challenge_participants.push(preparedParticipant);
-      },
-    );
+    const participants =
+      dataGraph.value.inline_data?.challenge_participants ?? [];
+    participants.forEach((participant) => {
+      const part = { ...participant };
+      const preparedParticipant = { ...part };
+      prepared.inline_data.challenge_participants.push(preparedParticipant);
+    });
     // Process visualization data for BoxPlot
     const visualization =
-      dataGraph.value.data.datalink.inline_data.visualization;
+      dataGraph.value.data.datalinks[0].inline_data.visualization;
     prepared.inline_data.visualization = {
       available_metrics: visualization.available_metrics,
       type: visualization.type,
@@ -182,13 +168,26 @@ function getPreparedData() {
 }
 
 function getMetricsNames(metricX: string, metricY: string) {
-  if (props.metrics.length === 0) return [];
+  if (!metricX || !metricY || props.metrics.length === 0) {
+    return { metricX, metricY };
+  }
 
-  const metricNames = { metricX: "", metricY: "" };
+  const metricNames = { metricX, metricY };
+
   props.metrics.forEach((metric: any) => {
-    const metricId = metric._metadata?.["level_2:metric_id"] ?? metric._id;
-    if (metricId === metricX) metricNames.metricX = metric.title;
-    if (metricId === metricY) metricNames.metricY = metric.title;
+    const id =
+      metric._metadata?.["level_2:metric_id"]?.toLowerCase() ??
+      metric._id?.toLowerCase();
+
+    const label = metric.title || metric.metrics_label || metric.orig_id || id;
+
+    if (id === metricX.toLowerCase()) {
+      metricNames.metricX = label;
+    }
+
+    if (id === metricY.toLowerCase()) {
+      metricNames.metricY = label;
+    }
   });
 
   return metricNames;

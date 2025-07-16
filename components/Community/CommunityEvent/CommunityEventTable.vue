@@ -21,7 +21,6 @@
         :checked="isAllSelected"
         @change="toggleSelectAll"
       />
-
       <UTable
         v-model:selected="selected"
         :rows="filteredRows"
@@ -66,7 +65,7 @@
           <NuxtLink
             class="text-primary-500 dark:text-primary-400"
             title="Go to challenge"
-            :to="`${community}/${row._id}`"
+            :to="`/benchmarking/${community}/${row._id}`"
           >
             {{ row.acronym }}
           </NuxtLink>
@@ -76,7 +75,7 @@
             v-if="!loadingRows.includes(row._id)"
             class="text-primary-500 dark:text-primary-400"
             title="Go to participant"
-            :to="`${community}/${row._id}/participants`"
+            :to="`/benchmarking/${community}/${row._id}/participants`"
             @click="handleClick(row._id)"
           >
             Participant

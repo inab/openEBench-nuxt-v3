@@ -10,25 +10,38 @@
         {{ challenge.name }}
       </div>
       <div class="benchmarking-challenge__body">
-        <div
-          v-for="(item, index) in datasets"
-          :key="index"
-          class="benchmarking-challenge__body_dec text-gray-500 text-sm"
-        >
-          <div v-if="index == tab && item">
-            <ChartDescriptionCard
-              :type="item.datalink.inline_data.visualization.type"
-              :label="challenge.challenge_label"
-            />
+        <div v-if="chatAvailable" class="chatAvailable">
+          <div
+            v-for="(item, index) in items"
+            :key="index"
+            class="benchmarking-challenge__body_dec text-gray-500 text-sm"
+          >
+            <div v-if="index == tab && item">
+              <ChartDescriptionCard
+                :type="item.visualization?.type"
+                :label="challenge.challenge_label"
+              />
+            </div>
           </div>
         </div>
-        <div class="benchmarking-challenge__body__content text-sm">
+        <div v-else class="empty-state-container">
+          <span class="empty-state-text"
+            >No charts have been generated for this challenge</span
+          >
+          <div class="empty-img-wrapper">
+            <emptyImg class="empty-img" viewBox="0 0 600 800" />
+          </div>
+        </div>
+        <div
+          v-if="chatAvailable"
+          class="benchmarking-challenge__body__content text-sm"
+        >
           <h2
             class="benchmarking-challenge__body__content__title text-h6 mt-8 mb-2"
           >
             Choose the metrics you want to visualize in the diagram:
           </h2>
-          <div class="benchmarking-challenge__body__content__graphs m">
+          <div class="benchmarking-challenge__body__content__graphs">
             <CustomTabs :data="items" :metrics="metrics" />
           </div>
         </div>
@@ -38,13 +51,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { challengeAPI, getGraphData } from "@/api/challengeAPI";
 import ChallengeObj from "@/models/ChallengeObj";
 import ChartDescriptionCard from "@/components/Cards/ChartDescriptionCard.vue";
 import CustomTabs from "@/components/Widgets/CustomTabs.vue";
 import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
 import { useCommunity } from "@/stores/community";
+import emptyImg from "../../public/images/illustrations/empty-state.svg?component";
 
 const route = useRoute();
 const isPending = ref(false);
@@ -53,13 +67,12 @@ const communityId: string = route.params.community;
 const eventsObj: any[] = communityStore.getEvents;
 const community: Ref<any> = ref(null);
 const challengeId = route.params.challenge;
-
-const datasets = ref(Array);
+const chatAvailable = ref<boolean>(true);
+const datasets = ref<any[]>([]);
 const participants: any = ref(null);
 const metrics = ref(null);
 const challenge: any = ref(null);
 const tab = ref(0);
-
 const itemSelected = ref(null);
 const items = ref([]);
 
@@ -71,34 +84,49 @@ await challengeAPI(challengeId).then(async (response: any) => {
   datasets.value = challengeObj.getDatasets();
   participants.value = challengeObj.getParticipants();
   participants.value = Object.values(participants.value);
+  items.value = [];
 
-  for (const [_key, value] of Object.entries(datasets.value)) {
-    const graphData = await getGraphData(value).then((response: any) => {
-      return response;
-    });
-    if (graphData && graphData.length > 0) {
-      value.datalink.inline_data.challenge_participants = graphData;
+  for (const [_key, dataset] of Object.entries(datasets.value)) {
+    const graphData = await getGraphData(dataset);
+    const datalink = dataset?.datalinks?.[0];
+
+    if (!graphData || !graphData.visualization) {
+      chatAvailable.value = false;
+      continue;
     }
-    const label =
-      (value as any).datalink.inline_data.visualization.type == "box-plot"
-        ? (value as any).datalink.inline_data.visualization.available_metrics[0]
-        : (value as any).datalink.inline_data.visualization.type == "2D-plot"
-          ? (value as any).datalink.inline_data.visualization.x_axis +
-            " + " +
-            (value as any).datalink.inline_data.visualization.y_axis
-          : (value as any).datalink.inline_data.visualization.metric;
 
-    const newData = value;
+    graphData.challenge_participants = graphData.challenge_participants ?? [];
 
-    const item: any = {
-      key: value?._id,
-      data: newData,
+    datalink.inline_data = JSON.stringify(graphData);
+
+    const visualization = graphData.visualization;
+    let label = "";
+
+    const type = visualization?.type?.toLowerCase();
+
+    console.log("type: " , type)
+
+    if (type === "box-plot") {
+      label = visualization.available_metrics?.[0] || "box-plot";
+    } else if (type === "2d-plot") {
+      label = `${visualization?.x_axis ?? "X"} + ${visualization?.y_axis ?? "Y"}`;
+    } else {
+      label = visualization?.metric || "visualización";
+    }
+
+    const item = {
+      _id: dataset._id,
+      key: dataset._id,
       label: label,
+      data: dataset,
+      challenge_participants: graphData.challenge_participants,
+      visualization: graphData.visualization,
     };
+
     items.value.push(item);
   }
 
-  itemSelected.value = items.value[0];
+  itemSelected.value = items.value[0] ?? null;
 });
 
 if (communityStore.communityId === communityId) {
@@ -112,10 +140,20 @@ if (communityStore.communityId === communityId) {
   isPending.value = pending.value;
 }
 
+function getVisualizationType(item) {
+  try {
+    const data = item?.datalinks?.[0]?.inline_data;
+    const parsed = typeof data === "string" ? JSON.parse(data) : data;
+
+    return parsed?.visualization?.type || "";
+  } catch (e) {
+    console.warn("Invalid inline_data:", e);
+    return "";
+  }
+}
+
 const currentEvent = computed(() => {
   const selectedEvent = communityStore.getCurrentEvent;
-
-  // If no event is selected, select the first available event.
   if (!selectedEvent && eventsObj.length > 0) {
     const firstEvent = eventsObj[0];
     communityStore.setCurrentEvent(firstEvent);
@@ -194,5 +232,36 @@ const routeArray: Array<{
 
 hr {
   opacity: 0.1;
+}
+
+.empty-state-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  text-align: center;
+  width: 100%;
+  min-height: 300px;
+  gap: 1.5rem;
+  color: #555;
+}
+
+.empty-state-text {
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.empty-img-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 400px;
+  width: 100%;
+}
+
+.empty-img {
+  width: 100%;
+  height: auto;
 }
 </style>
