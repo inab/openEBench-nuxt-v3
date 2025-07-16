@@ -1,23 +1,23 @@
 import { customRoutes } from "./router.options";
 import svgLoader from "vite-svg-loader";
-const mockAuthModule = process.env.VITEST ? ['./test/mocks/setup.ts'] : []
+const mockAuthModule = process.env.VITEST ? ["./test/mocks/setup.ts"] : [];
 
 export default defineNuxtConfig({
   devtools: {
     enabled: true,
   },
   app: {
-    baseURL: '/',
+    baseURL: "/",
   },
   nitro: {
     serveStatic: true,
     compressPublicAssets: false,
     externals: {
-      inline: ['@inb/oeb-classification-table']
-    }
+      inline: ["@inb/oeb-classification-table"],
+    },
   },
   build: {
-    publicPath: '/_nuxt/',
+    publicPath: "/_nuxt/",
   },
   vite: {
     server: {
@@ -25,6 +25,7 @@ export default defineNuxtConfig({
       watch: {
         usePolling: true,
         interval: 100,
+        ignored: ["!**/models/**"],
       },
     },
     css: {
@@ -56,7 +57,7 @@ export default defineNuxtConfig({
   },
 
   devServer: {
-    host: '0.0.0.0',
+    host: "0.0.0.0",
     port: 3001,
   },
 
@@ -137,10 +138,10 @@ export default defineNuxtConfig({
       login: "/login",
       home: "/",
     },
-    basePath: '/api/auth',
-    originEnvKey: 'AUTH_ORIGIN',
+    basePath: "/api/auth",
+    originEnvKey: "AUTH_ORIGIN",
     baseURL: process.env.APP_BASE_URL || "https://test2.openebench.bsc.es",
-    origin: process.env.AUTH_ORIGIN || "https://inb.bsc.es", 
+    origin: process.env.AUTH_ORIGIN || "https://inb.bsc.es",
   },
 
   hooks: {
@@ -163,15 +164,17 @@ export default defineNuxtConfig({
     ...mockAuthModule,
   ],
 
-  buildModules: [
-    "@nuxt/typescript-build",
-  ],
+  typescript: {
+    shim: false,
+  },
+
+  buildModules: ["@nuxt/typescript-build"],
 
   image: {
-    provider: 'ipx',
-    dir: 'assets/images'
+    provider: "ipx",
+    dir: "assets/images",
   },
- 
+
   eslint: {
     // TODO: Remove this when the project is clean
   },

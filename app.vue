@@ -15,8 +15,11 @@ definePageMeta({
 });
 </script>
 <template>
-  <div class="h-100">
-    <NuxtLayout name="default"> </NuxtLayout>
+  <div>
+    <NuxtLoadingIndicator />
+    <div class="h-100">
+      <NuxtLayout name="default"> </NuxtLayout>
+    </div>
   </div>
 </template>
 

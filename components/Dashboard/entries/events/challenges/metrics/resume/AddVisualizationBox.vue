@@ -8,7 +8,7 @@
         <label>{{ selectedVisualization.name }}</label>
       </div>
       <div class="add-metrics-box__contents__items__item">
-        <img heigth="300px" :src="selectedVisualization.image" />
+        <img style="height: 200px" :src="selectedVisualization.image" />
       </div>
     </div>
   </div>
@@ -17,9 +17,10 @@
 <script setup lang="ts">
 import type { ChartDefault } from "@/types/visualizations";
 
-defineProps<{
+const props = defineProps<{
   selectedVisualization: ChartDefault;
 }>();
+
 </script>
 
 <style lang="scss" scoped>
@@ -30,6 +31,11 @@ defineProps<{
     color: theme("colors.primary.500");
     border-bottom: 1px solid theme("colors.gray.200");
     margin-bottom: 20px;
+  }
+  &__contents__items__item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }
 </style>

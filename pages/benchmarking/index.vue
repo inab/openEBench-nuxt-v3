@@ -139,6 +139,7 @@ const fetchCommunitiesData = async () => {
 };
 
 onMounted(fetchCommunitiesData);
+
 </script>
 <style scoped lang="scss">
 .benchmarking-communities {

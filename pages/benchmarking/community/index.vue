@@ -2,12 +2,11 @@
   <div class="benchmarking-community">
     <BreadcrumbsBar :breadcrumbs-array="routeArray" />
     <div class="mx-auto container">
-      <div v-if="isPending">
-        <USkeleton class="h-12 w-12" :ui="{ rounded: 'rounded-full' }" />
-        <div class="space-y-2">
-          <USkeleton class="h-4 w-[250px]" />
-          <USkeleton class="h-4 w-[200px]" />
-        </div>
+      <div v-if="isPending" class="skeleton-wrapper">
+        <USkeleton class="h-[200px] w-full mb-4" />
+        <USkeleton class="h-6 w-[300px] mb-2" />
+        <USkeleton class="h-4 w-[200px] mb-2" />
+        <USkeleton class="h-4 w-[250px]" />
       </div>
       <div v-else>
         <CommunityInfo
@@ -106,37 +105,48 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from "vue";
+import { ref, watch, computed, defineAsyncComponent } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import CommunityInfo from "@/components/Community/CommunityInfo.vue";
-import CommunityEvent from "@/components/Community/CommunityEvent/CommunityEvent.vue";
 import CommunityDataset from "@/components/Community/CommunityDataset/CommunityDataset.vue";
 import CommunityTools from "@/components/Community/CommunityTools/CommunityTools.vue";
 import CommunityEventSummary from "@/components/Community/CommunityEvent/CommunityEventSummary.vue";
 import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
 import noDataAvailable from "@/layouts/noDataAvailableCard.vue";
 import { useCommunity } from "@/stores/community";
+const CommunityInfo = defineAsyncComponent(
+  () => import("@/components/Community/CommunityInfo.vue"),
+);
+const CommunityEvent = defineAsyncComponent(
+  () => import("@/components/Community/CommunityEvent/CommunityEvent.vue"),
+);
 
 const route = useRoute();
 const router = useRouter();
 const communityStore = useCommunity();
 
 const isPending = ref(false);
-const community = ref<any>(null);
+//const community = ref<any>(null);
 const communityId = route.params.community as string;
-const event = route.query.event as string;
+const eventId = route.query.event as string;
 
+// if (communityStore.communityId && communityStore.communityId == communityId) {
+//   community.value = communityStore.getCommunityData;
+// } else {
+//   const { data, pending } = await useAsyncData("community", () =>
+//     communityStore.requestCommunityData(communityId, event)
+//   );
+//   community.value = data.value ?? null;
+// }
 
-if (communityStore.communityId && communityStore.communityId == communityId) {
-  community.value = communityStore.getCommunityData;
-} else {
-  const { data, pending }: { data: any; pending: Ref<boolean> } =
-    await useAsyncData("community", () =>
-      communityStore.requestCommunityData(communityId, event),
-    );
-  community.value = data.value ?? null;
-  isPending.value = pending.value;
-}
+const { data: community, pending } = await useAsyncData("community", () => {
+  if (
+    communityStore.communityId &&
+    communityStore.communityId === communityId
+  ) {
+    return Promise.resolve(communityStore.getCommunityData);
+  }
+  return communityStore.requestCommunityData(communityId, eventId);
+});
 
 const datasetsObj = communityStore.getDatasets;
 const toolsObj = communityStore.getTools;
@@ -147,7 +157,6 @@ const communityReferences = communityStore.getCommunityReferences;
 const currentEvent = computed(() => {
   const selectedEvent = communityStore.getCurrentEvent;
 
-  // If no event is selected, select the first available event.
   if (!selectedEvent && eventsObj.length > 0) {
     const firstEvent = eventsObj[0];
     communityStore.setCurrentEvent(firstEvent);
@@ -225,7 +234,7 @@ const routeArray = computed(() => {
 });
 
 watch(
-  () => route.query.event,
+  () => route.query.eventId,
   async (newEventId) => {
     if (newEventId) {
       const newEvent = eventsObj.find((event) => event._id === newEventId);
@@ -258,5 +267,11 @@ watch(
 .custom-tab {
   border: 1px solid rgba(243, 244, 246);
   border-radius: 0.5rem;
+}
+.skeleton-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
 }
 </style>

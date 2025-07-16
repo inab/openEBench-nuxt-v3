@@ -62,6 +62,8 @@ services:
       - ./types:/app/types:ro
       - ./stylelint.config.js:/app/stylelint.config.js:ro
       - ./tsconfig.json:/app/tsconfig.json:ro
+      - ./models:/app/models
+      - ./api:/app/api
       - node-modules-volume:/app/node_modules
       - dist-volume:/app/dist
     ports:

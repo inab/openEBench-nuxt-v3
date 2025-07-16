@@ -15,7 +15,7 @@
         </div>
       </div>
       <div class="dashboard__body row mb-5">
-        <div class="col-6">
+        <div class="col-4">
           <UCard
             class="dashboard__body__card"
             :ui="{
@@ -30,7 +30,49 @@
               <div
                 class="dashboard__body__card__header d-flex justify-content-between"
               >
-                Participant submissions
+                Create Submission
+              </div>
+            </template>
+            <div class="row">
+              <div class="col-6">
+                <img
+                  src="assets/images/dashboard/submission.jpg"
+                  alt="User submissions"
+                  class=""
+                />
+              </div>
+              <div class="col-6 col-separator">
+                <div class="">
+                  Explore your submitted content, check approvals, and find
+                  resources for future contributions.
+                </div>
+                <div class="dashboard__body__card__link">
+                  <button class="ripple custom-button-primary">
+                    <NuxtLink to="/dashboard/submission" class="dashboard-link"
+                      >Create submission</NuxtLink
+                    >
+                  </button>
+                </div>
+              </div>
+            </div>
+          </UCard>
+        </div>
+        <div class="col-4">
+          <UCard
+            class="dashboard__body__card"
+            :ui="{
+              header: {
+                base: '',
+                background: '',
+                padding: 'px-4 py-3 sm:px-6',
+              },
+            }"
+          >
+            <template #header>
+              <div
+                class="dashboard__body__card__header d-flex justify-content-between"
+              >
+                Your submissions list
               </div>
             </template>
             <div class="row">
@@ -49,7 +91,7 @@
                 <div class="dashboard__body__card__link">
                   <button class="ripple custom-button-primary">
                     <NuxtLink
-                      to="/dashboard/submission"
+                      to="/dashboard/submission-list"
                       class="dashboard-link"
                       >View submission</NuxtLink
                     >
@@ -59,7 +101,7 @@
             </div>
           </UCard>
         </div>
-        <div class="col-6">
+        <div class="col-4">
           <UCard
             class="dashboard__body__card"
             :ui="{
@@ -313,7 +355,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
+import { computed, ref, watch, onMounted } from "vue";
 import { useUser } from "@/stores/user.ts";
 
 import BarSvg from "../../public/images/plots/bar-chart.svg?component";
@@ -324,8 +366,8 @@ import BoxSvg from "../../public/images/plots/box-chart.svg?component";
 definePageMeta({
   middleware: "auth",
   auth: {
-    authenticatedOnly: true, // Solo permite acceso a usuarios autenticados
-    navigateUnauthenticatedTo: "/login-required", // Redirige a los no autenticados
+    authenticatedOnly: true,
+    navigateUnauthenticatedTo: "/login-required",
   },
 });
 
@@ -478,15 +520,14 @@ async function getMetricsByType(metrics) {
   });
 }
 
-// onMounted(async () => {
-//   if(token.value) {
-// //countTotalMetrics();
-//   //countTotalTools();
-//   //countTotalCommunities();
-//   //countTotalContacts();
-//   }
-
-// });
+onMounted(async () => {
+  if (token.value) {
+    countTotalMetrics();
+    countTotalTools();
+    countTotalCommunities();
+    countTotalContacts();
+  }
+});
 
 watch(
   token,

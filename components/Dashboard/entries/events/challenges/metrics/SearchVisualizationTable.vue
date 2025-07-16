@@ -35,7 +35,7 @@
                     <div class="card-body-content row">
                       <div class="widget-card-img col-7">
                         <img
-                          heigth="300px"
+                          style="height: 200px;"
                           :src=selectedVisualizationTmp.image
                         />
                       </div>
@@ -381,7 +381,12 @@ const updateVisualization = (type: ChartDefault, isSelected: Boolean) => {
   }
 }
 .widget-card-img {
-  min-height: 300px;
+  min-height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.card-body-content__description {
   display: flex;
   justify-content: center;
   align-items: center;
