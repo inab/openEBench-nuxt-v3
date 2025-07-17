@@ -1,18 +1,35 @@
 <template>
   <div>
-    <UCard :ui="{body: {padding: 'px-3 py-3 sm:p-3'}}">
-      <h6>{{ title }}</h6>
-      <div class="grid justify-items-center">
-        <FAIRplot 
-          :toolName="toolMetadata.label[0]"
-          :height="230"
-          :label="title"
-          :colorFill="color"
-          :indicatorsLabel="indicatorsLabel"
-          class="mt-3 pb-1 mb-2"
-        />
+    <UCard :ui="{body: {padding: 'px-4 py-4 sm:p-4'},shadow: 'shadow-md'}">
       
+      <div class="d-flex flex-wrap items-start">
+        <div class="col-9">
+          <h6 class="mb-2">{{ title }}</h6>
+          <span class="text-sm">{{ principle.description }}</span>
+        </div>
+        <div class="col-3 text-end mt-1">
+          <div class="score leading-5">{{ principle.score }}</div>
+          <div class="control text-body-secondary text-sm">Avg. score: {{ principle.control }}</div>
+        </div>
       </div>
+      
+      <div class="flex justify-center mt-4 mb-4">
+        <IndicatorsBars :indicators="[
+          { label: 'F1', score: 0.90, color: '#5E9BE1', bg: '#5E9BE1' },
+          { label: 'F2', score: 0.60, color: 'text-yellow-600', bg: 'bg-yellow-400' },
+          { label: 'F3', score: 0.79, color: 'text-emerald-600', bg: 'bg-emerald-400' }
+        ]" />
+      </div>
+      <UAccordion multiple default-open color="white" :items="items">
+        <template #item="{ item }">
+         <ul class="list-disc list-inside space-y-1 pr-2">
+          <li v-for="(point, index) in item.content" :key="index">
+            {{ point }}
+          </li>
+        </ul>
+        </template>
+      </UAccordion>
+
       <div class="grid justify-items-end">
         <UButton 
           class="text-primaryOeb-500 text-xs expandBtn" 
@@ -21,7 +38,7 @@
           icon="i-heroicons-arrows-pointing-out-16-solid"
           @click="openDialog()"
         >
-          Detailed results
+          Detailed
         </UButton>
       </div>
     </UCard>
@@ -67,9 +84,29 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
 import { useMetadataStore } from '@/stores/observatory/evaluation/metadata';
+import type { AccordionItem } from '@nuxt/ui'
 import FAIRplot from './FAIRplot.vue';
+import IndicatorsBars from './IndicatorsBars.vue';
 import IndicatorsTable from './IndicatorsTable.vue';
+
 const metadataStore = useMetadataStore();
+
+
+// Data 
+const principle = {
+  description: "How easily software and its metadata can be discovered by humans and machines.",
+  score: 0.89,
+  control: 0.80,
+}
+
+const items:  AccordionItem[] = [{
+    label: "Strenghts",
+    content: ['Software name is unique and easily recognizable','High visibility across academic and developer communities']
+    },
+  {
+    label: "How to improve",
+    content: ['Provide a persistent identifier such as a DOI or RRID','Add a clear, searchable description using domain-relevant keywords']
+  }]
 
 // PROPS
 const props = defineProps<{
@@ -127,6 +164,19 @@ watch(dialog, (newValue) => {
 
 .an2 {
   animation: animationDown 0.5s ease 0s 1 normal forwards;
+}
+
+.score {
+  color: #0b579f;
+  font-size: 2em;
+  margin-top: 0;
+  line-height: 1.25rem;
+  margin-bottom: 0.2em;
+
+}
+
+.control {
+  font-size: 0.7em;
 }
 
 @keyframes animationDown {

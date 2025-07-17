@@ -15,7 +15,7 @@
       </div>
     </div>
     <div v-else class="flex flex-wrap content-around">
-      <div class="col-6 py-3 px-5">
+      <div class="col-6 py-3 px-4">
         <ResultsCardExpansible
           title="Fidability"
           color="#fabe69"
@@ -23,7 +23,7 @@
           :indicatorsLabel="labelsFindability"  
         />
       </div>
-      <div class="col-6 py-3 px-5">
+      <div class="col-6 py-3 px-4">
         <ResultsCardExpansible
           title="Accessibility"
           color="#5C6BC0"
@@ -31,7 +31,7 @@
           :indicatorsLabel="labelsAccessibility" 
         />
       </div>
-      <div class="col-6 py-3 px-5">
+      <div class="col-6 py-3 px-4">
         <ResultsCardExpansible
           title="Interoperability"
           color="#fabe69"
@@ -39,7 +39,7 @@
           :indicatorsLabel="labelsInteroperability"
         />
       </div>
-      <div class="col-6 py-3 px-5">
+      <div class="col-6 py-3 px-4">
         <ResultsCardExpansible
           title="Reusability"
           color="#5C6BC0"
