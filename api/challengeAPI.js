@@ -88,11 +88,9 @@ export async function challengeAPI(challengeID) {
 }
 
 export async function getGraphData(dataset) {
-	console.log("dataset: " , dataset)
   const datalink = dataset?.datalinks?.[0];
 
   if (!datalink?.inline_data) {
-    console.warn("No inline_data found in datalinks[0]");
     return [];
   }
 

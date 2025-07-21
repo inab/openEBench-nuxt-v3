@@ -17,6 +17,7 @@
 </template>
 <script setup lang="ts">
 import { ref } from "vue";
+import BoxPlotConverter from "@/utils/BoxPlotConverter.js";
 
 const isLoadingGraph = ref(true);
 onMounted(async () => {
@@ -54,7 +55,7 @@ function getPreparedData() {
       visualization: {},
     },
   };
-  
+
   if (graphType == "radar-plot") {
     prepared = {
       _id: dataGraph.value._id,
@@ -128,16 +129,11 @@ function getPreparedData() {
     };
   } else if (graphType === "box-plot") {
     // Process challenge_participants data for BoxPlot
-    const participants =
-      dataGraph.value.inline_data?.challenge_participants ?? [];
-    participants.forEach((participant) => {
-      const part = { ...participant };
-      const preparedParticipant = { ...part };
-      prepared.inline_data.challenge_participants.push(preparedParticipant);
-    });
-    // Process visualization data for BoxPlot
-    const visualization =
-      dataGraph.value.data.datalinks[0].inline_data.visualization;
+    const participants = dataGraph.value?.challenge_participants ?? [];
+    const result = BoxPlotConverter(participants, true);
+
+    prepared.inline_data.challenge_participants.push(result);
+    // // Process visualization data for BoxPlot
     prepared.inline_data.visualization = {
       available_metrics: visualization.available_metrics,
       type: visualization.type,

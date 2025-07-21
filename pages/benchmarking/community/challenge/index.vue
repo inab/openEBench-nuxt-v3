@@ -103,9 +103,6 @@ await challengeAPI(challengeId).then(async (response: any) => {
     let label = "";
 
     const type = visualization?.type?.toLowerCase();
-
-    console.log("type: " , type)
-
     if (type === "box-plot") {
       label = visualization.available_metrics?.[0] || "box-plot";
     } else if (type === "2d-plot") {
