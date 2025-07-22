@@ -149,6 +149,6 @@ export const customRoutes = [
   {
     name: "dashboard-submission-list",
     path: "/dashboard/submission-list",
-    file: resolve(__dirname, "pages/dashboard/submission/index.vue"),
+    file: resolve(__dirname, "pages/dashboard/submission-list/index.vue"),
   }
 ];

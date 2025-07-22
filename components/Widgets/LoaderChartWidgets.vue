@@ -17,6 +17,7 @@
 </template>
 <script setup lang="ts">
 import { ref } from "vue";
+import BoxPlotConverter from "@/utils/BoxPlotConverter.js";
 
 const isLoadingGraph = ref(true);
 onMounted(async () => {
@@ -33,6 +34,8 @@ const props = defineProps<{
 const dataGraph = computed(() => props.data);
 const preparedData: string = ref(null);
 const type: string = ref("");
+
+console.log("dataGraph: ", dataGraph.value);
 
 const schemaUrl = computed(() =>
   dataGraph.value.inline_data &&
@@ -54,7 +57,7 @@ function getPreparedData() {
       visualization: {},
     },
   };
-  
+
   if (graphType == "radar-plot") {
     prepared = {
       _id: dataGraph.value._id,
@@ -128,16 +131,18 @@ function getPreparedData() {
     };
   } else if (graphType === "box-plot") {
     // Process challenge_participants data for BoxPlot
-    const participants =
-      dataGraph.value.inline_data?.challenge_participants ?? [];
-    participants.forEach((participant) => {
-      const part = { ...participant };
-      const preparedParticipant = { ...part };
-      prepared.inline_data.challenge_participants.push(preparedParticipant);
-    });
-    // Process visualization data for BoxPlot
-    const visualization =
-      dataGraph.value.data.datalinks[0].inline_data.visualization;
+    const participants = dataGraph.value?.challenge_participants ?? [];
+    const log2Param =
+      dataGraph.value?.visualization.axes_scale &&
+      dataGraph.value?.visualization.axes_scale === "?log2=true"
+        ? true
+        : false;
+
+    const result = BoxPlotConverter(participants, log2Param);
+
+    prepared.inline_data.challenge_participants = result;
+
+    // // Process visualization data for BoxPlot
     prepared.inline_data.visualization = {
       available_metrics: visualization.available_metrics,
       type: visualization.type,
