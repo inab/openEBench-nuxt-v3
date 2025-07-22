@@ -35,6 +35,8 @@ const dataGraph = computed(() => props.data);
 const preparedData: string = ref(null);
 const type: string = ref("");
 
+console.log("dataGraph: ", dataGraph.value);
+
 const schemaUrl = computed(() =>
   dataGraph.value.inline_data &&
   dataGraph.value.visualization &&
@@ -130,9 +132,16 @@ function getPreparedData() {
   } else if (graphType === "box-plot") {
     // Process challenge_participants data for BoxPlot
     const participants = dataGraph.value?.challenge_participants ?? [];
-    const result = BoxPlotConverter(participants, true);
+    const log2Param =
+      dataGraph.value?.visualization.axes_scale &&
+      dataGraph.value?.visualization.axes_scale === "?log2=true"
+        ? true
+        : false;
 
-    prepared.inline_data.challenge_participants.push(result);
+    const result = BoxPlotConverter(participants, log2Param);
+
+    prepared.inline_data.challenge_participants = result;
+
     // // Process visualization data for BoxPlot
     prepared.inline_data.visualization = {
       available_metrics: visualization.available_metrics,

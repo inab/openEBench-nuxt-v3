@@ -1,7 +1,12 @@
 export default function BoxPlotConverter(data, log2) {
-  const name = data[0].label;
-  const metric_id = data[0].metric_id;
-  const values = data[0].values;
+  const plotArray = data.map(element => parsePlot(element, log2));
+  return plotArray;
+}
+
+function parsePlot(data, log2) {
+  const name = data.label;
+  const metric_id = data.metric_id;
+  const values = data.values;
 
   if (values != null && Array.isArray(values)) {
     const array = values;
