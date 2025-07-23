@@ -54,26 +54,18 @@
             class="form-control custom-entry-input"
           />
         </div>
-        <div class="custom-row text-right">
-          <UButton label="Validate Docker Container" :disabled="isDone"></UButton>
-        </div>
       </div>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import { ref, defineProps } from "vue";
+import { ref } from "vue";
 
 const description = ref("");
 const tags = ref("");
 const registryUrl = ref("");
 const nextFlowRepo = ref("");
 const repolink = ref("");
-
-const props = defineProps<{
-  isDone: boolean;
-}>();
-
 
 </script>
 <style scoped lang="scss">
@@ -92,4 +84,4 @@ const props = defineProps<{
     padding-top: 20px;
   }
 }
-</style
+</style>

@@ -3,7 +3,7 @@
     <div class="w-100 container">
       <div class="dashboard__header">
         <div class="dashboard__header__title">
-          <h2 class="text-primaryOeb-500">Dashboard</h2>
+          <h2 class="text-primaryOeb-500">{{ getGreeting() }}</h2>
         </div>
         <div class="dashboard__header__description text-gray-500">
           Welcome to the OpenEBench Dashboard! Here you can monitor, optimize
@@ -389,10 +389,13 @@ const metricsByType = ref([
   { name: "Box Plot Plot", total: 0 },
 ]);
 
+const communitiesByStatus = ref<Record<string, number>>({});
 const token = computed(() => data.value?.accessToken || "");
 
 const userName = computed(() => {
-  return data.value && data.value.statusCode != "404" ? data.value.name : "";
+  return data.value && data.value.statusCode != "404"
+    ? data.value.user.name
+    : "";
 });
 
 if (status.value == "authenticated") {
@@ -465,7 +468,15 @@ async function countTotalCommunities() {
     );
 
     const data = await response;
+    console.log(data);
     totalCommunities.value = data.length;
+    const grouped = data.reduce((acc: Record<string, number>, community) => {
+      const status = community.status || 'unknown';
+      acc[status] = (acc[status] || 0) + 1;
+      return acc;
+    }, {});
+
+    communitiesByStatus.value = grouped;
   } catch (error) {
     console.error("Error:", error);
   }
@@ -518,6 +529,13 @@ async function getMetricsByType(metrics) {
       type[0].total += 1;
     }
   });
+}
+
+function getGreeting(): string {
+  const hour = new Date().getHours();
+  if (hour < 12) return `Good morning, ${userName.value}`;
+  else if (hour < 18) return `Good afternoon, ${userName.value}`;
+  else return `Good evening, ${userName.value}`;
 }
 
 onMounted(async () => {
