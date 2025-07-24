@@ -16,7 +16,7 @@
               index == selectedBlock ? 'active' : '',
               link.status == 'pending' ? 'innactive' : '',
             ]"
-            @click="selectedComponent = link.component"
+            @click="handleSelect(index)"
           >
             <div class="badget">
               {{ index + 1 }}
@@ -28,161 +28,36 @@
         <div class="col-8">
           <div class="container-validation">
             <div
+              v-for="(link, index) in links"
+              :key="link.label"
               class="container-validation__block"
-              :class="[selectedBlock == 0 ? 'active' : 'innactive']"
+              :class="[selectedBlock === index ? 'active' : 'innactive']"
             >
               <div class="container-validation__block__badget">
                 <div
                   class="container-validation__block__badget__custom-badget"
-                  :class="[selectedBlock === 0 ? 'active' : '']"
+                  :class="{ active: selectedBlock === index }"
                 >
-                  {{ links[0].index }}
+                  {{ link.index }}
                 </div>
                 <div class="container-validation__block__badget__line"></div>
               </div>
+
               <div class="container-validation__block__content">
                 <div class="container-validation__block__content__header">
-                  <div
-                    class="container-validation__block__content__header__title"
-                  >
-                    Container Validation
-                    <div v-if="links[0].status != 'active'">
-                      {{ links[0].status }}
+                  <div class="container-validation__block__content__header__title">
+                    <div class="w-100">{{ link.label }}</div>
+                    <div
+                      v-if="link.status !== 'active'"
+                      class="container-validation__block__content__header__status"
+                    >
+                      {{ link.status }}
                     </div>
                   </div>
                 </div>
-                <div v-if="selectedBlock == 0" class="container-body">
-                  <SubmissionValidation :is-done="links[0].isDone" />
-                </div>
-              </div>
-            </div>
-            <div
-              class="container-validation__block"
-              :class="[selectedBlock != 1 ? 'innactive' : '']"
-            >
-              <div class="container-validation__block__badget">
-                <div
-                  class="container-validation__block__badget__custom-badget"
-                  :class="[selectedBlock === 2 ? 'active' : '']"
-                >
-                  {{ links[1].index }}
-                </div>
-                <div class="container-validation__block__badget__line"></div>
-              </div>
-              <div class="container-validation__block__content">
-                <div class="container-validation__block__content__header">
-                  <div
-                    class="container-validation__block__content__header__title"
-                  >
-                    <div class="w-100">Generate Predictions</div>
-                  </div>
-                  <div
-                    v-if="links[1].status != 'active'"
-                    class="w-100 container-validation__block__content__header__status"
-                  >
-                    {{ links[1].status }}
-                  </div>
-                </div>
-                <div v-if="selectedBlock == 1" class="container-body">
-                  <SubmissionValidation :is-done="links[1].isDone" />
-                </div>
-              </div>
-            </div>
-            <div
-              class="container-validation__block"
-              :class="[selectedBlock != 2 ? 'innactive' : '']"
-            >
-              <div class="container-validation__block__badget">
-                <div
-                  class="container-validation__block__badget__custom-badget"
-                  :class="[selectedBlock === 2 ? 'active' : '']"
-                >
-                  {{ links[2].index }}
-                </div>
-                <div class="container-validation__block__badget__line"></div>
-              </div>
-              <div class="container-validation__block__content">
-                <div class="container-validation__block__content__header">
-                  <div
-                    class="container-validation__block__content__header__title"
-                  >
-                    <div class="w-100">
-                      Validate Output and Compute Assessment Metrics
-                    </div>
-                  </div>
-                  <div
-                    v-if="links[2].status != 'active'"
-                    class="w-100 container-validation__block__content__header__status"
-                  >
-                    {{ links[2].status }}
-                  </div>
-                </div>
-                <div v-if="selectedBlock == 2" class="container-body">
-                  <SubmissionCompute :is-done="links[2].isDone" />
-                </div>
-              </div>
-            </div>
-            <div
-              class="container-validation__block"
-              :class="[selectedBlock != 3 ? 'innactive' : '']"
-            >
-              <div class="container-validation__block__badget">
-                <div
-                  class="container-validation__block__badget__custom-badget"
-                  :class="[selectedBlock === 3 ? 'active' : '']"
-                >
-                  {{ links[3].index }}
-                </div>
-                <div class="container-validation__block__badget__line"></div>
-              </div>
-              <div class="container-validation__block__content">
-                <div class="container-validation__block__content__header">
-                  <div
-                    class="container-validation__block__content__header__title"
-                  >
-                    <div class="w-100">View Summary</div>
-                  </div>
-                  <div
-                    v-if="links[3].status != 'active'"
-                    class="w-100 container-validation__block__content__header__status"
-                  >
-                    {{ links[3].status }}
-                  </div>
-                </div>
-                <div v-if="selectedBlock == 3" class="container-body">
-                  <SubmissionSummary :is-done="links[3].isDone" />
-                </div>
-              </div>
-            </div>
-            <div
-              class="container-validation__block"
-              :class="[selectedBlock != 4 ? 'innactive' : '']"
-            >
-              <div class="container-validation__block__badget">
-                <div
-                  class="container-validation__block__badget__custom-badget"
-                  :class="[selectedBlock === 4 ? 'active' : '']"
-                >
-                  {{ links[4].index }}
-                </div>
-                <div class="container-validation__block__badget__line"></div>
-              </div>
-              <div class="container-validation__block__content">
-                <div class="container-validation__block__content__header">
-                  <div
-                    class="container-validation__block__content__header__title"
-                  >
-                    <div class="w-100">Published</div>
-                  </div>
-                  <div
-                    v-if="links[4].status != 'active'"
-                    class="w-100 container-validation__block__content__header__status"
-                  >
-                    {{ links[4].status }}
-                  </div>
-                </div>
-                <div v-if="selectedBlock == 4" class="container-body">
-                  <SubmissionPublished :is-done="links[4].isDone" />
+
+                <div v-if="selectedBlock === index" class="container-body">
+                  <component :is="selectedComponent" :is-done="link.isDone" />
                 </div>
               </div>
             </div>
@@ -193,13 +68,13 @@
   </div>
 </template>
 <script setup lang="ts">
-import type { Component } from "vue";
-import { ref } from "vue";
-import SubmissionValidation from "@/components/Dashboard/submissions/form/SubmissionValidation.vue";
-import SubmissionPrediction from "@/components/Dashboard/submissions/form/SubmissionPrediction.vue";
-import SubmissionCompute from "@/components/Dashboard/submissions/form/SubmissionCompute.vue";
-import SubmissionSummary from "@/components/Dashboard/submissions/form/SubmissionSummary.vue";
-import SubmissionPublished from "@/components/Dashboard/submissions/form/SubmissionPublished.vue";
+import type { Component } from 'vue';
+import { ref } from 'vue';
+import SubmissionValidation from '@/components/Dashboard/submissions/form/SubmissionValidation.vue';
+import SubmissionPrediction from '@/components/Dashboard/submissions/form/SubmissionPrediction.vue';
+import SubmissionCompute from '@/components/Dashboard/submissions/form/SubmissionCompute.vue';
+import SubmissionSummary from '@/components/Dashboard/submissions/form/SubmissionSummary.vue';
+import SubmissionPublished from '@/components/Dashboard/submissions/form/SubmissionPublished.vue';
 
 interface LinkItem {
   index: number;
@@ -213,54 +88,58 @@ interface LinkItem {
 const links = ref<LinkItem[]>([
   {
     index: 1,
-    label: "Container Validation",
-    icon: "i-heroicons-inbox-arrow-down",
+    label: 'Container Validation',
+    icon: 'i-heroicons-inbox-arrow-down',
     component: SubmissionValidation,
     isDone: false,
-    status: "active",
+    status: 'active',
   },
   {
     index: 2,
-    label: "Prediction",
-    icon: "i-heroicons-cog-8-tooth-solid",
+    label: 'Prediction',
+    icon: 'i-heroicons-cog-8-tooth-solid',
     component: SubmissionPrediction,
     isDone: false,
-    status: "pending",
+    status: 'pending',
   },
   {
     index: 3,
-    label: "Reproducibility",
-    icon: "i-heroicons-command-line",
-    component: SubmissionPrediction,
+    label: 'Reproducibility',
+    icon: 'i-heroicons-command-line',
+    component: SubmissionCompute,
     isDone: false,
-    status: "pending",
+    status: 'pending',
   },
   {
     index: 4,
-    label: "Metrics",
-    icon: "i-heroicons-clipboard-document-list",
-    component: SubmissionPrediction,
+    label: 'Metrics',
+    icon: 'i-heroicons-clipboard-document-list',
+    component: SubmissionSummary,
     isDone: false,
-    status: "pending",
+    status: 'pending',
   },
   {
     index: 5,
-    label: "Publication",
-    icon: "i-heroicons-cloud-arrow-up",
-    component: SubmissionPrediction,
+    label: 'Publication',
+    icon: 'i-heroicons-cloud-arrow-up',
+    component: SubmissionPublished,
     isDone: false,
-    status: "pending",
+    status: 'pending',
   },
 ]);
 
 const selectedComponent = ref(SubmissionValidation);
 const selectedBlock = ref(0);
-const formValidationSended = ref(false);
-const predictionValidationSended = ref(false);
+// const formValidationSended = ref(false);
+// const predictionValidationSended = ref(false);
 
-function handleValidation(status, index) {
-  links[index].isDone = status;
+function handleSelect(index: number) {
+  selectedBlock.value = index;
 }
+
+// function handleValidation(statusDone: boolean, index: number) {
+//   links.value[index].isDone = statusDone;
+// }
 </script>
 <style scoped lang="scss">
 .dashboard-add__title {
@@ -268,15 +147,13 @@ function handleValidation(status, index) {
   border-bottom-width: 1px;
   font-size: 15px;
 }
-.custom-navigation {
+
+.container-validation {
+  padding: 10px 0 10px 0;
   .disabled {
     color: #ccc;
     cursor: not-allowed;
   }
-}
-
-.container-validation {
-  padding: 10px 0 10px 0;
   &__block {
     display: grid;
     grid-template-columns: 30px 1fr;
@@ -284,13 +161,13 @@ function handleValidation(status, index) {
     &.active {
       .container-validation__block__content__header__title {
         font-weight: bold;
-        color: theme("colors.primary.500");
+        color: theme('colors.primary.500');
       }
     }
     &.innactive {
       color: #b5c0d0 !important;
       &__content__header__title {
-        color: theme("colors.primary.500") !important;
+        color: theme('colors.primary.500') !important;
       }
     }
     &:not(:first-child) {
@@ -351,11 +228,11 @@ function handleValidation(status, index) {
   .active {
     font-weight: bold;
     .iconify {
-      color: theme("colors.secondaryOeb.500");
+      color: theme('colors.secondaryOeb.500');
     }
     .badget {
       border: 1px solid #0b579f;
-      color: theme("colors.primary.500");
+      color: theme('colors.primary.500');
     }
   }
   .innactive {
