@@ -8,6 +8,8 @@ import { $fetch } from '#app';
 
 await nuxtTestUtilSetup();
 
+let _metricsByType;
+
 vi.mock('@/stores/user', () => ({
   useUser: () => ({
     getUserCommunitiesRoles: [],
@@ -50,7 +52,7 @@ global.$fetch = vi.fn(() => Promise.resolve([]));
 
 describe('Dashboard Index', () => {
   beforeEach(() => {
-    metricsByType = {
+    _metricsByType = {
       value: [
         { name: 'Bar Plot', total: 0 },
         { name: 'Scatter Plot', total: 0 },
@@ -87,9 +89,15 @@ describe('Dashboard Index', () => {
       },
     });
 
+    const hour = new Date().getHours();
+    let text = '';
+    if (hour < 12) text = `Good morning,`;
+    else if (hour < 18) text = `Good afternoon,`;
+    else text = `Good evening,`;
+
     const header = wrapper.find('.dashboard__header__title');
     expect(header.exists()).toBe(true);
-    expect(header.text()).toBe('Good afternoon,');
+    expect(header.text()).toBe(text);
   });
 
   it('updates totalMetrics with the length of fetched data', async () => {
