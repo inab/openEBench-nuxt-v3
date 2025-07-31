@@ -1,10 +1,5 @@
 export interface CommunityStatus {
-  status: [
-    active?: string,
-    archived?: string,
-    pending?: string,
-    suspended?: string,
-  ];
+  status: [active?: string, archived?: string, pending?: string, suspended?: string];
 }
 
 export interface CommunityPrivilegeActions {
@@ -62,6 +57,6 @@ export interface UserCommunityRoles {
 }
 
 export interface UserCommunityPrivilege {
-  community: string,
+  community: string;
   role: UserCommunityRoles;
 }

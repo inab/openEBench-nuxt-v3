@@ -147,11 +147,7 @@
             </template>
             <div class="row">
               <div class="col-6">
-                <img
-                  src="assets/images/dashboard/entries.png"
-                  alt="User profile picture"
-                  class=""
-                />
+                <img src="assets/images/dashboard/entries.png" alt="User profile" />
               </div>
               <div class="col-6 col-separator">
                 <div class="">
@@ -235,7 +231,7 @@
                   <div class="col-6">
                     <img
                       src="assets/images/dashboard/22821946_Na_Dec_02.jpg"
-                      alt="User profile picture"
+                      alt="User profile"
                       class=""
                     />
                   </div>
@@ -327,8 +323,8 @@
 
 <script setup lang="ts">
 import { computed, ref, watch, onMounted } from 'vue';
-import { useUser } from '@/stores/user.ts';
-
+import { useUser } from '@/stores/user';
+import { definePageMeta } from '#imports';
 import BarSvg from '../../public/images/plots/bar-chart.svg?component';
 import ScatterSvg from '../../public/images/plots/scatter-chart.svg?component';
 import LineSvg from '../../public/images/plots/line-chart.svg?component';
@@ -346,7 +342,10 @@ defineExpose({
   countTotalMetrics,
 });
 
-const { data, status } = useAuth();
+const auth = useNuxtApp().$auth;
+const data = computed(() => auth?.data?.value ?? null);
+const status = computed(() => auth?.status?.value ?? 'loading');
+
 const userStore = useUser();
 const runtimeConfig = useRuntimeConfig();
 const totalMetrics = ref(0);

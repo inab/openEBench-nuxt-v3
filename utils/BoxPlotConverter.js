@@ -1,5 +1,5 @@
 export default function BoxPlotConverter(data, log2) {
-  const plotArray = data.map(element => parsePlot(element, log2));
+  const plotArray = data.map((element) => parsePlot(element, log2));
   return plotArray;
 }
 
@@ -14,11 +14,11 @@ function parsePlot(data, log2) {
 
     for (let j = 0, m = array.length; j < m; j++) {
       const value = array[j];
-      if (typeof value === "number") {
+      if (typeof value === 'number') {
         z[j] = value;
-      } else if (value && typeof value.toDouble === "function") {
+      } else if (value && typeof value.toDouble === 'function') {
         z[j] = value.toDouble();
-      } else if (value && value._bsontype === "Double") {
+      } else if (value && value._bsontype === 'Double') {
         z[j] = value.value;
       }
     }
@@ -31,8 +31,7 @@ function parsePlot(data, log2) {
 
     z.sort((a, b) => a - b);
 
-    const mean =
-      z.length > 0 ? z.reduce((sum, val) => sum + val, 0) / z.length : NaN;
+    const mean = z.length > 0 ? z.reduce((sum, val) => sum + val, 0) / z.length : NaN;
     const y0 = z[Math.ceil(0.25 * z.length)];
     const y1 = z[Math.ceil(0.5 * z.length)];
     const y2 = z[Math.ceil(0.75 * z.length)];
@@ -45,8 +44,7 @@ function parsePlot(data, log2) {
     const ho = getHighOutliers(z, upperFence);
 
     const loOutlier = lo < 0 || lo >= z.length ? [null, null] : [z[0], z[lo]];
-    const hiOutlier =
-      ho < 0 || ho >= z.length ? [null, null] : [z[z.length - 1], z[ho]];
+    const hiOutlier = ho < 0 || ho >= z.length ? [null, null] : [z[z.length - 1], z[ho]];
 
     const boxplot = {
       name: name,

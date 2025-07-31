@@ -75,7 +75,6 @@
     "@nuxt/eslint": "^0.4.0",
     "@nuxt/test-utils": "^3.14.1",
     "@nuxt/types": "^2.18.1",
-    "@nuxt/typescript-build": "^3.0.2",
     "@pinia/testing": "0.1.5",
     "@types/data-urls": "3.0.4",
     "@types/dompurify": "3.0.5",
@@ -97,7 +96,7 @@
     "prettier": "^3.3.3",
     "sass": "1.77.6",
     "sass-loader": "14.2.1",
-    "typescript": "5.5.4",
+    "typescript": "^5.5.4",
     "vitest": "^3.0.5",
     "webpack": "5.92.1"
   },

@@ -13,7 +13,8 @@
     "typeRoots": ["./types", "./node_modules/@types"],
     "paths": {
       "@/*": ["./*"],
-      "#app": ["./.nuxt/types/app"]
+      "#app": ["./.nuxt/types/app"],
+      "#imports": ["./.nuxt/imports"]
     },
     "outDir": "./dist",
     "rootDir": "./"
@@ -39,7 +40,8 @@
     "utils/**/*.ts",
     "test/**/*.ts",
     "types/**/*.d.ts",
-    "shims-vue.d.ts"
+    "shims-vue.d.ts",
+    ".nuxt"
   ],
-  "exclude": ["node_modules", ".nuxt", ".output", "dist", "stories"]
+  "exclude": ["node_modules", ".output", "dist", "stories"]
 }

@@ -10,7 +10,7 @@ export interface ChallengeMetricCategory {
 }
 
 export interface Metadata {
-  "level_2:metric_id": string;
+  'level_2:metric_id': string;
 }
 
 export interface Metric {
@@ -51,5 +51,5 @@ export interface MetricData {
   references: string[];
   orig_id: string;
   _metadata: Record<string, string>;
-  representation_hints?: object
+  representation_hints?: object;
 }
