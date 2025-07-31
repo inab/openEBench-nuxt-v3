@@ -19,7 +19,6 @@ export default defineNuxtConfig({
       name: 'page',
       mode: 'out-in',
     },
-    cdnURL: '/_nuxt/',
   },
   nitro: {
     serveStatic: true,
