@@ -6,7 +6,7 @@ export default defineVitestConfig({
   test: {
     globals: true,
     environment: 'jsdom',
-    setupFiles: mockAuthModule, // Carga el módulo de setup si estamos en modo de prueba
+    setupFiles: mockAuthModule,
     coverage: {
       reporter: ['text', 'json', 'html'],
       provider: 'istanbul',

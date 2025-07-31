@@ -1,7 +1,7 @@
 import { setupServer } from 'msw/node';
 import { rest } from 'msw';
 
-const server = setupServer(
+setupServer(
   rest.get('/api/auth/session', (req, res, ctx) => {
     return res(
       ctx.json({
