@@ -1,4 +1,4 @@
-import type { CommunityPrivileges } from "./communities";
+import type { CommunityPrivileges } from './communities';
 
 export interface EventDates {
   benchmark_start?: string;
