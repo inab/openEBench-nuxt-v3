@@ -19,6 +19,7 @@ vi.mock('@/middleware/auth', () => ({
 
 describe('Dashboard Edit entry', () => {
   let wrapper;
+  let userStore;
 
   beforeEach(() => {
     wrapper = mount(Edit, {
