@@ -30,15 +30,14 @@
                 class="peer w-full rounded-md border-1 text-sm px-3 py-2 pl-10 focus-within:ring-primaryOeb-500 focus-within:border-primaryOeb-500 focus-within:text-primaryOeb-500"
               >
                 <!-- Label -->
-                <template v-if="selectedToolLabel" #leading>
+                <!-- <template v-if="selectedToolLabel" #leading>
                   <UBadge variant="solid" class="bg-blue-100 text-black">
                     <template #trailing>
                         <span>{{ selectedToolLabel }}</span>
                           <UBadge variant="solid" class="bg-white text-black font-light text-uppercase ml-1">{{ selectedToolType}}</UBadge>
                       </template>
                   </UBadge>
-
-                </template>
+                </template> -->
 
                 <!-- Options -->
                 <template #option="{ option }">
@@ -76,7 +75,7 @@
             variant="solid"
             size="md"
             :disabled="!selectedTool"
-            @click="completeStep"
+            @click="submitObservatoryTool"
           >
             Continue
           </UButton>
@@ -102,7 +101,7 @@ const COOLDOWN_MS = 250;
 
 const selectedTool = ref<any | null>(null);
 const selectedToolLabel = computed(() => {
-  return selectedTool.value?.label || '';
+  return selectedTool.value?.name || '';
 });
 const selectedToolType = computed(() => {
   return selectedTool.value?.type || '';
@@ -259,6 +258,22 @@ watch(searchQuery, () => {
 // ------------------ Navegación / UI helpers ------------------
 const goBack = () => stepperStore.goBack(1);
 const completeStep = () => stepperStore.completeStep(1);
+
+const submitObservatoryTool = async () => {
+  if (!selectedTool.value) return;
+
+  const payload = {
+    name: selectedToolLabel.value,
+    type: selectedToolType.value,
+  };
+
+  // Get metadata
+  await observatoryStore.fetchToolMetadata(payload);
+
+  // Proceed to the next step
+  stepperStore.completeStep(1);
+};
+
 
 // ------------------ Clases dinámicas ------------------
 const labelClasses = computed(() => [
