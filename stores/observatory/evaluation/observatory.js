@@ -69,21 +69,22 @@ export const useObservatoryStore = defineStore("observatoryData", {
       this.loading = true;
 
       try {
-        const URL = `/tools?name=${payload.name}&type=${payload.type}`;
-        let result = await $observatory.get(URL);
+        const URL = `/api/tools?name=${payload.name}&type=${payload.type}`;
+        const result = await $observatory(URL, {
+          method: 'GET',
+        });
 
         console.log("Tool metadata response:", result); // Log metadata response
 
         // Assuming metadata preparation needs to be done here
         const metadataStore = useMetadataStore();
-        result = await metadataStore.prepareMetadata(result);
+        const resultPrepare = metadataStore.prepareMetadata(result);
 
-        metadataStore.updateToolsMetadata(result);
+        metadataStore.updateToolsMetadata(resultPrepare);
         metadataStore.updateLoadedMetadata(true);
 
         this.importationResult = result;
 
-        console.log("Metadata after preparation:", result); // Log after processing
       } catch (error) {
         console.error("Error fetching tool metadata:", error);
       } finally {
