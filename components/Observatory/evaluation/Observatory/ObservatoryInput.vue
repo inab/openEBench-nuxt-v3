@@ -10,7 +10,7 @@
       <div class="row justify-center mb-4 relative">
         <div class="col-10">
           <div v-if="observatoryStore.loadingAutocomplete" class="form-group w-full items-center">
-            <USkeleton class="h-11 w-full rounded-md" />
+            <USkeleton class="h-12 w-full rounded-md" />
           </div>
 
           <div v-else class="form-group relative">
@@ -18,38 +18,44 @@
             <div class="flex items-center gap-2 mt-2">
               <UIcon name="mdi-database" class="text-gray-500 text-2xl" :class="iconClass" />
 
-              <UInputMenu
+              <USelectMenu
                 v-model="selectedTool"
-                v-model:open="isOpen"
                 v-model:query="searchQuery"
                 :options="filteredVisibleOptions"
                 option-attribute="label"
+                clear-search-on-close
                 searchable
+                :popper="{ offsetSkid: 8 }"
                 @focus="onFocus"
-                @blur="handleBlur"
-                class="peer w-full rounded-md border-1 text-sm px-3 py-2 pl-10 focus-within:ring-primaryOeb-500 focus-within:border-primaryOeb-500 focus-within:text-primaryOeb-500"
-              >
-                <!-- Label -->
-                <!-- <template v-if="selectedToolLabel" #leading>
-                  <UBadge variant="solid" class="bg-blue-100 text-black">
-                    <template #trailing>
-                        <span>{{ selectedToolLabel }}</span>
-                          <UBadge variant="solid" class="bg-white text-black font-light text-uppercase ml-1">{{ selectedToolType}}</UBadge>
-                      </template>
-                  </UBadge>
-                </template> -->
+                :onClose="handleClose"
 
-                <!-- Options -->
+                class="peer w-full flex items-center h-12 max-h-12 rounded-md border-1 text-sm px-2 pl-10 focus-within:ring-primaryOeb-500 focus-within:border-primaryOeb-500 focus-within:text-primaryOeb-500"
+              >
+                <template #label>
+                  <UBadge v-if="selectedTool" variant="solid" class="bg-blue-100 text-black">
+                    <template #trailing>
+                      <span>{{ selectedTool.label }}</span>
+                      <UBadge variant="solid" class="bg-white text-black font-light text-uppercase ml-1">
+                        {{ selectedTool.type }}
+                      </UBadge>
+                    </template>
+                  </UBadge>
+
+                </template>
+
+                <!-- Option rendering -->
                 <template #option="{ option }">
                   <UBadge variant="solid" class="bg-blue-100 text-black">
                     <template #trailing>
                       <span>{{ option.label }}</span>
-                        <UBadge variant="solid" class="bg-white text-black font-light text-uppercase ml-1">{{ option.type }}</UBadge>
+                      <UBadge variant="solid" class="bg-white text-black font-light text-uppercase ml-1">
+                        {{ option.type }}
+                      </UBadge>
                     </template>
                   </UBadge>
                 </template>
 
-                <!-- Button -->
+                <!-- Chevron icon -->
                 <template #trailing>
                   <UIcon
                     name="i-heroicons-chevron-down-20-solid"
@@ -59,8 +65,7 @@
                     ]"
                   />
                 </template>
-              </UInputMenu>
-              
+              </USelectMenu>
             </div>
           </div>
         </div>
@@ -107,7 +112,6 @@ const selectedToolType = computed(() => {
   return selectedTool.value?.type || '';
 });
 
-const isOpen = ref(false);
 const searchQuery = ref('');
 const maxVisible = ref(CHUNK);
 const isFocused = ref(false);
@@ -215,18 +219,6 @@ const startObservingForPanel = () => {
   observer.observe(document.body, { childList: true, subtree: true });
 };
 
-const stopObserving = () => {
-  if (observer) {
-    observer.disconnect();
-    observer = null;
-  }
-  detachScrollFromMenu();
-  if (inputListenerCleanup) {
-    inputListenerCleanup();
-    inputListenerCleanup = null;
-  }
-};
-
 // ------------------ Focus & Blur ------------------
 const onFocus = async () => {
   isFocused.value = true;
@@ -237,18 +229,10 @@ const onFocus = async () => {
   await nextTick();
 };
 
-watch(isOpen, (open) => {
-  if (!open) {
-    stopObserving();
-    isFocused.value = false;
-  } else {
-    onFocus();
-  }
-});
-
-const handleBlur = () => {
+const handleClose = () => {
   isFocused.value = false;
 };
+
 
 // ------------------ Sincronizar búsqueda ------------------
 watch(searchQuery, () => {
@@ -257,8 +241,6 @@ watch(searchQuery, () => {
 
 // ------------------ Navegación / UI helpers ------------------
 const goBack = () => stepperStore.goBack(1);
-const completeStep = () => stepperStore.completeStep(1);
-
 const submitObservatoryTool = async () => {
   if (!selectedTool.value) return;
 
@@ -276,13 +258,30 @@ const submitObservatoryTool = async () => {
 
 
 // ------------------ Clases dinámicas ------------------
-const labelClasses = computed(() => [
-  'absolute left-9 top-2 text-sm text-gray-500 dark:text-gray-400 transition-all bg-white dark:bg-gray-900 px-1 z-10',
-  {
-    'text-primaryOeb-600 transform scale-75 -translate-y-5 left-9': isFocused.value || selectedTool.value,
-    'top-3 scale-100': !isFocused.value && !selectedTool.value
-  },
-]);
+const labelClasses = computed(() => {
+  let base = 'absolute left-9 transition-all bg-white dark:bg-gray-900 px-1 z-10';
+
+  if (isFocused.value) {
+    // Focus
+    return [
+      base,
+      'top-2 text-sm text-primaryOeb-600 transform scale-75 -translate-y-5'
+    ];
+  } else if (selectedTool.value) {
+    // Hay una opción seleccionada pero no hay focus
+    return [
+      base,
+      'top-2 text-sm text-gray-500 transform scale-75 -translate-y-5'
+    ];
+  } else {
+    // Estado inicial
+    return [
+      base,
+      'top-3 text-base text-gray-500 scale-100'
+    ];
+  }
+});
+
 
 const iconClass = computed(() => [
   'text-gray-500 transition-colors',
