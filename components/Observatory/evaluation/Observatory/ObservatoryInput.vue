@@ -55,8 +55,9 @@
                   </UBadge>
                 </template>
 
-                <!-- Chevron icon -->
-                <template #trailing>
+                
+                <template #trailing>              
+                  <!-- Chevron icon -->
                   <UIcon
                     name="i-heroicons-chevron-down-20-solid"
                     class="w-5 h-5 transition-transform transition-colors"
@@ -66,6 +67,17 @@
                   />
                 </template>
               </USelectMenu>
+                  
+              <!-- Clear selection button -->
+              <UButton
+                v-if="selectedTool"
+                color="white" variant="solid"
+                @click.stop="selectedTool = null"
+                class="absolute right-10 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-600"
+              >
+                <UIcon name="i-heroicons-x-circle-16-solid" class="w-5 h-5" />
+              </UButton>
+
             </div>
           </div>
         </div>
@@ -290,6 +302,11 @@ const iconClass = computed(() => [
 </script>
 
 <style>
+.clearButton{
+  position: absolute;
+  transform: translateX(-80px);
+}
+
 .u-input-menu input {
   caret-color: black; /* cursor visible */
 }
