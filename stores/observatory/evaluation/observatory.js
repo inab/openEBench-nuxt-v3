@@ -46,7 +46,7 @@ export const useObservatoryStore = defineStore("observatoryData", {
         const result = await $observatory("/api/tools/names_type_labels", {
           method: "GET",
         });
-        console.log("API Response:", result);
+        // console.log("API Response:", result);
 
         if (result ) {
           this.observatoryToolsNameTypeSources = result; // Ensure result has the data field
