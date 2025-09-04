@@ -47,7 +47,6 @@ const selectedVersion = ref(props.initialSelectedVersion || '');
 const searchQuery = ref('');
 
 const versions = ref([...props.versions]);
-console.log(versions)
 const errorMessage = ref("");
 
 // Watcher para sincronizar cambios en initialSelectedVersion

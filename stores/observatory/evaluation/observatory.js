@@ -74,7 +74,7 @@ export const useObservatoryStore = defineStore("observatoryData", {
           method: 'GET',
         });
 
-        console.log("Tool metadata response:", result); // Log metadata response
+        // console.log("Tool metadata response:", result); // Log metadata response
 
         // Assuming metadata preparation needs to be done here
         const metadataStore = useMetadataStore();
