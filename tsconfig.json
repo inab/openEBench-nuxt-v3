@@ -1,16 +1,47 @@
 {
   "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
-    "typeRoots": ["./types", "./node_modules/@types"],
-    "moduleResolution": "node",
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Node",
     "strict": true,
+    "allowJs": true,
+    "checkJs": false,
+    "jsx": "preserve",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
     "baseUrl": ".",
+    "typeRoots": ["./types", "./node_modules/@types"],
     "paths": {
       "@/*": ["./*"],
-      "#app": ["./.nuxt/types/app"]
-    }
+      "#app": ["./.nuxt/types/app"],
+      "#imports": ["./.nuxt/imports"]
+    },
+    "outDir": "./dist",
+    "rootDir": "./"
   },
-  "include": ["src/**/*", "types/**/*.d.ts", "shims-vue.d.ts"],
-  "exclude": ["node_modules", ".nuxt", "dist"]
+  "include": [
+    "nuxt.config.ts",
+    "app.vue",
+    "components/**/*.vue",
+    "layouts/**/*.vue",
+    "pages/**/*.vue",
+    "composables/**/*.ts",
+    "plugins/**/*.ts",
+    "middleware/**/*.ts",
+    "api/**/*.ts",
+    "config/**/*.ts",
+    "constants/**/*.ts",
+    "moks/**/*.ts",
+    "models/**/*.ts",
+    "public/**/*.ts",
+    "server/**/*.ts",
+    "static/**/*.ts",
+    "stores/**/*.ts",
+    "utils/**/*.ts",
+    "test/**/*.ts",
+    "types/**/*.d.ts",
+    "shims-vue.d.ts",
+    ".nuxt"
+  ],
+  "exclude": ["node_modules", ".output", "dist", "stories"]
 }

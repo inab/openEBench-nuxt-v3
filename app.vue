@@ -15,9 +15,11 @@ definePageMeta({
 });
 </script>
 <template>
-  <div class="h-100">
-    <NuxtLoadingIndicator color="#00ff00" error-color="#ff0000" height="5" duration="3000" throttle="100" />
-    <NuxtLayout name="default"> </NuxtLayout>
+  <div>
+    <NuxtLoadingIndicator />
+    <div class="h-100">
+      <NuxtLayout name="default"> </NuxtLayout>
+    </div>
   </div>
 </template>
 

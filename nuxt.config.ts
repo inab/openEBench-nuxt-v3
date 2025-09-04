@@ -1,6 +1,8 @@
-import { customRoutes } from "./router.options";
-import svgLoader from "vite-svg-loader";
-const mockAuthModule = process.env.VITEST ? ['./test/mocks/setup.ts'] : []
+import { customRoutes } from './router.options';
+import svgLoader from 'vite-svg-loader';
+import { defineNuxtConfig } from 'nuxt/config';
+
+const mockAuthModule = process.env.VITEST ? ['./test/mocks/setup.ts'] : [];
 
 export default defineNuxtConfig({
   devtools: {
@@ -8,23 +10,29 @@ export default defineNuxtConfig({
   },
   app: {
     baseURL: '/',
+    head: {
+      charset: 'utf-8',
+      viewport: 'width=device-width, initial-scale=1',
+      link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    },
+    pageTransition: {
+      name: 'page',
+      mode: 'out-in',
+    },
   },
   nitro: {
     serveStatic: true,
     compressPublicAssets: false,
     externals: {
-      inline: ['@inb/oeb-classification-table']
-    }
-  },
-  build: {
-    publicPath: '/_nuxt/',
+      inline: ['@inb/oeb-classification-table'],
+    },
   },
   vite: {
     server: {
-      port: 3001,
       watch: {
         usePolling: true,
         interval: 100,
+        ignored: ['!**/models/**'],
       },
     },
     css: {
@@ -37,20 +45,20 @@ export default defineNuxtConfig({
     plugins: [svgLoader()],
     optimizeDeps: {
       include: [
-        "dompurify",
-        "aos",
-        "data-urls",
-        "whatwg-encoding",
-        "vue3-carousel/dist/carousel.es.js",
-        "gsap",
-        "vue-multiselect",
-        "pluralize",
-        "marked",
-        "lodash.debounce",
-        "@inb/oeb-classification-table",
-        "@inb/oeb-widgets-graphs",
-        "valibot",
-        "@vuepic/vue-datepicker",
+        'dompurify',
+        'aos',
+        'data-urls',
+        'whatwg-encoding',
+        'vue3-carousel/dist/carousel.es.js',
+        'gsap',
+        'vue-multiselect',
+        'pluralize',
+        'marked',
+        'lodash.debounce',
+        '@inb/oeb-classification-table',
+        '@inb/oeb-widgets-graphs',
+        'valibot',
+        '@vuepic/vue-datepicker',
       ],
     },
   },
@@ -61,68 +69,48 @@ export default defineNuxtConfig({
   },
 
   css: [
-    "bootstrap/dist/css/bootstrap.min.css",
-    "@fortawesome/fontawesome-svg-core/styles.css",
-    "aos/dist/aos.css",
-    "vue-multiselect/dist/vue-multiselect.min.css",
-    "~/assets/styles/main.scss",
+    'bootstrap/dist/css/bootstrap.min.css',
+    '@fortawesome/fontawesome-svg-core/styles.css',
+    'aos/dist/aos.css',
+    'vue-multiselect/dist/vue-multiselect.min.css',
+    '~/assets/styles/main.scss',
   ],
 
   ssr: false,
 
-  app: {
-    head: {
-      charset: "utf-8",
-      viewport: "width=device-width, initial-scale=1",
-      link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
-    },
-    pageTransition: {
-      name: "page",
-      mode: "out-in",
-    },
-  },
-
   plugins: [
-    "~/plugins/useGraphql",
-    "~/plugins/useObservatory",
-    "~/plugins/useGithubapp",
-    "~/plugins/useApi",
+    '~/plugins/useGraphql',
+    '~/plugins/useObservatory',
+    '~/plugins/useGithubapp',
+    '~/plugins/useApi',
   ],
 
   runtimeConfig: {
     public: {
-      ENVIRONMENT: process.env.ENVIRONMENT || "dev-openebench",
+      ENVIRONMENT: process.env.ENVIRONMENT || 'dev-openebench',
       OEB_LEGACY_ANGULAR_URI:
-        process.env.OEB_LEGACY_ANGULAR_URI ||
-        "https://legacy.dev-openebench.bsc.es/",
-      VRE_URI: process.env.VRE_URI || "https://dev-openebench.bsc.es/vre/home/",
-      OBSERVATORY_URI:
-        process.env.OBSERVATORY_URI || "https://observatory.openebench.bsc.es",
+        process.env.OEB_LEGACY_ANGULAR_URI || 'https://legacy.dev-openebench.bsc.es/',
+      VRE_URI: process.env.VRE_URI || 'https://dev-openebench.bsc.es/vre/home/',
+      OBSERVATORY_URI: process.env.OBSERVATORY_URI || 'https://observatory.openebench.bsc.es',
       SCIENTIFIC_SERVICE_URL:
-        process.env.SCIENTIFIC_SERVICE_URL ||
-        "https://dev-openebench.bsc.es/api/scientific",
+        process.env.SCIENTIFIC_SERVICE_URL || 'https://dev-openebench.bsc.es/api/scientific',
       SCIENTIFIC_SERVICE_URL_API:
-        process.env.SCIENTIFIC_SERVICE_URL_API ||
-        "https://dev-openebench.bsc.es/api/scientific",
+        process.env.SCIENTIFIC_SERVICE_URL_API || 'https://dev-openebench.bsc.es/api/scientific',
       BENCH_EVENT_API_URL:
-        process.env.BENCH_EVENT_API_URL ||
-        "https://dev-openebench.bsc.es/rest/bench_event_api",
+        process.env.BENCH_EVENT_API_URL || 'https://dev-openebench.bsc.es/rest/bench_event_api',
       OBSERVATORY_API_URL:
-        process.env.OBSERVATORY_API_URL ||
-        "https://observatory.openebench.bsc.es/api",
+        process.env.OBSERVATORY_API_URL || 'https://observatory.openebench.bsc.es/api',
       GITHUBAPP_API_URL:
         process.env.GITHUBAPP_API_URL ||
-        "https://observatory.openebench.bsc.es/github-metadata-api",
+        'https://observatory.openebench.bsc.es/github-metadata-api',
       MONITORING: {
-        baseURL:
-          process.env.REST_API_URL ||
-          "https://dev-openebench.bsc.es/monitor/rest/",
+        baseURL: process.env.REST_API_URL || 'https://dev-openebench.bsc.es/monitor/rest/',
       },
-      KEYCLOAK_HOST: process.env.KEYCLOAK_HOST || "https://inb.bsc.es/",
-      KEYCLOAK_REALM: process.env.KEYCLOAK_REALM || "openebench",
-      KEYCLOAK_CLIENT_ID: process.env.KEYCLOAK_CLIENT_ID || "oeb-frontend",
-      BASE_URL: process.env.APP_BASE_URL || "https://openebench.bsc.es",
-      AUTH_ORIGIN: process.env.AUTH_ORIGIN || "https://inb.bsc.es",
+      KEYCLOAK_HOST: process.env.KEYCLOAK_HOST || 'https://inb.bsc.es/',
+      KEYCLOAK_REALM: process.env.KEYCLOAK_REALM || 'openebench',
+      KEYCLOAK_CLIENT_ID: process.env.KEYCLOAK_CLIENT_ID || 'oeb-frontend',
+      BASE_URL: process.env.APP_BASE_URL || 'https://openebench.bsc.es',
+      AUTH_ORIGIN: process.env.AUTH_ORIGIN || 'https://inb.bsc.es',
     },
   },
 
@@ -131,20 +119,20 @@ export default defineNuxtConfig({
     disableServerSideAuth: false,
     globalAppMiddleware: false,
     provider: {
-      type: "authjs",
+      type: 'authjs',
     },
     redirect: {
-      login: "/login",
-      home: "/",
+      login: '/login',
+      home: '/',
     },
     basePath: '/api/auth',
     originEnvKey: 'AUTH_ORIGIN',
-    baseURL: process.env.APP_BASE_URL || "https://test2.openebench.bsc.es",
-    origin: process.env.AUTH_ORIGIN || "https://inb.bsc.es", 
+    baseURL: process.env.APP_BASE_URL || 'https://test2.openebench.bsc.es',
+    origin: process.env.AUTH_ORIGIN || 'https://inb.bsc.es',
   },
 
   hooks: {
-    "pages:extend": (pages) => {
+    'pages:extend': (pages) => {
       customRoutes.forEach((customRoute) => {
         pages.push(customRoute);
       });
@@ -152,28 +140,24 @@ export default defineNuxtConfig({
   },
 
   modules: [
-    "@nuxt/image",
-    "@nuxt/ui",
-    "@pinia/nuxt",
-    "nuxt-viewport",
-    "@nuxt/eslint",
-    "@nuxt/test-utils/module",
-    "vue3-carousel-nuxt",
-    "@sidebase/nuxt-auth",
+    '@nuxt/image',
+    '@nuxt/ui',
+    '@pinia/nuxt',
+    'nuxt-viewport',
+    '@nuxt/eslint',
+    '@nuxt/test-utils/module',
+    'vue3-carousel-nuxt',
+    '@sidebase/nuxt-auth',
     ...mockAuthModule,
   ],
 
-  buildModules: [
-    "@nuxt/typescript-build",
-  ],
+  typescript: {
+    shim: false,
+  },
 
   image: {
     provider: 'ipx',
-    dir: 'assets/images'
-  },
- 
-  eslint: {
-    // TODO: Remove this when the project is clean
+    dir: 'assets/images',
   },
 
   viewport: {

@@ -22,6 +22,7 @@ services:
       - ./stores:/app/stores:ro
       - ./stories:/app/stories:ro
       - ./test:/app/test:ro
+      - ./utils:/app/utils:ro
       - ./vitest.config.ts:/app/vitest.config.ts:ro
       - ./nuxt.config.js:/app/nuxt.config.js:ro
       - ./package.json:/app/package.json:ro
@@ -54,6 +55,7 @@ services:
       - ./stores:/app/stores:ro
       - ./stories:/app/stories:ro
       - ./test:/app/test:ro
+      - ./utils:/app/utils:ro
       - ./vitest.config.ts:/app/vitest.config.ts:ro
       - ./nuxt.config.js:/app/nuxt.config.js:ro
       - ./package.json:/app/package.json:ro
@@ -62,6 +64,8 @@ services:
       - ./types:/app/types:ro
       - ./stylelint.config.js:/app/stylelint.config.js:ro
       - ./tsconfig.json:/app/tsconfig.json:ro
+      - ./models:/app/models
+      - ./api:/app/api
       - node-modules-volume:/app/node_modules
       - dist-volume:/app/dist
     ports:

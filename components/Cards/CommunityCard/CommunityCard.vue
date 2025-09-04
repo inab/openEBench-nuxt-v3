@@ -1,8 +1,8 @@
 <template>
   <div class="h-100 community-card">
-    <NuxtLink
-      :to="to"
-      class="community-card__item max-w-sm rounded overflow-visible text-zinc-700"
+    <div
+      class="community-card__item max-w-sm rounded overflow-visible text-zinc-700 cursor-pointer"
+      @click="handleNavigation"
     >
       <div class="community-card__item__image">
         <div
@@ -91,12 +91,14 @@
           </div>
         </div>
       </div>
-    </NuxtLink>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import pluralize from "pluralize";
+
+const router = useRouter();
 
 const props = defineProps<{
   _id: string;
@@ -138,6 +140,10 @@ const statusChipColor = computed(() => {
       return "bg-neutral-300";
   }
 });
+
+const handleNavigation = () => {
+  router.push(props.to);
+};
 </script>
 
 <style scoped lang="scss">

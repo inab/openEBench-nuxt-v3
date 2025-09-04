@@ -1,6 +1,5 @@
 // types/composables.d.ts
 declare module '~/composables/useAPI' {
-    const customApi: any;
-    export default customApi;
-  }
-  
+  const customApi: unknown;
+  export default customApi;
+}

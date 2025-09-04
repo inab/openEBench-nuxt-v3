@@ -411,8 +411,6 @@ const props = defineProps<{
   eventContacts: Array<any>;
 }>();
 
-console.log(props.eventContacts);
-
 const dialogTitle = ref("");
 const dialogType = ref("yesno");
 const isDialogOpened = ref(false);

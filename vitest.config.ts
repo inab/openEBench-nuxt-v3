@@ -1,19 +1,18 @@
-import { defineVitestConfig } from "@nuxt/test-utils/config";
-import vue from "@vitejs/plugin-vue";
-const mockAuthModule = process.env.VITEST ? ["test/mocks/setup"] : [];
+import { defineVitestConfig } from '@nuxt/test-utils/config';
+const mockAuthModule = process.env.VITEST ? ['test/mocks/setup'] : [];
 
 export default defineVitestConfig({
   plugins: [],
   test: {
     globals: true,
-    environment: "jsdom",
-    setupFiles: mockAuthModule, // Carga el módulo de setup si estamos en modo de prueba
+    environment: 'jsdom',
+    setupFiles: mockAuthModule,
     coverage: {
-      reporter: ["text", "json", "html"],
-      provider: "istanbul",
+      reporter: ['text', 'json', 'html'],
+      provider: 'istanbul',
     },
-    reporters: ["verbose"],
-    include: ["tests/unit/**/*.spec.ts", "tests/unit/**/*.test.ts"],
-    exclude: ["node_modules/**", "**/migrations/**", "**/coverage/**"],
+    reporters: ['verbose'],
+    include: ['tests/unit/**/*.spec.ts', 'tests/unit/**/*.test.ts'],
+    exclude: ['node_modules/**', '**/migrations/**', '**/coverage/**'],
   },
 });

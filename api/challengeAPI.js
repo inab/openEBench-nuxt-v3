@@ -20,7 +20,7 @@ export async function challengeAPI(challengeID) {
 							participant_datasets: datasets(datasetFilters: {type: "participant"}) {
 								_id
 								orig_id
-								datalink {
+								datalinks {
 									inline_data
 									schema_url
 									uri
@@ -39,7 +39,7 @@ export async function challengeAPI(challengeID) {
 							assessment_datasets: datasets(datasetFilters: {type: "assessment"}) {
 								_id
 								orig_id
-								datalink {
+								datalinks {
 									inline_data
 									schema_url
 									uri
@@ -62,7 +62,7 @@ export async function challengeAPI(challengeID) {
 						getDatasets(
 							datasetFilters: { challenge_id: $id, type: "aggregation" }
 						) {
-							datalink {
+							datalinks {
 								inline_data
 							}
 							dates {
@@ -86,34 +86,29 @@ export async function challengeAPI(challengeID) {
     }),
   });
 }
+
 export async function getGraphData(dataset) {
-  let log2Param = "";
-  if (
-    dataset.datalink.inline_data.visualization.type === "box-plot" &&
-    dataset.datalink.inline_data.visualization.axes_scale &&
-		dataset.datalink.inline_data.visualization.axes_scale === "?log2=true"
-  ) {
-    log2Param = "?log2=true";
+  const datalink = dataset?.datalinks?.[0];
+
+  if (!datalink?.inline_data) {
+    return [];
   }
-  let response =
-    dataset.datalink.inline_data.visualization.type === "bar-plot" ||
-    dataset.datalink.inline_data.visualization.type === "box-plot"
-      ? await useNuxtApp().$graphql(
-          `/widget/${dataset.datalink.inline_data.visualization.type}/${dataset._id}${
-            dataset.datalink.inline_data.visualization.type === "box-plot"
-              ? log2Param
-              : ""
-          }`,
-          {
-            method: "GET",
-            headers: {
-              Accept: "text/plain, */*",
-            },
-          },
-        )
-      : [];
-  return response;
+
+  let parsedInlineData;
+
+  try {
+    parsedInlineData =
+      typeof datalink.inline_data === "string"
+        ? JSON.parse(datalink.inline_data)
+        : datalink.inline_data;
+  } catch (e) {
+    console.error("Error parsing inline_data:", e);
+    return [];
+  }
+
+  return parsedInlineData;
 }
+
 
 export default {
   challengeAPI,
