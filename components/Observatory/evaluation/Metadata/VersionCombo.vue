@@ -2,7 +2,7 @@
   <div class="row mx-1 mt-2">
     <UInputMenu
       v-model="selectedVersion"
-      v-model:query="selectedVersion"
+      v-model:query="searchQuery"
       :options="versions"
       persistent-hint
       class="text-body-2 mt-2 border-1 rounded-md px-0 focus-within:ring-primaryOeb-500 focus-within:border-primaryOeb-500 focus-within:text-primaryOeb-500"
@@ -43,9 +43,11 @@ const props = defineProps({
 });
 
 // Reactive variables
-const selectedVersion = ref(props.initialSelectedVersion);
+const selectedVersion = ref(props.initialSelectedVersion || '');
+const searchQuery = ref('');
+
 const versions = ref([...props.versions]);
-const errorMessage = ref(""); // Mensaje de error reactivo
+const errorMessage = ref("");
 
 // Watcher para sincronizar cambios en initialSelectedVersion
 watch(
@@ -57,8 +59,9 @@ watch(
 
 // Methods
 const isValidVersion = (version) => {
-  const versionRegex = /^\d+\.\d+\.\d+$/;
-  return versionRegex.test(version) && version.trim() !== '';
+  // Permite formatos: 1, 1.2, 1.2.3
+  const versionRegex = /^\d+(\.\d+){0,2}$/;
+  return versionRegex.test(version.trim());
 };
 
 const addValueIfNotExists = () => {
