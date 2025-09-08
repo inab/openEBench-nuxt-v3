@@ -49,7 +49,8 @@
         title: 'Count',
       },
       yaxis: {
-        automargin: true
+        automargin: true,
+        ticksuffix: '  '
       },
       margin: {
         l: 100,

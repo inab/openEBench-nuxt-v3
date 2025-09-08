@@ -56,12 +56,13 @@
       yaxis: {
         autorange: 'reversed',
         automargin: true,
+        ticksuffix: '  '
       },
       showlegend: false,
       margin: {
         l: 200,
         r: 50,
-        t: 60,
+        t: 20,
         b: 60,
       },
       height: 700,

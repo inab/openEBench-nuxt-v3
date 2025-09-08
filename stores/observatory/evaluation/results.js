@@ -6,6 +6,7 @@ export const useResultStore = defineStore('result', {
   state: () => ({
     fAIRIndicatorsTool: null,
 	  fAIRIndicatorsLogs: null,
+    fAIRIndicatorsFeedback: null,
 	  fAIRIndicatorsControl: null,
 	  loadingEvaluation: false,
   }),
@@ -13,6 +14,7 @@ export const useResultStore = defineStore('result', {
   getters: {
     getFAIRIndicatorsTool: (state) => state.fAIRIndicatorsTool,
     getFAIRIndicatorsLogs: (state) => state.fAIRIndicatorsLogs,
+    getFAIRIndicatorsFeedback: (state) => state.fAIRIndicatorsFeedback,
     getFAIRIndicatorsControl: (state) => state.fAIRIndicatorsControl,
     getLoadingEvaluation: (state) => state.loadingEvaluation
   },
@@ -21,9 +23,13 @@ export const useResultStore = defineStore('result', {
     setFAIRIndicatorsToolResult(payload){
       const result = payload.result;
       const logs = payload.logs;
+      const feedback = payload.feedback;
 
       this.fAIRIndicatorsTool = result;
       this.fAIRIndicatorsLogs = logs;
+      this.fAIRIndicatorsFeedback = feedback;
+
+
     },
     setFAIRIndicatorsControl(result){
       this.fAIRIndicatorsControl = result;

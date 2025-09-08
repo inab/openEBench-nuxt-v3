@@ -22,11 +22,11 @@ const props = defineProps<{
 const plotContainer = ref<HTMLElement | null>(null);
 
 const colorMap: Record<DocFormat, string> = {
-  web: '#c7e9c0',
-  downloadable: '#74c476',
-  github: '#41AB5D',
-  gitlab: '#238B45',
-  total: '#366141',
+  web: '226f54',
+  downloadable: '87c38f',
+  github: 'f4f0bb',
+  gitlab: 'd3d3d3',
+  total: '2c423f',
 };
 
 const formats: DocFormat[] = ['web', 'downloadable', 'github', 'gitlab', 'total'];
@@ -87,8 +87,9 @@ const drawPlot = () => {
     title: '',
     barmode: 'group',
     yaxis: {
-      title: 'Documentation Type',
-      automargin: true
+      title: { text: 'Documentation Type', standoff: 10},
+      automargin: true,
+      ticksuffix: '  '
     },
     xaxis: {
       title: 'Number of Documentation Links'
@@ -103,8 +104,8 @@ const drawPlot = () => {
           x1: 1,
           y0: i - 0.5,
           y1: i + 0.5,
-          fillcolor: '#628062',
-          opacity: 0.1,
+          fillcolor: 'ffc971',
+          opacity: 0,
           layer: 'below',
           line: { width: 0 }
         };

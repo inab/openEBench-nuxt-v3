@@ -1,34 +1,35 @@
 <template>
   <div>
     <UCard :ui="{body: {padding: 'px-4 py-4 sm:p-4'},shadow: 'shadow-md'}">
-      
+
       <div class="d-flex flex-wrap items-start">
         <div class="col-9">
-          <h6 class="mb-2">{{ title }}</h6>
-          <span class="text-sm">{{ principle.description }}</span>
+          <h5 class="mb-2">{{ title }}</h5>
+          <span class="text-sm">{{ description }}</span>
         </div>
         <div class="col-3 text-end mt-1">
-          <div class="score leading-5">{{ principle.score }}</div>
-          <div class="control text-body-secondary text-sm">Avg. score: {{ principle.control }}</div>
+          <div class="score leading-5">{{ score?.toFixed(2) }}</div>
+          <!--div class="control text-body-secondary text-sm">Avg. score: {{ control }}</div-->
         </div>
       </div>
       
-      <div class="flex justify-center mt-4 mb-4">
-        <IndicatorsBars :indicators="[
-          { label: 'F1', score: 0.90, color: '#5E9BE1', bg: '#5E9BE1' },
-          { label: 'F2', score: 0.60, color: 'text-yellow-600', bg: 'bg-yellow-400' },
-          { label: 'F3', score: 0.79, color: 'text-emerald-600', bg: 'bg-emerald-400' }
-        ]" />
+      <div class="flex w-full mt-4 mb-4">
+        <IndicatorsBars :indicators="indicators" class="flex-1"/>
       </div>
-      <UAccordion multiple default-open color="white" :items="items">
-        <template #item="{ item }">
-         <ul class="list-disc list-inside space-y-1 pr-2">
-          <li v-for="(point, index) in item.content" :key="index">
+      <UAccordion multiple default-close color="white" :items="feedbackItems">
+      <!-- Body/content -->
+      <template #item="{ item }">
+        <ul class="list-disc space-y-1 pr-2">
+          <li
+            v-for="(point, index) in item.content"
+            :key="index"
+            class="mb-2 text-[0.82rem] text-black"
+          >
             {{ point }}
           </li>
         </ul>
-        </template>
-      </UAccordion>
+      </template>
+    </UAccordion>
 
       <div class="grid justify-items-end">
         <UButton 
@@ -42,7 +43,6 @@
         </UButton>
       </div>
     </UCard>
-  </div>
 
   <!-- Detailed results -->
   <div v-if="dialog" @click.self="closeDialog" 
@@ -78,6 +78,7 @@
       </div>
     </div>
   </div>
+  </div>
 
     
 </template>
@@ -91,36 +92,30 @@ import IndicatorsTable from './IndicatorsTable.vue';
 
 const metadataStore = useMetadataStore();
 
-
-// Data 
-const principle = {
-  description: "How easily software and its metadata can be discovered by humans and machines.",
-  score: 0.89,
-  control: 0.80,
-}
-
-const items:  AccordionItem[] = [{
-    label: "Strenghts",
-    content: ['Software name is unique and easily recognizable','High visibility across academic and developer communities']
-    },
-  {
-    label: "How to improve",
-    content: ['Provide a persistent identifier such as a DOI or RRID','Add a clear, searchable description using domain-relevant keywords']
-  }]
-
 // PROPS
 const props = defineProps<{
   title: string,
-  color: string,
+  description: string,
+  score: number,
+  control: number,
+  indicators: Array<object>,
+  strengths: Array<string>,
+  improvements: Array<string>,
   items: Array<any>,
-  indicatorsLabel: Array<any>
+  indicatorsLabel: Array<any>,
+  
 }>();
 
 const dialog = ref(false)
 const dialogAnimation = ref('an1');
 
 const toolMetadata = computed(() => metadataStore.getToolMetadata);
-
+const feedbackItems = computed<AccordionItem[]>(() => {
+  const items: AccordionItem[] = []
+  if (props.strengths?.length) items.push({ label: 'Strengths', content: props.strengths })
+  if (props.improvements?.length) items.push({ label: 'How to improve',  content: props.improvements })
+  return items
+})
 // Methods
 const openDialog = () => {
   dialog.value = true
@@ -144,6 +139,7 @@ watch(dialog, (newValue) => {
 	text-transform: none !important;
 }
 
+
 .buttonDetails {
 	color: #0b579f !important;
 }
@@ -166,12 +162,14 @@ watch(dialog, (newValue) => {
   animation: animationDown 0.5s ease 0s 1 normal forwards;
 }
 
+
 .score {
   color: #0b579f;
-  font-size: 2em;
+  font-size: 2.3em;
   margin-top: 0;
   line-height: 1.25rem;
   margin-bottom: 0.2em;
+  padding-right: 0.em
 
 }
 

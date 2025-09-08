@@ -145,6 +145,7 @@ function triggerDataRefresh() {
   trendsStore.getVersionControlCount();
   trendsStore.getVersionControlRepositories();
   trendsStore.getPublications();
+  trendsStore.getPublicationsCount();
   trendsStore.getDependencies();
   trendsStore.getDocumentation();
   trendsStore.getInputFormats();
