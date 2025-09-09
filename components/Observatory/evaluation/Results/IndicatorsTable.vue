@@ -58,10 +58,11 @@
           </div>
           <div v-if="!idsMainIndicators.includes(row.id) && indicatorsExplanation[row.id].types.includes(metaType(row))">
             <UBadge v-if="row.status === true" color="green" variant="soft"
+            class="bg-green-50 text-green-500 dark:bg-green-400/30 dark:text-green-400"
             >
               PASSED
             </UBadge>
-            <UBadge v-else color="amber" variant="soft"
+            <UBadge v-else  variant="soft" class="bg-amber-50 text-amber-500 dark:bg-amber-400/30 dark:text-amber-400"
             >
               FAILED
             </UBadge>
