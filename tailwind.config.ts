@@ -59,4 +59,10 @@ export default <Partial<Config>>{
       },
     },
   },
+  safelist: [
+    {
+      pattern: /(bg|text|ring|border)-(gray|green|amber|red|blue|indigo|purple|pink)-(50|100|200|300|400|500|600|700|800|900)/,
+      variants: ['hover', 'focus', 'ui-selected', 'dark']
+    }
+  ]
 };
