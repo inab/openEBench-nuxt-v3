@@ -13,7 +13,7 @@ ARG SCIENTIFIC_SERVICE_URL=https://dev.openebench.bsc.es/api/scientific/
 #ARG SCIENTIFIC_SERVICE_URL_API=https://dev-openebench.bsc.es/api/scientific/
 ARG SCIENTIFIC_SERVICE_URL_API=https://dev.openebench.bsc.es/api/scientific/
 
-ARG BENCH_EVENT_API_URL=https://dev-openebench.bsc.es/rest/bench_event_api
+ARG BENCH_EVENT_API_URL=https://openebench.bsc.es/rest/bench_event_api
 ARG KEYCLOAK_HOST=https://inb.bsc.es
 ARG KEYCLOAK_REALM=dev-openebench
 ARG KEYCLOAK_CLIENT_ID=oeb-frontend
