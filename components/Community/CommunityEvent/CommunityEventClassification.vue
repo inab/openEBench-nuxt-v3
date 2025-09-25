@@ -1,5 +1,14 @@
 <template>
-  <div class="community-event-classification">
+  <div>
+    <ClassificationTable 
+      :challengeList="filterArray" 
+      :activeTable="id"
+      :dataMode="dataMode"
+      :apiUrl="apiUrl"
+      :benchEventApiUrl="benchEventApiUrl"
+    />
+  </div>
+  <!-- <div class="community-event-classification">
     <div
       :id="id"
       class="oeb-table"
@@ -8,11 +17,12 @@
       :data-api-url="apiUrl"
       :data-bench-event-api-url="benchEventApiUrl"
     />
-  </div>
+  </div> -->
 </template>
 
 <script setup lang="ts">
 import debounce from "lodash.debounce";
+import ClassificationTable from "@/components/Community/CommunityEvent/CommunityClassificationTable.vue";
 import { run_summary_table } from "@inb/oeb-classification-table";
 import { watch, onMounted } from "vue";
 
@@ -29,7 +39,7 @@ const props = defineProps<{
 const runtimeConfig = useRuntimeConfig();
 
 const apiUrl = runtimeConfig.public
-  ? runtimeConfig.public.SCIENTIFIC_SERVICE_URL + "/graphql"
+  ? runtimeConfig.public.SCIENTIFIC_SERVICE_URL + "graphql"
   : "https://dev-openebench.bsc.es/api/scientific/graphql";
 const benchEventApiUrl = runtimeConfig.public
   ? runtimeConfig.public.BENCH_EVENT_API_URL
@@ -39,7 +49,7 @@ const dataMode = runtimeConfig.public
   : "dev-openebench";
 
 onMounted(() => {
-  loadTable();
+  // loadTable();
 });
 
 const debouncedFilterArrayWatch = debounce(() => {
