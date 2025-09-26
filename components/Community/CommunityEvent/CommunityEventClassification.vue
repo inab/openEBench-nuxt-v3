@@ -8,22 +8,10 @@
       :benchEventApiUrl="benchEventApiUrl"
     />
   </div>
-  <!-- <div class="community-event-classification">
-    <div
-      :id="id"
-      class="oeb-table"
-      :data-benchmarkingevent="id"
-      :data-mode="dataMode"
-      :data-api-url="apiUrl"
-      :data-bench-event-api-url="benchEventApiUrl"
-    />
-  </div> -->
 </template>
 
 <script setup lang="ts">
-import debounce from "lodash.debounce";
 import ClassificationTable from "@/components/Community/CommunityEvent/CommunityClassificationTable.vue";
-import { run_summary_table } from "@inb/oeb-classification-table";
 import { watch, onMounted } from "vue";
 
 const props = defineProps<{
@@ -48,29 +36,6 @@ const dataMode = runtimeConfig.public
   ? runtimeConfig.public.ENVIRONMENT
   : "dev-openebench";
 
-onMounted(() => {
-  // loadTable();
-});
-
-const debouncedFilterArrayWatch = debounce(() => {
-  loadTable();
-}, debounce);
-
-const loadTable = () => {
-  try {
-    run_summary_table(props.filterArray, props.id);
-  } catch (error) {
-    console.log("Error load table: " , error);
-  }
-};
-
-watch(
-  () => props.filterArray,
-  () => {
-    debouncedFilterArrayWatch();
-  },
-  { deep: true },
-);
 </script>
 
 <style scoped lang="scss">
