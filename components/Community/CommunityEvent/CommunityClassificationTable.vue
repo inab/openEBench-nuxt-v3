@@ -1,14 +1,14 @@
 <template>
-  <div>
-    <h2 class="text-xl font-bold mb-4">Hello World</h2>
+  <div
+    v-for="(table, index) in computedTables"
+    :key="index"
+    :id="table.divId"
+    :data-benchmarkingevent="table.dataId"
+  >
+    <!-- Error message -->
+    <p v-if="errors[table.divId]" class="my-4">{{ errors[table.divId] }}</p>
 
-    <div
-      v-for="(table, index) in computedTables"
-      :key="index"
-      class="oeb-table border rounded-lg p-4 shadow-sm mb-4"
-      :id="table.divId"
-      :data-benchmarkingevent="table.dataId"
-    >
+    <div v-else class="border rounded-lg p-4 shadow-sm mb-4 mt-4">
       <!-- Dropdown de clasificación -->
       <label :for="table.divId + '_bench_dropdown_list'">
         Classification Method:
@@ -16,7 +16,7 @@
       <select
         :id="table.divId + '_bench_dropdown_list'"
         v-model="classifiers[table.divId]"
-        class="classificator_list"
+        class="classificator_list py-1"
         @change="onClassifierChange(table.divId)"
       >
         <optgroup label="Select a classification method:">
@@ -24,7 +24,6 @@
           <option value="diagonals">DIAGONAL QUARTILES</option>
           <option value="clusters">K-MEANS CLUSTERING</option>
         </optgroup>
-
       </select>
 
       <!-- Spinner -->
@@ -39,42 +38,46 @@
       </div>
 
       <div v-else id="table-content-{{ table.divId }}">
-        <!-- Error message -->
-        <p v-if="errors[table.divId]" class="text-red-500">{{ errors[table.divId] }}</p>
-
+        
         <!-- Tabs -->
-        <div v-if="tableData && tableData.aggregation_slices.length > 0" class="mb-3 mt-4">
-          <div class="grid grid-cols-5 gap-2">
+        <div v-if="tableData && tableData.aggregation_slices.length > 0" class="mb-4 mt-5">
+          <div class="flex items-stretch gap-2">
             <button
-              v-for="(slice, idx) in paginatedSlices"
-              :key="idx"
-              @click="activeSliceIndex = currentPage * tabsPerPage + idx"
-              class="px-3 py-1 rounded-lg border texto-truncado"
-              :class="activeSliceIndex === (currentPage * tabsPerPage + idx)
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
-            >
-              {{ slice.from }}
-              <span v-if="slice.from !== slice.to">→ {{ slice.to }}</span>
-            </button>
-          </div>
-
-          <!-- Paginador -->
-          <div class="flex justify-center mt-2 space-x-2">
-            <button
+              v-if="totalPages > 1"
               @click="currentPage = Math.max(currentPage - 1, 0)"
               :disabled="currentPage === 0"
-              class="px-2 py-1 border rounded disabled:opacity-50"
+              class="px-1 font-bold rounded-l-md border bg-gray-300 text-gray-700 hover:bg-gray-200 disabled:opacity-50 flex items-center justify-center"
             >
-              ◀ Prev
+              ⟨
             </button>
-            <!--  -->
+
+            <!-- Tabs -->
+            <div
+            :class="paginatedSlices.length >= 5
+              ? 'grid grid-cols-5 gap-2 flex-1 bg-gray-300 p-2 items-stretch'
+              : 'flex justify-center gap-2 flex-1 bg-gray-300 p-2 items-stretch'"
+            >
+              <button
+                v-for="(slice, idx) in paginatedSlices"
+                :key="idx"
+                @click="activeSliceIndex = currentPage * tabsPerPage + idx"
+                class="px-3 py-1 rounded-lg border texto-truncado h-full"
+                :class="activeSliceIndex === (currentPage * tabsPerPage + idx)
+                  ? 'bg-primaryOeb-500 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
+              >
+                {{ slice.from }}
+                <span v-if="slice.from !== slice.to">→ {{ slice.to }}</span>
+              </button>
+            </div>
+
             <button
+              v-if="totalPages > 1"
               @click="currentPage = Math.min(currentPage + 1, totalPages - 1)"
               :disabled="currentPage === totalPages - 1"
-              class="px-2 py-1 border rounded disabled:opacity-50"
+              class="px-1 font-bold rounded-r-md border bg-gray-300 text-gray-700 hover:bg-gray-200 disabled:opacity-50 flex items-center justify-center"
             >
-              Next ▶
+              ⟩
             </button>
           </div>
         </div>
@@ -82,12 +85,12 @@
         <div v-if="tableData">
 
           <!-- Reporte -->
-          <div class="flex flex-row justify-between">
+          <div class="flex flex-row justify-between my-2 ">
             <p class="text-sm font-semibold">
               {{ tableData.challenges_list.length }} Challenges,
               {{ tableData.num_charts }} charts
             </p>
-            <div v-if="paginationInfo" class="text-sm text-gray-600">
+            <div v-if="paginationInfo && totalPages > 1" class="text-sm text-gray-600">
               {{ paginationInfo.start }}–{{ paginationInfo.end }} tabs of {{ paginationInfo.totalTabs }} tabs, 
               {{ paginationInfo.currentPage }}/{{ paginationInfo.totalPages }} pages
             </div>
@@ -99,10 +102,10 @@
             <!-- Table container -->
             <div class="overflow-x-auto overflow-y-auto max-h-[50vh]">
 
-              <table class="table-auto w-full min-w-64 border-separate border-spacing-0 oeb-table">
+              <table class="table-fixed w-full min-w-64 border-separate border-spacing-0 oeb-table">
                 <thead class="sticky z-20 top-0 bg-white">
                   <tr>
-                    <th class="border px-2 py-1 text-center font-bold sticky left-0 z-30 bg-white">
+                    <th class="border px-2 py-1 text-center font-bold sticky left-0 z-30 bg-white tool-column">
                       Challenges →
                     </th>
                     <th
@@ -154,7 +157,7 @@
 
                     <!-- Tool column -->
                     <td class="border px-2 py-1.5 font-semibold sticky left-0 z-10 bg-white min-w-44">
-                      <div class="aggregation_cell">
+                      <div>
                         <a
                           v-if="tableData.toolElixirIds[tool]"
                           :href="`https://${props.mode}.bsc.es/tool/${tableData.toolElixirIds[tool]}`"
@@ -187,7 +190,6 @@
 
         </div>
       </div>
-
     </div>
   </div>
 </template>
@@ -205,13 +207,12 @@ const props = defineProps({
 })
 
 const tableData = ref(null)
-// Guardamos qué clasificador está seleccionado por tabla
+// We save which sorter is selected by table.
 const classifiers = ref({})
 const loading = ref({})
 const errors = ref({})
 const results = ref({})
-
-// Paginador
+// Paginator
 const activeSliceIndex = ref(0)
 const tabsPerPage = 10          
 const currentPage = ref(0)
@@ -234,33 +235,26 @@ const computedTables = computed(() => {
   }
 })
 
-// 👉 función que sustituye load_table
+// Load table
 function load_table(divId, challengeList, classifier = 'diagonals', chunkSize = 10) {
-  // inicializamos el clasificador si no está
   if (!classifiers.value[divId]) {
     classifiers.value[divId] = classifier
   }
-
-  // ejecutar clasificación inicial
   compute_classification(divId, classifiers.value[divId], challengeList, chunkSize)
 }
 
-// Manejo cuando cambia el dropdown
+// Dropdown management
 function onClassifierChange(divId, chunkSize = 10) {
   compute_classification(divId, classifiers.value[divId], props.challengeList, chunkSize)
 }
 
+// Loading
 function setLoading(divId, isLoading) {
   loading.value[divId] = isLoading
 }
 
-// Revisar bien esta funcion.
-function prepareTableData(
-  aggregations,
-  chunk_size,
-  mode,
-  community_id
-) {
+// Prepare the data in the table.
+function prepareTableData( aggregations, chunk_size, mode, community_id) {
   let known_tools = {}
   let ordered_tools = []
   let challenges = {}
@@ -285,13 +279,11 @@ function prepareTableData(
         num_charts++
       }
 
-      // ------------------------------------------------------------
       // Aggregation specific cell
-
       if (aggregation.aggregation_id !== undefined){
         aggregation.metrics.forEach((m_entry, m_entry_i) => {
           if (m_entry == null) {
-            // console.log("FIXME: metrics label not in challenge", aggregation);
+            console.log("FIXME: metrics label not in challenge", aggregation);
           }
         })
       }
@@ -345,7 +337,7 @@ function prepareTableData(
   force_break = true
   aggregation_slices = empty_challenges_list.reduce(reduce_lambda, aggregation_slices)
 
-  // 🔹 Construir headers con colspan y URL
+  // Building headers with colspan and URLs
   const challengeHeaders = []
   const seen = {}
   challenges_list.flat().forEach(agg => {
@@ -372,42 +364,7 @@ function prepareTableData(
 }
 
 // ------------------------------------------------------------------------------------------------
-// PAGINADOR
-// ------------------------------------------------------------------------------------------------
-// calcular slices visibles en la página actual
-const paginatedSlices = computed(() => {
-  if (!tableData.value) return []
-  const start = currentPage.value * tabsPerPage
-  return tableData.value.aggregation_slices.slice(start, start + tabsPerPage)
-})
-
-// total de páginas
-const totalPages = computed(() => {
-  if (!tableData.value) return 0
-  return Math.ceil(tableData.value.aggregation_slices.length / tabsPerPage)
-})
-
-const paginationInfo = computed(() => {
-  if (!tableData.value) return null
-
-  const totalTabs = tableData.value.aggregation_slices.length
-  const start = currentPage.value * tabsPerPage + 1
-  const end = Math.min((currentPage.value + 1) * tabsPerPage, totalTabs)
-  const totalPages = Math.ceil(totalTabs / tabsPerPage)
-
-  return {
-    start,
-    end,
-    totalTabs,
-    currentPage: currentPage.value + 1,
-    totalPages
-  }
-})
-
-
-
-// ------------------------------------------------------------------------------------------------
-// Adaptación de compute_classification
+// Compute Classification
 async function compute_classification(divId, selectedClassifier, challengeList, chunkSize) {
   setLoading(divId, true)
   errors.value[divId] = null
@@ -420,10 +377,9 @@ async function compute_classification(divId, selectedClassifier, challengeList, 
 
     const pathData = `${divId}/${selectedClassifier}`
     const url = `${bench_event_api_url.replace(/\/$/, '')}/${pathData}`
-
     const method = (challengeList.length === 0 ? 'GET' : 'POST')
 
-    // 🔹 Aquí $fetch ya devuelve el JSON, no un Response
+    // ResultsJson
     const resultsJson = await $fetch(url, {
       method,
       body: method === 'POST' ? challengeList : undefined
@@ -434,14 +390,13 @@ async function compute_classification(divId, selectedClassifier, challengeList, 
       return
     }
 
-    // 🔹 Calcular bench_id y community_id
+    // Calculate bench_id and community_id
     const bench_id = divId
     const community_id = "OEBC" + bench_id.substring(4, 7)
 
     const graphqlUrl = api_url
       ? api_url
       : `https://${mode}.bsc.es/sciapi/graphql`
-
 
     const gqlResponse = await $fetch(graphqlUrl, {
       method: 'POST',
@@ -461,7 +416,7 @@ async function compute_classification(divId, selectedClassifier, challengeList, 
 
     const toolList = gqlResponse?.data?.getTools ?? []
 
-    // 🔹 Generar diccionario tool_elixir_ids
+    // Generate tool_elixir_ids dictionary
     const tool_elixir_ids = {}
     toolList.forEach(tool => {
       if (tool.registry_tool_id != null) {
@@ -471,30 +426,48 @@ async function compute_classification(divId, selectedClassifier, challengeList, 
       }
     })
 
-    // 
-    // 
-    // 
-    // 🔹 Llamar a fill_in_table (placeholder por ahora)
-    // fill_in_table(divId, resultsJson, mode, tool_elixir_ids, community_id, bench_id, chunkSize, api_url)
-    console.log('📊 fill_in_table pendiente', {
-      divId, resultsJson, mode, tool_elixir_ids, community_id, bench_id, chunkSize, api_url
-    })
-
     const prepared = prepareTableData(resultsJson, chunkSize, mode, community_id)
     prepared.toolElixirIds = tool_elixir_ids
     tableData.value = prepared
 
-    // Guardar resultados
+    // Save results
     results.value[divId] = resultsJson
   } catch (err) {
     console.error('❌ Error en compute_classification:', err)
-    errors.value[divId] = 'Unexpected error while fetching data.'
+    errors.value[divId] = 'There is an error in the server. Please try again or contact with the support team.'
   } finally {
     setLoading(divId, false)
   }
 }
 
+// Paginator
 // ------------------------------------------------------------------------------------------------
+const paginatedSlices = computed(() => {
+  if (!tableData.value) return []
+  const start = currentPage.value * tabsPerPage
+  return tableData.value.aggregation_slices.slice(start, start + tabsPerPage)
+})
+const totalPages = computed(() => {
+  if (!tableData.value) return 0
+  return Math.ceil(tableData.value.aggregation_slices.length / tabsPerPage)
+})
+const paginationInfo = computed(() => {
+  if (!tableData.value) return null
+
+  const totalTabs = tableData.value.aggregation_slices.length
+  const start = currentPage.value * tabsPerPage + 1
+  const end = Math.min((currentPage.value + 1) * tabsPerPage, totalTabs)
+  const totalPages = Math.ceil(totalTabs / tabsPerPage)
+
+  return {
+    start,
+    end,
+    totalTabs,
+    currentPage: currentPage.value + 1,
+    totalPages
+  }
+})
+
 // Montaje inicial
 // ------------------------------------------------------------------------------------------------
 onMounted(() => {
@@ -503,7 +476,8 @@ onMounted(() => {
   })
 })
 
-// Volvemos a calcular si cambian las props
+// We recalculate if the props change.
+// ------------------------------------------------------------------------------------------------
 watch([() => props.challengeList, () => props.activeTable], () => {
   computedTables.value.forEach((table) => {
     load_table(table.divId, props.challengeList)
@@ -514,29 +488,47 @@ watch([() => props.challengeList, () => props.activeTable], () => {
 <style scoped>
 
 .classificator_list {
-  background-color: #0a58a2;
+  background-color: #0b579f;
   color: #fff;
   cursor: pointer;
   padding-left: 5px;
   padding-right: 25px;
   margin-left: 50px;
   text-align: center;
-  border: 5px solid transparent;
-  border-right: 15px solid transparent;
+  border: 5px solid transparent !important;
+  border-right: 15px solid transparent !important;
   line-height: 1.25rem;
   font-size: 0.875rem;
   border-radius: 0.375rem;
 }
 
 .classificator_list:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(61 121 179 / var(--tw-bg-opacity));
+  background-color: #09477f;
+}
+
+.classificator_list:focus {
+  outline: none;
 }
 
 select.classificator_list {
   appearance: auto;
   -moz-appearance: auto !important;
   -webkit-appearance: auto !important;
+}
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  margin-top: 20px;
+  height: 100px;
+  text-align: center;
+}
+
+.spinner {
+  width: 150px;
+  height: 100px;
 }
 /* Cells color */
 .Q1 {
@@ -564,9 +556,18 @@ select.classificator_list {
   max-width: 30ch;
 }
 
-.oeb-table th,
 .oeb-table {
+  margin-bottom: 0px;
+  table-layout: auto; /* Default, mantiene el comportamiento normal */ 
+}
+
+.oeb-table th{
   background: #fff;
+}
+
+.oeb-table th,
+.oeb-table td {
+  border: 1px solid #0000003d !important; /* color gris claro de ejemplo */
 }
 
 .oeb-table thead th {
@@ -575,13 +576,15 @@ select.classificator_list {
   top: 0;
 }
 
-/* Fijar las dos primeras celdas del thead en el scroll horizontal */
 .oeb-table thead th.sticky {
   left: 0;
-  z-index: 30; /* más alto que el resto del header */
+  z-index: 30;
   background: #fff;
   position: sticky;
 }
 
+.tool-column{
+  width: 100px !important;
+}
 
 </style>
