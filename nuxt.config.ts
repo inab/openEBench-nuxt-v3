@@ -54,8 +54,6 @@ export default defineNuxtConfig({
         'vue-multiselect',
         'pluralize',
         'marked',
-        'lodash.debounce',
-        '@inb/oeb-classification-table',
         '@inb/oeb-widgets-graphs',
         'valibot',
         '@vuepic/vue-datepicker',
