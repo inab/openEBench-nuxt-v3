@@ -25,7 +25,7 @@
             class="inline-block bg-primaryOeb-150 text-primaryOeb-950 custom-badget btn-custom-badget rounded-full font-semibold text-gray-700"
             title="View events"
           >
-            <NuxtLink :to="`${to}/events`" class="text-primaryOeb-950">
+            <NuxtLink :to="`${to}/events`" @click.stop class="text-primaryOeb-950">
               <font-awesome-icon :icon="['far', 'calendar-check']" />
               {{ benchmarkingEvents.length }}
               {{ pluralize("Events", benchmarkingEvents.length) }}
