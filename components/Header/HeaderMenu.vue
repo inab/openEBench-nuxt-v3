@@ -434,7 +434,7 @@ function closeMenu() {
   border-bottom: 1px solid rgb(229, 231, 235);
   position: fixed;
   top: 0;
-  z-index: 2;
+  z-index: 100;
   width: 100%;
   background-color: white;
   transition:
@@ -528,7 +528,7 @@ function closeMenu() {
     width: 300px;
     background-color: white;
     transition: left 0.3s ease-in-out;
-    z-index: 2;
+    z-index: 100;
   }
 
   .nav-offcanvas.show {
@@ -725,7 +725,7 @@ function closeMenu() {
       height: 100vh;
       background-color: white;
       transition: left 0.3s ease-in-out;
-      z-index: 2;
+      z-index: 100;
       overflow-y: auto;
       max-height: 100vh;
       padding-bottom: 20px;
