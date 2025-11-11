@@ -114,6 +114,7 @@ export default {
     ],
     isMobile: false,
     openIndex: null,
+    tabRoutes : ['Trends', 'FAIRness', 'Evaluation', 'Data', 'About'],
   }),
 
   computed: {
@@ -142,7 +143,7 @@ export default {
 
     goToObservatory(index) {
       activeTabIndex.value = index;
-      this.$router.push("/observatory");
+      router.push(`/observatory/${tabRoutes[index]}`)
       window.scrollTo({
         top: 0,
         behavior: 'smooth',
