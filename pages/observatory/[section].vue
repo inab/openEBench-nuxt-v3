@@ -45,23 +45,20 @@ const router = useRouter()
 const tabComponents = [Trends, FairnessScoreboard, FAIRsoftEvaluator, Data, About]
 
 // --- URL → Tab (cuando cambia la ruta)
-const tabRoutes = ['Trends', 'FAIRness', 'Evaluation', 'Data', 'About']
-watch(
-  () => route.params.section,
-  (val) => {
-    const index = tabRoutes.indexOf(val as string)
-    if (index !== -1) {
-      activeTabIndex.value = index
-    } else {
-      router.replace('/observatory/Trends')
-    }
-  },
-  { immediate: true }
-)
+watch(() => route.params.section, (section) => {
+  const found = tabsItems.find(t => t.path.split("/")[1] === section)
+
+  if (found) {
+    activeTabIndex.value = found.index
+  } else {
+    router.replace("/observatory/Trends")
+  }
+}, { immediate: true })
+
 
 // --- Tab → URL (cuando cambia la tab)
 watch(activeTabIndex, (newIndex) => {
-  const newRoute = `/observatory/${tabRoutes[newIndex]}`
+  const newRoute = `/${tabsItems[newIndex].path}`
   if (route.fullPath !== newRoute) {
     router.replace(newRoute)
   }
