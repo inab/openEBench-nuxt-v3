@@ -293,8 +293,12 @@ import NavbarStatus from "@/components/status/NavbarStatus";
 const router = useRouter();
 
 function goToObservatory(index: number) {
+  const tab = subMenuEntriesObservatory[index];
+  if (!tab) return;
+
   activeTabIndex.value = index;
-  router.push("/observatory");
+  router.push(`/${tab.path}`);
+  closeMenu();
 }
 
 const { data, signIn, signOut } = useAuth();

@@ -35,9 +35,28 @@
                   <UBadge v-if="selectedTool" variant="solid" class="bg-blue-100 text-black">
                     <template #trailing>
                       <span>{{ selectedTool.label }}</span>
-                      <UBadge variant="solid" class="bg-white text-black font-light text-uppercase ml-1">
+                      <!-- Siguiente cambio -->
+                      <!-- Si hay array types -->
+                      <template v-if="Array.isArray(selectedTool.types) && selectedTool.types.length">
+                        <UBadge
+                          v-for="(t, i) in selectedTool.types"
+                          :key="i"
+                          variant="solid"
+                          class="bg-white text-black font-light text-uppercase ml-1"
+                        >
+                          {{ t }}
+                        </UBadge>
+                      </template>
+
+                      <!-- Si NO hay types, usar type actual -->
+                      <UBadge
+                        v-else-if="selectedTool.type"
+                        variant="solid"
+                        class="bg-white text-black font-light text-uppercase ml-1"
+                      >
                         {{ selectedTool.type }}
                       </UBadge>
+
                     </template>
                   </UBadge>
 
@@ -48,9 +67,28 @@
                   <UBadge variant="solid" class="bg-blue-100 text-black">
                     <template #trailing>
                       <span>{{ option.label }}</span>
-                      <UBadge variant="solid" class="bg-white text-black font-light text-uppercase ml-1">
+                      <!-- Siguiente cambio -->
+                      <!-- Si hay array types -->
+                      <template v-if="Array.isArray(option.types) && option.types.length">
+                        <UBadge
+                          v-for="(t, i) in option.types"
+                          :key="i"
+                          variant="solid"
+                          class="bg-white text-black font-light text-uppercase ml-1"
+                        >
+                          {{ t }}
+                        </UBadge>
+                      </template>
+
+                      <!-- Si NO hay types, usar type -->
+                      <UBadge
+                        v-else-if="option.type"
+                        variant="solid"
+                        class="bg-white text-black font-light text-uppercase ml-1"
+                      >
                         {{ option.type }}
                       </UBadge>
+
                     </template>
                   </UBadge>
                 </template>
@@ -112,7 +150,6 @@ const observatoryStore = useObservatoryStore();
 const stepperStore = useStepperStore();
 const observatoryTools = computed(() => observatoryStore.ObservatoryToolsNameTypeSources || []);
 
-// ------------------ Config y estados ------------------
 const CHUNK = 20;
 const COOLDOWN_MS = 250;
 
@@ -121,16 +158,18 @@ const selectedToolLabel = computed(() => {
   return selectedTool.value?.name || '';
 });
 const selectedToolType = computed(() => {
+  // Nuevo sistema (array)
+  // if (Array.isArray(selectedTool.value?.types)) return selectedTool.value.types;
+  
+  // TODO: eliminar cuando type deje de existir
   return selectedTool.value?.type || '';
 });
 
 const searchQuery = ref('');
 const maxVisible = ref(CHUNK);
 const isFocused = ref(false);
-
 let loadingMore = false;
 
-// ------------------ Computeds ------------------
 const allFilteredBySearch = computed(() => {
   const all = observatoryTools.value ?? [];
   const q = (searchQuery.value || '').trim().toLowerCase();
@@ -146,12 +185,12 @@ const filteredVisibleOptions = computed(() => {
   return allFilteredBySearch.value.slice(0, maxVisible.value);
 });
 
-// ------------------ Carga inicial ------------------
+// Carga inicial
 onMounted(async () => {
   await observatoryStore.getObservatoryToolsNameTypeSources();
 });
 
-// ------------------ Infinite scroll ------------------
+// Infinite scroll
 let menuElement: HTMLElement | null = null;
 let observer: MutationObserver | null = null;
 let scrollHandler: ((e: Event) => void) | null = null;
@@ -231,7 +270,7 @@ const startObservingForPanel = () => {
   observer.observe(document.body, { childList: true, subtree: true });
 };
 
-// ------------------ Focus & Blur ------------------
+// Focus & Blur
 const onFocus = async () => {
   isFocused.value = true;
   await nextTick();
@@ -240,13 +279,11 @@ const onFocus = async () => {
   startObservingForPanel();
   await nextTick();
 };
-
 const handleClose = () => {
   isFocused.value = false;
 };
 
 
-// ------------------ Sincronizar búsqueda ------------------
 watch(searchQuery, () => {
   maxVisible.value = CHUNK;
 });
@@ -258,6 +295,8 @@ const submitObservatoryTool = async () => {
 
   const payload = {
     name: selectedToolLabel.value,
+    // Siguiente cambio.
+    // Despues tendre que eliminar esta linea porque el endpoint solo recibira el name.
     type: selectedToolType.value,
   };
 
@@ -269,31 +308,27 @@ const submitObservatoryTool = async () => {
 };
 
 
-// ------------------ Clases dinámicas ------------------
+// Dynamic classes
 const labelClasses = computed(() => {
   let base = 'absolute left-9 transition-all bg-white dark:bg-gray-900 px-1 z-10';
 
   if (isFocused.value) {
-    // Focus
     return [
       base,
       'top-2 text-sm text-primaryOeb-600 transform scale-75 -translate-y-5'
     ];
   } else if (selectedTool.value) {
-    // Hay una opción seleccionada pero no hay focus
     return [
       base,
       'top-2 text-sm text-gray-500 transform scale-75 -translate-y-5'
     ];
   } else {
-    // Estado inicial
     return [
       base,
       'top-3 text-base text-gray-500 scale-100'
     ];
   }
 });
-
 
 const iconClass = computed(() => [
   'text-gray-500 transition-colors',

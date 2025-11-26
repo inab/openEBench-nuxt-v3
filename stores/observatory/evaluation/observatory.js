@@ -25,19 +25,7 @@ export const useObservatoryStore = defineStore("observatoryData", {
 
   actions: {
     // Fetches observatory tool names and types
-    async getObservatoryToolsNameTypeSources(page) {
-      try {
-        const result = await $observatory("/api/tools/names_type_labels", {
-          method: "GET",
-          params: { page }, // Include page number in the request
-        });
-        return result; // Return the tools for the current page
-      } catch (err) {
-        console.error("Error fetching tools:", err);
-        return [];
-      }
-    },
-
+    
     async getObservatoryToolsNameTypeSources() {
       const { $observatory } = useNuxtApp();
       this.loadingAutocomplete = true;
@@ -46,10 +34,12 @@ export const useObservatoryStore = defineStore("observatoryData", {
         const result = await $observatory("/api/tools/names_type_labels", {
           method: "GET",
         });
-        // console.log("API Response:", result);
+
+        // Verificar que el resultado tiene type y types
+        console.log("API Response names_type_labels:", result);
 
         if (result ) {
-          this.observatoryToolsNameTypeSources = result; // Ensure result has the data field
+          this.observatoryToolsNameTypeSources = result;
           return result; // Return the correct data to the component
         } else {
           console.error("Invalid API response:", result);
@@ -69,12 +59,13 @@ export const useObservatoryStore = defineStore("observatoryData", {
       this.loading = true;
 
       try {
+        // Siguiente cambio.
+        // El endpoint cambiará, se eliminara type.
         const URL = `/api/tools?name=${payload.name}&type=${payload.type}`;
         const result = await $observatory(URL, {
           method: 'GET',
         });
 
-        // console.log("Tool metadata response:", result); // Log metadata response
 
         // Assuming metadata preparation needs to be done here
         const metadataStore = useMetadataStore();
