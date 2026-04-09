@@ -76,7 +76,7 @@ export const useCommunity = defineStore("community", {
                                     getDatasets(datasetFilters: {community_id: $community_id, visibility: "public"}) {
                                         name
                                         type
-                                        datalinks {
+                                        datalink {
                                             uri
                                             __typename
                                         }
