@@ -395,12 +395,13 @@ import { getLocaleDateString } from "@/constants/global_const";
 import CustomTab from "@/components/Common/CustomTab.vue";
 import CustomTabBody from "@/components/Common/CustomTabBody.vue";
 import ChallengeMetrics from "@/components/Dashboard/entries/events/challenges/ChallengeMetrics.vue";
+import { useOebConfig } from "@/composables/useOebConfig";
 
 const router = useRouter();
 const { data } = useAuth();
 const userStore = useUser();
 const token: string = data?.value.accessToken;
-const runtimeConfig = useRuntimeConfig();
+const config = useOebConfig();
 
 const props = defineProps<{
   id: string;
@@ -771,7 +772,7 @@ async function updateBenchmarkingCommunity() {
   };
 
   try {
-    const response = await fetch(`${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Challenge/${state.value._id}`, {
+    const response = await fetch(`${config.value.SCIENTIFIC_SERVICE_URL_API}staged/Challenge/${state.value._id}`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${token}`,

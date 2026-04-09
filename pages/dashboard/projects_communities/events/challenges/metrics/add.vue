@@ -33,6 +33,7 @@ import type { ChallengeMetricCategory } from "@/types/challenge_metric";
 import AddMetric from "@/components/Dashboard/entries/events/challenges/metrics/AddMetric.vue";
 import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
 import { useUser } from "@/stores/user.ts";
+import { useOebConfig } from "@/composables/useOebConfig";
 
 definePageMeta({
   middleware: "auth",
@@ -49,7 +50,7 @@ const token: string = data?.value.accessToken;
 const contactsData = ref<string[]>([]);
 const challengeMetrics = ref<ChallengeMetricCategory[]>([]);
 const isLoadingChallengeMetrics = ref(true);
-const runtimeConfig = useRuntimeConfig();
+const config = useOebConfig();
 const eventId: string = route.params.event_id;
 const communityId: string = route.params.community_id;
 const challengeId: string = route.params.id;
@@ -96,7 +97,7 @@ const fetchContacts = async (token: string): Promise<void> => {
 const fetchChallengeMetrics = async (token: string): Promise<void> => {
   try {
     const response = await fetch(
-      `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Challenge/${challengeId}`,
+      `${config.value.SCIENTIFIC_SERVICE_URL_API}staged/Challenge/${challengeId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

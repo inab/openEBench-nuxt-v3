@@ -185,6 +185,7 @@ import {
   ChartRadar,
   ChartScatter,
 } from "@/constants/visualization_const";
+import { useOebConfig } from "@/composables/useOebConfig";
 
 const props = defineProps<{
   isLoadingData: boolean;
@@ -204,7 +205,7 @@ const metricTool = computed(() => {
 
 const isOpen = ref(false);
 
-const runtimeConfig = useRuntimeConfig();
+const config = useOebConfig();
 const { data } = useAuth();
 const isFetchingData = ref(true);
 const token: string = data?.value.accessToken;
@@ -227,7 +228,7 @@ const formatContact = (contact: string): string => {
 const fetchMetricData = async (): Promise<void> => {
   try {
     const response = await fetch(
-      `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Metrics/${metricId.value}`,
+      `${config.value.SCIENTIFIC_SERVICE_URL_API}staged/Metrics/${metricId.value}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

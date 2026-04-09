@@ -265,6 +265,7 @@ import type { FormErrorEvent, FormSubmitEvent } from "#ui/types";
 import CustomModal from "@/components/Common/CustomModal.vue";
 import type { Metric } from "@/types/challenge_metric";
 import { array, object, string, safeParse } from "valibot";
+import { useOebConfig } from "@/composables/useOebConfig";
 
 const props = defineProps<{
   isModalOpen: boolean;
@@ -276,7 +277,7 @@ const props = defineProps<{
 
 const emits = defineEmits(["close-modal"]);
 
-const runtimeConfig = useRuntimeConfig();
+const config = useOebConfig();
 const metricObj = ref<Metric | null>(null);
 const isSearchingMetric = ref(true);
 const errors = ref<string[]>([]);
@@ -315,7 +316,7 @@ async function fetchMetric(id: string): Promise<Metric> {
   isSearchingMetric.value = true;
   try {
     const response = await fetch(
-      `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Metrics/${id}`,
+      `${config.value.SCIENTIFIC_SERVICE_URL_API}staged/Metrics/${id}`,
       {
         method: "GET",
         headers: {

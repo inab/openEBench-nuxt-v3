@@ -105,6 +105,7 @@
 import type { Metric } from "@/types/challenge_metric";
 import { ref, computed } from "vue";
 import MetricModal from "@/components/Dashboard/metrics/MetricModal.vue";
+import { useOebConfig } from "@/composables/useOebConfig";
 
 const props = defineProps<{
   metricRows: Metric[];
@@ -112,7 +113,7 @@ const props = defineProps<{
   token: string;
 }>();
 
-const runtimeConfig = useRuntimeConfig();
+const config = useOebConfig();
 const isModalOpen = ref(false);
 const isSearchingMetric = ref(false);
 const modalTitle = ref("");

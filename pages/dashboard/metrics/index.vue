@@ -70,6 +70,7 @@ import { ref } from "vue";
 import type { Metric } from "@/types/challenge_metric";
 import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
 import MetricsList from "@/components/Dashboard/metrics/MetricsList.vue";
+import { useOebConfig } from "@/composables/useOebConfig";
 
 definePageMeta({
   middleware: "auth",
@@ -82,7 +83,7 @@ definePageMeta({
 const userStore = useUser();
 const { data, status } = useAuth();
 const isLoadingMetrics = ref(false);
-const runtimeConfig = useRuntimeConfig();
+const config = useOebConfig();
 const metricsList = ref<Metric[]>([]);
 const token: string = data?.value.accessToken;
 
@@ -99,7 +100,7 @@ async function fetchMetrics(token: string): Promise<Metric[]> {
   isLoadingMetrics.value = true;
   try {
     const response = await fetch(
-      `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Metrics`,
+      `${config.value.SCIENTIFIC_SERVICE_URL_API}staged/Metrics`,
       {
         method: "GET",
         headers: {

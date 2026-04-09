@@ -14,6 +14,7 @@
 import ClassificationTable from "@/components/Community/CommunityEvent/CommunityClassificationTable.vue";
 import { watch, onMounted } from "vue";
 
+
 const props = defineProps<{
   id: number;
   filterArray: Array<any>;
@@ -24,17 +25,15 @@ const props = defineProps<{
   };
 }>();
 
-const runtimeConfig = useRuntimeConfig();
+const config = useOebConfig();
 
-const apiUrl = runtimeConfig.public
-  ? runtimeConfig.public.SCIENTIFIC_SERVICE_URL + "graphql"
-  : "https://dev-openebench.bsc.es/api/scientific/graphql";
-const benchEventApiUrl = runtimeConfig.public
-  ? runtimeConfig.public.BENCH_EVENT_API_URL
-  : "https://dev-openebench.bsc.es/rest/bench_event_api";
-const dataMode = runtimeConfig.public
-  ? runtimeConfig.public.ENVIRONMENT
-  : "dev-openebench";
+const apiUrl = config.value.SCIENTIFIC_SERVICE_URL + "/graphql";
+const benchEventApiUrl = config.value.BENCH_EVENT_API_URL
+  ? config.value.BENCH_EVENT_API_URL
+  : "https://openebench.bsc.es/rest/bench_event_api";
+const dataMode = config.value.ENVIRONMENT
+  ? config.value.ENVIRONMENT
+  : "openebench";
 
 </script>
 

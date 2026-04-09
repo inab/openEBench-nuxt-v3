@@ -1,5 +1,5 @@
 export default defineNuxtPlugin(() => {
-  const runtimeConfig = useRuntimeConfig();
+  const config = useOebConfig();
 
   const githubapp = $fetch.create({
     headers: {
@@ -7,7 +7,7 @@ export default defineNuxtPlugin(() => {
         Accept: "text/plain, */*",
       },
     },
-    baseURL: runtimeConfig.public.GITHUBAPP_API_URL,
+    baseURL: config.value.GITHUBAPP_API_URL,
     method: "POST",
   });
 

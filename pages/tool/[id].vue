@@ -13,9 +13,9 @@
 <script setup lang="ts">
 const route = useRoute();
 const toolId: string = route.params.id;
-const runtimeConfig = useRuntimeConfig();
+const config = useOebConfig();
 
-const hostname = runtimeConfig.public.OEB_LEGACY_ANGULAR_URI;
+const hostname = config.value.OEB_LEGACY_ANGULAR_URI;
 </script>
 
 <style scoped lang="scss">

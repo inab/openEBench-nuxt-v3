@@ -268,8 +268,9 @@ import { useRouter } from "vue-router";
 import type { FormSubmitEvent } from "#ui/types";
 import * as v from "valibot";
 
+
 const router = useRouter();
-const runtimeConfig = useRuntimeConfig();
+const config = useOebConfig();
 const { data } = useAuth();
 const token: string = data?.value.accessToken;
 
@@ -378,7 +379,7 @@ async function updateCommunity() {
 
   try {
     await fetch(
-      `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Community/${props.communityObj._id}`,
+      `${config.value.SCIENTIFIC_SERVICE_URL_API}staged/Community/${props.communityObj._id}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

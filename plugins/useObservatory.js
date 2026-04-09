@@ -1,5 +1,5 @@
 export default defineNuxtPlugin(() => {
-  const runtimeConfig = useRuntimeConfig();
+  const config = useOebConfig();
 
   const observatory = $fetch.create({
     headers: {
@@ -7,7 +7,7 @@ export default defineNuxtPlugin(() => {
         Accept: "text/plain, */*",
       },
     },
-    baseURL: runtimeConfig.public.OBSERVATORY_URI,
+    baseURL: config.value.OBSERVATORY_URI,
     method: "POST",
   });
 

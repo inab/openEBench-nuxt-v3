@@ -126,9 +126,10 @@ import CustomSubtitle from "@/components/Common/CustomSubtitle.vue";
 import * as v from "valibot";
 import type { FormSubmitEvent } from "#ui/types";
 
+
 const { status, data } = useAuth();
 const userInfo = ref(null);
-const runtimeConfig = useRuntimeConfig();
+const config = useOebConfig();
 
 const state = reactive({
   username: undefined,
@@ -160,7 +161,7 @@ const fetchUserInfo = async () => {
       const token = data?.value.accessToken;
 
       const response = await fetch(
-        `${runtimeConfig.public.KEYCLOAK_HOST}/auth/realms/${runtimeConfig.public.KEYCLOAK_REALM}/protocol/openid-connect/userinfo`,
+        `${config.value.KEYCLOAK_HOST}/auth/realms/${config.value.KEYCLOAK_REALM}/protocol/openid-connect/userinfo`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

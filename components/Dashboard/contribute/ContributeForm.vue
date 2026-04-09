@@ -220,13 +220,14 @@ import { ClassicEditor, Essentials, Paragraph, Bold } from "ckeditor5";
 import { Ckeditor } from "@ckeditor/ckeditor5-vue";
 import "ckeditor5/ckeditor5.css";
 
+
 const config = computed(() => ({
   licenseKey: "GPL",
   plugins: [Essentials, Paragraph, Bold],
   toolbar: ["undo", "redo", "|", "heading", "|", "bold"],
 }));
 
-const runtimeConfig = useRuntimeConfig();
+const runtimeConfig = useOebConfig();
 const { status, data } = useAuth();
 const token = computed(() => data?.value?.accessToken || "");
 
@@ -343,7 +344,7 @@ async function fetchUserCommunitiesEvents(communityId: string) {
   loadingEvent.value = true;
   try {
     const response = await fetch(
-      `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/BenchmarkingEvent`,
+      `${runtimeConfig.value.SCIENTIFIC_SERVICE_URL_API}staged/BenchmarkingEvent`,
       {
         headers: {
           Authorization: `Bearer ${token.value}`,

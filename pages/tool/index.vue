@@ -12,8 +12,8 @@
 import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
 
 const route = useRoute();
-const runtimeConfig = useRuntimeConfig();
-const hostname = runtimeConfig.public.OEB_LEGACY_ANGULAR_URI;
+const config = useOebConfig();
+const hostname = config.value.OEB_LEGACY_ANGULAR_URI;
 const query = route.query.search ? route.query.search : "";
 const iframeSRC = `${hostname}tool?search=${query}`;
 

@@ -379,8 +379,9 @@ import {
 } from "valibot";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
+import { useOebConfig } from "@/composables/useOebConfig";
 
-const runtimeConfig = useRuntimeConfig();
+const config = useOebConfig();
 const router = useRouter();
 const userStore = useUser();
 const { data } = useAuth();
@@ -550,7 +551,7 @@ async function createBenchmarkingEvent() {
   };
 
   try {
-    const response = await fetch(`${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/BenchmarkingEvent`, {
+    const response = await fetch(`${config.value.SCIENTIFIC_SERVICE_URL_API}staged/BenchmarkingEvent`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,

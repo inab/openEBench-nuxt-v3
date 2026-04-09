@@ -144,12 +144,13 @@ import { ref, computed, onMounted } from "vue";
 import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
 import StatusTable from "@/components/status/StatusTable.vue";
 import Plotly from "plotly.js-dist";
+import { useOebConfig } from "@/composables/useOebConfig";
 
-const runtimeConfig = useRuntimeConfig();
-const vreServicesUrl = `${runtimeConfig.public.VRE_URI}`;
-const scientificUrl = `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL}`;
-const keycloakUrl = `${runtimeConfig.public.KEYCLOAK_HOST}`;
-const observatoryUrl = `${runtimeConfig.public.OBSERVATORY_API_URL}`;
+const config = useOebConfig();
+const vreServicesUrl = `${config.value.VRE_URI}`;
+const scientificUrl = `${config.value.SCIENTIFIC_SERVICE_URL}`;
+const keycloakUrl = `${config.value.KEYCLOAK_HOST}`;
+const observatoryUrl = `${config.value.OBSERVATORY_API_URL}`;
 
 const isVreServicesUp = ref(null);
 const isScientificServicesUp = ref(null);

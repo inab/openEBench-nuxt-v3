@@ -63,6 +63,7 @@ import type { Challenge } from "@/types/challenge";
 import { useUser } from "@/stores/user.ts";
 import { privileges } from "@/constants/privileges";
 import CommunityEvent from "@/components/Dashboard/entries/events/CommunityEvent.vue";
+import { useOebConfig } from "@/composables/useOebConfig";
 
 definePageMeta({
   middleware: "auth",
@@ -88,7 +89,7 @@ const token: string = data?.value.accessToken;
 const eventId: string = route.params.id;
 const communityId: string = route.params.community_id;
 const routeName = ref<string>("");
-const runtimeConfig = useRuntimeConfig();
+const config = useOebConfig();
 const userPrivileges: Array<string> = computed(
   () => userStore.getUserCommunitiesRoles,
 );
@@ -124,7 +125,7 @@ const eventPrivileges = computed(() => {
 const fetchUserCommunitiesEvents = async (token: string): Promise<void> => {
   try {
     const response = await fetch(
-      `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/BenchmarkingEvent/${eventId}`,
+      `${config.value.SCIENTIFIC_SERVICE_URL_API}staged/BenchmarkingEvent/${eventId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -187,7 +188,7 @@ const fetchCommunityContacts = async (
 ): Promise<void> => {
   try {
     const contactsResponse = await fetch(
-      `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}query/contacts/${communityId}`,
+      `${config.value.SCIENTIFIC_SERVICE_URL_API}query/contacts/${communityId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

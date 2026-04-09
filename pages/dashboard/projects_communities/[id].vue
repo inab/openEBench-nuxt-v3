@@ -30,6 +30,7 @@ import type { Event } from "@/types/events";
 import type { Contact } from "@/types/contact";
 import parseDataURL from "data-urls";
 import { labelToName, decode } from "whatwg-encoding";
+import { useOebConfig } from "@/composables/useOebConfig";
 
 definePageMeta({
   middleware: "auth",
@@ -39,7 +40,7 @@ definePageMeta({
   },
 });
 
-const runtimeConfig = useRuntimeConfig();
+const config = useOebConfig();
 const { data } = useAuth();
 const route = useRoute();
 const communityId: string = route.params.id;
@@ -123,7 +124,7 @@ const routeArray: Array = ref([
 const fetchUserCommunity = async (token: string): Promise<void> => {
   try {
     const response = await fetch(
-      `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Community/${communityId}`,
+      `${config.value.SCIENTIFIC_SERVICE_URL_API}staged/Community/${communityId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

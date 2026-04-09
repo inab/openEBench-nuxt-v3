@@ -156,6 +156,7 @@ import type { Community } from "@/types/communities";
 import type { Contact } from "@/types/contact";
 import { useUser } from "@/stores/user.ts";
 import ContactModal from "@/components/Dashboard/contacts/ContactModal.vue";
+import { useOebConfig } from "@/composables/useOebConfig";
 
 const props = defineProps<{
   contactsData: Contact[];
@@ -163,7 +164,7 @@ const props = defineProps<{
   token: string;
 }>();
 
-const runtimeConfig = useRuntimeConfig();
+const runtimeConfig = useOebConfig();
 const isModalOpen = ref(false);
 const isSearchingContact = ref(false);
 const search = ref("");

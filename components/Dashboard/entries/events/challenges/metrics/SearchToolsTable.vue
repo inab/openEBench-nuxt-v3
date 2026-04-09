@@ -60,6 +60,7 @@ import type {
   Metric,
   ChallengeCommonMetric,
 } from "@/types/challenge_metric";
+import { useOebConfig } from "@/composables/useOebConfig";
 
 const props = defineProps<{
   selectedTools: Tool[];
@@ -67,7 +68,7 @@ const props = defineProps<{
 }>();
 
 const emits = defineEmits(["handleSelectedTools"]);
-const runtimeConfig = useRuntimeConfig();
+const config = useOebConfig();
 const { data } = useAuth();
 const token: string = data?.value.accessToken;
 
@@ -114,7 +115,7 @@ const rows = computed(() => {
 async function fetchTools(token: string): Promise<Metric[]> {
   isTableLoading.value = true;
   const response = await fetch(
-    `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Tool`,
+    `${config.value.SCIENTIFIC_SERVICE_URL_API}staged/Tool`,
     {
       headers: {
         Authorization: `Bearer ${token}`,

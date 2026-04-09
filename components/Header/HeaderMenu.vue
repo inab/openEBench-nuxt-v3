@@ -152,7 +152,7 @@
                   class="text-primaryOeb-500 border-1 border-primaryOeb-800 hover:bg-primaryOeb-50 font-medium rounded-md text-base px-3 py-2 me-2"
                 >
                   <a
-                    :href="runtimeConfig.public.VRE_URI"
+                    :href="config.VRE_URI"
                     target="_blank"
                     class="text-primaryOeb-500"
                     style="text-decoration: none"
@@ -302,7 +302,7 @@ function goToObservatory(index: number) {
 }
 
 const { data, signIn, signOut } = useAuth();
-const runtimeConfig = useRuntimeConfig();
+const config = useOebConfig();
 const { $viewport } = useNuxtApp();
 const toggleMenu = ref(false);
 const isMobile = ref(false);
@@ -414,8 +414,8 @@ function handleLogin() {
 }
 
 function handleLogout() {
-  const keycloackLogoutUrl = `${runtimeConfig.public.KEYCLOAK_HOST}/auth/realms/${runtimeConfig.public.KEYCLOAK_REALM}/protocol/openid-connect/logout`;
-  window.location.href = `${keycloackLogoutUrl}?post_logout_redirect_uri=${runtimeConfig.public.BASE_URL}/&client_id=${runtimeConfig.public.KEYCLOAK_CLIENT_ID}`;
+  const keycloackLogoutUrl = `${config.value.KEYCLOAK_HOST}/auth/realms/${config.value.KEYCLOAK_REALM}/protocol/openid-connect/logout`;
+  window.location.href = `${keycloackLogoutUrl}?post_logout_redirect_uri=${config.value.BASE_URL}/&client_id=${config.value.KEYCLOAK_CLIENT_ID}`;
   signOut();
 }
 

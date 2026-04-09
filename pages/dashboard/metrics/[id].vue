@@ -19,6 +19,7 @@ import { ref, computed } from "vue";
 import type { Metric } from "@/types/challenge_metric";
 import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
 import MetricEdit from "@/components/Dashboard/metrics/MetricEdit.vue";
+import { useOebConfig } from "@/composables/useOebConfig";
 
 definePageMeta({
   middleware: "auth",
@@ -29,7 +30,7 @@ definePageMeta({
 });
 
 const { data, status } = useAuth();
-const runtimeConfig = useRuntimeConfig();
+const config = useOebConfig();
 const route = useRoute();
 const metricId: string = route.params.id;
 const token: string = data?.value.accessToken;
@@ -42,7 +43,7 @@ async function fetchMetrics(token: string): Promise<Metric[]> {
   isSearchingMetric.value = true;
   try {
     const response = await fetch(
-      `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Metrics/${metricId}`,
+      `${config.value.SCIENTIFIC_SERVICE_URL_API}staged/Metrics/${metricId}`,
       {
         method: "GET",
         headers: {

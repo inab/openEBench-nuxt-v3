@@ -56,6 +56,7 @@ import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
 import { useUser } from "@/stores/user.ts";
 import { privileges } from "@/constants/privileges";
 import CommunityEventChallenge from "@/components/Dashboard/entries/events/challenges/ChallengeEventChallenge.vue";
+import { useOebConfig } from "@/composables/useOebConfig";
 
 definePageMeta({
   middleware: "auth",
@@ -81,7 +82,7 @@ const eventId: string = route.params.event_id;
 const communityId: string = route.params.community_id;
 const challengeId: string = route.params.id;
 const routeName = ref<string>("");
-const runtimeConfig = useRuntimeConfig();
+const config = useOebConfig();
 
 const challengeData = ref<Challenge>(null);
 
@@ -143,7 +144,7 @@ const fetchUserCommunityEventChallenge = async (
 ): Promise<void> => {
   try {
     const response = await fetch(
-      `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Challenge/${challengeId}`,
+      `${config.value.SCIENTIFIC_SERVICE_URL_API}staged/Challenge/${challengeId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

@@ -1,5 +1,5 @@
 export default defineNuxtPlugin(() => {
-  const runtimeConfig = useRuntimeConfig();
+  const config = useOebConfig();
 
   const graphql = $fetch.create({
     headers: {
@@ -7,7 +7,7 @@ export default defineNuxtPlugin(() => {
         Accept: "text/plain, */*",
       },
     },
-    baseURL: runtimeConfig.public.SCIENTIFIC_SERVICE_URL,
+    baseURL: config.value.SCIENTIFIC_SERVICE_URL,
     method: "POST",
   });
 

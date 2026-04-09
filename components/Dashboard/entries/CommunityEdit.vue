@@ -624,7 +624,7 @@ import "ckeditor5/ckeditor5.css";
 const turndownService = new TurndownService();
 
 const router = useRouter();
-const runtimeConfig = useRuntimeConfig();
+const runtimeConfig = useOebConfig();
 const { data } = useAuth();
 const token = ref(data?.value.accessToken);
 const hasSetConsentTab = ref(false);
@@ -956,7 +956,7 @@ async function updateCommunity() {
 
   try {
     const response = await fetch(
-      `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Community/${props.communityObj._id}`,
+      `${runtimeConfig.value.SCIENTIFIC_SERVICE_URL_API}staged/Community/${props.communityObj._id}`,
       {
         method: "PATCH",
         headers: {

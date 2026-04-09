@@ -416,7 +416,7 @@ const dialogType = ref("yesno");
 const isDialogOpened = ref(false);
 const dialogText = ref("");
 const selectedTab = ref(props.tabIndex);
-const runtimeConfig = useRuntimeConfig();
+const runtimeConfig = useOebConfig();
 
 const items = [
   {

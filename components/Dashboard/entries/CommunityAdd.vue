@@ -490,7 +490,7 @@ import {
 import { Ckeditor } from "@ckeditor/ckeditor5-vue";
 import "ckeditor5/ckeditor5.css";
 
-const runtimeConfig = useRuntimeConfig();
+const runtimeConfig = useOebConfig();
 const userStore = useUser();
 const router = useRouter();
 const { data } = useAuth();
@@ -800,7 +800,7 @@ async function createCommunity() {
   let responseCommunity = null;
   try {
     const res = await fetch(
-      `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Community/${state.value._id}`,
+      `${runtimeConfig.value.SCIENTIFIC_SERVICE_URL_API}staged/Community/${state.value._id}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -828,7 +828,7 @@ async function createCommunity() {
   }
 
   try {
-    const response = await fetch(`${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Community`, {
+    const response = await fetch(`${runtimeConfig.value.SCIENTIFIC_SERVICE_URL_API}staged/Community`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,

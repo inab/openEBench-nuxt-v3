@@ -310,6 +310,7 @@ import { object, string, safeParse, array } from "valibot";
 import { useRouter } from "vue-router";
 import CustomDialog from "@/components/Common/CustomDialog.vue";
 
+
 const props = defineProps<{
   isModalOpen: boolean;
   modalTitle: string;
@@ -320,7 +321,7 @@ const props = defineProps<{
 
 const emits = defineEmits(["close-modal"]);
 const userStore = useUser();
-const runtimeConfig = useRuntimeConfig();
+const config = useOebConfig();
 const contactObj = ref<Contact | null>(null);
 const communities = ref<Community[]>([]);
 const isSearchingContact = ref(true);
@@ -385,7 +386,7 @@ async function fetchContact(id: string): Promise<Contact> {
   isSearchingContact.value = true;
   try {
     const response = await fetch(
-      `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Contact/${id}`,
+      `${config.value.SCIENTIFIC_SERVICE_URL_API}staged/Contact/${id}`,
       {
         headers: {
           Authorization: `Bearer ${props.token}`,
@@ -436,7 +437,7 @@ const fetchAllPrivileges = async (
 ): Promise<UserCommunityPrivilege[]> => {
   try {
     const privilegesResponse = await fetch(
-      `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}query/privileges/${props.contactId}`,
+      `${config.value.SCIENTIFIC_SERVICE_URL_API}query/privileges/${props.contactId}`,
       {
         method: "GET",
         headers: {
@@ -575,7 +576,7 @@ async function updateContact() {
 
   try {
     const response = await fetch(
-      `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Contact/${props.contactId}`,
+      `${config.value.SCIENTIFIC_SERVICE_URL_API}staged/Contact/${props.contactId}`,
       {
         method: "PATCH",
         headers: {
@@ -590,7 +591,7 @@ async function updateContact() {
     if (data.status >= 200 && data.status < 300) {
       const privilegesObj = allCommunitiesPrivileges;
       const updatePrivileges = await fetch(
-        `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}query/privileges/${props.contactId}`,
+        `${config.value.SCIENTIFIC_SERVICE_URL_API}query/privileges/${props.contactId}`,
         {
           method: "PATCH",
           headers: {

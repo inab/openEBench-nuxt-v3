@@ -160,11 +160,12 @@ import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
 import { useUser } from "@/stores/user.ts";
 import { array, object, string, safeParse } from "valibot";
 import { useRouter } from "vue-router";
+import { useOebConfig } from "@/composables/useOebConfig";
 
 const userStore = useUser();
 const { data } = useAuth();
 const contactTypeOptions = ["person", "helpdesk", "other"];
-const runtimeConfig = useRuntimeConfig();
+const config = useOebConfig();
 const communities = ref<Community[]>([]);
 const errors = ref<string[]>([]);
 const oks = ref<string>("");
@@ -299,7 +300,7 @@ async function createContact() {
 
   try {
     const response = await fetch(
-      `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Contact`,
+      `${config.value.SCIENTIFIC_SERVICE_URL_API}staged/Contact`,
       {
         method: "POST",
         headers: {

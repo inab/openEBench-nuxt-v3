@@ -84,6 +84,7 @@ import { ref, onMounted } from "vue";
 import ContactsList from "@/components/Dashboard/contacts/ContactsList.vue";
 import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
 import type { Contact } from "@/types/contact";
+import { useOebConfig } from "@/composables/useOebConfig";
 
 definePageMeta({
   middleware: "auth",
@@ -94,7 +95,7 @@ definePageMeta({
 });
 
 const { data, status } = useAuth();
-const runtimeConfig = useRuntimeConfig();
+const config = useOebConfig();
 
 const routeArray: Array = [
   { label: "Dashboard", isActualRoute: false, route: "/dashboard" },
@@ -117,7 +118,7 @@ async function fetchContacts(token: string): Promise<Contact[]> {
   isLoadingContacts.value = true;
   try {
     const response = await fetch(
-      `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Contact`,
+      `${config.value.SCIENTIFIC_SERVICE_URL_API}staged/Contact`,
       {
         method: "GET",
         headers: {

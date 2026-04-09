@@ -75,6 +75,7 @@ import { ref, onMounted, computed } from "vue";
 import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
 import ContactsList from "@/components/Dashboard/contacts/ContactsList.vue";
 import type { Contact } from "@/types/contact";
+import { useOebConfig } from "@/composables/useOebConfig";
 
 definePageMeta({
   middleware: "auth",
@@ -85,7 +86,7 @@ definePageMeta({
 });
 
 const { data, status } = useAuth();
-const runtimeConfig = useRuntimeConfig();
+const config = useOebConfig();
 const HEADER_ITEM = [
   {
     label: "Users",
@@ -114,7 +115,7 @@ async function fetchContacts(token: string): Promise<Contact[]> {
 
   try {
     const response = await fetch(
-      `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Contact`,
+      `${config.value.SCIENTIFIC_SERVICE_URL_API}staged/Contact`,
       {
         method: "GET",
         headers: {

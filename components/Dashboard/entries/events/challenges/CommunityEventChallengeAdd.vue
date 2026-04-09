@@ -384,6 +384,7 @@ import {
 } from "valibot";
 import type { FormSubmitEvent, FormErrorEvent } from "#ui/types";
 import { getLocaleDateString } from "@/constants/global_const";
+import { useOebConfig } from "@/composables/useOebConfig";
 
 const router = useRouter();
 const { data } = useAuth();
@@ -419,7 +420,7 @@ const localReferences = ref<string[]>([]);
 const localMetricsCategories = ref<string[]>([]);
 const errors = ref<string[]>([]);
 const oks = ref<string>("");
-const runtimeConfig = useRuntimeConfig();
+const config = useOebConfig();
 
 const state = ref({
   _id: "",
@@ -637,7 +638,7 @@ async function createChallenge() {
   };
 
   try {
-    const response = await fetch(`${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Challenge`, {
+    const response = await fetch(`${config.value.SCIENTIFIC_SERVICE_URL_API}staged/Challenge`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,

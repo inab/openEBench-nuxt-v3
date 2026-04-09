@@ -329,6 +329,7 @@ import BarSvg from '../../public/images/plots/bar-chart.svg?component';
 import ScatterSvg from '../../public/images/plots/scatter-chart.svg?component';
 import LineSvg from '../../public/images/plots/line-chart.svg?component';
 import BoxSvg from '../../public/images/plots/box-chart.svg?component';
+import { useOebConfig } from '@/composables/useOebConfig';
 
 definePageMeta({
   middleware: 'auth',
@@ -347,7 +348,7 @@ const data = computed(() => auth?.data?.value ?? null);
 const status = computed(() => auth?.status?.value ?? 'loading');
 
 const userStore = useUser();
-const runtimeConfig = useRuntimeConfig();
+const config = useOebConfig();
 const totalMetrics = ref(0);
 const totalTools = ref(0);
 const totalCommunities = ref(0);
@@ -381,7 +382,7 @@ if (status.value == 'authenticated') {
 async function countTotalMetrics() {
   try {
     const response = await $fetch(
-      `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Metrics`,
+      `${config.value.SCIENTIFIC_SERVICE_URL_API}staged/Metrics`,
       {
         headers: {
           Authorization: `Bearer ${token.value}`,
@@ -402,7 +403,7 @@ async function countTotalMetrics() {
 
 async function countTotalTools() {
   try {
-    const response = await $fetch(`${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Tool`, {
+    const response = await $fetch(`${config.value.SCIENTIFIC_SERVICE_URL_API}staged/Tool`, {
       headers: {
         Authorization: `Bearer ${token.value}`,
         Accept: 'application/json',
@@ -420,7 +421,7 @@ async function countTotalTools() {
 async function countTotalCommunities() {
   try {
     const response = await $fetch(
-      `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Community`,
+      `${config.value.SCIENTIFIC_SERVICE_URL_API}staged/Community`,
       {
         headers: {
           Authorization: `Bearer ${token.value}`,
@@ -448,7 +449,7 @@ async function countTotalCommunities() {
 async function countTotalContacts() {
   try {
     const response = await $fetch(
-      `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Contact`,
+      `${config.value.SCIENTIFIC_SERVICE_URL_API}staged/Contact`,
       {
         headers: {
           Authorization: `Bearer ${token.value}`,
