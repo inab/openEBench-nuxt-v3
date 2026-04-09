@@ -2,35 +2,41 @@
   <div class="h-100 community-card">
     <div
       class="community-card__item max-w-sm rounded overflow-visible text-zinc-700 cursor-pointer"
-      @click="handleNavigation"
     >
-      <div class="community-card__item__image">
+      <!-- Clickable image + acronym + header area -->
+      <div class="community-card__item__image" @click="handleNavigation">
         <div
           class="community-card__item__image__box"
           :style="{ backgroundImage: 'url(' + logo + ')' }"
         ></div>
       </div>
-      <div class="community-card__item__acronym font-bold text-xl">
+      <div class="community-card__item__acronym font-bold text-xl" @click="handleNavigation">
         {{ acronym }}
       </div>
+
       <div class="community-card__item__body">
-        <div class="w-100 community-card__item__body__header">
+        <!-- Name header is clickable -->
+        <div class="w-100 community-card__item__body__header" @click="handleNavigation">
           <div class="w-100">
             {{ name }}
           </div>
         </div>
+
+        <!-- Badges row — each badge handles its own navigation, stops propagation -->
         <div class="community-card__item__body__content__wrapper">
+          <!-- Events badge → goes to /events -->
           <div
             v-if="benchmarkingEvents && benchmarkingEvents.length > 0"
             class="inline-block bg-primaryOeb-150 text-primaryOeb-950 custom-badget btn-custom-badget rounded-full font-semibold text-gray-700"
             title="View events"
+            @click.stop="router.push(`${to}/events`)"
           >
-            <NuxtLink :to="`${to}/events`" class="text-primaryOeb-950">
-              <font-awesome-icon :icon="['far', 'calendar-check']" />
-              {{ benchmarkingEvents.length }}
-              {{ pluralize("Events", benchmarkingEvents.length) }}
-            </NuxtLink>
+            <font-awesome-icon :icon="['far', 'calendar-check']" />
+            {{ benchmarkingEvents.length }}
+            {{ pluralize("Events", benchmarkingEvents.length) }}
           </div>
+
+          <!-- Status badge — not a link, no navigation needed -->
           <div
             class="inline-block rounded-full text-primaryOeb-950 custom-badget font-semibold text-gray-700"
             :class="`status-${status}`"
@@ -42,27 +48,33 @@
               {{ status }}
             </div>
           </div>
+
+          <!-- Reference tools badge -->
           <div
             v-if="referenceTools.length > 0"
             class="inline-block bg-gray-200 rounded-full text-primaryOeb-950 custom-badget btn-custom-badget font-semibold text-gray-700"
+            @click.stop="router.push(`${to}/tools`)"
           >
             <font-awesome-icon :icon="['fas', 'gear']" />
-            {{ benchmarkingEvents.length }}
-            {{ pluralize("Events", benchmarkingEvents.length) }}
+            {{ referenceTools.length }}
+            {{ pluralize("Tools", referenceTools.length) }}
           </div>
         </div>
-        <!-- Current Event -->
+
+        <!-- Footer: Current Event button + dropdown -->
         <div class="community-card__item__body__footer">
+          <!-- Current Event button → navigates to `to` -->
           <button
             class="text-primaryOeb-500 hover:bg-primaryOeb-50 rounded p-2"
+            @click.stop="router.push(to)"
           >
-            <NuxtLink :to="to" class="text-primaryOeb-500">
+            <span class="text-primaryOeb-500 uppercase font-semibold text-sm">
               Current Event
-            </NuxtLink>
+            </span>
           </button>
 
-          <!-- Dropdown -->
-          <div class="dropdown community-card__item__dropdown">
+          <!-- Dropdown — stops propagation so the card click doesn't fire -->
+          <div class="dropdown community-card__item__dropdown" @click.stop>
             <button
               id="dropdownMenuButton"
               class="text-gray-800 rounded-full w-10 h-10 flex items-center justify-center hover:bg-gray-100 text-decoration-none"
@@ -113,22 +125,17 @@ const props = defineProps<{
   to: string;
 }>();
 
-let itemsCommunityLinks: null = null;
-if (props.links) {
-  itemsCommunityLinks = props.links.filter((item: any) => {
-    if (item.comment == "@logo") {
-      return;
-    }
-    return [
-      {
-        label: item.label,
-        href: item.uri,
-        icon: "i-heroicons-link",
-        target: "_blank",
-      },
-    ];
-  });
-}
+// Fixed: was using filter() but returning objects inside it (should be map + filter)
+const itemsCommunityLinks = computed(() => {
+  if (!props.links) return [];
+  return props.links
+    .filter((item: any) => item.comment !== "@logo")
+    .map((item: any) => ({
+      label: item.label,
+      uri: item.uri,
+      icon: "i-heroicons-link",
+    }));
+});
 
 const statusChipColor = computed(() => {
   switch (props.status) {
@@ -196,6 +203,7 @@ const handleNavigation = () => {
       letter-spacing: 0.0071428571em;
       font-weight: 550;
       padding-bottom: 30px;
+      cursor: pointer;
       div {
         border: none;
       }
@@ -205,21 +213,19 @@ const handleNavigation = () => {
         display: flex;
         gap: 10px;
         padding-bottom: 35px;
-        a {
-          height: 28px;
-          text-decoration: none;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          gap: 5px;
-          font-size: 12px;
-        }
         .custom-badget {
           padding: 0px 15px;
           height: 28px;
           display: flex;
           align-items: center;
           font-size: 12px;
+          gap: 5px;
+        }
+        .btn-custom-badget {
+          cursor: pointer;
+          &:hover {
+            filter: brightness(0.95);
+          }
         }
       }
     }
@@ -227,7 +233,7 @@ const handleNavigation = () => {
       display: flex;
       justify-content: space-between;
       align-items: end;
-      a {
+      button span {
         text-decoration: none;
         text-transform: uppercase;
         font-weight: 550;
