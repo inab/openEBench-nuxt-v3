@@ -135,6 +135,7 @@ services:
       - ./layouts:/app/layouts:ro
       - ./pages:/app/pages:ro
       - ./plugins:/app/plugins:ro
+      - ./public:/app/public:ro
       - ./static:/app/static
       - ./stores:/app/stores:ro
       - ./stories:/app/stories:ro

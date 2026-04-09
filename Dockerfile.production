@@ -1,57 +1,24 @@
-# Fase de construcción
+# Build stage
 FROM node:20-alpine as build
 WORKDIR /app
 
-# Definir vars de entorno
-ARG ENVIRONMENT=test2-openebench
-ARG APP_BASE_URL=https://test2.openebench.bsc.es
-ARG OEB_LEGACY_ANGULAR_URI=https://legacy.openebench.bsc.es/
-ARG VRE_URI=https://dev-openebench.bsc.es/vre/home/
-ARG OBSERVATORY_URI=https://observatory.openebench.bsc.es
-ARG REST_API_URL=https://openebench.bsc.es/monitor/rest/
-# ARG REST_API_URL=https://dev.openebench.bsc.es/monitor/rest/
-ARG SCIENTIFIC_SERVICE_URL=https://dev.openebench.bsc.es/api/scientific/
-#ARG SCIENTIFIC_SERVICE_URL_API=https://dev-openebench.bsc.es/api/scientific/
-ARG SCIENTIFIC_SERVICE_URL_API=https://dev.openebench.bsc.es/api/scientific/
-ARG BENCH_EVENT_API_URL=https://openebench.bsc.es/rest/bench_event_api
-ARG KEYCLOAK_HOST=https://inb.bsc.es
-#ARG KEYCLOAK_REALM=dev-openebench
-ARG KEYCLOAK_REALM=oeb2dev
-ARG KEYCLOAK_CLIENT_ID=oeb-frontend
-ARG OBSERVATORY_API_URL=https://observatory.openebench.bsc.es/api
-ARG GITHUBAPP_API_URL=https://observatory.openebench.bsc.es/github-metadata-api
-ARG AUTH_ORIGIN=https://inb.bsc.es
-
-ENV ENVIRONMENT $ENVIRONMENT
-ENV OEB_LEGACY_ANGULAR_URI $OEB_LEGACY_ANGULAR_URI
-ENV VRE_URI $VRE_URI
-ENV OBSERVATORY_URI $OBSERVATORY_URI
-ENV REST_API_URL $REST_API_URL
-ENV NUXT_SCIENTIFIC_SERVICE_URL $SCIENTIFIC_SERVICE_URL
-ENV SCIENTIFIC_SERVICE_URL_API $SCIENTIFIC_SERVICE_URL_API
-ENV BENCH_EVENT_API_URL $BENCH_EVENT_API_URL
-ENV KEYCLOAK_HOST $KEYCLOAK_HOST
-ENV KEYCLOAK_REALM $KEYCLOAK_REALM
-ENV KEYCLOAK_CLIENT_ID $KEYCLOAK_CLIENT_ID
-ENV OBSERVATORY_API_URL $OBSERVATORY_API_URL
-ENV GITHUBAPP_API_URL $GITHUBAPP_API_URL
-ENV APP_BASE_URL $APP_BASE_URL
-ENV NODE_OPTIONS --openssl-legacy-provider
-ENV AUTH_ORIGIN $AUTH_ORIGIN
-
-ENV NITRO_PORT 3000
-ENV NITRO_HOST 0.0.0.0
+# Only non-URL build config here
+ENV NODE_OPTIONS=--openssl-legacy-provider
+ENV NITRO_PORT=3000
+ENV NITRO_HOST=0.0.0.0
 
 COPY package*.json ./
 RUN npm install
-
 COPY . .
-#ENV NODE_OPTIONS="--max-old-space-size=8192 --expose-gc"
 RUN npm run build
 
+# Runtime stage
 FROM node:20-alpine
+WORKDIR /app
 COPY --from=build /app/.output /app/.output
 
+# Mount point for config.json — document it clearly
+# At runtime, mount your config.json to:
+# /app/.output/public/config.json
 EXPOSE 3000
-
 CMD ["node", "/app/.output/server/index.mjs"]

@@ -77,6 +77,7 @@ export default defineNuxtConfig({
   ssr: false,
 
   plugins: [
+    '~/plugins/config.client',
     '~/plugins/useGraphql',
     '~/plugins/useObservatory',
     '~/plugins/useGithubapp',
@@ -85,30 +86,23 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      ENVIRONMENT: process.env.ENVIRONMENT || 'dev-openebench',
-      OEB_LEGACY_ANGULAR_URI:
-        process.env.OEB_LEGACY_ANGULAR_URI || 'https://legacy.dev-openebench.bsc.es/',
-      VRE_URI: process.env.VRE_URI || 'https://dev-openebench.bsc.es/vre/home/',
-      OBSERVATORY_URI: process.env.OBSERVATORY_URI || 'https://observatory.openebench.bsc.es',
-      SCIENTIFIC_SERVICE_URL:
-        process.env.SCIENTIFIC_SERVICE_URL || 'https://dev-openebench.bsc.es/api/scientific',
-      SCIENTIFIC_SERVICE_URL_API:
-        process.env.SCIENTIFIC_SERVICE_URL_API || 'https://dev-openebench.bsc.es/api/scientific',
-      BENCH_EVENT_API_URL:
-        process.env.BENCH_EVENT_API_URL || 'https://dev-openebench.bsc.es/rest/bench_event_api',
-      OBSERVATORY_API_URL:
-        process.env.OBSERVATORY_API_URL || 'https://observatory.openebench.bsc.es/api',
-      GITHUBAPP_API_URL:
-        process.env.GITHUBAPP_API_URL ||
-        'https://observatory.openebench.bsc.es/github-metadata-api',
+      ENVIRONMENT: process.env.ENVIRONMENT,
+      OEB_LEGACY_ANGULAR_URI: process.env.OEB_LEGACY_ANGULAR_URI,
+      VRE_URI: process.env.VRE_URI,
+      OBSERVATORY_URI: process.env.OBSERVATORY_URI,
+      SCIENTIFIC_SERVICE_URL: process.env.SCIENTIFIC_SERVICE_URL,
+      SCIENTIFIC_SERVICE_URL_API: process.env.SCIENTIFIC_SERVICE_URL_API,
+      BENCH_EVENT_API_URL: process.env.BENCH_EVENT_API_URL,
+      OBSERVATORY_API_URL: process.env.OBSERVATORY_API_URL,
+      GITHUBAPP_API_URL: process.env.GITHUBAPP_API_URL,
       MONITORING: {
-        baseURL: process.env.REST_API_URL || 'https://dev-openebench.bsc.es/monitor/rest/',
+        baseURL: process.env.REST_API_URL,
       },
-      KEYCLOAK_HOST: process.env.KEYCLOAK_HOST || 'https://inb.bsc.es/',
-      KEYCLOAK_REALM: process.env.KEYCLOAK_REALM || 'openebench',
-      KEYCLOAK_CLIENT_ID: process.env.KEYCLOAK_CLIENT_ID || 'oeb-frontend',
-      BASE_URL: process.env.APP_BASE_URL || 'https://openebench.bsc.es',
-      AUTH_ORIGIN: process.env.AUTH_ORIGIN || 'https://inb.bsc.es',
+      KEYCLOAK_HOST: process.env.KEYCLOAK_HOST,
+      KEYCLOAK_REALM: process.env.KEYCLOAK_REALM,
+      KEYCLOAK_CLIENT_ID: process.env.KEYCLOAK_CLIENT_ID,
+      BASE_URL: process.env.APP_BASE_URL,
+      AUTH_ORIGIN: process.env.AUTH_ORIGIN,
     },
   },
 

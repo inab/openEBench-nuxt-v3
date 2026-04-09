@@ -1,0 +1,20 @@
+{
+  "ENVIRONMENT": "test2-openebench",
+  "APP_BASE_URL": "https://test-oeb2.openebench.bsc.es",
+  "OEB_LEGACY_ANGULAR_URI": "https://legacy.openebench.bsc.es/",
+  "VRE_URI": "https://openebench.bsc.es/vre/home/",
+  "OBSERVATORY_URI": "https://observatory.openebench.bsc.es",
+  "REST_API_URL": "https://openebench.bsc.es/monitor/rest/",
+  "SCIENTIFIC_SERVICE_URL": "https://openebench.bsc.es/api/scientific",
+  "SCIENTIFIC_SERVICE_URL_API": "https://openebench.bsc.es/api/scientific",
+  "BENCH_EVENT_API_URL": "https://openebench.bsc.es/rest/bench_event_api",
+  "OBSERVATORY_API_URL": "https://observatory.openebench.bsc.es/api",
+  "GITHUBAPP_API_URL": "https://observatory.openebench.bsc.es/githubapp/api",
+  "KEYCLOAK_HOST": "https://inb.bsc.es",
+  "KEYCLOAK_REALM": "oeb2dev",
+  "KEYCLOAK_CLIENT_ID": "oeb-frontend",
+  "AUTH_ORIGIN": "https://inb.bsc.es",
+  "MONITORING": {
+    "baseURL": "https://openebench.bsc.es/monitor/rest/"
+  }
+}
