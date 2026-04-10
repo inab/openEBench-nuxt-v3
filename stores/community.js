@@ -157,11 +157,11 @@ export const useCommunity = defineStore("community", {
     setCommunityReferences(references) {
       this.communityReferences = references
         ? references.map((reference) => {
-            return {
-              href: "https://doi.org/" + reference.split(":")[1],
-              doi: reference,
-            };
-          })
+          return {
+            href: "https://doi.org/" + reference.split(":")[1],
+            doi: reference,
+          };
+        })
         : [];
     },
 

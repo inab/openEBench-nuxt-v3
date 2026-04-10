@@ -65,7 +65,7 @@ export const useData = defineStore('data', {
     setFeatures(features) {
       this.features = features;
     },
-    
+
     setFeaturesControl(features) {
       this.featuresControl = features;
     },
@@ -78,12 +78,12 @@ export const useData = defineStore('data', {
       this.coverageSources = sources;
     },
 
-    setCompleteness(result1, result2 ) {
+    setCompleteness(result1, result2) {
       this.completeness.cummulative_features = result1;
       this.completeness.distribution_features = result2;
     },
 
-    setCompletenessControl(result1, result2 ) {
+    setCompletenessControl(result1, result2) {
       this.completenessControl.cummulative_features = result1;
       this.completenessControl.distribution_features = result2;
     },
@@ -114,7 +114,7 @@ export const useData = defineStore('data', {
       const { $observatory } = useNuxtApp();
       const observatoryStore = useObservatory();
       const URL = `${BASE_URL}count_per_source?collection=${observatoryStore.currentCollection}`;
-      
+
       try {
         this.setLoaded({ countsPerSource: true });
         const { data } = await useAsyncData("countsPerSource", () =>
@@ -141,7 +141,7 @@ export const useData = defineStore('data', {
       const { $observatory } = useNuxtApp();
       const observatoryStore = useObservatory();
       const URL = `${BASE_URL}count_total?collection=${observatoryStore.currentCollection}`;
-      
+
       try {
         this.setLoaded({ totalCount: true });
         const resources =
@@ -149,7 +149,7 @@ export const useData = defineStore('data', {
             $observatory(URL, {
               method: "GET",
             }),
-        );
+          );
         // Verifica la estructura de result
         if (resources && resources.data._value.length > 0) {
           this.setTotalCount(resources.data._value[0].data)
@@ -157,7 +157,7 @@ export const useData = defineStore('data', {
 
         // If no errors
         this.setLoaded({ totalCount: false });
-    
+
       } catch (error) {
         console.error('Error fetching Total Count:', error);
         this.setLoaded({ totalCount: false });
@@ -183,7 +183,7 @@ export const useData = defineStore('data', {
         // Verifica los datos antes de asignar
         if (!result || !resultLabels || !resultControl) {
           console.warn('Some features data could not be loaded');
-        }else{
+        } else {
           this.setFeatures(result.data);
           this.setFeaturesLabels(resultLabels.data);
           this.setFeaturesControl(resultControl.data);
@@ -191,42 +191,42 @@ export const useData = defineStore('data', {
           // If no errors
           this.setLoaded({ features: false });
         }
-          
+
       } catch (error) {
         console.error('Error fetching Features:', error);
         this.setLoaded({ features: true });
       }
     },
 
-    async getCoverageSources () {
+    async getCoverageSources() {
       const { $observatory } = useNuxtApp();
       const observatoryStore = useObservatory();
       const URL = `${BASE_URL}coverage_sources?collection=${observatoryStore.currentCollection}`;
-      
+
       try {
-        this.setLoaded({ coverageSources : true});
+        this.setLoaded({ coverageSources: true });
         const result =
           await useAsyncData('CoverageSources', () =>
             $observatory(URL, {
               method: "GET",
-          })
-        );
+            })
+          );
 
-        if(result.data === null) {
+        if (result.data === null) {
           console.log('CoverageSources no data available');
-          this.setLoaded({ coverageSources : true})
-        }else{
+          this.setLoaded({ coverageSources: true })
+        } else {
           // If not error
           this.setCoverageSources(result.data);
-          this.setLoaded({ coverageSources : false});
+          this.setLoaded({ coverageSources: false });
         }
       } catch (error) {
-        console.error('Error fetching Coverage Source: ',error);
-        this.setLoaded({ coverageSources : true});
+        console.error('Error fetching Coverage Source: ', error);
+        this.setLoaded({ coverageSources: true });
       }
     },
 
-    async getCompleteness () {
+    async getCompleteness() {
       // This plot uses two serires of data, one for the histogram and one for the line (cummulative distribution)
       const { $observatory } = useNuxtApp();
       const observatoryStore = useObservatory();
@@ -238,7 +238,7 @@ export const useData = defineStore('data', {
       const URLDistributionFeaturesControl = `${BASE_URL}distribution_features?collection=tools`;
 
       try {
-        this.setLoaded({ completeness : true});
+        this.setLoaded({ completeness: true });
 
         // Realiza todas las llamadas en paralelo
         const [
@@ -253,10 +253,10 @@ export const useData = defineStore('data', {
           $observatory(URLDistributionFeaturesControl, { method: 'GET' }),
         ]);
 
-        if(resultCummulativeFeatures.data === null && resultDistributionFeatures.data === data) {
+        if (resultCummulativeFeatures.data === null && resultDistributionFeatures.data === data) {
           console.log('Completeness no data available');
-          this.setLoaded({ completeness : true})
-        }else{
+          this.setLoaded({ completeness: true })
+        } else {
           // If not error
 
           // Setea datos de control
@@ -264,12 +264,12 @@ export const useData = defineStore('data', {
 
           // Setea datos principales
           this.setCompleteness(resultCummulativeFeatures.data, resultDistributionFeatures.data);
-          this.setLoaded({ completeness : false});
+          this.setLoaded({ completeness: false });
         }
 
-      }catch (error) {
-        console.error('Error fetching Completeness: ',error);
-        this.setLoaded({ completeness : true});
+      } catch (error) {
+        console.error('Error fetching Completeness: ', error);
+        this.setLoaded({ completeness: true });
       }
     },
 
@@ -282,7 +282,7 @@ export const useData = defineStore('data', {
       const URLControl = `${BASE_URL}types_count?collection=tools`;
 
       try {
-        this.setLoaded({ types : true});
+        this.setLoaded({ types: true });
 
         // Make both requests in parallel
         const [result, resultControl] = await Promise.all([
@@ -290,18 +290,18 @@ export const useData = defineStore('data', {
           $observatory(URLControl, { method: 'GET' })
         ]);
 
-        if(result.data === null) {
+        if (result.data === null) {
           console.log('Types no data available');
-          this.setLoaded({ types : true})
-        }else{
+          this.setLoaded({ types: true })
+        } else {
           // If not error
           this.setTypes(result.data);
           this.setTypesControl(resultControl.data);
-          this.setLoaded({ types : false});
+          this.setLoaded({ types: false });
         }
       } catch (error) {
-        console.error('Error fetching Types: ',error);
-        this.setLoaded({ types : true});
+        console.error('Error fetching Types: ', error);
+        this.setLoaded({ types: true });
       }
 
     },

@@ -112,9 +112,9 @@ export const useDashboard = defineStore("dashboard", {
           method: "HEAD",
           params: { limit: 1 },
         });
-    
+
         const contentRange = response.headers.get("content-range");
-    
+
         if (contentRange) {
           const matches = contentRange.match(/(\d+)-(\d+|\*)\/(\d+|\*)/);
           if (matches) {
@@ -125,6 +125,6 @@ export const useDashboard = defineStore("dashboard", {
         console.error("Error fetching tools count:", error);
       }
     }
-    
+
   }
 })

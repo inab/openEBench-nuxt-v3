@@ -6,26 +6,26 @@ import { reactive } from 'vue';
 
 const BASE_URL = '/api/stats/tools/';
 const labels = {
-	F: {
-		F1: 'F1. Identity <br> uniqueness',
-		F2: 'F2. Existence <br> of metadata',
-		F3: 'F3. Discoverability',
-	},
-	A: {
-		A1: 'A1. Availability of<br>working version',
-		A3: 'A3. Unrestricted Access',
-	},
-	I: {
-		I1: 'I1. Data format <br> standards and<br>practices',
-		I2: 'I2. Software <br> integration',
-		I3: 'I3. Dependencies <br> availability',
-	},
-	R: {
-		R1: 'R1. Usage <br> documentation',
-		R2: 'R2. License',
-		R3: 'R3. Recognition <br> and governance',
-		R4: 'R4. Versioning and<br>  historical traceability',
-	},
+  F: {
+    F1: 'F1. Identity <br> uniqueness',
+    F2: 'F2. Existence <br> of metadata',
+    F3: 'F3. Discoverability',
+  },
+  A: {
+    A1: 'A1. Availability of<br>working version',
+    A3: 'A3. Unrestricted Access',
+  },
+  I: {
+    I1: 'I1. Data format <br> standards and<br>practices',
+    I2: 'I2. Software <br> integration',
+    I3: 'I3. Dependencies <br> availability',
+  },
+  R: {
+    R1: 'R1. Usage <br> documentation',
+    R2: 'R2. License',
+    R3: 'R3. Recognition <br> and governance',
+    R4: 'R4. Versioning and<br>  historical traceability',
+  },
 };
 export const useFairness = defineStore("fairness", {
   state: () => ({
@@ -78,7 +78,7 @@ export const useFairness = defineStore("fairness", {
 
       try {
         this.setLoaded({ FAIRscores: true });
-        const { data: FAIRscoresData } = await useAsyncData('FAIRscores', () => 
+        const { data: FAIRscoresData } = await useAsyncData('FAIRscores', () =>
           $observatory(URL, { method: "GET" })
         );
 
@@ -110,7 +110,7 @@ export const useFairness = defineStore("fairness", {
 
       try {
         this.setLoaded({ controlFAIRscores: true });
-        const { data: controlFAIRscoresData } = await useAsyncData('controlFAIRscores', () => 
+        const { data: controlFAIRscoresData } = await useAsyncData('controlFAIRscores', () =>
           $observatory(URL, { method: "GET" })
         );
 
