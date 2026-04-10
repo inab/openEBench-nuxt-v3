@@ -1,11 +1,11 @@
 export async function challengeAPI(challengeID) {
-  return await useNuxtApp().$graphql("/graphql", {
-    method: "POST",
-    headers: {
-      Accept: "text/plain, */*",
-    },
-    body: JSON.stringify({
-      query: `
+	return await useNuxtApp().$graphql('/graphql', {
+		method: 'POST',
+		headers: {
+			Accept: 'text/plain, */*',
+		},
+		body: JSON.stringify({
+			query: `
 					query ($id: String!) {
 						getChallenges(challengeFilters: { id: $id }) {
 							_id
@@ -20,7 +20,7 @@ export async function challengeAPI(challengeID) {
 							participant_datasets: datasets(datasetFilters: {type: "participant"}) {
 								_id
 								orig_id
-								datalinks {
+								datalink {
 									inline_data
 									schema_url
 									uri
@@ -39,7 +39,7 @@ export async function challengeAPI(challengeID) {
 							assessment_datasets: datasets(datasetFilters: {type: "assessment"}) {
 								_id
 								orig_id
-								datalinks {
+								datalink {
 									inline_data
 									schema_url
 									uri
@@ -62,7 +62,7 @@ export async function challengeAPI(challengeID) {
 						getDatasets(
 							datasetFilters: { challenge_id: $id, type: "aggregation" }
 						) {
-							datalinks {
+							datalink {
 								inline_data
 							}
 							dates {
@@ -80,37 +80,36 @@ export async function challengeAPI(challengeID) {
 						}
 					}
 				`,
-      variables: {
-        id: challengeID,
-      },
-    }),
-  });
+			variables: {
+				id: challengeID,
+			},
+		}),
+	});
 }
 
 export async function getGraphData(dataset) {
-  const datalink = dataset?.datalinks?.[0];
+	const datalink = dataset?.datalink?.[0];
 
-  if (!datalink?.inline_data) {
-    return [];
-  }
+	if (!datalink?.inline_data) {
+		return [];
+	}
 
-  let parsedInlineData;
+	let parsedInlineData;
 
-  try {
-    parsedInlineData =
-      typeof datalink.inline_data === "string"
-        ? JSON.parse(datalink.inline_data)
-        : datalink.inline_data;
-  } catch (e) {
-    console.error("Error parsing inline_data:", e);
-    return [];
-  }
+	try {
+		parsedInlineData =
+			typeof datalink.inline_data === 'string'
+				? JSON.parse(datalink.inline_data)
+				: datalink.inline_data;
+	} catch (e) {
+		console.error('Error parsing inline_data:', e);
+		return [];
+	}
 
-  return parsedInlineData;
+	return parsedInlineData;
 }
 
-
 export default {
-  challengeAPI,
-  getGraphData,
+	challengeAPI,
+	getGraphData,
 };
