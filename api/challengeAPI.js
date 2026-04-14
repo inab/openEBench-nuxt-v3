@@ -88,7 +88,7 @@ export async function challengeAPI(challengeID) {
 }
 
 export async function getGraphData(dataset) {
-	const datalink = dataset?.datalink?.[0];
+	const datalink = dataset?.datalink;
 
 	if (!datalink?.inline_data) {
 		return [];

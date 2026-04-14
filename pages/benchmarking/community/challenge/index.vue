@@ -88,7 +88,7 @@ await challengeAPI(challengeId).then(async (response: any) => {
 
   for (const [_key, dataset] of Object.entries(datasets.value)) {
     const graphData = await getGraphData(dataset);
-    const datalink = dataset?.datalinks?.[0];
+    const datalink = dataset?.datalink;
 
     if (!graphData || !graphData.visualization) {
       chatAvailable.value = false;
@@ -139,7 +139,7 @@ if (communityStore.communityId === communityId) {
 
 function getVisualizationType(item) {
   try {
-    const data = item?.datalinks?.[0]?.inline_data;
+    const data = item?.datalink?.inline_data;
     const parsed = typeof data === "string" ? JSON.parse(data) : data;
 
     return parsed?.visualization?.type || "";
