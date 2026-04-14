@@ -1,11 +1,7 @@
 <template>
   <div class="loader-chart-widget">
     <div v-if="isLoadingGraph" class="loader-container mt-5">
-      <img
-        src="~/assets/images/201805.OpenEBench.logo.Animated.0050secs.gif"
-        alt="Loader GIF"
-        class="loader"
-      />
+      <img src="~/assets/images/201805.OpenEBench.logo.Animated.0050secs.gif" alt="Loader GIF" class="loader" />
     </div>
     <div v-else>
       <div v-if="schemaUrl" class="schema-url text-primaryOeb-500">
@@ -16,7 +12,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted, watch, computed } from "vue";
 import BoxPlotConverter from "@/utils/BoxPlotConverter.js";
 
 const isLoadingGraph = ref(true);
@@ -38,17 +34,36 @@ const type: string = ref("");
 console.log("dataGraph: ", dataGraph.value);
 
 const schemaUrl = computed(() =>
-  dataGraph.value.inline_data &&
-  dataGraph.value.visualization &&
-  dataGraph.value.visualization.schema_url
-    ? dataGraph.value.visualization.schema_url
-    : null,
+  dataGraph.value.inline_data?.visualization?.schema_url ?? null
 );
 
-getPreparedData();
+watch(
+  () => props.data,
+  () => {
+    if (props.data) {
+      getPreparedData();
+    }
+  },
+  { immediate: true }
+);
+
+// Add this after getPreparedData() call
+watch(preparedData, (newVal) => {
+  if (newVal) {
+    try {
+      console.log('[widget] type:', type.value);
+      console.log('[widget] preparedData parsed:', JSON.parse(newVal));
+    } catch (e) {
+      console.error('[widget] preparedData is not valid JSON:', newVal);
+    }
+  }
+}, { immediate: true });
 
 function getPreparedData() {
-  const visualization = dataGraph.value.visualization ?? {};
+  const visualization =
+    dataGraph.value.visualization ??
+    dataGraph.value.inline_data?.visualization ??
+    {};
   const graphType = visualization?.type ?? null;
 
   let prepared = {
@@ -62,7 +77,7 @@ function getPreparedData() {
     prepared = {
       _id: dataGraph.value._id,
       name: dataGraph.value.name,
-      dates: dataGraph.value.dates,
+      dates: dataGraph.value.dates ?? dataGraph.value.data?.dates ?? null,
       inline_data: {
         challenge_participants: [],
         visualization: {},
@@ -70,9 +85,9 @@ function getPreparedData() {
     };
   } else {
     prepared = {
-      _id: dataGraph.value.key,
-      dates: dataGraph.value.data.dates,
-      dataset_contact_ids: dataGraph.value.data.dataset_contact_ids,
+      _id: dataGraph.value.key ?? dataGraph.value._id,
+      dates: dataGraph.value.data?.dates ?? dataGraph.value.dates ?? null,
+      dataset_contact_ids: dataGraph.value.data?.dataset_contact_ids ?? null,
       inline_data: {
         challenge_participants: [],
         visualization: {},
@@ -134,7 +149,7 @@ function getPreparedData() {
     const participants = dataGraph.value?.challenge_participants ?? [];
     const log2Param =
       dataGraph.value?.visualization.axes_scale &&
-      dataGraph.value?.visualization.axes_scale === "?log2=true"
+        dataGraph.value?.visualization.axes_scale === "?log2=true"
         ? true
         : false;
 
@@ -161,13 +176,17 @@ function getPreparedData() {
       prepared.inline_data.challenge_participants.push(preparedParticipant);
     }
     // Process visualization data for RadarPlot
-    const visualization = dataGraph.value.inline_data.visualization;
+    const radarVisualization = dataGraph.value.inline_data.visualization;
     prepared.inline_data.visualization = {
-      type: visualization.type,
-      dates: visualization.dates,
-      schema_url: visualization.schema_url,
+      type: radarVisualization.type,
+      dates: radarVisualization.dates,
+      schema_url: radarVisualization.schema_url,
     };
   }
+  console.log('[getPreparedData] graphType:', graphType);
+  console.log('[getPreparedData] dataGraph.value:', JSON.parse(JSON.stringify(dataGraph.value)));
+  console.log('[getPreparedData] prepared before stringify:', prepared);
+
   preparedData.value = JSON.stringify(prepared);
   type.value = graphType;
 }
@@ -180,17 +199,20 @@ function getMetricsNames(metricX: string, metricY: string) {
   const metricNames = { metricX, metricY };
 
   props.metrics.forEach((metric: any) => {
-    const id =
-      metric._metadata?.["level_2:metric_id"]?.toLowerCase() ??
-      metric._id?.toLowerCase();
+    const rawId = metric._metadata?.["level_2:metric_id"];
+    const label = metric.title || metric.metrics_label || metric.orig_id || metric._id;
 
-    const label = metric.title || metric.metrics_label || metric.orig_id || id;
+    // Handle both string and array cases
+    const ids: string[] = Array.isArray(rawId)
+      ? rawId.map((id: string) => id.toLowerCase())
+      : rawId
+        ? [rawId.toLowerCase()]
+        : [metric._id?.toLowerCase()];
 
-    if (id === metricX.toLowerCase()) {
+    if (ids.includes(metricX.toLowerCase())) {
       metricNames.metricX = label;
     }
-
-    if (id === metricY.toLowerCase()) {
+    if (ids.includes(metricY.toLowerCase())) {
       metricNames.metricY = label;
     }
   });
@@ -211,6 +233,7 @@ function getMetricsNames(metricX: string, metricY: string) {
   width: 160px;
   height: 100px;
 }
+
 .loader-chart-widget {
   .schema-url {
     font-size: 15px;
