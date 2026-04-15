@@ -278,36 +278,58 @@ const currentEvent = computed(() => {
   return selectedEvent;
 });
 
-const routeArray: Array<{
-  label: string;
-  isActualRoute: boolean;
-  route?: string;
-}> = [
-  {
-    label: "Benchmarking Communities",
-    isActualRoute: false,
-    route: "/benchmarking",
-  },
-  {
-    label: community.value?.acronym + " " + "Events",
-    isActualRoute: false,
-    route: "/benchmarking/" + communityId + "/events",
-  },
-  {
-    label: currentEvent.value?.name,
-    isActualRoute: false,
-    route: "/benchmarking/" + communityId + "?event=" + currentEvent.value._id,
-  },
-  {
-    label: "Challenge " + challenge.value.acronym + " " + challengeId,
-    isActualRoute: false,
-    route: "/benchmarking/" + communityId + "/" + challengeId,
-  },
-  {
-    label: "Participants",
-    isActualRoute: true,
-  },
-];
+const fromProjects = computed(() => route.query.from === "projects");
+
+const routeArray = computed(() => {
+  if (fromProjects.value) {
+    return [
+      {
+        label: "Project Spaces",
+        isActualRoute: false,
+        route: "/projects",
+      },
+      {
+        label: community.value?.acronym || communityId,
+        isActualRoute: false,
+        route: `/projects/${communityId}`,
+      },
+      {
+        label: "Challenge " + challenge.value?.acronym + " " + challengeId,
+        isActualRoute: true,   
+      },
+      {
+        label: "Participants",
+        isActualRoute: true,
+      },
+    ];
+  }
+
+  return [
+    {
+      label: "Benchmarking Communities",
+      isActualRoute: false,
+      route: "/benchmarking",
+    },
+    {
+      label: community.value?.acronym + " Events",
+      isActualRoute: false,
+      route: "/benchmarking/" + communityId + "/events",
+    },
+    {
+      label: currentEvent.value?.name,
+      isActualRoute: false,
+      route: "/benchmarking/" + communityId + "?event=" + currentEvent.value?._id,
+    },
+    {
+      label: "Challenge " + challenge.value?.acronym + " " + challengeId,
+      isActualRoute: true,    
+    },
+    {
+      label: "Participants",
+      isActualRoute: true,
+    },
+  ];
+});
 </script>
 
 <style scoped lang="scss">

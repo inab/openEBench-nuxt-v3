@@ -1,6 +1,6 @@
 <template>
   <div class="projects">
-    <BreadcrumbsBar />
+    <BreadcrumbsBar :breadcrumbs-array="routeArray"/>
     <div class="w-100 container">
       <UAccordion :items="HEADER_ITEM">
         <template #default="{ item, open }">
@@ -92,7 +92,9 @@ import { useCommunities } from "@/stores/communities";
 const communitiesStore = useCommunities();
 const projects: Ref<any> = ref(null);
 const status = ref({ pending: false });
-
+const routeArray: Array = [
+  { label: "Project Spaces", isActualRoute: true },
+];
 const HEADER_ITEM = [
   {
     label: "Project Spaces",

@@ -65,7 +65,7 @@
           <NuxtLink
             class="text-primary-500 dark:text-primary-400"
             title="Go to challenge"
-            :to="`/benchmarking/${community}/${row._id}`"
+            :to="getChallengeLink(row._id)"
           >
             {{ row.acronym }}
           </NuxtLink>
@@ -75,7 +75,7 @@
             v-if="!loadingRows.includes(row._id)"
             class="text-primary-500 dark:text-primary-400"
             title="Go to participant"
-            :to="`/benchmarking/${community}/${row._id}/participants`"
+            :to="getChallengeLink(row._id, '/participants')"
             @click="handleClick(row._id)"
           >
             Participant
@@ -127,9 +127,18 @@ const props = defineProps<{
   filterArray: Array<any>;
 }>();
 
+const route = useRoute();
 const emit = defineEmits(["handleChangeChallengers"]);
 
 const community = computed(() => props.communityId);
+// Check if we're coming from the projects section
+const fromProjects = computed(() => route.path.includes("/projects/"));
+
+// Build challenge link, appending ?from=projects if in projects section
+function getChallengeLink(challengeId: string, suffix = "") {
+   const base = `/benchmarking/${community.value}/${challengeId}${suffix}`;
+   return fromProjects.value ? `${base}?from=projects` : base;
+}
 const page = ref<number>(1);
 const pageCount = ref<number>(10);
 const search = ref<string>("");
