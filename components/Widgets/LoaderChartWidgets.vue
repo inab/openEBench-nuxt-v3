@@ -31,7 +31,7 @@ const dataGraph = computed(() => props.data);
 const preparedData: string = ref(null);
 const type: string = ref("");
 
-console.log("dataGraph: ", dataGraph.value);
+//console.log("dataGraph: ", dataGraph.value);
 
 const schemaUrl = computed(() =>
   dataGraph.value.inline_data?.visualization?.schema_url ?? null
@@ -47,17 +47,6 @@ watch(
   { immediate: true }
 );
 
-// Add this after getPreparedData() call
-watch(preparedData, (newVal) => {
-  if (newVal) {
-    try {
-      console.log('[widget] type:', type.value);
-      console.log('[widget] preparedData parsed:', JSON.parse(newVal));
-    } catch (e) {
-      console.error('[widget] preparedData is not valid JSON:', newVal);
-    }
-  }
-}, { immediate: true });
 
 function getPreparedData() {
   const visualization =
@@ -183,9 +172,6 @@ function getPreparedData() {
       schema_url: radarVisualization.schema_url,
     };
   }
-  console.log('[getPreparedData] graphType:', graphType);
-  console.log('[getPreparedData] dataGraph.value:', JSON.parse(JSON.stringify(dataGraph.value)));
-  console.log('[getPreparedData] prepared before stringify:', prepared);
 
   preparedData.value = JSON.stringify(prepared);
   type.value = graphType;
