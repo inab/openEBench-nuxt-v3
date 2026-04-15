@@ -19,9 +19,20 @@ const markdownString: ComputedRef<string | null> = computed(
   () => props.markdown.summary ?? null,
 );
 
-const markup = computed(() =>
-  DOMPurify.sanitize(marked(markdownString.value ?? "")),
-);
+// Replace (#item1) → <a id="item1"></a>
+// Negative lookbehind avoids touching [text](#itemX)
+function convertAnchors(md: string): string {
+  return md.replace(
+    /(?<!\[.*?)\(#([\w-]+)\)(?!\))/g,
+    (_match, id) => `<a id="${id}"></a>`
+  );
+}
+
+const markup = computed(() => {
+  const processed = convertAnchors(markdownString.value ?? "");
+  const html = marked(processed);
+  return DOMPurify.sanitize(html as string);
+});
 </script>
 
 <style lang="scss">
