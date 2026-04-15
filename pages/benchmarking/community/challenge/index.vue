@@ -10,7 +10,7 @@
         {{ challenge.name }}
       </div>
       <div class="benchmarking-challenge__body">
-        <div v-if="chatAvailable" class="chatAvailable">
+        <div v-if="chatAvailable && items.length > 0" class="chatAvailable">
           <div
             v-for="(item, index) in items"
             :key="index"
@@ -90,10 +90,7 @@ await challengeAPI(challengeId).then(async (response: any) => {
     const graphData = await getGraphData(dataset);
     const datalink = dataset?.datalink;
 
-    if (!graphData || !graphData.visualization) {
-      chatAvailable.value = false;
-      continue;
-    }
+    
 
     graphData.challenge_participants = graphData.challenge_participants ?? [];
 
@@ -122,6 +119,8 @@ await challengeAPI(challengeId).then(async (response: any) => {
 
     items.value.push(item);
   }
+
+  chatAvailable.value = items.value.length > 0 && datasets.value.length > 0
 
   itemSelected.value = items.value[0] ?? null;
 });
@@ -159,31 +158,50 @@ const currentEvent = computed(() => {
   return selectedEvent;
 });
 
-const routeArray: Array<{
-  label: string;
-  isActualRoute: boolean;
-  route?: string;
-}> = [
-  {
-    label: "Benchmarking Communities",
-    isActualRoute: false,
-    route: "/benchmarking",
-  },
-  {
-    label: community.value?.acronym + " " + "Events",
-    isActualRoute: false,
-    route: "/benchmarking/" + communityId + "/events",
-  },
-  {
-    label: currentEvent.value?.name,
-    isActualRoute: false,
-    route: "/benchmarking/" + communityId + "?event=" + currentEvent.value._id,
-  },
-  {
-    label: "Challenge " + challenge.value.acronym + " " + challengeId,
-    isActualRoute: true,
-  },
-];
+const fromProjects = computed(() => route.query.from === "projects");
+
+const routeArray = computed(() => {
+  if (fromProjects.value) {
+    return [
+      {
+        label: "Project Spaces",
+        isActualRoute: false,
+        route: "/projects",
+      },
+      {
+        label: community.value?.acronym || communityId,
+        isActualRoute: false,
+        route: `/projects/${communityId}`,
+      },
+      {
+        label: "Challenge " + challenge.value?.acronym + " " + challengeId,
+        isActualRoute: true,
+      },
+    ];
+  }
+
+  return [
+    {
+      label: "Benchmarking Communities",
+      isActualRoute: false,
+      route: "/benchmarking",
+    },
+    {
+      label: community.value?.acronym + " " + "Events",
+      isActualRoute: false,
+      route: "/benchmarking/" + communityId + "/events",
+    },
+    {
+      label: currentEvent.value?.name,
+      isActualRoute: false,
+      route: "/benchmarking/" + communityId + "?event=" + currentEvent.value?._id,
+    },
+    {
+      label: "Challenge " + challenge.value?.acronym + " " + challengeId,
+      isActualRoute: true,
+    },
+  ];
+});
 </script>
 
 <style scoped lang="scss">
