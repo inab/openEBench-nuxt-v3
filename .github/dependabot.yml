@@ -9,9 +9,9 @@ updates:
     open-pull-requests-limit: 10
     target-branch: "main"
     reviewers:
-      - JessicaFM
+      - Androidbeingx
     assignees:
-      - JessicaFM
+      - Androidbeingx
     commit-message:
       prefix: fix
       prefix-development: chore
@@ -24,9 +24,9 @@ updates:
       time: "00:00"
     open-pull-requests-limit: 10
     reviewers:
-      - JessicaFM
+      - jmfernandez
     assignees:
-      - JessicaFM
+      - jmfernandez
     commit-message:
       prefix: fix
       prefix-development: chore
