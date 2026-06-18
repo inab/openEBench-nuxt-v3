@@ -1,0 +1,68 @@
+name: Create and publish openEBench3 Docker image (sandbox)
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - sandbox
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build-and-push-openebench-web-image:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node: [20]
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
+    steps:
+      - name: Checkout repository ⏰
+        uses: actions/checkout@v4
+      - name: Setup node env 🏗
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+          check-latest: false
+      - name: Set IMAGE_NAME to lowercase ✨
+        id: set_image_name
+        run: echo "IMAGE_NAME=$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+      - name: Cache node_modules 📦
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ matrix.node }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-${{ matrix.node }}-
+      - name: Install dependencies 👨🏻‍💻
+        run: npm ci
+      - name: Run unit tests locally 🧪
+        run: npm run test -- -- --watch=false
+      - name: Log in to the Container Registry ☕️
+        uses: docker/login-action@v3.3.0
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Extract metadata (tags, labels) for Docker ⌨
+        id: meta
+        uses: docker/metadata-action@v5.5.1
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+      - name: Build Docker image ✈️
+        run: docker build -t ghcr.io/${{ env.IMAGE_NAME }}:sandbox -f Dockerfile.production .
+      - name: Push Docker image 📦
+        id: push
+        uses: docker/build-push-action@v6.13.0
+        with:
+          context: .
+          file: ./Dockerfile.production
+          push: true
+          tags: ghcr.io/${{ env.IMAGE_NAME }}:sandbox
+          labels: ${{ steps.meta.outputs.labels }}
