@@ -17,8 +17,8 @@ FROM node:20-alpine
 WORKDIR /app
 COPY --from=build /app/.output /app/.output
 
-# Mount point for config.json — document it clearly
-# At runtime, mount your config.json to:
-# /app/.output/public/config.json
+# Create the file so Docker can bind-mount over it
+RUN touch /app/.output/public/config.json
+
 EXPOSE 3000
 CMD ["node", "/app/.output/server/index.mjs"]

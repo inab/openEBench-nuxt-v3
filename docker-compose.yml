@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile.production
     image: ghcr.io/inab/openebench-nuxt-v3:test2
     volumes:
-      - ./config.json:/app/.output/public/config.json:ro
+      - ./public/config.json:/app/.output/public/config.json:ro
     environment:
       - NODE_ENV=production
     network_mode: host

@@ -1,5 +1,4 @@
 import { ref } from 'vue';
-
 export type OebConfig = Record<string, string>;
 
 const _defaults: Record<string, string> = {
@@ -20,24 +19,40 @@ const _defaults: Record<string, string> = {
   REST_API_URL: 'https://openebench.bsc.es/monitor/rest/',
 };
 
-// starts with defaults so it's never empty
 const _config = ref<OebConfig>({ ..._defaults });
 
 export async function loadOebConfig(): Promise<void> {
-  console.log('[oebConfig] starting fetch...');
+  console.group('[oebConfig] loading configuration...');
   try {
     const res = await fetch('/config.json');
+
     if (!res.ok) {
-      console.warn(`config.json not found (${res.status}), using defaults`);
+      console.warn(`⚠️  config.json not found (${res.status}) — using hardcoded defaults`);
+      console.table(_defaults);
+      console.groupEnd();
       return;
     }
+
     const overrides: OebConfig = await res.json();
-    console.log('[oebConfig] overrides received:', overrides);
+
+    // show developers exactly what got overridden vs what fell back to default
+    const overriddenKeys = Object.keys(overrides);
+    const defaultedKeys = Object.keys(_defaults).filter(k => !overriddenKeys.includes(k));
+
+    console.log('✅ config.json loaded successfully');
+    console.log('📝 overridden keys:', overriddenKeys);
+    if (defaultedKeys.length) {
+      console.log('↩️  keys falling back to defaults:', defaultedKeys);
+    }
+
     _config.value = { ..._defaults, ...overrides };
-    console.log('[oebConfig] final config:', _config.value);
+    console.log('🔧 final config:', _config.value);
+
   } catch (e) {
-    console.warn('[oebConfig] fetch failed, using defaults:', e);
+    console.warn('❌ config.json fetch failed — using hardcoded defaults:', e);
+    console.table(_defaults);
   }
+  console.groupEnd();
 }
 
 export function useOebConfig() {

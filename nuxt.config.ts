@@ -86,21 +86,6 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      ENVIRONMENT: process.env.ENVIRONMENT,
-      OEB_LEGACY_ANGULAR_URI: process.env.OEB_LEGACY_ANGULAR_URI,
-      VRE_URI: process.env.VRE_URI,
-      OBSERVATORY_URI: process.env.OBSERVATORY_URI,
-      SCIENTIFIC_SERVICE_URL: process.env.SCIENTIFIC_SERVICE_URL,
-      SCIENTIFIC_SERVICE_URL_API: process.env.SCIENTIFIC_SERVICE_URL_API,
-      BENCH_EVENT_API_URL: process.env.BENCH_EVENT_API_URL,
-      OBSERVATORY_API_URL: process.env.OBSERVATORY_API_URL,
-      GITHUBAPP_API_URL: process.env.GITHUBAPP_API_URL,
-      MONITORING: {
-        baseURL: process.env.REST_API_URL,
-      },
-      KEYCLOAK_HOST: process.env.KEYCLOAK_HOST,
-      KEYCLOAK_REALM: process.env.KEYCLOAK_REALM,
-      KEYCLOAK_CLIENT_ID: process.env.KEYCLOAK_CLIENT_ID,
       BASE_URL: process.env.APP_BASE_URL,
       AUTH_ORIGIN: process.env.AUTH_ORIGIN,
     },
