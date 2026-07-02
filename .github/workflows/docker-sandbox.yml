@@ -59,7 +59,7 @@ jobs:
         run: docker build -t ghcr.io/${{ env.IMAGE_NAME }}:sandbox -f Dockerfile.production .
       - name: Push Docker image 📦
         id: push
-        uses: docker/build-push-action@v6.13.0
+        uses: docker/build-push-action@v7.3.0
         with:
           context: .
           file: ./Dockerfile.production
