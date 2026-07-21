@@ -67,7 +67,7 @@
                       data-bs-toggle="dropdown"
                       aria-expanded="false"
                     >
-                      <span>Observatory</span>
+                      <span>SW Observatory</span>
                       <UIcon
                         name="i-heroicons-chevron-right-20-solid"
                         class="transform transition-transform duration-200 text-2xl"

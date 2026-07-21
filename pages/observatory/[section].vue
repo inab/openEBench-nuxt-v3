@@ -35,14 +35,14 @@ import Trends from '@/components/Observatory/trends/Trends.vue'
 import FairnessScoreboard from '@/components/Observatory/fairness/FAIRness.vue'
 import FAIRsoftEvaluator from '@/components/Observatory/evaluation/Evaluation.vue'
 import Data from '@/components/Observatory/data/Data.vue'
-import About from '@/components/Observatory/About.vue'
+import Overview from '@/components/Observatory/Overview.vue'
 import { activeTabIndex } from '@/components/Common/state.js'
 
 const route = useRoute()
 const router = useRouter()
 
 // Mapeo tab → componente
-const tabComponents = [Trends, FairnessScoreboard, FAIRsoftEvaluator, Data, About]
+const tabComponents = [Overview, Trends, FairnessScoreboard, FAIRsoftEvaluator, Data ]
 
 // --- URL → Tab (cuando cambia la ruta)
 watch(() => route.params.section, (section) => {
