@@ -66,7 +66,6 @@
       </div>
     </div>
 
-    
     <p class="text-center mb-2 ml-8">
       <span class="text-sm highlight">
         Overview of documentation types and their availability in different
@@ -76,7 +75,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { onMounted, computed, ref} from 'vue';
+import { onMounted, computed} from 'vue';
 import DocumentationPlot from './DocumentationPlot.vue';
 import { useTrends } from '@/stores/observatory/trends';
 import { useObservatory } from '@/stores/observatory/index.js';
