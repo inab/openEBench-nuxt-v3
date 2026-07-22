@@ -75,6 +75,16 @@
             </div>
           </div>
 
+          <!-- Formats Section -->
+          <div class="row mt-4">
+            <div class="col-12">
+              <div
+                class="my-4 p-4 max-full bg-white border border-gray-100 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                <FormatsMain />
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
 </template>
@@ -87,6 +97,7 @@ import VersionControl from "./versionControl/VersionControl.vue";
 import PublicationsMain from "./publications/PublicationsMain.vue";
 import DocumentationMain from "./documentation/DocumentationMain.vue";
 import DependenciesMain from "./dependencies/DependenciesMain.vue";
+import FormatsMain from "./formats/FormatsMain.vue";
 
 </script>
 
