@@ -54,6 +54,17 @@
               </div>
             </div>
           </div>
+
+          <!-- Publications Section -->
+          <div class="row mt-4">
+            <div class="col-12">
+              <div
+                class="my-4 p-4 max-full bg-white border border-gray-100 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                <DocumentationMain />
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
 </template>
@@ -64,6 +75,7 @@ import LicensesMain from "./licenses/LicensesMain.vue";
 import VersioningMain from "./versioning/VersioningMain.vue";
 import VersionControl from "./versionControl/VersionControl.vue";
 import PublicationsMain from "./publications/PublicationsMain.vue";
+import DocumentationMain from "./documentation/DocumentationMain.vue";
 
 </script>
 
