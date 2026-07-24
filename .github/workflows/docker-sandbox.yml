@@ -45,7 +45,7 @@ jobs:
       - name: Run unit tests locally 🧪
         run: npm run test -- -- --watch=false
       - name: Log in to the Container Registry ☕️
-        uses: docker/login-action@v4.4.0
+        uses: docker/login-action@v4.5.0
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
