@@ -51,7 +51,7 @@ watch(() => route.params.section, (section) => {
   if (found) {
     activeTabIndex.value = found.index
   } else {
-    router.replace("/observatory/Trends")
+    router.replace("/observatory/Overview")
   }
 }, { immediate: true })
 
