@@ -1,5 +1,3 @@
-// This needss to be placed in
-// .github/workflows/add-to-general-front-end-project.yml
 
 name: Auto Add to Org Projects
 
