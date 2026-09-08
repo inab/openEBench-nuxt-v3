@@ -28,7 +28,8 @@
   },
   "license": "Apache-2.0",
   "engines": {
-    "npm": "10.8.2"
+    "node": "^20.9.0",
+    "npm": ">=10.8.0 <11"
   },
   "dependencies": {
     "@ckeditor/ckeditor5-vue": "^7.3.0",
@@ -37,7 +38,6 @@
     "@fortawesome/free-regular-svg-icons": "6.7.2",
     "@fortawesome/free-solid-svg-icons": "6.7.2",
     "@fortawesome/vue-fontawesome": "3.0.8",
-    "@inb/oeb-classification-table": "^1.4.0",
     "@inb/oeb-widgets-graphs": "^1.0.9",
     "@nuxt/image": "1.7.0",
     "@nuxt/ui": "^2.21.0",
@@ -64,7 +64,7 @@
     "v-calendar": "^3.1.2",
     "valibot": "^0.41.0",
     "vite-svg-loader": "5.1.0",
-    "vue": "latest",
+    "vue": "3.5.13",
     "vue-multiselect": "3.1.0",
     "vue-observe-visibility": "2.0.0-alpha.1",
     "vue3-carousel": "0.3.3",
@@ -101,6 +101,6 @@
     "webpack": "5.92.1"
   },
   "overrides": {
-    "vue": "latest"
+    "vue": "3.5.13"
   }
 }
