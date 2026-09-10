@@ -81,7 +81,7 @@
     "@types/pluralize": "0.0.33",
     "@types/whatwg-encoding": "2.0.3",
     "@vitejs/plugin-vue": "6.0.8",
-    "@vitest/coverage-istanbul": "3.2.4",
+    "@vitest/coverage-istanbul": "5.0.0",
     "@vitest/ui": "3.2.4",
     "@vue/runtime-core": "^3.5.12",
     "@vue/test-utils": "^2.4.6",
