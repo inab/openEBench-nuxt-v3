@@ -149,7 +149,7 @@ services:
     ports:
       - 3001:3001
   proxy:
-    image: nginx:alpine
+    image: nginx:1.27-bookworm
     depends_on:
       - nuxt
     volumes:
