@@ -221,7 +221,7 @@ async function showOkMessage(msg: string) {
 
 <style lang="scss" scoped>
 .terms-content {
-  paddig-bottom: 6px;
+  padding-bottom: 6px;
   .terms-intro {
     color: var(--color-gray-500);
     padding-bottom: 20px;

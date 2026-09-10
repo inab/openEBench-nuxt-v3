@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import emptyImg from "../../public/images/illustrations/empty-state.svg?component";
+import emptyImg from "~/assets/images/illustrations/empty-state.svg?component";
 const props = defineProps<{
   info?: string;
 }>();
