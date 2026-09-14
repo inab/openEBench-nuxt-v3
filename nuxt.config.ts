@@ -6,6 +6,9 @@ const mockAuthModule = process.env.VITEST ? ['./test/mocks/setup.ts'] : [];
 const testUtilsModule = process.env.VITEST ? ['@nuxt/test-utils/module'] : [];
 
 export default defineNuxtConfig({
+  alias: {
+    'next-auth/core': `${process.cwd()}/node_modules/next-auth/core/index.js`,
+  },
   devtools: {
     enabled: true,
   },
@@ -39,7 +42,7 @@ export default defineNuxtConfig({
     css: {
       preprocessorOptions: {
         scss: {
-          additionalData: '@import "@/assets/styles/_variables.scss";',
+          additionalData: '@use "@/assets/styles/_variables.scss" as *;',
         },
       },
     },
