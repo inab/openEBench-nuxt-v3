@@ -139,9 +139,9 @@ const removeItem = (item: string) => {
 }
 
 /* Ocultar el icono de selección por defecto en USelectMenu */
-::v-deep li[data-headlessui-state="selected"] .iconify,
-::v-deep li[data-headlessui-state="active selected"]:hover .iconify,
-::v-deep li[data-headlessui-state="selected"]:hover .iconify {
+:deep(li[data-headlessui-state="selected"] .iconify),
+:deep(li[data-headlessui-state="active selected"]:hover .iconify),
+:deep(li[data-headlessui-state="selected"]:hover .iconify) {
   display: none !important;
 }
 </style>

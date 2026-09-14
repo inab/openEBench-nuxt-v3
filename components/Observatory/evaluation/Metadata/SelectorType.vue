@@ -76,14 +76,14 @@ const formatOption = (option) => {
 
 <style scoped>
 /* Usamos una regla más específica para el dropdown del select */
-::v-deep .u-select-dropdown {
+:deep(.u-select-dropdown) {
   border: none !important;
   box-shadow: none !important;
   padding: 0 !important; 
 }
 
 /* Asegúrate de que el select también no tenga borde si es necesario */
-::v-deep .u-select {
+:deep(.u-select) {
   border: none !important;
 }
 

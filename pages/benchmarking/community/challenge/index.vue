@@ -58,7 +58,7 @@ import ChartDescriptionCard from "@/components/Cards/ChartDescriptionCard.vue";
 import CustomTabs from "@/components/Widgets/CustomTabs.vue";
 import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
 import { useCommunity } from "@/stores/community";
-import emptyImg from "../../public/images/illustrations/empty-state.svg?component";
+import emptyImg from "~/assets/images/illustrations/empty-state.svg?component";
 
 const route = useRoute();
 const isPending = ref(false);

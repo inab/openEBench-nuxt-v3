@@ -3,6 +3,7 @@ import svgLoader from 'vite-svg-loader';
 import { defineNuxtConfig } from 'nuxt/config';
 
 const mockAuthModule = process.env.VITEST ? ['./test/mocks/setup.ts'] : [];
+const testUtilsModule = process.env.VITEST ? ['@nuxt/test-utils/module'] : [];
 
 export default defineNuxtConfig({
   devtools: {
@@ -84,6 +85,8 @@ export default defineNuxtConfig({
   ],
 
   runtimeConfig: {
+    authSecret: process.env.AUTH_SECRET || '',
+    KEYCLOAK_CLIENT_SECRET: process.env.KEYCLOAK_CLIENT_SECRET || '',
     public: {
       ENVIRONMENT: process.env.ENVIRONMENT || 'dev-openebench',
       OEB_LEGACY_ANGULAR_URI:
@@ -143,9 +146,9 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     'nuxt-viewport',
     '@nuxt/eslint',
-    '@nuxt/test-utils/module',
     'vue3-carousel-nuxt',
     '@sidebase/nuxt-auth',
+    ...testUtilsModule,
     ...mockAuthModule,
   ],
 

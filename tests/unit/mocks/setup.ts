@@ -1,7 +1,6 @@
 import { vi } from "vitest";
 import { createPinia, setActivePinia } from "pinia";
-import { useNuxtApp } from "#app";
-//import { mockNuxtApp } from "./mocks/nuxt";
+
 
 import { createResolver, defineNuxtModule } from "@nuxt/kit";
 

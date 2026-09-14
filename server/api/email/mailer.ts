@@ -5,20 +5,16 @@ import { defineEventHandler, readBody } from "h3";
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
 
-  console.log("step 1");
-
-  console.log(body);
-
   const transporter = nodemailer.createTransport({
-    host: "mao.bsc.es",
-    port: 465,
-    secure: true,
+    host: process.env.SMTP_HOST,
+    port: Number(process.env.SMTP_PORT || 465),
+    secure: process.env.SMTP_SECURE !== "false",
     auth: {
-      user: "X",
-      pass: "X",
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASSWORD,
     },
     tls: {
-      rejectUnauthorized: false,
+      rejectUnauthorized: true,
     },
   });
 
@@ -32,29 +28,28 @@ export default defineEventHandler(async (event) => {
     .map(([key, value]) => `${key}: ${value}`)
     .join("\n");
 
-  const html = Object.entries(body.message)
+  const html = Object.entries(cleanMessage)
     .map(([key, value]) => {
       if (key === "details")
-        return `<p><strong>${key}:</strong><br/>${value}</p>`;
-      return `<p><strong>${key}:</strong> ${value}</p>`;
+        return `<p><strong>${escapeHtml(key)}:</strong><br/>${escapeHtml(String(value))}</p>`;
+      return `<p><strong>${escapeHtml(key)}:</strong> ${escapeHtml(String(value))}</p>`;
     })
     .join("");
 
   const mailOptions = {
-    from: "X",
-    to: "X",
-    subject: body.subject,
+    from: process.env.SMTP_FROM,
+    to: process.env.SMTP_TO,
+    subject: String(body.subject || ""),
     text: text,
     html: html,
   };
 
   try {
     const info = await transporter.sendMail(mailOptions);
-    console.log("its ok!: ", info);
-    return { success: true, info };
+    return { success: true, messageId: info.messageId };
   } catch (error) {
-    console.log("fail: ", error);
-    return { success: false, error: error.message };
+    console.error("Email delivery failed", error);
+    return { success: false };
   }
 });
 
@@ -64,4 +59,11 @@ function stripHtml(html) {
     .replace(/<\/p>/gi, "\n")
     .replace(/<\/?[^>]+(>|$)/g, "")
     .trim();
+}
+
+function escapeHtml(value) {
+  return value.replace(/[&<>"']/g, (character) => {
+    const entities = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
+    return entities[character];
+  });
 }
