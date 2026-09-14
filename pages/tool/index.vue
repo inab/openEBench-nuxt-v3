@@ -1,39 +1,48 @@
 <template>
   <div class="tool h-100">
     <BreadcrumbsBar :breadcrumbs-array="routeArray" />
+
     <div class="container">
-      <iframe :src="iframeSRC" width="100%" height="100%" frameborder="0">
-      </iframe>
+      <h1>Tools</h1>
+
+      <div v-if="loading">Loading...</div>
+
+      <div v-else>
+        <div v-for="tool in tools" :key="tool.id" class="mb-3">
+          <NuxtLink :to="`/tool/${encodeURIComponent(tool.name)}-${tool.id}`">
+            {{ tool.label || tool.name }}
+          </NuxtLink>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
+import { onMounted, computed } from 'vue';
+import { useToolStore } from '@/stores/tool';
 
-const route = useRoute();
-const runtimeConfig = useRuntimeConfig();
-const hostname = runtimeConfig.public.OEB_LEGACY_ANGULAR_URI;
-const query = route.query.search ? route.query.search : "";
-const iframeSRC = `${hostname}tool?search=${query}`;
+import BreadcrumbsBar from '@/components/Common/BreadcrumbsBar.vue';
 
-definePageMeta({
-  layout: "embed-iframe-full-width",
+const toolStore = useToolStore();
+
+const tools = computed(() => toolStore.tools);
+const loading = computed(() => toolStore.loading);
+
+onMounted(async () => {
+  if (!toolStore.tools.length) {
+    await toolStore.fetchTools();
+  }
 });
 
-const routeArray: Array = [{ label: "Tool", isActualRoute: true }];
+definePageMeta({
+  layout: 'embed-iframe-full-width',
+});
+
+const routeArray = [
+  {
+    label: 'Tools',
+    isActualRoute: true,
+  },
+];
 </script>
-
-<style scoped lang="scss">
-.tool {
-  flex: 1 1 auto;
-  backface-visibility: hidden;
-
-  min-height: 100vh;
-  max-width: 100%;
-  position: relative;
-  iframe {
-    height: 100vh;
-  }
-}
-</style>

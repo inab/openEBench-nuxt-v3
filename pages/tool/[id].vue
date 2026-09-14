@@ -1,32 +1,49 @@
 <template>
-  <div class="tool_item container">
-    <iframe
-      :src="`${'hostname'}tool/${'toolId'}`"
-      width="100%"
-      height="100%"
-      frameborder="1"
-    >
-    </iframe>
+  <div class="tool h-100">
+    <BreadcrumbsBar :breadcrumbs-array="routeArray" />
+
+    <div class="tool_item container">
+      <div v-if="loading">Loading...</div>
+
+      <template v-else>
+        <h1>{{ tool?.label || tool?.name }}</h1>
+        <p>{{ tool?.description }}</p>
+      </template>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { computed, onMounted } from 'vue';
+import BreadcrumbsBar from '@/components/Common/BreadcrumbsBar.vue';
+import { useToolStore } from '@/stores/tool';
+
 const route = useRoute();
-const toolId: string = route.params.id;
-const runtimeConfig = useRuntimeConfig();
+const toolStore = useToolStore();
 
-const hostname = runtimeConfig.public.OEB_LEGACY_ANGULAR_URI;
+const tool = computed(() => {
+  const slug = decodeURIComponent(String(route.params.id));
+
+  return toolStore.tools.find((item) => slug.endsWith(`-${item.id}`));
+});
+
+const loading = computed(() => toolStore.loading);
+
+const routeArray = computed(() => [
+  {
+    label: 'Tools',
+    route: '/tool',
+    isActualRoute: false,
+  },
+  {
+    label: tool.value?.label || tool.value?.name || '',
+    isActualRoute: true,
+  },
+]);
+
+onMounted(async () => {
+  if (!toolStore.tools.length) {
+    await toolStore.fetchTools();
+  }
+});
 </script>
-
-<style scoped lang="scss">
-.tool_item {
-  height: 100%;
-  flex: 1 1 auto;
-  backface-visibility: hidden;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  max-width: 100%;
-  position: relative;
-}
-</style>
