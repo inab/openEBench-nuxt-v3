@@ -23,7 +23,7 @@
                   <button
                     class="custom-tabs-button truncate"
                     :class="{
-                      'custom-tabs-button--active': item.key == selected.key,
+                      'custom-tabs-button--active': item.key == selected?.key,
                     }"
                     @click="selected = item"
                   >
@@ -41,7 +41,7 @@
                 <button
                   class="custom-tabs-button truncate"
                   :class="{
-                    'custom-tabs-button--active': item.key == selected.key,
+                    'custom-tabs-button--active': item.key == selected?.key,
                   }"
                   @click="selected = item"
                 >
@@ -75,7 +75,7 @@
       <div
         v-for="(item, index) in props.data"
         :key="index"
-        :class="[item.key == selected.key ? 'visible' : 'no-visible']"
+        :class="[item.key == selected?.key ? 'visible' : 'no-visible']"
       >
         <div>
           <LoaderChartWidgets :data="item" :metrics="props.metrics" />

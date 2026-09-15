@@ -165,7 +165,7 @@ const columns = [
 ];
 
 // Keeps all rows (without pagination) to refer to the complete data
-const allRows = ref(props.eventChallenges);
+const allRows = ref(props.eventChallenges ?? []);
 
 // Computed for rows filtered by search and pagination
 const filteredRows = computed(() => {
@@ -248,6 +248,15 @@ watch(
     emit("handleChangeChallengers", newSelected);
   },
   { deep: true },
+);
+
+watch(
+  () => props.eventChallenges,
+  (newChallenges) => {
+    allRows.value = newChallenges ?? [];
+    selected.value = [];
+    page.value = 1;
+  },
 );
 </script>
 

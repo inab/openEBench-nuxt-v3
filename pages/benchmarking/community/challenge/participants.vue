@@ -106,9 +106,11 @@ await challengeAPI(challengeId).then((response: any) => {
   participants.value = Object.values(participants.value);
 
   if (participants.value.length > 0) {
-    const charData = participants.value[0].assessments[0].dates;
+    const charData = participants.value[0].assessments?.[0]?.dates ?? null;
 
-    for (const [_key, value]: any of Object.entries(participants.value)) {
+    for (const [_key, value] of Object.entries(participants.value) as Array<
+      [string, any]
+    >) {
       itemObj = {
         _id: value._id,
         key: value._id,
@@ -120,12 +122,15 @@ await challengeAPI(challengeId).then((response: any) => {
           challenge_participants: [],
           visualization: {
             type: "radar-plot",
-            schema_url: value.datalink.uri,
+            schema_url: value.datalink?.uri ?? null,
             dates: charData,
           },
         },
       };
       value.assessments.forEach((assessment: any) => {
+        if (!assessment.datalink?.inline_data) {
+          return;
+        }
         const item = {
           key: value._id,
           value: assessment.datalink.inline_data.value,
@@ -259,8 +264,8 @@ if (communityStore.communityId === communityId) {
   community.value = communityStore.getCommunityData;
 } else {
   const { data, pending }: { data: any; pending: Ref<boolean> } =
-    await useAsyncData("community", () =>
-      communityStore.requestCommunityData(communityId, event),
+    await useAsyncData(`participants-community-${communityId}`, () =>
+      communityStore.requestCommunityData(communityId),
     );
   community.value = data.value ?? null;
   isPending.value = pending.value;
