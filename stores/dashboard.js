@@ -3,7 +3,7 @@ import { useAsyncData } from 'nuxt/app';
 import customApi from "~/composables/useAPI";
 import { useNuxtApp, useRuntimeConfig } from "#app";
 import parseDataURL from "data-urls";
-import { labelToName, decode } from "whatwg-encoding";
+import { TextDecoder } from "@exodus/bytes/encoding.js";
 import useAPI from "~/composables/useAPI";
 
 const BASE_URL = '/api/stats/tools/';
@@ -70,11 +70,10 @@ export const useDashboard = defineStore("dashboard", {
 
               if (dataURL) {
                 const encodingName =
-                  labelToName(
-                    dataURL.mimeType.parameters.get("charset") || "utf-8"
-                  ) || "utf-8";
-
-                const decodedSummary = decode(dataURL.body, encodingName);
+                  dataURL.mimeType.parameters.get("charset") || "utf-8";
+                const decodedSummary = new TextDecoder(encodingName).decode(
+                  dataURL.body,
+                );
                 community.summary = decodedSummary;
                 community._metadata["project:summary"] = decodedSummary;
               } else {
