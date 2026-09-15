@@ -52,8 +52,7 @@ export default defineNuxtConfig({
         'dompurify',
         'aos',
         'data-urls',
-        'whatwg-encoding',
-        'vue3-carousel/dist/carousel.es.js',
+        'vue3-carousel/dist/carousel.mjs',
         'gsap',
         'vue-multiselect',
         'pluralize',
@@ -94,21 +93,21 @@ export default defineNuxtConfig({
       ENVIRONMENT: process.env.ENVIRONMENT || 'dev-openebench',
       OEB_LEGACY_ANGULAR_URI:
         process.env.OEB_LEGACY_ANGULAR_URI || 'https://legacy.dev-openebench.bsc.es/',
-      VRE_URI: process.env.VRE_URI || 'https://dev-openebench.bsc.es/vre/home/',
+      VRE_URI: process.env.VRE_URI || 'https://openebench.bsc.es/vre/home/',
       OBSERVATORY_URI: process.env.OBSERVATORY_URI || 'https://observatory.openebench.bsc.es',
       SCIENTIFIC_SERVICE_URL:
-        process.env.SCIENTIFIC_SERVICE_URL || 'https://dev-openebench.bsc.es/api/scientific',
+        process.env.SCIENTIFIC_SERVICE_URL || 'https://openebench.bsc.es/api/scientific',
       SCIENTIFIC_SERVICE_URL_API:
-        process.env.SCIENTIFIC_SERVICE_URL_API || 'https://dev-openebench.bsc.es/api/scientific',
+        process.env.SCIENTIFIC_SERVICE_URL_API || 'https://openebench.bsc.es/api/scientific',
       BENCH_EVENT_API_URL:
-        process.env.BENCH_EVENT_API_URL || 'https://dev-openebench.bsc.es/rest/bench_event_api',
+        process.env.BENCH_EVENT_API_URL || 'https://openebench.bsc.es/rest/bench_event_api',
       OBSERVATORY_API_URL:
         process.env.OBSERVATORY_API_URL || 'https://observatory.openebench.bsc.es/api',
       GITHUBAPP_API_URL:
         process.env.GITHUBAPP_API_URL ||
         'https://observatory.openebench.bsc.es/github-metadata-api',
       MONITORING: {
-        baseURL: process.env.REST_API_URL || 'https://dev-openebench.bsc.es/monitor/rest/',
+        baseURL: process.env.REST_API_URL || 'https://openebench.bsc.es/monitor/rest/',
       },
       KEYCLOAK_HOST: process.env.KEYCLOAK_HOST || 'https://inb.bsc.es/',
       KEYCLOAK_REALM: process.env.KEYCLOAK_REALM || 'openebench',
