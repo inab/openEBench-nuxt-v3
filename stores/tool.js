@@ -3,7 +3,7 @@ import { defineStore } from 'pinia';
 import { useAsyncData } from 'nuxt/app';
 import { pickDescription } from '@/utils/toolDescription';
 
-const BASE_URL = '/api/stats/tools/';
+// const BASE_URL = '/api/stats/tools/';
 const API_HEADERS = {
 	headers: { 'ngrok-skip-browser-warning': '69420' },
 };
