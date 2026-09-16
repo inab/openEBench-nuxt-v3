@@ -10,10 +10,7 @@
         <i>{{ challenge.name }}</i>
       </div>
 
-      <div
-        v-if="status.pending"
-        class="benchmarking-participant__skeleton"
-      ></div>
+      <div v-if="status.pending" class="benchmarking-participant__skeleton"></div>
       <p class="text">
         List of tools participating in the challenge, together with a summary of
         the metrics obtained.
@@ -36,11 +33,7 @@
       <div v-else class="">
         <noDataAvailable description="No participants and metrics available." />
       </div>
-      <div
-        class="chart-image text--secondary"
-        align="center"
-        color="rgba(0, 0, 0, 0.6)"
-      >
+      <div class="chart-image text--secondary" align="center" color="rgba(0, 0, 0, 0.6)">
         <CustomTabs :data="itemsObjList" :metrics="metrics" />
       </div>
     </div>
@@ -283,36 +276,63 @@ const currentEvent = computed(() => {
   return selectedEvent;
 });
 
-const routeArray: Array<{
-  label: string;
-  isActualRoute: boolean;
-  route?: string;
-}> = [
-  {
-    label: "Benchmarking Communities",
-    isActualRoute: false,
-    route: "/benchmarking",
-  },
-  {
-    label: community.value?.acronym + " " + "Events",
-    isActualRoute: false,
-    route: "/benchmarking/" + communityId + "/events",
-  },
-  {
-    label: currentEvent.value?.name,
-    isActualRoute: false,
-    route: "/benchmarking/" + communityId + "?event=" + currentEvent.value._id,
-  },
-  {
-    label: "Challenge " + challenge.value.acronym + " " + challengeId,
-    isActualRoute: false,
-    route: "/benchmarking/" + communityId + "/" + challengeId,
-  },
-  {
-    label: "Participants",
-    isActualRoute: true,
-  },
-];
+const fromProjects = computed(() => route.query.from === "projects");
+
+const routeArray = computed(() => {
+  if (fromProjects.value) {
+    // Breadcrumbs when coming from Project Spaces
+    return [
+      {
+        label: "Project Spaces",
+        isActualRoute: false,
+        route: "/projects",
+      },
+      {
+        label: community.value?.acronym,
+        isActualRoute: false,
+        route: `/projects/${communityId}`,
+      },
+      {
+        label: "Challenge " + challenge.value.acronym + " " + challengeId,
+        isActualRoute: false,
+        route: `/scientific/${communityId}/${challengeId}?from=projects`,
+      },
+      {
+        label: "Participants",
+        isActualRoute: true,
+      },
+    ];
+  }
+
+  // Original breadcrumbs when coming from benchmarking
+  return [
+    {
+      label: "Benchmarking Communities",
+      isActualRoute: false,
+      route: "/benchmarking",
+    },
+    {
+      label: community.value?.acronym + " " + "Events",
+      isActualRoute: false,
+      route: "/benchmarking/" + communityId + "/events",
+    },
+    {
+      label: currentEvent.value?.name,
+      isActualRoute: false,
+      route:
+        "/benchmarking/" + communityId + "?event=" + currentEvent.value?._id,
+    },
+    {
+      label: "Challenge " + challenge.value.acronym + " " + challengeId,
+      isActualRoute: false,
+      route: "/benchmarking/" + communityId + "/" + challengeId,
+    },
+    {
+      label: "Participants",
+      isActualRoute: true,
+    },
+  ];
+});
 </script>
 
 <style scoped lang="scss">
