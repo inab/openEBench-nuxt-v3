@@ -27,11 +27,11 @@ import BreadcrumbsBar from '@/components/Common/BreadcrumbsBar.vue';
 const toolStore = useToolStore();
 
 const tools = computed(() => toolStore.tools);
-const loading = computed(() => toolStore.loading);
+const loading = computed(() => toolStore.loading.initialSearch);
 
 onMounted(async () => {
   if (!toolStore.tools.length) {
-    await toolStore.fetchTools();
+    await toolStore.initialSearch();
   }
 });
 
