@@ -3,7 +3,7 @@
     <ClassificationTable 
       :challengeList="filterArray" 
       :activeTable="id"
-      :dataMode="dataMode"
+      :mode="dataMode"
       :apiUrl="apiUrl"
       :benchEventApiUrl="benchEventApiUrl"
     />
@@ -27,11 +27,11 @@ const props = defineProps<{
 const runtimeConfig = useRuntimeConfig();
 
 const apiUrl = runtimeConfig.public
-  ? runtimeConfig.public.SCIENTIFIC_SERVICE_URL + "graphql"
-  : "https://dev-openebench.bsc.es/api/scientific/graphql";
+  ? `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL.replace(/\/$/, "")}/graphql`
+  : "https://openebench.bsc.es/api/scientific/graphql";
 const benchEventApiUrl = runtimeConfig.public
   ? runtimeConfig.public.BENCH_EVENT_API_URL
-  : "https://dev-openebench.bsc.es/rest/bench_event_api";
+  : "https://openebench.bsc.es/rest/bench_event_api";
 const dataMode = runtimeConfig.public
   ? runtimeConfig.public.ENVIRONMENT
   : "dev-openebench";

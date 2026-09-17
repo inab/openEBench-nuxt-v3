@@ -10,10 +10,7 @@
         <i>{{ challenge.name }}</i>
       </div>
 
-      <div
-        v-if="status.pending"
-        class="benchmarking-participant__skeleton"
-      ></div>
+      <div v-if="status.pending" class="benchmarking-participant__skeleton"></div>
       <p class="text">
         List of tools participating in the challenge, together with a summary of
         the metrics obtained.
@@ -36,11 +33,7 @@
       <div v-else class="">
         <noDataAvailable description="No participants and metrics available." />
       </div>
-      <div
-        class="chart-image text--secondary"
-        align="center"
-        color="rgba(0, 0, 0, 0.6)"
-      >
+      <div class="chart-image text--secondary" align="center" color="rgba(0, 0, 0, 0.6)">
         <CustomTabs :data="itemsObjList" :metrics="metrics" />
       </div>
     </div>
@@ -106,9 +99,11 @@ await challengeAPI(challengeId).then((response: any) => {
   participants.value = Object.values(participants.value);
 
   if (participants.value.length > 0) {
-    const charData = participants.value[0].assessments[0].dates;
+    const charData = participants.value[0].assessments?.[0]?.dates ?? null;
 
-    for (const [_key, value]: any of Object.entries(participants.value)) {
+    for (const [_key, value] of Object.entries(participants.value) as Array<
+      [string, any]
+    >) {
       itemObj = {
         _id: value._id,
         key: value._id,
@@ -120,12 +115,15 @@ await challengeAPI(challengeId).then((response: any) => {
           challenge_participants: [],
           visualization: {
             type: "radar-plot",
-            schema_url: value.datalink.uri,
+            schema_url: value.datalink?.uri ?? null,
             dates: charData,
           },
         },
       };
       value.assessments.forEach((assessment: any) => {
+        if (!assessment.datalink?.inline_data) {
+          return;
+        }
         const item = {
           key: value._id,
           value: assessment.datalink.inline_data.value,
@@ -259,8 +257,8 @@ if (communityStore.communityId === communityId) {
   community.value = communityStore.getCommunityData;
 } else {
   const { data, pending }: { data: any; pending: Ref<boolean> } =
-    await useAsyncData("community", () =>
-      communityStore.requestCommunityData(communityId, event),
+    await useAsyncData(`participants-community-${communityId}`, () =>
+      communityStore.requestCommunityData(communityId),
     );
   community.value = data.value ?? null;
   isPending.value = pending.value;
@@ -278,36 +276,63 @@ const currentEvent = computed(() => {
   return selectedEvent;
 });
 
-const routeArray: Array<{
-  label: string;
-  isActualRoute: boolean;
-  route?: string;
-}> = [
-  {
-    label: "Benchmarking Communities",
-    isActualRoute: false,
-    route: "/benchmarking",
-  },
-  {
-    label: community.value?.acronym + " " + "Events",
-    isActualRoute: false,
-    route: "/benchmarking/" + communityId + "/events",
-  },
-  {
-    label: currentEvent.value?.name,
-    isActualRoute: false,
-    route: "/benchmarking/" + communityId + "?event=" + currentEvent.value._id,
-  },
-  {
-    label: "Challenge " + challenge.value.acronym + " " + challengeId,
-    isActualRoute: false,
-    route: "/benchmarking/" + communityId + "/" + challengeId,
-  },
-  {
-    label: "Participants",
-    isActualRoute: true,
-  },
-];
+const fromProjects = computed(() => route.query.from === "projects");
+
+const routeArray = computed(() => {
+  if (fromProjects.value) {
+    // Breadcrumbs when coming from Project Spaces
+    return [
+      {
+        label: "Project Spaces",
+        isActualRoute: false,
+        route: "/projects",
+      },
+      {
+        label: community.value?.acronym,
+        isActualRoute: false,
+        route: `/projects/${communityId}`,
+      },
+      {
+        label: "Challenge " + challenge.value.acronym + " " + challengeId,
+        isActualRoute: false,
+        route: `/scientific/${communityId}/${challengeId}?from=projects`,
+      },
+      {
+        label: "Participants",
+        isActualRoute: true,
+      },
+    ];
+  }
+
+  // Original breadcrumbs when coming from benchmarking
+  return [
+    {
+      label: "Benchmarking Communities",
+      isActualRoute: false,
+      route: "/benchmarking",
+    },
+    {
+      label: community.value?.acronym + " " + "Events",
+      isActualRoute: false,
+      route: "/benchmarking/" + communityId + "/events",
+    },
+    {
+      label: currentEvent.value?.name,
+      isActualRoute: false,
+      route:
+        "/benchmarking/" + communityId + "?event=" + currentEvent.value?._id,
+    },
+    {
+      label: "Challenge " + challenge.value.acronym + " " + challengeId,
+      isActualRoute: false,
+      route: "/benchmarking/" + communityId + "/" + challengeId,
+    },
+    {
+      label: "Participants",
+      isActualRoute: true,
+    },
+  ];
+});
 </script>
 
 <style scoped lang="scss">

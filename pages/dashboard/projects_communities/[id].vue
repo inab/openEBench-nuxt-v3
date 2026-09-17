@@ -29,7 +29,7 @@ import type { Community } from "@/types/communities";
 import type { Event } from "@/types/events";
 import type { Contact } from "@/types/contact";
 import parseDataURL from "data-urls";
-import { labelToName, decode } from "whatwg-encoding";
+import { TextDecoder } from "@exodus/bytes/encoding.js";
 
 definePageMeta({
   middleware: "auth",
@@ -136,10 +136,9 @@ const fetchUserCommunity = async (token: string): Promise<void> => {
     loadingData.value = false;
     if (data._metadata && data._metadata["project:summary"]) {
       const dataURL = parseDataURL(data._metadata["project:summary"]);
-      const encodingName = labelToName(
-        dataURL.mimeType.parameters.get("charset") || "utf-8",
-      );
-      const decodedSummary = decode(dataURL.body, encodingName);
+      const encodingName =
+        dataURL.mimeType.parameters.get("charset") || "utf-8";
+      const decodedSummary = new TextDecoder(encodingName).decode(dataURL.body);
       data._metadata.project_summary = decodedSummary;
     }
 

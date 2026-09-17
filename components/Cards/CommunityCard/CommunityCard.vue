@@ -1,14 +1,8 @@
 <template>
   <div class="h-100 community-card">
-    <div
-      class="community-card__item max-w-sm rounded overflow-visible text-zinc-700 cursor-pointer"
-      @click="handleNavigation"
-    >
+    <div class="community-card__item max-w-sm rounded overflow-visible text-zinc-700">
       <div class="community-card__item__image">
-        <div
-          class="community-card__item__image__box"
-          :style="{ backgroundImage: 'url(' + logo + ')' }"
-        ></div>
+        <div class="community-card__item__image__box" :style="{ backgroundImage: 'url(' + logo + ')' }"></div>
       </div>
       <div class="community-card__item__acronym font-bold text-xl">
         {{ acronym }}
@@ -20,32 +14,24 @@
           </div>
         </div>
         <div class="community-card__item__body__content__wrapper">
-          <div
-            v-if="benchmarkingEvents && benchmarkingEvents.length > 0"
-            class="inline-block bg-primaryOeb-150 text-primaryOeb-950 custom-badget btn-custom-badget rounded-full font-semibold text-gray-700"
-            title="View events"
-          >
-            <NuxtLink :to="`${to}/events`" class="text-primaryOeb-950">
+          <div v-if="benchmarkingEvents && benchmarkingEvents.length > 0"
+            class="inline-block bg-primaryOeb-150 text-primaryOeb-950 custom-badget btn-custom-badget rounded-full font-semibold text-gray-700 cursor-pointer"
+            title="View events">
+            <NuxtLink :to="eventsChipLink" class="text-primaryOeb-950">
               <font-awesome-icon :icon="['far', 'calendar-check']" />
               {{ benchmarkingEvents.length }}
               {{ pluralize("Events", benchmarkingEvents.length) }}
             </NuxtLink>
           </div>
-          <div
-            class="inline-block rounded-full text-primaryOeb-950 custom-badget font-semibold text-gray-700"
-            :class="`status-${status}`"
-          >
-            <div
-              class="text-xs font-normal leading-none max-w-full flex-initial font-semibold"
-              :title="`${'Status'} ${status}`"
-            >
+          <div class="inline-block rounded-full text-primaryOeb-950 custom-badget font-semibold text-gray-700"
+            :class="`status-${status}`" style="cursor: default">
+            <div class="text-xs font-normal leading-none max-w-full flex-initial font-semibold"
+              :title="`${'Status'} ${status}`">
               {{ status }}
             </div>
           </div>
-          <div
-            v-if="referenceTools.length > 0"
-            class="inline-block bg-gray-200 rounded-full text-primaryOeb-950 custom-badget btn-custom-badget font-semibold text-gray-700"
-          >
+          <div v-if="referenceTools.length > 0"
+            class="inline-block bg-gray-200 rounded-full text-primaryOeb-950 custom-badget btn-custom-badget font-semibold text-gray-700">
             <font-awesome-icon :icon="['fas', 'gear']" />
             {{ benchmarkingEvents.length }}
             {{ pluralize("Events", benchmarkingEvents.length) }}
@@ -53,9 +39,7 @@
         </div>
         <!-- Current Event -->
         <div class="community-card__item__body__footer">
-          <button
-            class="text-primaryOeb-500 hover:bg-primaryOeb-50 rounded p-2"
-          >
+          <button class="text-primaryOeb-500 hover:bg-primaryOeb-50 rounded p-2 cursor-pointer">
             <NuxtLink :to="to" class="text-primaryOeb-500">
               Current Event
             </NuxtLink>
@@ -63,28 +47,17 @@
 
           <!-- Dropdown -->
           <div class="dropdown community-card__item__dropdown">
-            <button
-              id="dropdownMenuButton"
+            <button id="dropdownMenuButton"
               class="text-gray-800 rounded-full w-10 h-10 flex items-center justify-center hover:bg-gray-100 text-decoration-none"
-              type="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
+              type="button" data-bs-toggle="dropdown" aria-expanded="false">
               <font-awesome-icon :icon="['fas', 'ellipsis-vertical']" />
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
               <li v-for="item in itemsCommunityLinks" :key="item.label">
-                <a
-                  :href="item.uri"
-                  class="dropdown-item"
-                  target="_blank"
-                  @click.stop
-                >
+                <a :href="item.uri" class="dropdown-item" target="_blank" @click.stop>
                   <span>{{ item.label }}</span>
-                  <UIcon
-                    name="i-heroicons-arrow-top-right-on-square"
-                    class="flex-shrink-0 h-4 w-4 text-gray-800 dark:text-gray-500 ms-2"
-                  />
+                  <UIcon name="i-heroicons-arrow-top-right-on-square"
+                    class="flex-shrink-0 h-4 w-4 text-gray-800 dark:text-gray-500 ms-2" />
                 </a>
               </li>
             </ul>
@@ -97,8 +70,6 @@
 
 <script setup lang="ts">
 import pluralize from "pluralize";
-
-const router = useRouter();
 
 const props = defineProps<{
   _id: string;
@@ -141,9 +112,12 @@ const statusChipColor = computed(() => {
   }
 });
 
-const handleNavigation = () => {
-  router.push(props.to);
-};
+const eventsChipLink = computed(() => {
+  if (props.benchmarkingEvents && props.benchmarkingEvents.length === 1) {
+    return props.to;
+  }
+  return `${props.to}/events`;
+});
 </script>
 
 <style scoped lang="scss">
@@ -154,18 +128,22 @@ const handleNavigation = () => {
   justify-content: start;
   height: 100%;
   text-decoration: none;
-  cursor: pointer;
+  /* cursor: pointer removed — the whole card is no longer clickable */
   box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
+
   &:hover {
     transform: scale(1.05);
   }
+
   &__image {
     padding: 10px 20px 10px 20px;
     height: 140px;
+
     a {
       display: block;
       height: 120px;
     }
+
     &__box {
       height: 120px;
       background-repeat: no-repeat;
@@ -173,11 +151,13 @@ const handleNavigation = () => {
       background-position: center;
     }
   }
+
   &__acronym {
     text-align: center;
     padding: 10px 0;
     background-color: #b0d9ff;
   }
+
   &__body {
     display: flex;
     flex-direction: column;
@@ -188,6 +168,7 @@ const handleNavigation = () => {
     font-weight: 400;
     letter-spacing: 0.1px;
     line-height: 22px;
+
     &__header {
       flex: 2;
       text-decoration: none;
@@ -196,15 +177,18 @@ const handleNavigation = () => {
       letter-spacing: 0.0071428571em;
       font-weight: 550;
       padding-bottom: 30px;
+
       div {
         border: none;
       }
     }
+
     &__content {
       &__wrapper {
         display: flex;
         gap: 10px;
         padding-bottom: 35px;
+
         a {
           height: 28px;
           text-decoration: none;
@@ -214,6 +198,7 @@ const handleNavigation = () => {
           gap: 5px;
           font-size: 12px;
         }
+
         .custom-badget {
           padding: 0px 15px;
           height: 28px;
@@ -223,10 +208,12 @@ const handleNavigation = () => {
         }
       }
     }
+
     &__footer {
       display: flex;
       justify-content: space-between;
       align-items: end;
+
       a {
         text-decoration: none;
         text-transform: uppercase;
@@ -235,8 +222,10 @@ const handleNavigation = () => {
     }
   }
 }
+
 .community-card__item__dropdown {
   position: relative;
+
   .dropdown-menu {
     position: absolute;
     top: 100%;
@@ -247,6 +236,7 @@ const handleNavigation = () => {
     transform: translateX(-100%) !important;
     pointer-events: auto;
   }
+
   .dropdown-item {
     text-transform: capitalize;
     display: flex !important;

@@ -11,34 +11,21 @@
       </div>
       <div class="benchmarking-challenge__body">
         <div v-if="chatAvailable" class="chatAvailable">
-          <div
-            v-for="(item, index) in items"
-            :key="index"
-            class="benchmarking-challenge__body_dec text-gray-500 text-sm"
-          >
+          <div v-for="(item, index) in items" :key="index"
+            class="benchmarking-challenge__body_dec text-gray-500 text-sm">
             <div v-if="index == tab && item">
-              <ChartDescriptionCard
-                :type="item.visualization?.type"
-                :label="challenge.challenge_label"
-              />
+              <ChartDescriptionCard :type="item.visualization?.type" :label="challenge.challenge_label" />
             </div>
           </div>
         </div>
         <div v-else class="empty-state-container">
-          <span class="empty-state-text"
-            >No charts have been generated for this challenge</span
-          >
+          <span class="empty-state-text">No charts have been generated for this challenge</span>
           <div class="empty-img-wrapper">
             <emptyImg class="empty-img" viewBox="0 0 600 800" />
           </div>
         </div>
-        <div
-          v-if="chatAvailable"
-          class="benchmarking-challenge__body__content text-sm"
-        >
-          <h2
-            class="benchmarking-challenge__body__content__title text-h6 mt-8 mb-2"
-          >
+        <div v-if="chatAvailable" class="benchmarking-challenge__body__content text-sm">
+          <h2 class="benchmarking-challenge__body__content__title text-h6 mt-8 mb-2">
             Choose the metrics you want to visualize in the diagram:
           </h2>
           <div class="benchmarking-challenge__body__content__graphs">
@@ -67,7 +54,7 @@ const communityId: string = route.params.community;
 const eventsObj: any[] = communityStore.getEvents;
 const community: Ref<any> = ref(null);
 const challengeId = route.params.challenge;
-const chatAvailable = ref<boolean>(true);
+const chatAvailable = ref<boolean>(false);
 const datasets = ref<any[]>([]);
 const participants: any = ref(null);
 const metrics = ref(null);
@@ -86,12 +73,16 @@ await challengeAPI(challengeId).then(async (response: any) => {
   participants.value = Object.values(participants.value);
   items.value = [];
 
+  console.log("datasets.value:", datasets.value);
+
   for (const [_key, dataset] of Object.entries(datasets.value)) {
     const graphData = await getGraphData(dataset);
-    const datalink = dataset?.datalinks?.[0];
+    const datalink = dataset?.datalink ?? dataset?.datalinks?.[0];
+
+    console.log("dataset:", dataset._id, "graphData:", graphData);
 
     if (!graphData || !graphData.visualization) {
-      chatAvailable.value = false;
+      console.log("Skipping dataset (no graphData or visualization):", dataset._id);
       continue;
     }
 
@@ -123,6 +114,9 @@ await challengeAPI(challengeId).then(async (response: any) => {
     items.value.push(item);
   }
 
+  chatAvailable.value = items.value.length > 0;
+  console.log("Final items.value:", items.value, "chatAvailable:", chatAvailable.value);
+
   itemSelected.value = items.value[0] ?? null;
 });
 
@@ -131,7 +125,7 @@ if (communityStore.communityId === communityId) {
 } else {
   const { data, pending }: { data: any; pending: Ref<boolean> } =
     await useAsyncData("community", () =>
-      communityStore.requestCommunityData(communityId, event),
+      communityStore.requestCommunityData(communityId),
     );
   community.value = data.value ?? null;
   isPending.value = pending.value;
@@ -139,7 +133,7 @@ if (communityStore.communityId === communityId) {
 
 function getVisualizationType(item) {
   try {
-    const data = item?.datalinks?.[0]?.inline_data;
+    const data = (item?.datalink ?? item?.datalinks?.[0])?.inline_data;
     const parsed = typeof data === "string" ? JSON.parse(data) : data;
 
     return parsed?.visualization?.type || "";
@@ -159,31 +153,53 @@ const currentEvent = computed(() => {
   return selectedEvent;
 });
 
-const routeArray: Array<{
-  label: string;
-  isActualRoute: boolean;
-  route?: string;
-}> = [
-  {
-    label: "Benchmarking Communities",
-    isActualRoute: false,
-    route: "/benchmarking",
-  },
-  {
-    label: community.value?.acronym + " " + "Events",
-    isActualRoute: false,
-    route: "/benchmarking/" + communityId + "/events",
-  },
-  {
-    label: currentEvent.value?.name,
-    isActualRoute: false,
-    route: "/benchmarking/" + communityId + "?event=" + currentEvent.value._id,
-  },
-  {
-    label: "Challenge " + challenge.value.acronym + " " + challengeId,
-    isActualRoute: true,
-  },
-];
+const fromProjects = computed(() => route.query.from === "projects");
+
+const routeArray = computed(() => {
+  if (fromProjects.value) {
+    // Breadcrumbs when coming from Project Spaces
+    return [
+      {
+        label: "Project Spaces",
+        isActualRoute: false,
+        route: "/projects",
+      },
+      {
+        label: community.value?.acronym ?? communityId,
+        isActualRoute: false,
+        route: `/projects/${communityId}`,
+      },
+      {
+        label: "Challenge " + challenge.value.acronym + " " + challengeId,
+        isActualRoute: true,
+      },
+    ];
+  }
+
+  // Original breadcrumbs when coming from benchmarking
+  return [
+    {
+      label: "Benchmarking Communities",
+      isActualRoute: false,
+      route: "/benchmarking",
+    },
+    {
+      label: (community.value?.acronym ?? communityId) + " " + "Events",
+      isActualRoute: false,
+      route: "/benchmarking/" + communityId + "/events",
+    },
+    {
+      label: currentEvent.value?.name,
+      isActualRoute: false,
+      route:
+        "/benchmarking/" + communityId + "?event=" + currentEvent.value?._id,
+    },
+    {
+      label: "Challenge " + challenge.value.acronym + " " + challengeId,
+      isActualRoute: true,
+    },
+  ];
+});
 </script>
 
 <style scoped lang="scss">

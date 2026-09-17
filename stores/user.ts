@@ -4,7 +4,6 @@ import type { Event } from "@/types/events";
 import type { Challenge } from "@/types/challenges";
 import { privileges } from "@/constants/privileges";
 import parseDataURL from "data-urls";
-import { labelToName, decode } from "whatwg-encoding";
 
 const runtimeConfig = useRuntimeConfig();
 
