@@ -1,22 +1,56 @@
 import { defineStore } from 'pinia';
-import { useAsyncData } from 'nuxt/app';
-import { faL } from '@fortawesome/free-solid-svg-icons';
+import { pickDescription } from '@/utils/toolDescription';
 
-// 
+//
 function availabilityItems(payload) {
-	const items =
-		payload?.data ||
-		payload?.results ||
-		payload?.items ||
-		payload?.availability ||
-		payload;
+  const items =
+    payload?.data || payload?.results || payload?.items || payload?.availability || payload;
 
-	return Array.isArray(items) ? items : [];
+  return Array.isArray(items) ? items : [];
 }
 
-// 
+function pickFirst(value) {
+  if (Array.isArray(value)) {
+    return pickFirst(value[0]);
+  }
+  if (value && typeof value === 'object' && 'term' in value) {
+    return value.term || '';
+  }
+  return value != null ? value : '';
+}
 
-export const useToolEntryStore = defineStore('tool_entry',  {
+function normalizeStringArray(value) {
+  const values = Array.isArray(value) ? value : [value];
+  return values
+    .map((item) => pickFirst(item))
+    .filter((item) => item != null && String(item).trim() !== '')
+    .map((item) => String(item));
+}
+
+function normalizeToolEntry(tool) {
+  if (!tool) {
+    return {};
+  }
+
+  const webpage = pickFirst(tool.webpage) || pickFirst(tool.homepage);
+
+  return {
+    ...tool,
+    id: tool.id || tool._id || '',
+    name: pickFirst(tool.name),
+    label: pickFirst(tool.label) || pickFirst(tool.name),
+    description: Array.isArray(tool.description)
+      ? pickDescription(tool.description)
+      : pickFirst(tool.description),
+    type: normalizeStringArray(tool.type),
+    version: normalizeStringArray(tool.version || tool.other_versions),
+    webpage: webpage ? String(webpage) : '',
+    sourcesLabels: tool.sourcesLabels || tool.sources_labels || {},
+    publications: tool.publications || tool.publication || [],
+  };
+}
+
+export const useToolEntryStore = defineStore('tool_entry', {
   state: () => ({
     tool: {},
     loading: true,
@@ -24,9 +58,9 @@ export const useToolEntryStore = defineStore('tool_entry',  {
     webAvailabilityRequestKey: '',
     webAvailabilityUrl: '',
     webAvailability: {
-        week: [],
-        month: [],
-        sixMonths: [],
+      week: [],
+      month: [],
+      sixMonths: [],
     },
     webAvailabilityLoading: false,
     webAvailabilityError: null,
@@ -50,103 +84,97 @@ export const useToolEntryStore = defineStore('tool_entry',  {
     Citations: (state) => state.citations,
     LoadingCitations: (state) => state.loadingCitations,
     SimilarTools: (state) => state.similarTools,
-    LoadingSimilar: (state) => state.loadingSimilar
-
+    LoadingSimilar: (state) => state.loadingSimilar,
   },
 
   actions: {
-
-    async retrieveTool(payload){
+    async retrieveTool(payload) {
       const { $observatory } = useNuxtApp();
 
       // Loading
-      this.loading = true
-      this.resetWebAvailability()
-      this.updateSimilarTools([])
+      this.loading = true;
+      this.resetWebAvailability();
+      this.updateSimilarTools([]);
 
       try {
         // Prefer fetching by id if available, fall back to name
-        const query = payload.id 
-          ? `/tools?id=${payload.id}` 
-          : `/tools?name=${payload.name}`;
-        
-        const {data} = await $observatory(query, {
-          method: 'GET',
-        })
+        const query = payload.id ? `api/tools?id=${payload.id}` : `api/tools?name=${payload.name}`;
+
+        const data = await $observatory(query, { method: 'GET' });
 
         // Treat an empty array / missing payload / object lacking a label
         // (the field the entry page relies on) as "tool not found".
-        const tool = Array.isArray(data) ? data[0] : data;ç
-        if (!tool || !tool.label){
-          this.updateTool({})
+        const tool = normalizeToolEntry(Array.isArray(data) ? data[0] : data);
+        if (!tool?.label) {
+          this.updateTool({});
           return false;
         }
-        this.updateTool(data)
+        this.updateTool(tool);
         return true;
-
-      }catch (error) {
-        this.updateTool({})
+      } catch (error) {
+        this.updateTool({});
         if (error?.response?.status === 404) {
           return false;
         }
-        // Surface genuine (non-404) errors instead of swallowing them.
         throw error;
       } finally {
-        this.loading = false
+        this.loading = false;
       }
     },
 
-    async resolveToolId(_ctx, { name, source = 'biotools' }){
+    async resolveToolId({ name, source = 'biotools' }) {
+      const { $observatory } = useNuxtApp();
+
       try {
-        const {data} = await $observatory(`/tool/id?name=${encodeURIComponent(name)}&source=${source}`, {
-          method: 'GET',
-        });
-
+        const { data } = await $observatory(
+          `api/tool/id?name=${encodeURIComponent(name)}&source=${source}`,
+          {
+            method: 'GET',
+          }
+        );
         return data?.id || null;
-
-      }catch (e) {
-				// Not found / network error → caller falls back to 404.
+      } catch (e) {
         return null;
       }
-
     },
 
-    async retrieveSimilarTools(toolId){
+    async retrieveSimilarTools(toolId) {
+      const { $observatory } = useNuxtApp();
+
       if (!toolId) {
-        this.updateSimilarTools([])
+        this.updateSimilarTools([]);
         return;
       }
       this.loadingSimilar = true;
 
       try {
-        const {data} = await $observatory(`/similarity?tool_id=${toolId}`, {
+        const { data } = await $observatory(`/similarity?tool_id=${toolId}`, {
           method: 'GET',
-        })
-        this.updateSimilarTools(data.similar || [])
-
+        });
+        this.updateSimilarTools(data.similar || []);
       } catch (e) {
-        this.updateSimilarTools([])
+        this.updateSimilarTools([]);
       } finally {
-				this.loadingSimilar = false;
-			}
+        this.loadingSimilar = false;
+      }
     },
 
-    async retrieveWebAvailability(webpages){
-      const webpageList = (
-				Array.isArray(webpages) ? webpages : [webpages]
-			).filter(Boolean);
+    async retrieveWebAvailability(webpages) {
+      const { $observatory } = useNuxtApp();
+
+      const webpageList = (Array.isArray(webpages) ? webpages : [webpages]).filter(Boolean);
 
       if (!webpageList.length) {
-        this.resetWebAvailability()
+        this.resetWebAvailability();
         return;
       }
 
       const requestKey = webpageList.join('|');
       const ranges = [
-				{ key: 'week', endpoint: '/web-availability/week' },
-				{ key: 'month', endpoint: '/web-availability/month' },
-				{ key: 'sixMonths', endpoint: '/web-availability/6months' },
-			];
+        { key: 'week', endpoint: '/web-availability/week' },
+        { key: 'month', endpoint: '/web-availability/month' },
+        { key: 'sixMonths', endpoint: '/web-availability/6months' },
+      ];
 
       this.resetWebAvailability();
       this.updateWebAvailabilityRequestKey(requestKey);
@@ -199,11 +227,10 @@ export const useToolEntryStore = defineStore('tool_entry',  {
         });
 
         this.webAvailabilityNoData = true;
-        
+
         if (allFailed) {
           this.webAvailabilityError = new Error('Unable to retrieve uptime data');
         }
-
       } catch (error) {
         this.webAvailabilityError = error;
       } finally {
@@ -213,73 +240,72 @@ export const useToolEntryStore = defineStore('tool_entry',  {
       }
     },
 
-    async fetchCitations({ doi, pmid, title }){
+    async fetchCitations({ doi, pmid, title } = {}) {
+      const { $observatory } = useNuxtApp();
+
       const key = doi || pmid || title;
-			if (!key) return;
-			if (key in this.citations) return;
+      if (!key) return;
+      if (key in this.citations) return;
 
       this.updateLoadingCitations({ doi: key, value: true });
 
       const attempts = [
-				doi ? { doi } : null,
-				pmid ? { pmid } : null,
-				title ? { title } : null,
-			].filter(Boolean);
-      
-			let data = null;
+        doi ? { doi } : null,
+        pmid ? { pmid } : null,
+        title ? { title } : null,
+      ].filter(Boolean);
+
+      let data = null;
       for (const body of attempts) {
         try {
           const response = await $observatory('/publication/citations', {
             method: 'POST',
-            body: body
+            body: body,
           });
           data = response.data;
           break; // éxito, no seguir intentando
-        }catch (error) {
+        } catch (error) {
           // este identificador falló, probar el siguiente
         }
       }
 
-      this.updateCitations({ doi: key, data })
+      this.updateCitations({ doi: key, data });
       this.updateLoadingCitations({ doi: key, value: false });
     },
 
     // Reset
     resetWebAvailability() {
-			this.webAvailabilityRequestKey = '';
-			this.webAvailabilityUrl = '';
-			this.webAvailability = {
-				week: [],
-				month: [],
-				sixMonths: [],
-			};
-			this.webAvailabilityLoading = false;
-			this.webAvailabilityError = null;
-			this.webAvailabilityNoData = false;
-		},
-    updateSimilarTools(payload) {
-      this.similarTools = payload
+      this.webAvailabilityRequestKey = '';
+      this.webAvailabilityUrl = '';
+      this.webAvailability = {
+        week: [],
+        month: [],
+        sixMonths: [],
+      };
+      this.webAvailabilityLoading = false;
+      this.webAvailabilityError = null;
+      this.webAvailabilityNoData = false;
     },
-    updateTool(payload){
+    updateSimilarTools(payload) {
+      this.similarTools = payload;
+    },
+    updateTool(payload) {
       this.tool = payload;
     },
     updateWebAvailabilityRequestKey(payload) {
-			this.webAvailabilityRequestKey = payload;
-		},
+      this.webAvailabilityRequestKey = payload;
+    },
     updateWebAvailabilityUrl(payload) {
-			this.webAvailabilityUrl = payload;
-		},
+      this.webAvailabilityUrl = payload;
+    },
     updateWebAvailabilityRange({ key, data }) {
-			this.webAvailability[key] = data;
-		},
-    updateLoadingCitations({ doi, value }){
+      this.webAvailability[key] = data;
+    },
+    updateLoadingCitations({ doi, value }) {
       this.loadingCitations = { ...this.loadingCitations, [doi]: value };
     },
     updateCitations({ doi, data }) {
-			this.citations = { ...this.citations, [doi]: data };
-		},
-
-
-
-  }
-})
+      this.citations = { ...this.citations, [doi]: data };
+    },
+  },
+});
