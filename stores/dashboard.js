@@ -18,7 +18,6 @@ export const useDashboard = defineStore("dashboard", {
 
   getters: {
     ResourcesCount: (state) => state.resourcesCount,
-    ToolsCount: (state) => state.toolsCount,
     CommunitiesCount: (state) => state.communitiesCount,
     ProjectsCount: (state) => state.projectsCount
   },
@@ -104,26 +103,6 @@ export const useDashboard = defineStore("dashboard", {
       }
     },
 
-    async getToolsCount() {
-      const { $api } = useNuxtApp();
-      try {
-        const response = await $api.raw("aggregate", {
-          method: "HEAD",
-          params: { limit: 1 },
-        });
-    
-        const contentRange = response.headers.get("content-range");
-    
-        if (contentRange) {
-          const matches = contentRange.match(/(\d+)-(\d+|\*)\/(\d+|\*)/);
-          if (matches) {
-            this.toolsCount = parseInt(matches[3]);
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching tools count:", error);
-      }
-    }
     
   }
 })

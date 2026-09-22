@@ -34,7 +34,7 @@
                 </p>
                 <NuxtLink to="/observatory/trends" class="custom-btn secondary welcome-header-btn "
                   title="Go to Tools Observatory">
-                  Tools Observatory
+                  SW Observatory
                 </NuxtLink>
               </div>
             </div>
