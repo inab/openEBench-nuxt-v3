@@ -331,7 +331,7 @@ import LineSvg from '../../public/images/plots/line-chart.svg?component';
 import BoxSvg from '../../public/images/plots/box-chart.svg?component';
 
 definePageMeta({
-  middleware: 'auth',
+  middleware: 'requireAuth',
   auth: {
     authenticatedOnly: true,
     navigateUnauthenticatedTo: '/login-required',
