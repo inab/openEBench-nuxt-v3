@@ -5,7 +5,7 @@ import { createTestingPinia } from "@pinia/testing";
 import { setActivePinia, defineStore, createPinia } from "pinia";
 import { computed, ref } from "vue";
 
-vi.mock("@/middleware/auth", () => ({
+vi.mock("@/middleware/requireAuth", () => ({
   default: vi.fn((context) => {
     const { auth } = context;
     if (

@@ -18,7 +18,7 @@ import { useUser } from "@/stores/user.ts";
 import { privileges } from "@/constants/privileges";
 
 definePageMeta({
-  middleware: "auth",
+  middleware: "requireAuth",
   auth: {
     authenticatedOnly: true,
     navigateUnauthenticatedTo: "/login-required",

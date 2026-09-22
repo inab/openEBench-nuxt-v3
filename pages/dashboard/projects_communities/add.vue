@@ -14,7 +14,7 @@ import CommunityAdd from "@/components/Dashboard/entries/CommunityAdd.vue";
 import { useUser } from "@/stores/user.ts";
 
 definePageMeta({
-  middleware: "auth",
+  middleware: "requireAuth",
   auth: {
     authenticatedOnly: true,
     navigateUnauthenticatedTo: "/login-required",

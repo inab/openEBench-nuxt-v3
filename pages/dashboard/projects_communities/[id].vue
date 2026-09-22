@@ -32,7 +32,7 @@ import parseDataURL from "data-urls";
 import { TextDecoder } from "@exodus/bytes/encoding.js";
 
 definePageMeta({
-  middleware: "auth",
+  middleware: "requireAuth",
   auth: {
     authenticatedOnly: true,
     navigateUnauthenticatedTo: "/login-required",

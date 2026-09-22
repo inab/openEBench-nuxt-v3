@@ -77,7 +77,7 @@ import ContactsList from "@/components/Dashboard/contacts/ContactsList.vue";
 import type { Contact } from "@/types/contact";
 
 definePageMeta({
-  middleware: "auth",
+  middleware: "requireAuth",
   auth: {
     authenticatedOnly: true,
     navigateUnauthenticatedTo: "/login-required",
