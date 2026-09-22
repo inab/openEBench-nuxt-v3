@@ -87,8 +87,6 @@ export default defineNuxtConfig({
   ],
 
   runtimeConfig: {
-    authSecret: process.env.AUTH_SECRET || '',
-    KEYCLOAK_CLIENT_SECRET: process.env.KEYCLOAK_CLIENT_SECRET || '',
     public: {
       ENVIRONMENT: process.env.ENVIRONMENT || 'dev-openebench',
       OEB_LEGACY_ANGULAR_URI:
