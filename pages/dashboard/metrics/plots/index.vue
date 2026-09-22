@@ -97,7 +97,7 @@ import Plots from "@/components/Dashboard/metrics/plots/Plots.vue";
 import { useRoute } from "vue-router";
 
 definePageMeta({
-  middleware: "auth",
+  middleware: "requireAuth",
   auth: {
     authenticatedOnly: true,
     navigateUnauthenticatedTo: "/login-required",

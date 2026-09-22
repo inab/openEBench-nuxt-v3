@@ -374,8 +374,6 @@ if (status.value == 'authenticated') {
   if (privileges.value && privileges.value.length === 0) {
     userStore.setUserCommunitiesRoles(data.value.oeb_roles);
   }
-} else {
-  userName.value = '';
 }
 
 async function countTotalMetrics() {
