@@ -4,7 +4,7 @@ import CommunityAdd from "@/components/Dashboard/entries/CommunityAdd.vue";
 
 import {
   mockDashboardLinks,
-} from "@/test/mocks/dashboardMoks";
+} from "~~/test/mocks/dashboardMoks";
 
 const mockUseRouter = vi.fn();
 vi.mock("vue-router", () => ({

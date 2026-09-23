@@ -4,9 +4,9 @@ import { createTestingPinia } from '@pinia/testing';
 import Edit from '@/pages/dashboard/projects_communities/[id].vue';
 import BreadcrumbsBar from '@/components/Common/BreadcrumbsBar.vue';
 import CommunityEdit from '@/components/Dashboard/entries/CommunityEdit.vue';
-import { useUser } from '@/stores/user.ts';
+import { useUser } from '~~/stores/user.ts';
 import { ref } from 'vue';
-import { mockDashboardLinks } from '@/test/mocks/dashboardMoks';
+import { mockDashboardLinks } from '~~/test/mocks/dashboardMoks';
 
 vi.mock('@/middleware/requireAuth', () => ({
   default: vi.fn((context) => {

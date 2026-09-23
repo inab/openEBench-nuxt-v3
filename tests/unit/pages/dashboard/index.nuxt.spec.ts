@@ -3,14 +3,14 @@ import { ref } from 'vue';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import Index from '@/pages/dashboard/index.vue';
 import { nuxtTestUtilSetup } from '../../utils';
-import authMiddleware from '../../../../middleware/requireAuth';
+import authMiddleware from '../../../../app/middleware/requireAuth';
 import { $fetch } from '#app';
 
 await nuxtTestUtilSetup();
 
 let _metricsByType;
 
-vi.mock('@/stores/user', () => ({
+vi.mock('~~/stores/user', () => ({
   useUser: () => ({
     getUserCommunitiesRoles: [],
     setUserCommunitiesRoles: vi.fn(),

@@ -26,7 +26,7 @@ vi.mock('#app', () => ({
   }),
 }));
 
-vi.mock('@/stores/user', () => ({
+vi.mock('~~/stores/user', () => ({
   useUser: () => ({
     getUserCommunitiesRoles: [{ role: 'admin' }],
     setUserCommunitiesRoles: vi.fn(),

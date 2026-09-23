@@ -2,7 +2,7 @@ import { EDAMDict } from './EDAM_forFE_1.25.js';
 
 import { defineStore } from 'pinia';
 import { useNuxtApp } from 'nuxt/app';
-import { useMetadataStore } from'@/stores/observatory/evaluation/metadata.js';
+import { useMetadataStore } from'~~/stores/observatory/evaluation/metadata.js';
 
 export const useFileStore = defineStore('file',{
   state: () => ({

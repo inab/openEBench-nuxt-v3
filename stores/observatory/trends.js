@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { useObservatory } from "@/stores/observatory/index.js";
+import { useObservatory } from "~~/stores/observatory/index.js";
 import { useAsyncData } from "nuxt/app";
 
 const BASE_URL = "/api/stats/tools/";

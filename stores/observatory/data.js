@@ -1,6 +1,6 @@
 // stores/data.js
 import { defineStore } from 'pinia';
-import { useObservatory } from '@/stores/observatory/index.js';
+import { useObservatory } from '~~/stores/observatory/index.js';
 import { reactive } from 'vue';
 
 const BASE_URL = '/api/stats/tools/';

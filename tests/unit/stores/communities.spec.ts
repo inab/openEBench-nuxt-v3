@@ -1,5 +1,5 @@
 import { setActivePinia, createPinia } from 'pinia';
-import { useCommunities } from '@/stores/communities.js';
+import { useCommunities } from '~~/stores/communities.js';
 import { beforeEach, describe, expect, test } from 'vitest';
 
 describe('Communities', () => {

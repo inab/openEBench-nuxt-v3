@@ -5,7 +5,7 @@ These functions are mainly called from the component `observatoryInput.vue`
 (in `components/Observatory/evaluation/Observatory`)
 */
 import { defineStore } from "pinia";
-import { useMetadataStore } from "@/stores/observatory/evaluation/metadata.js";
+import { useMetadataStore } from "~~/stores/observatory/evaluation/metadata.js";
 import { useNuxtApp } from "nuxt/app";
 
 export const useObservatoryStore = defineStore("observatoryData", {

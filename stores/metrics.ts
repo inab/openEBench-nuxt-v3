@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
-import type { Metric } from "@/types/challenge_metric";
-import type { Challenge } from "@/types/challenge";
+import type { Metric } from "~~/types/challenge_metric";
+import type { Challenge } from "~~/types/challenge";
 
 const runtimeConfig = useRuntimeConfig();
 

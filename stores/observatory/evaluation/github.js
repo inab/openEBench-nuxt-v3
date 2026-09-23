@@ -4,7 +4,7 @@ In Step 2: import of metadata from a github repository.
 */
 import { defineStore } from 'pinia';
 import { useNuxtApp } from 'nuxt/app';
-import { useMetadataStore } from'@/stores/observatory/evaluation/metadata.js';
+import { useMetadataStore } from'~~/stores/observatory/evaluation/metadata.js';
 
 export const useGithub = defineStore('github', {
   state: () => ({

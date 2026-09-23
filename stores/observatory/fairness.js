@@ -1,6 +1,6 @@
 // stores/fairness.js
 import { defineStore } from "pinia";
-import { useObservatory } from '@/stores/observatory/index.js';
+import { useObservatory } from '~~/stores/observatory/index.js';
 import { useAsyncData } from 'nuxt/app';
 import { reactive } from 'vue';
 

@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 import { mount } from "@vue/test-utils";
 import ContactsList from "@/components/Dashboard/contacts/ContactsList.vue";
 import { ref } from "vue";
-import { useUser } from "@/stores/user.ts";
+import { useUser } from "~~/stores/user.ts";
 
 describe("Dashboard Contacts List", () => {
   let wrapper;

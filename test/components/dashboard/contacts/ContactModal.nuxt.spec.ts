@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 import { mount, flushPromises } from "@vue/test-utils";
 import ContactModal from "@/components/Dashboard/contacts/ContactModal.vue";
 
-vi.mock("@/stores/user.ts", () => ({
+vi.mock("~~/stores/user.ts", () => ({
   useUser: () => ({
     fetchCommunities: vi.fn().mockResolvedValue([
       {

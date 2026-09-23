@@ -6,6 +6,7 @@ const mockAuthModule = process.env.VITEST ? ['./test/mocks/setup.ts'] : [];
 const testUtilsModule = process.env.VITEST ? ['@nuxt/test-utils/module'] : [];
 
 export default defineNuxtConfig({
+  compatibilityDate: '2026-09-23',
   alias: {
     'next-auth/core': `${process.cwd()}/node_modules/next-auth/core/index.js`,
   },
@@ -32,13 +33,6 @@ export default defineNuxtConfig({
     },
   },
   vite: {
-    server: {
-      watch: {
-        usePolling: true,
-        interval: 100,
-        ignored: ['!**/models/**'],
-      },
-    },
     css: {
       preprocessorOptions: {
         scss: {
@@ -52,7 +46,6 @@ export default defineNuxtConfig({
         'dompurify',
         'aos',
         'data-urls',
-        'vue3-carousel/dist/carousel.mjs',
         'gsap',
         'vue-multiselect',
         'pluralize',
@@ -144,7 +137,6 @@ export default defineNuxtConfig({
     '@nuxt/image',
     '@nuxt/ui',
     '@pinia/nuxt',
-    'nuxt-viewport',
     '@nuxt/eslint',
     'vue3-carousel-nuxt',
     '@sidebase/nuxt-auth',
@@ -159,19 +151,5 @@ export default defineNuxtConfig({
   image: {
     provider: 'ipx',
     dir: 'assets/images',
-  },
-
-  viewport: {
-    breakpoints: {
-      desktop: 1024,
-      desktopMedium: 1280,
-      desktopWide: 1600,
-
-      mobile: 320,
-      mobileMedium: 375,
-      mobileWide: 425,
-
-      tablet: 768,
-    },
   },
 });

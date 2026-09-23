@@ -3,7 +3,7 @@ import { describe, it, expect, vi } from "vitest";
 import Index from "@/pages/dashboard/projects_communities/index.vue";
 import { createTestingPinia } from "@pinia/testing";
 import { setActivePinia } from "pinia";
-import { useUser } from "@/stores/user";
+import { useUser } from "~~/stores/user";
 
 
 const mockUseRouter = vi.fn();
