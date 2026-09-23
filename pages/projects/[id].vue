@@ -64,14 +64,13 @@ import { useCommunity } from "@/stores/community";
 
 const route = useRoute();
 const communityStore = useCommunity();
-const community: Ref<any> = ref(null);
-const communityId: string = route.params.id;
-const { data, pending }: { data: any; pending: boolean } = await useAsyncData(
+
+const communityId = route.params.id as string;
+
+const { data: community, pending } = await useAsyncData(
   `project-community-${communityId}`,
   () => communityStore.requestCommunityData(communityId),
 );
-
-community.value = data.value ?? null;
 
 const summaryObj = communityStore.getCommunityData;
 const datasetsObj = communityStore.getDatasets;

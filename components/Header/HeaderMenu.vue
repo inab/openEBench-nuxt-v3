@@ -288,7 +288,7 @@ import { useRouter } from "vue-router";
 import subMenuEntriesObservatory from "./HeaderMenu/subMenuEntriesObservatory";
 import subMenuEntriesAbout from "./HeaderMenu/subMenuEntriesAbout";
 import { activeTabIndex } from "@/components/Common/state.js";
-import NavbarStatus from "@/components/status/NavbarStatus";
+import NavbarStatus from "@/components/status/NavbarStatus.vue";
 
 const router = useRouter();
 

@@ -1,5 +1,5 @@
 // TO TS
-import type { CommunityPrivileges } from "../types/privileges";
+import type { CommunityPrivileges } from "../types/communities";
 export const privileges: CommunityPrivileges = {
   owner: {
     community: {

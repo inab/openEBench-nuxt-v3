@@ -2,7 +2,7 @@
   <div class="benchmarking-community-events">
     <BreadcrumbsBar :breadcrumbs-array="routeArray" />
     <div class="mx-auto container">
-      <div v-if="isPending">
+      <div v-if="pending">
         <USkeleton class="h-12 w-12" :ui="{ rounded: 'rounded-full' }" />
         <div class="space-y-2">
           <USkeleton class="h-4 w-[250px]" />
@@ -10,26 +10,15 @@
         </div>
       </div>
       <div v-else>
-        <CommunityInfo
-          v-if="community"
-          :community="community"
-          :community-references="communityReferences"
-        />
+        <CommunityInfo v-if="community" :community="community" :community-references="communityReferences" />
         <div v-else>
-          <p v-if="!community && !isPending">
-            <noDataAvailable
-              :id="`'` + community_Id + `'.`"
-              description="No events found for community with Id "
-              btn-path="/benchmarking"
-              btn-text="Benchmarking communities"
-            />
+          <p v-if="!community && !pending">
+            <noDataAvailable :id="`'` + community_Id + `'.`" description="No events found for community with Id "
+              btn-path="/benchmarking" btn-text="Benchmarking communities" />
           </p>
           <p v-else>
-            <noDataAvailable
-              description="No information found to display."
-              btn-path="/benchmarking"
-              btn-text="Benchmarking communities"
-            />
+            <noDataAvailable description="No information found to display." btn-path="/benchmarking"
+              btn-text="Benchmarking communities" />
           </p>
         </div>
 
@@ -75,22 +64,24 @@ interface Challenge {
 
 const route = useRoute();
 const communityStore = useCommunity();
-const community: Ref<any> = ref(null);
-const isPending = ref(false);
+
 const community_Id = Array.isArray(route.params.community)
   ? route.params.community[0]
   : route.params.community;
 
-if (communityStore.communityId && communityStore.communityId == community_Id) {
-  community.value = communityStore.getCommunityData;
-} else {
-  const { data, pending }: { data: any; pending: Ref<boolean> } =
-    await useAsyncData("community", () =>
-      communityStore.requestCommunityData(community_Id, event),
-    );
-  community.value = data.value ?? null;
-  isPending.value = pending.value;
-}
+const { data: community, pending } = await useAsyncData(
+  `community-events-${community_Id}`,
+  () => {
+    if (
+      communityStore.communityId &&
+      communityStore.communityId === community_Id
+    ) {
+      return communityStore.getCommunityData;
+    }
+
+    return communityStore.requestCommunityData(community_Id, event);
+  },
+);
 
 const eventsObj = computed(() => communityStore.getEvents ?? []);
 const communityReferences = computed(
@@ -102,7 +93,7 @@ const routeArray: Array<{
   isActualRoute: boolean;
   route?: string;
 }> = !community.value
-  ? [
+    ? [
       {
         label: "Benchmarking Communities",
         isActualRoute: false,
@@ -110,7 +101,7 @@ const routeArray: Array<{
       },
       { label: "Events Not Found", isActualRoute: true },
     ]
-  : [
+    : [
       {
         label: "Benchmarking Communities",
         isActualRoute: false,

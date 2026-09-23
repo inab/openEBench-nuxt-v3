@@ -90,8 +90,7 @@ import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
 import { useCommunities } from "@/stores/communities";
 
 const communitiesStore = useCommunities();
-const projects: Ref<any> = ref(null);
-const status = ref({ pending: false });
+
 
 const HEADER_ITEM = [
   {
@@ -101,19 +100,19 @@ const HEADER_ITEM = [
   },
 ];
 
-if (
-  communitiesStore.getProjects &&
-  Object.keys(communitiesStore.getProjects).length > 0
-) {
-  projects.value = communitiesStore.getProjects;
-  status.value = { pending: false };
-} else {
-  const { data, status } = await useAsyncData(() =>
-    communitiesStore.requestCommunitiesData("projects"),
-  );
-  projects.value = data.value ?? null;
-  status.value = status;
-}
+const { data: projects, status } = await useAsyncData(
+  "projects",
+  async () => {
+    if (
+      communitiesStore.getProjects &&
+      Object.keys(communitiesStore.getProjects).length > 0
+    ) {
+      return communitiesStore.getProjects;
+    }
+
+    return communitiesStore.requestCommunitiesData("projects");
+  },
+);
 </script>
 
 <style scoped lang="scss">

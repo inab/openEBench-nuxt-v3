@@ -10,17 +10,17 @@
         <i>{{ challenge.name }}</i>
       </div>
 
-      <div v-if="status.pending" class="benchmarking-participant__skeleton"></div>
+      <div v-if="pending" class="benchmarking-participant__skeleton"></div>
       <p class="text">
         List of tools participating in the challenge, together with a summary of
         the metrics obtained.
       </p>
       <div v-if="participants?.length > 0" class="">
-        <div v-if="status.pending" class=""></div>
+        <div v-if="pending" class=""></div>
         <div v-else class="">
           <ChallengeParticipantMetricsTable :metrics-table="metricsTable" />
         </div>
-        <div v-if="status.pending" class="">
+        <div v-if="pending" class="">
           <USkeleton class="h-12 w-12" :ui="{ rounded: 'rounded-full' }" />
         </div>
         <div v-else class="">
@@ -53,10 +53,8 @@ const METRIC_ID_KEY = "level_2:metric_id";
 
 const route = useRoute();
 const challengeId = route.params.id;
-const isPending = ref(false);
 const communityStore = useCommunity();
 const communityId: string = route.params.community;
-const community: Ref<any> = ref(null);
 const eventsObj: any[] = communityStore.getEvents;
 
 const datasets = ref(Array);
@@ -64,7 +62,6 @@ const participants: any = ref(null);
 const metrics = ref(null);
 const challenge: any = ref(null);
 
-const status = { pending: false }; // TODo
 const page = ref(1);
 const pageCount = ref(15);
 
@@ -253,16 +250,16 @@ function getMetricsTable() {
   };
 }
 
-if (communityStore.communityId === communityId) {
-  community.value = communityStore.getCommunityData;
-} else {
-  const { data, pending }: { data: any; pending: Ref<boolean> } =
-    await useAsyncData(`participants-community-${communityId}`, () =>
-      communityStore.requestCommunityData(communityId),
-    );
-  community.value = data.value ?? null;
-  isPending.value = pending.value;
-}
+const { data: community, pending } = await useAsyncData(
+  `participants-community-${communityId}`,
+  () => {
+    if (communityStore.communityId === communityId) {
+      return communityStore.getCommunityData;
+    }
+
+    return communityStore.requestCommunityData(communityId);
+  },
+);
 
 const currentEvent = computed(() => {
   const selectedEvent = communityStore.getCurrentEvent;

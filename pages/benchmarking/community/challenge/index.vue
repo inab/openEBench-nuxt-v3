@@ -48,11 +48,9 @@ import { useCommunity } from "@/stores/community";
 import emptyImg from "~/assets/images/illustrations/empty-state.svg?component";
 
 const route = useRoute();
-const isPending = ref(false);
 const communityStore = useCommunity();
 const communityId: string = route.params.community;
 const eventsObj: any[] = communityStore.getEvents;
-const community: Ref<any> = ref(null);
 const challengeId = route.params.challenge;
 const chatAvailable = ref<boolean>(false);
 const datasets = ref<any[]>([]);
@@ -120,16 +118,16 @@ await challengeAPI(challengeId).then(async (response: any) => {
   itemSelected.value = items.value[0] ?? null;
 });
 
-if (communityStore.communityId === communityId) {
-  community.value = communityStore.getCommunityData;
-} else {
-  const { data, pending }: { data: any; pending: Ref<boolean> } =
-    await useAsyncData("community", () =>
-      communityStore.requestCommunityData(communityId),
-    );
-  community.value = data.value ?? null;
-  isPending.value = pending.value;
-}
+const { data: community, pending } = await useAsyncData(
+  `challenge-community-${communityId}`,
+  () => {
+    if (communityStore.communityId === communityId) {
+      return communityStore.getCommunityData;
+    }
+
+    return communityStore.requestCommunityData(communityId);
+  },
+);
 
 function getVisualizationType(item) {
   try {

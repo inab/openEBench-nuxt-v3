@@ -2,7 +2,7 @@
   <div class="benchmarking-community">
     <BreadcrumbsBar :breadcrumbs-array="routeArray" />
     <div class="mx-auto container">
-      <div v-if="isPending" class="skeleton-wrapper">
+      <div v-if="pending" class="skeleton-wrapper">
         <USkeleton class="h-[200px] w-full mb-4" />
         <USkeleton class="h-6 w-[300px] mb-2" />
         <USkeleton class="h-4 w-[200px] mb-2" />
@@ -15,7 +15,7 @@
           :community-references="communityReferences"
         />
         <div v-else>
-          <p v-if="!community && !isPending">
+          <p v-if="!community && !pending">
             <noDataAvailable
               :id="`'` + communityId + `'.`"
               description="No community found for Id "
@@ -124,19 +124,8 @@ const route = useRoute();
 const router = useRouter();
 const communityStore = useCommunity();
 
-const isPending = ref(false);
-//const community = ref<any>(null);
 const communityId = route.params.community as string;
 const eventId = route.query.event as string;
-
-// if (communityStore.communityId && communityStore.communityId == communityId) {
-//   community.value = communityStore.getCommunityData;
-// } else {
-//   const { data, pending } = await useAsyncData("community", () =>
-//     communityStore.requestCommunityData(communityId, event)
-//   );
-//   community.value = data.value ?? null;
-// }
 
 const { data: community, pending } = await useAsyncData(
   `benchmarking-community-${communityId}-${eventId ?? "default"}`,
@@ -145,12 +134,12 @@ const { data: community, pending } = await useAsyncData(
       communityStore.communityId &&
       communityStore.communityId === communityId
     ) {
-      return Promise.resolve(communityStore.getCommunityData);
+      return communityStore.getCommunityData;
     }
+
     return communityStore.requestCommunityData(communityId, eventId);
   },
 );
-
 const datasetsObj = communityStore.getDatasets;
 const toolsObj = communityStore.getTools;
 const eventsObj: any[] = communityStore.getEvents;

@@ -36,7 +36,7 @@ onMounted(async () => {
 });
 
 definePageMeta({
-  layout: 'embed-iframe-full-width',
+  layout: 'default',
 });
 
 const routeArray = [
