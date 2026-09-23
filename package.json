@@ -46,6 +46,7 @@
     "@nuxt/ui": "^2.21.0",
     "@pinia/nuxt": "0.5.4",
     "@sidebase/nuxt-auth": "0.8.1",
+    "@vue/compiler-sfc": "^3.5.43",
     "@vuepic/vue-datepicker": "^9.0.3",
     "aos": "^2.3.4",
     "bootstrap": "5.3.8",
@@ -67,7 +68,7 @@
     "v-calendar": "^3.1.2",
     "valibot": "^1.0.0",
     "vite-svg-loader": "5.1.0",
-    "vue": "3.5.13",
+    "vue": "3.5.43",
     "vue-multiselect": "3.1.0",
     "vue-observe-visibility": "2.0.0-alpha.1",
     "vue3-carousel": "0.15.1",
@@ -94,10 +95,11 @@
     "prettier": "^3.9.8",
     "sass": "1.104.0",
     "typescript": "^5.5.4",
-    "vitest": "3.2.7"
+    "vitest": "3.2.7",
+    "vue-tsc": "^3.3.11"
   },
   "overrides": {
-    "vue": "3.5.13",
+    "vue": "3.5.43",
     "tar": "7.5.22"
   }
 }
