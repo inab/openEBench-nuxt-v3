@@ -31,7 +31,7 @@
         </div>
 
         <div class="col-2">
-          <h2>FAIRsoft scores</h2>
+          <FAIRScores v-if="hasTool" :fairsoft="tool.fairsoft" />
         </div>
       </div>
     </div>
@@ -43,6 +43,7 @@ import { computed, onMounted, watch } from 'vue';
 import { navigateTo, createError, showError } from '#app';
 import BreadcrumbsBar from '@/components/Common/BreadcrumbsBar.vue';
 import EntryIntro from '@/components/Tools/ToolEntry/EntryIntro.vue';
+import FAIRScores from '@/components/Tools/ToolEntry/FAIR/FAIRScores.vue'
 import { useToolEntryStore } from '@/stores/tool_entry';
 
 const route = useRoute();
