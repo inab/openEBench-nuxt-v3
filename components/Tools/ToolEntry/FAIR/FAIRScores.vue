@@ -136,7 +136,7 @@ const childColor = (key: string) => statusColor(raw(key));
   background-color: #fff;
   padding: 1rem 1.1rem;
   position: sticky;
-  top: 90px; /* ajústalo a la altura de tu header */
+  top: var(--tool-sticky-top, 90px); /* ajústalo a la altura de tu header */
   max-height: calc(100vh - 150px);
   overflow-y: auto;
 }
