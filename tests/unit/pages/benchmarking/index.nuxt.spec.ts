@@ -38,28 +38,34 @@ const mockEmptyCommunitiesStore = {
 };
 
 // Fake nuxt app to mock $graphql and communities store
-vi.mock("#app", () => ({
-  useNuxtApp: () => ({
-    $graphql: vi.fn(() =>
-      Promise.resolve({
-        data: {
-          getCommunities: [
-            {
-              _id: "1",
-              acronym: "C1",
-              name: "Community 1",
-              logo: "",
-              links: [],
-              status: "",
-              benchmarkingEvents: [],
-              summary: "",
-            },
-          ],
-        },
-      }),
-    ),
-  }),
-}));
+vi.mock("#app", async () => {
+	const actual = await vi.importActual("#app");
+
+	return {
+		...actual,
+		useNuxtApp: () => ({
+			...actual.useNuxtApp(),
+			$graphql: vi.fn(() =>
+				Promise.resolve({
+					data: {
+						getCommunities: [
+							{
+								_id: "1",
+								acronym: "C1",
+								name: "Community 1",
+								logo: "",
+								links: [],
+								status: "",
+								benchmarkingEvents: [],
+								summary: "",
+							},
+						],
+					},
+				}),
+			),
+		}),
+	};
+});
 
 describe("Benchmarking Page", () => {
   let pinia;

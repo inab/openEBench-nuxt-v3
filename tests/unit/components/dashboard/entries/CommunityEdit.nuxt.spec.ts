@@ -7,10 +7,6 @@ import { computed, ref } from "vue";
 import { mockDashboardLinks } from "~~/test/mocks/dashboardMoks";
 import { CommunityPrivileges } from "~~/types/communities";
 
-const mockUseRouter = vi.fn();
-vi.mock("vue-router", () => ({
-  useRouter: () => mockUseRouter,
-}));
 
 vi.mock("@/middleware/requireAuth", () => ({
   default: vi.fn((context) => {
@@ -24,15 +20,20 @@ vi.mock("@/middleware/requireAuth", () => ({
   }),
 }));
 
-vi.mock("#app", () => ({
-  useRuntimeConfig: () => ({
-    public: {
-      SCIENTIFIC_SERVICE_URL_API:
-        "https://dev-openebench.bsc.es/api/scientific/staged/Metrics/",
-    },
-  }),
-  $fetch: vi.fn(() => Promise.resolve()),
-}));
+vi.mock("#app", async () => {
+	const actual = await vi.importActual("#app");
+
+	return {
+		...actual,
+		useRuntimeConfig: () => ({
+			public: {
+				SCIENTIFIC_SERVICE_URL_API:
+					"https://dev-openebench.bsc.es/api/scientific/staged/Metrics/",
+			},
+		}),
+		$fetch: vi.fn(() => Promise.resolve()),
+	};
+});
 
 global.$fetch = vi.fn(() => Promise.resolve([]));
 

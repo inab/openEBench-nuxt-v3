@@ -1,14 +1,29 @@
 import { mount } from '@vue/test-utils';
-import { ref } from 'vue';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+
 import Index from '@/pages/dashboard/index.vue';
-import { nuxtTestUtilSetup } from '../../utils';
 import authMiddleware from '../../../../app/middleware/requireAuth';
-import { $fetch } from '#app';
 
-await nuxtTestUtilSetup();
 
-let _metricsByType;
+const mockFetch = vi.hoisted(() => vi.fn());
+
+vi.mock('#build/fetch.mjs', () => ({
+	$fetch: mockFetch,
+}));
+
+vi.mock('#imports', async () => {
+	const actual = await vi.importActual('#imports');
+
+	return {
+		...actual,
+		useRuntimeConfig: () => ({
+			public: {
+				SCIENTIFIC_SERVICE_URL_API:
+					'https://dev.openebench.bsc.es/api/scientific/',
+			},
+		}),
+	};
+});
 
 vi.mock('~~/stores/user', () => ({
   useUser: () => ({
@@ -20,46 +35,16 @@ vi.mock('~~/stores/user', () => ({
 vi.mock('@/middleware/requireAuth', () => ({
   default: vi.fn((context) => {
     const { auth } = context;
+
     if (!auth || (auth.authenticatedOnly && context.auth.status === 'unauthenticated')) {
       context.redirect('/login-required');
     }
   }),
 }));
 
-vi.mock('#app', () => ({
-  useNuxtApp: () => ({
-    $auth: {
-      status: ref('authenticated'),
-      data: ref({
-        statusCode: 200,
-        user: {
-          name: 'John Doe',
-          oeb_roles: [{ role: 'admin' }],
-        },
-      }),
-    },
-  }),
-
-  useRuntimeConfig: () => ({
-    public: {
-      SCIENTIFIC_SERVICE_URL_API: 'https://dev.openebench.bsc.es/api/scientific/',
-    },
-  }),
-  $fetch: vi.fn(() => Promise.resolve([])),
-}));
-
-global.$fetch = vi.fn(() => Promise.resolve([]));
-
 describe('Dashboard Index', () => {
   beforeEach(() => {
-    _metricsByType = {
-      value: [
-        { name: 'Bar Plot', total: 0 },
-        { name: 'Scatter Plot', total: 0 },
-        { name: 'Box Plot', total: 0 },
-        { name: 'Line Plot', total: 0 },
-      ],
-    };
+    vi.clearAllMocks();
   });
 
   it('allows authenticated users', () => {
@@ -106,8 +91,7 @@ describe('Dashboard Index', () => {
       { id: 2, name: 'Metric 2' },
     ];
 
-    const fetchMock = vi.fn().mockResolvedValue(mockResponse);
-    vi.stubGlobal('$fetch', fetchMock);
+    mockFetch.mockResolvedValue(mockResponse);
 
     const wrapper = mount(Index, {
       global: {
@@ -118,8 +102,6 @@ describe('Dashboard Index', () => {
     await wrapper.vm.countTotalMetrics();
 
     expect(wrapper.vm.totalMetrics).toEqual(mockResponse.length);
-
-    vi.unstubAllGlobals();
   });
 
   it('update totalTools with the length of fetched data', async () => {
@@ -129,8 +111,7 @@ describe('Dashboard Index', () => {
       { id: 3, name: 'Tool 3' },
     ];
 
-    const fetchMock = vi.fn().mockResolvedValue(mockResponse);
-    vi.stubGlobal('$fetch', fetchMock);
+    mockFetch.mockResolvedValue(mockResponse);
 
     const wrapper = mount(Index, {
       global: {
@@ -141,8 +122,6 @@ describe('Dashboard Index', () => {
     await wrapper.vm.countTotalTools();
 
     expect(wrapper.vm.totalTools).toEqual(mockResponse.length);
-
-    vi.unstubAllGlobals();
   });
 
   it('update totalCommunities with the length of fetched data', async () => {
@@ -152,8 +131,7 @@ describe('Dashboard Index', () => {
       { id: 3, name: 'Community 3' },
     ];
 
-    const fetchMock = vi.fn().mockResolvedValue(mockResponse);
-    vi.stubGlobal('$fetch', fetchMock);
+    mockFetch.mockResolvedValue(mockResponse);
 
     const wrapper = mount(Index, {
       global: {
@@ -172,7 +150,8 @@ describe('Dashboard Index', () => {
       { id: 2, name: 'Contact 2' },
       { id: 3, name: 'Contact 3' },
     ];
-    vi.mocked($fetch).mockResolvedValue(mockResponse);
+
+    mockFetch.mockResolvedValue(mockResponse);
 
     const wrapper = mount(Index, {
       global: {
@@ -180,10 +159,8 @@ describe('Dashboard Index', () => {
       },
     });
 
-    const { countTotalContacts } = wrapper.vm;
-    await countTotalContacts();
-    const totalContacts = wrapper.vm.totalContacts;
+    await wrapper.vm.countTotalContacts();
 
-    expect(totalContacts).toEqual(mockResponse.length);
+    expect(wrapper.vm.totalContacts).toEqual(mockResponse.length);
   });
 });

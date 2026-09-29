@@ -5,10 +5,6 @@ import { createTestingPinia } from '@pinia/testing';
 import { setActivePinia } from 'pinia';
 import { useUser } from '~~/stores/user';
 
-const mockUseRouter = vi.fn();
-vi.mock('vue-router', () => ({
-  useRouter: () => mockUseRouter,
-}));
 
 vi.mock('@/middleware/requireAuth', () => ({
   default: vi.fn((context) => {
@@ -19,14 +15,20 @@ vi.mock('@/middleware/requireAuth', () => ({
   }),
 }));
 
-vi.mock('#app', () => ({
-  useRuntimeConfig: () => ({
-    public: {
-      SCIENTIFIC_SERVICE_URL_API: 'https://dev-openebench.bsc.es/api/scientific/staged/Metrics/',
-    },
-  }),
-  $fetch: vi.fn(() => Promise.resolve()),
-}));
+vi.mock('#app', async () => {
+	const actual = await vi.importActual('#app');
+
+	return {
+		...actual,
+		useRuntimeConfig: () => ({
+			public: {
+				SCIENTIFIC_SERVICE_URL_API:
+					'https://dev-openebench.bsc.es/api/scientific/staged/Metrics/',
+			},
+		}),
+		$fetch: vi.fn(() => Promise.resolve()),
+	};
+});
 
 interface CommunityRole {
   role: string;

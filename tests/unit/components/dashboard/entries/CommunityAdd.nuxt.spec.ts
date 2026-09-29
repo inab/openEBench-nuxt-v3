@@ -6,11 +6,6 @@ import {
   mockDashboardLinks,
 } from "~~/test/mocks/dashboardMoks";
 
-const mockUseRouter = vi.fn();
-vi.mock("vue-router", () => ({
-  useRouter: () => mockUseRouter,
-}));
-
 vi.mock("@/middleware/requireAuth", () => ({
   default: vi.fn((context) => {
     const { auth } = context;

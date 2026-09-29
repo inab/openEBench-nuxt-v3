@@ -6,11 +6,6 @@ import BreadcrumbsBar from '@/components/Common/BreadcrumbsBar.vue';
 import CommunityAdd from '@/components/Dashboard/entries/CommunityAdd.vue';
 import { useUser } from '~~/stores/user.ts';
 
-const mockUseRouter = vi.fn();
-vi.mock('vue-router', () => ({
-  useRouter: () => mockUseRouter,
-}));
-
 vi.mock('@/middleware/requireAuth', () => ({
   default: vi.fn((context) => {
     const { auth } = context;

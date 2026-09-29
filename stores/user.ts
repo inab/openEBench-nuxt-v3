@@ -5,7 +5,6 @@ import type { Challenge } from "~~/types/challenge";
 import { privileges } from "~~/constants/privileges";
 import parseDataURL from "data-urls";
 
-const runtimeConfig = useRuntimeConfig();
 
 interface CommunityRole {
   role: string;
@@ -84,6 +83,7 @@ export const useUser = defineStore("user", {
     },
 
     async fetchUserPrivileges(token: string) {
+      const runtimeConfig = useRuntimeConfig();
       return await fetch(
         `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}query/privileges`,
         {
@@ -103,6 +103,7 @@ export const useUser = defineStore("user", {
     },
 
     async fetchCommunities(token: string) {
+      const runtimeConfig = useRuntimeConfig();
       return await fetch(
         `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Community`,
         {
@@ -124,6 +125,7 @@ export const useUser = defineStore("user", {
     },
 
     async fetchContacts(token: string) {
+      const runtimeConfig = useRuntimeConfig();
       const response = await fetch(
         `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Contact`,
         {
@@ -147,6 +149,7 @@ export const useUser = defineStore("user", {
     },
 
     async fetchCommunitiesEvents(token: string, community: string) {
+      const runtimeConfig = useRuntimeConfig();
       const response = await fetch(
         `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/BenchmarkingEvent`,
         {
@@ -174,6 +177,7 @@ export const useUser = defineStore("user", {
     },
 
     async fetchCommunitiesEventsChallenges(token: string, event: string) {
+      const runtimeConfig = useRuntimeConfig();
       const response = await fetch(
         `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Challenge`,
         {
@@ -200,6 +204,7 @@ export const useUser = defineStore("user", {
     },
 
     async fetchCommunitiesChallenge(token: string, event: string) {
+      const runtimeConfig = useRuntimeConfig();
       const response = await fetch(
         `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Challenge`,
         {
@@ -225,6 +230,7 @@ export const useUser = defineStore("user", {
     },
 
     formatCommunityData(data) {
+      const runtimeConfig = useRuntimeConfig();
       return data.map((community: Community) => {
         const links = community.links ?? [];
         const logo =
@@ -257,6 +263,7 @@ export const useUser = defineStore("user", {
     },
 
     formatCommunityEventData(data) {
+      const runtimeConfig = useRuntimeConfig();
       return data.map((event: Event) => {
         return {
           _id: event._id,

@@ -2,10 +2,8 @@ import { mount } from "@vue/test-utils";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import Index from "@/pages/dashboard/index.vue";
 import { ref } from "vue";
-import { nuxtTestUtilSetup } from "../../utils";
 import authMiddleware from "../../../app/middleware/requireAuth";
 
-await nuxtTestUtilSetup();
 
 let metricsByType;
 
@@ -28,41 +26,34 @@ vi.mock("@/middleware/requireAuth", () => ({
   }),
 }));
 
-vi.mock("#app", () => ({
-  useRuntimeConfig: () => ({
-    public: {
-      SCIENTIFIC_SERVICE_URL_API:
-        "https://dev-openebench.bsc.es/api/scientific/staged/Metrics/",
-    },
-  }),
-  $fetch: vi.fn(() => Promise.resolve()),
-}));
-
-global.$fetch = vi.fn(() => Promise.resolve([])); 
-
-const runtimeConfig = {
-  public: {
-    SCIENTIFIC_SERVICE_URL_API:
-      "https://dev-openebench.bsc.es/api/scientific/staged/Metrics/",
-  },
-};
-
-vi.mock("#app", () => ({
-  useRuntimeConfig: () => runtimeConfig,
-  $fetch: vi.fn(),
-}));
-
+const mockFetch = vi.hoisted(() => vi.fn());
 describe("Dashboard Index", () => {
-  beforeEach(() => {
-    metricsByType = {
-      value: [
-        { name: "Bar Plot", total: 0 },
-        { name: "Scatter Plot", total: 0 },
-        { name: "Box Plot", total: 0 },
-        { name: "Line Plot", total: 0 },
-      ],
-    };
-  });
+  vi.clearAllMocks();
+  
+      mockFetch.mockImplementation((url: string) => {
+        if (url.includes('/Metrics')) {
+          return Promise.resolve([{ type: 'Bar Plot' }, { type: 'Scatter Plot' }]);
+        }
+  
+        if (url.includes('/Tool')) {
+          return Promise.resolve([{}, {}, {}]);
+        }
+  
+        if (url.includes('/Community')) {
+          return Promise.resolve([
+            { status: 'active' },
+            { status: 'active' },
+            { status: 'inactive' },
+          ]);
+        }
+  
+        if (url.includes('/Contact')) {
+          return Promise.resolve([{}, {}, {}]);
+        }
+  
+        return Promise.resolve([]);
+      });
+    });
 
   it("allows authenticated users", () => {
     const context = {
@@ -124,7 +115,7 @@ describe("Dashboard Index", () => {
       { representation_hints: { visualization: true } },
     ];
 
-    vi.mocked($fetch).mockResolvedValue(mockResponse);
+    mockFetch.mockResolvedValue(mockResponse);
 
     const wrapper = mount(Index, {
       global: {
@@ -145,7 +136,7 @@ describe("Dashboard Index", () => {
       { id: 2, name: "Tool 2" },
       { id: 3, name: "Tool 3" },
     ];
-    vi.mocked($fetch).mockResolvedValue(mockResponse);
+    mockFetch.mockResolvedValue(mockResponse);
 
     const wrapper = mount(Index, {
       global: {
@@ -166,7 +157,7 @@ describe("Dashboard Index", () => {
       { id: 2, name: "Community 2" },
       { id: 3, name: "Community 3" },
     ];
-    vi.mocked($fetch).mockResolvedValue(mockResponse);
+    mockFetch.mockResolvedValue(mockResponse);
 
     const wrapper = mount(Index, {
       global: {
@@ -187,7 +178,7 @@ describe("Dashboard Index", () => {
       { id: 2, name: "Contact 2" },
       { id: 3, name: "Contact 3" },
     ];
-    vi.mocked($fetch).mockResolvedValue(mockResponse);
+    mockFetch.mockResolvedValue(mockResponse);
 
     const wrapper = mount(Index, {
       global: {
