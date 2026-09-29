@@ -42,7 +42,7 @@
             v-if="primaryWebpage"
             :link="primaryWebpage"
             text="Homepage"
-            icon="mdi-web"
+            icon="i-mdi-web"
             big
           />
           <LinkChipWImage

@@ -6,7 +6,7 @@
         :class="{ 'link-chip--small': !big }"
         @click="openLink"
       >
-        <UIcon :name="iconName" class="size-4" />
+        <UIcon :name="icon" class="size-4" />
         <span v-if="text">{{ text }}</span>
       </button>
     </UTooltip>
@@ -29,7 +29,7 @@
     defineProps<{
       text?: string;
       link?: string;
-      icon: string; // formato 'mdi-web', igual que en el Vue2 original
+      icon: string;
       big?: boolean;
       minimal?: boolean;
     }>(),
@@ -40,11 +40,6 @@
       minimal: false,
     }
   );
-  
-  // El Vue2 pasaba iconos en formato Vuetify ('mdi-web'), que coincide
-  // exactamente con el nombre del icono en la colección mdi de Iconify.
-  // Solo hace falta anteponer el prefijo 'i-' que usa UIcon.
-  const iconName = computed(() => `i-${props.icon}`);
   
   function openLink() {
     if (props.link) {
