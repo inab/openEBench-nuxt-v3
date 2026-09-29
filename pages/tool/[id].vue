@@ -1,25 +1,22 @@
 <template>
-  <div>
-    <BreadcrumbsBar :breadcrumbs-array="routeArray" />
+  <div class="tool-page">
+  <BreadcrumbsBar :breadcrumbs-array="routeArray" />
 
-    <div class="container-fluid">
-      <div class="row">
-        <!-- SideBar -->
-        <div class="col-3">
-          <ul>
-            <li>kgkfdnkglf</li>
-          </ul>
+  <div class="container-fluid">
+    <div class="row">
+      <!-- SideBar -->
+      <div class="col-12 col-lg-3 d-none d-lg-block">
+        <ToolSidebar v-if="hasTool" :items="sections" :active-id="activeSectionId" />
+      </div>
+
+      <!-- Content -->
+      <div class="col-12 col-lg-7">
+        <div v-if="loading">
+          <USkeleton class="h-96" />
         </div>
-
-        <!-- Content -->
-        <div class="col-7">
-          <div v-if="loading">
-            <USkeleton class="h-96" />
-          </div>
-          <div v-else>
-            <!-- Introduccion de la tool -->
+        <div v-else-if="hasTool">
+          <div class="mb-4">
             <EntryIntro
-              v-if="hasTool"
               :name="tool.label || tool.name"
               :description="tool.description || ''"
               :type="tool.type"
@@ -28,26 +25,43 @@
               :sources-labels="tool.sourcesLabels || {}"
             />
           </div>
-        </div>
 
-        <div class="col-2">
-          <FAIRScores v-if="hasTool" :fairsoft="tool.fairsoft" />
+          <section
+            v-for="section in sections"
+            :id="section.id"
+            :key="section.id"
+            class="tool-section card card-body mb-4"
+          >
+            <h2 class="h4 fw-bold mb-3">{{ section.title }}</h2>
+            <!-- TODO (paso 8): componente real de cada sección -->
+            <p class="text-muted mb-0">Contenido de {{ section.title }} pendiente.</p>
+          </section>
         </div>
+      </div>
+
+      <div class="col-12 col-lg-2">
+        <FAIRScores v-if="hasTool" :fairsoft="tool.fairsoft" />
       </div>
     </div>
   </div>
+</div>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, watch } from 'vue';
+import { computed, onMounted, onBeforeUnmount, ref, watch } from 'vue';
 import { navigateTo, createError, showError } from '#app';
 import BreadcrumbsBar from '@/components/Common/BreadcrumbsBar.vue';
 import EntryIntro from '@/components/Tools/ToolEntry/EntryIntro.vue';
 import FAIRScores from '@/components/Tools/ToolEntry/FAIR/FAIRScores.vue'
+import ToolSidebar from '@/components/Tools/ToolEntry/ToolSidebar.vue';
+import { TOOL_SECTIONS } from '@/utils/toolSections';
 import { useToolEntryStore } from '@/stores/tool_entry';
 
 const route = useRoute();
 const toolEntryStore = useToolEntryStore();
+
+const sections = computed(() => TOOL_SECTIONS); // si no lo tienes ya
+const activeSectionId = ref<string | null>(null);
 
 //
 const tool = computed(() => toolEntryStore.Tool);
@@ -135,6 +149,30 @@ watch(
     if (newId) loadTool(decodeURIComponent(String(newId)));
   }
 );
+
+function updateActiveSection() {
+  const triggerLine = 100; // línea imaginaria cerca de arriba de la pantalla
+  let current: string | null = null;
+
+  for (const section of sections.value) {
+    const el = document.getElementById(section.id);
+    if (!el) continue;
+    if (el.getBoundingClientRect().top <= triggerLine) {
+      current = section.id;
+    }
+  }
+
+  activeSectionId.value = current;
+  console.log('activeSectionId:', current); // TEMPORAL, lo quitamos al final
+}
+
+onMounted(() => {
+  window.addEventListener('scroll', updateActiveSection, { passive: true });
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', updateActiveSection);
+});
 </script>
 
 <style scoped>
@@ -150,6 +188,15 @@ watch(
 
 .tool-content {
   min-width: 0;
+}
+
+.tool-page {
+  --tool-sticky-top: 90px; /* altura de tu header + breadcrumbs */
+}
+
+.tool-section {
+  min-height: 200px;
+  scroll-margin-top: var(--tool-sticky-top);
 }
 
 @media (min-width: 960px) {
