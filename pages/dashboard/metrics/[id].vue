@@ -21,7 +21,7 @@ import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
 import MetricEdit from "@/components/Dashboard/metrics/MetricEdit.vue";
 
 definePageMeta({
-  middleware: "auth",
+  middleware: "requireAuth",
   auth: {
     authenticatedOnly: true,
     navigateUnauthenticatedTo: "/login-required",

@@ -10,7 +10,7 @@ vi.mock('vue-router', () => ({
   useRouter: () => mockUseRouter,
 }));
 
-vi.mock('@/middleware/auth', () => ({
+vi.mock('@/middleware/requireAuth', () => ({
   default: vi.fn((context) => {
     const { auth } = context;
     if (!auth || (auth.authenticatedOnly && context.auth.status === 'unauthenticated')) {

@@ -6,10 +6,7 @@
           <AnimateNumber description="Communities" :number="communitiesCount" />
         </div>
         <div class="col-12 col-sm-6 col-lg-3 mb-3 mb-lg-0 h-100">
-          <AnimateNumber description="Tools" :number="toolsCount" />
-        </div>
-        <div class="col-12 col-sm-6 col-lg-3 mb-3 mb-lg-0 h-100">
-          <AnimateNumber description="Resources" :number="resourcesCount" />
+          <AnimateNumber description="Tools" :number="resourcesCount" />
         </div>
         <div class="col-12 col-sm-6 col-lg-3 mb-3 mb-lg-0 h-100">
           <AnimateNumber description="Project Spaces" :number="projectsCount" />
@@ -28,12 +25,10 @@ import AnimateNumber from "~/components/Landing/AnimateNumber.vue";
 const store = useDashboard();
 store.getResourcesCount();
 store.getCommunities();
-store.getToolsCount();
 
 const communitiesCount = computed(() => store.CommunitiesCount || []);
 const resourcesCount = computed(() => store.ResourcesCount || []);
 const projectsCount = computed(() => store.ProjectsCount || []);
-const toolsCount = computed(() => store.ToolsCount || []);
 
 </script>
 

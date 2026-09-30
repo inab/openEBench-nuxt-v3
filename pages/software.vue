@@ -172,7 +172,7 @@
                 </p>
 
                 <a
-                  href="https://observatory.openebench.bsc.es/api/docs/"
+                  href="https://observatory.openebench.bsc.es/api/docs"
                   target="_blank"
                   rel="noopener noreferrer"
                   class="linkish mt-auto"
