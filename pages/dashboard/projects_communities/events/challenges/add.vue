@@ -36,7 +36,7 @@ import CommunityEventChallengeAdd from "@/components/Dashboard/entries/events/ch
 import type { ComputedRef } from "vue";
 
 definePageMeta({
-  middleware: "auth",
+  middleware: "requireAuth",
   auth: {
     authenticatedOnly: true,
     navigateUnauthenticatedTo: "/login-required",

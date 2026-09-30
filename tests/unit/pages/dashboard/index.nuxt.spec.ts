@@ -3,7 +3,7 @@ import { ref } from 'vue';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import Index from '@/pages/dashboard/index.vue';
 import { nuxtTestUtilSetup } from '../../utils';
-import authMiddleware from '../../../../middleware/auth';
+import authMiddleware from '../../../../middleware/requireAuth';
 import { $fetch } from '#app';
 
 await nuxtTestUtilSetup();
@@ -17,7 +17,7 @@ vi.mock('@/stores/user', () => ({
   }),
 }));
 
-vi.mock('@/middleware/auth', () => ({
+vi.mock('@/middleware/requireAuth', () => ({
   default: vi.fn((context) => {
     const { auth } = context;
     if (!auth || (auth.authenticatedOnly && context.auth.status === 'unauthenticated')) {

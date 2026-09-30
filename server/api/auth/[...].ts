@@ -1,21 +1,12 @@
 import { NuxtAuthHandler } from "#auth";
 import KeycloakProvider from "next-auth/providers/keycloak";
-import { randomBytes } from "node:crypto";
 const runtimeConfig = useRuntimeConfig();
-
-const authSecret =
-  runtimeConfig.authSecret ||
-  (import.meta.dev ? randomBytes(32).toString("hex") : "");
-
-if (!authSecret) {
-  throw new Error('AUTH_SECRET must be configured for authentication');
-}
 
 const refreshAccessToken = async (token: JWT) => {
   try {
     const details = {
       client_id: runtimeConfig.public.KEYCLOAK_CLIENT_ID,
-      client_secret: runtimeConfig.KEYCLOAK_CLIENT_SECRET,
+      client_secret: "secrettt", 
       authorization_code: token.accessToken,
       grant_type: "refresh_token",
       refresh_token: token.refreshToken,
@@ -56,7 +47,7 @@ const refreshAccessToken = async (token: JWT) => {
 };
 
 export default NuxtAuthHandler({
-  secret: authSecret,
+  secret: '2990de7a246eb8aa80684cc357ebd54615a5add237758af78388f25e68383db4',
   providers: [
     KeycloakProvider.default({
       clientId: runtimeConfig.public.KEYCLOAK_CLIENT_ID,
@@ -166,5 +157,5 @@ export default NuxtAuthHandler({
       return session;
     },
   },
-  debug: false,
+  debug: true,
 });

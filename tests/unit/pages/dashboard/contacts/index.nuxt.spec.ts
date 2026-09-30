@@ -4,7 +4,7 @@ import Contacts from "@/pages/dashboard/contacts/index.vue";
 import ContactsList from "@/components/Dashboard/contacts/ContactsList.vue";
 import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
 
-vi.mock("@/middleware/auth", () => ({
+vi.mock("@/middleware/requireAuth", () => ({
   default: vi.fn((context) => {
     const { auth } = context;
     if (

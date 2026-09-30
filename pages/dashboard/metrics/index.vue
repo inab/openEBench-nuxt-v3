@@ -72,7 +72,7 @@ import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
 import MetricsList from "@/components/Dashboard/metrics/MetricsList.vue";
 
 definePageMeta({
-  middleware: "auth",
+  middleware: "requireAuth",
   auth: {
     authenticatedOnly: true,
     navigateUnauthenticatedTo: "/login-required",

@@ -116,7 +116,7 @@ import { Ckeditor } from "@ckeditor/ckeditor5-vue";
 import "ckeditor5/ckeditor5.css";
 
 definePageMeta({
-  middleware: "auth",
+  middleware: "requireAuth",
   auth: {
     authenticatedOnly: true,
     navigateUnauthenticatedTo: "/login-required",

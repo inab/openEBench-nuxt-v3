@@ -82,7 +82,7 @@ import { useUser } from "@/stores/user.ts";
 import Communities from "@/components/Dashboard/entries/Communities.vue";
 
 definePageMeta({
-  middleware: "auth",
+  middleware: "requireAuth",
   auth: {
     authenticatedOnly: true,
     navigateUnauthenticatedTo: "/login-required",

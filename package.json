@@ -5,7 +5,7 @@
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
-    "predev": "nuxt cleanup",
+    "cleanup": "nuxt cleanup",
     "start": "nuxt start",
     "test": "vitest",
     "test:ui": "vitest --ui",
@@ -54,7 +54,7 @@
     "gsap": "^3.12.5",
     "lodash.debounce": "4.0.8",
     "marked": "13.0.2",
-    "next-auth": "4.24.15",
+    "next-auth": "4.21.1",
     "nodemailer": "10.0.10",
     "nuxt": "3.21.11",
     "nuxt-viewport": "2.1.5",
@@ -76,14 +76,12 @@
   "devDependencies": {
     "@nuxt/eslint": "^1.17.0",
     "@nuxt/test-utils": "3.23.0",
-    "@nuxt/types": "^2.18.1",
     "@pinia/testing": "0.1.5",
     "@types/data-urls": "3.0.4",
     "@types/pluralize": "0.0.33",
     "@vitejs/plugin-vue": "6.0.8",
     "@vitest/coverage-istanbul": "3.2.7",
     "@vitest/ui": "3.2.7",
-    "@vue/runtime-core": "^3.5.12",
     "@vue/test-utils": "^2.4.6",
     "eslint": "^10.10.0",
     "eslint-config-prettier": "^9.1.0",
@@ -95,10 +93,8 @@
     "msw": "^2.4.11",
     "prettier": "^3.3.3",
     "sass": "1.104.0",
-    "sass-loader": "14.2.1",
     "typescript": "^5.5.4",
-    "vitest": "3.2.7",
-    "webpack": "5.92.1"
+    "vitest": "3.2.7"
   },
   "overrides": {
     "vue": "3.5.13",
