@@ -107,14 +107,6 @@ export const customRoutes = [
 		file: resolve(__dirname, 'app/pages/dashboard/metrics_playground/index.vue'),
 	},
 	{
-		name: 'dashboard-community-event-community',
-		path: '/dashboard/projects_communities/:community_id/events/:event_id/challenges/:id',
-		file: resolve(
-			__dirname,
-			'app/pages/dashboard/projects_communities/events/challenges/[id].vue'
-		),
-	},
-	{
 		name: 'dashboard-challenge-participate',
 		path: '/dashboard/projects_communities/:community_id/events/:event_id/challenges/:challenge_id/participant',
 		file: resolve(

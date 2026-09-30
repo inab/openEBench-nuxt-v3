@@ -1,4 +1,4 @@
-import { customRoutes } from './router.options';
+import { customRoutes } from './custom-routes';
 import svgLoader from 'vite-svg-loader';
 import { defineNuxtConfig } from 'nuxt/config';
 

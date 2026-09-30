@@ -3,7 +3,7 @@
     <BreadcrumbsBar :breadcrumbs-array="routeArray" />
     <div class="container">
       <div class="w-100">
-        <h2 class="text-primaryOeb-500 mb-4">The Team of OpenEBench hola</h2>
+        <h2 class="text-primaryOeb-500 mb-4">The Team of OpenEBench</h2>
 
         <p class="text-sm leading-6 mt-3">
           Here, you can get to know the current and
