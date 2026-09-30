@@ -3,7 +3,7 @@
     <BreadcrumbsBar :breadcrumbs-array="routeArray" />
     <div class="w-100 container">
       <img
-        src="assets/images/dashboard/under-construction.jpg"
+        src="~/assets/images/dashboard/under-construction.jpg"
         alt="Contacts image"
         class="metrics__body__img"
       />
