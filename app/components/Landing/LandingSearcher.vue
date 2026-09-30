@@ -1,37 +1,20 @@
 <template>
   <div class="landing-searcher">
     <div class="container">
-      <UInput
-        v-model="searchValue"
-        name="searchValue"
-        placeholder="Search for individual tools."
-        autocomplete="off"
-        size="xl"
-        :ui="{ icon: { trailing: { pointer: '' }, leading: { pointer: '' } } }"
-        @keydown.enter="handleSubmit"
-      >
-        <!-- Prepend slot for the left icon (Magnifying glass) -->
+      <UInput v-model="searchValue" name="searchValue" placeholder="Search for individual tools" autocomplete="off"
+        size="xl" class="search-input" :ui="{
+          base: 'bg-white text-gray-900 shadow-none !ps-12',
+          leading: 'ps-3',
+          trailing: 'pe-3'
+        }" @keydown.enter="handleSubmit">
         <template #leading>
-          <UButton
-            class="left-icon"
-            color="gray"
-            variant="link"
-            icon="i-heroicons-magnifying-glass-20-solid"
-            :padded="false"
-            @click="handleSubmit"
-          />
+          <UButton color="neutral" variant="link" icon="i-heroicons-magnifying-glass-20-solid" :padded="false"
+            aria-label="Search" class="!text-gray-400" @click="handleSubmit" />
         </template>
 
-        <!-- Trailing slot for the right icon (Clear button) -->
         <template #trailing>
-          <UButton
-            v-show="searchValue !== ''"
-            color="gray"
-            variant="link"
-            icon="i-heroicons-x-mark-20-solid"
-            :padded="false"
-            @click="searchValue = ''"
-          />
+          <UButton v-show="searchValue !== ''" color="neutral" variant="link" icon="i-heroicons-x-mark-20-solid"
+            :padded="false" aria-label="Clear search" class="!text-gray-400" @click="searchValue = ''" />
         </template>
       </UInput>
     </div>
@@ -39,18 +22,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import { useRouter } from "nuxt/app";
+import { ref } from 'vue'
+import { useRouter } from 'nuxt/app'
 
-const searchValue = ref("");
-const router = useRouter();
+const searchValue = ref('')
+const router = useRouter()
 
 function handleSubmit() {
-  if (searchValue.value.trim() !== "") {
+  if (searchValue.value.trim() !== '') {
     router.push({
-      path: "/tool",
+      path: '/tool',
       query: { search: searchValue.value },
-    });
+    })
   }
 }
 </script>
@@ -58,11 +41,15 @@ function handleSubmit() {
 <style lang="scss" scoped>
 .landing-searcher {
   background-color: #0b579f;
-  padding: 30px 0px;
+  padding: 30px 0;
+}
+
+.search-input {
+  width: 100%;
 }
 
 .left-icon {
-  margin-right: 8px; /* Adjust spacing as needed */
-  cursor: pointer; /* Ensure the icon shows as clickable */
+  cursor: pointer;
+  color: #6b7280;
 }
 </style>
