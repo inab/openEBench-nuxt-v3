@@ -623,10 +623,10 @@ function closeMenu() {
   }
 
   .dropdown-menu li:hover {
-    color: theme("colors.primaryOeb.500");
+    color: var(--color-primaryOeb-500);
 
     a {
-      color: theme("colors.primaryOeb.500");
+      color: var(--color-primaryOeb-500);
     }
   }
 
@@ -666,10 +666,10 @@ function closeMenu() {
   }
 
   .dropdown-menu li:hover {
-    color: theme("colors.primaryOeb.500");
+    color: var(--color-primaryOeb-500);
 
     a {
-      color: theme("colors.primaryOeb.500");
+      color: var(--color-primaryOeb-500);
     }
   }
 

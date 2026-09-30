@@ -161,13 +161,13 @@ function handleSelect(index: number) {
     &.active {
       .container-validation__block__content__header__title {
         font-weight: bold;
-        color: theme('colors.primary.500');
+        color: var(--color-primary-500);
       }
     }
     &.innactive {
       color: #b5c0d0 !important;
       &__content__header__title {
-        color: theme('colors.primary.500') !important;
+        color: var(--color-primary-500) !important;
       }
     }
     &:not(:first-child) {
@@ -228,11 +228,11 @@ function handleSelect(index: number) {
   .active {
     font-weight: bold;
     .iconify {
-      color: theme('colors.secondaryOeb.500');
+      color: var(--color-secondaryOeb-500);
     }
     .badget {
       border: 1px solid #0b579f;
-      color: theme('colors.primary.500');
+      color: var(--color-primary-500);
     }
   }
   .innactive {

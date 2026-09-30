@@ -719,7 +719,7 @@ watch(props.contactsData, (newVal: string[]) => {
   }
 }
 .input-wrapper {
-  background-color: theme("colors.primary.50");
+  background-color: var(--color-primary-50);
   padding: 0.6rem 0.8rem;
   border-radius: 9999px;
   font-size: 0.75rem;
@@ -742,8 +742,8 @@ watch(props.contactsData, (newVal: string[]) => {
   font-size: 1.4rem;
   padding-top: 10px;
   font-weight: 600;
-  color: theme("colors.primary.500");
-  border-bottom: 1px solid theme("colors.gray.200");
+  color: var(--color-primary-500);
+  border-bottom: 1px solid var(--color-gray-200);
 }
 .metric-content {
   padding-top: 30px;
@@ -770,12 +770,12 @@ watch(props.contactsData, (newVal: string[]) => {
     height: 60px;
     background: repeating-linear-gradient(
       -65deg,
-      theme("colors.primary.50"),
-      theme("colors.primary.50") 20px,
-      theme("colors.primary.50") 20px,
-      theme("colors.primary.50") 40px
+      var(--color-primary-50),
+      var(--color-primary-50) 20px,
+      var(--color-primary-50) 20px,
+      var(--color-primary-50) 40px
     );
-    background-color: theme("colors.primary.50");
+    background-color: var(--color-primary-50);
     -webkit-clip-path: polygon(
       20px 50%,
       0% 0%,
@@ -786,7 +786,7 @@ watch(props.contactsData, (newVal: string[]) => {
     );
 
     &.current {
-      background: theme("colors.secondaryOeb.500");
+      background: var(--color-secondaryOeb-500);
       font-weight: bold;
       color: white;
       cursor: pointer;

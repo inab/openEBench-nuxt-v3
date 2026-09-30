@@ -28,7 +28,7 @@
     }
     p {
       font-size: 1.5rem;
-      color: theme("colors.gray.500");
+      color: var(--color-gray-500);
       text-align: center;
     }
   }

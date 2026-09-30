@@ -459,8 +459,8 @@ async function onSubmissionUpdate(event: FormSubmitEvent<Schema>) {
 
   .submission-btn {
     border-radius: 20px;
-    background-color: theme("colors.primary.500");
-    border: 1px solid theme("colors.primary.500");
+    background-color: var(--color-primary-500);
+    border: 1px solid var(--color-primary-500);
     color: white;
     font-size: 14px;
     padding: 5px 15px;
@@ -473,7 +473,7 @@ async function onSubmissionUpdate(event: FormSubmitEvent<Schema>) {
     }
     &:hover {
       background-color: white;
-      color: theme("colors.primary.500");
+      color: var(--color-primary-500);
     }
   }
 }

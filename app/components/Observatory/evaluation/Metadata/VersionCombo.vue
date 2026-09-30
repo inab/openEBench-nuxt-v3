@@ -101,8 +101,11 @@ onMounted(() => {
 </script>
   
 <style scoped>
+
 .text-body-2 {
-  @apply text-sm text-gray-700;
+	font-size: 0.875rem;
+	line-height: 1.25rem;
+	color: var(--color-gray-700);
 }
 .text-red-500 {
   color: red !important;

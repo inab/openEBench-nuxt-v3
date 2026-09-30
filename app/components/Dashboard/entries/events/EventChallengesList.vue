@@ -263,7 +263,7 @@ const getCommunityChallengeParticipant = (row) => {
   padding: 5px;
   font-size: 16px;
   a {
-    color: theme("colors.gray.400");
+    color: var(--color-gray-400);
   }
 }
 

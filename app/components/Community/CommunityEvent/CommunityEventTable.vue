@@ -248,18 +248,18 @@ watch(
       box-shadow: none !important;
 
       :focus {
-        border: 1px solid theme("colors.primary.500");
+        border: 1px solid var(--color-primary-500);
       }
     }
   }
 
   table {
     a {
-      color: theme("colors.primary.500");
+      color: var(--color-primary-500);
       text-decoration: none;
 
       &:hover {
-        color: theme("colors.primary.400");
+        color: var(--color-primary-400);
       }
     }
   }

@@ -63,7 +63,7 @@ onClickOutside(target, ()=>emit('modal-close'))
 }
 
 .modal-header {
-  color: theme("colors.primary.500");
+  color: var(--color-primary-500);
   display: flex;
   justify-content: space-between;
   width: 100%;

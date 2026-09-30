@@ -1296,7 +1296,7 @@ watchEffect(() => {
   }
   &__content {
     a {
-      color: theme("colors.primary.500");
+      color: var(--color-primary-500);
       text-decoration: none;
     }
     .form-group {

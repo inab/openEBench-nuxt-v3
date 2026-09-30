@@ -13,12 +13,12 @@ useHead({
 </script>
 
 <template>
-	<div>
-		<NuxtLoadingIndicator />
-		<div class="h-100">
-			<NuxtLayout name="default"></NuxtLayout>
-		</div>
-	</div>
+    <UApp>
+        <NuxtLoadingIndicator />
+        <div class="h-100">
+            <NuxtLayout name="default" />
+        </div>
+    </UApp>
 </template>
 
 <style>

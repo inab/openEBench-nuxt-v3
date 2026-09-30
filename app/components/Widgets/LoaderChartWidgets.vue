@@ -248,7 +248,7 @@ function getMetricsNames(metricX: string, metricY: string) {
     text-align: left;
 
     a {
-      color: theme("colors.primary.500");
+      color: var(--color-primary-500);
       text-decoration: none;
 
       &:hover {

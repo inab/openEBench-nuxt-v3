@@ -20,7 +20,7 @@ const fontSize = props.size ?? "22px";
   width: 100%;
   border-color: rgb(226, 232, 240);
   border-bottom-width: 1px;
-  color: theme("colors.primary.500");
+  color: var(--color-primary-500);
   font-size: v-bind(fontSize);
   padding-bottom: 2px;
   margin-bottom: 10px;

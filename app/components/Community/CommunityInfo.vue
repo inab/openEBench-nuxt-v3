@@ -179,10 +179,10 @@ const communityLinks = computed(() => {
         }
         a {
           text-decoration: none;
-          color: theme("colors.gray.500");
+          color: var(--color-gray-500);
           font-weight: 600;
           &:hover {
-            color: theme("colors.primary.300");
+            color: var(--color-primary-300);
           }
         }
       }

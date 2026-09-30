@@ -50,11 +50,11 @@ watchEffect(() => {
     justify-content: space-around;
     gap: 1rem;
     padding: 0.25rem;
-    color: theme("colors.gray.500");
+    color: var(--color-gray-500);
     border-radius: 0.5rem;
     font-size: 14px;
-    /* border: 1px solid theme("colors.gray.200"); */
-    background-color: theme("colors.gray.200");
+    /* border: 1px solid var(--color-gray-200); */
+    background-color: var(--color-gray-200);
     .tab-item {
       cursor: pointer;
       display: flex;
@@ -76,7 +76,7 @@ watchEffect(() => {
   }
   .selected {
     color: white;
-    background-color: theme("colors.secondaryOeb.400");
+    background-color: var(--color-secondaryOeb-400);
     border-radius: 0.5rem;
     span {
       color: white;

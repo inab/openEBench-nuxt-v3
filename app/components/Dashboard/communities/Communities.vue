@@ -329,7 +329,7 @@ function getCommunityEditLink(row: any) {
         padding: 5px;
         font-size: 16px;
         a {
-            color: theme('colors.gray.400');
+            color: var(--color-gray-400);
         }
         
     }
@@ -337,7 +337,7 @@ function getCommunityEditLink(row: any) {
         input {
             box-shadow: none !important;
             :focus {
-                border: 1px solid theme("colors.primary.500");
+                border: 1px solid var(--color-primary-500);
             }
         }
     }
@@ -347,7 +347,7 @@ function getCommunityEditLink(row: any) {
     input {
         box-shadow: none !important;
         :focus {
-            border: 1px solid theme("colors.primary.500");
+            border: 1px solid var(--color-primary-500);
         }
     }
     button {
@@ -369,7 +369,7 @@ function getCommunityEditLink(row: any) {
         color: #0b579f !important;
     }
     :focus {
-        border: 1px solid theme("colors.primary.500");
+        border: 1px solid var(--color-primary-500);
     }
     div:first-child {
         display: block;
@@ -408,7 +408,7 @@ function getCommunityEditLink(row: any) {
     text-align: center;
     margin-right: 0.5rem;
     margin-top: 5px;
-    color: theme("colors.primary.500");
+    color: var(--color-primary-500);
     padding: 4px 26px 4px 10px;
     min-height: 32px;
 }
@@ -424,10 +424,10 @@ function getCommunityEditLink(row: any) {
     color: black;
 }
 .multiselect__option--highlight {
-    background-color: theme("colors.primary.500");
+    background-color: var(--color-primary-500);
 }
 .multiselect__option--highlight::after {
-    background-color: theme("colors.primary.500");
+    background-color: var(--color-primary-500);
 }
 .multiselect--active .multiselect__placeholder {
     display: block;

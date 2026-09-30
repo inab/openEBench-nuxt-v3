@@ -85,13 +85,13 @@ const items = computed(() => {
   &__header__title {
     font-size: 1.2rem;
     font-weight: 600;
-    color: theme("colors.primary.500");
-    border-bottom: 1px solid theme("colors.gray.200");
+    color: var(--color-primary-500);
+    border-bottom: 1px solid var(--color-gray-200);
     margin-bottom: 20px;
   }
   &__contents__items {
     &:not(:last-child) {
-      border-bottom: 1px solid theme("colors.gray.200");
+      border-bottom: 1px solid var(--color-gray-200);
     }
     &:not(:first-child) {
       padding-top: 10px;

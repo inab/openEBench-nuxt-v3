@@ -344,7 +344,7 @@ const routeArray = computed(() => {
     cursor: pointer;
 
     &.selected {
-      background-color: theme("colors.primary.100");
+      background-color: var(--color-primary-100);
     }
   }
 }

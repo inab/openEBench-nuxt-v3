@@ -949,7 +949,7 @@ watch(
     }
   }
   .input-wrapper {
-    background-color: theme("colors.primary.50");
+    background-color: var(--color-primary-50);
     padding: 0.6rem 0.8rem;
     border-radius: 9999px;
     font-size: 0.75rem;
@@ -966,7 +966,7 @@ watch(
   }
   &__content {
     a {
-      color: theme("colors.primary.500");
+      color: var(--color-primary-500);
       text-decoration: none;
     }
     .form-group {

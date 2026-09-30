@@ -87,7 +87,9 @@ const formatOption = (option) => {
   border: none !important;
 }
 
-.text-caption {
-  @apply text-sm text-gray-500;
+.text-body-2 {
+	font-size: 0.875rem;
+	line-height: 1.25rem;
+	color: var(--color-gray-500);
 }
 </style>

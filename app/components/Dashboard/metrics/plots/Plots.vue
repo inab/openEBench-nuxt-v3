@@ -74,7 +74,7 @@ const plotName = computed(() => {
 .card-header {
   font-size: 20px;
   font-weight: 600;
-  color: theme("colors.primary.500");
+  color: var(--color-primary-500);
 }
 .custom-card-box {
   box-shadow:

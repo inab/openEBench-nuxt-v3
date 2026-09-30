@@ -170,7 +170,7 @@ const selected = ref(props.data[0] ? props.data[0] : null);
 
   .custom-tabs-button {
     border-radius: 6px;
-    color: theme("colors.gray.500");
+    color: var(--color-gray-500);
     cursor: pointer;
     font-size: 16px;
     font-weight: 400;
@@ -183,8 +183,8 @@ const selected = ref(props.data[0] ? props.data[0] : null);
   }
 
   .custom-tabs-button--active {
-    background-color: theme("colors.secondaryOeb.100");
-    color: theme("colors.secondaryOeb.500");
+    background-color: var(--color-secondaryOeb-100);
+    color: var(--color-secondaryOeb-500);
   }
 }
 </style>

@@ -69,7 +69,7 @@ $colorSecondary: #f47c21;
 .input-search input:focus,
 .input-search button:focus,
 .custom-input input:focus {
-  border: 1px solid theme("colors.primary.500") !important;
+  border: 1px solid var(--color-primary-500) !important;
   box-shadow: none !important;
 }
 
@@ -92,7 +92,7 @@ $colorSecondary: #f47c21;
   border-bottom-right-radius: 0;
 }
 .input-search-lg:focus{
-  border: 1px solid theme("colors.primary.500") !important;
+  border: 1px solid var(--color-primary-500) !important;
   box-shadow: none !important;
 }
 
@@ -102,7 +102,7 @@ $colorSecondary: #f47c21;
   background-repeat: no-repeat !important;
   background-size: 100% 100% !important;
   border-color: #0000 !important;
-  background-color:theme("colors.primary.500") !important;
+  background-color:var(--color-primary-500) !important;
 }
 
 .selector select {
@@ -115,154 +115,154 @@ $colorSecondary: #f47c21;
 }
 
 .status-active {
-  background-color: theme("colors.statusActive.50");
-  color: theme("colors.statusActive.500");
-  border: 1px solid theme("colors.statusActive.500");
+  background-color: var(--color-statusActive-50);
+  color: var(--color-statusActive-500);
+  border: 1px solid var(--color-statusActive-500);
   transition: .5s;
   cursor: pointer;
   &:hover {
-    background-color: theme("colors.statusActive.500");
-    color: theme("colors.statusActive.50");
+    background-color: var(--color-statusActive-500);
+    color: var(--color-statusActive-50);
   }
   &.no-hover {
-    background-color: theme("colors.statusActive.50");
-    color: theme("colors.statusActive.500");
-    border: 1px solid theme("colors.statusActive.500");
+    background-color: var(--color-statusActive-50);
+    color: var(--color-statusActive-500);
+    border: 1px solid var(--color-statusActive-500);
   }
   &.option-btn {
     &:hover {
-      background-color: theme("colors.statusActive.50");
-      color: theme("colors.statusActive.500");
+      background-color: var(--color-statusActive-50);
+      color: var(--color-statusActive-500);
     }
   }
   &__option {
-    background-color: theme("colors.statusActive.500");
+    background-color: var(--color-statusActive-500);
   }
 }
 .status-archived {
-  background-color: theme("colors.statusArchived.50");
-  color: theme("colors.statusArchived.500");
-  border: 1px solid theme("colors.statusArchived.500");
+  background-color: var(--color-statusArchived-50);
+  color: var(--color-statusArchived-500);
+  border: 1px solid var(--color-statusArchived-500);
   transition: .5s;
   cursor: pointer;
   &:hover {
-    background-color: theme("colors.statusArchived.500");
-    color: theme("colors.statusArchived.50");
+    background-color: var(--color-statusArchived-500);
+    color: var(--color-statusArchived-50);
   }
   &.no-hover {
-    background-color: theme("colors.statusArchived.50");
-    color: theme("colors.statusArchived.500");
-    border: 1px solid theme("colors.statusArchived.500");
+    background-color: var(--color-statusArchived-50);
+    color: var(--color-statusArchived-500);
+    border: 1px solid var(--color-statusArchived-500);
   }
   &.option-btn {
     &:hover {
-      background-color: theme("colors.statusArchived.50");
-      color: theme("colors.statusArchived.500");
+      background-color: var(--color-statusArchived-50);
+      color: var(--color-statusArchived-500);
     }
   }
   &__option {
-      background-color: theme("colors.statusArchived.500");
+      background-color: var(--color-statusArchived-500);
   }
 }
 .status-incubating {
-  background-color: theme("colors.statusIncubating.50");
-  color: theme("colors.statusIncubating.500");
-  border: 1px solid theme("colors.statusIncubating.500");
+  background-color: var(--color-statusIncubating-50);
+  color: var(--color-statusIncubating-500);
+  border: 1px solid var(--color-statusIncubating-500);
   transition: .5s;
   cursor: pointer;
   &:hover {
-    background-color: theme("colors.statusIncubating.500");
-    color: theme("colors.statusIncubating.50");
+    background-color: var(--color-statusIncubating-500);
+    color: var(--color-statusIncubating-50);
   }
   &.no-hover {
-    background-color: theme("colors.statusIncubating.50");
-    color: theme("colors.statusIncubating.500");
-    border: 1px solid theme("colors.statusIncubating.500");
+    background-color: var(--color-statusIncubating-50);
+    color: var(--color-statusIncubating-500);
+    border: 1px solid var(--color-statusIncubating-500);
   }
   &.option-btn {
     &:hover {
-      background-color: theme("colors.statusIncubating.50");
-      color: theme("colors.statusIncubating.500");
+      background-color: var(--color-statusIncubating-50);
+      color: var(--color-statusIncubating-500);
     }
   }
   &__option {
-      background-color: theme("colors.statusIncubating.500");
+      background-color: var(--color-statusIncubating-500);
   }
 }
 .status-abandoned {
-  background-color: theme("colors.statusAbandoned.50");
-  color: theme("colors.statusAbandoned.500");
-  border: 1px solid theme("colors.statusAbandoned.500");
+  background-color: var(--color-statusAbandoned-50);
+  color: var(--color-statusAbandoned-500);
+  border: 1px solid var(--color-statusAbandoned-500);
   transition: .5s;
   cursor: pointer;
   &:hover {
-    background-color: theme("colors.statusAbandoned.500");
-    color: theme("colors.statusAbandoned.50");
+    background-color: var(--color-statusAbandoned-500);
+    color: var(--color-statusAbandoned-50);
   }
   &.no-hover {
-    background-color: theme("colors.statusAbandoned.50");
-    color: theme("colors.statusAbandoned.500");
-    border: 1px solid theme("colors.statusAbandoned.500");
+    background-color: var(--color-statusAbandoned-50);
+    color: var(--color-statusAbandoned-500);
+    border: 1px solid var(--color-statusAbandoned-500);
   }
   &.option-btn {
     &:hover {
-      background-color: theme("colors.statusAbandoned.50");
-      color: theme("colors.statusAbandoned.500");
+      background-color: var(--color-statusAbandoned-50);
+      color: var(--color-statusAbandoned-500);
     }
   }
   &__option {
-    background-color: theme("colors.statusAbandoned.500");
+    background-color: var(--color-statusAbandoned-500);
   }
 }
 .btn-custom-badget {
   background-color: white;
-  color: theme("colors.gray.400");
-  border: 1px solid theme("colors.gray.400");
+  color: var(--color-gray-400);
+  border: 1px solid var(--color-gray-400);
   border-radius: 50px;
   min-width: 80px;
   font-size: 12px;
   transition: .5s;
   padding: 0.3rem;
   &:hover {
-    background-color: theme("colors.primary.500");
-    color: theme("colors.primary.50") !important;
+    background-color: var(--color-primary-500);
+    color: var(--color-primary-50) !important;
     a {
-      color: theme('colors.primary.50');
+      color: var(--color-primary-50);
       text-decoration: none;
     }
   }
   a {
     font-size: 12px;
     text-decoration: none;
-    color: theme("colors.gray.400");
+    color: var(--color-gray-400);
   }
 }
 
 .btn-primary {
-  background-color: theme("colors.primary.500") !important;
+  background-color: var(--color-primary-500) !important;
   color: white !important;
   border-radius: 6px !important;
   &:disabled {
-    background-color: theme("colors.primary.200") !important;
+    background-color: var(--color-primary-200) !important;
     color: white;
     :hover {
-      background-color: theme("colors.primary.200") !important;
+      background-color: var(--color-primary-200) !important;
       color: white;
       cursor: not-allowed;
     }
   }
   &:hover:enabled {
-    background-color: theme("colors.primary.50") !important;
-    color: theme("colors.primary.500") !important;
-    border: 1px solid theme("colors.primary.500") !important;
+    background-color: var(--color-primary-50) !important;
+    color: var(--color-primary-500) !important;
+    border: 1px solid var(--color-primary-500) !important;
   }
   &.hover_effect {
-    background-color: theme("colors.primary.50");
-    color: theme("colors.primary.500");
-    border: 1px solid theme("colors.primary.500");
+    background-color: var(--color-primary-50);
+    color: var(--color-primary-500);
+    border: 1px solid var(--color-primary-500);
     transition: .5s;
     &:hover {
-      background-color: theme("colors.primary.500");
+      background-color: var(--color-primary-500);
       color: white;
     }
   }
@@ -273,14 +273,14 @@ $colorSecondary: #f47c21;
 }
 
 .tab-wrapper {
-  border: 1px solid theme("colors.gray.200");
+  border: 1px solid var(--color-gray-200);
   border-radius: 5px;
 }
 
 .tab-body-title {
   font-size: 1.1rem;
-  color: theme("colors.primary.500");
-  border-bottom: 1px solid theme("colors.gray.200");
+  color: var(--color-primary-500);
+  border-bottom: 1px solid var(--color-gray-200);
   margin-bottom: 20px;
 }
 
@@ -290,11 +290,11 @@ $colorSecondary: #f47c21;
 
 .custom-select-input {
   border-radius: 0.375rem;
-  border: 1px solid theme("colors.gray.200");
+  border: 1px solid var(--color-gray-200);
   padding: 0.1rem 0.25rem;
   font-size: 1rem;
   &:focus {
-    border: 1px solid theme("colors.primary.500");
+    border: 1px solid var(--color-primary-500);
     box-shadow: none;
   }
 }

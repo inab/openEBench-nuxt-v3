@@ -646,7 +646,7 @@ watch(
 
 <style lang="scss" scoped>
 .input-wrapper {
-  background-color: theme("colors.primary.50");
+  background-color: var(--color-primary-50);
   padding: 0.6rem 0.8rem;
   border-radius: 9999px;
   font-size: 0.75rem;
@@ -679,7 +679,7 @@ watch(
 }
 
 .input-wrapper {
-  background-color: theme("colors.primary.50");
+  background-color: var(--color-primary-50);
   padding: 0.6rem 0.8rem;
   border-radius: 9999px;
   font-size: 0.75rem;
@@ -723,7 +723,7 @@ watch(
   text-align: center;
   font-size: 14px;
   color: black;
-  background-color: theme("colors.primary.50");
+  background-color: var(--color-primary-50);
   padding: 10px 20px;
 }
 .delete-validator {

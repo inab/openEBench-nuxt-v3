@@ -77,12 +77,12 @@ const markup = computed(() =>
       border-spacing: 0;
       font-size: 12px;
       tbody td {
-        border: 1px solid theme("colors.primary.100");
+        border: 1px solid var(--color-primary-100);
         padding: 10px;
       }
       thead th {
-        background-color: theme("colors.primary.100");
-        border: 1px solid theme("colors.primary.100");
+        background-color: var(--color-primary-100);
+        border: 1px solid var(--color-primary-100);
         padding: 10px;
       }
     }

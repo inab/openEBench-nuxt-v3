@@ -545,11 +545,11 @@ watch(
       &__header {
         font-size: 20px;
         font-weight: 600;
-        color: theme('colors.primary.500');
+        color: var(--color-primary-500);
         & span {
           font-size: 18px;
           font-weight: 500;
-          color: theme('colors.gray.500');
+          color: var(--color-gray-500);
         }
       }
       &__link {
@@ -573,7 +573,7 @@ watch(
 
   .custom-button-primary {
     border-radius: 20px;
-    background-color: theme('colors.primary.500');
+    background-color: var(--color-primary-500);
     padding: 10px 20px;
     cursor: pointer;
     transition: 0.5s;
@@ -582,15 +582,15 @@ watch(
       color: white;
       text-decoration: none;
       &:hover {
-        color: theme('colors.primary.500');
+        color: var(--color-primary-500);
       }
     }
     &:hover {
       border: 1px solid #0b579f;
       background-color: white;
-      color: theme('colors.primary.500');
+      color: var(--color-primary-500);
       &:hover .dashboard-link {
-        color: theme('colors.primary.500');
+        color: var(--color-primary-500);
       }
     }
   }
@@ -603,7 +603,7 @@ watch(
   .card-plot-title-sub {
     font-size: 16px;
     font-weight: 600;
-    color: theme('colors.primary.500');
+    color: var(--color-primary-500);
     width: 100%;
     display: flex;
     justify-content: center;

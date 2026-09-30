@@ -63,6 +63,7 @@ export default defineNuxtConfig({
   },
 
   css: [
+    '~/assets/css/main.css',
     'bootstrap/dist/css/bootstrap.min.css',
     '@fortawesome/fontawesome-svg-core/styles.css',
     'aos/dist/aos.css',
@@ -149,7 +150,6 @@ export default defineNuxtConfig({
   },
 
   image: {
-    provider: 'ipx',
-    dir: 'assets/images',
-  },
+    provider: 'ipx'
+    },
 });
