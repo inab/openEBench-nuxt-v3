@@ -35,7 +35,7 @@ import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
 import { useUser } from "~~/stores/user.ts";
 
 definePageMeta({
-  middleware: "requireAuth",
+  middleware: "require-auth",
   auth: {
     authenticatedOnly: true,
     navigateUnauthenticatedTo: "/login-required",

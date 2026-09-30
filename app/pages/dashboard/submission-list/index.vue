@@ -11,7 +11,7 @@ import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
 import SubmissionList from "@/components/Dashboard/submissions/SubmissionList.vue";
 
 definePageMeta({
-  middleware: "requireAuth",
+  middleware: "require-auth",
   auth: {
     authenticatedOnly: true,
     navigateUnauthenticatedTo: "/login-required",

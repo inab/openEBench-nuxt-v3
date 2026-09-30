@@ -65,7 +65,7 @@ import { privileges } from "~~/constants/privileges";
 import CommunityEvent from "@/components/Dashboard/entries/events/CommunityEvent.vue";
 
 definePageMeta({
-  middleware: "requireAuth",
+  middleware: "require-auth",
   auth: {
     authenticatedOnly: true,
     navigateUnauthenticatedTo: "/login-required",

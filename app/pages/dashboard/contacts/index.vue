@@ -86,7 +86,7 @@ import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
 import type { Contact } from "~~/types/contact";
 
 definePageMeta({
-  middleware: "requireAuth",
+  middleware: "require-auth",
   auth: {
     authenticatedOnly: true,
     navigateUnauthenticatedTo: "/login-required",

@@ -8,7 +8,7 @@
 import Dashboard from "@/components/Dashboard/Profile.vue";
 
 definePageMeta({
-  middleware: "requireAuth",
+  middleware: "require-auth",
   auth: {
     authenticatedOnly: true,
     navigateUnauthenticatedTo: "/login-required",

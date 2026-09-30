@@ -82,7 +82,7 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      ENVIRONMENT: process.env.ENVIRONMENT || 'dev-openebench',
+      ENVIRONMENT: process.env.ENVIRONMENT || 'test-oeb2',
       OEB_LEGACY_ANGULAR_URI:
         process.env.OEB_LEGACY_ANGULAR_URI || 'https://legacy.dev-openebench.bsc.es/',
       VRE_URI: process.env.VRE_URI || 'https://openebench.bsc.es/vre/home/',
@@ -102,7 +102,7 @@ export default defineNuxtConfig({
         baseURL: process.env.REST_API_URL || 'https://openebench.bsc.es/monitor/rest/',
       },
       KEYCLOAK_HOST: process.env.KEYCLOAK_HOST || 'https://inb.bsc.es/',
-      KEYCLOAK_REALM: process.env.KEYCLOAK_REALM || 'openebench',
+      KEYCLOAK_REALM: process.env.KEYCLOAK_REALM || 'oeb2dev',
       KEYCLOAK_CLIENT_ID: process.env.KEYCLOAK_CLIENT_ID || 'oeb-frontend',
       BASE_URL: process.env.APP_BASE_URL || 'https://openebench.bsc.es',
       AUTH_ORIGIN: process.env.AUTH_ORIGIN || 'https://inb.bsc.es',
@@ -122,7 +122,7 @@ export default defineNuxtConfig({
     },
     basePath: '/api/auth',
     originEnvKey: 'AUTH_ORIGIN',
-    baseURL: process.env.APP_BASE_URL || 'https://test2.openebench.bsc.es',
+    baseURL: process.env.APP_BASE_URL || 'https://test-oeb2.openebench.bsc.es',
     origin: process.env.AUTH_ORIGIN || 'https://inb.bsc.es',
   },
 

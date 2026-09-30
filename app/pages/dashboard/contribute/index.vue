@@ -13,7 +13,7 @@ import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
 import ContributeForm from "@/components/Dashboard/contribute/ContributeForm.vue";
 
 definePageMeta({
-  middleware: "requireAuth",
+  middleware: "require-auth",
   auth: {
     authenticatedOnly: true,
     navigateUnauthenticatedTo: "/login-required",
