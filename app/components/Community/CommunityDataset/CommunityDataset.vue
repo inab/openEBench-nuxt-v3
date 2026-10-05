@@ -20,7 +20,7 @@
     </div>
     <UTable
       :columns="columns"
-      :rows="filteredRows"
+      :data="filteredRows"
       :ui="{
         tr: {
           base: 'hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer',
@@ -40,14 +40,14 @@
         },
       }"
     >
-      <template #name-data="{ row }">
-        <span>{{ row.name }}</span>
+      <template #name-cell="{ row }">
+        <span>{{ row.original.name }}</span>
       </template>
-      <template #type-data="{ row }">
-        <span>{{ row.type }}</span>
+      <template #type-cell="{ row }">
+        <span>{{ row.original.type }}</span>
       </template>
-      <template #download-data="{ row }">
-        <a v-if="row.datalink && row.datalink.uri" :href="row.datalink.uri" target="_blank"
+      <template #download-cell="{ row }">
+        <a v-if="row.original.datalink && row.original.datalink.uri" :href="row.original.datalink.uri" target="_blank"
           >Download
         </a>
         <span v-else>Not available</span>
@@ -106,16 +106,22 @@ let _total = 0;
 
 const columns = [
   {
-    key: "name",
-    label: "Name",
+    id: "name",
+    accessorKey: "name",
+    header: "Name",
+    enableSorting: false,
   },
   {
-    key: "type",
-    label: "Type",
+    id: "type",
+    accessorKey: "type",
+    header: "Type",
+    enableSorting: false,
   },
   {
-    key: "download",
-    label: "Download",
+    id: "download",
+    accessorKey: "download",
+    header: "Download",
+    enableSorting: false,
   },
 ];
 

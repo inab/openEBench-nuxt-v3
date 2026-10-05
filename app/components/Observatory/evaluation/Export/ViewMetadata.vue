@@ -28,9 +28,10 @@
     <!--  -->
 
     <!-- Detailed results -->
-  <div v-if="dialog" @click.self="closeDialog" 
-    class="fixed z-30 inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex center-text items-center justify-center">
-    <div :class="['relative mx-auto p-4 border w-11/12 md:w-2/3 shadow-lg rounded-md bg-white', dialogAnimation] ">
+  <Teleport to="body">
+    <div v-if="dialog" @click.self="closeDialog"
+      class="fixed z-50 inset-0 bg-gray-600/50 overflow-y-auto h-full w-full flex center-text items-center justify-center">
+      <div :class="['relative mx-auto p-4 border w-11/12 md:w-2/3 shadow-lg rounded-md bg-white', dialogAnimation] ">
       <h5 class="mb-4">Preview and Edit</h5>
       <UTextarea 
         color="primary" 
@@ -49,8 +50,9 @@
         <UButton class="px-3" color="green" variant="soft" @click="saveJson()"> Save and Close</UButton>
       </div>
             
+      </div>
     </div>
-  </div>
+  </Teleport>
 
   </div>
 </template>

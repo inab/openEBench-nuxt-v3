@@ -129,11 +129,16 @@
             class="mr-2 bg-primaryOeb-500"
             variant="solid"
             size="md"
-            :disabled="!selectedTool"
+            :disabled="!selectedTool || isSubmitting"
             @click="submitObservatoryTool"
           >
-            Continue
+            {{ isSubmitting ? 'Loading metadata…' : 'Continue' }}
           </UButton>
+        </div>
+      </div>
+      <div v-if="loadError" class="row justify-center mt-3">
+        <div class="col-10">
+          <UAlert color="error" variant="soft" :description="loadError" />
         </div>
       </div>
     </form>
@@ -145,9 +150,13 @@
 import { ref, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue';
 import { useStepperStore } from '~~/stores/observatory/evaluation/index';
 import { useObservatoryStore } from '~~/stores/observatory/evaluation/observatory';
+import { useMetadataStore } from '~~/stores/observatory/evaluation/metadata';
 
 const observatoryStore = useObservatoryStore();
 const stepperStore = useStepperStore();
+const metadataStore = useMetadataStore();
+const isSubmitting = ref(false);
+const loadError = ref('');
 const observatoryTools = computed(() => observatoryStore.ObservatoryToolsNameTypeSources || []);
 
 const CHUNK = 20;
@@ -291,7 +300,10 @@ watch(searchQuery, () => {
 // ------------------ Navegación / UI helpers ------------------
 const goBack = () => stepperStore.goBack(1);
 const submitObservatoryTool = async () => {
-  if (!selectedTool.value) return;
+  if (!selectedTool.value || isSubmitting.value) return;
+  isSubmitting.value = true;
+  loadError.value = '';
+  metadataStore.updateLoadedMetadata(false);
 
   const payload = {
     name: selectedToolLabel.value,
@@ -300,11 +312,16 @@ const submitObservatoryTool = async () => {
     type: selectedToolType.value,
   };
 
-  // Get metadata
-  await observatoryStore.fetchToolMetadata(payload);
-
-  // Proceed to the next step
-  stepperStore.completeStep(1);
+  try {
+    await observatoryStore.fetchToolMetadata(payload);
+    if (metadataStore.getLoadedMetadata) {
+      stepperStore.completeStep(1);
+    } else {
+      loadError.value = 'Unable to load metadata for this software. Please try again or select another source.';
+    }
+  } finally {
+    isSubmitting.value = false;
+  }
 };
 
 

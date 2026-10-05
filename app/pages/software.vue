@@ -13,8 +13,8 @@
           where possible, and computes
           <span class="font-semibold">FAIRsoft</span> indicators. This
           consolidated dataset powers both the
-          <NuxtLink to="/tool">Tools catalogue</NuxtLink> and the
-          <NuxtLink to="/observatory">Software Observatory</NuxtLink> 
+          <NuxtLink to="/tool" class="linkish">Tools catalogue</NuxtLink> and the
+          <NuxtLink to="/observatory" class="linkish">Software Observatory</NuxtLink>
           supporting software discovery, trends analysis, and FAIRness assessment.
         </p>
 
@@ -141,12 +141,12 @@
 
             <!-- GitHub Metadata API -->
             <div class="col-12 col-md-4">
-              <div class="h-100 p-4 bg-white border border-gray-100 rounded-lg shadow d-flex flex-column">
+              <div class="h-100 p-4 bg-white border border-gray-100 rounded-lg shadow card-hover d-flex flex-column">
 
                 <div class="d-flex align-items-center mb-3">
                   <UIcon
                     name="i-mdi-source-repository"
-                    class="icon-color size-6 me-2 flex-shrink-0"
+                    class="icon-color size-6 me-2 shrink-0"
                   />
                   <h6 class="mb-0 fw-semibold">GitHub Metadata API</h6>
                 </div>
@@ -162,9 +162,9 @@
 
             <!-- Software Observatory API -->
             <div class="col-12 col-md-4">
-              <div class="h-100 p-4 bg-white border border-gray-100 rounded-lg shadow d-flex flex-column">
+              <div class="h-100 p-4 bg-white border border-gray-100 rounded-lg shadow card-hover d-flex flex-column">
                 <div class="d-flex align-items-center mb-3">
-                  <UIcon name="i-mdi-api" class="icon-color size-6 me-2 flex-shrink-0"/>
+                  <UIcon name="i-mdi-api" class="icon-color size-6 me-2 shrink-0"/>
                   <h6 class="mb-0 fw-semibold">Software Observatory API</h6>
                 </div>
                 <p class="text-sm text-muted mb-4">
@@ -184,10 +184,10 @@
 
             <!-- FAIRsoft -->
             <div class="col-12 col-md-4">
-              <div class="h-100 p-4 bg-white border border-gray-100 rounded-lg shadow d-flex flex-column">
+              <div class="h-100 p-4 bg-white border border-gray-100 rounded-lg shadow card-hover d-flex flex-column">
 
                 <div class="d-flex align-items-center mb-3">
-                  <UIcon name="i-mdi-code-tags"class="icon-color size-6 me-2 flex-shrink-0"/>
+                  <UIcon name="i-mdi-code-tags" class="icon-color size-6 me-2 shrink-0"/>
                   <h6 class="mb-0 fw-semibold">Programmatic FAIRsoft evaluation</h6>
                 </div>
 

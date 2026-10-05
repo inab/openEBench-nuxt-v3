@@ -22,7 +22,7 @@
     </div>
     <UTable
       :columns="columns"
-      :rows="filteredRows"
+      :data="filteredRows"
       :ui="{
         tr: {
           base: 'hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer',
@@ -42,12 +42,12 @@
         },
       }"
     >
-      <template #name-data="{ row }">
+      <template #name-cell="{ row }">
         <NuxtLink
-          :to="`/tool/${row.registry_rool_id ? row.registry_tool_id.split(':')[1] : ''}`"
+          :to="`/tool/${row.original.registry_tool_id ? row.original.registry_tool_id.split(':')[1] : ''}`"
           class="text-blue-600 dark:text-blue-400"
         >
-          {{ row.name }}
+          {{ row.original.name }}
         </NuxtLink>
       </template>
     </UTable>
@@ -104,16 +104,22 @@ let _total = 0;
 
 const columns = [
   {
-    key: "name",
-    label: "Name",
+    id: "name",
+    accessorKey: "name",
+    header: "Name",
+    enableSorting: false,
   },
   {
-    key: "status",
-    label: "Status",
+    id: "status",
+    accessorKey: "status",
+    header: "Status",
+    enableSorting: false,
   },
   {
-    key: "description",
-    label: "Description",
+    id: "description",
+    accessorKey: "description",
+    header: "Description",
+    enableSorting: false,
   },
 ];
 const filteredRows = computed(() => {

@@ -2,36 +2,25 @@
   <div class="projects">
     <BreadcrumbsBar />
     <div class="w-100 container">
-      <UAccordion :items="HEADER_ITEM">
-        <template #default="{ item, open }">
-          <UButton
-            color="primary"
-            variant="ghost"
-            class="border-b border-slate-200 dark:border-gray-700 projects-collapse-btn"
-            :ui="{ rounded: 'rounded-none' }"
-          >
-            <div class="primary label-btn">
-              <h2>{{ item.label }}</h2>
-            </div>
-            <template #trailing>
-              <UIcon
-                name="i-heroicons-chevron-right-20-solid"
-                class="transform transition-transform duration-200"
-                :class="[open && 'rotate-90']"
-              />
-            </template>
-          </UButton>
+      <UAccordion class="intro-accordion" :items="HEADER_ITEM" default-value="projects">
+        <template #default="{ item }">
+          <h2 class="intro-accordion-title">{{ item.label }}</h2>
         </template>
+
+        <template #trailing="{ open }">
+          <UIcon name="i-heroicons-chevron-right-20-solid"
+            class="intro-accordion-icon"
+            :class="[open && 'rotate-90']" />
+        </template>
+
         <template #projects>
           <div class="projects__header">
             <div class="row">
               <div class="col-md-6 d-none d-lg-block projects__header__left">
-                <img
-                  src="~/assets/images/illustrations/lab_community.png"
-                  alt="welcome-header-image"
-                  class="img-fluid"
-                />
+                <img src="~/assets/images/illustrations/lab_community.png" alt="welcome-header-image"
+                  class="img-fluid" />
               </div>
+
               <div class="col-md-6 projects__header__right">
                 <div class="projects__header__right__row">
                   Project spaces enable research communities to collaborate on
@@ -47,11 +36,11 @@
       </UAccordion>
     </div>
     <div class="projects__container container">
-      <div v-if="status.pending" class="row g-4">
+      <div v-if="status === 'pending'" class="row g-4 loading-skeleton">
         <div
-          v-for="(c, i) in Array.from({ length: 8 }, (x, i) => i)"
-          :key="i"
-          class="col-sm-6 col-md-4 col-lg-3"
+          v-for="(_, index) in 8"
+          :key="index"
+          class="col-sm-6 col-md-4 col-lg-3 card-community-skeleton"
         >
           <USkeleton class="h-12 w-12" :ui="{ rounded: 'rounded-full' }" />
           <div class="space-y-2">
@@ -60,26 +49,30 @@
           </div>
         </div>
       </div>
-      <div v-else class="row g-4">
+      <p v-else-if="status === 'error'" class="text-red-600" role="alert">
+        Project spaces could not be loaded. Please try again later.
+      </p>
+      <div v-else-if="projects?.length" class="row g-4">
         <div
-          v-for="(project, index) in projects"
-          :key="index"
-          class="col-sm-6 col-md-4 col-lg-3"
+          v-for="project in projects"
+          :key="project._id"
+          class="col-sm-6 col-md-4 col-lg-3 community-card-item"
         >
           <CommunityCard
-            :id="project._id"
+            :_id="project._id"
             :acronym="project.acronym"
             :name="project.name"
             :logo="project.logo"
-            :links="project.links ? project.links : []"
+            :links="project.links"
             :status="project.status"
             :summary="project.summary"
             :benchmarking-events="[]"
             :reference-tools="[]"
-            :to="'/projects/' + project._id"
+            :to="`/projects/${project._id}`"
           />
         </div>
       </div>
+      <p v-else class="text-gray-500">No project spaces are available.</p>
     </div>
   </div>
 </template>
@@ -95,12 +88,12 @@ const communitiesStore = useCommunities();
 const HEADER_ITEM = [
   {
     label: "Project Spaces",
-    defaultOpen: true,
+    value: "projects",
     slot: "projects",
   },
 ];
 
-const { data: projects, status } = await useAsyncData(
+const { data: projects, status } = useAsyncData(
   "projects",
   async () => {
     if (
@@ -118,13 +111,16 @@ const { data: projects, status } = await useAsyncData(
 <style scoped lang="scss">
 .projects {
   font-size: 16px;
+
   &__header {
     &__right {
       display: flex;
       align-items: center;
+
       &__row {
         padding-top: 50px;
         padding-bottom: 30px;
+
         &:last-child {
           padding-top: 0;
           padding-bottom: 0;
@@ -132,32 +128,30 @@ const { data: projects, status } = await useAsyncData(
         }
       }
     }
+
+    .projects__header__right__row {
+      font-family: 'Open Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: #6b7280;
+    }
+
     &__left {
       display: flex;
       justify-content: center;
       align-items: center;
+
       img {
         margin: auto;
         width: 90%;
       }
     }
   }
-  .projects-collapse-btn {
-    padding: 0;
-    display: flex;
-    justify-content: space-between;
-    &:hover {
-      background-color: white;
-    }
-    span {
-      font-size: 30px;
-    }
-  }
+
   &__container {
     padding-top: 40px;
   }
-  .label-btn {
-    white-space: nowrap;
-  }
+
 }
 </style>

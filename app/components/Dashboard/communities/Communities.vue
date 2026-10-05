@@ -4,121 +4,94 @@
             <div class="user-communities__body__table">
                 <div class="flex items-center justify-between gap-3 py-3">
                     <div class="col-5">
-                        <multiselect 
-                            v-model="selectedStatus"
-                            :options="todoStatus"
-                            :multiple="true"
-                            :close-on-select="true"
-                            :clear-on-select="true"
-                            :preserve-search="false"
-                            placeholder="Select status"
-                            :preselect-first="false"
-                            :searchable="false"
-                            :taggable="true"
-                            @tag="addTag"
-                            label="label"
-                            track-by="label">
+                        <multiselect v-model="selectedStatus" :options="todoStatus" :multiple="true"
+                            :close-on-select="true" :clear-on-select="true" :preserve-search="false"
+                            placeholder="Select status" :preselect-first="false" :searchable="false" :taggable="true"
+                            @tag="addTag" label="label" track-by="label">
                             <template #selection="{ values, search, isOpen }">
-                                <div v-for="value in values" :key="value.value" class="selector-label" 
-                                :class="`status-${ value.value } option-btn`">
+                                <div v-for="value in values" :key="value.value" class="selector-label"
+                                    :class="`status-${value.value} option-btn`">
                                     <span>{{ value.label }}</span>
-                                    <i 
-                                        tabindex="1" 
-                                        class="multiselect__tag-icon"
-                                        @click="removeTag(value)"
-                                        />
+                                    <i tabindex="1" class="multiselect__tag-icon" @click="removeTag(value)" />
                                 </div>
                             </template>
                             <template #option="props">
                                 <span class="d-flex">
-                                    <span
-                                        class="h-2 w-2 rounded-full rounded-options" 
-                                        :class="`status-${ props.option.value }__option`">
+                                    <span class="h-2 w-2 rounded-full rounded-options"
+                                        :class="`status-${props.option.value}__option`">
                                     </span>
                                     <span>{{ props.option.label }}</span>
                                 </span>
                             </template>
                         </multiselect>
                     </div>
-                    <UInput
-                        v-model="search"
-                        color="primary"
-                        variant="outline"
-                        icon="i-heroicons-magnifying-glass-20-solid"
-                        placeholder="Search ..."
-                        class="input-search"
-                    />
+                    <UInput v-model="search" color="primary" variant="outline"
+                        icon="i-heroicons-magnifying-glass-20-solid" placeholder="Search ..." class="input-search" />
                 </div>
-                <UTable
-                    :columns="columns"
-                    :loading="isLoadingData"
-                    :rows="filteredRows"
-                    :ui="{
-                        tr: {
-                            base: 'hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer',
-                        },
-                        th: {
-                            base: 'text-left rtl:text-right',
-                            padding: 'px-2.5 py-2.5',
-                            color: 'text-gray-900 dark:text-white',
-                            font: 'font-semibold',
-                            size: 'text-sm',
-                        },
-                        td: {
-                            base: 'whitespace-nowrap',
-                            padding: 'px-3 py-3',
-                            font: '',
-                            size: 'text-sm',
-                        },
-                    }">
-                    <template #logos-data="{ row }">
+                <UTable :columns="columns" :loading="isLoadingData" :data="filteredRows" :ui="{
+                    tr: {
+                        base: 'hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer',
+                    },
+                    th: {
+                        base: 'text-left rtl:text-right',
+                        padding: 'px-2.5 py-2.5',
+                        color: 'text-gray-900 dark:text-white',
+                        font: 'font-semibold',
+                        size: 'text-sm',
+                    },
+                    td: {
+                        base: 'whitespace-nowrap',
+                        padding: 'px-3 py-3',
+                        font: '',
+                        size: 'text-sm',
+                    },
+                }">
+                    <template #logos-cell="{ row }">
                         <div class="user-communities__body__table__logo">
-                            <img :src="row.logo" alt="Community logo" class="" />
+                            <img :src="row.original.logo" alt="Community logo" class="" />
                         </div>
                     </template>
-                
-                    <template #name-data="{ row }">
+
+                    <template #name-cell="{ row }">
                         <div class="d-flex f-items-center">
-                            <span v-if="row.privileges === 'Owner' && row.actions.community"
-                                title="Community Owner"
-                                class="row-icon">
+                            <span v-if="row.original.privileges === 'Owner' && row.original.actions.community"
+                                title="Community Owner" class="row-icon">
                                 <font-awesome-icon :icon="['fas', 'key']" />
                             </span>
-                            <span v-if="row.privileges === 'Manager' && row.actions.community"
-                                title="Community Manager"
-                                class="row-icon">
+                            <span v-if="row.original.privileges === 'Manager' && row.original.actions.community"
+                                title="Community Manager" class="row-icon">
                                 <font-awesome-icon :icon="['fas', 'gear']" />
                             </span>
-                            <span>{{ row._id }} - {{ row.name }}</span>
-                        </div> 
+                            <span>{{ row.original._id }} - {{ row.original.name }}</span>
+                        </div>
                     </template>
-                    <template #actions-data="{ row }">
-                        <div v-if="row.actions">
-                            <div v-if="row.privileges === 'Owner' && row.actions.community">
+                    <template #actions-cell="{ row }">
+                        <div v-if="row.original.actions">
+                            <div v-if="row.original.privileges === 'Owner' && row.original.actions.community">
                                 <button title="Edit community" class="btn-event text-neutral-300">
                                     <NuxtLink :to="getCommunityEditLink(row)">
                                         <font-awesome-icon :icon="['fas', 'pencil']" />
                                     </NuxtLink>
                                 </button>
-                                <template v-if="row.actions.community.delete">
+                                <template v-if="row.original.actions.community.delete">
                                     <button title="Delete community" class="btn-event text-neutral-300">
                                         <font-awesome-icon :icon="['fas', 'trash']" />
                                     </button>
                                 </template>
                             </div>
-                            <div v-else-if="row.privileges=== 'Manager' && row.actions.community">
+                            <div v-else-if="row.original.privileges === 'Manager' && row.original.actions.community">
                                 <button title="Edit community" class="btn-event text-neutral-300">
                                     <NuxtLink :to="getCommunityEditLink(row)">
                                         <font-awesome-icon :icon="['fas', 'pencil']" />
                                     </NuxtLink>
                                 </button>
-                                <template v-if="row.actions.community.delete">
+                                <template v-if="row.original.actions.community.delete">
                                     <button title="Delete community" class="btn-event text-neutral-300">
                                         <font-awesome-icon :icon="['fas', 'trash']" />
                                     </button>
                                 </template>
                             </div>
-                            <div v-else-if="row.privileges=== 'anyone' && row.actions.community">
+                            <div v-else-if="row.original.privileges === 'anyone' && row.original.actions.community">
                                 <button title="Edit community" class="btn-event text-neutral-300">
                                     <NuxtLink :to="getCommunityEditLink(row)">
                                         <font-awesome-icon :icon="['fas', 'pencil']" />
@@ -130,55 +103,45 @@
                             <div>-</div>
                         </div>
                     </template>
-                    <template #status-data="{ row }">
-                        <div class="inline-block rounded-full custom-badget font-semibold" 
-                            :class="`status-${row.status}`"
-                            :title="`${'Status'} ${row.status}`">
+                    <template #status-cell="{ row }">
+                        <div class="inline-block rounded-full custom-badget font-semibold"
+                            :class="`status-${row.original.status}`" :title="`${'Status'} ${row.original.status}`">
                             <div class="text-xs font-normal leading-none max-w-full flex-initial font-semibold"
-                                :title="`${'Status'} ${row.status}`">
-                                {{ row.status }}
+                                :title="`${'Status'} ${row.original.status}`">
+                                {{ row.original.status }}
                             </div>
                         </div>
                     </template>
-                    <template #events-data="{ row }">
+                    <template #events-cell="{ row }">
                         <button class="btn-custom-badget text-sm">
-                            <NuxtLink :to="`/dashboard/community/${row._id}/events`" 
-                                title="View community events" 
-                                class="text-sm">
+                            <NuxtLink :to="`/dashboard/community/${row.original._id}/events`"
+                                title="View community events" class="text-sm">
                                 View
                             </NuxtLink>
                         </button>
                     </template>
                 </UTable>
-                <div
-                    v-if="filteredRows.length > 0"
-                    class="flex flex-wrap justify-between items-center pt-2"
-                    >
+                <div v-if="filteredRows.length > 0" class="flex flex-wrap justify-between items-center pt-2">
                     <div>
                         <span class="text-sm leading-5">
-                        Showing
-                        <span class="font-medium">{{ pageFrom }}</span>
-                        to
-                        <span class="font-medium">{{ pageTo }}</span>
-                        of
-                        <span class="font-medium">{{ _total }}</span>
-                        results
+                            Showing
+                            <span class="font-medium">{{ pageFrom }}</span>
+                            to
+                            <span class="font-medium">{{ pageTo }}</span>
+                            of
+                            <span class="font-medium">{{ _total }}</span>
+                            results
                         </span>
                     </div>
-                    <UPagination 
-                        v-model="page" 
-                        :page-count="pageCount" 
-                        :total="_total" 
-                        :ui="{
-                            wrapper: 'flex items-center',
-                            default: {
-                                activeButton: {
+                    <UPagination v-model="page" :page-count="pageCount" :total="_total" :ui="{
+                        wrapper: 'flex items-center',
+                        default: {
+                            activeButton: {
                                 base: 'bg-primary-500 dark:bg-primary-400',
                                 color: 'text-white',
-                                },
                             },
-                        }"
-                        />
+                        },
+                    }" />
                 </div>
             </div>
         </div>
@@ -202,59 +165,74 @@ const page = ref<Number>(1);
 const pageCount = ref<Number>(10);
 const pageFrom = computed(() => (Number(page.value) - 1) * Number(pageCount.value) + 1);
 const pageTo = computed(() =>
-  Math.min(Number(page.value) * Number(pageCount.value), Number(totalPages.value)),
+    Math.min(Number(page.value) * Number(pageCount.value), Number(totalPages.value)),
 );
 const search = ref<string>("");
 const selectedStatus = ref(<Array<CommunityStatus>>[]);
 const todoStatus = ref<Array<{ value: string, label: string }>>(CommunityStatusLabels);
 
-const columns: Array<CommunityColumnsDashboard> = [
+const columns = [
     {
-        key: 'logos',
-    },{
-        key: 'name',
-        label: 'NAME'
-    },{
-        key: "community_contact",
-        label: "CONTACTS"
-    },{
-        key: 'status',
-        label: 'STATUS'
-    },{
-        key: 'events',
-        label: 'EVENTS'
-    },{
-        key: 'actions',
-        label: 'ACTIONS'
-    }
+        id: "logos",
+        header: "",
+        enableSorting: false,
+    },
+    {
+        id: "name",
+        accessorKey: "name",
+        header: "NAME",
+        enableSorting: true,
+    },
+    {
+        id: "community_contact",
+        accessorKey: "community_contact",
+        header: "CONTACTS",
+        enableSorting: false,
+    },
+    {
+        id: "status",
+        accessorKey: "status",
+        header: "STATUS",
+        enableSorting: true,
+    },
+    {
+        id: "events",
+        header: "EVENTS",
+        enableSorting: false,
+    },
+    {
+        id: "actions",
+        header: "ACTIONS",
+        enableSorting: false,
+    },
 ];
 
 let _total = ref(0);
 
 const filteredRows = computed(() => {
-    if(communitiesData.value.length === 0) {
+    if (communitiesData.value.length === 0) {
         return [];
     }
     if (!search.value && selectedStatus.value.length === 0) {
         _total.value = communitiesData.value.length;
         return communitiesData.value.slice(
-        (Number(page.value) - 1) * Number(pageCount.value),
-        Number(page.value) * Number(pageCount.value),
+            (Number(page.value) - 1) * Number(pageCount.value),
+            Number(page.value) * Number(pageCount.value),
         );
     }
 
     const filteredSearcher = communitiesData.value.filter((challenge: any) => {
         return Object.values(challenge).some((ch) => {
-            if(selectedStatus.value.length > 0) {
+            if (selectedStatus.value.length > 0) {
                 return selectedStatus.value.some((status) => {
-                    if(search.value) {
+                    if (search.value) {
                         return status.value === challenge.status && String(ch).toLowerCase().includes(search.value.toLowerCase());
                     }
                     if (status.value === 'all') {
                         return String(ch).toLowerCase().includes(search.value.toLowerCase());
                     }
-                    return status.value === challenge.status ;
-            });
+                    return status.value === challenge.status;
+                });
             } else {
                 return String(ch).toLowerCase().includes(search.value.toLowerCase());
             }
@@ -285,13 +263,13 @@ function addTag(newTag: string) {
 
 function removeTag(tagName: string) {
     selectedStatus.value = selectedStatus.value.filter((tag) => {
-        return  tagName.value != tag.value
+        return tagName.value != tag.value
     });
 }
 
 function getCommunityEditLink(row: any) {
-    return (row.privileges === 'Owner' 
-        && row.actions.community 
+    return (row.privileges === 'Owner'
+        && row.actions.community
         && row.actions.community.update) ? `/dashboard/community/${row._id}` : `/dashboard/community/${row._id}?view`;
 }
 
@@ -300,19 +278,24 @@ function getCommunityEditLink(row: any) {
 .user-communities {
     &__body {
         padding: 1rem;
+
         &__table {
             margin-top: 1rem;
+
             a {
                 text-decoration: none;
             }
+
             &__logo {
                 width: 60px;
             }
         }
     }
+
     &__events {
         font-size: 18px;
     }
+
     .custom-badget {
         padding: 0.45rem 0.5rem 0.6rem;
         border-radius: 9999px;
@@ -321,39 +304,49 @@ function getCommunityEditLink(row: any) {
         text-align: center;
         min-width: 100px;
         text-transform: capitalize;
+
         &.filter-badget {
             margin-right: 0.5rem;
         }
     }
+
     .btn-event {
         padding: 5px;
         font-size: 16px;
+
         a {
             color: var(--color-gray-400);
         }
-        
+
     }
+
     .input-search {
         input {
             box-shadow: none !important;
+
             :focus {
                 border: 1px solid var(--color-primary-500);
             }
         }
     }
 }
+
 .input-selector {
     padding: 5px 10px !important;
+
     input {
         box-shadow: none !important;
+
         :focus {
             border: 1px solid var(--color-primary-500);
         }
     }
+
     button {
         color: #0b579f !important;
     }
 }
+
 .row-icon {
     padding-right: 10px;
 }
@@ -365,27 +358,34 @@ function getCommunityEditLink(row: any) {
     box-shadow: rgb(255, 255, 255) 0px 0px 0px 0px inset, rgb(209, 213, 219) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px !important;
     display: block;
     border-radius: 6px;
+
     button {
         color: #0b579f !important;
     }
+
     :focus {
         border: 1px solid var(--color-primary-500);
     }
+
     div:first-child {
         display: block;
+
         .custom-badget {
             margin-bottom: 5px;
         }
     }
 }
+
 .multiselect {
     padding-left: 0px;
 }
+
 .multiselect,
 .multiselect__tags {
     min-height: 32px;
     padding: 0px 00px 0 0px;
 }
+
 .multiselect__tags {
     border: none;
     box-shadow: rgb(255, 255, 255) 0px 0px 0px 0px inset, rgb(209, 213, 219) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px !important;
@@ -395,11 +395,13 @@ function getCommunityEditLink(row: any) {
     align-items: center;
     height: 32px;
 }
+
 .multiselect__select {
     height: 32px;
     right: 2px;
     top: 3px;
 }
+
 .multiselect__tag {
     background-color: #e9ecef;
     border-radius: 9999px;
@@ -412,29 +414,37 @@ function getCommunityEditLink(row: any) {
     padding: 4px 26px 4px 10px;
     min-height: 32px;
 }
+
 .multiselect__placeholder {
     margin-bottom: 2px;
     padding-top: 5px;
     padding-left: 10px;
 }
+
 .multiselect__tag-icon {
     top: -2px;
 }
-.multiselect__tag-icon::after {    
+
+.multiselect__tag-icon::after {
     color: black;
 }
+
 .multiselect__option--highlight {
     background-color: var(--color-primary-500);
 }
+
 .multiselect__option--highlight::after {
     background-color: var(--color-primary-500);
 }
+
 .multiselect--active .multiselect__placeholder {
     display: block;
 }
+
 .multiselect__tag-icon {
     position: relative;
 }
+
 .selector-label {
     display: flex;
     justify-content: center;
@@ -443,10 +453,12 @@ function getCommunityEditLink(row: any) {
     width: auto;
     padding: 2px 7px;
     border-radius: 50px;
+
     span {
         padding: 0px;
     }
 }
+
 .rounded-options {
     display: flex;
     width: 10px;

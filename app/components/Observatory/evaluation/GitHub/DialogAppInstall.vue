@@ -1,17 +1,24 @@
 <template>
   <div>
-    <UModal v-model="dialogAppInstall" prevent-close :ui="{width:'w-96',overlay:{background:'bg-zinc-800/50'}}">
-      <div class="px-4 py-3">
-        <h6>{{ title }}</h6>
-        <span class="text-xs text-slate-600" v-html="text" @click="handleLinkClick"></span><br>
-        <!-- Buttons -->
+    <UModal
+      v-model:open="dialogAppInstall"
+      :dismissible="false"
+      :close="false"
+      :ui="{ content: 'w-96', overlay: 'bg-zinc-800/50' }"
+    >
+      <template #content>
+        <div class="px-4 py-3">
+          <h6>{{ title }}</h6>
+          <span class="text-xs text-slate-600" v-html="text" @click="handleLinkClick"></span><br>
+          <!-- Buttons -->
           <UButton color="green" @click="openGitHubAppLink" class="mt-3 mr-2">
-            Give Permissions 
+            Give Permissions
             <font-awesome-icon :icon="['fas', 'arrow-up-right-from-square']" size="sm" class="mx-1"/>
           </UButton>
-         <UButton label="Close" class="" color="gray" variant="ghost" size="md" 
-         :ui="{color:{gray:{ghost:'text-gray-900 hover:bg-gray-100'}},}" @click="cancelInstall" />
-      </div>
+          <UButton label="Close" class="" color="gray" variant="ghost" size="md"
+            :ui="{color:{gray:{ghost:'text-gray-900 hover:bg-gray-100'}},}" @click="cancelInstall" />
+        </div>
+      </template>
     </UModal>
   </div>
 </template>

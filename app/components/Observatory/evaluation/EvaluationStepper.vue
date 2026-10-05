@@ -18,8 +18,8 @@
           <!----------------- STEP 1 ------------------->
           <!-------------------------------------------->
           <div v-if="index === 0">
-            <div class="flex justify-evenly my-4 p-4">
-              <div class="col-3">
+            <div class="mx-auto my-4 grid w-full max-w-6xl grid-cols-1 items-stretch justify-items-center gap-5 p-4 sm:grid-cols-3">
+              <div class="h-full w-full max-w-80">
                 <EvaluationSourceCard
                   title="Software Observatory"
                   description="Select a software from the Software Observatory's database"
@@ -27,7 +27,7 @@
                   icon="mdi-database"
                 />
               </div>
-              <div class="col-3">
+              <div class="h-full w-full max-w-80">
                 <EvaluationSourceCard
                   title="GitHub repository"
                   description="Enter the URL of the software's GitHub repository"
@@ -35,7 +35,7 @@
                   icon="mdi-github"
                 />
               </div>
-              <div class="col-3">
+              <div class="h-full w-full max-w-80">
                 <EvaluationSourceCard
                   title="Metadata file"
                   description="Provide the URL of a metadata file in Bioschema format"
@@ -63,9 +63,13 @@
           <!----------------- STEP 3 ------------------->
           <!-------------------------------------------->
           <div v-if="index === 2">
-            <div>
-              <MetadataEdit v-if="loadedMetadata"/>
-            </div>
+            <MetadataEdit v-if="loadedMetadata" />
+            <UAlert
+              v-else
+              color="error"
+              variant="soft"
+              description="Metadata has not loaded yet. Go back and complete the previous step before editing it."
+            />
           </div>
 
           <!----------------- STEP 4 ------------------->

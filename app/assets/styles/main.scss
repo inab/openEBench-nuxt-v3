@@ -1,6 +1,71 @@
 $colorPrimary: #0b579f;
 $colorSecondary: #f47c21;
 
+body {
+  font-family: var(--font-sans);
+}
+
+.card-hover {
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.evaluator-link {
+  color: #0b579f;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: #6a98c4;
+    text-decoration: underline;
+  }
+}
+
+.intro-accordion {
+  [data-slot='trigger'] {
+    width: 100%;
+    padding: 0;
+    border-bottom: 1px solid #e2e8f0;
+    border-radius: 0;
+    background-color: transparent;
+    text-align: left;
+
+    &:hover {
+      background-color: transparent;
+    }
+  }
+
+  [data-slot='label'] {
+    flex: 1;
+  }
+
+  [data-slot='content'] {
+    color: #6b7280;
+  }
+}
+
+.intro-accordion-title {
+  margin: 0;
+  color: #0b579f;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: normal;
+}
+
+.intro-accordion-icon {
+  width: 30px;
+  height: 30px;
+  color: #0b579f;
+  transition: transform 0.2s;
+}
+
 .container-padding {
   padding: 40px 25px;
 }

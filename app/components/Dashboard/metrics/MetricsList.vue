@@ -16,7 +16,7 @@
     <UTable
       :columns="columns"
       :loading="isLoading"
-      :rows="filteredRows"
+      :data="filteredRows"
       :sort="sort"
       :ui="{
         tr: {
@@ -38,12 +38,12 @@
       }"
       @update:sort="handleUpdateSort"
     >
-      <template #view-data="{ row }">
+      <template #view-cell="{ row }">
         <div class="action-btn-group">
           <button
             class="btn-custom-badget text-sm text-primaryOeb-950"
             title="View metric"
-            @click="viewMetric(row)"
+            @click="viewMetric(row.original)"
           >
             <font-awesome-icon :icon="['far', 'eye']" />
             View
@@ -51,7 +51,7 @@
           <button
             class="btn-custom-badget btn-clone text-sm text-primaryOeb-950"
             title="Clone metric"
-            @click="cloneMetric(row)"
+            @click="cloneMetric(row.original)"
           >
             <font-awesome-icon :icon="['fas', 'clone']" />
             Clone
@@ -133,23 +133,28 @@ const pageTo = computed(() =>
 
 const columns = [
   {
-    key: "_id",
-    label: "METRIC ID",
-    sortable: true,
+    id: "_id",
+    accessorKey: "_id",
+    header: "METRIC ID",
+    enableSorting: true,
   },
   {
-    key: "title",
-    label: "TITLE",
-    sortable: true,
+    id: "title",
+    accessorKey: "title",
+    header: "TITLE",
+    enableSorting: true,
   },
   {
-    key: "description",
-    label: "DESCRIPTION",
-    sortable: true,
+    id: "description",
+    accessorKey: "description",
+    header: "DESCRIPTION",
+    enableSorting: true,
   },
   {
-    key: "view",
-    label: "ACTIONS",
+    id: "view",
+    accessorKey: "view",
+    header: "ACTIONS",
+    enableSorting: false,
   },
 ];
 

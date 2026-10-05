@@ -3,30 +3,16 @@
     <BreadcrumbsBar :breadcrumbs-array="routeArray" />
     <div class="w-100 container">
       <div v-if="status == 'authenticated'">
-        <UAccordion :items="HEADER_ITEM">
-          <template #item="{ item }">
-            <div class="dashboard__header__title">
-              <h2 class="text-primaryOeb-500">{{ item.label }}</h2>
-            </div>
+        <UAccordion class="intro-accordion" :items="HEADER_ITEM" default-value="contacts">
+          <template #default="{ item }">
+            <h2 class="intro-accordion-title">{{ item.label }}</h2>
           </template>
-          <template #default="{ item, open }">
-            <UButton
-              color="primary"
-              variant="ghost"
-              class="border-b border-slate-200 dark:border-gray-700 community-collapse-btn"
-              :ui="{ rounded: 'rounded-none' }"
-            >
-              <div class="primary label-btn">
-                <h2>{{ item.label }}</h2>
-              </div>
-              <template #trailing>
-                <UIcon
-                  name="i-heroicons-chevron-right-20-solid"
-                  class="transform transition-transform duration-200"
-                  :class="[open && 'rotate-90']"
-                />
-              </template>
-            </UButton>
+          <template #trailing="{ open }">
+            <UIcon
+              name="i-heroicons-chevron-right-20-solid"
+              class="intro-accordion-icon"
+              :class="[open && 'rotate-90']"
+            />
           </template>
           <template #contacts>
             <div class="accordion_contacts__body">
@@ -104,7 +90,7 @@ const routeArray: Array = [
 const HEADER_ITEM = [
   {
     label: "Contacts",
-    defaultOpen: true,
+    value: "contacts",
     slot: "contacts",
   },
 ];
@@ -176,17 +162,6 @@ onMounted(async () => {
   &__text {
     font-size: 16px;
     line-height: 1.5;
-  }
-}
-.community-collapse-btn {
-  padding: 0;
-  display: flex;
-  justify-content: space-between;
-  &:hover {
-    background-color: white;
-  }
-  span {
-    font-size: 30px;
   }
 }
 </style>

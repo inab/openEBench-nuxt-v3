@@ -2,40 +2,30 @@
   <div class="container px-5 my-5">
     <UAccordion 
     :items="items"
+    default-value="0"
     class="shadow-md"
     :ui="{ wrapper: 'flex flex-col w-full' }"
     >
       <template #default="{ item, index, open }">
-        <UButton
-          color="gray"
-          variant="ghost"
-          class="border-b border-gray-200 dark:border-gray-700"
-          :ui="{ rounded: 'rounded-none', padding: { sm: 'p-4' } }"
-          @click="togglePanel(index)"
-        >
-          <span class="text-base truncate ms-3">{{ item.label }}</span>
-
-          <template #trailing>
-            <div class="flex items-center ms-auto space-x-2">
-              <!-- Iconos de PanelHeader -->
-              <PanelHeader
-                :fields="metadataFields[metadataKeys[index]]"
-						    :field_names="metadataFieldNames[metadataKeys[index]]"
-                :visible_ticks="visibleTicks(index)"
-              />
-              <!-- Chevron Icon -->
-              <UIcon
-                name="i-heroicons-chevron-right-20-solid"
-                class="w-5 h-5 transform transition-transform duration-200 ms-4"
-                :class="[open && 'rotate-90']"
-              />
-            </div>
-          </template>
-        </UButton>
+        <span class="text-base truncate ms-3">{{ item.label }}</span>
+      </template>
+      <template #trailing="{ index, open }">
+        <div class="flex items-center ms-auto space-x-2">
+          <PanelHeader
+            :fields="metadataFields[metadataKeys[index]]"
+            :field_names="metadataFieldNames[metadataKeys[index]]"
+            :visible_ticks="!open"
+          />
+          <UIcon
+            name="i-heroicons-chevron-right-20-solid"
+            class="w-5 h-5 transform transition-transform duration-200 ms-4"
+            :class="[open && 'rotate-90']"
+          />
+        </div>
       </template>
 
       <!-- CONTENTS -->
-      <template #item="{ item }">
+      <template #content="{ item }">
 
         <!-- Content 0. Identity -->
         <div v-if="item.label == '0. Identity'" class="p-4 ">
@@ -472,8 +462,6 @@ const items = [
   { label: "7. Recognition" },
 ];
 const versionControl = ref(false);
-const openPanels = ref<number[]>([]);
-  const openIndex = ref<number | null>(null);
 const selectedType = '';
 const selectedVersion = '';
 const registries = [
@@ -563,20 +551,6 @@ onMounted(() => {
 
 // Methods
 const metadataKeys = Object.keys(metadataFields);
-
-// Toggle header panel
-const togglePanel = (index: number) => {
-  if (openIndex.value === index) {
-    openIndex.value = null;
-    openPanels.value = [];
-  } else {
-    openIndex.value = index;
-    openPanels.value = [index];
-  }
-};
-const visibleTicks = (i: number) => {
-  return !openPanels.value.includes(i);
-};
 
 const initialVersionControl = () => {
   if (toolMetadata.value.repository.length > 0) {

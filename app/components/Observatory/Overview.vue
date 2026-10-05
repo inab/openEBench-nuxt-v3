@@ -33,8 +33,8 @@
       <div class="row g-4 mb-5">
         <!-- Trends -->
         <div class="col-12 col-sm-6 col-lg-3">
-          <NuxtLink to="/observatory/Trends" class="text-decoration-none text-reset">
-            <div class="h-100 p-4 bg-white border border-gray-100 rounded-lg shadow card-hover d-flex flex-column">
+          <NuxtLink to="/observatory/Trends" class="text-decoration-none text-reset d-flex h-100">
+            <div class="h-100 w-100 p-4 bg-white border border-gray-100 rounded-lg shadow card-hover d-flex flex-column">
 
               <!-- Icon -->
               <div class="icon-wrap mb-3">
@@ -45,7 +45,7 @@
                 Trends
               </h6>
 
-              <p class="text-sm flex-grow-1 text-muted mb-3">
+              <p class="text-sm grow text-muted mb-3">
                 Explore ecosystem and community practices over time:
                 licensing, repositories, documentation, and more.
               </p>
@@ -60,8 +60,8 @@
 
         <!-- FAIRness Scoreboard -->
         <div class="col-12 col-sm-6 col-lg-3">
-          <NuxtLink to="/observatory/FAIRness" class="text-decoration-none text-reset">
-            <div class="h-100 p-4 bg-white border border-gray-100 rounded-lg shadow card-hover d-flex flex-column">
+          <NuxtLink to="/observatory/FAIRness" class="text-decoration-none text-reset d-flex h-100">
+            <div class="h-100 w-100 p-4 bg-white border border-gray-100 rounded-lg shadow card-hover d-flex flex-column">
 
               <div class="icon-wrap mb-3">
                 <UIcon name="i-charm-disc" class="size-6 icon-color" />
@@ -71,7 +71,7 @@
                 FAIRness Scoreboard
               </h6>
 
-              <p class="text-sm flex-grow-1 text-muted mb-3">
+              <p class="text-sm grow text-muted mb-3">
                 See how collections perform across FAIRsoft indicators.
                 Filter, compare and share charts.
               </p>
@@ -86,8 +86,8 @@
 
         <!-- Evaluator -->
         <div class="col-12 col-sm-6 col-lg-3">
-          <NuxtLink to="/observatory/Evaluation" class="text-decoration-none text-reset">
-            <div class="h-100 p-4 bg-white border border-gray-100 rounded-lg shadow card-hover d-flex flex-column">
+          <NuxtLink to="/observatory/Evaluation" class="text-decoration-none text-reset d-flex h-100">
+            <div class="h-100 w-100 p-4 bg-white border border-gray-100 rounded-lg shadow card-hover d-flex flex-column">
 
               <div class="icon-wrap mb-3">
                 <UIcon name="i-cil-check-circle" class="size-6 icon-color" />
@@ -97,7 +97,7 @@
                 FAIRsoft Evaluator
               </h6>
 
-              <p class="text-sm flex-grow-1 text-muted mb-3">
+              <p class="text-sm grow text-muted mb-3">
                 Assess an individual tool, review its metadata and export
                 improvements in standard formats.
               </p>
@@ -112,8 +112,8 @@
 
         <!-- Data -->
         <div class="col-12 col-sm-6 col-lg-3">
-          <NuxtLink to="/observatory/Data" class="text-decoration-none text-reset">
-            <div class="h-100 p-4 bg-white border border-gray-100 rounded-lg shadow card-hover d-flex flex-column">
+          <NuxtLink to="/observatory/Data" class="text-decoration-none text-reset d-flex h-100">
+            <div class="h-100 w-100 p-4 bg-white border border-gray-100 rounded-lg shadow card-hover d-flex flex-column">
 
               <div class="icon-wrap mb-3">
                 <UIcon name="i-dashicons-database" class="size-6 icon-color" />
@@ -123,7 +123,7 @@
                 Data
               </h6>
 
-              <p class="text-sm flex-grow-1 text-muted mb-3">
+              <p class="text-sm grow text-muted mb-3">
                 Inspect metadata completeness, source coverage and statistics
                 across the integrated dataset.
               </p>

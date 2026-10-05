@@ -2,41 +2,24 @@
   <div class="community-info">
     <div class="community-info__header">
       <UAccordion
+        class="intro-accordion"
         :items="HEADER_ITEM"
-        :ui="{ tab: { active: 'cursor-text select-text' } }"
+        :default-value="HEADER_ITEM[0].value"
       >
-        <template #item="{ item }">
-          <p class="italic text-gray-900 dark:text-white text-center">
-            {{ item.label }}
-          </p>
-          <p class="">
-            {{ item.description }}
-          </p>
-        </template>
-        <template #default="{ item, open }">
-          <UButton
-            color="primary"
-            variant="ghost"
-            class="dark:border-gray-700 community-info__header__collapse__btn"
-            :ui="{ rounded: 'rounded-none' }"
-          >
-            <div class="primary label-btn">
-              <div class="border-b border-slate-200">
-                <h2 class="text-left community-info__title">
-                  {{ item.label }}
-                  <UIcon
-                    name="i-heroicons-chevron-right-20-solid"
-                    class="transform transition-transform duration-200 mt-2 community-info__title__icon"
-                    :class="[open && 'rotate-90']"
-                  />
-                </h2>
-              </div>
-
-              <div class="text-left community-info__subtitle mt-2">
-                {{ community.name }}
-              </div>
+        <template #default="{ item }">
+          <div>
+            <h2 class="intro-accordion-title">{{ item.label }}</h2>
+            <div class="text-left community-info__subtitle mt-2">
+              {{ community.name }}
             </div>
-          </UButton>
+          </div>
+        </template>
+        <template #trailing="{ open }">
+          <UIcon
+            name="i-heroicons-chevron-right-20-solid"
+            class="intro-accordion-icon"
+            :class="[open && 'rotate-90']"
+          />
         </template>
         <template #acronym>
           <div class="community-info__header__body">
@@ -120,8 +103,8 @@ console.log(props.community);
 const HEADER_ITEM = [
   {
     label: props.community.acronym ? props.community.acronym : "",
+    value: props.community.acronym || "community",
     description: props.community.description,
-    defaultOpen: true,
     slot: "acronym",
   },
 ];

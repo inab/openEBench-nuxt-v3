@@ -51,7 +51,13 @@
         <span class="text-sm text-gray-500 italic ml-11">
           Examples:
           <span v-for="(item, i) in exampleValues" :key="i">
-            <a href="#" @click.prevent="inputExample(item.URL)">{{ item.title }}</a>
+            <a
+              href="#"
+              class="evaluator-link"
+              @click.prevent="inputExample(item.URL)"
+            >
+              {{ item.title }}
+            </a>
             <span v-if="i < exampleValues.length - 1">, </span>
           </span>
         </span>
@@ -69,9 +75,9 @@
         </UButton>
         <UButton class="bg-primaryOeb-500" variant="solid" size="md" 
         :ui="{color:{variant:{solid:'hover:bg-{blue}-500'}}}"
-        :disabled="!url || showError"
+        :disabled="!url || showError || isSubmitting"
         @click="submitURL">
-          Continue
+          {{ isSubmitting ? 'Loading metadata…' : 'Continue' }}
         </UButton>
         
       </div>
@@ -92,8 +98,11 @@ import { ref, computed } from 'vue';
 import DialogAppInstall from '@/components/Observatory/evaluation/GitHub/DialogAppInstall.vue';
 import { useFileStore } from '~~/stores/observatory/evaluation/file';
 import { useStepperStore } from '~~/stores/observatory/evaluation/index';
+import { useMetadataStore } from '~~/stores/observatory/evaluation/metadata';
 
 const fileStore = useFileStore();
+const metadataStore = useMetadataStore();
+const isSubmitting = ref(false);
 
 const dialogInstallApp = computed(() => fileStore.getDialogInstallApp);
 const test = computed(() => fileStore.getTest);
@@ -112,7 +121,7 @@ const exampleValues = ref([
 ]);
 const installDialogParameters = ref(
   { title: 'Unable to access the file.',
-    text: 'Let the FAIRsoft Evaluator access the requested repositories content by grantting the <a>OpenEBench FAIRsoft Evaluator GitHub App</a> the necessary permissions.',
+    text: 'Let the FAIRsoft Evaluator access the requested repositories content by granting the <a class="evaluator-link" href="https://github.com/apps/metadata-extractor-for-fairsoft" target="_blank" rel="noopener noreferrer">OpenEBench FAIRsoft Evaluator GitHub App</a> the necessary permissions.',
   },
 );
 
@@ -185,9 +194,18 @@ const inputExample = (URL: string) => {
 
 // Method by download File
 const submitURL = async () => {
-  fileStore.downloadFile({url: url.value})
-  // Complete steps
-  completeStep()
+  if (!url.value || isSubmitting.value) return;
+
+  isSubmitting.value = true;
+  metadataStore.updateLoadedMetadata(false);
+  try {
+    await fileStore.downloadFile({url: url.value});
+    if (metadataStore.getLoadedMetadata) {
+      completeStep();
+    }
+  } finally {
+    isSubmitting.value = false;
+  }
 }
 
 const cancel = () => {

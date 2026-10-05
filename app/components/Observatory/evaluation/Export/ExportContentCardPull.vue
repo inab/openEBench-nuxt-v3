@@ -212,7 +212,7 @@ const installDialogParameters = ref({
   installationURL:
     'https://github.com/apps/metadata-updater-for-fairsoft/installations/select_target',
   title: 'Unable to create a pull request',
-  text: 'Let the FAIRsoft Evaluator create a branch, create a citation file and make a pull request in the repository by granting the <a href="https://github.com/apps/metadata-updater-for-fairsoft" target="_blank">Metadata Updater for FAIRsoft GitHub App</a> the necessary permissions.',
+  text: 'Let the FAIRsoft Evaluator create a branch, create a citation file and make a pull request in the repository by granting the <a class="evaluator-link" href="https://github.com/apps/metadata-updater-for-fairsoft" target="_blank" rel="noopener noreferrer">Metadata Updater for FAIRsoft GitHub App</a> the necessary permissions.',
 });
 
 // Conmputed

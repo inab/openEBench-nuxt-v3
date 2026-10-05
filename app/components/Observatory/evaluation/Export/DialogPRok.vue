@@ -1,43 +1,46 @@
 <template>
-  <UModal v-model="dialogPRok" 
-    prevent-close 
-    :ui="{width:'w-96',overlay:{background:'bg-zinc-800/50'}}"
+  <UModal
+    v-model:open="dialogPRok"
+    :close="false"
+    :ui="{ content: 'w-96', overlay: 'bg-zinc-800/50' }"
   >
-    <div class="px-4 py-3">
-      <div class="row flex justify-center">
-        <div class="col-2">
-          <UIcon name="i-heroicons-check-circle " class="w-8 h-8 bg-green-500 my-2" />
+    <template #content>
+      <div class="px-4 py-3">
+        <div class="row flex justify-center">
+          <div class="col-2">
+            <UIcon name="i-heroicons-check-circle " class="w-8 h-8 bg-green-500 my-2" />
+          </div>
         </div>
-      </div>
-      <div class="row flex justify-center">
-        <div class="col-12">
-          <h6 class="text-center my-2">Pull Request Created</h6>
+        <div class="row flex justify-center">
+          <div class="col-12">
+            <h6 class="text-center my-2">Pull Request Created</h6>
+          </div>
+          <div class="col-2 flex justify-center">
+            <UButton
+              color="gray"
+              variant="ghost"
+              @click="openPRinGH()"
+              class="mt-3 px-3 text-black bg-gray-100"
+              :ui="{color: { gray: {ghost:'hover:bg-gray-200'}}}"
+            >
+              See in repository
+            </UButton>
+          </div>
         </div>
-        <div class="col-2 flex justify-center">
+
+        <!-- Actions -->
+        <div class="mt-2 flex justify-end">
           <UButton 
-            color="gray"
-            variant="ghost"
-            @click="openPRinGH()" 
-            class="mt-3 px-3 text-black bg-gray-100"
-            :ui="{color: { gray: {ghost:'hover:bg-gray-200'}}}"
+            color="green"
+            variant="soft"
+            @click="close"
+            class="mt-2"
           >
-            See in repository
+            Close
           </UButton>
         </div>
       </div>
-
-      <!-- Actions -->
-      <div class="mt-2 flex justify-end">
-        <UButton 
-          color="green"
-          variant="soft"
-          @click="close" 
-          class="mt-2"
-        >
-          Close
-        </UButton>
-      </div>
-    </div>
+    </template>
   </UModal>
 
 </template>
@@ -46,7 +49,10 @@ import { computed } from 'vue';
 import { useExport } from '~~/stores/observatory/evaluation/export';
 const exportStore = useExport();
 
-const dialogPRok = computed (() => exportStore.getDialogPRok)
+const dialogPRok = computed({
+  get: () => exportStore.getDialogPRok,
+  set: (value: boolean) => exportStore.updateDialogPRok(value),
+});
 const okURL = computed (() => exportStore.getOkURL)
 
 // Methods

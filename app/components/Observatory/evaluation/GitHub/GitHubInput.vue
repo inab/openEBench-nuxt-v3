@@ -58,7 +58,7 @@
           <span class="text-sm text-gray-500 italic ml-11">
             Examples:
             <span v-for="(item, i) in exampleValues" :key="i">
-              <a href="#" @click.prevent="inputExample(item.URL)">{{ item.title }}</a>
+              <a href="#" class="evaluator-link" @click.prevent="inputExample(item.URL)">{{ item.title }}</a>
               <span v-if="i < exampleValues.length - 1">, </span>
             </span>
           </span>
@@ -116,7 +116,7 @@ const exampleValues = ref([
 const installDialogParameters = ref({
   installationURL: 'https://github.com/apps/metadata-extractor-for-fairsoft/installations/select_target',
   title: "Unable to access repository's metadata.",
-  text: 'Let the FAIRsoft Evaluator access the requested repositories metadata by granting the <a href="https://github.com/apps/metadata-extractor-for-fairsoft" target="_blank">Metadata Extractor for FAIRsoft GitHub App</a> the necessary permissions.',
+  text: 'Let the FAIRsoft Evaluator access the requested repositories metadata by granting the <a class="evaluator-link" href="https://github.com/apps/metadata-extractor-for-fairsoft" target="_blank" rel="noopener noreferrer">Metadata Extractor for FAIRsoft GitHub App</a> the necessary permissions.',
 });
 
 const dialogAppInstall = computed(() => githubStore.getDialogAppInstall);

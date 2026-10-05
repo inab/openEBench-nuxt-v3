@@ -28,9 +28,10 @@
   </div>
 
   <!-- Detailed results -->
-  <div v-if="dialog" @click.self="closeDialog" 
-    class="fixed z-30 inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex center-text items-center justify-center">
-    <div :class="['relative mx-auto p-4 border w-11/12 md:w-2/3 shadow-lg rounded-md bg-white max-h-[80vh] overflow-y-auto', dialogAnimation] ">
+  <Teleport to="body">
+    <div v-if="dialog" @click.self="closeDialog"
+      class="fixed z-50 inset-0 bg-gray-600/50 overflow-y-auto h-full w-full flex center-text items-center justify-center">
+      <div :class="['relative mx-auto p-4 border w-11/12 md:w-2/3 shadow-lg rounded-md bg-white max-h-[80vh] overflow-y-auto', dialogAnimation] ">
       <h6 class="mb-0">{{ title }}</h6>
       <span class="text-xs font-thin">Detailed indicators</span>
 
@@ -40,27 +41,28 @@
         class="mt-3"
       />
 
-      <div class="row grid justify-items-center">
-        <div class="11">
-          <p class="mt-4">
-            <UIcon name="i-heroicons-information-circle" class="w-5 h-5 mr-2" />
-            <span class="text-xs font-light">
-              Not all indicators apply to all kinds of software. For instance,
-              the conditions for a web application to be accessible differ
-              from a command line tool. To keep our set of indicators as
-              simple as possible, we only distinguish between what we consider
-              the minimum number of software categories necessary for our
-              purpose: “web” and “non-web" tools.
-              <br>
-              APIs, web applications, suites, workbenches and databases lie
-              under the “web” category. Software of any other kind is
-              considered “non-web”.
-            </span>
-          </p>
+        <div class="row grid justify-items-center">
+          <div class="11">
+            <p class="mt-4">
+              <UIcon name="i-heroicons-information-circle" class="w-5 h-5 mr-2" />
+              <span class="text-xs font-light">
+                Not all indicators apply to all kinds of software. For instance,
+                the conditions for a web application to be accessible differ
+                from a command line tool. To keep our set of indicators as
+                simple as possible, we only distinguish between what we consider
+                the minimum number of software categories necessary for our
+                purpose: “web” and “non-web" tools.
+                <br>
+                APIs, web applications, suites, workbenches and databases lie
+                under the “web” category. Software of any other kind is
+                considered “non-web”.
+              </span>
+            </p>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </Teleport>
 
     
 </template>

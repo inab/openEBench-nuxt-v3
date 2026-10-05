@@ -2,121 +2,84 @@
   <div class="dashboard-contacts-list">
     <div class="flex justify-content-end py-2.5 dark:border-gray-700">
       <div class="pr-3">
-        <USelectMenu
-          v-model="communitiesSelected"
-          placeholder="Select a community"
-          :options="globalCommunities"
-          by="id"
-          multiple
-          searchable
-          show-create-option-when="always"
-          option-attribute="name"
-          class="input-search"
-          @change="handleCommunityFilter"
-        >
+        <USelectMenu v-model="communitiesSelected" placeholder="Select a community" :options="globalCommunities" by="id"
+          multiple searchable show-create-option-when="always" option-attribute="name" class="input-search"
+          @change="handleCommunityFilter">
           <template #option="{ option }">
-            <div
-              class="inline-block rounded-full custom-badget font-semibold"
-              :class="`status-${option.status} no-hover`"
-              :title="`${'Status'} ${option.status}`"
-            >
-              <div
-                class="text-xs font-normal leading-none max-w-full flex-initial font-semibold p-1"
-                :title="`${'Status'} ${option.status}`"
-              >
-                <span v-if="option.status === 'active'"
-                  ><font-awesome-icon :icon="['fas', 'check']"
-                /></span>
-                <span v-else-if="option.status === 'archived'"
-                  ><font-awesome-icon :icon="['fas', 'box-archive']"
-                /></span>
-                <span v-else-if="option.status === 'incubating'"
-                  ><font-awesome-icon :icon="['fas', 'stopwatch']"
-                /></span>
-                <span v-else-if="option.status === 'abandoned'"
-                  ><font-awesome-icon :icon="['fas', 'ban']"
-                /></span>
-                <span v-else-if="option.status === 'unknown'"
-                  ><font-awesome-icon :icon="['far', 'circle-question']"
-                /></span>
+            <div class="inline-block rounded-full custom-badget font-semibold"
+              :class="`status-${option.status} no-hover`" :title="`${'Status'} ${option.status}`">
+              <div class="text-xs font-normal leading-none max-w-full flex-initial font-semibold p-1"
+                :title="`${'Status'} ${option.status}`">
+                <span v-if="option.status === 'active'"><font-awesome-icon :icon="['fas', 'check']" /></span>
+                <span v-else-if="option.status === 'archived'"><font-awesome-icon
+                    :icon="['fas', 'box-archive']" /></span>
+                <span v-else-if="option.status === 'incubating'"><font-awesome-icon
+                    :icon="['fas', 'stopwatch']" /></span>
+                <span v-else-if="option.status === 'abandoned'"><font-awesome-icon :icon="['fas', 'ban']" /></span>
+                <span v-else-if="option.status === 'unknown'"><font-awesome-icon
+                    :icon="['far', 'circle-question']" /></span>
               </div>
             </div>
             <span>{{ option.name }}</span>
           </template>
         </USelectMenu>
       </div>
-      <UInput
-        v-model="search"
-        color="white"
-        variant="outline"
-        icon="i-heroicons-magnifying-glass-20-solid"
-        placeholder="Search ..."
-        class="input-search"
-      />
+      <UInput v-model="search" color="white" variant="outline" icon="i-heroicons-magnifying-glass-20-solid"
+        placeholder="Search ..." class="input-search" />
     </div>
-    <UTable
-      :columns="columns"
-      :loading="isLoading"
-      :rows="filteredRows"
-      :sort="sort"
-      :ui="{
-        tr: {
-          base: 'hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer',
-        },
-        th: {
-          base: 'text-left rtl:text-right',
-          padding: 'px-2.5 py-2.5',
-          color: 'text-gray-900 dark:text-white',
-          font: 'font-semibold',
-          size: 'text-sm',
-        },
-        td: {
-          base: '',
-          padding: 'px-2.5 py-2.5',
-          font: '',
-          size: 'text-sm',
-        },
-      }"
-    >
-      <template #email-data="{ row }">
-        <template v-if="row.email.length > 0">
-          <div v-for="(email, index) in row.email" :key="index" class="d-flex">
+    <UTable :columns="columns" :loading="isLoading" :data="filteredRows" v-model:sorting="sorting" :ui="{
+      tr: {
+        base: 'hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer',
+      },
+      th: {
+        base: 'text-left rtl:text-right',
+        padding: 'px-2.5 py-2.5',
+        color: 'text-gray-900 dark:text-white',
+        font: 'font-semibold',
+        size: 'text-sm',
+      },
+      td: {
+        base: '',
+        padding: 'px-2.5 py-2.5',
+        font: '',
+        size: 'text-sm',
+      },
+    }">
+      <template #email-cell="{ row }">
+        <template v-if="row.original.email.length > 0">
+          <div v-for="(email, index) in row.original.email" :key="index" class="d-flex">
             {{ email }}
           </div>
         </template>
         <template v-else>
-          {{ row.email }}
+          {{ row.original.email }}
         </template>
       </template>
-      <template #communities-data="{ row }">
-        <div
-          :class="`${getCommunityColor(row.initial_community_id)} no-hover community-row-badget`"
-        >
+      <template #communities-cell="{ row }">
+        <div :class="`${getCommunityColor(row.original.initial_community_id)} no-hover community-row-badget`">
           <font-awesome-icon :icon="['fas', 'external-link-alt']" />
-          {{ parseCommunity(row.initial_community_id)?.name }}
-          <NuxtLink
-            :to="`/dashboard/projects_communities/${row.initial_community_id}`"
-            class="text-primaryOeb-950 pr-1"
-          >
+          {{ parseCommunity(row.original.initial_community_id)?.name }}
+          <NuxtLink :to="`/dashboard/projects_communities/${row.original.initial_community_id}`"
+            class="text-primaryOeb-950 pr-1">
           </NuxtLink>
         </div>
       </template>
-      <template #contact_type-data="{ row }">
+      <template #contact_type-cell="{ row }">
         <div class="d-flex">
-          <span v-if="row.contact_type === 'person'" class="mr-1">
+          <span v-if="row.original.contact_type === 'person'" class="mr-1">
             <font-awesome-icon :icon="['fas', 'user']" />
           </span>
-          <span v-else-if="row.contact_type === 'helpdesk'" class="mr-1">
+          <span v-else-if="row.original.contact_type === 'helpdesk'" class="mr-1">
             <font-awesome-icon :icon="['fas', 'person-shelter']" />
           </span>
           <span v-else class="mr-1">
             <font-awesome-icon :icon="['fas', 'users']" />
           </span>
-          {{ row.contact_type }}
+          {{ row.original.contact_type }}
         </div>
       </template>
-      <template #view-data="{ row }">
-        <button class="btn-custom-badget text-sm" @click="viewContact(row._id)">
+      <template #view-cell="{ row }">
+        <button class="btn-custom-badget text-sm" @click="viewContact(row.original._id)">
           <font-awesome-icon :icon="['fas', 'pencil']" />
           Edit
         </button>
@@ -134,20 +97,11 @@
           results
         </span>
       </div>
-      <UPagination
-        v-model="page"
-        class="pagination"
-        :page-count="pageCount"
-        :total="_total"
-      />
+      <UPagination v-if="_total > pageCount" v-model="page" class="pagination" :page-count="pageCount"
+        :total="_total" />
     </div>
-    <ContactModal
-      :is-modal-open="isModalOpen"
-      modal-title="Contact View"
-      :contact-id="contactIdOpen"
-      :token="token"
-      @close-modal="closeModal"
-    />
+    <ContactModal :is-modal-open="isModalOpen" modal-title="Contact View" :contact-id="contactIdOpen" :token="token"
+      @close-modal="closeModal" />
   </div>
 </template>
 <script setup lang="ts">
@@ -184,36 +138,42 @@ const pageTo = computed(() =>
 
 const columns = [
   {
-    key: "fullName",
-    label: "NAME",
-    sortable: true,
+    id: "fullName",
+    accessorKey: "fullName",
+    header: "NAME",
+    enableSorting: true,
   },
   {
-    key: "email",
-    label: "EMAIL",
-    sortable: true,
+    id: "email",
+    accessorKey: "email",
+    header: "EMAIL",
+    enableSorting: true,
   },
   {
-    key: "notes",
-    label: "NOTES",
-    sortable: true,
+    id: "notes",
+    accessorKey: "notes",
+    header: "NOTES",
+    enableSorting: true,
   },
   {
-    key: "communities",
-    label: "COMMUNITIES",
-    sortable: true,
+    id: "communities",
+    accessorKey: "communities",
+    header: "COMMUNITIES",
+    enableSorting: true,
   },
   {
-    key: "view",
-    label: "ACTIONS",
+    id: "view",
+    header: "ACTIONS",
+    enableSorting: false,
   },
 ];
 
-const sort = ref({
-  column: "fullName",
-  direction: "asc",
-});
-
+const sorting = ref([
+  {
+    id: "fullName",
+    desc: false,
+  },
+]);
 const filteredRows = computed(() => {
   const communities = Array.isArray(communitiesSelected.value)
     ? communitiesSelected.value
@@ -318,14 +278,20 @@ const globalCommunities = ref<Community[]>([]);
 
 function handleCommunityFilter() {
   if (communitiesSelected.value.length > 0) {
-    sort.value.column = "initial_community_id";
+    sorting.value = [
+      {
+        id: "initial_community_id",
+        desc: false,
+      },
+    ];
   } else {
-    sort.value.column = "fullName";
+    sorting.value = [
+      {
+        id: "fullName",
+        desc: false,
+      },
+    ];
   }
-
-  return globalCommunities.value.filter((community) => {
-    return community.id === communitiesSelected.value.id;
-  });
 }
 
 function getCommunityColor(communityId: string) {
@@ -348,6 +314,7 @@ onMounted(async () => {
 .input-search div button {
   min-width: 180px !important;
 }
+
 .community-row-badget {
   width: auto;
   padding: 0.25rem 0.5rem;

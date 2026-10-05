@@ -27,9 +27,10 @@
     </div>
 
     <!-- Detailed results -->
-    <div v-if="dialog" @click.self="closeDialog" 
-      class="fixed z-30 inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex center-text items-center justify-center">
-      <div :class="['relative mx-auto p-4 border w-11/12 md:w-2/3 shadow-lg rounded-md bg-white', dialogAnimation] ">
+    <Teleport to="body">
+      <div v-if="dialog" @click.self="closeDialog"
+        class="fixed z-50 inset-0 bg-gray-600/50 overflow-y-auto h-full w-full flex center-text items-center justify-center">
+        <div :class="['relative mx-auto p-4 border w-11/12 md:w-2/3 shadow-lg rounded-md bg-white', dialogAnimation] ">
         <h5 class="mb-4">Preview and Edit</h5>
         <UTextarea
           v-model="yamlContent"
@@ -37,7 +38,7 @@
           variant="outline"
           autoresize
           resize
-          class="border-1 p-2 textTextarea rounded-md focus-within:ring-primaryOeb-500 focus-within:border-primaryOeb-500 focus-within:text-primaryOeb-500 max-h-[50vh] mb-3 relative"
+          class="border p-2 textTextarea rounded-md focus-within:ring-primaryOeb-500 focus-within:border-primaryOeb-500 focus-within:text-primaryOeb-500 max-h-[50vh] mb-3 relative"
         >
           <template #default>
             <span class="absolute -top-2 left-2 bg-white text-xs px-1 z-50">
@@ -52,8 +53,9 @@
           <UButton class="px-3" color="green" variant="soft" @click="saveYaml()"> Save and Close</UButton>
         </div>
               
+        </div>
       </div>
-    </div>
+    </Teleport>
   </div>
 </template>
 <script setup lang="ts">

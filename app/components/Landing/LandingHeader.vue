@@ -12,12 +12,12 @@
                 workflows.
               </h2>
             </div>
-            <div class="row justify-content-center text-center">
-              <div class="col-md-6 mb-4 mb-md-0 d-flex flex-column align-items-center gap-4">
+            <div class="row align-items-stretch justify-content-center text-center">
+              <div class="col-md-6 mb-4 mb-md-0 d-flex flex-column align-items-center">
                 <NuxtLink to="/benchmarking" class="welcome-avatar">
                   <div class="welcome-avatar__image" title="Scientific Benchmarking"></div>
                 </NuxtLink>
-                <p class="body-1">
+                <p class="body-1 welcome-header-description">
                   I want to search for benchmarking communities and results
                 </p>
                 <NuxtLink to="/benchmarking" class="custom-btn primary welcome-header-btn"
@@ -25,11 +25,11 @@
                   Scientific Benchmarking
                 </NuxtLink>
               </div>
-              <div class="col-md-6 d-flex flex-column align-items-center gap-4">
+              <div class="col-md-6 d-flex flex-column align-items-center">
                 <NuxtLink class="welcome-avatar secondary" to="/observatory/trends">
                   <div class="welcome-avatar__image_secondary" title="Tools Observatory"></div>
                 </NuxtLink>
-                <p class="body-1">
+                <p class="body-1 welcome-header-description">
                   I want to see how to develop sustainable research tools
                 </p>
                 <NuxtLink to="/observatory/trends" class="custom-btn secondary welcome-header-btn "
@@ -131,19 +131,27 @@ import HeaderImage from "@/components/Landing/HeaderImage";
     display: flex;
     flex-direction: column;
     padding-top: 5px;
+  }
 
-    .row {
-      flex-grow: 1;
-      padding-top: 20px;
+  .welcome-left > .row {
+    flex-grow: 1;
+    padding-top: 20px;
+  }
 
-      .col {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        align-items: center;
-        text-align: center;
-      }
-    }
+  .welcome-left > .row > [class*="col-"] {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .welcome-avatar {
+    flex-shrink: 0;
+  }
+
+  .welcome-header-description {
+    margin: 16px 0 24px;
+    min-height: 3.5rem;
   }
 }
 

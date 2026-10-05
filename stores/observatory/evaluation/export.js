@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia';
 import { useNuxtApp } from 'nuxt/app';
-import { value } from 'valibot';
 
 export const useExport = defineStore('export', {
   state: () => ({
@@ -37,7 +36,7 @@ export const useExport = defineStore('export', {
       this.setDialogPRok(value)
     },
 
-    updateDialogPRfail() {
+    updateDialogPRfail(value) {
       this.setDialogPRfail(value)
     },
 
@@ -74,8 +73,8 @@ export const useExport = defineStore('export', {
         this.setDialogPR(false)
         this.setDialogAppInstall(false)
       }else{
-        this.setOkURL(response.message)
-        this.setDialogPRok(true)
+        this.setFailMessage(response.message)
+        this.setDialogPRfail(true)
         this.setDialogPR(false)
         this.setDialogAppInstall(false)
       }

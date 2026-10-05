@@ -1,7 +1,7 @@
 <template>
   <div class="container px-5 my-5">
     <UTabs :items="items" class="w-full" :ui="{list:{tab:{active:'text-primaryOeb-500'}}}" >
-    <template #item="{ item }">
+    <template #content="{ item }">
       <div v-if="item.component === 'FAIRresults'">
         <FAIRresults/>
       </div>

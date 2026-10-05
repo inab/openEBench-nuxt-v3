@@ -1,6 +1,6 @@
 <template>
   <a :href="href" target="_blank" class="card-link">
-    <div class="card mb-5 mx-3 main-card">
+    <div class="card mb-5 mx-3 main-card card-hover">
       <div class="image-container">
         <!-- custom styles for ELIXIR STEERS -->
         <img

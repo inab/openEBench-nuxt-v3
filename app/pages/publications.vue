@@ -41,11 +41,15 @@
 
         <div class="community-tabs md:flex">
           <UTabs
-            v-model:selected="selectedTab"
+            v-model="selectedTab"
             :items="tabsItems"
             class="w-full"
-            :ui="{ list: { tab: { active: 'text-primary-500' } } }"
-            @tab-selected="handleTabSelection"
+            variant="pill"
+            :ui="{
+              list: 'w-full',
+              trigger: 'flex-1 data-[state=active]:text-white',
+            }"
+            @update:model-value="handleTabSelection"
           >
             <template #default="{ item, index, selected }">
               <div class="flex items-center gap-2 relative truncate">
@@ -183,11 +187,13 @@ const routeArray: { label: string; isActualRoute: boolean }[] = [
 const tabsItems = [
   {
     label: "Papers",
+    value: "papers",
     icon: "i-heroicons-document-duplicate-16-solid",
     slot: "papers",
   },
   {
     label: "Posters",
+    value: "posters",
     icon: "i-heroicons-document-chart-bar-16-solid",
     slot: "posters",
   },

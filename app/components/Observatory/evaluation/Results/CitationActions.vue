@@ -7,7 +7,7 @@
         when used in research. By including a citation file in your
         repository, users can easily reference your work. For more
         information, see the
-        <a href="https://citation-file-format.github.io/" target="_blank"
+        <a class="evaluator-link" href="https://citation-file-format.github.io/" target="_blank" rel="noopener noreferrer"
           >Citation File Format CFF specification</a
         >.
       </p>

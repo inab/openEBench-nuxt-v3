@@ -64,9 +64,9 @@
         </UButton>
         <UButton class="bg-primaryOeb-500" variant="solid" size="md" 
         :ui="{color:{variant:{solid:'hover:bg-{blue}-500'}}}"
-        :disabled="!file || showError"
+        :disabled="!file || showError || isSubmitting"
         @click="submitFile">
-          Continue
+          {{ isSubmitting ? 'Loading metadata…' : 'Continue' }}
         </UButton>
       </div>
     </div>
@@ -77,12 +77,15 @@
 import { ref, computed } from 'vue';
 import { useFileStore } from '~~/stores/observatory/evaluation/file';
 import { useStepperStore } from '~~/stores/observatory/evaluation/index';
+import { useMetadataStore } from '~~/stores/observatory/evaluation/metadata';
 
 const fileStore = useFileStore();
+const metadataStore = useMetadataStore();
 
 // Validation State
 const file = ref<File | null>(null);
 const fileName = ref<string | null>(null);
+const isSubmitting = ref(false);
 const showError = ref(false);
 const errorMessage = ref('');
 const fileInput = ref<HTMLInputElement | null>(null);
@@ -170,16 +173,22 @@ const handleFileUpload = (event: Event) => {
   showError.value = false;
 };
 
-const submitFile = () => {
+const submitFile = async () => {
   if (!file.value) {
     showError.value = true;
     errorMessage.value = 'Please select a file before submitting.';
     return;
   }
-  fileStore.parseMetadataFile(file.value)
-
-  // IF ALL OK, COMPLETE STEP
-  completeStep();
+  isSubmitting.value = true;
+  metadataStore.updateLoadedMetadata(false);
+  try {
+    await fileStore.parseMetadataFile(file.value);
+    if (metadataStore.getLoadedMetadata) {
+      completeStep();
+    }
+  } finally {
+    isSubmitting.value = false;
+  }
 };
 
 // Stepper

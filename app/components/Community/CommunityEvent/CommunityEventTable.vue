@@ -8,7 +8,7 @@
 
       <!-- Checkbox in header to select/deselect all visible elements on the current page -->
       <input type="checkbox" class="allChecks" :checked="isAllSelected" @change="toggleSelectAll" />
-      <UTable v-model:selected="selected" :rows="filteredRows" :columns="columns" :ui="{
+      <UTable v-model:selected="selected" :data="filteredRows" :columns="columns" :ui="{
         tr: {
           base: 'hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer',
         },
@@ -26,26 +26,27 @@
           size: 'text-sm',
         },
       }">
-        <template #checkbox-data="{ row }">
-          <input type="checkbox" :checked="isSelected(row)" @change="select(row)" />
+        <template #checkbox-cell="{ row }">
+          <input type="checkbox" :checked="isSelected(row.original)" @change="select(row.original)" />
         </template>
 
-        <template #name-data="{ row }">
+        <template #name-cell="{ row }">
           <span :class="[
-            isSelected(row) && 'text-primaryOeb-500 dark:text-primary-400',
+            isSelected(row.original) && 'text-primaryOeb-500 dark:text-primary-400',
           ]">
-            {{ row.name }}
+            {{ row.original.name }}
           </span>
         </template>
-        <template #_id-data="{ row }">
+        <template #_id-cell="{ row }">
           <NuxtLink class="text-primary-500 dark:text-primary-400" title="Go to challenge"
-            :to="getChallengeLink(row._id)">
-            {{ row.acronym }}
+            :to="getChallengeLink(row.original._id)">
+            {{ row.original.acronym }}
           </NuxtLink>
         </template>
-        <template #participant-data="{ row }">
-          <NuxtLink v-if="!loadingRows.includes(row._id)" class="text-primary-500 dark:text-primary-400"
-            title="Go to participant" :to="getChallengeLink(`${row._id}/participants`)" @click="handleClick(row._id)">
+        <template #participant-cell="{ row }">
+          <NuxtLink v-if="!loadingRows.includes(row.original._id)" class="text-primary-500 dark:text-primary-400"
+            title="Go to participant" :to="getChallengeLink(`${row.original._id}/participants`)"
+            @click="handleClick(row.original._id)">
             Participant
           </NuxtLink>
           <span v-else>
@@ -112,20 +113,25 @@ const _total = ref(0);
 
 const columns = [
   {
-    key: "checkbox",
-    label: "",
+    id: "checkbox",
+    header: "",
+    enableSorting: false,
   },
   {
-    key: "_id",
-    label: "Acronym",
+    id: "_id",
+    accessorKey: "_id",
+    header: "Acronym",
+    enableSorting: false,
   },
   {
-    key: "participant",
-    label: "Participant",
+    id: "participant",
+    header: "Participant",
+    enableSorting: false,
   },
   {
-    key: "name",
-    label: "Name",
+    id: "name",
+    header: "Name",
+    enableSorting: false,
   },
 ];
 

@@ -3,54 +3,38 @@
     <BreadcrumbsBar :breadcrumbs-array="routeArray" />
     <div class="w-100 container">
       <div v-if="status == 'authenticated'">
-        <UAccordion :items="HEADER_ITEM">
-          <template #item="{ item }">
-            <div class="dashboard__header__title">
-              <h2 class="text-primaryOeb-500">{{ item.label }}</h2>
-            </div>
+        <UAccordion class="intro-accordion" :items="HEADER_ITEM" default-value="plots">
+          <template #default="{ item }">
+            <h2 class="intro-accordion-title">{{ item.label }}</h2>
           </template>
-          <template #default="{ item, open }">
-            <UButton
-              color="primary"
-              variant="ghost"
-              class="border-b border-slate-200 dark:border-gray-700 community-collapse-btn"
-              :ui="{ rounded: 'rounded-none' }"
-            >
-              <div class="primary label-btn">
-                <h2>{{ item.label }}</h2>
-              </div>
-              <template #trailing>
-                <UIcon
-                  name="i-heroicons-chevron-right-20-solid"
-                  class="transform transition-transform duration-200"
-                  :class="[open && 'rotate-90']"
-                />
-              </template>
-            </UButton>
+
+          <template #trailing="{ open }">
+            <UIcon name="i-heroicons-chevron-right-20-solid"
+              class="intro-accordion-icon"
+              :class="[open && 'rotate-90']" />
           </template>
+
           <template #plots>
             <div class="accordion_metrics__body">
               <div class="dashboard__description text-gray-500">
                 <div class="dashboard__description__image">
-                  <img
-                    src="assets/images/dashboard/Charts-pana.png"
-                    alt="metrics"
-                    class="metrics__body__img"
-                  />
+                  <img src="~/assets/images/dashboard/Charts-pana.png" alt="metrics" class="metrics__body__img" />
+
                   <div class="hidden">
-                    <a href="https://storyset.com/business"
-                      >Business illustrations by Storyset</a
-                    >
+                    <a href="https://storyset.com/business">
+                      Business illustrations by Storyset
+                    </a>
                   </div>
                 </div>
+
                 <div class="dashboard__description__text">
-                  <div class="dashboard__description__text__extension">
+                  <div class="dashboard__description__text__extension mt-2">
                     Communities in OpenEBench leverage powerful visualization
                     tools to present benchmarking results in clear and
                     insightful ways. These interactive plots enable users to
                     explore performance trends, compare tool effectiveness
-                    across different datasets, and gain valuable insights into
-                    software capabilities.
+                    across different datasets, and gain valuable insights
+                    into software capabilities.
                   </div>
 
                   <div class="dashboard__description__text__extension">
@@ -72,13 +56,7 @@
           <div class="metric-filter d-flex justify-content-start">
             <div class="metric-filter__col col-3 d-flex">
               <label for="plotType" class="form-label">Select Plot Type:</label>
-              <USelect
-                v-model="plotSelected"
-                :options="plotTypes"
-                option-attribute="name"
-                class="custom-select-input"
-                size="xl"
-              />
+              <USelect v-model="plotSelected" :items="plotTypes" class="custom-select-input" size="xl" />
             </div>
           </div>
           <div class="dashboard-tabs pt-4">
@@ -108,23 +86,23 @@ const { data, status } = useAuth();
 const route = useRoute();
 const plotTypes = [
   {
-    name: "Bar Plot",
+    label: "Bar Plot",
     value: "bar-plot",
   },
   {
-    name: "Scatter Plot",
+    label: "Scatter Plot",
     value: "2D-plot",
   },
   {
-    name: "Box Plot",
+    label: "Box Plot",
     value: "box-plot",
   },
   {
-    name: "Radar Plot",
+    label: "Radar Plot",
     value: "radar-plot",
   },
   {
-    name: "Line Plot",
+    label: "Line Plot",
     value: "line-plot",
   },
 ];
@@ -139,7 +117,7 @@ if (plotSelected.value == "scatter") {
 const HEADER_ITEM = [
   {
     label: "Plots",
-    defaultOpen: true,
+    value: "plots",
     slot: "plots",
   },
 ];
@@ -154,40 +132,36 @@ const routeArray: Array = [
 <style lang="scss" scoped>
 .dashboard__description {
   display: flex;
+
   &__image {
     margin-right: 40px;
+
     img {
       max-height: 500px;
     }
   }
+
   &__text {
     font-size: 16px;
     line-height: 1.5;
   }
 }
 
-.community-collapse-btn {
-  padding: 0;
-  display: flex;
-  justify-content: space-between;
-  &:hover {
-    background-color: white;
-  }
-  span {
-    font-size: 30px;
-  }
-}
 .dashboard__description__text {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  margin-top: 10px;
 }
+
 .metric-filter__col {
   align-items: center;
+
   label {
     padding-right: 30px;
     min-width: 150px;
   }
+
   .custom-select-input {
     min-width: 170px;
   }
