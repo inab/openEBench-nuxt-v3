@@ -64,7 +64,6 @@ export default defineNuxtConfig({
 
   css: [
     '~/assets/css/main.css',
-    'bootstrap/dist/css/bootstrap.min.css',
     '@fortawesome/fontawesome-svg-core/styles.css',
     'aos/dist/aos.css',
     'vue-multiselect/dist/vue-multiselect.min.css',
@@ -84,8 +83,8 @@ export default defineNuxtConfig({
     public: {
       ENVIRONMENT: process.env.ENVIRONMENT || 'test-oeb2',
       OEB_LEGACY_ANGULAR_URI:
-        process.env.OEB_LEGACY_ANGULAR_URI || 'https://legacy.dev-openebench.bsc.es/',
-      VRE_URI: process.env.VRE_URI || 'https://openebench.bsc.es/vre/home/',
+        process.env.OEB_LEGACY_ANGULAR_URI || 'https://legacy.dev-openebench.bsc.es',
+      VRE_URI: process.env.VRE_URI || 'https://openebench.bsc.es/vre/home',
       OBSERVATORY_URI: process.env.OBSERVATORY_URI || 'https://observatory.openebench.bsc.es',
       SCIENTIFIC_SERVICE_URL:
         process.env.SCIENTIFIC_SERVICE_URL || 'https://openebench.bsc.es/api/scientific',
@@ -99,9 +98,9 @@ export default defineNuxtConfig({
         process.env.GITHUBAPP_API_URL ||
         'https://observatory.openebench.bsc.es/github-metadata-api',
       MONITORING: {
-        baseURL: process.env.REST_API_URL || 'https://openebench.bsc.es/monitor/rest/',
+        baseURL: process.env.REST_API_URL || 'https://openebench.bsc.es/monitor/rest',
       },
-      KEYCLOAK_HOST: process.env.KEYCLOAK_HOST || 'https://inb.bsc.es/',
+      KEYCLOAK_HOST: process.env.KEYCLOAK_HOST || 'https://inb.bsc.es',
       KEYCLOAK_REALM: process.env.KEYCLOAK_REALM || 'oeb2dev',
       KEYCLOAK_CLIENT_ID: process.env.KEYCLOAK_CLIENT_ID || 'oeb-frontend',
       BASE_URL: process.env.APP_BASE_URL || 'https://openebench.bsc.es',

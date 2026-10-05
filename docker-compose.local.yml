@@ -11,18 +11,16 @@ services:
     user: ${DEV_UID:-0}:${DEV_GID:-0}
     command: npm ci
     volumes:
-      - ./assets:/app/assets:ro
-      - ./components:/app/components:ro
-      - ./config:/app/config:ro
+      - ./app/assets:/app/assets:ro
+      - ./app/components:/app/components:ro
+      - ./app/config:/app/config:ro
       - ./constants:/app/constants:ro
-      - ./layouts:/app/layouts:ro
-      - ./pages:/app/pages:ro
-      - ./plugins:/app/plugins:ro
-      - ./static:/app/static
+      - ./app/layouts:/app/layouts:ro
+      - ./app/pages:/app/pages:ro
+      - ./app/plugins:/app/plugins:ro
       - ./stores:/app/stores:ro
-      - ./stories:/app/stories:ro
       - ./test:/app/test:ro
-      - ./utils:/app/utils:ro
+      - ./app/utils:/app/utils:ro
       - ./vitest.config.ts:/app/vitest.config.ts:ro
       - ./nuxt.config.js:/app/nuxt.config.js:ro
       - ./package.json:/app/package.json:ro
@@ -39,38 +37,23 @@ services:
       dockerfile: Dockerfile.localci
     image: openebench-nuxt3:localci
     user: ${DEV_UID:-0}:${DEV_GID:-0}
+
     depends_on:
       npm_ci_deps:
         condition: service_completed_successfully
+
     restart: on-failure
+
     volumes:
-      - ./assets:/app/assets:ro
-      - ./components:/app/components:ro
-      - ./constants:/app/constants:ro
-      - ./config:/app/config:ro
-      - ./layouts:/app/layouts:ro
-      - ./pages:/app/pages:ro
-      - ./plugins:/app/plugins:ro
-      - ./static:/app/static
-      - ./stores:/app/stores:ro
-      - ./stories:/app/stories:ro
-      - ./test:/app/test:ro
-      - ./utils:/app/utils:ro
-      - ./vitest.config.ts:/app/vitest.config.ts:ro
-      - ./nuxt.config.js:/app/nuxt.config.js:ro
-      - ./package.json:/app/package.json:ro
-      - ./package-lock.json:/app/package-lock.json
-      - ./server:/app/server:ro
-      - ./types:/app/types:ro
-      - ./stylelint.config.js:/app/stylelint.config.js:ro
-      - ./tsconfig.json:/app/tsconfig.json:ro
-      - ./models:/app/models
-      - ./api:/app/api
+      - .:/app
       - node-modules-volume:/app/node_modules
       - dist-volume:/app/dist
+
     ports:
-      - 3001:3001
+      - "3001:3001"
+
     environment:
       CHOKIDAR_USEPOLLING: "true"
+      WATCHPACK_POLLING: "true"
       AUTH_ORIGIN: "http://localhost:3001"
       APP_BASE_URL: "http://localhost:3001"
