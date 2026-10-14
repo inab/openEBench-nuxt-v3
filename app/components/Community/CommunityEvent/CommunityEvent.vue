@@ -1,7 +1,11 @@
 <template>
   <div class="community-event">
     <div v-if="events && events.length > 0" class="w-100">
-      <CommunityEventSelector :current-event="currentEvent" :events="events" />
+      <CommunityEventSelector
+        :current-event="currentEvent"
+        :events="events"
+        :community-id="communityId"
+      />
       <CommunityEventTableContent
         :event="currentEvent"
         :community-id="communityId"

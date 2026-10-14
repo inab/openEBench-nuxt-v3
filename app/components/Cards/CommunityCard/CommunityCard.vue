@@ -15,23 +15,23 @@
         </div>
         <div class="community-card__item__body__content__wrapper">
           <div v-if="benchmarkingEvents && benchmarkingEvents.length > 0"
-            class="inline-block bg-primaryOeb-150 text-primaryOeb-950 custom-badget btn-custom-badget rounded-full font-semibold text-gray-700 cursor-pointer"
+            class="community-card__chip community-card__events-chip custom-badget btn-custom-badget rounded-full cursor-pointer"
             title="View events">
-            <NuxtLink :to="eventsChipLink" class="text-primaryOeb-950">
+            <NuxtLink :to="eventsChipLink">
               <font-awesome-icon :icon="['far', 'calendar-check']" />
               {{ benchmarkingEvents.length }}
               {{ pluralize("Events", benchmarkingEvents.length) }}
             </NuxtLink>
           </div>
-          <div class="inline-block rounded-full text-primaryOeb-950 custom-badget font-semibold text-gray-700"
-            :class="`status-${status}`" style="cursor: default">
+          <div class="community-card__chip community-card__status-chip inline-block rounded-full custom-badget font-semibold"
+            :class="statusClass" style="cursor: default">
             <div class="text-xs font-normal leading-none max-w-full flex-initial font-semibold"
               :title="`${'Status'} ${status}`">
               {{ status }}
             </div>
           </div>
           <div v-if="referenceTools.length > 0"
-            class="inline-block bg-gray-200 rounded-full text-primaryOeb-950 custom-badget btn-custom-badget font-semibold text-gray-700">
+            class="community-card__chip community-card__tools-chip inline-block rounded-full custom-badget btn-custom-badget font-semibold">
             <font-awesome-icon :icon="['fas', 'gear']" />
             {{ benchmarkingEvents.length }}
             {{ pluralize("Events", benchmarkingEvents.length) }}
@@ -101,15 +101,12 @@ if (props.links) {
   });
 }
 
-const statusChipColor = computed(() => {
-  switch (props.status) {
-    case "active":
-      return "bg-green-200";
-    case "incubating":
-      return "bg-teal-200";
-    default:
-      return "bg-neutral-300";
-  }
+const statusClass = computed(() => {
+  const normalizedStatus = props.status.toLowerCase();
+  const supportedStatuses = ["active", "archived", "incubating", "abandoned"];
+  return supportedStatuses.includes(normalizedStatus)
+    ? `status-${normalizedStatus}`
+    : "community-card__status-chip--default";
 });
 
 const eventsChipLink = computed(() => {
@@ -223,6 +220,69 @@ const eventsChipLink = computed(() => {
   }
 }
 
+.community-card__chip {
+  font-weight: 600;
+}
+
+.community-card__events-chip {
+  background-color: #fff;
+  color: var(--color-gray-400);
+  border: 1px solid var(--color-gray-400);
+  transition: 0.5s;
+
+  a {
+    color: inherit;
+  }
+
+  &:hover {
+    background-color: var(--color-primary-500);
+    color: var(--color-primary-50);
+
+    a {
+      color: var(--color-primary-50);
+      text-decoration: none;
+    }
+  }
+}
+
+.community-card__status-chip {
+  cursor: default;
+
+  &.status-active {
+    background-color: var(--color-statusActive-50);
+    color: var(--color-statusActive-500);
+    border: 1px solid var(--color-statusActive-500);
+  }
+
+  &.status-archived {
+    background-color: var(--color-statusArchived-50);
+    color: var(--color-statusArchived-500);
+    border: 1px solid var(--color-statusArchived-500);
+  }
+
+  &.status-incubating {
+    background-color: var(--color-statusIncubating-50);
+    color: var(--color-statusIncubating-500);
+    border: 1px solid var(--color-statusIncubating-500);
+  }
+
+  &.status-abandoned {
+    background-color: var(--color-statusAbandoned-50);
+    color: var(--color-statusAbandoned-500);
+    border: 1px solid var(--color-statusAbandoned-500);
+  }
+
+  &--default {
+    background-color: var(--color-gray-200);
+    color: var(--color-gray-700);
+  }
+}
+
+.community-card__tools-chip {
+  background-color: var(--color-gray-200);
+  color: var(--color-primaryOeb-950);
+}
+
 .community-card__item__dropdown {
   position: relative;
 
@@ -241,6 +301,9 @@ const eventsChipLink = computed(() => {
     text-transform: capitalize;
     display: flex !important;
     align-items: center !important;
+    font-size: 12px;
+    line-height: 1.25;
+    padding: 0.375rem 0.75rem;
   }
 }
 </style>

@@ -19,19 +19,81 @@ const markdownString: ComputedRef<string | null> = computed(
   () => props.markdown.summary ?? null,
 );
 
-const markup = computed(() =>
-  DOMPurify.sanitize(marked(markdownString.value ?? "")),
-);
+function convertAnchors(markdown: string): string {
+  return markdown.replace(
+    /\(#([\w-]+)\)/g,
+    (match, id: string, offset: number, source: string) =>
+      source[offset - 1] === "]" ? match : `<a id="${id}"></a>`,
+  );
+}
+
+function indentBulletHeadingSections(markdown: string): string {
+  let sectionHeadingLevel = 0;
+
+  return markdown
+    .split("\n")
+    .map((line) => {
+      const bulletHeading = line.match(/^\s*[*+-]\s+(#{1,6})\s+/);
+      const bulletHeadingLevel = bulletHeading?.[1]?.length;
+      if (bulletHeadingLevel) {
+        sectionHeadingLevel = bulletHeadingLevel;
+        return line;
+      }
+
+      const heading = line.match(/^(#{1,6})\s+/);
+      const headingLevel = heading?.[1]?.length;
+      if (headingLevel && headingLevel <= sectionHeadingLevel) {
+        sectionHeadingLevel = 0;
+        return line;
+      }
+
+      if (!sectionHeadingLevel || !line.trim()) {
+        return line;
+      }
+
+      const indentation = line.match(/^\s*/)?.[0].length ?? 0;
+      return indentation >= 4 ? line : `${" ".repeat(4 - indentation)}${line}`;
+    })
+    .join("\n");
+}
+
+const markup = computed(() => {
+  const markdown = convertAnchors(markdownString.value ?? "");
+  const tokens = marked.lexer(indentBulletHeadingSections(markdown));
+  return DOMPurify.sanitize(marked.parser(tokens));
+});
 </script>
 
 <style lang="scss">
 .community-event-summary {
   padding-top: 5px;
   &__markup {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      margin: 1.5rem 0 0.75rem;
+      color: #111827;
+      font-weight: 600;
+      line-height: 1.25;
+    }
     h1 {
-      padding-top: 0;
-      color: #396fba;
-      font-size: 38px;
+      margin-top: 0;
+      color: var(--color-primaryOeb-500);
+      font-size: 1.75rem;
+    }
+    h2 {
+      font-size: 1.4rem;
+    }
+    h3 {
+      font-size: 1.2rem;
+    }
+    h4,
+    h5,
+    h6 {
+      font-size: 1rem;
     }
     a {
       color: #0b579f;
@@ -41,22 +103,47 @@ const markup = computed(() =>
         color: #6a98c4;
       }
     }
-    strong{
-      font-weight: 500;
-    }
-    h2,
-    h3 {
-      padding-bottom: 8px;
+    strong {
+      font-weight: 600;
     }
     p,
-    ul {
+    ul,
+    ol {
+      margin-bottom: 0.875rem;
       font-size: 0.875rem !important;
       font-weight: 400;
-      line-height: 1.25rem;
+      line-height: 1.5rem;
       letter-spacing: 0.0178571429em !important;
     }
+    ul,
+    ol {
+      padding-left: 1.5rem;
+    }
     ul {
-      padding-bottom: 16px;
+      list-style: disc;
+    }
+    ol {
+      list-style: decimal;
+    }
+    li {
+      padding-left: 0.25rem;
+    }
+    li > p {
+      margin: 0.375rem 0;
+    }
+    li > p:first-child {
+      margin-top: 0;
+    }
+    li > :last-child {
+      margin-bottom: 0;
+    }
+    li > ul,
+    li > ol {
+      margin: 0.375rem 0;
+      padding-left: 1.25rem;
+    }
+    li + li {
+      margin-top: 0.25rem;
     }
     img {
       max-height: 80vh;
