@@ -78,6 +78,7 @@ describe("Entries Page Dashboard", () => {
           "NuxtLink",
           "UTable",
           "UInput",
+          "UTooltip",
         ],
       },
       props: {

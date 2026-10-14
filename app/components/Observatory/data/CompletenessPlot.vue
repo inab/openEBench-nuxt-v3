@@ -1,13 +1,14 @@
 <template>
-	<div id="plot_22"></div>
+	<div ref="plotContainer" id="plot_22"></div>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, watch, nextTick } from 'vue';
+import { computed, watch, nextTick, ref } from 'vue';
 import { useData } from '~~/stores/observatory/data';
 import { useObservatory } from '~~/stores/observatory/index.js';
 import Plotly from 'plotly.js-dist';
 import { activeTabIndex } from '@/components/Common/state.js';
+import { getPlotElement, resizePlot } from '~/utils/resizePlot';
 
 // Store
 const dataStore = useData();
@@ -17,6 +18,7 @@ const observatoryStore = useObservatory();
 const completeness = computed(() => dataStore.completeness);
 const completenessControl = computed(() => dataStore.completenessControl);
 const currentCollection = computed(() => observatoryStore.getCurrentCollection);
+const plotContainer = ref<HTMLElement | null>(null);
 
 const layout = {
   grid: {
@@ -29,7 +31,6 @@ const layout = {
 		tickformat: ',.0%',
   },
   xaxis: {
-    tickformat: '%{x}',
     ticksuffix: ' features or less',
     tickmode: 'array',
     showticksuffix: false,
@@ -37,7 +38,6 @@ const layout = {
   },
   xaxis2: {
     title: 'Number of features',
-    tickformat: '%{x}',
     ticksuffix: ' features',
     tickmode: 'array',
     showticksuffix: false,
@@ -55,6 +55,7 @@ const layout = {
     orientation: 'h',
   },
   autosize: true,
+  height: 340,
   margin: {
     autoexpand: true,
     t: 0,
@@ -141,25 +142,29 @@ function buildTraces() {
   return data;
 }
 
-function updatePlot() {
-  const data = buildTraces();
-  const plotElement = document.getElementById('plot_22');
+async function updatePlot() {
+  await nextTick();
+  const plotElement = getPlotElement(plotContainer.value);
+  if (!plotElement) return;
 
-  if (plotElement) {
-    Plotly.newPlot(plotElement, data, layout, config);
+  const data = buildTraces();
+
+  if (plotElement.classList.contains('js-plotly-plot')) {
+    await Plotly.react(plotElement, data, layout, config);
   } else {
-    console.error('No DOM element with id "plot_22" exists on the page.');
+    await Plotly.newPlot(plotElement, data, layout, config);
   }
 }
 
-// OnMounted
-onMounted(() => {
-  updatePlot();
-});
+watch(
+  [completeness, completenessControl, currentCollection],
+  updatePlot,
+  { deep: true, immediate: true, flush: 'post' }
+);
 
 watch(activeTabIndex, async () => {
     await nextTick(); 
-    Plotly.relayout('plot_22', { autosize: true });
+    await resizePlot(plotContainer.value, Plotly);
 });
 
 </script>
@@ -168,6 +173,11 @@ watch(activeTabIndex, async () => {
 #plot_22 {
   padding: 0%;
   margin: 0%;
+  width: 100%;
+  min-width: 0;
+  min-height: 340px;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 #plot_22 .modebar {

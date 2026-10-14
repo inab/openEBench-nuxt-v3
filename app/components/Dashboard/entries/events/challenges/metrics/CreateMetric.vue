@@ -54,7 +54,7 @@
         <div class="col-6">
           <label for="formal_definition"> Type </label>
           <div class="w-100">
-            <USelect v-model="state.type" :options="types" class="selector" />
+            <USelect v-model="state.type" :items="types" class="selector" />
           </div>
         </div>
       </div>

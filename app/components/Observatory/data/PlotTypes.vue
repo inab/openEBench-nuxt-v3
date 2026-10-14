@@ -1,12 +1,13 @@
 <template>
-	<div id="plot_23"></div>
+	<div ref="plotContainer" id="plot_23"></div>
 </template>
 <script setup lang="ts">
-import { computed, onMounted, watch, nextTick } from 'vue';
+import { computed, watch, nextTick, ref } from 'vue';
 import { useData } from '~~/stores/observatory/data';
 import { useObservatory } from '~~/stores/observatory/index.js';
 import Plotly from 'plotly.js-dist';
 import { activeTabIndex } from '@/components/Common/state.js';
+import { getPlotElement, resizePlot } from '~/utils/resizePlot';
 
 // Store
 const dataStore = useData();
@@ -16,8 +17,11 @@ const observatoryStore = useObservatory();
 const types_data = computed(() => dataStore.types);
 const types_data_control = computed(() => dataStore.typesControl);
 const currentCollection = computed(() => observatoryStore.getCurrentCollection);
+const plotContainer = ref<HTMLElement | null>(null);
 
 const layout = {
+  autosize: true,
+  height: 340,
   yaxis: {
     title: '',
     categoryorder: 'total ascending',
@@ -81,7 +85,11 @@ function buildData(typesData) {
   return newValues;
 }
 
-function updatePlot() {
+async function updatePlot() {
+  await nextTick();
+  const plotElement = getPlotElement(plotContainer.value);
+  if (!plotElement) return;
+
   const data = buildData(types_data.value);
   const dataControl = buildData(types_data_control.value);
 
@@ -117,21 +125,22 @@ function updatePlot() {
   }
   traces.push(trace)
 
-  const plotElement = document.getElementById('plot_23');
-  if (plotElement) {
-    Plotly.newPlot(plotElement, traces, layout, config);
+  if (plotElement.classList.contains('js-plotly-plot')) {
+    await Plotly.react(plotElement, traces, layout, config);
   } else {
-    console.error('No DOM element with id "plot_23" exists on the page.');
+    await Plotly.newPlot(plotElement, traces, layout, config);
   }
 }
 
-onMounted(() => {
-  updatePlot();
-});
+watch(
+  [types_data, types_data_control, currentCollection],
+  updatePlot,
+  { deep: true, immediate: true, flush: 'post' }
+);
 
 watch(activeTabIndex, async () => {
     await nextTick(); 
-    Plotly.relayout('plot_23', { autosize: true });
+    await resizePlot(plotContainer.value, Plotly);
 });
 </script>
 
@@ -139,6 +148,11 @@ watch(activeTabIndex, async () => {
 #plot_23 {
   padding: 0%;
   margin: 0%;
+  width: 100%;
+  min-width: 0;
+  min-height: 340px;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .v-card {

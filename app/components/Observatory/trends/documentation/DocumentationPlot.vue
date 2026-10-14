@@ -6,6 +6,7 @@
   import { defineProps, onMounted, watch, nextTick } from "vue";
   import Plotly from "plotly.js-dist";
   import { activeTabIndex } from "@/components/Common/state.js";
+  import { getPlotElement, resizePlot } from "~/utils/resizePlot";
   
   const props = defineProps<{
     data: Record<string, any>;
@@ -111,7 +112,10 @@
       },
     };
   
-    Plotly.newPlot("plot_documentation", traces, layout, config);
+    const plotElement = getPlotElement("plot_documentation");
+    if (!plotElement) return;
+
+    Plotly.newPlot(plotElement, traces, layout, config);
   };
   
   onMounted(() => {
@@ -129,8 +133,6 @@
   
   watch(activeTabIndex, async () => {
     await nextTick();
-    Plotly.relayout("plot_documentation", {
-      autosize: true,
-    });
+    await resizePlot("plot_documentation", Plotly);
   });
 </script>

@@ -6,6 +6,7 @@
 import { defineProps, onMounted, watch, nextTick } from "vue";
 import Plotly from "plotly.js-dist";
 import { activeTabIndex } from "@/components/Common/state.js";
+import { getPlotElement, resizePlot } from "~/utils/resizePlot";
 
 const props = defineProps<{
   data: Record<string, number> | { name: string; count: number }[];
@@ -95,12 +96,10 @@ const plotChart = () => {
     },
   };
 
-  Plotly.newPlot(
-    "plot_dependencies",
-    [...sticks, dots],
-    layout,
-    config
-  );
+  const plotElement = getPlotElement("plot_dependencies");
+  if (!plotElement) return;
+
+  Plotly.newPlot(plotElement, [...sticks, dots], layout, config);
 };
 
 onMounted(() => {
@@ -119,8 +118,6 @@ watch(
 watch(activeTabIndex, async () => {
   await nextTick();
 
-  Plotly.relayout("plot_dependencies", {
-    autosize: true,
-  });
+  await resizePlot("plot_dependencies", Plotly);
 });
 </script>

@@ -1,16 +1,17 @@
 <template>
   <div>
-    <div id="plot"></div>
+    <div ref="plotContainer" id="plot"></div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, watch, nextTick, toRaw } from 'vue';
+import { computed, ref, watch, nextTick, toRaw } from 'vue';
 import { useData } from '~~/stores/observatory/data.js';
 import { useObservatory } from '~~/stores/observatory/index.js';
 
 import Plotly from 'plotly.js-dist';
 import { activeTabIndex } from '@/components/Common/state.js';
+import { getPlotElement, resizePlot } from '~/utils/resizePlot';
 
 // Store
 const dataStore = useData();
@@ -21,6 +22,7 @@ const sources = computed(() => dataStore.FeaturesLabels);
 const featuresControl = computed(() => dataStore.FeaturesControl);
 
 const currentCollection = computed(() => observatoryStore.getCurrentCollection);
+const plotContainer = ref<HTMLElement | null>(null);
 
 // Reactive constants
 const features_names: string[] = [
@@ -167,8 +169,11 @@ function bar_plot_data_restruct(features) {
   return newValues;
 }
 
-// Plot Mounted
-onMounted(() => { 
+async function updatePlot() {
+  await nextTick();
+  const plotElement = getPlotElement(plotContainer.value);
+  if (!plotElement) return;
+
   const scatterData = { 
     source: fps.sources, 
     values: features_names.map(map_feat_names),
@@ -268,12 +273,22 @@ onMounted(() => {
   };
 
   const filteredData = data.filter(trace => trace !== undefined && trace !== null);
-  Plotly.newPlot('plot', filteredData, layout, config);
-});
+  if (plotElement.classList.contains('js-plotly-plot')) {
+    await Plotly.react(plotElement, filteredData, layout, config);
+  } else {
+    await Plotly.newPlot(plotElement, filteredData, layout, config);
+  }
+}
+
+watch(
+  [features, sources, featuresControl, currentCollection],
+  updatePlot,
+  { deep: true, immediate: true, flush: 'post' }
+);
 
 watch(activeTabIndex, async () => {
     await nextTick(); 
-    Plotly.relayout('plot', { autosize: true });
+    await resizePlot(plotContainer.value, Plotly);
 });
 
 </script>

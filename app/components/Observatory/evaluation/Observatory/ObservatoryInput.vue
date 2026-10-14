@@ -19,81 +19,16 @@
               <UIcon name="mdi-database" class="text-gray-500 text-2xl" :class="iconClass" />
 
               <USelectMenu
-                v-model="selectedTool"
-                v-model:query="searchQuery"
-                :options="filteredVisibleOptions"
-                option-attribute="label"
-                clear-search-on-close
-                searchable
-                :popper="{ offsetSkid: 8 }"
+                v-model="selectedToolName"
+                v-model:search-term="searchQuery"
+                :items="toolItems"
+                reset-search-term-on-blur
+                :content="{ alignOffset: 8 }"
                 @focus="onFocus"
-                :onClose="handleClose"
+                @update:open="handleMenuOpen"
 
                 class="peer w-full flex items-center h-12 max-h-12 rounded-md border-1 text-sm px-2 pl-10 focus-within:ring-primaryOeb-500 focus-within:border-primaryOeb-500 focus-within:text-primaryOeb-500"
               >
-                <template #label>
-                  <UBadge v-if="selectedTool" variant="solid" class="bg-blue-100 text-black">
-                    <template #trailing>
-                      <span>{{ selectedTool.label }}</span>
-                      <!-- Siguiente cambio -->
-                      <!-- Si hay array types -->
-                      <template v-if="Array.isArray(selectedTool.types) && selectedTool.types.length">
-                        <UBadge
-                          v-for="(t, i) in selectedTool.types"
-                          :key="i"
-                          variant="solid"
-                          class="bg-white text-black font-light text-uppercase ml-1"
-                        >
-                          {{ t }}
-                        </UBadge>
-                      </template>
-
-                      <!-- Si NO hay types, usar type actual -->
-                      <UBadge
-                        v-else-if="selectedTool.type"
-                        variant="solid"
-                        class="bg-white text-black font-light text-uppercase ml-1"
-                      >
-                        {{ selectedTool.type }}
-                      </UBadge>
-
-                    </template>
-                  </UBadge>
-
-                </template>
-
-                <!-- Option rendering -->
-                <template #option="{ option }">
-                  <UBadge variant="solid" class="bg-blue-100 text-black">
-                    <template #trailing>
-                      <span>{{ option.label }}</span>
-                      <!-- Siguiente cambio -->
-                      <!-- Si hay array types -->
-                      <template v-if="Array.isArray(option.types) && option.types.length">
-                        <UBadge
-                          v-for="(t, i) in option.types"
-                          :key="i"
-                          variant="solid"
-                          class="bg-white text-black font-light text-uppercase ml-1"
-                        >
-                          {{ t }}
-                        </UBadge>
-                      </template>
-
-                      <!-- Si NO hay types, usar type -->
-                      <UBadge
-                        v-else-if="option.type"
-                        variant="solid"
-                        class="bg-white text-black font-light text-uppercase ml-1"
-                      >
-                        {{ option.type }}
-                      </UBadge>
-
-                    </template>
-                  </UBadge>
-                </template>
-
-                
                 <template #trailing>              
                   <!-- Chevron icon -->
                   <UIcon
@@ -110,7 +45,7 @@
               <UButton
                 v-if="selectedTool"
                 color="white" variant="solid"
-                @click.stop="selectedTool = null"
+                @click.stop="selectedToolName = undefined"
                 class="absolute right-10 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-600"
               >
                 <UIcon name="i-heroicons-x-circle-16-solid" class="w-5 h-5" />
@@ -157,14 +92,25 @@ const stepperStore = useStepperStore();
 const metadataStore = useMetadataStore();
 const isSubmitting = ref(false);
 const loadError = ref('');
-const observatoryTools = computed(() => observatoryStore.ObservatoryToolsNameTypeSources || []);
+type ObservatoryToolOption = {
+  label?: string;
+  name?: string;
+  type?: string;
+};
+const observatoryTools = computed<ObservatoryToolOption[]>(
+  () => observatoryStore.ObservatoryToolsNameTypeSources || []
+);
+const getToolLabel = (tool: ObservatoryToolOption) => tool.label ?? tool.name ?? '';
 
 const CHUNK = 20;
 const COOLDOWN_MS = 250;
 
-const selectedTool = ref<any | null>(null);
+const selectedToolName = ref<string>();
+const selectedTool = computed(
+  () => observatoryTools.value.find((tool) => getToolLabel(tool) === selectedToolName.value) ?? null
+);
 const selectedToolLabel = computed(() => {
-  return selectedTool.value?.name || '';
+  return selectedTool.value?.name ?? (selectedTool.value ? getToolLabel(selectedTool.value) : '');
 });
 const selectedToolType = computed(() => {
   // Nuevo sistema (array)
@@ -183,7 +129,7 @@ const allFilteredBySearch = computed(() => {
   const all = observatoryTools.value ?? [];
   const q = (searchQuery.value || '').trim().toLowerCase();
   if (!q) return all;
-  return all.filter((opt: any) => {
+  return all.filter((opt) => {
     const label = (opt.label ?? opt.name ?? '').toString().toLowerCase();
     const type = (opt.type ?? '').toString().toLowerCase();
     return label.includes(q) || type.includes(q);
@@ -193,6 +139,7 @@ const allFilteredBySearch = computed(() => {
 const filteredVisibleOptions = computed(() => {
   return allFilteredBySearch.value.slice(0, maxVisible.value);
 });
+const toolItems = computed(() => filteredVisibleOptions.value.map(getToolLabel));
 
 // Carga inicial
 onMounted(async () => {
@@ -292,6 +239,9 @@ const handleClose = () => {
   isFocused.value = false;
 };
 
+const handleMenuOpen = (open: boolean) => {
+  if (!open) handleClose();
+};
 
 watch(searchQuery, () => {
   maxVisible.value = CHUNK;

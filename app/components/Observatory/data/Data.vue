@@ -25,7 +25,7 @@
         <!-- 1  -->
         <div class="col-12">
           <div
-            class="my-4 p-4 max-full bg-white border border-gray-100 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+            class="my-4 p-4 max-full min-w-0 overflow-hidden bg-white border border-gray-100 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
             <h5 class="text-center mt-6 mb-4 text-2xl font-semibold">
               Consolidated Research Software (meta)data
             </h5>
@@ -64,7 +64,7 @@
               Coverage
             </h5>
             <div class="row">
-              <div class="col-lg-8 col-12">
+              <div class="col-lg-8 col-12 min-w-0">
                 <!-- v-if -->
                 <USkeleton v-if="store.unLoaded.coverageSources" class="h-52 mb-3 mx-10" />
                 <USkeleton v-if="store.unLoaded.coverageSources" class="h-7 w-80 rounded-xl mb-5 mx-10" />
@@ -91,9 +91,9 @@
         </div>
 
         <!-- 3 -->
-        <div class="col-6 d-flex">
+        <div class="col-12 col-lg-6 d-flex">
           <div
-            class="pb-5 my-4 p-4 w-100 bg-white border border-gray-100 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 d-flex flex-column">
+            class="pb-5 my-4 p-4 w-100 min-w-0 overflow-hidden bg-white border border-gray-100 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 d-flex flex-column">
             <h5 class="text-center mt-6 mb-4 text-2xl font-semibold">
               (Meta)data completeness
             </h5>
@@ -118,9 +118,9 @@
         </div>
 
         <!-- 4 -->
-        <div class="col-6 d-flex">
+        <div class="col-12 col-lg-6 d-flex">
           <div
-            class="pb-5 my-4 p-4 w-100 bg-white border border-gray-100 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 d-flex flex-column">
+            class="pb-5 my-4 p-4 w-100 min-w-0 overflow-hidden bg-white border border-gray-100 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 d-flex flex-column">
             <h5 class="text-center mt-6 mb-4 text-2xl font-semibold">
               Types of software
             </h5>

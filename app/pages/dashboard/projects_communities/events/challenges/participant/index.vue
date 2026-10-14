@@ -57,9 +57,9 @@
                           <USelect
                             v-model="state.category"
                             class="selector"
-                            :options="modelOptions"
-                            option-attribute="label"
-                            value-attribute="value"
+                            :items="modelOptions"
+                            label-key="label"
+                            value-key="value"
                           />
                         </div>
                       </div>

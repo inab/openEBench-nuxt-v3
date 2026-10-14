@@ -9,7 +9,7 @@
       </span>
       <USelectMenu
         v-model="modelType"
-        :options="types"
+        :items="types"
         placeholder=""
         class="border rounded-md px-0 w-full peer"
         :class="{ 'border-primaryOeb-500 ring-1 ring-primaryOeb-500': isFocusedSelect }"

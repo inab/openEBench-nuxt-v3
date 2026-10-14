@@ -6,6 +6,7 @@
 import Plotly from 'plotly.js-dist';
 import { ref, computed, watch, onMounted, nextTick } from 'vue';
 import { useResultStore } from '~~/stores/observatory/evaluation/results';
+import { getPlotElement } from '~/utils/resizePlot';
 
 const resultStore = useResultStore();
 
@@ -58,7 +59,10 @@ const config = {
 // Render the chart
 const renderPlot = async () => {
   await nextTick(); // Asegura que el DOM esté actualizado antes de renderizar
-  Plotly.newPlot(props.label, buildTraces(), layout.value, config);
+  const plotElement = getPlotElement(props.label);
+  if (!plotElement) return;
+
+  Plotly.newPlot(plotElement, buildTraces(), layout.value, config);
 };
 
 // Look at the changes in the data

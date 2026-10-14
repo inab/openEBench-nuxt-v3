@@ -13,9 +13,8 @@
     <!-- Source -->
     <div v-else>
       <div class="flex flex-wrap justify-around items-center">
-        <div class="mt-4" 
-          v-for="card in cardsC" :key="cards_info[card.source.title]">
-          <div class="py-1 bg-white border border-gray-100 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+        <div class="mt-4" v-for="card in cardsC" :key="card.source">
+          <div class="source-card-shell py-1 bg-white border border-gray-100 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
             <SourceCard
               :title="cards_info[card.source].title"
               :count="card.count"
@@ -27,12 +26,12 @@
     </div>
 
     <!-- Total -->
-    <div class="row mt-5">
-      <div class="col-4"></div>
-      <div class="col-4 flex items-center justify-center">
+    <div class="row mt-5 align-items-center">
+      <div class="col-12 col-md-4"></div>
+      <div class="col-12 col-md-4 flex items-center justify-center">
         <TotalCard :count="totalC" />
       </div>
-      <div class="col-4 flex items-center justify-center pt-2">
+      <div class="col-12 col-md-4 flex items-center justify-center pt-3 pt-md-2">
         <p class="card-caption-side" v-html="mainCardCaption"></p>
       </div>
     </div>
@@ -122,26 +121,32 @@ const cards_info = reactive({
 
 <style scoped>
 .source-card {
-  margin: auto;
-  padding: auto;
-  width: 90%;
   width: 13em;
   height: 4em;
-  background-color: white;
+}
+
+.source-card-shell {
+  width: 13em;
 }
 
 .loading-card {
-  height: 45%;
-  width: 50%;
-  display: inline-block;
+  height: 2.5em;
+  width: 100%;
 }
 
 .card-caption-side {
-  width: 80%;
+  width: 100%;
+  max-width: 24rem;
   text-align: justify;
   color: #334155;
   line-height: 22px;
   font-size: 14px;
+}
+
+@media (max-width: 767.98px) {
+  .card-caption-side {
+    text-align: center;
+  }
 }
 
 .card-caption-b {

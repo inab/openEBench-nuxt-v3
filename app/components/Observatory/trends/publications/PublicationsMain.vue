@@ -41,13 +41,35 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, computed, ref} from 'vue';
+import { onMounted, computed } from 'vue';
 import PublicationsPlot from './PublicationsPlot.vue';
 import { useTrends } from '~~/stores/observatory/trends';
 import { useObservatory } from '~~/stores/observatory/index.js';
 import noDataAvailable from "@/layouts/noDataAvailableImg.vue";
 import PlotWOptions from '~/components/Observatory/PlotWOptions.vue';
 import { embedCodes } from '~/components/Observatory/visualizations/embedCodes.js';
+
+type PublicationsResponse = {
+    data: {
+        tools: object;
+        publications: object;
+        citations: object;
+        IF_tools?: { x?: unknown[] };
+    };
+};
+
+function isPublicationsResponse(value: unknown): value is PublicationsResponse {
+    if (!value || typeof value !== 'object' || Array.isArray(value)) {
+        return false;
+    }
+
+    const data = (value as Record<string, unknown>).data;
+    if (!data || typeof data !== 'object' || Array.isArray(data)) {
+        return false;
+    }
+
+    return ['tools', 'publications', 'citations'].every((key) => key in data);
+}
 
 // Store
 const trendsStore = useTrends();
@@ -58,18 +80,23 @@ const dialogItems = [embedCodes.publications];
 // Computed Properties
 const current_collection = computed(() => observatoryStore.currentCollection);
 
-const data_plot = computed(() => trendsStore.Publications.data);
+const publicationsResponse = computed(() => {
+    const publications: unknown = trendsStore.Publications;
+    return isPublicationsResponse(publications) ? publications : undefined;
+});
+const data_plot = computed(() => publicationsResponse.value?.data);
 
 // Loading States
 const isPublicationsLoading = computed(() => trendsStore.Loaded.publications);
 
 // Is visible
-const checkData = ref(false)
+const checkData = computed(
+    () => (publicationsResponse.value?.data.IF_tools?.x?.length ?? 0) > 0
+);
 
 // Fetch Data on Mount
 onMounted(async () => {
     await trendsStore.getPublications();
-    checkData.value = computed(() => trendsStore.Publications.data.IF_tools.x.length > 0);
 });
 
 </script>

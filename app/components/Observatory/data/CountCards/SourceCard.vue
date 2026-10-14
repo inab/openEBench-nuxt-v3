@@ -1,15 +1,15 @@
 <template>
-  <div class="source-card row rounded p-2">
-    <div class="col col-4">
-      <UAvatar
+  <div class="source-card flex items-center gap-3 rounded px-3 py-2">
+    <div class="source-logo flex shrink-0 items-center justify-center">
+      <img
         :src="`/images/observatory/${label}-logo.svg`"
-        alt="Avatar" size="lg"
-        class="avatar"
+        :alt="`${title} logo`"
+        class="source-logo-image"
       />
     </div>
-    <div id="counts-text" class="col col-8">
-      <h3> {{ title }}</h3>
-      <h2> {{ formatNumber(Number(count)) }}</h2>
+    <div class="counts-text min-w-0 flex-1">
+      <h3>{{ title }}</h3>
+      <h2>{{ formatNumber(Number(count)) }}</h2>
     </div>    
   </div>
 </template>
@@ -29,32 +29,47 @@ function formatNumber(value: number): string {
 </script>
 
 <style scoped>
-#counts-text {
-	text-align: right !important;
-  padding: 0px 0px 0px 0px !important;
+.source-logo {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 9999px;
+  background-color: #001752f8;
 }
 
-.avatar {
-  background-color: #001752f8
+.source-logo-image {
+  display: block;
+  width: 2.5rem;
+  height: 2.5rem;
+  object-fit: contain;
 }
 
 .source-card {
+  box-sizing: border-box;
   background-color: white;
+  width: 13em;
+  height: 4em;
+}
+
+.counts-text {
+  text-align: left;
 }
 
 .source-card h3 {
 	font-family: 'Open Sans', sans-serif;
 	font-size: 0.9rem;
-	font-weight: 300;
+	font-weight: 500;
 	line-height: normal;
-	margin: 0.2rem;
+	margin: 0 0 0.2rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .source-card h2 {
 	font-family: 'Open Sans', sans-serif;
-	font-size: 1.5rem;
+	font-size: 1.35rem;
 	font-weight: 500;
 	line-height: normal;
-	margin: 0.3rem;
+	margin: 0;
 }
 </style>

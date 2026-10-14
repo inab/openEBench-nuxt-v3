@@ -1,11 +1,14 @@
 <template>
-    <div id="plot_4"></div>
+    <div ref="plotElement"></div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, watch, nextTick } from 'vue';
+import { onMounted, watch, nextTick, ref } from 'vue';
 import Plotly from 'plotly.js-dist';
 import { activeTabIndex } from '@/components/Common/state.js';
+import { resizePlot } from '~/utils/resizePlot';
+
+const plotElement = ref<HTMLDivElement | null>(null);
 
 // Define props
 const props = defineProps<{
@@ -66,7 +69,13 @@ onMounted(() => {
 });
 
 // Function to plot the chart
-function plotChart() {
+async function plotChart() {
+    await nextTick();
+    const element = plotElement.value;
+    if (!element?.isConnected) {
+        return;
+    }
+
     // Define the data array directly
     const data: Partial<Plotly.PlotData>[] = [
         {
@@ -83,12 +92,16 @@ function plotChart() {
     ];
 
     // Pass the data and layout directly to Plotly
-    Plotly.newPlot('plot_4', data, layout, config);
+    if (element.classList.contains('js-plotly-plot')) {
+        await Plotly.react(element, data, layout, config);
+    } else {
+        await Plotly.newPlot(element, data, layout, config);
+    }
 }
 
 watch(activeTabIndex, async () => {
     await nextTick();
-    Plotly.relayout('plot_4', { autosize: true });
+    await resizePlot(plotElement.value, Plotly);
 });
 </script>
 

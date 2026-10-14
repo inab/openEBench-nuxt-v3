@@ -6,6 +6,7 @@
 import { defineProps, onMounted, watch, nextTick } from "vue";
 import Plotly from "plotly.js-dist";
 import { activeTabIndex } from "@/components/Common/state.js";
+import { resizePlot } from "~/utils/resizePlot";
 
 const props = defineProps<{
   data: Record<string, number>;
@@ -92,9 +93,7 @@ watch(activeTabIndex, async () => {
   await nextTick();
 
   if (plotContainer.value) {
-    Plotly.relayout(plotContainer.value, {
-      autosize: true,
-    });
+    await resizePlot(plotContainer.value, Plotly);
   }
 });
 

@@ -1,8 +1,6 @@
 // stores/fairness.js
 import { defineStore } from "pinia";
 import { useObservatory } from '~~/stores/observatory/index.js';
-import { useAsyncData } from 'nuxt/app';
-import { reactive } from 'vue';
 
 const BASE_URL = '/api/stats/tools/';
 const labels = {
@@ -74,33 +72,34 @@ export const useFairness = defineStore("fairness", {
     async getFAIRscores() {
       const { $observatory } = useNuxtApp();
       const observatoryStore = useObservatory();
-      const URL = `${BASE_URL}fair_scores_summary?collection=${observatoryStore.currentCollection}`;
+      const collectionId = observatoryStore.currentCollection;
+      const URL = `${BASE_URL}fair_scores_summary?collection=${collectionId}`;
 
       try {
         this.setLoaded({ FAIRscores: true });
-        const { data: FAIRscoresData } = await useAsyncData('FAIRscores', () => 
-          $observatory(URL, { method: "GET" })
-        );
+        const FAIRscoresData = await $observatory(URL, { method: "GET" });
+        if (observatoryStore.currentCollection !== collectionId) return;
 
-        if (!FAIRscoresData || !FAIRscoresData.value) {
+        if (!FAIRscoresData?.data) {
           console.log('FAIRscores no data available');
-          this.setLoaded({ FAIRscores: true });
+          this.setLoaded({ FAIRscores: false });
           return;
         }
 
         const results = {
-          F: { fair_scores: FAIRscoresData.value.data.F, labels: labels.F, id: 'F' },
-          A: { fair_scores: FAIRscoresData.value.data.A, labels: labels.A, id: 'A' },
-          I: { fair_scores: FAIRscoresData.value.data.I, labels: labels.I, id: 'I' },
-          R: { fair_scores: FAIRscoresData.value.data.R, labels: labels.R, id: 'R' },
+          F: { fair_scores: FAIRscoresData.data.F, labels: labels.F, id: 'F' },
+          A: { fair_scores: FAIRscoresData.data.A, labels: labels.A, id: 'A' },
+          I: { fair_scores: FAIRscoresData.data.I, labels: labels.I, id: 'I' },
+          R: { fair_scores: FAIRscoresData.data.R, labels: labels.R, id: 'R' },
         };
 
         this.setFAIRscores(results);
         this.setLoaded({ FAIRscores: false });
 
       } catch (error) {
+        if (observatoryStore.currentCollection !== collectionId) return;
         console.error('Error fetching FAIRscores: ', error);
-        this.setLoaded({ FAIRscores: true });
+        this.setLoaded({ FAIRscores: false });
       }
     },
 
@@ -110,21 +109,19 @@ export const useFairness = defineStore("fairness", {
 
       try {
         this.setLoaded({ controlFAIRscores: true });
-        const { data: controlFAIRscoresData } = await useAsyncData('controlFAIRscores', () => 
-          $observatory(URL, { method: "GET" })
-        );
+        const controlFAIRscoresData = await $observatory(URL, { method: "GET" });
 
-        if (!controlFAIRscoresData || !controlFAIRscoresData.value) {
+        if (!controlFAIRscoresData?.data) {
           console.log('Control FAIRscores no data available');
-          this.setLoaded({ controlFAIRscores: true });
+          this.setLoaded({ controlFAIRscores: false });
           return;
         }
 
         const results = {
-          F: { fair_scores: controlFAIRscoresData.value.data.F, labels: labels.F, id: 'F' },
-          A: { fair_scores: controlFAIRscoresData.value.data.A, labels: labels.A, id: 'A' },
-          I: { fair_scores: controlFAIRscoresData.value.data.I, labels: labels.I, id: 'I' },
-          R: { fair_scores: controlFAIRscoresData.value.data.R, labels: labels.R, id: 'R' },
+          F: { fair_scores: controlFAIRscoresData.data.F, labels: labels.F, id: 'F' },
+          A: { fair_scores: controlFAIRscoresData.data.A, labels: labels.A, id: 'A' },
+          I: { fair_scores: controlFAIRscoresData.data.I, labels: labels.I, id: 'I' },
+          R: { fair_scores: controlFAIRscoresData.data.R, labels: labels.R, id: 'R' },
         };
 
         this.setControlFAIRscores(results);
@@ -132,7 +129,7 @@ export const useFairness = defineStore("fairness", {
 
       } catch (error) {
         console.error('Error fetching controlFAIRscores: ', error);
-        this.setLoaded({ controlFAIRscores: true });
+        this.setLoaded({ controlFAIRscores: false });
       }
     }
   }

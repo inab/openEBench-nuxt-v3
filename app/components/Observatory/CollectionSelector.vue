@@ -5,7 +5,7 @@
 
       <!-- Carousel -->
       <div class="relative">
-        <Carousel :key="carouselKey" :items-to-show="5" :items-to-scroll="5" :wrap-around="false"
+        <Carousel v-model="currentSlide" :items-to-show="5" :items-to-scroll="5" :wrap-around="false"
           :snap-align="'center'" :transition="350" :mouse-drag="true" :touch-drag="true"
           class="my-3 relative px-4 md:px-8 custom-carousel">
           <Slide v-for="(slide, index) in collections" :key="index">
@@ -33,7 +33,10 @@
         <div v-if="selectedCollection !== null"
           class="max-w-7xl p-3 mt-4 bg-gray-50 rounded-lg transition-all transform">
           <div class="flex flex-col md:flex-row justify-between items-center">
-            <div class="w-full md:w-3/4">
+            <div
+              class="w-full"
+              :class="collections[selectedCollection].id === 'IMPaCT-Data' ? 'md:w-2/3' : 'md:w-3/4'"
+            >
               <h6 class="text-lg font-bold text-primaryOeb-500">
                 <a :href="collections[selectedCollection].homepage" target="_blank">{{
                   collections[selectedCollection].title }}</a>
@@ -41,10 +44,14 @@
               <p class="text-sm font-medium">{{ collections[selectedCollection].subtitle }}</p>
               <p class="text-sm text-gray-600 text-justify">{{ collections[selectedCollection].description }}</p>
             </div>
-            <div class="w-full md:w-1/4 mt-4 md:mt-0 ml-0 md:ml-20">
+            <div
+              class="w-full mt-4 md:mt-0 flex justify-center md:justify-end pr-0 md:pr-4"
+              :class="collections[selectedCollection].id === 'IMPaCT-Data' ? 'md:w-1/3' : 'md:w-1/4'"
+            >
               <a target="_blank" :href="collections[selectedCollection].homepage"><img
                   :src="getImagePath(collections[selectedCollection].image)" alt="Collection Image"
-                  class="rounded-lg collection-image transition-transform duration-500 ease-in-out" /></a>
+                  class="rounded-lg collection-image transition-transform duration-500 ease-in-out"
+                  :class="{ 'collection-image--impact-data': collections[selectedCollection].id === 'IMPaCT-Data' }" /></a>
             </div>
           </div>
         </div>
@@ -60,7 +67,6 @@ import { useObservatory } from '~~/stores/observatory/index.js';
 import { useFairness } from '~~/stores/observatory/fairness';
 import { useTrends } from '~~/stores/observatory/trends';
 import { useData } from '~~/stores/observatory/data';
-import { activeTabIndex } from '@/components/Common/state.js';
 
 // Store
 const observatoryStore = useObservatory();
@@ -72,10 +78,12 @@ const dataStore = useData();
 const collections = computed(() => observatoryStore.getCollections);
 const selectedCollection = computed(() => observatoryStore.selectedCollection);
 
-const carouselKey = ref(0);
+const currentSlide = ref(observatoryStore.selectedCollection ?? 0);
 
-watch(activeTabIndex, () => {
-  carouselKey.value += 1;
+watch(selectedCollection, (index) => {
+  if (index !== null) {
+    currentSlide.value = index;
+  }
 });
 
 function setCollection(index: number | null) {
@@ -83,6 +91,7 @@ function setCollection(index: number | null) {
     observatoryStore.selectCollection(index);
 
     if (index !== null) {
+      currentSlide.value = index;
       const collectionId = collections.value[index].id;
       observatoryStore.changeCurrentCollection(collectionId);
     } else {
@@ -109,6 +118,13 @@ function triggerDataRefresh() {
   trendsStore.getVersionControlCount();
   trendsStore.getVersionControlRepositories();
   trendsStore.getPublications();
+  trendsStore.getDependencies();
+  trendsStore.getDependenciesCount();
+  trendsStore.getDocumentation();
+  trendsStore.getDocumentationCount();
+  trendsStore.getInputFormats();
+  trendsStore.getOutputFormats();
+  trendsStore.getFormatsCount();
   dataStore.getCountsPerSource();
   dataStore.getTotalCount();
   dataStore.getFeatures();
@@ -222,12 +238,20 @@ function getImagePath(image: string) {
 
 .collection-image {
   width: 100%;
-  max-width: 100px;
+  max-width: 120px;
+  max-height: 100px;
+  object-fit: contain;
   transition: transform 0.3s ease;
 }
 
 .collection-image:hover {
   transform: scale(1.05);
+}
+
+.collection-image--impact-data {
+  max-width: 160px;
+  max-height: 125px;
+  border-radius: 0;
 }
 
 a {

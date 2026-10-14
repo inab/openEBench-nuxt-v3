@@ -1,23 +1,38 @@
 <template>
-  <div id="plot_21"></div>
+  <div ref="plotContainer" id="plot_21"></div>
 </template>
 
 <script setup lang="ts">
-import { computed, watch, onMounted, nextTick } from 'vue';
+import { computed, ref, watch, nextTick, onMounted } from 'vue';
 import { useData } from '~~/stores/observatory/data';
 import Plotly from 'plotly.js-dist';
 import { activeTabIndex } from '@/components/Common/state.js';
+import { getPlotElement, resizePlot } from '~/utils/resizePlot';
 
 // Store
 const dataStore = useData();
 const coverageSources = computed(() => dataStore.coverageSources);
+type CoverageSourceData = {
+  counts?: Record<string, number[]>;
+  counts_cummulative?: Record<string, number>;
+};
+const coverageData = computed<CoverageSourceData>(() => {
+  const source: unknown = coverageSources.value;
+  if (!source || typeof source !== 'object') return {};
+
+  const nestedData = (source as Record<string, unknown>).data;
+  if (nestedData && typeof nestedData === 'object') {
+    return nestedData as CoverageSourceData;
+  }
+
+  return source as CoverageSourceData;
+});
+const plotContainer = ref<HTMLElement | null>(null);
 
 const props = defineProps<{
   small: boolean;
 }>();
 
-// Datos reactivos
-const nums = ['1', '2', '3', '4', '5'];
 const colors_primary = [
   '#404040',
   '#606060',
@@ -48,11 +63,17 @@ const layout_base = {
     title: 'Number of software',
   },
   autosize: true,
-  height: 300,
+  height: 390,
   margin: {
     autoexpand: true,
-    t: 0,
-    b: 40,
+    t: 10,
+    b: 110,
+  },
+  legend: {
+    orientation: 'h',
+    y: -0.35,
+    x: 0.5,
+    xanchor: 'center',
   },
 };
 
@@ -64,9 +85,9 @@ const config = {
 const layout = computed(() => {
   const l = { ...layout_base };
   if (props.small) {
-    l.legend = { orientation: 'h', y: 5, x: -0.2, size: 15 };
-  } else {
-    l.legend = {};
+    l.height = 420;
+    l.margin = { ...layout_base.margin, b: 140 };
+    l.legend.y = -0.4;
   }
   return l;
 });
@@ -74,17 +95,19 @@ const layout = computed(() => {
 // Function to construct bar traces
 function build_bar_traces(colors) {
   const traces = [];
-  if (coverageSources.value.data && coverageSources.value.data.counts) {
-    for (const [key] of Object.entries(coverageSources.value.data.counts)) {
+  if (coverageData.value?.counts) {
+    for (const [key] of Object.entries(coverageData.value.counts)) {
+      const counts = coverageData.value.counts[key];
+      const sourceTitle = titles[key] ?? key;
       const trace = {
-        x: nums,
-        y: coverageSources.value.data.counts[key],
-        name: titles[key],
+        x: counts.map((_, index) => index + 1),
+        y: counts,
+        name: sourceTitle,
         marker: {
-          color: colors[key],
+          color: colors[key] ?? colors_primary[0],
         },
         type: 'bar',
-        meta: titles[key],
+        meta: sourceTitle,
         hovertemplate:
           'Of instances found in %{x} sources: <br>' +
           '%{y:,d} are found in %{meta} <extra></extra>',
@@ -97,12 +120,12 @@ function build_bar_traces(colors) {
 
 // Function to construct the line trace
 function build_line_trace(n) {
-  return coverageSources.value.data && coverageSources.value.data.counts_cummulative
-    ? coverageSources.value.data.counts_cummulative[n]
+  return coverageData.value?.counts_cummulative
+    ? coverageData.value.counts_cummulative[n]
     : 0;
 }
 
-function updatePlot() {
+async function updatePlot() {
   const colors = {
     github: colors_primary[0],
     galaxy: colors_primary[1],
@@ -114,42 +137,50 @@ function updatePlot() {
   };
 
   const data = build_bar_traces(colors);
+  const cumulative = coverageData.value?.counts_cummulative ?? {};
+  const cumulativeSourceCount = Object.keys(cumulative)
+    .map(Number)
+    .filter(Number.isFinite)
+    .sort((a, b) => a - b);
 
   const lineData = {
-    x: nums,
-    y: nums.map(build_line_trace),
+    x: cumulativeSourceCount,
+    y: cumulativeSourceCount.map(build_line_trace),
+    type: 'scatter',
+    mode: 'lines+markers',
     marker: {
       color: '#FFD700',
     },
     name: 'Instances',
     hovertemplate: '%{x} sources or less: %{y:,d} instances <extra></extra>',
-    type: 'line',
   };
 
   data.push(lineData);
 
-  const plotElement = document.getElementById('plot_21');
-  if (plotElement) {
-    Plotly.newPlot(plotElement, data, layout.value, config);
-  } else {
-    console.error('No DOM element with id "plot_21" exists on the page.');
+  const plotElement = getPlotElement(plotContainer.value);
+  if (!plotElement) return;
+
+  try {
+    if (plotElement.classList.contains('js-plotly-plot')) {
+      await Plotly.react(plotElement, data, layout.value, config);
+    } else {
+      await Plotly.newPlot(plotElement, data, layout.value, config);
+    }
+  } catch (error) {
+    console.error('Error rendering Observatory coverage plot:', error);
   }
 }
 
-// Use watch to make sure coverageSources updates the chart.
-watch(() => coverageSources.value.data, (newVal) => {
-  if (newVal && Object.keys(newVal.counts).length > 0) {
-    updatePlot();
-  }
-}, { deep: true });
+onMounted(updatePlot);
 
-onMounted(() => {
-  updatePlot();
+watch([coverageSources, () => props.small], updatePlot, {
+  deep: true,
+  flush: 'post',
 });
 
 watch(activeTabIndex, async () => {
   await nextTick();
-  Plotly.relayout('plot_21', { autosize: true });
+  await resizePlot(plotContainer.value, Plotly);
 });
 </script>
 
@@ -157,6 +188,10 @@ watch(activeTabIndex, async () => {
 #plot_21 {
   padding: 0%;
   margin: 0%;
+  width: 100%;
+  min-width: 0;
+  min-height: 390px;
+  max-width: 100%;
 }
 
 #plot_21 .modebar {

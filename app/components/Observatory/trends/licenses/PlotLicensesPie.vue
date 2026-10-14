@@ -1,11 +1,14 @@
 <template>
-    <div id="plot_1" :style="{ height: height + 'px', width: '100%' }"></div>
+    <div ref="plotElement" :style="{ height: height + 'px', width: '100%' }"></div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, watch, nextTick } from 'vue';
+import { onMounted, watch, nextTick, ref } from 'vue';
 import Plotly from 'plotly.js-dist';
 import { activeTabIndex } from '@/components/Common/state.js';
+import { resizePlot } from '~/utils/resizePlot';
+
+const plotElement = ref<HTMLDivElement | null>(null);
 
 // Define props
 const props = defineProps<{
@@ -48,7 +51,13 @@ onMounted(() => {
 });
 
 // Plot the chart
-function plotChart() {
+async function plotChart() {
+    await nextTick();
+    const element = plotElement.value;
+    if (!element?.isConnected) {
+        return;
+    }
+
     const trace = {
         type: 'sunburst',
         labels: props.labels,
@@ -67,18 +76,22 @@ function plotChart() {
             '%{value:,d} software<br>' +
             '%{percentParent:.1%} of %{text}<extra></extra>',
     };
-    Plotly.newPlot('plot_1', [trace], layout, config);
+    if (element.classList.contains('js-plotly-plot')) {
+        await Plotly.react(element, [trace], layout, config);
+    } else {
+        await Plotly.newPlot(element, [trace], layout, config);
+    }
+    await resizePlot(element, Plotly);
 }
+
+watch(
+    () => [props.labels, props.parents, props.values, props.text],
+    plotChart,
+    { deep: true }
+);
 
 watch(activeTabIndex, async () => {
-    await nextTick(); 
-    Plotly.relayout('plot_1', { autosize: true });
+    await nextTick();
+    await resizePlot(plotElement.value, Plotly);
 });
 </script>
-
-<style scoped>
-
-#plot_1 {
-    width: 100%;
-}
-</style>

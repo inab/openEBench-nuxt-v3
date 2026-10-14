@@ -14,16 +14,16 @@
       <div class="border-bottom px-">
         <USelectMenu
           v-model="selectedItem"
-          :options="registries"
+          :items="registries"
           multiple
           :ui="{ base: 'peer' }"
           class="border-0 px-0 mx-0 select-menu" 
           @update:model-value="changeValue"
         >
-          <template #label>
+          <template #default="{ modelValue }">
             <div class="d-flex flex-wrap gap-x-1 min-height">
               <UBadge
-                v-for="(item, index) in selectedItem"
+                v-for="(item, index) in modelValue"
                 :key="index"
                 :ui="{ rounded: 'rounded-full' }"
                 size="xs"
@@ -45,15 +45,14 @@
             </div>
           </template>
 
-          <template #option="{ option, active }">
+          <template #item-label="{ item }">
             <div class="flex items-center gap-2">
               <UCheckbox
-                v-model="selectedStates[option]"
-                :checked="selectedStates[option]"
-                :class="{'text-primary-500': active}"
+                v-model="selectedStates[item]"
+                :checked="selectedStates[item]"
                 class="pointer-events-none me-2"
               />
-              <span>{{ option }}</span>
+              <span>{{ item }}</span>
             </div>
           </template>
 

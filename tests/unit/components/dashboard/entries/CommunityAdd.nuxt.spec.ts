@@ -22,7 +22,7 @@ describe("Entries Page Dashboard", () => {
   it("should render the component correctly", () => {
     const wrapper = mount(CommunityAdd, {
       global: {
-        stubs: ["FontAwesomeIcon", "NuxtIcon", "RouterLink"],
+        stubs: ["FontAwesomeIcon", "NuxtIcon", "RouterLink", "UTooltip"],
       },
     });
 
@@ -32,7 +32,7 @@ describe("Entries Page Dashboard", () => {
   it('should add new link to the list when the "Add Link" button is clicked', async () => {
     const wrapper = mount(CommunityAdd, {
       global: {
-        stubs: ["FontAwesomeIcon", "NuxtIcon", "RouterLink"],
+        stubs: ["FontAwesomeIcon", "NuxtIcon", "RouterLink", "UTooltip"],
       },
     });
     const addButton = wrapper.find("button.btn-add-link");
@@ -45,7 +45,7 @@ describe("Entries Page Dashboard", () => {
   it('should remove the link from the list when the "Remove Link" button is clicked', async () => {
     const wrapper = mount(CommunityAdd, {
       global: {
-        stubs: ["FontAwesomeIcon", "NuxtIcon", "RouterLink"],
+        stubs: ["FontAwesomeIcon", "NuxtIcon", "RouterLink", "UTooltip"],
       },
     });
 

@@ -1,11 +1,14 @@
 <template>
-    <div id="plot_2" :style="{ height: height + 'px', width: '100%' }"></div>
+    <div ref="plotElement" :style="{ height: height + 'px', width: '100%' }"></div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, computed, watch, nextTick } from 'vue';
+import { onMounted, computed, watch, nextTick, ref } from 'vue';
 import Plotly from 'plotly.js-dist';
 import { activeTabIndex } from '@/components/Common/state.js';
+import { resizePlot } from '~/utils/resizePlot';
+
+const plotElement = ref<HTMLDivElement | null>(null);
 
 // Define props
 const props = defineProps<{
@@ -120,23 +123,28 @@ const trace3 = computed(() =>
 
 // Plot the chart on mount
 onMounted(() => {
+    const element = plotElement.value;
+    if (!element?.isConnected) {
+        return;
+    }
+
     const traces = [];
 
     if (props.licenses_copyleft.length > 0) traces.push(trace1.value);
     if (props.licenses_permissive.length > 0) traces.push(trace2.value);
     if (props.licenses_data.length > 0) traces.push(trace3.value);
 
-    Plotly.newPlot('plot_2', traces, layout, config);
+    Plotly.newPlot(element, traces, layout, config);
 });
 
 watch(activeTabIndex, async () => {
     await nextTick();
-    Plotly.relayout('plot_2', { autosize: true });
+    await resizePlot(plotElement.value, Plotly);
 });
 </script>
 
 <style scoped>
-#plot_2 {
+:deep(.js-plotly-plot) {
     width: 100%;
     max-width: 700px;
     margin: 0 auto;

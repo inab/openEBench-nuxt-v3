@@ -32,7 +32,7 @@ describe('Dashboard Add entry', () => {
             createSpy: vi.fn,
           }),
         ],
-        stubs: ['RouterLink', 'FontAwesomeIcon'],
+        stubs: ['RouterLink', 'FontAwesomeIcon', 'UTooltip'],
       },
     });
 

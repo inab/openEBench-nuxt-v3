@@ -54,9 +54,9 @@
         </UAccordion>
         <div class="metrics__body pt-4">
           <div class="metric-filter d-flex justify-content-start">
-            <div class="metric-filter__col col-3 d-flex">
+            <div class="metric-filter__col col-12 col-md-6 col-lg-4 d-flex">
               <label for="plotType" class="form-label">Select Plot Type:</label>
-              <USelect v-model="plotSelected" :items="plotTypes" class="custom-select-input" size="xl" />
+              <USelect id="plotType" v-model="plotSelected" :items="plotTypes" class="custom-select-input w-full" size="xl" />
             </div>
           </div>
           <div class="dashboard-tabs pt-4">
@@ -106,7 +106,14 @@ const plotTypes = [
     value: "line-plot",
   },
 ];
-const plotSelected = ref(route.query.plot ?? plotTypes[0].value);
+const requestedPlot = Array.isArray(route.query.plot)
+  ? route.query.plot[0]
+  : route.query.plot;
+const plotSelected = ref(
+  typeof requestedPlot === "string"
+    ? requestedPlot
+    : plotTypes[0]?.value ?? "bar-plot",
+);
 
 if (plotSelected.value == "scatter") {
   plotSelected.value = "2D-plot";
@@ -156,14 +163,17 @@ const routeArray: Array = [
 
 .metric-filter__col {
   align-items: center;
+  gap: 0.75rem;
 
   label {
-    padding-right: 30px;
-    min-width: 150px;
+    padding-right: 0;
+    margin-bottom: 0;
+    white-space: nowrap;
   }
 
   .custom-select-input {
-    min-width: 170px;
+    flex: 1;
+    min-width: 0;
   }
 }
 </style>

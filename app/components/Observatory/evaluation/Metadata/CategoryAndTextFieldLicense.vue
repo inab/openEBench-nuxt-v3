@@ -3,20 +3,12 @@
     <div class="col-6">
       <USelectMenu
         v-model="selectLicense"
-        :options="SPDXLicenses"
-        searchable
+        :items="SPDXLicenses"
+        search-input
         placeholder="License"
         class="border-1 rounded-md px-0 peer focus-within:ring-primaryOeb-500 focus-within:border-primaryOeb-500 focus-within:text-primaryOeb-500"
         @update:model-value="changeValueName"
       >
-        <template #selected="{ option }">
-          {{ option }}
-        </template>
-        <template class="mt-2 border-none" #option="{ option }">
-          <div class="text-caption ">
-            {{ option }}
-          </div>
-        </template>
       </USelectMenu>
     </div>
     <div class="col-6">
@@ -69,7 +61,7 @@ const selectLicense = ref(props.item.name);
 const URL = ref(props.item.url);
 
 // Computed property para acceder a las licencias desde la store
-const SPDXLicenses = computed(() => metadataStore.getSPDXLicenses);
+const SPDXLicenses = computed<string[]>(() => metadataStore.getSPDXLicenses);
 
 // Methods
 // Method for finding and assigning a matching licence

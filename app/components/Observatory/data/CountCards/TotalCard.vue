@@ -1,8 +1,12 @@
 <template>
-  <div class="grid justify-items-center main-row rounded py-2 blue-shadow">
-    <UIcon name="i-mdi-database" class="w-8 h-8 bg-white mb-1" />
-    <p class="text-center number-text mt-1"> Total </p>
-    <p class="text-center number"> {{ formatNumber(Number(count)) }} </p>
+  <div class="main-row flex items-center gap-3 rounded px-3 py-2 blue-shadow">
+    <div class="total-icon flex shrink-0 items-center justify-center rounded-full">
+      <UIcon name="i-mdi-database" class="w-6 h-6" />
+    </div>
+    <div class="min-w-0">
+      <p class="number-text">Total</p>
+      <p class="number">{{ formatNumber(Number(count)) }}</p>
+    </div>
   </div>
 </template>
 
@@ -19,9 +23,17 @@ function formatNumber(value:number) {
 
 <style scoped>
 .main-row {
-  max-width: 80%;
-  width: 55%;
+  box-sizing: border-box;
+  width: 13em;
+  height: 4em;
   background-color: #001752f8;
+}
+
+.total-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  color: #001752f8;
+  background-color: white;
 }
 
 .blue-shadow {
@@ -34,19 +46,20 @@ function formatNumber(value:number) {
 }
 
 .number {
-	font-size: 2.1rem;
+	font-size: 1.35rem;
 	color: white !important;
-  margin-bottom: 0px;
+  margin: 0;
+  line-height: normal;
 }
 
 .number-text {
 	color: white !important;
 	font-family: Roboto, sans-serif;
-	font-size: 1.4em;
+	font-size: 0.9rem;
 	font-weight: 600;
-	line-height: 1.2em;
+	line-height: normal;
 	word-break: initial;
-  margin-bottom: 0px;
+  margin: 0 0 0.2rem;
 }
 
 .number-highlight {

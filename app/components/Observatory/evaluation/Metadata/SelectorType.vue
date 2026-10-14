@@ -2,18 +2,16 @@
   <div class="row mx-1 mt-2">
     <USelectMenu
       v-model="selectedType"
-      :options="typeItems"
+      :items="typeItems"
       class="mt-2 border-1 rounded-md px-0 focus-within:ring-primaryOeb-500 focus-within:border-primaryOeb-500 focus-within:text-primaryOeb-500"
       bordered="false"
       @update:model-value="changeValue"
     >
-      <template #selected="{ option }">
-        {{ formatOption(option) }}
+      <template #default="{ modelValue }">
+        {{ formatOption(modelValue) }}
       </template>
-      <template class="mt-2 border-none" #option="{ option }">
-        <div class="text-caption ">
-          {{ formatOption(option) }}
-        </div>
+      <template #item-label="{ item }">
+        {{ formatOption(item) }}
       </template>
     </USelectMenu>
   </div>

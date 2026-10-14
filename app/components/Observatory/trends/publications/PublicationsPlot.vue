@@ -1,11 +1,14 @@
 <template>
-    <div class="ml-8" id="plot_5"></div>
+    <div ref="plotElement" class="ml-8"></div>
 </template>
 
 <script setup lang="ts">
-import { defineProps, onMounted, watch, nextTick } from 'vue';
+import { defineProps, onMounted, watch, nextTick, ref } from 'vue';
 import Plotly from 'plotly.js-dist';
 import { activeTabIndex } from '@/components/Common/state.js';
+import { resizePlot } from '~/utils/resizePlot';
+
+const plotElement = ref<HTMLDivElement | null>(null);
 
 // Define props with TypeScript types
 const props = defineProps<{
@@ -61,7 +64,12 @@ const config: Partial<Plotly.Config> = {
 };
 
 // Function to initialize the plot
-const plotChart = () => {
+const plotChart = async () => {
+    await nextTick();
+    const element = plotElement.value;
+    if (!element?.isConnected) {
+        return;
+    }
 
     const tracePublications : Partial<Plotly.PlotData> = {
         x: props.publications.x,
@@ -104,7 +112,11 @@ const plotChart = () => {
     
     const data: Partial<Plotly.PlotData>[] = [tracePublications, traceCitations];
 
-    Plotly.newPlot('plot_5', data, layout, config);
+    if (element.classList.contains('js-plotly-plot')) {
+        await Plotly.react(element, data, layout, config);
+    } else {
+        await Plotly.newPlot(element, data, layout, config);
+    }
 };
 
 // Mount the chart when the component is mounted
@@ -114,6 +126,6 @@ onMounted(() => {
 
 watch(activeTabIndex, async () => {
     await nextTick();
-    Plotly.relayout('plot_5', { autosize: true });
+    await resizePlot(plotElement.value, Plotly);
 });
 </script>

@@ -11,21 +11,13 @@
     </span>
     <USelectMenu
       v-model="selectCategory"
-      :options="categoryItems"
+      :items="categoryItems"
       :label="vocabularyLabel"
       placeholder=""
       class="border rounded-md px-0 w-full peer"
       :class="{ 'border-primaryOeb-500 ring-1 ring-primaryOeb-500': isFocusedSelect }"
       @change="changeValue"
     >
-      <template #selected="{ option }">
-        {{ option }}
-      </template>
-      <template class="mt-2 border-none" #option="{ option }">
-        <div class="text-caption ">
-          {{ option }}
-        </div>
-      </template>
     </USelectMenu>
   </div>
 
@@ -88,7 +80,7 @@ const props = defineProps<{
 // Define los eventos que el componente puede emitir
 const emit = defineEmits(['remove']);
 
-const selectCategory = ref(null)
+const selectCategory = ref<string | undefined>()
 const model = ref('')
 const urlErrorMessage = ref('')
 const categoryItems = [

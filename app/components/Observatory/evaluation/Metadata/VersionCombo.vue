@@ -2,8 +2,8 @@
   <div class="row mx-1 mt-2">
     <UInputMenu
       v-model="selectedVersion"
-      v-model:query="searchQuery"
-      :options="versions"
+      v-model:search-term="searchQuery"
+      :items="versions"
       persistent-hint
       class="text-body-2 mt-2 border-1 rounded-md px-0 focus-within:ring-primaryOeb-500 focus-within:border-primaryOeb-500 focus-within:text-primaryOeb-500"
       :inputClass="inputClass"

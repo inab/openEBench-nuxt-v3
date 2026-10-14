@@ -1,6 +1,5 @@
 import { defineStore } from "pinia";
 import { useObservatory } from "~~/stores/observatory/index.js";
-import { useAsyncData } from "nuxt/app";
 
 const BASE_URL = "/api/stats/tools/";
 
@@ -80,68 +79,69 @@ export const useTrends = defineStore("trends", {
     async fetchData(key, endpoint) {
       const { $observatory } = useNuxtApp();
       const observatoryStore = useObservatory();
-      const URL = `${BASE_URL}${endpoint}?collection=${observatoryStore.currentCollection}`;
+      const collectionId = observatoryStore.currentCollection;
+      const URL = `${BASE_URL}${endpoint}?collection=${collectionId}`;
 
       try {
         this.setLoaded(key, true);
 
-        const result = await useAsyncData(key, () =>
-          $observatory(URL, { method: "GET" })
-        );
+        const result = await $observatory(URL, { method: "GET" });
+        if (observatoryStore.currentCollection !== collectionId) return;
 
-        if (result.data === null) {
-          this.setLoaded(key, true);
+        if (result === null || result === undefined) {
+          this.setLoaded(key, false);
         } else {
-          this.setData(key, result.data);
+          this.setData(key, result);
         }
       } catch (error) {
+        if (observatoryStore.currentCollection !== collectionId) return;
         console.error(`Error fetching ${key}:`, error);
-        this.setLoaded(key, true);
+        this.setLoaded(key, false);
       }
     },
 
     // Using the generic `fetchData` method
     getLicensesSunburst() {
-      this.fetchData("licensesSunburst", "licenses_summary_sunburst");
+      return this.fetchData("licensesSunburst", "licenses_summary_sunburst");
     },
     getLicensesOpenSource() {
-      this.fetchData("licensesOpenSource", "licenses_open_source");
+      return this.fetchData("licensesOpenSource", "licenses_open_source");
     },
     getSemanticVersioning() {
-      this.fetchData("semanticVersioning", "semantic_versioning");
+      return this.fetchData("semanticVersioning", "semantic_versioning");
     },
     getVersionControlCount() {
-      this.fetchData("versionControlCount", "version_control_count");
+      return this.fetchData("versionControlCount", "version_control_count");
     },
     getVersionControlRepositories() {
-      this.fetchData(
+      return this.fetchData(
         "versionControlRepositories",
         "version_control_repositories"
       );
     },
     getPublications() {
-      this.fetchData("publications", "publications_journals_IF");
+      return this.fetchData("publications", "publications_journals_IF");
     },
     getDependencies() {
-      this.fetchData("dependencies", "dependencies_count");
+      return this.fetchData("dependencies", "dependencies_count");
     },
     getDependenciesCount() {
-      this.fetchData("dependenciesCount", "dependencies_coverage");
+      return this.fetchData("dependenciesCount", "dependencies_coverage");
     },
     getDocumentation() {
-      this.fetchData("documentation", "documentation");
+      return this.fetchData("documentation", "documentation");
     },
     getDocumentationCount() {
-      this.fetchData("documentationCount", "documentation_coverage");
+      return this.fetchData("documentationCount", "documentation_coverage");
     },
     getInputFormats() {
-      this.fetchData("inputFormats", "input_formats");
+      return this.fetchData("inputFormats", "input_formats");
     },
     getOutputFormats() {
-      this.fetchData("outputFormats", "output_formats");
+      return this.fetchData("outputFormats", "output_formats");
     },
     getFormatsCount() {
-      this.fetchData("formatsCount", "formats_coverage");
+      return this.fetchData("formatsCount", "formats_coverage");
     },
   },
 });

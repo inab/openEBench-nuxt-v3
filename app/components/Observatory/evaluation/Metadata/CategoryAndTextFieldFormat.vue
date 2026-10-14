@@ -4,7 +4,7 @@
       <span>{{ vocabularyLabel }}</span>
       <USelectMenu
         v-model="selectVocabulary"
-        :options="acceptedVocabularies"
+        :items="acceptedVocabularies"
         :label="vocabularyLabel"
         class="border-1 rounded-md px-0"
       >
@@ -21,7 +21,7 @@
       </span>
       <USelectMenu
         v-model="model"
-        :options="comboboxItemsFormat"
+        :items="comboboxItemsFormat"
         placeholder=""
         class="border rounded-md px-0 w-full peer"
         :class="{ 'border-primaryOeb-500 ring-1 ring-primaryOeb-500': isFocusedSelect }"

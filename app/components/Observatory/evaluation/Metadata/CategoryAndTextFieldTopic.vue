@@ -13,19 +13,11 @@
       <!-- Select con bordes dinámicos -->
       <USelectMenu
         v-model="selectVocabulary"
-        :options="acceptedVocabularies"
+        :items="acceptedVocabularies"
         placeholder=""
         class="border rounded-md w-full peer"
         :class="selectClasses"
       >
-        <template #selected="{ option }">
-          {{ option }}
-        </template>
-        <template #option="{ option }">
-          <div class="text-caption">
-            {{ option }}
-          </div>
-        </template>
       </USelectMenu>
     </div>
 
@@ -40,21 +32,12 @@
       </span>
       <USelectMenu
         v-model="model"
-        :options="comboboxItems"
+        :items="comboboxItems"
         placeholder=""
         class="border rounded-md px-0 w-full peer"
         :class="{ 'border-primaryOeb-500 ring-1 ring-primaryOeb-500': isFocusedSelect }"
-        @input="changeValue"
-        @change="changeValue"
+        @update:model-value="changeValue"
       >
-        <template #selected="{ option }">
-          {{ option }}
-        </template>
-        <template class="mt-2 border-none" #option="{ option }">
-          <div class="text-caption ">
-            {{ option }}
-          </div>
-        </template>
       </USelectMenu>
     </div>
     <div v-if="!customVocabulary" class="col-5 ml-1">

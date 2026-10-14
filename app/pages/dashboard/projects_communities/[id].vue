@@ -28,8 +28,7 @@ import { privileges } from "~~/constants/privileges";
 import type { Community } from "~~/types/communities";
 import type { Event } from "~~/types/events";
 import type { Contact } from "~~/types/contact";
-import parseDataURL from "data-urls";
-import { TextDecoder } from "@exodus/bytes/encoding.js";
+import { decodeDataUrlText } from "@/utils/decodeDataUrlText";
 
 definePageMeta({
   middleware: "require-auth",
@@ -135,10 +134,9 @@ const fetchUserCommunity = async (token: string): Promise<void> => {
     const data = await response.json();
     loadingData.value = false;
     if (data._metadata && data._metadata["project:summary"]) {
-      const dataURL = parseDataURL(data._metadata["project:summary"]);
-      const encodingName =
-        dataURL.mimeType.parameters.get("charset") || "utf-8";
-      const decodedSummary = new TextDecoder(encodingName).decode(dataURL.body);
+      const decodedSummary = await decodeDataUrlText(
+        data._metadata["project:summary"],
+      );
       data._metadata.project_summary = decodedSummary;
     }
 
