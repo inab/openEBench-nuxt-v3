@@ -45,7 +45,6 @@ export default defineNuxtConfig({
       include: [
         'dompurify',
         'aos',
-        'data-urls',
         'gsap',
         'vue-multiselect',
         'pluralize',

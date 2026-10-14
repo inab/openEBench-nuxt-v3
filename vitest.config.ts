@@ -8,6 +8,8 @@ export default defineVitestConfig({
 		globals: true,
 		environment: 'nuxt',
 		setupFiles: mockAuthModule,
+		fsModuleCache: true,
+		isolate: false,
 		coverage: {
 			reporter: ['text', 'json', 'html'],
 			provider: 'istanbul',

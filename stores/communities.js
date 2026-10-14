@@ -1,6 +1,5 @@
 import { defineStore } from "pinia";
-import parseDataURL from "data-urls";
-import { TextDecoder } from "@exodus/bytes/encoding.js";
+import { decodeDataUrlText } from "~/utils/decodeDataUrlText";
 
 export const useCommunities = defineStore("communities", {
   state: () => ({
@@ -50,7 +49,7 @@ export const useCommunities = defineStore("communities", {
       });
 
       const data = returnData.data.getCommunities;
-      const dataFormatted = this.formatData(data ?? []);
+      const dataFormatted = await this.formatData(data ?? []);
       this.communities = this.filterCommunities(dataFormatted);
       this.projects = this.filterProjects(dataFormatted);
 
@@ -61,8 +60,8 @@ export const useCommunities = defineStore("communities", {
       return this.communities;
     },
 
-    formatData(data) {
-      return data.map((community) => {
+    async formatData(data) {
+      return Promise.all(data.map(async (community) => {
         if (!community.links) {
           community.links = [];
         }
@@ -76,11 +75,8 @@ export const useCommunities = defineStore("communities", {
         });
         community._metadata = JSON.parse(community._metadata);
         if (community._metadata && "project:summary" in community._metadata) {
-          const dataURL = parseDataURL(community._metadata["project:summary"]);
-          const encodingName =
-            dataURL.mimeType.parameters.get("charset") || "utf-8";
-          const decodedSummary = new TextDecoder(encodingName).decode(
-            dataURL.body,
+          const decodedSummary = await decodeDataUrlText(
+            community._metadata["project:summary"],
           );
 
           community.summary = decodedSummary;
@@ -88,7 +84,7 @@ export const useCommunities = defineStore("communities", {
         }
         if (community.status === "abandoned") community.status = "inactive";
         return community;
-      });
+      }));
     },
 
     filterCommunities(data) {

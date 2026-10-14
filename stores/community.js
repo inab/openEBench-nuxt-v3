@@ -1,6 +1,5 @@
 import { defineStore } from "pinia";
-import parseDataURL from "data-urls";
-import { TextDecoder } from "@exodus/bytes/encoding.js";
+import { decodeDataUrlText } from "~/utils/decodeDataUrlText";
 
 // OpenEBench API
 export const useCommunity = defineStore("community", {
@@ -112,7 +111,7 @@ export const useCommunity = defineStore("community", {
         return null;
       }
 
-      this.communityData = this.formatCommunityData(
+      this.communityData = await this.formatCommunityData(
         community,
       );
 
@@ -185,7 +184,7 @@ export const useCommunity = defineStore("community", {
     },
 
     // Format community data
-    formatCommunityData(data) {
+    async formatCommunityData(data) {
       data.links = data.links ?? [];
       data.links.forEach((link) => {
         if (link.comment === "@logo") {
@@ -198,12 +197,8 @@ export const useCommunity = defineStore("community", {
           ? JSON.parse(data._metadata)
           : (data._metadata ?? {});
       if (data._metadata && "project:summary" in data._metadata) {
-        const dataURL = parseDataURL(data._metadata["project:summary"]);
-
-        const encodingName =
-          dataURL.mimeType.parameters.get("charset") || "utf-8";
-        const decodedSummary = new TextDecoder(encodingName).decode(
-          dataURL.body,
+        const decodedSummary = await decodeDataUrlText(
+          data._metadata["project:summary"],
         );
         data.summary = decodedSummary;
         data._metadata["project:summary"] = decodedSummary;

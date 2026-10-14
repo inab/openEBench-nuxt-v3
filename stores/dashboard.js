@@ -2,8 +2,7 @@ import { defineStore } from "pinia";
 import { useAsyncData } from 'nuxt/app';
 import customApi from "~/composables/useAPI";
 import { useNuxtApp, useRuntimeConfig } from "#app";
-import parseDataURL from "data-urls";
-import { TextDecoder } from "@exodus/bytes/encoding.js";
+import { decodeDataUrlText } from "~/utils/decodeDataUrlText";
 import useAPI from "~/composables/useAPI";
 
 const BASE_URL = '/api/stats/tools/';
@@ -58,33 +57,24 @@ export const useDashboard = defineStore("dashboard", {
           }),
         });
 
-        const communitiesData = communities.getCommunities.map(
-          (community) => {
+        const communitiesData = await Promise.all(communities.getCommunities.map(
+          async (community) => {
             community._metadata = JSON.parse(community._metadata);
 
             if (community._metadata && "project:summary" in community._metadata) {
-              const dataURL = parseDataURL(
+              const decodedSummary = await decodeDataUrlText(
                 community._metadata["project:summary"]
               );
 
-              if (dataURL) {
-                const encodingName =
-                  dataURL.mimeType.parameters.get("charset") || "utf-8";
-                const decodedSummary = new TextDecoder(encodingName).decode(
-                  dataURL.body,
-                );
-                community.summary = decodedSummary;
-                community._metadata["project:summary"] = decodedSummary;
-              } else {
-                community.summary = null;
-              }
+              community.summary = decodedSummary;
+              community._metadata["project:summary"] = decodedSummary;
             } else {
               community.summary = null;
             }
 
             return community;
           }
-        );
+        ));
 
         this.communitiesCount = communitiesData.filter(
           (item) =>
