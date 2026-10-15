@@ -487,9 +487,9 @@ function closeMenu() {
   nav {
     flex-grow: 1;
     display: flex;
-    justify-content: start;
+    justify-content: flex-start;
     align-items: center;
-    margin-left: 30px;
+    margin-left: 12px;
   }
 
   .nav-list {
@@ -507,7 +507,7 @@ function closeMenu() {
   .nav-list-items-ul {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     list-style: none;
     padding: 0;
     margin: 0;
