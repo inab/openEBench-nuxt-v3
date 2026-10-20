@@ -28,7 +28,7 @@
       <UTable
         :columns="columns"
         :loading="isLoadingData"
-        :rows="filteredRows"
+        :data="filteredRows"
         :ui="{
           tr: {
             base: 'hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer',
@@ -48,18 +48,22 @@
           },
         }"
       >
-        <template #dates-data="{ row }">
+        <template #dates-cell="{ row }">
           <div>
             <div class="w-100">
-              Benchmark start: {{ row.dates.benchmark_start }}
+              Benchmark start: {{ row.original.dates?.benchmark_start }}
             </div>
           </div>
         </template>
-        <template #bench_contact-data="{ row }">
-          <span v-for="(contact, index) in getContactsArray(row.bench_contact)" :key="index">
+        <template #bench_contact-cell="{ row }">
+          <span
+            v-for="(contact, index) in getContactsArray(row.original.bench_contact ?? '')"
+            :key="index"
+          >
             <a
               :href="`https://orcid.org/${getContactORCID(contact)}`"
               target="_blank"
+              rel="noopener noreferrer"
               class="text-primaryOeb-500"
             >
               {{ contact }}
@@ -67,11 +71,11 @@
             <br />
           </span>
         </template>
-        <template #actions-data="{ row }">
+        <template #actions-cell="{ row }">
           <div class="action-btn-group">
             <button class="btn-custom-badget text-sm">
               <NuxtLink
-                :to="`/benchmarking/${row.community_id}?event=${row._id}`"
+                :to="`/benchmarking/${row.original.community_id}?event=${row.original._id}`"
                 title="Visit community event"
                 class="text-sm"
               >
@@ -79,19 +83,9 @@
                 Visit
               </NuxtLink>
             </button>
-            <div v-if="row.privileges === 'Owner' && row.actions.community">
+            <div v-if="canEditEvent(row.original)">
               <button title="Edit Event" class="btn-custom-badget text-sm">
-                <NuxtLink :to="getCommunityEventEditLink(row)">
-                  <font-awesome-icon :icon="['fas', 'pencil']" />
-                  Edit
-                </NuxtLink>
-              </button>
-            </div>
-            <div
-              v-else-if="row.privileges === 'Manager' && row.actions.community"
-            >
-              <button title="Edit Event" class="btn-custom-badget text-sm">
-                <NuxtLink :to="getCommunityEventEditLink(row)">
+                <NuxtLink :to="getCommunityEventEditLink(row.original)">
                   <font-awesome-icon :icon="['fas', 'pencil']" />
                   Edit
                 </NuxtLink>
@@ -99,7 +93,7 @@
             </div>
             <button class="btn-custom-badget text-sm">
               <NuxtLink
-                :to="getCommunityEventEditLink(row, true)"
+                :to="getCommunityEventEditLink(row.original, true)"
                 title="View Event challenges"
                 class="text-sm column-link"
               >
@@ -157,20 +151,23 @@ const props = defineProps<{
 
 const columns = [
   {
-    label: "Name",
-    key: "name",
+    id: "name",
+    accessorKey: "name",
+    header: "NAME",
   },
   {
-    label: "Dates",
-    key: "dates",
+    id: "dates",
+    accessorKey: "dates",
+    header: "DATES",
   },
   {
-    label: "Contacts",
-    key: "bench_contact",
+    id: "bench_contact",
+    accessorKey: "bench_contact",
+    header: "CONTACTS",
   },
   {
-    key: "actions",
-    label: "ACTIONS",
+    id: "actions",
+    header: "ACTIONS",
   },
 ];
 const page = ref<number>(1);
@@ -187,15 +184,6 @@ const pageTo = computed(() =>
 );
 const _total = ref(0);
 
-const eventsData = computed(() => {
-  if (!props.events) return [];
-  return props.events.map((event) => {
-    return {
-      ...event,
-    };
-  });
-});
-
 const filteredRows = computed(() => {
   if (!props.events) return [];
   if (!search.value) {
@@ -206,8 +194,8 @@ const filteredRows = computed(() => {
     );
   }
 
-  const filteredSearcher = props.events.filter((challenge: any) => {
-    return Object.values(challenge).some((value) => {
+  const filteredSearcher = props.events.filter((event) => {
+    return Object.values(event).some((value) => {
       return String(value).toLowerCase().includes(search.value.toLowerCase());
     });
   });
@@ -224,11 +212,21 @@ const eventPrivileges = computed(() => {
   return props.commmunityPrivileges.event;
 });
 
+const canEditEvent = (event: Event) => {
+  return (
+    (event.privileges === "Owner" || event.privileges === "Manager") &&
+    eventPrivileges.value.update
+  );
+};
+
 const totalPages = computed(() => {
   return Math.ceil(Number(_total.value) / Number(pageCount.value));
 });
 
-const getCommunityEventEditLink = (row: any, isChallenge: boolean = false) => {
+const getCommunityEventEditLink = (
+  row: Event,
+  isChallenge: boolean = false,
+) => {
   if (isChallenge) {
     return `/dashboard/projects_communities/${row.community_id}/events/${row._id}?challenges=true`;
   }
@@ -236,10 +234,10 @@ const getCommunityEventEditLink = (row: any, isChallenge: boolean = false) => {
 };
 
 
-function getContactsArray(contacts) {
+function getContactsArray(contacts: string) {
   return contacts.split(",");
 }
-function getContactORCID(orcid) {
+function getContactORCID(orcid: string) {
   return orcid.split(":")[1];
 }
 

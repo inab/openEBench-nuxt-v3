@@ -151,11 +151,10 @@
                       <USelectMenu
                         v-model="state.initial_community_id"
                         class="w-full custom-select-input"
-                        :options="communities"
-                        searchable
-                        searchable-placeholder="Search a community..."
-                        value-attribute="_id"
-                        option-attribute="name"
+                        :items="communities"
+                        :search-input="{ placeholder: 'Search a community...' }"
+                        value-key="_id"
+                        label-key="name"
                       />
                     </div>
                   </div>
@@ -190,18 +189,19 @@
                             :ref="`contact_${index}`"
                             v-model="allCommunitiesPrivileges[index].id"
                             class="w-full lg:w-100"
-                            searchable
                             selected-icon="i-heroicons-check-16-solid"
                             placeholder="Select a Community"
-                            :options="communities"
-                            value-attribute="_id"
-                            option-attribute="name"
+                            :items="communities"
+                            value-key="_id"
+                            label-key="name"
                           >
                           </USelectMenu>
                           <USelect
                             v-model="allCommunitiesPrivileges[index].role"
-                            :options="rolesObj"
+                            :items="rolesObj"
                             class="w-48"
+                            label-key="label"
+                            value-key="value"
                           />
                           <button
                             class="btn-delete-input"

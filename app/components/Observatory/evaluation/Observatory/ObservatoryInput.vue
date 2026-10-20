@@ -14,42 +14,87 @@
           </div>
 
           <div v-else class="form-group relative">
-            <label :class="labelClasses">Tool</label>
+            <label v-if="selectedTool" :class="labelClasses">Tool</label>
             <div class="flex items-center gap-2 mt-2">
               <UIcon name="mdi-database" class="text-gray-500 text-2xl" :class="iconClass" />
 
               <USelectMenu
                 v-model="selectedToolName"
                 v-model:search-term="searchQuery"
-                :items="toolItems"
+                :items="toolItemsWithTypes"
+                placeholder="Select a tool"
+                aria-label="Tool"
                 reset-search-term-on-blur
+                value-key="label"
                 :content="{ alignOffset: 8 }"
                 @focus="onFocus"
                 @update:open="handleMenuOpen"
-
-                class="peer w-full flex items-center h-12 max-h-12 rounded-md border-1 text-sm px-2 pl-10 focus-within:ring-primaryOeb-500 focus-within:border-primaryOeb-500 focus-within:text-primaryOeb-500"
+                :ui="{
+                  base: 'peer w-full flex items-center h-12 max-h-12 rounded-md border text-sm px-2 focus-within:ring-primaryOeb-500 focus-within:border-primaryOeb-500 focus-within:text-primaryOeb-500',
+                  item: 'rounded-md bg-transparent data-highlighted:text-default data-highlighted:before:bg-gray-100',
+                  itemWrapper: 'w-full min-w-0',
+                  itemLabel: 'w-full',
+                }"
               >
-                <template #trailing>              
-                  <!-- Chevron icon -->
+                <template #default="{ modelValue }">
+                  <span
+                    v-if="modelValue && selectedTool"
+                    class="inline-flex max-w-full min-w-0 items-center gap-1.5 rounded-md bg-[#DBEAFE] px-2 py-1 text-sm font-medium text-black"
+                  >
+                    <span class="min-w-0 truncate">{{ selectedToolLabel }}</span>
+                    <span class="flex shrink-0 items-center gap-1">
+                      <span
+                        v-for="type in getToolTypes(selectedTool)"
+                        :key="type"
+                        class="inline-flex items-center rounded-sm bg-white px-2 py-0.5 text-xs font-semibold text-black"
+                      >
+                        {{ type.toUpperCase() }}
+                      </span>
+                    </span>
+                  </span>
+                  <span
+                    v-else
+                    data-slot="placeholder"
+                    class="truncate text-dimmed"
+                  >
+                    Select a tool
+                  </span>
+                </template>
+                <template #trailing="{ modelValue, open }">
+                  <UButton
+                    v-if="modelValue"
+                    as="span"
+                    icon="i-heroicons-x-circle-16-solid"
+                    color="neutral"
+                    variant="link"
+                    tabindex="-1"
+                    aria-label="Clear selected tool"
+                    class="cursor-pointer"
+                    @click.stop="selectedToolName = undefined"
+                  />
                   <UIcon
                     name="i-heroicons-chevron-down-20-solid"
-                    class="w-5 h-5 transition-transform transition-colors"
-                    :class="[
-                      isFocused ? 'text-primaryOeb-500 rotate-180' : 'text-gray-400 rotate-0'
-                    ]"
+                    class="size-5 shrink-0 text-gray-400 transition-transform duration-150"
+                    :class="{ 'rotate-180 text-primaryOeb-500': open }"
                   />
                 </template>
+                <template #item-label="{ item }">
+                  <span class="inline-flex max-w-full min-w-0 items-center gap-1.5 rounded-md bg-[#DBEAFE] px-2 py-1 text-sm font-medium text-black">
+                    <span class="min-w-0 truncate">
+                      {{ item.label }}
+                    </span>
+                    <span class="flex shrink-0 items-center gap-1">
+                      <span
+                        v-for="type in item.types"
+                        :key="type"
+                        class="inline-flex items-center rounded-sm bg-white px-2 py-0.5 text-xs font-semibold text-black"
+                      >
+                        {{ type.toUpperCase() }}
+                      </span>
+                    </span>
+                  </span>
+                </template>
               </USelectMenu>
-                  
-              <!-- Clear selection button -->
-              <UButton
-                v-if="selectedTool"
-                color="white" variant="solid"
-                @click.stop="selectedToolName = undefined"
-                class="absolute right-10 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-600"
-              >
-                <UIcon name="i-heroicons-x-circle-16-solid" class="w-5 h-5" />
-              </UButton>
 
             </div>
           </div>
@@ -96,6 +141,7 @@ type ObservatoryToolOption = {
   label?: string;
   name?: string;
   type?: string;
+  types?: string[];
 };
 const observatoryTools = computed<ObservatoryToolOption[]>(
   () => observatoryStore.ObservatoryToolsNameTypeSources || []
@@ -113,10 +159,8 @@ const selectedToolLabel = computed(() => {
   return selectedTool.value?.name ?? (selectedTool.value ? getToolLabel(selectedTool.value) : '');
 });
 const selectedToolType = computed(() => {
-  // Nuevo sistema (array)
-  // if (Array.isArray(selectedTool.value?.types)) return selectedTool.value.types;
-  
-  // TODO: eliminar cuando type deje de existir
+  const types = selectedTool.value ? getToolTypes(selectedTool.value) : [];
+  if (types.length) return types[0];
   return selectedTool.value?.type || '';
 });
 
@@ -139,7 +183,16 @@ const allFilteredBySearch = computed(() => {
 const filteredVisibleOptions = computed(() => {
   return allFilteredBySearch.value.slice(0, maxVisible.value);
 });
-const toolItems = computed(() => filteredVisibleOptions.value.map(getToolLabel));
+const toolItemsWithTypes = computed(() =>
+  filteredVisibleOptions.value.map((tool) => ({
+    label: getToolLabel(tool),
+    types: getToolTypes(tool),
+  }))
+);
+const getToolTypes = (tool: ObservatoryToolOption) => {
+  const types = tool.types?.length ? tool.types : tool.type ? [tool.type] : [];
+  return types.filter((type) => type && type !== 'undefined');
+};
 
 // Carga inicial
 onMounted(async () => {

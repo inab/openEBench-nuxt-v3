@@ -152,7 +152,6 @@
 import { ref, computed } from "vue";
 import { useUser } from "~~/stores/user.ts";
 import { CommunityStatusColors, CommunityStatusLabels, CommunityStatusTextColors, CommunityStatusBackgroundColors } from '~~/constants/community_const'
-import { CommunityColumnsDashboard, CommunityStatus } from "~~/types/communities";
 import Multiselect from 'vue-multiselect';
 
 defineProps<{
@@ -168,8 +167,9 @@ const pageTo = computed(() =>
     Math.min(Number(page.value) * Number(pageCount.value), Number(totalPages.value)),
 );
 const search = ref<string>("");
-const selectedStatus = ref(<Array<CommunityStatus>>[]);
-const todoStatus = ref<Array<{ value: string, label: string }>>(CommunityStatusLabels);
+type StatusOption = { value: string; label: string };
+const selectedStatus = ref<StatusOption[]>([]);
+const todoStatus = ref<StatusOption[]>([...CommunityStatusLabels]);
 
 const columns = [
     {
@@ -257,11 +257,10 @@ function addTag(newTag: string) {
         label: newTag,
         value: newTag.substring(0, 2) + Math.floor((Math.random() * 10000000))
     }
-    todoStatus.options.push(tag)
     todoStatus.value.push(tag)
 }
 
-function removeTag(tagName: string) {
+function removeTag(tagName: StatusOption) {
     selectedStatus.value = selectedStatus.value.filter((tag) => {
         return tagName.value != tag.value
     });

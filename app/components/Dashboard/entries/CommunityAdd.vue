@@ -96,25 +96,17 @@
                             <label for="status">Status</label>
                             <USelectMenu
                               v-model="localStatus.value"
-                              :options="CommunityStatusLabels"
+                              :items="CommunityStatusLabels"
+                              label-key="label"
+                              value-key="value"
                               class="w-full custom-select-input"
-                              @change="onChangeStatus"
+                              @update:model-value="onChangeStatus"
                             >
-                              <template #label>
-                                <span
-                                  :class="`status-${localStatus.value}__option inline-block h-2 w-2 flex-shrink-0 rounded-full`"
-                                  aria-hidden="true"
-                                />
-                                <span class="truncate">{{
-                                  localStatus.label
-                                }}</span>
-                              </template>
-                              <template #option="{ option: item }">
+                              <template #item-leading="{ item }">
                                 <span
                                   class="h-2 w-2 rounded-full"
-                                  :class="`status-${item?.value}__option`"
+                                  :class="`status-${item.value}__option`"
                                 ></span>
-                                <span>{{ item.label }}</span>
                               </template>
                             </USelectMenu>
                           </div>
@@ -124,8 +116,9 @@
                             <label for="type">Type</label>
                             <USelect
                               v-model="state.type"
-                              :options="typeOptions"
-                              option-attribute="label"
+                              :items="typeOptions"
+                              label-key="label"
+                              value-key="value"
                               class="w-full custom-select-input"
                             />
                           </div>
@@ -278,17 +271,18 @@
                               :ref="`contact_${index}`"
                               v-model="localContacts[index].id"
                               class="w-full lg:w-100"
-                              searchable
                               selected-icon="i-heroicons-check-16-solid"
                               placeholder="Select a contact"
-                              :options="contactsData"
-                              value-attribute="id"
-                              option-attribute="name"
+                              :items="contactsData"
+                              value-key="id"
+                              label-key="name"
                             >
                             </USelectMenu>
                             <USelect
                               v-model="localContacts[index].role"
-                              :options="rolesObj"
+                              :items="rolesObj"
+                              label-key="label"
+                              value-key="value"
                               class="w-48"
                             />
                             <button
@@ -455,7 +449,7 @@
 <script setup lang="ts">
 import { computed, ref, nextTick, onMounted, useTemplateRef } from "vue";
 import { useUser } from "~~/stores/user.ts";
-import { Community } from "~~/types/communities";
+import type { Community } from "~~/types/communities";
 import { CommunityStatusLabels } from "~~/constants/community_const";
 import { useRouter } from "vue-router";
 import CustomSubtitle from "@/components/Common/CustomSubtitle.vue";
@@ -888,8 +882,13 @@ function goBack() {
 const getErrors = computed(() => errors.value.join(", "));
 
 function onChangeStatus(newStatus: string) {
-  localStatus.value.value = newStatus.value;
-  localStatus.value.label = newStatus.label;
+  localStatus.value.value = newStatus;
+  const selectedStatus = CommunityStatusLabels.find(
+    (status) => status.value === newStatus,
+  );
+  if (selectedStatus) {
+    localStatus.value.label = selectedStatus.label;
+  }
 }
 
 function onAddElement(array: string[], arrayRef?: HTMLInputElement[]) {

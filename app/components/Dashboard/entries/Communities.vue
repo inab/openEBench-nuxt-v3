@@ -57,46 +57,34 @@
           </template>
           <template #actions-cell="{ row }">
             <div class="action-btn-group">
-              <button class="btn-custom-badget text-sm" title="Visit community">
-                <NuxtLink :to="`/benchmarking/${row.original._id}`" class="text-sm">
-                  <font-awesome-icon :icon="['far', 'eye']" />
-                  Visit
-                </NuxtLink>
-              </button>
+              <NuxtLink
+                :to="`/benchmarking/${row.original._id}`"
+                class="btn-custom-badget text-sm"
+                title="Visit community"
+              >
+                <font-awesome-icon :icon="['far', 'eye']" />
+                Visit
+              </NuxtLink>
               <div v-if="row.original.actions">
-                <div class="text-center" v-if="row.original.privileges === 'Owner' && row.original.actions.community">
-                  <button title="Edit community" class="btn-custom-badget text-sm">
-                    <NuxtLink :to="getCommunityEditLink(row.original)" class="text-sm">
-                      <font-awesome-icon :icon="['fas', 'pencil']" />
-                      Edit
-                    </NuxtLink>
-                  </button>
-                </div>
-                <div class="text-center" v-else-if="
-                  row.original.privileges === 'Manager' && row.original.actions.community
-                ">
-                  <button title="Edit community" class="btn-custom-badget text-sm">
-                    <NuxtLink :to="getCommunityEditLink(row.original)" class="text-sm">
-                      <font-awesome-icon :icon="['fas', 'pencil']" />
-                      Edit
-                    </NuxtLink>
-                  </button>
-                </div>
-                <div class="text-center" v-else>
-                  <button title="Edit community" class="btn-custom-badget text-sm">
-                    <NuxtLink :to="getCommunityEditLink(row.original)" class="text-sm">
-                      <font-awesome-icon :icon="['fas', 'pencil']" />
-                      Edit
-                    </NuxtLink>
-                  </button>
-                </div>
+                <NuxtLink
+                  :to="getCommunityEditLink(row.original)"
+                  class="btn-custom-badget text-sm"
+                  title="Edit community"
+                >
+                  <font-awesome-icon :icon="['fas', 'pencil']" />
+                  Edit
+                </NuxtLink>
               </div>
-              <button class="btn-custom-badget text-sm" v-if="!row.original._metadata">
-                <NuxtLink :to="getCommunityEditLink(row.original, true)" title="View community events" class="text-sm">
+              <template v-if="!row.original._metadata">
+                <NuxtLink
+                  :to="getCommunityEditLink(row.original, true)"
+                  class="btn-custom-badget text-sm"
+                  title="View community events"
+                >
                   <font-awesome-icon :icon="['fas', 'calendar-check']" />
                   Events
                 </NuxtLink>
-              </button>
+              </template>
             </div>
           </template>
           <template #contacts-cell="{ row }">
@@ -186,9 +174,6 @@ import { useUser } from "~~/stores/user.ts";
 import {
   CommunityStatusLabels,
 } from "~~/constants/community_const";
-import {
-  CommunityStatus,
-} from "~~/types/communities";
 import Multiselect from "vue-multiselect";
 
 defineProps<{
@@ -212,10 +197,9 @@ const pageTo = computed(() => {
 );
 
 const search = ref<string>("");
-const selectedStatus = ref(<Array<CommunityStatus>>[]);
-const todoStatus = ref<Array<{ value: string; label: string }>>(
-  CommunityStatusLabels,
-);
+type StatusOption = { value: string; label: string };
+const selectedStatus = ref<StatusOption[]>([]);
+const todoStatus = ref<StatusOption[]>([...CommunityStatusLabels]);
 
 const columns = [
   {
@@ -312,11 +296,10 @@ function addTag(newTag: string) {
     label: newTag,
     value: newTag.substring(0, 2) + Math.floor(Math.random() * 10000000),
   };
-  todoStatus.options.push(tag);
   todoStatus.value.push(tag);
 }
 
-function removeTag(tagName: string) {
+function removeTag(tagName: StatusOption) {
   selectedStatus.value = selectedStatus.value.filter((tag) => {
     return tagName.value != tag.value;
   });

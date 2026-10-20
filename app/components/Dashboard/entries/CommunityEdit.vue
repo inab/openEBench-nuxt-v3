@@ -51,7 +51,7 @@
           </div>
         </div>
       </div>
-      <div v-if="loadingData" class="">
+      <div v-if="loadingData || !communityObj" class="">
         <div class="space-y-2">
           <USkeleton class="dashboard-community-edit__skeleton__small" />
           <USkeleton class="dashboard-community-edit__skeleton__big" />
@@ -159,36 +159,21 @@
                                   v-model="localStatus.value"
                                   class="w-full custom-select-input"
                                   selected-icon="i-heroicons-hand-thumb-up-solid"
-                                  :options="CommunityStatusLabels"
+                                  :items="CommunityStatusLabels"
+                                  label-key="label"
+                                  value-key="value"
                                   :disabled="
                                     !commmunityPrivileges.community.update ||
                                     isView
                                   "
                                   :popper="{ arrow: true, offsetDistance: 0 }"
-                                  @change="onChangeStatus"
+                                  @update:model-value="onChangeStatus"
                                 >
-                                  <template #label>
-                                    <span
-                                      :class="`status-${localStatus.value}__option inline-block h-2 w-2 flex-shrink-0 rounded-full`"
-                                      aria-hidden="true"
-                                    />
-                                    <span class="truncate">{{
-                                      localStatus.label
-                                    }}</span>
-                                  </template>
-                                  <template #option="{ option: item }">
+                                  <template #item-leading="{ item }">
                                     <span
                                       class="h-2 w-2 rounded-full"
-                                      :class="`status-${item?.value}__option`"
+                                      :class="`status-${item.value}__option`"
                                     ></span>
-                                    <span>{{ item.label }}</span>
-                                    <span
-                                      v-if="item.label == localStatus.label"
-                                    >
-                                      <font-awesome-icon
-                                        :icon="['fas', 'check']"
-                                      />
-                                    </span>
                                   </template>
                                 </USelectMenu>
                               </div>
@@ -199,8 +184,9 @@
                                 <USelect
                                   v-model="state.type"
                                   class="w-full custom-select-input"
-                                  :options="typeOptions"
-                                  option-attribute="label"
+                                  :items="typeOptions"
+                                  label-key="label"
+                                  value-key="value"
                                   :disabled="
                                     !commmunityPrivileges.community.update ||
                                     isView
@@ -221,7 +207,7 @@
                           <UTooltip text="Unique community acronym">
                             <UIcon name="i-heroicons-information-circle" />
                           </UTooltip>
-                          {{ inputLabels[state.type].acronym }}
+                          {{ inputLabels[state.type]?.acronym ?? "Acronym" }}
                           <span class="text-red-400 required">*</span>
                         </label>
                         <input
@@ -238,7 +224,7 @@
                     <div class="form-card__row__box">
                       <div class="form-group">
                         <label for="description">
-                          {{ inputLabels[state.type].name }}
+                          {{ inputLabels[state.type]?.name ?? "Name" }}
                           <span class="text-red-400 required">*</span>
                         </label>
                         <input
@@ -363,12 +349,11 @@
                                   :ref="`contact_${index}`"
                                   v-model="localContacts[index].id"
                                   class="w-full lg:w-100"
-                                  searchable
                                   selected-icon="i-heroicons-check-16-solid"
                                   placeholder="Select a contact"
-                                  :options="contactsData"
-                                  value-attribute="id"
-                                  option-attribute="name"
+                                  :items="contactsData"
+                                  value-key="id"
+                                  label-key="name"
                                   :disabled="
                                     !commmunityPrivileges.community.update ||
                                     isView
@@ -377,7 +362,9 @@
                                 </USelectMenu>
                                 <USelect
                                   v-model="localContacts[index].role"
-                                  :options="rolesObj"
+                                  :items="rolesObj"
+                                  label-key="label"
+                                  value-key="value"
                                   class="w-48"
                                 />
                                 <button
@@ -1058,8 +1045,13 @@ function consentTab(userPrivileges) {
 }
 
 function onChangeStatus(newStatus: string) {
-  localStatus.value.value = newStatus.value;
-  localStatus.value.label = newStatus.label;
+  localStatus.value.value = newStatus;
+  const selectedStatus = CommunityStatusLabels.find(
+    (status) => status.value === newStatus,
+  );
+  if (selectedStatus) {
+    localStatus.value.label = selectedStatus.label;
+  }
 }
 
 function onAddElement(array: string[], arrayRef?: HTMLInputElement[]) {

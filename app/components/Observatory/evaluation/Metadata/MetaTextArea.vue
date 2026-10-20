@@ -1,12 +1,12 @@
 <template>
-  <div class="container ms-3" :class="n_cols">
+  <div :class="n_cols">
     <div class="d-flex">
       <HeaderAvatar
         :field="field"
         :field_name="title"
         :disabled_tooltip="true"
       />
-      <span class="text-body title">{{ title }}</span>
+      <span class="text-body title" style="color: #0b579f !important">{{ title }}</span>
       <UButton
         color="gray"
         variant="solid"
@@ -20,22 +20,26 @@
         />
       </UButton>
     </div>
-    <div class="mt-1 relative mt-2">
+    <div class="relative mt-2 ms-1">
       <UTextarea
         v-for="(item, index) in description"
         :key="item.id"
         :value="item.term"
-        class="mb-2 d-flex border-1 rounded-md p-1 focus-within:ring-primaryOeb-500 focus-within:border-primaryOeb-500 focus-within:text-primaryOeb-500"
+        variant="none"
+        :ui="{
+          root: 'mb-2 w-full rounded-md border border-gray-300 p-1 focus-within:border-primaryOeb-500 focus-within:ring-1 focus-within:ring-primaryOeb-500',
+          base: 'w-full resize-none border-0 bg-transparent shadow-none focus:outline-none focus:ring-0',
+        }"
       >
         <!-- clear description -->
         <button
           v-if="value"
-          class="absolute right-1"
+          class="absolute right-2 top-2"
           @click="clearLink"
         >
           <UIcon
             name="i-heroicons-x-circle-20-solid"
-            class="text-2xl"
+            class="size-4"
           />
         </button>
 

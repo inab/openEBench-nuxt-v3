@@ -47,8 +47,13 @@
         <span>{{ row.original.type }}</span>
       </template>
       <template #download-cell="{ row }">
-        <a v-if="row.original.datalink && row.original.datalink.uri" :href="row.original.datalink.uri" target="_blank"
-          >Download
+        <a
+          v-if="row.original.datalink?.uri ?? row.original.datalinks?.[0]?.uri"
+          :href="row.original.datalink?.uri ?? row.original.datalinks?.[0]?.uri"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Download
         </a>
         <span v-else>Not available</span>
       </template>

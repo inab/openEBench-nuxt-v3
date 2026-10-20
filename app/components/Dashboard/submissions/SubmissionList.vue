@@ -213,7 +213,7 @@
                     <USelect
                       v-model="selectedSubmission.status"
                       class="w-full custom-select-input"
-                      :options="statusOptions"
+                      :items="statusOptions"
                     />
                   </div>
                 </div>
@@ -270,10 +270,10 @@ const submissionStatus = [
 const isModalOpen = ref<boolean>(false);
 const selectedSubmission = ref<Submission>({});
 
-const statusOptions = [
-  { value: "all", label: "All", color: "" },
-  ...submissionStatus,
-];
+const statusOptions = submissionStatus.map((status) => ({
+  ...status,
+  value: Number(status.value),
+}));
 
 const selectedStatus = ref<
   Array<{ value: string; label: string; color: string }>

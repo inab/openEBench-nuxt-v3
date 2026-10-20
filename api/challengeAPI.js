@@ -20,7 +20,7 @@ export async function challengeAPI(challengeID) {
 							participant_datasets: datasets(datasetFilters: {type: "participant"}) {
 								_id
 								orig_id
-								datalink {
+								datalinks {
 									inline_data
 									schema_url
 									uri
@@ -39,7 +39,7 @@ export async function challengeAPI(challengeID) {
 							assessment_datasets: datasets(datasetFilters: {type: "assessment"}) {
 								_id
 								orig_id
-								datalink {
+								datalinks {
 									inline_data
 									schema_url
 									uri
@@ -62,7 +62,7 @@ export async function challengeAPI(challengeID) {
 						getDatasets(
 							datasetFilters: { challenge_id: $id, type: "aggregation" }
 						) {
-							datalink {
+							datalinks {
 								inline_data
 							}
 							dates {

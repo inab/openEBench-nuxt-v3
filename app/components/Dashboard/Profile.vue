@@ -90,7 +90,7 @@
             >
               <USelectMenu
                 v-model="state.roles"
-                :options="state.roles"
+                :items="state.roles"
                 multiple
                 placeholder="Status"
                 class=""

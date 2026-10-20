@@ -1,13 +1,13 @@
 <template>
-  <UTooltip :style="{ pointerEvents: disabled_tooltip ? 'none' : 'auto' }" 
-    :text="field_name" class="text-right rtl:text-left" 
-    :ui="{ background: 'bg-black bg-opacity-50', color: 'text-white',
-      transition: {enterActiveClass: 'transition ease-out duration-300', leaveActiveClass: 'transition ease-in duration-150',}
-    }"
+  <UTooltip
+    :text="field_name"
+    :disabled="disabled_tooltip"
+    class="inline-flex shrink-0 items-center"
+    :ui="{ content: 'bg-black/80 text-white' }"
   >
     <UIcon
       :name="metaState ? 'i-heroicons-check-circle-20-solid' : 'i-heroicons-minus-circle-20-solid'"
-      class="w-5 h-5 ms-auto bg-gray-400 mx-2"
+      class="size-5 shrink-0 bg-gray-400 mx-1"
       :class="[metaState ? 'bg-green-500' : 'bg-gray-400']"
     />
   </UTooltip>
@@ -19,15 +19,13 @@ import { useMetadataStore } from '~~/stores/observatory/evaluation/metadata';
 const metadataStore = useMetadataStore();
 
 // PROPS
-const props = defineProps<{
-  field: String,
-  field_name: String,
-  disabled_tooltip:{
-    type: Boolean,
-    default: false,
-	  required: false,
-  },
-}>();
+const props = withDefaults(defineProps<{
+  field: string,
+  field_name: string,
+  disabled_tooltip?: boolean,
+}>(), {
+  disabled_tooltip: false,
+});
 
 // Computed
 const toolMetadata = computed(() => metadataStore.getToolMetadata);

@@ -90,9 +90,9 @@
                         <USelect
                           v-model="state.is_automated"
                           class="selector"
-                          :options="automatedOptions"
-                          option-attribute="label"
-                          value-attribute="value"
+                          :items="automatedOptions"
+                          label-key="label"
+                          value-key="value"
                         />
                       </div>
                     </div>
@@ -247,17 +247,18 @@
                                   :ref="`contact_${index}`"
                                   v-model="localContacts[index].id"
                                   class="w-full lg:w-100"
-                                  searchable
                                   selected-icon="i-heroicons-check-16-solid"
                                   placeholder="Select a contact"
-                                  :options="contactsData"
-                                  value-attribute="id"
-                                  option-attribute="name"
+                                  :items="contactsData"
+                                  value-key="id"
+                                  label-key="name"
                                 >
                                 </USelectMenu>
                                 <USelect
                                   v-model="localContacts[index].role"
-                                  :options="rolesObj"
+                                  :items="rolesObj"
+                                  label-key="label"
+                                  value-key="value"
                                   class="w-48"
                                 />
                                 <button

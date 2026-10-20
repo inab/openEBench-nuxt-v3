@@ -34,23 +34,23 @@
 
       <div class="row row-spacing">
         <UFormGroup label="Type of request" name="requestType" class="col-6 input-row-group">
-          <USelect v-model="state.requestType" class="selector custom-entry-input" :options="requestOptions"
-            option-attribute="label" value-attribute="value" @change="handleRequestTypeChange" />
+          <USelect v-model="state.requestType" class="selector custom-entry-input" :items="requestOptions"
+            label-key="label" value-key="value" @update:model-value="handleRequestTypeChange" />
         </UFormGroup>
       </div>
 
       <template v-if="state.requestType === 'roleUpgrade'">
         <div class="row row-spacing flex">
           <UFormGroup label="Community" name="community" class="col-6 input-row-group">
-            <USelect v-model="state.community" class="selector custom-entry-input" :options="communities"
-              :loading="loadingCommunity" option-attribute="label" value-attribute="value"
-              :disabled="!!requestCommunity" @change="handleCommunityChange" />
+            <USelect v-model="state.community" class="selector custom-entry-input" :items="communities"
+              :loading="loadingCommunity" label-key="label" value-key="value"
+              :disabled="!!requestCommunity" @update:model-value="handleCommunityChange" />
           </UFormGroup>
 
           <div v-if="!loadingEvent && eventsList.length > 0" class="col-6 input-row-group">
             <UFormGroup label="Benchmarking event" name="event">
               <USelect v-model="selectedEvent" class="selector custom-entry-input" :loading="loadingEvent"
-                :options="eventsList" option-attribute="label" value-attribute="value" @change="handleEventChange" />
+                :items="eventsList" label-key="label" value-key="value" @update:model-value="handleEventChange" />
             </UFormGroup>
           </div>
           <div v-else-if="loadingEvent" class="col-6 input-row-group">

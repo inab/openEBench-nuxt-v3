@@ -1,12 +1,12 @@
 <template>
-  <div class="container ms-3" :class="n_cols">
+  <div :class="n_cols">
     <div class="d-flex align-items-center mt-2">
       <HeaderAvatar
         :field="field"
         :field_name="title"
         :disabled_tooltip="true"
       />
-      <span class="text-body title ms-2">{{ title }}</span>
+      <span class="text-body title ms-2" style="color: #0b579f !important">{{ title }}</span>
     </div>
     
     <UCheckbox 

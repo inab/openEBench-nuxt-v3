@@ -1,12 +1,12 @@
 <template>
-  <div class="container">
+  <div>
     <div class="d-flex mb-2">
       <HeaderAvatar
         :field="field"
         :field_name="title"
         :disabled_tooltip="true"
       />
-      <span class="text-body title">{{ title }}</span>
+      <span class="text-body title" style="color: #0b579f !important">{{ title }}</span>
     </div>
 
     <div class="row mt-1 px-3">

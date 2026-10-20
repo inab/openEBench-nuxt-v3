@@ -53,24 +53,22 @@ const isLoadingCommunityContacts = ref<boolean>(false);
 const communityContacts = ref<Contact[]>([]);
 
 const isView = computed(() => {
-  if (!userPrivileges.value) return true;
+  if (userPrivileges.value.length === 0) return true;
 
-  const isAdmin = userPrivileges.value.some(
+  const hasAdminPrivilege = userPrivileges.value.some(
     (privilege) => privilege.role === "admin",
   );
 
-  if (isAdmin) return false;
+  if (hasAdminPrivilege) return false;
 
   const userPrivilege = userPrivileges.value.find(
-    (privilege) => privilege.community === communityId.value,
+    (privilege) => privilege.community === communityId,
   );
 
-  return userPrivilege ? userPrivilege.role === "Owner" : true;
+  return userPrivilege ? userPrivilege.role !== "owner" : true;
 });
 
-const userPrivileges: Array<string> = computed(
-  () => userStore.getUserCommunitiesRoles,
-);
+const userPrivileges = computed(() => userStore.getUserCommunitiesRoles);
 
 if (userPrivileges.value.length == 0) {
   userStore.setUserCommunitiesRoles(data.value.oeb_roles);
@@ -104,7 +102,7 @@ const privilegesType = computed(() => {
     : "None";
 });
 
-const communityEvents = ref<Array<Event>>(null);
+const communityEvents = ref<Array<Event>>([]);
 
 const routeArray: Array = ref([
   { label: "Dashboard", isActualRoute: false, route: "/dashboard" },
@@ -132,7 +130,6 @@ const fetchUserCommunity = async (token: string): Promise<void> => {
     );
 
     const data = await response.json();
-    loadingData.value = false;
     if (data._metadata && data._metadata["project:summary"]) {
       const decodedSummary = await decodeDataUrlText(
         data._metadata["project:summary"],
@@ -141,6 +138,7 @@ const fetchUserCommunity = async (token: string): Promise<void> => {
     }
 
     communityData.value = data;
+    loadingData.value = false;
     routeName.value = `Community ${communityData.value?.acronym}`;
 
     const eventResponse = await fetchUserCommunitiesEvents(

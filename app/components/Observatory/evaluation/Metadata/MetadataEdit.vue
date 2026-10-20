@@ -1,16 +1,20 @@
 <template>
   <div class="container px-5 my-5">
-    <UAccordion 
+    <UAccordion
     :items="items"
-    default-value="0"
-    class="shadow-md"
-    :ui="{ wrapper: 'flex flex-col w-full' }"
+    class="metadata-accordion"
+    :ui="{
+      root: 'flex w-full flex-col shadow-md',
+      item: 'w-full',
+      trigger: 'group flex w-full items-center gap-1.5 rounded-none border-b border-gray-200 bg-transparent p-4 text-sm font-medium text-gray-700 hover:bg-gray-50 focus-visible:outline-primaryOeb-500',
+      content: 'pt-1.5 pb-3 text-sm text-gray-500',
+    }"
     >
       <template #default="{ item, index, open }">
-        <span class="text-base truncate ms-3">{{ item.label }}</span>
+        <span class="min-w-0 flex-1 truncate ms-3">{{ item.label }}</span>
       </template>
       <template #trailing="{ index, open }">
-        <div class="flex items-center ms-auto space-x-2">
+        <div class="ms-auto flex shrink-0 items-center gap-2">
           <PanelHeader
             :fields="metadataFields[metadataKeys[index]]"
             :field_names="metadataFieldNames[metadataKeys[index]]"
@@ -29,13 +33,13 @@
 
         <!-- Content 0. Identity -->
         <div v-if="item.label == '0. Identity'" class="p-4 ">
-          <div class="mt-0 d-flex flex-row justify-space-between">
+          <div class="mt-0 row mx-0">
             <!-- Name -->
             <MetaField
               title="Name"
               field="label"
               value-type=""
-              n_cols="4"
+              n_cols="col-4"
               :increasable="false"
             >
               <template #inputField>
@@ -53,7 +57,7 @@
               title="Type of Software"
               field="type"
               value-type=""
-              n_cols="3"
+              n_cols="col-3"
               :increasable="false"
             >
               <template #inputField>
@@ -69,7 +73,7 @@
               title="Version"
               field="version"
               value-type=""
-              n_cols="4"
+              n_cols="col-4"
               :increasable="false"
             >
               <template #inputField>
@@ -82,7 +86,7 @@
             </MetaField>
           </div>
 
-          <div class="mt-4 ml-0.5 d-flex">
+          <div class="mt-4 row mx-0 align-items-start">
             <!-- Description -->
             <MetaTextArea
               title="Description"
@@ -91,12 +95,18 @@
               n_cols="col-8">
             </MetaTextArea>
             <!-- Alert -->
-            <div v-if="toolMetadata.description.length > 1 > 0" class="col-3 mt-4 pt-1.5 me-3">
+            <div
+              v-if="toolMetadata.description.length > 1 > 0"
+              class="offset-1 col-3"
+              style="padding-top: 32px"
+            >
               <UAlert
-                :ui="{gap:'gap-2', shadow: 'shadow-md'}"
+                :ui="{
+                  root: 'bg-[#DBEAFE] text-gray-900 ring-1 ring-blue-200',
+                  gap: 'gap-2',
+                  shadow: 'shadow-md',
+                }"
                 icon="mdi-alert-circle"
-                color="sky"
-                variant="soft"
                 description="Only the first description will appear in the exported
 									metadata."
                 class="p-2 text-gray-900"
@@ -104,7 +114,7 @@
             </div>
           </div>
 
-          <div class="mt-4 ml-0.5 d-flex">
+          <div class="mt-4 row mx-0 align-items-start">
             <!-- Webpage -->
             <MetaFieldURLField
               title="Webpage"
@@ -115,14 +125,19 @@
 							label="URL"
 							:increasable="true"
             />
-
             <!-- Alert -->
-            <div v-if="toolMetadata.webpage.length > 1 > 0" class="col-3 mt-4 pt-1.5 me-3">
+            <div
+              v-if="toolMetadata.webpage.length > 1 > 0"
+              class="offset-1 col-3"
+              style="padding-top: 16px"
+            >
               <UAlert
-                :ui="{gap:'gap-2', shadow: 'shadow-md'}"
+                :ui="{
+                  root: 'bg-[#DBEAFE] text-gray-900 ring-1 ring-blue-200',
+                  gap: 'gap-2',
+                  shadow: 'shadow-md',
+                }"
                 icon="mdi-alert-circle"
-                color="sky"
-                variant="soft"
                 description="Only the first URL will appear in the exported
 									metadata."
                 class="p-2 text-gray-900"
@@ -135,35 +150,36 @@
         <div v-if="item.label == '1. Accessibility / License'" class="p-4">
             <!-- License  -->
           <div class="mt-0 d-flex flex-col justify-space-between">
-            <div class="mt-0 ml-0.5 d-flex">
+            <div class="mt-0 row mx-0 align-items-start">
               <MetaFieldLicense
                 title="License"
                 :value="toolMetadata.license"
                 field="license"
+                class="col-9"
                 :increasable="true"
               />
-                <!-- Alert -->
-                <div v-if="toolMetadata.license.length > 1 &&
-                  toolMetadata.license[1].length > 0" class="col-3 mt-4 pt-1.5 ms-4">
-                  <UAlert
-                    :ui="{gap:'gap-2', shadow: 'shadow-md'}"
-                    icon="mdi-alert-circle"
-                    color="sky"
-                    variant="soft"
-                    description="Several licenses"
-                    class="p-2 text-gray-900"
-                  />
-                </div>
+              <!-- Alert -->
+              <div v-if="toolMetadata.license.length > 1 &&
+                toolMetadata.license[1].length > 0" class="col-3 pt-4">
+                <UAlert
+                  :ui="{ gap: 'gap-2', shadow: 'shadow-md' }"
+                  icon="mdi-alert-circle"
+                  color="sky"
+                  variant="soft"
+                  description="Several licenses"
+                  class="p-2 text-gray-900"
+                />
+              </div>
             </div>
           </div>
           <!-- Registries / Package managers -->
-          <div class="mt-5 ml-0.5 d-flex">
+          <div class="mt-5 ml-0.5 row">
             <MetaRegistriesCombo
               title="Registries / Package managers"
               field="registries"
               :selected="toolMetadata.registries"
               :registries="registries"
-              class="ms-3"
+              class="col-6"
             />
 
             <!-- E-Infrastructures -->
@@ -172,7 +188,7 @@
               field="e_infrastructures"
               :selected="toolMetadata.e_infrastructures"
               :registries="eInfrastructures"
-              class="me-3"
+              class="col-6"
             />
           </div>
           <!-- Source Code -->
@@ -209,7 +225,7 @@
               color="primary"
               field="registration_not_mandatory"
               title="Registration Not Mandatory"
-              n_cols="12"
+              n_cols="col-12"
             />
           </div>
 
@@ -222,7 +238,7 @@
               color="primary"
               field="api_lib"
               title="Availability as library or API"
-              n_cols="12"
+              n_cols="col-12"
             />
           </div>
         </div>
@@ -245,7 +261,7 @@
             :value="toolMetadata.topics"
             field="topics"
             value-type=""
-            n_cols="12"
+            n_cols="col-12"
             class="mr-auto mt-4"
             type-label="topic"
             :accepted-vocabularies="['EDAM']"
@@ -257,7 +273,7 @@
             :value="toolMetadata.operations"
             field="operations"
             value-type=""
-            n_cols="12"
+            n_cols="col-12"
             class="mr-auto mt-4"
             type-label="operation"
             :accepted-vocabularies="['EDAM']"
@@ -585,4 +601,3 @@ const nameTextClass = () => {
   return ["text-body", "mt-2"];
 };
 </script>
-<style scoped></style>

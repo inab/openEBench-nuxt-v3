@@ -1,12 +1,12 @@
 <template>
-  <div class="container ms-3" :class="n_cols">
+  <div :class="n_cols">
     <div class="d-flex mb-4">
       <HeaderAvatar
           :field="field"
           :field_name="title"
           :disabled_tooltip="true"
         />
-        <span id="title" class="text-body">
+        <span id="title" class="text-body" style="color: #0b579f !important">
           {{ title }}
         </span>
 

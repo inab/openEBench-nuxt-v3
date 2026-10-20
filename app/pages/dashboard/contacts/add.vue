@@ -55,7 +55,7 @@
                 <div class="w-100">
                   <USelect
                     v-model="state.contact_type"
-                    :options="contactTypeOptions"
+                    :items="contactTypeOptions"
                     class="custom-select-input"
                   />
                 </div>
@@ -116,12 +116,11 @@
                   <USelectMenu
                     v-model="communitiesSelected"
                     class="w-full custom-select-input"
-                    :options="communities"
+                    :items="communities"
                     multiple
-                    searchable
-                    searchable-placeholder="Search a community..."
+                    :search-input="{ placeholder: 'Search a community...' }"
                     placeholder="Select a community"
-                    option-attribute="name"
+                    label-key="name"
                     by="id"
                   />
                 </div>

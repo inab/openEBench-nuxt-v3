@@ -18,6 +18,7 @@ export interface Event {
   url?: string;
   community_id: string;
   bench_contact_ids?: Array<string>;
+  bench_contact?: string;
   dates?: EventDates;
   to?: string;
   privileges?: string;

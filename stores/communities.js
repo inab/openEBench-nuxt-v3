@@ -73,7 +73,10 @@ export const useCommunities = defineStore("communities", {
             community.logo = link.uri;
           }
         });
-        community._metadata = JSON.parse(community._metadata);
+        community._metadata =
+          typeof community._metadata === "string"
+            ? JSON.parse(community._metadata)
+            : (community._metadata ?? {});
         if (community._metadata && "project:summary" in community._metadata) {
           const decodedSummary = await decodeDataUrlText(
             community._metadata["project:summary"],

@@ -1,12 +1,12 @@
 <template>
-  <div class="container ms-3 mb-3" :class="n_cols">
+  <div class="mb-3" :class="n_cols">
     <div class="d-flex">
       <HeaderAvatar
         :field="field"
         :field_name="title"
         :disabled_tooltip="true"
       />
-      <span class="text-body title">{{ title }}</span>
+      <span class="text-body title" style="color: #0b579f !important">{{ title }}</span>
       <UButton
         color="gray"
         variant="solid"

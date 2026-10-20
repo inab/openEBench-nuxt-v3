@@ -3,7 +3,8 @@
     <USelectMenu
       v-model="selectedType"
       :items="typeItems"
-      class="mt-2 border-1 rounded-md px-0 focus-within:ring-primaryOeb-500 focus-within:border-primaryOeb-500 focus-within:text-primaryOeb-500"
+      :multiple="false"
+      class="mt-2 border-1 rounded-md px-3 focus-within:ring-primaryOeb-500 focus-within:border-primaryOeb-500 focus-within:text-primaryOeb-500"
       bordered="false"
       @update:model-value="changeValue"
     >
@@ -24,7 +25,7 @@ import { useMetadataStore } from '~~/stores/observatory/evaluation/metadata';
 // Props
 const props = defineProps({
   initialSelectedType: {
-    type: String,
+    type: [String, Array],
     required: false,
   },
   field: {
@@ -37,7 +38,7 @@ const props = defineProps({
 const metadataStore = useMetadataStore();
 
 // Reactive variables
-const selectedType = ref(props.initialSelectedType);
+const selectedType = ref(normalizeType(props.initialSelectedType));
 const typeItems = [
   'cmd',
   'web',
@@ -53,7 +54,7 @@ const typeItems = [
 const changeValue = () => {
   const payload = {
     field: props.field,
-    value: selectedType.value,
+    value: selectedType.value ? [selectedType.value] : [],
   };
   metadataStore.updateSelectorEntry(payload); // Usando el método definido en Pinia
 };
@@ -62,9 +63,13 @@ const changeValue = () => {
 watch(
   () => props.initialSelectedType,
   (newVal) => {
-    selectedType.value = newVal;
+    selectedType.value = normalizeType(newVal);
   }
 );
+
+function normalizeType(value) {
+  return Array.isArray(value) ? value[0] ?? '' : value ?? '';
+}
 
 // Formatear la opción a mayúsculas
 const formatOption = (option) => {

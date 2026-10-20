@@ -2,10 +2,10 @@
   <div class="dashboard-contacts-list">
     <div class="flex justify-content-end py-2.5 dark:border-gray-700">
       <div class="pr-3">
-        <USelectMenu v-model="communitiesSelected" placeholder="Select a community" :options="globalCommunities" by="id"
-          multiple searchable show-create-option-when="always" option-attribute="name" class="input-search"
+        <USelectMenu v-model="communitiesSelected" placeholder="Select a community" :items="globalCommunities" by="id"
+          multiple label-key="name" class="input-search"
           @change="handleCommunityFilter">
-          <template #option="{ option }">
+          <template #item="{ item: option }">
             <div class="inline-block rounded-full custom-badget font-semibold"
               :class="`status-${option.status} no-hover`" :title="`${'Status'} ${option.status}`">
               <div class="text-xs font-normal leading-none max-w-full flex-initial font-semibold p-1"

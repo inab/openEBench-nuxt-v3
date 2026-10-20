@@ -3,6 +3,31 @@ const EXCLUDE_PARTICIPANT_KEY = "level_2:exclude_participant";
 const CHALLENGE_LABEL_KEY = "level_2:challenge_id";
 const METRIC_ID_KEY = "level_2:metric_id";
 
+function parseJson(value) {
+  return typeof value === "string" ? JSON.parse(value) : value;
+}
+
+function normalizeMetadata(dataset) {
+  dataset._metadata = parseJson(dataset._metadata);
+}
+
+function normalizeDataset(dataset) {
+  const datalinks = Array.isArray(dataset.datalinks)
+    ? dataset.datalinks
+    : dataset.datalink
+      ? [dataset.datalink]
+      : [];
+
+  dataset.datalinks = datalinks;
+  dataset.datalink = datalinks[0] ?? null;
+
+  if (dataset.datalink?.inline_data != null) {
+    dataset.datalink.inline_data = parseJson(dataset.datalink.inline_data);
+  }
+
+  normalizeMetadata(dataset);
+}
+
 class ChallengeObj {
   constructor(id, data) {
     this.id = id;
@@ -11,85 +36,19 @@ class ChallengeObj {
 
   formatData() {
     this.data.getChallenges.forEach((challenge) => {
-      if (
-        typeof challenge._metadata === "string" ||
-        challenge._metadata instanceof String
-      ) {
-        challenge._metadata = JSON.parse(challenge._metadata);
-      }
+      challenge._metadata = parseJson(challenge._metadata);
+      challenge.participant_datasets = challenge.participant_datasets ?? [];
+      challenge.assessment_datasets = challenge.assessment_datasets ?? [];
 
-      challenge.participant_datasets.forEach((participant) => {
-        if (
-          participant.datalink &&
-          participant.datalink.inline_data &&
-          (typeof participant.datalink.inline_data === "string" ||
-            participant.datalink.inline_data instanceof String)
-        ) {
-          participant.datalink.inline_data = JSON.parse(
-            participant.datalink.inline_data,
-          );
-        }
-
-        if (
-          typeof participant._metadata === "string" ||
-          participant._metadata instanceof String
-        ) {
-          participant._metadata = JSON.parse(participant._metadata);
-        }
-      });
-
-      challenge.assessment_datasets.forEach((assessment) => {
-        if (
-          assessment.datalink &&
-          assessment.datalink.inline_data &&
-          (typeof assessment.datalink.inline_data === "string" ||
-            assessment.datalink.inline_data instanceof String)
-        ) {
-          assessment.datalink.inline_data = JSON.parse(
-            assessment.datalink.inline_data,
-          );
-        }
-        if (
-          typeof assessment._metadata === "string" ||
-          assessment._metadata instanceof String
-        ) {
-          assessment._metadata = JSON.parse(assessment._metadata);
-        }
-      });
+      challenge.participant_datasets.forEach(normalizeDataset);
+      challenge.assessment_datasets.forEach(normalizeDataset);
     });
 
-    this.data.getDatasets.forEach((aggregation) => {
-      if (
-        aggregation.datalink &&
-        aggregation.datalink.inline_data &&
-        (typeof aggregation.datalink.inline_data === "string" ||
-          aggregation.datalink.inline_data instanceof String)
-      ) {
-        aggregation.datalink.inline_data = JSON.parse(
-          aggregation.datalink.inline_data,
-        );
-      }
-      if (
-        typeof aggregation._metadata === "string" ||
-        aggregation._metadata instanceof String
-      ) {
-        aggregation._metadata = JSON.parse(aggregation._metadata);
-      }
-    });
+    this.data.getDatasets.forEach(normalizeDataset);
 
     this.data.getMetrics.forEach((metric) => {
-      if (
-        typeof metric.representation_hints === "string" ||
-        metric.representation_hints instanceof String
-      ) {
-        metric.representation_hints = JSON.parse(metric.representation_hints);
-      }
-      if (
-        typeof metric._metadata === "string" ||
-        metric._metadata instanceof String
-      ) {
-        metric._metadata = JSON.parse(metric._metadata);
-      }
+      metric.representation_hints = parseJson(metric.representation_hints);
+      normalizeMetadata(metric);
     });
   }
 

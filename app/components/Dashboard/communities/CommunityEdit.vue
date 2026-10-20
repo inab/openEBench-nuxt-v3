@@ -38,24 +38,18 @@
                   <label for="status">Status</label>
                   <USelectMenu
                     v-model="localStatus.value"
-                    :options="CommunityStatusLabels"
+                    :items="CommunityStatusLabels"
+                    label-key="label"
+                    value-key="value"
                     :disabled="!commmunityPrivileges.update || isView"
                     :color="commmunityPrivileges.update ? 'white' : 'gray'"
-                    @change="onChangeStatus"
+                    @update:model-value="onChangeStatus"
                   >
-                    <template #label>
-                      <span
-                        :class="`status-${localStatus.value}__option inline-block h-2 w-2 flex-shrink-0 rounded-full`"
-                        aria-hidden="true"
-                      />
-                      <span class="truncate">{{ localStatus.label }}</span>
-                    </template>
-                    <template #option="{ option: item }">
+                    <template #item-leading="{ item }">
                       <span
                         class="h-2 w-2 rounded-full"
-                        :class="`status-${item?.value}__option`"
+                        :class="`status-${item.value}__option`"
                       ></span>
-                      <span>{{ item.label }}</span>
                     </template>
                   </USelectMenu>
                 </div>
@@ -399,8 +393,13 @@ async function updateCommunity() {
 }
 
 function onChangeStatus(newStatus: string) {
-  localStatus.value.value = newStatus.value;
-  localStatus.value.label = newStatus.label;
+  localStatus.value.value = newStatus;
+  const selectedStatus = CommunityStatusLabels.find(
+    (status) => status.value === newStatus,
+  );
+  if (selectedStatus) {
+    localStatus.value.label = selectedStatus.label;
+  }
 }
 
 function onAddElement(array: string[]) {

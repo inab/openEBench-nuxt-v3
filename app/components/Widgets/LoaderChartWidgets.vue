@@ -166,13 +166,29 @@ function getPreparedData() {
       values: [{ v: entry.value, e: entry.error ?? 0 }],
     }));
 
-    const metricsSeries = (props.metrics ?? []).map((metric: any) => {
-      const rawId = metric._metadata?.["level_2:metric_id"] ?? metric._id;
+    const radarMetricIds = [
+      ...new Set(
+        rawEntries
+          .map((entry: any) => entry.label)
+          .filter((metricId: any) => metricId != null && metricId !== "")
+          .map((metricId: any) => String(metricId)),
+      ),
+    ];
+
+    const metricsSeries = radarMetricIds.map((metricId) => {
+      const metric = (props.metrics ?? []).find((candidate: any) => {
+        const rawId =
+          candidate._metadata?.["level_2:metric_id"] ?? candidate._id;
+        return rawId != null && String(rawId) === metricId;
+      });
+
       return {
-        metric_id: rawId != null ? String(rawId) : metric._id,
+        metric_id: metricId,
         title:
-          metric.title || metric.metrics_label || metric.orig_id || rawId,
-        optimization: metric.optimization ?? "maximize", // TODO: confirm real field
+          metric?.title || metric?.metrics_label || metric?.orig_id || metricId,
+        ...(metric?.optimization
+          ? { optimization: metric.optimization }
+          : {}),
       };
     });
 
