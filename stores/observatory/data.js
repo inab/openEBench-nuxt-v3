@@ -9,8 +9,8 @@ export const useData = defineStore('data', {
 	state: () => ({
 		countsPerSource: /** @type {any} */ ({}),
 		totalCount: null,
-		features: {},
-		featuresControl: {},
+		features: /** @type {any} */ ({}),
+		featuresControl: /** @type {any} */ ({}),
 		featuresLabels: /** @type {any[]} */ ([]),
 		coverageSources: reactive({ counts: {}, counts_cummulative: {} }),
 		completeness: {
@@ -21,8 +21,8 @@ export const useData = defineStore('data', {
 			cummulative_features: {},
 			distribution_features: {},
 		},
-		types: {},
-		typesControl: {},
+		types: /** @type {any} */ ({}),
+		typesControl: /** @type {any} */ ({}),
 		unLoaded: {
 			countsPerSource: true,
 			totalCount: true,

@@ -4,9 +4,9 @@ import { useNuxtApp } from 'nuxt/app';
 
 export const useResultStore = defineStore('result', {
 	state: () => ({
-		fAIRIndicatorsTool: null,
-		fAIRIndicatorsLogs: null,
-		fAIRIndicatorsControl: null,
+		fAIRIndicatorsTool: /** @type {any} */ (null),
+		fAIRIndicatorsLogs: /** @type {any} */ (null),
+		fAIRIndicatorsControl: /** @type {any} */ (null),
 		loadingEvaluation: false,
 	}),
 

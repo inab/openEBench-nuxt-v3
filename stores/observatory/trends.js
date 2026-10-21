@@ -5,27 +5,27 @@ const BASE_URL = '/api/stats/tools/';
 
 export const useTrends = defineStore('trends', {
 	state: () => ({
-		licensesSunburst: /** @type {any[]} */ ([]),
-		licensesOpenSource: {
+		licensesSunburst: /** @type {any} */ ({}),
+		licensesOpenSource: /** @type {any} */ ({
 			licenses_copyleft: [],
 			counts_copyleft: [],
 			licenses_permissive: [],
 			counts_permissive: [],
 			licenses_data: [],
 			counts_data: [],
-		},
-		semanticVersioning: /** @type {any[]} */ ([]),
-		versionControlCount: /** @type {any[]} */ ([]),
-		versionControlRepositories: /** @type {any[]} */ ([]),
-		publications: /** @type {any[]} */ ([]),
+		}),
+		semanticVersioning: /** @type {any} */ ([]),
+		versionControlCount: /** @type {any} */ ([]),
+		versionControlRepositories: /** @type {any} */ ([]),
+		publications: /** @type {any} */ ([]),
 
-		dependencies: /** @type {any[]} */ ([]),
-		dependenciesCount: {},
-		documentation: /** @type {any[]} */ ([]),
-		documentationCount: {},
-		inputFormats: {},
-		outputFormats: {},
-		formatsCount: {},
+		dependencies: /** @type {any} */ ([]),
+		dependenciesCount: /** @type {any} */ ({}),
+		documentation: /** @type {any} */ ([]),
+		documentationCount: /** @type {any} */ ({}),
+		inputFormats: /** @type {any} */ ({}),
+		outputFormats: /** @type {any} */ ({}),
+		formatsCount: /** @type {any} */ ({}),
 
 		unLoaded: {
 			licensesSunburst: true,

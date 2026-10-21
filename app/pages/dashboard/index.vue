@@ -318,7 +318,7 @@ defineExpose({
 	countTotalMetrics,
 });
 
-const auth = useNuxtApp().$auth;
+const auth = useNuxtApp().$auth as any;
 const data = computed(() => auth?.data?.value ?? null);
 const status = computed(() => auth?.status?.value ?? 'loading');
 
@@ -356,7 +356,7 @@ if (status.value == 'authenticated') {
 
 async function countTotalMetrics() {
 	try {
-		const response = await $fetch(
+		const response = await $fetch<any[]>(
 			`${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Metrics`,
 			{
 				headers: {
@@ -378,7 +378,7 @@ async function countTotalMetrics() {
 
 async function countTotalTools() {
 	try {
-		const response = await $fetch(`${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Tool`, {
+		const response = await $fetch<any[]>(`${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Tool`, {
 			headers: {
 				Authorization: `Bearer ${token.value}`,
 				Accept: 'application/json',
@@ -395,7 +395,7 @@ async function countTotalTools() {
 
 async function countTotalCommunities() {
 	try {
-		const response = await $fetch(
+		const response = await $fetch<any[]>(
 			`${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Community`,
 			{
 				headers: {
@@ -423,7 +423,7 @@ async function countTotalCommunities() {
 
 async function countTotalContacts() {
 	try {
-		const response = await $fetch(
+		const response = await $fetch<any[]>(
 			`${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Contact`,
 			{
 				headers: {
