@@ -331,7 +331,7 @@ const runtimeConfig = useRuntimeConfig();
 const router = useRouter();
 const userStore = useUser();
 const { data } = useAuth();
-const token: string = data?.value.accessToken;
+const token = data.value?.accessToken as string;
 
 const props = defineProps<{
 	eventPrivileges: CommunityPrivilegeCategories;
@@ -469,7 +469,7 @@ async function onSubmitCommunityEvent(event: FormSubmitEvent<Schema>) {
 			await createBenchmarkingEvent();
 		}
 	} else {
-		errors.value = result.error.issues.map((issue) => issue.message);
+		errors.value = result.issues.map((issue) => issue.message);
 	}
 }
 

@@ -90,7 +90,7 @@ const isModalOpen = ref(false);
 const isSearchingMetric = ref(false);
 const modalTitle = ref('View Metric');
 const isMetricEditable = ref(false);
-const token: string = data?.value.accessToken;
+const token = data.value?.accessToken as string;
 const metricIdOpen = ref('');
 
 const selectedMetric = computed({

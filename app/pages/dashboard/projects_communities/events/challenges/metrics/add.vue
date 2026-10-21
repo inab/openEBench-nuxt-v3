@@ -44,14 +44,14 @@ definePageMeta({
 const route = useRoute();
 const userStore = useUser();
 const { data } = useAuth();
-const token: string = data?.value.accessToken;
+const token = data.value?.accessToken as string;
 const contactsData = ref<string[]>([]);
 const challengeMetrics = ref<ChallengeMetricCategory[]>([]);
 const isLoadingChallengeMetrics = ref(true);
 const runtimeConfig = useRuntimeConfig();
-const eventId: string = route.params.event_id;
-const communityId: string = route.params.community_id;
-const challengeId: string = route.params.id;
+const eventId: string = route.params.event_id as string;
+const communityId: string = route.params.community_id as string;
+const challengeId: string = route.params.id as string;
 const routeArray = ref([
 	{ label: 'Dashboard', isActualRoute: false, route: '/dashboard' },
 	{

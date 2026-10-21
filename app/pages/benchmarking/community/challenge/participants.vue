@@ -55,7 +55,7 @@ const METRIC_ID_KEY = 'level_2:metric_id';
 const route = useRoute();
 const challengeId = route.params.id;
 const communityStore = useCommunity();
-const communityId: string = route.params.community;
+const communityId: string = route.params.community as string;
 const eventsObj: any[] = communityStore.getEvents;
 
 const datasets = ref(Array);

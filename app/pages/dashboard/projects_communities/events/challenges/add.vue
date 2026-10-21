@@ -44,8 +44,8 @@ definePageMeta({
 
 const route = useRoute();
 const { data } = useAuth();
-const communityId: string = route.params.community_id;
-const eventId: string = route.params.event_id;
+const communityId: string = route.params.community_id as string;
+const eventId: string = route.params.event_id as string;
 const userStore = useUser();
 const userPrivileges: ComputedRef<Array<{ role: string; community: string }>> = computed(
 	() => userStore.getUserCommunitiesRoles

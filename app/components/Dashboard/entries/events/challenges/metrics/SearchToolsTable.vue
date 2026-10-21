@@ -59,7 +59,7 @@ const props = defineProps<{
 const emits = defineEmits(['handleSelectedTools']);
 const runtimeConfig = useRuntimeConfig();
 const { data } = useAuth();
-const token: string = data?.value.accessToken;
+const token = data.value?.accessToken as string;
 
 const selectedToolsTmp = computed({
 	get: () => [...props.selectedTools],

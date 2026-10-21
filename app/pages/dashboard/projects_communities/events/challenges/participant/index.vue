@@ -119,9 +119,9 @@ definePageMeta({
 });
 
 const route = useRoute();
-const eventId: string = route.params.event_id;
-const communityId: string = route.params.community_id;
-const challengeId: string = route.params.challenge_id;
+const eventId: string = route.params.event_id as string;
+const communityId: string = route.params.community_id as string;
+const challengeId: string = route.params.challenge_id as string;
 
 const config = computed(() => {
 	return {

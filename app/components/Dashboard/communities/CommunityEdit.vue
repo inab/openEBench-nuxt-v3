@@ -231,7 +231,7 @@ import * as v from 'valibot';
 const router = useRouter();
 const runtimeConfig = useRuntimeConfig();
 const { data } = useAuth();
-const token: string = data?.value.accessToken;
+const token = data.value?.accessToken as string;
 
 const props = defineProps<{
 	id: string;
@@ -325,7 +325,7 @@ async function onSubmitCommunity(event: FormSubmitEvent<Schema>) {
 		const response = await updateCommunity();
 		/* TODO */
 	} else {
-		errors.value = result.error.issues.map((issue) => issue.message);
+		errors.value = result.issues.map((issue) => issue.message);
 	}
 }
 

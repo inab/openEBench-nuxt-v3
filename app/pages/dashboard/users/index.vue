@@ -85,7 +85,7 @@ const isAdmin = computed(() => {
 	return false;
 });
 
-const token: string = data?.value.accessToken;
+const token = data.value?.accessToken as string;
 const isLoadingContacts = ref(false);
 const contactsList = ref<Contact[]>([]);
 

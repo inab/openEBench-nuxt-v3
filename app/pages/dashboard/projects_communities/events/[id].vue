@@ -82,9 +82,9 @@ if (status.value !== 'authenticated') {
 	await navigateTo('/login-required');
 }
 
-const token: string = data?.value.accessToken;
-const eventId: string = route.params.id;
-const communityId: string = route.params.community_id;
+const token = data.value?.accessToken as string;
+const eventId: string = route.params.id as string;
+const communityId: string = route.params.community_id as string;
 const routeName = ref<string>('');
 const runtimeConfig = useRuntimeConfig();
 const userPrivileges: Array<string> = computed(() => userStore.getUserCommunitiesRoles);

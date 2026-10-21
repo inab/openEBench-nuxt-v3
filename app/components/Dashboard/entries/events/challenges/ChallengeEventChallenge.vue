@@ -357,7 +357,7 @@ import ChallengeMetrics from '@/components/Dashboard/entries/events/challenges/C
 const router = useRouter();
 const { data } = useAuth();
 const userStore = useUser();
-const token: string = data?.value.accessToken;
+const token = data.value?.accessToken as string;
 const runtimeConfig = useRuntimeConfig();
 
 const props = defineProps<{
@@ -635,7 +635,7 @@ async function onSubmitChallenge(event: FormSubmitEvent<Schema>) {
 			await updateBenchmarkingCommunity();
 		}
 	} else {
-		errors.value = result.error.issues.map((issue) => issue.message);
+		errors.value = result.issues.map((issue) => issue.message);
 	}
 }
 

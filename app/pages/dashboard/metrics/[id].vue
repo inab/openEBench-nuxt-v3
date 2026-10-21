@@ -31,8 +31,8 @@ definePageMeta({
 const { data, status } = useAuth();
 const runtimeConfig = useRuntimeConfig();
 const route = useRoute();
-const metricId: string = route.params.id;
-const token: string = data?.value.accessToken;
+const metricId: string = route.params.id as string;
+const token = data.value?.accessToken as string;
 
 const isSearchingMetric = ref<boolean>(false);
 const metricsData = ref<Metric>() || '';

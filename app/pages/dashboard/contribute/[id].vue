@@ -19,7 +19,7 @@ definePageMeta({
 	},
 });
 const route = useRoute();
-const communityId: string = route.params.id;
+const communityId: string = route.params.id as string;
 
 const routeArray = ref([
 	{ label: 'Dashboard', isActualRoute: false, route: '/dashboard' },

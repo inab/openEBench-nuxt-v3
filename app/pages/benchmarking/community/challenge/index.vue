@@ -55,7 +55,7 @@ import emptyImg from '~/assets/images/illustrations/empty-state.svg?component';
 
 const route = useRoute();
 const communityStore = useCommunity();
-const communityId: string = route.params.community;
+const communityId: string = route.params.community as string;
 const eventsObj: any[] = communityStore.getEvents;
 const challengeId = route.params.challenge;
 const chatAvailable = ref<boolean>(false);

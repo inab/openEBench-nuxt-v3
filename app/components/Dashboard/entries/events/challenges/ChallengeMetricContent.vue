@@ -166,7 +166,7 @@ const isOpen = ref(false);
 const runtimeConfig = useRuntimeConfig();
 const { data } = useAuth();
 const isFetchingData = ref(true);
-const token: string = data?.value.accessToken;
+const token = data.value?.accessToken as string;
 
 const metricData = ref<MetricData>({
 	title: '',

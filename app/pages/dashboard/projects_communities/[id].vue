@@ -41,10 +41,10 @@ definePageMeta({
 const runtimeConfig = useRuntimeConfig();
 const { data } = useAuth();
 const route = useRoute();
-const communityId: string = route.params.id;
+const communityId: string = route.params.id as string;
 const tabIndex: Ref<string> = ref(route.query.events ? '1' : '0');
 const loadingData = ref<boolean>(true);
-const token: string = data?.value.accessToken;
+const token = data.value?.accessToken as string;
 const userStore = useUser();
 const routeName = ref<string>('');
 const isLoadingEvents = ref<boolean>(true);

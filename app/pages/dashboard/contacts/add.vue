@@ -167,7 +167,7 @@ const runtimeConfig = useRuntimeConfig();
 const communities = ref<Community[]>([]);
 const errors = ref<string[]>([]);
 const oks = ref<string>('');
-const token: string = data?.value.accessToken;
+const token = data.value?.accessToken as string;
 const communitiesSelected = ref<any[]>([]);
 const router = useRouter();
 
@@ -283,7 +283,7 @@ async function onSubmitContactAdd(event: FormSubmitEvent<Schema>) {
 			const response = await createContact();
 		}
 	} else {
-		errors.value = result.error.issues.map((issue) => issue.message);
+		errors.value = result.issues.map((issue) => issue.message);
 	}
 }
 

@@ -369,7 +369,7 @@ const props = defineProps<{
 	challengePrivileges: CommunityPrivilegeCategories;
 }>();
 
-const token: string = data?.value.accessToken;
+const token = data.value?.accessToken as string;
 const dialogTitle = ref('');
 const dialogType = ref('yesno');
 const isDialogOpened = ref(false);
@@ -541,7 +541,7 @@ async function onSubmitChallenge(event: FormSubmitEvent<Schema>) {
 			await createChallenge();
 		}
 	} else {
-		errors.value = result.error.issues.map((issue) => issue.message);
+		errors.value = result.issues.map((issue) => issue.message);
 	}
 }
 

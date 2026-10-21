@@ -443,7 +443,7 @@ async function onSubmitContactUpdate(event: FormSubmitEvent<Schema>) {
 			await updateContact();
 		}
 	} else {
-		errors.value = result.error.issues.map((issue) => issue.message);
+		errors.value = result.issues.map((issue) => issue.message);
 	}
 }
 

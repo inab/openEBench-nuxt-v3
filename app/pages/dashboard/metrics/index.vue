@@ -66,7 +66,7 @@ const { data, status } = useAuth();
 const isLoadingMetrics = ref(false);
 const runtimeConfig = useRuntimeConfig();
 const metricsList = ref<Metric[]>([]);
-const token: string = data?.value.accessToken;
+const token = data.value?.accessToken as string;
 
 const HEADER_ITEM = [
 	{

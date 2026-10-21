@@ -70,7 +70,7 @@ const { data } = useAuth();
 const isModalOpen = ref(false);
 const modalTitle = ref('View Metric');
 const isMetricEditable = ref(false);
-const token: string = data?.value.accessToken;
+const token = data.value?.accessToken as string;
 const page = ref(1);
 const pageCount = 5;
 
