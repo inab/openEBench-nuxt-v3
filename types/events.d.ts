@@ -1,4 +1,4 @@
-import type { CommunityPrivileges } from './communities';
+import type { CommunityPrivilegeCategories } from './communities';
 
 export interface EventDates {
 	benchmark_start?: string;
@@ -25,6 +25,6 @@ export interface Event {
 	orig_id?: string;
 	_schema?: string;
 	references?: Array<string>;
-	actions?: Array<CommunityPrivileges>;
+	actions?: Partial<CommunityPrivilegeCategories>;
 	is_automated?: boolean;
 }

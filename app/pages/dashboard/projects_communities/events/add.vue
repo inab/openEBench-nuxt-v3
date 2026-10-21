@@ -41,7 +41,7 @@ const eventPrivileges = computed(() => {
 	const privilege = userPrivileges.value.find((privilege) => {
 		return privilege.community === communityId;
 	});
-	return privilege ? privileges[privilege.role] : privileges.anyone;
+	return privileges[privilege?.role ?? 'anyone'] ?? privileges.anyone;
 });
 
 const dialogTitle = ref('');

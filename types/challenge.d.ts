@@ -1,4 +1,4 @@
-import type { CommunityPrivileges } from './communities';
+import type { CommunityPrivilegeCategories } from './communities';
 
 export interface ChallengeDates {
 	benchmark_start?: string;
@@ -30,5 +30,5 @@ export interface Challenge {
 	orig_id?: string;
 	references?: Array<string>;
 	metrics_categories?: Array<string>;
-	actions?: Array<CommunityPrivileges>;
+	actions?: Partial<CommunityPrivilegeCategories>;
 }

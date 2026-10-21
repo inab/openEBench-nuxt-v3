@@ -68,7 +68,7 @@ const challengePrivileges = computed(() => {
 	const privilege = userPrivileges.value.find((privilege) => {
 		return privilege.community === communityId;
 	});
-	return privilege ? privileges[privilege.role].challenge : privileges.anyone.challenge;
+	return privileges[privilege?.role ?? 'anyone'] ?? privileges.anyone;
 });
 
 const routeArray = ref([

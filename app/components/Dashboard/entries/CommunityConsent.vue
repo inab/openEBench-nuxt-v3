@@ -57,6 +57,7 @@
 import { ref, computed } from 'vue';
 import CustomSubtitle from '@/components/Common/CustomSubtitle.vue';
 import { object, string, safeParse } from 'valibot';
+import type { FormSubmitEvent } from '#ui/types';
 
 import {
 	ClassicEditor,
@@ -158,6 +159,8 @@ const oks = ref<string>('');
 const schema = object({
 	terms: string(),
 });
+
+type Schema = import('valibot').InferOutput<typeof schema>;
 
 async function onSubmitTerms(event: FormSubmitEvent<Schema>) {
 	const result = safeParse(schema, state.value);

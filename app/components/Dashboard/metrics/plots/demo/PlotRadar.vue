@@ -80,6 +80,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { array, object, safeParse } from 'valibot';
+import type { FormSubmitEvent } from '#ui/types';
 
 import demo_bar from './templates/RADARPLOT.json';
 const isLoadingGraphBar = ref(true);
@@ -142,6 +143,8 @@ function regeneratePlot(newData: any) {
 
 	widgetKey.value++;
 }
+
+type Schema = import('valibot').InferOutput<typeof schema>;
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
 	const result = safeParse(schema, state.value);

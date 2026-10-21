@@ -351,7 +351,7 @@
 <script setup lang="ts">
 import { computed, ref, watch, onMounted } from 'vue';
 import { useUser } from '~~/stores/user.ts';
-import type { CommunityPrivilegeActions } from '~~/constants/privileges';
+import type { CommunityPrivilegeCategories } from '~~/types/communities';
 import { VueDatePicker } from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import { object, string, array, safeParse, boolean, optional, date, description } from 'valibot';
@@ -366,7 +366,7 @@ const props = defineProps<{
 	communityId: string;
 	eventId: string;
 	isView: boolean;
-	challengePrivileges: CommunityPrivilegeActions;
+	challengePrivileges: CommunityPrivilegeCategories;
 }>();
 
 const token: string = data?.value.accessToken;
@@ -527,6 +527,8 @@ function restartElementToDelete() {
 		element: [],
 	};
 }
+
+type Schema = import('valibot').InferOutput<typeof schema>;
 
 async function onSubmitChallenge(event: FormSubmitEvent<Schema>) {
 	const result = safeParse(schema, state.value);

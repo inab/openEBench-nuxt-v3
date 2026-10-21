@@ -130,7 +130,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import type { CommunityPrivilegeActions } from '~~/constants/privileges';
+import type { CommunityPrivilegeActions } from '~~/types/communities';
 import type { Challenge } from '~~/types/challenge';
 import { getLocaleDateString } from '~~/constants/global_const';
 
@@ -204,10 +204,6 @@ const filteredRows = computed(() => {
 
 const totalPages = computed(() => {
 	return Math.ceil(Number(_total.value) / Number(pageCount.value));
-});
-
-const challengePrivileges = computed(() => {
-	return props.commmunityPrivileges.challenge;
 });
 
 function formatClientDate(date: string) {

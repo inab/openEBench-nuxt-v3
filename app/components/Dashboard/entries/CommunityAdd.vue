@@ -673,6 +673,8 @@ function deleteEmptyContact(array: { id: string; role: string }[]) {
 	return array.filter((element) => element.id !== '');
 }
 
+type Schema = import('valibot').InferOutput<typeof schema>;
+
 async function onSubmitCommunity(event: FormSubmitEvent<Schema>) {
 	event.preventDefault();
 

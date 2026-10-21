@@ -320,7 +320,7 @@
 <script setup lang="ts">
 import { computed, ref, onMounted, nextTick } from 'vue';
 import { useUser } from '~~/stores/user.ts';
-import type { CommunityPrivilegeActions } from '~~/constants/privileges';
+import type { CommunityPrivilegeCategories } from '~~/types/communities';
 import CustomDialog from '@/components/Common/CustomDialog.vue';
 import type { FormSubmitEvent } from '#ui/types';
 import { object, string, array, safeParse, boolean, optional, date } from 'valibot';
@@ -334,7 +334,7 @@ const { data } = useAuth();
 const token: string = data?.value.accessToken;
 
 const props = defineProps<{
-	eventPrivileges: CommunityPrivilegeActions;
+	eventPrivileges: CommunityPrivilegeCategories;
 	communityId: string;
 }>();
 
@@ -454,6 +454,8 @@ function goBack() {
 }
 
 const getErrors = computed(() => errors.value.join(', '));
+
+type Schema = import('valibot').InferOutput<typeof schema>;
 
 async function onSubmitCommunityEvent(event: FormSubmitEvent<Schema>) {
 	const result = safeParse(schema, state.value);

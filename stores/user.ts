@@ -237,7 +237,7 @@ export const useUser = defineStore('user', {
 					_metadata: community._metadata ? community._metadata : '',
 					to: `${runtimeConfig.public.BASE_URL}/benchmarking/${community._id}`,
 					privileges: community.privileges,
-					actions: community.actions || [],
+					actions: community.actions || {},
 				};
 			});
 		},
@@ -258,7 +258,7 @@ export const useUser = defineStore('user', {
 					dates: event.dates,
 					to: `${runtimeConfig.public.BASE_URL}/benchmarking/${event.community_id}/event/${event._id}`,
 					privileges: event.privileges || '',
-					actions: event.actions || [],
+					actions: event.actions || {},
 				};
 			});
 		},
@@ -282,7 +282,7 @@ export const useUser = defineStore('user', {
 					url: challenge.url,
 					orig_id: challenge.orig_id,
 					privileges: challenge.privileges || '',
-					actions: challenge.actions || [],
+					actions: challenge.actions || {},
 				};
 			});
 		},
@@ -290,7 +290,7 @@ export const useUser = defineStore('user', {
 		setCommunityPrivileges(data: Community[]): Community[] {
 			const userPrivileges = this.getUserCommunitiesRoles;
 			data.forEach((community: Community) => {
-				community.actions = [];
+				community.actions = {};
 				community.privileges = 'None';
 				if (userPrivileges.length > 0) {
 					userPrivileges.some((value: { role: string; community: string }) => {
@@ -316,7 +316,7 @@ export const useUser = defineStore('user', {
 		setCommunityEventPrivileges(data: Event[]): Event[] {
 			const userPrivileges = this.getUserCommunitiesRoles;
 			data.forEach((event: Event) => {
-				event.actions = [];
+				event.actions = {};
 				event.privileges = 'None';
 				if (userPrivileges.length > 0) {
 					userPrivileges.some((value: { role: string; community: string }) => {
@@ -346,7 +346,7 @@ export const useUser = defineStore('user', {
 		setCommunityChallengePrivileges(data: Challenge[]): Challenge[] {
 			const userPrivileges = this.getUserCommunitiesRoles;
 			data.forEach((event: Event) => {
-				event.actions = [];
+				event.actions = {};
 				event.privileges = 'None';
 				if (userPrivileges.length > 0) {
 					userPrivileges.some((value: { role: string; community: string }) => {

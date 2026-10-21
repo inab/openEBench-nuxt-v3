@@ -137,13 +137,13 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import type { CommunityPrivilegeActions } from '~~/constants/privileges';
+import type { CommunityPrivilegeCategories } from '~~/types/communities';
 import type { Event } from '~~/types/events';
 
 const props = defineProps<{
 	events?: Array<Event>;
 	isLoadingData: boolean;
-	commmunityPrivileges: CommunityPrivilegeActions;
+	commmunityPrivileges: CommunityPrivilegeCategories;
 	communityId: string;
 }>();
 

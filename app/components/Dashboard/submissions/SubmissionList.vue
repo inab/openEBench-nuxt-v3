@@ -350,6 +350,8 @@ function getDotColor(statusValue: string) {
 	return status?.color || 'bg-gray-100 text-gray-800';
 }
 
+type Schema = import('valibot').InferOutput<typeof schema>;
+
 async function onSubmissionUpdate(event: FormSubmitEvent<Schema>) {
 	const index = mockSubmissions.value.findIndex((sub) => sub.id === selectedSubmission.value.id);
 

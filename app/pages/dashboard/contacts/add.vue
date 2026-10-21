@@ -267,6 +267,8 @@ function validateRequiredFields(data: any): string[] {
 	return errorMessages;
 }
 
+type Schema = import('valibot').InferOutput<typeof schema>;
+
 async function onSubmitContactAdd(event: FormSubmitEvent<Schema>) {
 	const result = safeParse(schema, state.value);
 	if (result.success) {

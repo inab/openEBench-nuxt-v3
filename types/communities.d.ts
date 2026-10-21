@@ -15,9 +15,13 @@ export interface CommunityPrivilegeCategories {
 	challenge: CommunityPrivilegeActions;
 }
 
-export interface CommunityPrivileges {
-	owner?: CommunityPrivilegeCategories;
-	member?: CommunityPrivilegeCategories;
+export interface CommunityPrivilegesByRole {
+	owner: CommunityPrivilegeCategories;
+	manager: CommunityPrivilegeCategories;
+	guest: CommunityPrivilegeCategories;
+	anyone: CommunityPrivilegeCategories;
+	admin: CommunityPrivilegeCategories;
+	[role: string]: CommunityPrivilegeCategories | undefined;
 }
 
 export interface CommunityColumnsDashboard {
@@ -43,7 +47,7 @@ export interface Community {
 	to?: string;
 	_metadata: CommunityMetadata;
 	privileges?: string;
-	actions?: Array<CommunityPrivileges>;
+	actions?: Partial<CommunityPrivilegeCategories>;
 }
 
 export interface CommunityPrivileges {

@@ -109,7 +109,7 @@ const eventPrivileges = computed(() => {
 	const privilege = userPrivileges.value.find((privilege) => {
 		return privilege.community === communityId;
 	});
-	return privilege ? privileges[privilege.role].event : privileges.anyone.event;
+	return (privileges[privilege?.role ?? 'anyone'] ?? privileges.anyone).event;
 });
 
 const fetchUserCommunitiesEvents = async (token: string): Promise<void> => {

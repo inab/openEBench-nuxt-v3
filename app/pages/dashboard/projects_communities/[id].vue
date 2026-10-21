@@ -85,7 +85,7 @@ const communityPrivileges = computed(() => {
 		return privilege.community === communityId;
 	});
 
-	return privilege ? privileges[privilege.role] : privileges.anyone;
+	return privileges[privilege?.role ?? 'anyone'] ?? privileges.anyone;
 });
 
 const privilegesType = computed(() => {

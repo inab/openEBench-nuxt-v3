@@ -323,7 +323,7 @@ import { computed, ref, onMounted, watch, nextTick } from 'vue';
 import { useUser } from '~~/stores/user.ts';
 import type { Event } from '~~/types/events';
 import type { Challenge } from '~~/types/challenge';
-import type { CommunityPrivilegeActions } from '~~/constants/privileges';
+import type { CommunityPrivilegeActions } from '~~/types/communities';
 import EventChallengesList from '@/components/Dashboard/entries/events/EventChallengesList.vue';
 import CustomDialog from '@/components/Common/CustomDialog.vue';
 import CustomTab from '@/components/Common/CustomTab.vue';
@@ -584,6 +584,8 @@ function dialogShow() {
 }
 
 const getErrors = computed(() => errors.value.join(', '));
+
+type Schema = import('valibot').InferOutput<typeof schema>;
 
 async function onSubmitCommunityEvent(event: FormSubmitEvent<Schema>) {
 	const result = safeParse(schema, state.value);

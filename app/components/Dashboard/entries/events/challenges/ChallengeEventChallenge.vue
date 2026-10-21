@@ -343,9 +343,11 @@
 <script setup lang="ts">
 import { computed, ref, watch, onMounted, nextTick } from 'vue';
 import type { Challenge } from '~~/types/challenge';
-import type { CommunityPrivilegeActions } from '~~/constants/privileges';
+import type { CommunityPrivilegeCategories } from '~~/types/communities';
 import '@vuepic/vue-datepicker/dist/main.css';
 import { object, string, boolean, date, safeParse } from 'valibot';
+import type { FormSubmitEvent } from '#ui/types';
+import { useUser } from '~~/stores/user.ts';
 import { VueDatePicker } from '@vuepic/vue-datepicker';
 import { getLocaleDateString } from '~~/constants/global_const';
 import CustomTab from '@/components/Common/CustomTab.vue';
@@ -364,7 +366,7 @@ const props = defineProps<{
 	eventId: string;
 	isLoadingData: boolean;
 	isView: boolean;
-	challengePrivileges: CommunityPrivilegeActions;
+	challengePrivileges: CommunityPrivilegeCategories;
 	challengeObj: Challenge;
 }>();
 
@@ -619,6 +621,8 @@ function deleteEmptyElements(array: string[]): string[] {
 function deleteEmptyContact(array: { id: string; role: string }[]) {
 	return array.filter((element) => element.id !== '');
 }
+
+type Schema = import('valibot').InferOutput<typeof schema>;
 
 async function onSubmitChallenge(event: FormSubmitEvent<Schema>) {
 	const result = safeParse(schema, state.value);

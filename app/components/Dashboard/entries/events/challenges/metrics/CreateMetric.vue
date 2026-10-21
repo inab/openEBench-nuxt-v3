@@ -143,6 +143,8 @@ function closeModal() {
 	emit('modal-close');
 }
 
+type Schema = import('valibot').InferOutput<typeof schema>;
+
 async function onSubmitNewMetric(event: FormSubmitEvent<Schema>) {
 	const result = safeParse(schema, state.value);
 	if (result.success) {

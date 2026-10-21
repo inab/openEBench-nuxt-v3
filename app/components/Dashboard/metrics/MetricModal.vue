@@ -323,6 +323,8 @@ async function onError(event: FormErrorEvent) {
 	// console.log("event: ", event);
 }
 
+type Schema = import('valibot').InferOutput<typeof schema>;
+
 async function onSubmitNewMetric(event: FormSubmitEvent<Schema>) {
 	const result = safeParse(schema, state.value);
 	if (result.success) {

@@ -485,7 +485,7 @@ import { CommunityStatusLabels, CommunityStatusColors } from '~~/constants/commu
 
 import type { Community } from '~~/types/communities';
 import type { FormErrorEvent, FormSubmitEvent } from '#ui/types';
-import type { CommunityPrivilegeActions } from '~~/constants/privileges';
+import type { CommunityPrivilegeCategories } from '~~/types/communities';
 import type { Event } from '~~/types/events';
 import type { Contact } from '~~/types/contact';
 
@@ -552,7 +552,7 @@ const props = defineProps<{
 	id: string;
 	communityObj?: Community | null;
 	loadingData: boolean;
-	commmunityPrivileges: CommunityPrivilegeActions;
+	commmunityPrivileges: CommunityPrivilegeCategories;
 	isView: boolean;
 	events: Array<Event>;
 	isLoadingEvents: boolean;
@@ -787,6 +787,8 @@ const checkEmptyKeywords = computed(() => {
 function goBack() {
 	router.push('/dashboard/projects_communities');
 }
+
+type Schema = import('valibot').InferOutput<typeof schema>;
 
 async function onSubmitCommunity(event: FormSubmitEvent<Schema>) {
 	const result = safeParse(schema, state.value);
