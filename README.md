@@ -47,6 +47,18 @@ The git workflow for building and pushing the Docker Image for <https://dev2-ope
 
 The respective docker compose files for the oeb landscape can be found in this repo: <https://github.com/inab/oeb-docker-compose>
 
+#### Authentication secret
+
+The app needs the `NUXT_AUTH_SECRET` environment variable at **runtime** (it signs the session cookies; it is not needed to build the image). Generate one per environment with `openssl rand -hex 32` and never commit it.
+
+- Locally: put `NUXT_AUTH_SECRET=...` in a git-ignored `.env` (see [.env.example](.env.example)); the local compose files fall back to a dev-only value.
+- Deployed (test2, preprod, sandbox): add it to each service in the `oeb-docker-compose` repo, reading a different value per environment from the VM's `.env`:
+
+  ```yaml
+  environment:
+    - NUXT_AUTH_SECRET=${AUTH_SECRET_TEST2}
+  ```
+
 ## Build Setup
 
 ```bash

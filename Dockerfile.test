@@ -37,6 +37,7 @@ ENV OBSERVATORY_API_URL $OBSERVATORY_API_URL
 ENV GITHUBAPP_API_URL $GITHUBAPP_API_URL
 ENV APP_BASE_URL $APP_BASE_URL
 ENV AUTH_ORIGIN $AUTH_ORIGIN
+# NUXT_AUTH_SECRET is intentionally not set here: provide it at runtime (docker run -e / orchestrator secret)
 
 COPY package*.json ./
 

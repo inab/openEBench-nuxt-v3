@@ -38,7 +38,6 @@ const refreshAccessToken = async (token: JWT) => {
 	try {
 		const details = {
 			client_id: runtimeConfig.public.KEYCLOAK_CLIENT_ID,
-			client_secret: 'secrettt',
 			authorization_code: token.accessToken,
 			grant_type: 'refresh_token',
 			refresh_token: token.refreshToken,
@@ -79,7 +78,7 @@ const refreshAccessToken = async (token: JWT) => {
 };
 
 export default NuxtAuthHandler({
-	secret: '2990de7a246eb8aa80684cc357ebd54615a5add237758af78388f25e68383db4',
+	secret: runtimeConfig.authSecret,
 	providers: [
 		Keycloak({
 			clientId: runtimeConfig.public.KEYCLOAK_CLIENT_ID,

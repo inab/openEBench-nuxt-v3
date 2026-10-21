@@ -78,6 +78,8 @@ export default defineNuxtConfig({
 	],
 
 	runtimeConfig: {
+		// Server-only; set via the NUXT_AUTH_SECRET environment variable
+		authSecret: '',
 		public: {
 			ENVIRONMENT: process.env.ENVIRONMENT || 'test-oeb2',
 			OEB_LEGACY_ANGULAR_URI:

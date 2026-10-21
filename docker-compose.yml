@@ -8,4 +8,5 @@ services:
     image: ghcr.io/inab/openebench-nuxt-v3:test2
     environment:
       - NODE_ENV=production
+      - NUXT_AUTH_SECRET=${NUXT_AUTH_SECRET:?Set NUXT_AUTH_SECRET (openssl rand -hex 32)}
     network_mode: host
