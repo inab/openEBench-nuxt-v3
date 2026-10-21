@@ -44,15 +44,15 @@
 								<UBadge
 									v-if="item.label == 'Datasets' && datasetsObj.length > 0"
 									color="neutral"
-									variant="solid"
-									:ui="{ rounded: 'rounded-full' }"
+									variant="subtle"
+									class="rounded-full"
 									>{{ datasetsObj.length }}</UBadge
 								>
 								<UBadge
 									v-if="item.label == 'Tools' && toolsObj.length > 0"
 									color="neutral"
-									variant="solid"
-									:ui="{ rounded: 'rounded-full' }"
+									variant="subtle"
+									class="rounded-full"
 									>{{ toolsObj.length }}</UBadge
 								>
 								<span

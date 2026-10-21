@@ -5,7 +5,7 @@
 			<div class="flex flex-wrap justify-around items-center">
 				<div v-for="card in 8" :key="card" class="my-4">
 					<div class="source-card pt-3 px-3 rounded-sm">
-						<USkeleton class="loading-card" :ui="{ rounded: 'rounded-xl' }" />
+						<USkeleton class="loading-card rounded-xl" />
 					</div>
 				</div>
 			</div>

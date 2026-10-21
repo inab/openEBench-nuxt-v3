@@ -21,19 +21,17 @@
 							<UBadge
 								v-for="(item, index) in modelValue"
 								:key="index"
-								:ui="{ rounded: 'rounded-full' }"
 								size="xs"
 								variant="solid"
 								color="neutral"
-								class="py-0.5 my-0.5 bg-gray-200 border-0 ring-transparent"
+								class="py-0.5 my-0.5 bg-gray-200 border-0 ring-transparent rounded-full"
 							>
 								{{ item }}
 								<UButton
 									icon="i-heroicons-x-mark"
 									size="xxs"
-									variant="solid"
-									:ui="{ rounded: 'rounded-full' }"
-									class="p-0 ms-1 bg-gray-500 text-white"
+									variant="subtle"
+									class="p-0 ms-1 bg-gray-500 text-white rounded-full"
 									color="neutral"
 									@click.stop="removeItem(item)"
 								/>

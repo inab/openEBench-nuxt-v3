@@ -3,7 +3,7 @@
 		<BreadcrumbsBar :breadcrumbs-array="routeArray" />
 		<div class="mx-auto container">
 			<div v-if="pending">
-				<USkeleton class="h-12 w-12" :ui="{ rounded: 'rounded-full' }" />
+				<USkeleton class="h-12 w-12 rounded-full" />
 				<div class="space-y-2">
 					<USkeleton class="h-4 w-[250px]" />
 					<USkeleton class="h-4 w-[200px]" />

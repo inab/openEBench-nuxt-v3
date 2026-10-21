@@ -9,12 +9,11 @@
 			<UButton
 				v-if="increasable"
 				color="neutral"
-				variant="solid"
-				:ui="{ rounded: 'rounded-full' }"
-				class="p-1.5 mx-2"
+				variant="ghost"
+				class="p-1.5 mx-2 rounded-full"
 				@click="addEntry"
 			>
-				<UIcon name="i-heroicons-plus-circle-20-solid" class="bg-gray-400" />
+				<UIcon name="i-heroicons-plus-circle-20-solid" class="text-gray-500" />
 			</UButton>
 		</div>
 
@@ -31,12 +30,11 @@
 			<div class="col-1">
 				<UButton
 					color="neutral"
-					variant="solid"
-					:ui="{ rounded: 'rounded-full' }"
-					class="p-1.5 top-0.5"
+					variant="ghost"
+					class="p-1.5 top-0.5 rounded-full"
 					@click="removeEntry(index)"
 				>
-					<UIcon name="i-heroicons-x-circle-20-solid" class="bg-gray-400" />
+					<UIcon name="i-heroicons-x-circle-20-solid" class="text-gray-500" />
 				</UButton>
 			</div>
 		</div>

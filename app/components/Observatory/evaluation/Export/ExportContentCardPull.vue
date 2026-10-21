@@ -25,8 +25,7 @@
 								<UButton
 									color="neutral"
 									variant="ghost"
-									class="hover:bg-white font-normal ps-0"
-									:ui="{ rounded: 'rounded-none' }"
+									class="hover:bg-white font-normal ps-0 rounded-none"
 								>
 									<span
 										class="text-left text-xs text-gray-700"

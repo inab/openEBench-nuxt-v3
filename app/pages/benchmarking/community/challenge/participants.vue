@@ -21,7 +21,7 @@
 					<ChallengeParticipantMetricsTable :metrics-table="metricsTable" />
 				</div>
 				<div v-if="pending" class="">
-					<USkeleton class="h-12 w-12" :ui="{ rounded: 'rounded-full' }" />
+					<USkeleton class="h-12 w-12 rounded-full" />
 				</div>
 				<div v-else class="">
 					<h2 class="choosetext">

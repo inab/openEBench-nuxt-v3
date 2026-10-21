@@ -3,14 +3,8 @@
 		<div class="d-flex">
 			<HeaderAvatar :field="field" :field_name="title" :disabled_tooltip="true" />
 			<span class="text-body title" style="color: #0b579f !important">{{ title }}</span>
-			<UButton
-				color="neutral"
-				variant="solid"
-				:ui="{ rounded: 'rounded-full' }"
-				class="p-1.5 mx-2"
-				@click="addEntry"
-			>
-				<UIcon name="i-heroicons-plus-circle-20-solid" class="bg-gray-400" />
+			<UButton color="neutral" variant="ghost" class="p-1.5 mx-2 rounded-full" @click="addEntry">
+				<UIcon name="i-heroicons-plus-circle-20-solid" class="text-gray-500" />
 			</UButton>
 		</div>
 		<div class="relative mt-2 ms-1">
@@ -32,12 +26,11 @@
 				<!-- Close Entry -->
 				<UButton
 					color="neutral"
-					variant="solid"
-					:ui="{ rounded: 'rounded-full' }"
-					class="p-1.5 mx-3 absolute right-[-55px] top-0.5"
+					variant="ghost"
+					class="p-1.5 mx-3 absolute right-[-55px] top-0.5 rounded-full"
 					@click="closeEntry(index)"
 				>
-					<UIcon name="i-heroicons-x-circle-20-solid" class="bg-gray-400" />
+					<UIcon name="i-heroicons-x-circle-20-solid" class="text-gray-500" />
 				</UButton>
 			</UTextarea>
 		</div>

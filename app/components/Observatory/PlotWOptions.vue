@@ -3,7 +3,7 @@
 		<UTooltip
 			text="See iframe code"
 			:ui="{
-				background: 'bg-black bg-opacity-50',
+				background: 'bg-black/50',
 				color: 'text-white',
 				transition: {
 					enterActiveClass: 'transition ease-out duration-300',
@@ -22,7 +22,7 @@
 
 		<div
 			v-if="dialog"
-			class="fixed z-30 inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center"
+			class="fixed z-30 inset-0 bg-gray-600/50 backdrop-blur-sm overflow-y-auto h-full w-full flex items-center justify-center"
 			@click.self="closeDialog"
 		>
 			<div
@@ -48,7 +48,7 @@
 							<div class="col-1">
 								<UTooltip
 									text="Copy to clipboard"
-									:ui="{ background: 'bg-black bg-opacity-50', color: 'text-white' }"
+									:ui="{ background: 'bg-black/50', color: 'text-white' }"
 								>
 									<button
 										class="px-2 py-1 rounded-full hover:bg-gray-100 click-animation"
@@ -66,7 +66,7 @@
 
 		<div
 			v-if="copied"
-			class="fixed z-40 bottom-10 left-1/2 rounded transform -translate-x-1/2 w-80 text-center p-2 bg-black bg-opacity-50 text-white flex justify-between items-center"
+			class="fixed z-40 bottom-10 left-1/2 rounded transform -translate-x-1/2 w-80 text-center p-2 bg-black/50 text-white flex justify-between items-center"
 		>
 			<span>Copied to clipboard</span>
 			<button class="ml-2 bg-transparent border-none text-red-600" @click="copied = false">

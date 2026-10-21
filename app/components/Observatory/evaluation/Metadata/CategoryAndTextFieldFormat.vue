@@ -53,12 +53,11 @@
 			>
 				<UButton
 					color="neutral"
-					variant="solid"
-					:ui="{ rounded: 'rounded-full' }"
-					class="p-1.5 mx-3 absolute right-[-55px] top-0.5"
+					variant="ghost"
+					class="p-1.5 mx-3 absolute right-[-55px] top-0.5 rounded-full"
 					@click="emitRemove"
 				>
-					<UIcon name="i-heroicons-x-circle-20-solid" class="bg-gray-400" />
+					<UIcon name="i-heroicons-x-circle-20-solid" class="text-gray-500" />
 				</UButton>
 			</UInput>
 			<span class="text-xs ps-1 mt-2" :class="{ 'text-red-500': uriErrorMessage }">
@@ -100,12 +99,11 @@
 			>
 				<UButton
 					color="neutral"
-					variant="solid"
-					:ui="{ rounded: 'rounded-full' }"
-					class="p-1.5 mx-3 absolute right-[-55px] top-0.5"
+					variant="ghost"
+					class="p-1.5 mx-3 absolute right-[-55px] top-0.5 rounded-full"
 					@click="emitRemove"
 				>
-					<UIcon name="i-heroicons-x-circle-20-solid" class="bg-gray-400" />
+					<UIcon name="i-heroicons-x-circle-20-solid" class="text-gray-500" />
 				</UButton>
 			</UInput>
 			<span class="text-xs ps-1 mt-2" :class="{ 'text-red-500': uriErrorMessage }">

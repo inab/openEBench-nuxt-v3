@@ -54,7 +54,7 @@
 					:key="i"
 					class="col-sm-6 col-md-4 col-lg-3 card-community-skeleton"
 				>
-					<USkeleton class="h-12 w-12" :ui="{ rounded: 'rounded-full' }" />
+					<USkeleton class="h-12 w-12 rounded-full" />
 					<div class="space-y-2">
 						<USkeleton class="h-4 w-100" />
 						<USkeleton class="h-4 w-75" />

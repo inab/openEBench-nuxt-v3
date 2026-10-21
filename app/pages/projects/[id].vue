@@ -3,7 +3,7 @@
 		<BreadcrumbsBar :breadcrumbs-array="routeArray" />
 		<div class="container mx-auto">
 			<div v-if="pending">
-				<USkeleton class="h-12 w-12" :ui="{ rounded: 'rounded-full' }" />
+				<USkeleton class="h-12 w-12 rounded-full" />
 				<div class="space-y-2">
 					<USkeleton class="h-4 w-[250px]" />
 					<USkeleton class="h-4 w-[200px]" />
@@ -23,15 +23,15 @@
 								<UBadge
 									v-if="item.label == 'Datasets' && datasetsObj.length > 0"
 									color="neutral"
-									variant="solid"
-									:ui="{ rounded: 'rounded-full' }"
+									variant="subtle"
+									class="rounded-full"
 									>{{ datasetsObj.length }}</UBadge
 								>
 								<UBadge
 									v-if="item.label == 'Tools' && toolsObj.length > 0"
 									color="neutral"
-									variant="solid"
-									:ui="{ rounded: 'rounded-full' }"
+									variant="subtle"
+									class="rounded-full"
 									>{{ toolsObj.length }}</UBadge
 								>
 								<span

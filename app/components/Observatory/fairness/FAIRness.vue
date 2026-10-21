@@ -99,7 +99,7 @@
 					<UButton
 						v-for="tab in tabs"
 						:key="tab.id"
-						:ui="{ rounded: 'rounded-full' }"
+						class="rounded-full"
 						variant="outline"
 						size="lg"
 						:class="activeTab === tab.id ? 'bg-primaryOeb-50' : 'bg-white'"
