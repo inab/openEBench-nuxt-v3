@@ -145,6 +145,9 @@ export default defineNuxtConfig({
 
 	typescript: {
 		shim: false,
+		tsConfig: {
+			include: ['../types/**/*.d.ts'],
+		},
 	},
 
 	image: {
