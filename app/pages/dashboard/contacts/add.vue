@@ -168,7 +168,7 @@ const communities = ref<Community[]>([]);
 const errors = ref<string[]>([]);
 const oks = ref<string>('');
 const token: string = data?.value.accessToken;
-const communitiesSelected = ref([]);
+const communitiesSelected = ref<any[]>([]);
 const router = useRouter();
 
 const routeArray = [

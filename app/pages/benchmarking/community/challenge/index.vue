@@ -65,7 +65,7 @@ const metrics = ref(null);
 const challenge: any = ref(null);
 const tab = ref(0);
 const itemSelected = ref(null);
-const items = ref([]);
+const items = ref<any[]>([]);
 
 await challengeAPI(challengeId).then(async (response: any) => {
 	const challengeObj = new ChallengeObj(challengeId, response.data);

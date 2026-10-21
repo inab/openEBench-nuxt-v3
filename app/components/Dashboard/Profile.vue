@@ -137,7 +137,7 @@ const schema = v.object({
 	roles: v.pipe(v.string()),
 });
 
-const selectedRoles = ref([]);
+const selectedRoles = ref<any[]>([]);
 
 type Schema = v.InferOutput<typeof schema>;
 

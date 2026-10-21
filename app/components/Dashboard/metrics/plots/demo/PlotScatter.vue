@@ -72,7 +72,7 @@ const type: string = '2D-plot';
 const widgetKey = ref(0);
 
 const state = ref({
-	challenge_participants: [],
+	challenge_participants: [] as any[],
 });
 
 const schema = object({

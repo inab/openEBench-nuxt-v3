@@ -450,11 +450,11 @@ const token: string = data?.value.accessToken;
 const processedMetrics = ref(new Set());
 
 const selectedMetric = ref(null);
-const selectedMetrics = ref([]);
+const selectedMetrics = ref<any[]>([]);
 const isShowSearchTable = ref(false);
 
 const stepperIndex = ref(1);
-const selectedTools = ref([]);
+const selectedTools = ref<any[]>([]);
 const isShowToolsTable = ref(false);
 
 const isShowVisualizationTable = ref(false);

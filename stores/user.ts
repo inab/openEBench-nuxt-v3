@@ -12,7 +12,7 @@ interface CommunityRole {
 
 interface CommunityEvents {
 	communityId: string;
-	communityEvents: [];
+	communityEvents: Event[];
 }
 
 export const useUser = defineStore('user', {
@@ -20,13 +20,13 @@ export const useUser = defineStore('user', {
 		userInfo: {} as object,
 		userRoles: [] as string[],
 		communitiesRoles: [] as CommunityRole[],
-		userCommunities: [],
+		userCommunities: [] as Community[],
 		userCommunitiesEvents: {
 			communityId: '',
 			communityEvents: [],
 		} as CommunityEvents,
-		userCommunitiesChallenges: [],
-		contactsList: [],
+		userCommunitiesChallenges: [] as Challenge[],
+		contactsList: [] as any[],
 	}),
 
 	getters: {

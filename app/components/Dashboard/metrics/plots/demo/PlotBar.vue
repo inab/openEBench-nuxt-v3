@@ -65,7 +65,7 @@ const type: string = ref('bar-plot');
 const widgetKey = ref(0);
 
 const state = ref({
-	challenge_participants: [],
+	challenge_participants: [] as any[],
 });
 
 const schema = object({

@@ -288,7 +288,7 @@ const toggleMenu = ref(false);
 const isMobile = ref(false);
 const route = useRoute();
 
-const logInItems = ref([]);
+const logInItems = ref<any[]>([]);
 
 const isAdmin = computed(() => {
 	if (data.value) {
