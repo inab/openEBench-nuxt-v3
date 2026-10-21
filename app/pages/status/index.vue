@@ -132,15 +132,15 @@ const scientificUrl = `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL}`;
 const keycloakUrl = `${runtimeConfig.public.KEYCLOAK_HOST}`;
 const observatoryUrl = `${runtimeConfig.public.OBSERVATORY_API_URL}`;
 
-const isVreServicesUp = ref(null);
-const isScientificServicesUp = ref(null);
-const isKeycloakServiceUp = ref(null);
-const isObservatoryServiceUp = ref(null);
+const isVreServicesUp = ref<any>(null);
+const isScientificServicesUp = ref<any>(null);
+const isKeycloakServiceUp = ref<any>(null);
+const isObservatoryServiceUp = ref<any>(null);
 
-const vreLatency = ref(null);
-const scientificLatency = ref(null);
-const keycloakLatency = ref(null);
-const observatoryLatency = ref(null);
+const vreLatency = ref<any>(null);
+const scientificLatency = ref<any>(null);
+const keycloakLatency = ref<any>(null);
+const observatoryLatency = ref<any>(null);
 const chartDivVre = ref(null);
 const chartDivApi = ref(null);
 const chartDivAuth = ref(null);
@@ -149,7 +149,7 @@ const statusGeneral = ref({});
 const isTableLoading = ref(true);
 
 const recomendedTraces = [2000, 1000, 2000, 1000];
-const realTraces = ref({
+const realTraces = ref<Record<string, any>>({
 	vre: null,
 	scientific: null,
 	keycloak: null,
@@ -187,8 +187,8 @@ const checkVreServices = async () => {
 			performance.mark(markEnd);
 			performance.measure(measureName, markStart, markEnd);
 
-			vreLatency.value = performance.getEntriesByName(measureName)[0].duration.toFixed(3);
-			realTraces.value.vre = performance.getEntriesByName(measureName)[0].duration.toFixed(3);
+			vreLatency.value = performance.getEntriesByName(measureName)[0]!.duration.toFixed(3);
+			realTraces.value.vre = performance.getEntriesByName(measureName)[0]!.duration.toFixed(3);
 		})
 		.catch((error) => {
 			console.log('error on VRE fetch: ', error);
@@ -212,9 +212,9 @@ const checkScientificServices = async () => {
 			performance.mark(markEnd);
 			performance.measure(measureName, markStart, markEnd);
 
-			scientificLatency.value = performance.getEntriesByName(measureName)[0].duration.toFixed(3);
+			scientificLatency.value = performance.getEntriesByName(measureName)[0]!.duration.toFixed(3);
 			realTraces.value.scientific = performance
-				.getEntriesByName(measureName)[0]
+				.getEntriesByName(measureName)[0]!
 				.duration.toFixed(3);
 		})
 		.catch((error) => {
@@ -240,8 +240,8 @@ const checkKeycloakServices = async () => {
 			performance.mark(markEnd);
 			performance.measure(measureName, markStart, markEnd);
 
-			keycloakLatency.value = performance.getEntriesByName(measureName)[0].duration.toFixed(3);
-			realTraces.value.keycloak = performance.getEntriesByName(measureName)[0].duration.toFixed(3);
+			keycloakLatency.value = performance.getEntriesByName(measureName)[0]!.duration.toFixed(3);
+			realTraces.value.keycloak = performance.getEntriesByName(measureName)[0]!.duration.toFixed(3);
 		})
 		.catch((error) => {
 			console.log('Error on Auth fetch: ', error);
@@ -268,9 +268,9 @@ const checkObservatoryServices = async () => {
 			performance.mark(markEnd);
 			performance.measure(measureName, markStart, markEnd);
 
-			observatoryLatency.value = performance.getEntriesByName(measureName)[0].duration.toFixed(3);
+			observatoryLatency.value = performance.getEntriesByName(measureName)[0]!.duration.toFixed(3);
 			realTraces.value.observatory = performance
-				.getEntriesByName(measureName)[0]
+				.getEntriesByName(measureName)[0]!
 				.duration.toFixed(3);
 		})
 		.catch((error) => {

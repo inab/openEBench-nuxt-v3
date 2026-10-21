@@ -235,7 +235,7 @@ const token = data.value?.accessToken as string;
 
 const props = defineProps<{
 	id: string;
-	communityObj: Community | null;
+	communityObj: any;
 	loadingData: boolean;
 	commmunityPrivileges: CommunityPrivilegeActions;
 	isView: boolean;
@@ -258,13 +258,14 @@ const schema = v.object({
 const errors = ref<string[]>([]);
 
 const communityData = computed(() => {
+	const obj = props.communityObj;
 	state.value = {
-		acronym: props.communityObj.acronym,
-		status: props.communityObj.status,
-		name: props.communityObj.name,
-		description: props.communityObj.description,
+		acronym: obj.acronym,
+		status: obj.status,
+		name: obj.name,
+		description: obj.description,
 	};
-	return props.communityObj;
+	return obj;
 });
 
 const localStatus = ref({

@@ -114,7 +114,7 @@ import * as v from 'valibot';
 import type { FormSubmitEvent } from '#ui/types';
 
 const { status, data } = useAuth();
-const userInfo = ref(null);
+const userInfo = ref<any>(null);
 const runtimeConfig = useRuntimeConfig();
 
 const state = reactive({
@@ -144,7 +144,7 @@ type Schema = v.InferOutput<typeof schema>;
 const fetchUserInfo = async () => {
 	if (status.value === 'authenticated') {
 		try {
-			const token = data?.value.accessToken;
+			const token = data?.value?.accessToken;
 
 			const response = await fetch(
 				`${runtimeConfig.public.KEYCLOAK_HOST}/auth/realms/${runtimeConfig.public.KEYCLOAK_REALM}/protocol/openid-connect/userinfo`,

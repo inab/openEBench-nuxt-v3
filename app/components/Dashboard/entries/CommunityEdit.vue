@@ -549,7 +549,7 @@ const inputLabels = {
 
 const props = defineProps<{
 	id: string;
-	communityObj?: Community | null;
+	communityObj?: any;
 	loadingData: boolean;
 	commmunityPrivileges: CommunityPrivilegeCategories;
 	isView: boolean;
@@ -698,7 +698,7 @@ const communityData = computed(() => ({
 	_metadata: props.communityObj?._metadata ?? '',
 	_schema: props.communityObj?._schema ?? '',
 	community_contact_ids:
-		props.communityObj?.community_contact_ids.map((contact: string) => ({
+		props.communityObj?.community_contact_ids?.map((contact: string) => ({
 			id: contact,
 			name: contact,
 		})) || [],

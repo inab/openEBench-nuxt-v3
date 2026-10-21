@@ -44,40 +44,40 @@
 			<!-- Selected collection details with transition effect -->
 			<transition name="slide">
 				<div
-					v-if="selectedCollection !== null"
+					v-if="currentCollection"
 					class="max-w-7xl p-3 mt-4 bg-gray-50 rounded-lg transition-all transform"
 				>
 					<div class="flex flex-col md:flex-row justify-between items-center">
 						<div
 							class="w-full"
 							:class="
-								collections[selectedCollection].id === 'IMPaCT-Data' ? 'md:w-2/3' : 'md:w-3/4'
+								currentCollection.id === 'IMPaCT-Data' ? 'md:w-2/3' : 'md:w-3/4'
 							"
 						>
 							<h6 class="text-lg font-bold text-primaryOeb-500">
-								<a :href="collections[selectedCollection].homepage" target="_blank">{{
-									collections[selectedCollection].title
+								<a :href="currentCollection.homepage" target="_blank">{{
+									currentCollection.title
 								}}</a>
 							</h6>
-							<p class="text-sm font-medium">{{ collections[selectedCollection].subtitle }}</p>
+							<p class="text-sm font-medium">{{ currentCollection.subtitle }}</p>
 							<p class="text-sm text-gray-600 text-justify">
-								{{ collections[selectedCollection].description }}
+								{{ currentCollection.description }}
 							</p>
 						</div>
 						<div
 							class="w-full mt-4 md:mt-0 flex justify-center md:justify-end pr-0 md:pr-4"
 							:class="
-								collections[selectedCollection].id === 'IMPaCT-Data' ? 'md:w-1/3' : 'md:w-1/4'
+								currentCollection.id === 'IMPaCT-Data' ? 'md:w-1/3' : 'md:w-1/4'
 							"
 						>
-							<a target="_blank" :href="collections[selectedCollection].homepage"
+							<a target="_blank" :href="currentCollection.homepage"
 								><img
-									:src="getImagePath(collections[selectedCollection].image)"
+									:src="getImagePath(currentCollection.image)"
 									alt="Collection Image"
 									class="rounded-lg collection-image transition-transform duration-500 ease-in-out"
 									:class="{
 										'collection-image--impact-data':
-											collections[selectedCollection].id === 'IMPaCT-Data',
+											currentCollection.id === 'IMPaCT-Data',
 									}"
 							/></a>
 						</div>
@@ -104,6 +104,9 @@ const dataStore = useData();
 // Collections
 const collections = computed(() => observatoryStore.getCollections);
 const selectedCollection = computed(() => observatoryStore.selectedCollection);
+const currentCollection = computed(() =>
+	selectedCollection.value === null ? null : (collections.value[selectedCollection.value] ?? null)
+);
 
 const currentSlide = ref(observatoryStore.selectedCollection ?? 0);
 
@@ -119,7 +122,7 @@ function setCollection(index: number | null) {
 
 		if (index !== null) {
 			currentSlide.value = index;
-			const collectionId = collections.value[index].id;
+			const collectionId = collections.value[index]?.id;
 			observatoryStore.changeCurrentCollection(collectionId);
 		} else {
 			observatoryStore.changeCurrentCollection(null);

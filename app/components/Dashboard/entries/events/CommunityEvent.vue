@@ -448,17 +448,17 @@ const eventData = computed(() => {
 		name: props.eventObj?.name || '',
 		community_id: props.eventObj?.community_id || '',
 		bench_contact_ids:
-			props.eventObj?.bench_contact_ids.map((contact: string) => {
+			props.eventObj?.bench_contact_ids?.map((contact: string) => {
 				return {
 					id: contact,
 					name: contact,
 				};
 			}) || [],
 		dates: {
-			benchmark_start: new Date(props.eventObj?.dates.benchmark_start) || new Date(),
-			benchmark_stop: new Date(props.eventObj?.dates.benchmark_stop) || new Date(),
-			creation: new Date(props.eventObj?.dates.creation) || new Date(),
-			modification: new Date(props.eventObj?.dates.modification) || new Date(),
+			benchmark_start: new Date(props.eventObj?.dates?.benchmark_start ?? Date.now()),
+			benchmark_stop: new Date(props.eventObj?.dates?.benchmark_stop ?? Date.now()),
+			creation: new Date(props.eventObj?.dates?.creation ?? Date.now()),
+			modification: new Date(props.eventObj?.dates?.modification ?? Date.now()),
 		},
 		orig_id: props.eventObj?.orig_id || '',
 		_schema: props.eventObj?._schema || '',
