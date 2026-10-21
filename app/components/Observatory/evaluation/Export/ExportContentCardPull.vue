@@ -259,7 +259,7 @@ onMounted(() => {
 });
 
 // Methods
-const getFromBoxStatic = (param) => {
+const getFromBoxStatic = (param: any) => {
 	return boxStatic.value[props.type][param];
 };
 
@@ -271,7 +271,7 @@ const cancel = () => {
 	exportStore.cancelRequest();
 };
 
-const toString = (object) => {
+const toString = (object: any) => {
 	/*
   Transform a JSON object to a base64 string
   */

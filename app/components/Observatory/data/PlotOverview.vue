@@ -84,12 +84,12 @@ const colors = ['#fab370', '#fab370', '#fab370', '#fab370', '#fab370', '#fab370'
 const colors_l = ['#ed8828', '#ed8828', '#ed8828', '#ed8828', '#ed8828', '#ed8828', '#ed8828'];
 
 // FUNCTIONS
-function map_feat_names(featureKey) {
+function map_feat_names(featureKey: any) {
 	return sources.value.map((src) => src.features[featureKey] || 0);
 }
 
 // Build scatter traces
-function build_scatter_traces(scatterData) {
+function build_scatter_traces(scatterData: any) {
 	const scatterPlot = [];
 
 	for (let index: number = 0; index < scatterData.values.length; ++index) {
@@ -138,13 +138,13 @@ function build_scatter_traces(scatterData) {
 	return scatterPlot;
 }
 
-function getTraceName(index) {
+function getTraceName(index: any) {
 	if (index === 17) return 'All tools';
 	return '';
 }
 
 // Restructure the Barplot data
-function bar_plot_data_restruct(features) {
+function bar_plot_data_restruct(features: any) {
 	const newValues = [];
 	for (const [key, value] of Object.entries(features)) {
 		newValues.push([key, value]);

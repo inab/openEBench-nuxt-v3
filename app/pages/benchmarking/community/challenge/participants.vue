@@ -209,7 +209,7 @@ function getMetricsTable() {
 	}
 
 	// And their metadata
-	metrics.value.forEach((metric) => {
+	metrics.value.forEach((metric: any) => {
 		if (metric._id in metricsIdsDict) {
 			metricsIdsDict[metric._id].metric = metric;
 		}

@@ -193,11 +193,11 @@ function formatClientDate(date: string) {
 	});
 }
 
-const getCommunityChallengeEditLink = (row) => {
+const getCommunityChallengeEditLink = (row: any) => {
 	return `/dashboard/projects_communities/${props.communityId}/events/${props.eventId}/challenges/${row._id}`;
 };
 
-const getCommunityChallengeParticipant = (row) => {
+const getCommunityChallengeParticipant = (row: any) => {
 	return `/dashboard/projects_communities/${props.communityId}/events/${props.eventId}/challenges/${row._id}/participant`;
 };
 </script>

@@ -34,7 +34,7 @@ const toolMetadata = computed(() => metadataStore.getToolMetadata);
 const metaState = computed(() => getMetadataState(props.field));
 
 // Methods
-const getMetadataState = (field) => {
+const getMetadataState = (field: any) => {
 	let state = false;
 	switch (typeof toolMetadata.value[field]) {
 		case 'boolean': {

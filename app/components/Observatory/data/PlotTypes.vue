@@ -51,7 +51,7 @@ const config = {
 };
 
 // Methods
-function buildData(typesData) {
+function buildData(typesData: any) {
 	const typeLabels = {
 		cmd: 'Command-line tool',
 		web: 'Web application',

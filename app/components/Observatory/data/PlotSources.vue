@@ -93,7 +93,7 @@ const layout = computed(() => {
 });
 
 // Function to construct bar traces
-function build_bar_traces(colors) {
+function build_bar_traces(colors: any) {
 	const traces = [];
 	if (coverageData.value?.counts) {
 		for (const [key] of Object.entries(coverageData.value.counts)) {
@@ -119,7 +119,7 @@ function build_bar_traces(colors) {
 }
 
 // Function to construct the line trace
-function build_line_trace(n) {
+function build_line_trace(n: any) {
 	return coverageData.value?.counts_cummulative ? coverageData.value.counts_cummulative[n] : 0;
 }
 

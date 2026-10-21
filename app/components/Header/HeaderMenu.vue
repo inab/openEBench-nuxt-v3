@@ -292,7 +292,7 @@ const logInItems = ref<any[]>([]);
 
 const isAdmin = computed(() => {
 	if (data.value) {
-		const privileges = data.value.oeb_roles.find((privilege) => privilege === 'admin:oeb');
+		const privileges = data.value.oeb_roles.find((privilege: any) => privilege === 'admin:oeb');
 
 		return privileges ? true : false;
 	}
@@ -354,7 +354,7 @@ onMounted(() => {
 	setupDropdown('observatoryDropdown', 'observatory');
 });
 
-function setupDropdown(dropdownId, stateKey) {
+function setupDropdown(dropdownId: any, stateKey: any) {
 	const dropdownElement = document.getElementById(dropdownId);
 
 	dropdownElement.addEventListener('show.bs.dropdown', () => {

@@ -167,18 +167,18 @@ function getPreparedData() {
 	preparedBar.value = JSON.stringify(preparedBar.value);
 }
 
-function recalculateMedians(params) {
+function recalculateMedians(params: any) {
 	const preparedObj = JSON.parse(preparedBar.value);
 	if (preparedObj.inline_data) {
 		const initialValuesMap = Object.fromEntries(
-			initialValues.value.map((item) => [item.metric_id, item])
+			initialValues.value.map((item: any) => [item.metric_id, item])
 		);
 
 		const preparedObj = JSON.parse(preparedBar.value);
 
 		preparedObj.inline_data.challenge_participants =
-			preparedObj.inline_data.challenge_participants.map((item) => {
-				const paramItem = params.find((param) => param.name === item.name);
+			preparedObj.inline_data.challenge_participants.map((item: any) => {
+				const paramItem = params.find((param: any) => param.name === item.name);
 				const initialItem = initialValuesMap[item.metric_id];
 
 				const { q1: oldQ1, q3: oldQ3, mean: oldMean, median: oldMedian } = initialItem;

@@ -115,7 +115,7 @@ onMounted(() => {
 });
 
 // Methods
-const checkIfRequired = (field) => {
+const checkIfRequired = (field: any) => {
 	if (field === 'DOI') {
 		if (doi.value === '' && pmid.value === '' && pmcid.value === '') {
 			return 'At least one ID is required';

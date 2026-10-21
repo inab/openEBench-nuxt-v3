@@ -324,7 +324,7 @@ async function fetchUserCommunitiesEvents(communityId: string) {
 		let data = await response.json();
 		data = data.filter((event: any) => event.community_id === communityId);
 
-		eventsList.value = data.map((item) => ({
+		eventsList.value = data.map((item: any) => ({
 			label: `${item._id} - ${item.name}`,
 			value: item._id,
 		}));

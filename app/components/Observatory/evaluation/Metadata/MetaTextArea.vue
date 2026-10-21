@@ -58,7 +58,7 @@ const clearLink = () => {
 	description.value = [{}];
 };
 
-const closeEntry = (index) => {
+const closeEntry = (index: any) => {
 	const payload = {
 		field: props.field,
 		index,

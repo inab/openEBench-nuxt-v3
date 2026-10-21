@@ -380,7 +380,7 @@ async function fetchContact(id: string): Promise<Contact> {
 const fetchUserCommunities = async (token: string): Promise<any[]> => {
 	try {
 		const communitiesResponse = await userStore.fetchCommunities(token);
-		return communitiesResponse.map((community) => {
+		return communitiesResponse.map((community: any) => {
 			return {
 				...community,
 				name: `${community._id} - ${community.name}`,

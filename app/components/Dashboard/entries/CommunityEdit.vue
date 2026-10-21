@@ -933,11 +933,11 @@ function validateRequiredFields(data: any): string[] {
 	return errorMessages;
 }
 
-function consentTab(userPrivileges) {
+function consentTab(userPrivileges: any) {
 	if (!userPrivileges?.value || !Array.isArray(items.value)) return;
 
 	const canConsent = userPrivileges.value.find(
-		(privilege) => privilege.role === 'admin' || privilege.role === 'owner'
+		(privilege: any) => privilege.role === 'admin' || privilege.role === 'owner'
 	);
 
 	const existItem = items.value.find((item) => item.index === 3);

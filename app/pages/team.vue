@@ -189,7 +189,7 @@ function sortedByName<T extends { name: string }>(persons: T[]): T[] {
 	return [...persons].sort((a, b) => a.name.localeCompare(b.name));
 }
 
-function sortedByStartYear(persons, order = 'desc') {
+function sortedByStartYear(persons: any, order = 'desc') {
 	return [...persons].sort((a, b) => {
 		// Sort by start year (most recent first by default)
 		if (order === 'desc') {

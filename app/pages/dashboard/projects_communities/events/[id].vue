@@ -93,7 +93,7 @@ const communityDataEvent = ref<Event>(null);
 const eventChallenge = ref<Array<Challenge>>(null);
 
 const isView = computed(() => {
-	return userPrivileges.value.filter((privilege) => privilege.event === eventId).role === 'Owner';
+	return userPrivileges.value.filter((privilege: any) => privilege.event === eventId).role === 'Owner';
 });
 
 if (userPrivileges.value.length == 0) {
@@ -101,12 +101,12 @@ if (userPrivileges.value.length == 0) {
 }
 
 const eventPrivileges = computed(() => {
-	const isAdmin = userPrivileges.value.some((privilege) => privilege.role === 'admin');
+	const isAdmin = userPrivileges.value.some((privilege: any) => privilege.role === 'admin');
 
 	if (isAdmin) {
 		return privileges.admin.event;
 	}
-	const privilege = userPrivileges.value.find((privilege) => {
+	const privilege = userPrivileges.value.find((privilege: any) => {
 		return privilege.community === communityId;
 	});
 	return (privileges[privilege?.role ?? 'anyone'] ?? privileges.anyone).event;

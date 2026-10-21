@@ -441,7 +441,7 @@ async function countTotalContacts() {
 	}
 }
 
-async function getMetricsByType(metrics) {
+async function getMetricsByType(metrics: any) {
 	const typeMap = {
 		visualization: 'Bar Plot',
 		optimization: 'Scatter Plot',
@@ -449,7 +449,7 @@ async function getMetricsByType(metrics) {
 		visualizationLine: 'Line Plot',
 	};
 
-	metrics.forEach((metric) => {
+	metrics.forEach((metric: any) => {
 		if (metric.representation_hints && metric.representation_hints.visualization) {
 			const type = metricsByType.value.filter((item) => item.name === typeMap.visualization);
 			type[0].total += 1;

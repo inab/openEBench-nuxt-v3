@@ -400,7 +400,7 @@ async function searchMetricResults() {
 		res.forEach((challenge) => {
 			if (challenge.metrics_categories) {
 				challenge.metrics_categories.forEach((category) => {
-					category?.metrics.forEach((m) => {
+					category?.metrics.forEach((m: any) => {
 						if (m.metrics_id !== selectedMetric.value._id) {
 							if (!metricAssociatedList.value[m.metrics_id]) {
 								metricAssociatedList.value[m.metrics_id] = {

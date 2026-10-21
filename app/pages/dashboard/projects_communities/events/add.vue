@@ -33,12 +33,12 @@ if (userPrivileges.value.length == 0) {
 }
 
 const eventPrivileges = computed(() => {
-	const isAdmin = userPrivileges.value.filter((privilege) => privilege.role === 'admin');
+	const isAdmin = userPrivileges.value.filter((privilege: any) => privilege.role === 'admin');
 
 	if (isAdmin.length > 0) {
 		return privileges.admin;
 	}
-	const privilege = userPrivileges.value.find((privilege) => {
+	const privilege = userPrivileges.value.find((privilege: any) => {
 		return privilege.community === communityId;
 	});
 	return privileges[privilege?.role ?? 'anyone'] ?? privileges.anyone;

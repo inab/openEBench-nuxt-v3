@@ -136,7 +136,7 @@ const sortedRoles = computed(() => {
 });
 
 // METHODS
-function getMemberAltText(member) {
+function getMemberAltText(member: any) {
 	return `Photo of ${member.name}`;
 }
 
@@ -149,7 +149,7 @@ function hideTooltip(index: number) {
 	tooltipVisible.value[index] = false;
 }
 
-function navigateToLink(institution) {
+function navigateToLink(institution: any) {
 	const institutionInfo = getInstitutionFullName(institution);
 	if (institutionInfo.link) {
 		window.open(institutionInfo.link, '_blank');
@@ -164,7 +164,7 @@ function getInstitutionFullName(acronym: string) {
 	return { name: acronym, link: '#' };
 }
 
-function toggleHovered(value) {
+function toggleHovered(value: any) {
 	isHovered.value = value;
 }
 

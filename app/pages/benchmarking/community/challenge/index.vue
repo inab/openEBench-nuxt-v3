@@ -135,7 +135,7 @@ const { data: community, pending } = await useAsyncData(
 	}
 );
 
-function getVisualizationType(item) {
+function getVisualizationType(item: any) {
 	try {
 		const data = (item?.datalink ?? item?.datalinks?.[0])?.inline_data;
 		const parsed = typeof data === 'string' ? JSON.parse(data) : data;

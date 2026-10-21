@@ -144,11 +144,11 @@ const fetchUserCommunitiesEvents = async (token: string, communityId: string): P
 	try {
 		const communityEventResponse = await userStore.fetchCommunitiesEvents(token, communityId);
 		const data = await communityEventResponse;
-		const formatResponse = data.map((item) => {
+		const formatResponse = data.map((item: any) => {
 			if (Array.isArray(item.bench_contact)) {
 				return {
 					...item,
-					bench_contact: item.bench_contact.map((contact) => {
+					bench_contact: item.bench_contact.map((contact: any) => {
 						if (typeof contact === 'object' && contact !== null) {
 							return {
 								...contact,

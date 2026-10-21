@@ -70,7 +70,7 @@ const addEntry = () => {
 	metadataStore.addEntry(payload);
 };
 
-const removeEntry = (index) => {
+const removeEntry = (index: any) => {
 	const payload = {
 		field: props.field,
 		index,
@@ -78,7 +78,7 @@ const removeEntry = (index) => {
 	metadataStore.removeEntry(payload);
 };
 
-const changeEntry = (initialPayload) => {
+const changeEntry = (initialPayload: any) => {
 	const payload = {
 		field: props.field,
 		index: initialPayload.index,

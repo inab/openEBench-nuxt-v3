@@ -160,12 +160,12 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 
 	if (result.success) {
 		const data = state.value.challenge_participants.map((item) => {
-			const xValues = item.x_value.map((x) => {
+			const xValues = item.x_value.map((x: any) => {
 				const xValueString = typeof x === 'string' ? x : x === 0 ? '0' : String(x || '');
 				return parseFloat(xValueString);
 			});
 
-			const yValues = item.y_value.map((y) => {
+			const yValues = item.y_value.map((y: any) => {
 				const yValueString = typeof y === 'string' ? y : y === 0 ? '0' : String(y || '');
 				return parseFloat(yValueString);
 			});

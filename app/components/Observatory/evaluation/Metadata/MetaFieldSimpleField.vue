@@ -64,7 +64,7 @@ const addEntry = () => {
 	metadataStore.addEntry(payload);
 };
 
-const removeEntry = (index) => {
+const removeEntry = (index: any) => {
 	const payload = {
 		field: props.field,
 		index,
