@@ -7,10 +7,7 @@ declare module 'nuxt/schema' {
 			provider?: {
 				type: 'authjs';
 			};
-			basePath?: string;
-			originEnvKey?: string;
 			baseURL?: string;
-			origin?: string;
 		};
 	}
 

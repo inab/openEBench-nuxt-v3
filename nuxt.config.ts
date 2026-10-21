@@ -113,10 +113,10 @@ export default defineNuxtConfig({
 		provider: {
 			type: 'authjs',
 		},
-		basePath: '/api/auth',
-		originEnvKey: 'AUTH_ORIGIN',
-		baseURL: process.env.APP_BASE_URL || 'https://test-oeb2.openebench.bsc.es',
-		origin: process.env.AUTH_ORIGIN || 'https://inb.bsc.es',
+		// nuxt-auth >= 1.0 has no basePath/origin options: baseURL must be the full URL including the path
+		baseURL: `${
+			process.env.AUTH_ORIGIN || process.env.APP_BASE_URL || 'https://test-oeb2.openebench.bsc.es'
+		}/api/auth`,
 	},
 
 	hooks: {
