@@ -54,21 +54,13 @@
 		<!-- Form Action Buttons -->
 		<div class="row justify-center">
 			<div class="col-10 text-right">
-				<UButton
-					class="mr-2"
-					color="neutral"
-					variant="ghost"
-					size="md"
-					:ui="{ color: { gray: { ghost: 'text-gray-900 hover:bg-gray-100' } } }"
-					@click="goBack"
-				>
+				<UButton class="mr-2" color="neutral" variant="ghost" size="md" @click="goBack">
 					Back
 				</UButton>
 				<UButton
 					class="bg-primaryOeb-500"
 					variant="solid"
 					size="md"
-					:ui="{ color: { variant: { solid: 'hover:bg-{blue}-500' } } }"
 					:disabled="!url || showError || isSubmitting"
 					@click="submitURL"
 				>

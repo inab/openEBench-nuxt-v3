@@ -40,12 +40,7 @@
 			<UTooltip
 				text="Remove entry"
 				:ui="{
-					background: 'bg-black bg-opacity-50',
-					color: 'text-white',
-					transition: {
-						enterActiveClass: 'transition ease-out duration-300',
-						leaveActiveClass: 'transition ease-in duration-150',
-					},
+					content: 'bg-black/50 text-white',
 				}"
 			>
 				<UButton

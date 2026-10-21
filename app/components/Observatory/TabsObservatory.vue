@@ -1,11 +1,6 @@
 <template>
 	<div>
-		<UTabs
-			:items="items"
-			class="w-full"
-			:ui="{ list: { tab: { active: 'text-primaryOeb-500' } } }"
-			:default-index="defaultIndex"
-		>
+		<UTabs :items="items" class="w-full" :default-index="defaultIndex">
 			<template #default="{ item, index, selected }">
 				<div class="flex items-center gap-2 relative truncate w-full" @click="onTabClick(index)">
 					<!-- Render the icon -->

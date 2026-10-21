@@ -25,7 +25,6 @@
 						color="neutral"
 						variant="ghost"
 						class="mt-2 text-black bg-gray-100"
-						:ui="{ color: { gray: { ghost: 'hover:bg-gray-200' } } }"
 						@click="close"
 					>
 						Close

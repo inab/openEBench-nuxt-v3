@@ -11,9 +11,7 @@
 									:text="formatName(item.label, 'tooltip')"
 									:popper="{ offsetDistance: 16 }"
 									:ui="{
-										background: 'bg-primaryOeb-500',
-										color: 'text-white',
-										width: 'w-auto',
+										content: 'bg-primaryOeb-500 text-white w-auto',
 									}"
 								>
 									<button
@@ -51,7 +49,11 @@
 			v-if="props.data.length > itemsPerPage"
 			class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700"
 		>
-			<UPagination v-model="currentPage" :page-count="itemsPerPage" :total="props.data.length" />
+			<UPagination
+				v-model:page="currentPage"
+				:items-per-page="itemsPerPage"
+				:total="props.data.length"
+			/>
 		</div>
 
 		<!-- Widgets -->

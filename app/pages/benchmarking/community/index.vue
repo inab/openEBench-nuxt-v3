@@ -32,12 +32,7 @@
 				</div>
 
 				<div v-if="community" class="community-tabs md:flex">
-					<UTabs
-						:key="tabsItems.map((tab) => tab.slot).join()"
-						:items="tabsItems"
-						class="w-full"
-						:ui="{ list: { tab: { active: 'text-primaryOeb-500' } } }"
-					>
+					<UTabs :key="tabsItems.map((tab) => tab.slot).join()" :items="tabsItems" class="w-full">
 						<template #default="{ item, index, selected }">
 							<div class="flex items-center gap-2 relative truncate">
 								<span class="">{{ item.label }}</span>

@@ -58,22 +58,9 @@
 			:loading="isLoading"
 			:data="filteredRows"
 			:ui="{
-				tr: {
-					base: 'hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer',
-				},
-				th: {
-					base: 'text-left rtl:text-right',
-					padding: 'px-2.5 py-2.5',
-					color: 'text-gray-900 dark:text-white',
-					font: 'font-semibold',
-					size: 'text-sm',
-				},
-				td: {
-					base: '',
-					padding: 'px-2.5 py-2.5',
-					font: '',
-					size: 'text-sm',
-				},
+				tr: 'hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer',
+				th: 'text-left rtl:text-right px-2.5 py-2.5 text-gray-900 dark:text-white font-semibold text-sm',
+				td: 'px-2.5 py-2.5 text-sm',
 			}"
 		>
 			<template #email-cell="{ row }">
@@ -134,9 +121,9 @@
 			</div>
 			<UPagination
 				v-if="_total > pageCount"
-				v-model="page"
+				v-model:page="page"
 				class="pagination"
-				:page-count="pageCount"
+				:items-per-page="pageCount"
 				:total="_total"
 			/>
 		</div>

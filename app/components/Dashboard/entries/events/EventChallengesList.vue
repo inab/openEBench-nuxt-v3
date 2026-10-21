@@ -14,22 +14,9 @@
 			:loading="isLoadingChallenges"
 			:data="filteredRows"
 			:ui="{
-				tr: {
-					base: 'hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer',
-				},
-				th: {
-					base: 'text-left rtl:text-right',
-					padding: 'px-2.5 py-2.5',
-					color: 'text-gray-900 dark:text-white',
-					font: 'font-semibold',
-					size: 'text-sm',
-				},
-				td: {
-					base: '',
-					padding: 'px-3 py-3',
-					font: '',
-					size: 'text-sm',
-				},
+				tr: 'hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer',
+				th: 'text-left rtl:text-right px-2.5 py-2.5 text-gray-900 dark:text-white font-semibold text-sm',
+				td: 'px-3 py-3 text-sm',
 			}"
 		>
 			<template #dates-cell="{ row }">
@@ -110,19 +97,10 @@
 				</span>
 			</div>
 			<UPagination
-				v-model="page"
+				v-model:page="page"
 				class="pagination"
-				:page-count="pageCount"
+				:items-per-page="pageCount"
 				:total="_total"
-				:ui="{
-					wrapper: 'flex items-center',
-					default: {
-						activeButton: {
-							base: 'bg-primary-500 dark:bg-primary-400',
-							color: 'text-white',
-						},
-					},
-				}"
 			/>
 		</div>
 	</div>

@@ -15,13 +15,7 @@
 				<p class="mt-3 text-sm" v-html="description"></p>
 			</div>
 			<div class="mt-auto pt-4">
-				<UButton
-					class="bg-primaryOeb-500"
-					variant="solid"
-					size="md"
-					:ui="{ color: { variant: { solid: 'hover:bg-{blue}-500' } } }"
-					@click="selectSource"
-				>
+				<UButton class="bg-primaryOeb-500" variant="solid" size="md" @click="selectSource">
 					Select
 				</UButton>
 			</div>

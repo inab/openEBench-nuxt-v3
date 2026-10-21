@@ -20,7 +20,6 @@
 							color="neutral"
 							variant="ghost"
 							class="mt-3 px-3 text-black bg-gray-100"
-							:ui="{ color: { gray: { ghost: 'hover:bg-gray-200' } } }"
 							@click="openPRinGH()"
 						>
 							See in repository

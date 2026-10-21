@@ -29,11 +29,13 @@
 			<!-- Pagination Controls -->
 			<div v-if="pageCount > 1" class="pagination-container mt-4">
 				<UPagination
-					:active-button="{ variant: 'outline' }"
-					:inactive-button="{ color: 'gray' }"
-					:model-value="currentPage"
-					:total="pageCount"
-					@update:model-value="changePage"
+					:page="currentPage"
+					:items-per-page="itemsPerPage"
+					:total="props.events.length"
+					active-variant="outline"
+					variant="outline"
+					color="neutral"
+					@update:page="changePage"
 				/>
 			</div>
 		</template>

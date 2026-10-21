@@ -29,22 +29,9 @@
 		<UModal v-model="isOpen" prevent-close>
 			<UCard
 				:ui="{
-					base: '',
-					background: 'bg-white dark:bg-gray-900',
-					divide: 'divide-y divide-gray-200 dark:divide-gray-800',
-					ring: 'ring-1 ring-gray-200 dark:ring-gray-800',
-					rounded: 'rounded-lg',
-					shadow: 'shadow',
-					body: {
-						base: '',
-						background: '',
-						padding: 'p-4 sm:p-6',
-					},
-					header: {
-						base: '',
-						background: '',
-						padding: 'px-4 py-2 sm:p-6',
-					},
+					root: 'bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-800 ring-1 ring-gray-200 dark:ring-gray-800 rounded-lg shadow',
+					body: 'p-4 sm:p-6',
+					header: 'px-4 py-2 sm:p-6',
 				}"
 			>
 				<template #header>

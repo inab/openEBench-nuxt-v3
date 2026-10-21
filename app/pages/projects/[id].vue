@@ -12,11 +12,7 @@
 			<div v-else>
 				<CommunityInfo :community="summaryObj" :community-references="communityReferences" />
 				<div class="community-tabs md:flex">
-					<UTabs
-						:items="tabsItems"
-						class="w-full"
-						:ui="{ list: { tab: { active: 'text-primaryOeb-500' } } }"
-					>
+					<UTabs :items="tabsItems" class="w-full">
 						<template #default="{ item, index, selected }">
 							<div class="flex items-center gap-2 relative truncate">
 								<span class="">{{ item.label }}</span>

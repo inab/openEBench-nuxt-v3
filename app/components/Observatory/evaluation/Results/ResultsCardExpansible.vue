@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<UCard :ui="{ body: { padding: 'px-3 py-3 sm:p-3' } }">
+		<UCard :ui="{ body: 'px-3 py-3 sm:p-3' }">
 			<h6>{{ title }}</h6>
 			<div class="grid justify-items-center">
 				<FAIRplot

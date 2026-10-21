@@ -16,22 +16,9 @@
 				<UCard
 					class="shadowless-card"
 					:ui="{
-						base: '',
-						background: 'bg-white dark:bg-gray-900',
-						divide: 'divide-y divide-gray-200 dark:divide-gray-800',
-						ring: 'ring-1 ring-gray-200 dark:ring-gray-800',
-						rounded: 'rounded-lg',
-						shadow: 'shadow',
-						body: {
-							base: '',
-							background: '',
-							padding: 'px-4 py-2 sm:p-6',
-						},
-						header: {
-							base: '',
-							background: '',
-							padding: 'px-4 py-2 sm:p-6',
-						},
+						root: 'bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-800 ring-1 ring-gray-200 dark:ring-gray-800 rounded-lg shadow',
+						body: 'px-4 py-2 sm:p-6',
+						header: 'px-4 py-2 sm:p-6',
 					}"
 				>
 					<template #header>
@@ -105,15 +92,18 @@ const showAdvancedSearch = ref(false);
 const to = props.challengeId;
 
 const metrics_by_categories = computed(() => {
-	return props.metricData.reduce((acc, metric) => {
-		if (metric.category === 'aggregation') {
-			if (!acc[metric.category]) {
-				acc[metric.category] = [];
+	return props.metricData.reduce(
+		(acc, metric) => {
+			if (metric.category === 'aggregation') {
+				if (!acc[metric.category]) {
+					acc[metric.category] = [];
+				}
+				acc[metric.category].push(metric);
 			}
-			acc[metric.category].push(metric);
-		}
-		return acc;
-	}, {} as Record<string, any[]>);
+			return acc;
+		},
+		{} as Record<string, any[]>
+	);
 });
 </script>
 

@@ -3,12 +3,7 @@
 		<UTooltip
 			text="See iframe code"
 			:ui="{
-				background: 'bg-black/50',
-				color: 'text-white',
-				transition: {
-					enterActiveClass: 'transition ease-out duration-300',
-					leaveActiveClass: 'transition ease-in duration-150',
-				},
+				content: 'bg-black/50 text-white',
 			}"
 		>
 			<button
@@ -48,7 +43,7 @@
 							<div class="col-1">
 								<UTooltip
 									text="Copy to clipboard"
-									:ui="{ background: 'bg-black/50', color: 'text-white' }"
+									:ui="{ content: 'bg-black/50 text-white' }"
 								>
 									<button
 										class="px-2 py-1 rounded-full hover:bg-gray-100 click-animation"

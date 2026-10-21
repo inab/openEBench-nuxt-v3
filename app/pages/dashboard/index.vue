@@ -18,11 +18,7 @@
 					<UCard
 						class="dashboard__body__card"
 						:ui="{
-							header: {
-								base: '',
-								background: '',
-								padding: 'px-4 py-3 sm:px-6',
-							},
+							header: 'px-4 py-3 sm:px-6',
 						}"
 					>
 						<template #header>
@@ -54,11 +50,7 @@
 					<UCard
 						class="dashboard__body__card"
 						:ui="{
-							header: {
-								base: '',
-								background: '',
-								padding: 'px-4 py-3 sm:px-6',
-							},
+							header: 'px-4 py-3 sm:px-6',
 						}"
 					>
 						<template #header>
@@ -90,11 +82,7 @@
 					<UCard
 						class="dashboard__body__card"
 						:ui="{
-							header: {
-								base: '',
-								background: '',
-								padding: 'px-4 py-3 sm:px-6',
-							},
+							header: 'px-4 py-3 sm:px-6',
 						}"
 					>
 						<template #header>
@@ -132,11 +120,7 @@
 					<UCard
 						class="dashboard__body__card"
 						:ui="{
-							header: {
-								base: '',
-								background: '',
-								padding: 'px-4 py-3 sm:px-6',
-							},
+							header: 'px-4 py-3 sm:px-6',
 						}"
 					>
 						<template #header>
@@ -169,11 +153,7 @@
 					<UCard
 						class="dashboard__body__card"
 						:ui="{
-							header: {
-								base: '',
-								background: '',
-								padding: 'px-4 py-3 sm:px-6',
-							},
+							header: 'px-4 py-3 sm:px-6',
 						}"
 					>
 						<template #header>
@@ -212,11 +192,7 @@
 					<UCard
 						class="dashboard__body__card"
 						:ui="{
-							header: {
-								base: '',
-								background: '',
-								padding: 'px-4 py-3 sm:px-6',
-							},
+							header: 'px-4 py-3 sm:px-6',
 						}"
 					>
 						<template #header>

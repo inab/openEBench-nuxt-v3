@@ -2,16 +2,8 @@
 	<UCard
 		class="custom-card-box"
 		:ui="{
-			body: {
-				base: '',
-				background: '',
-				padding: 'p-4 sm:p-6',
-			},
-			header: {
-				base: '',
-				background: '',
-				padding: 'px-4 py-2 sm:p-6',
-			},
+			body: 'p-4 sm:p-6',
+			header: 'px-4 py-2 sm:p-6',
 		}"
 	>
 		<template #header>

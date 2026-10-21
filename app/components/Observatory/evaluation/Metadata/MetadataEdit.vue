@@ -411,24 +411,11 @@
 		<div class="flex justify-between mt-5">
 			<UButton variant="ghost" color="error" @click="stepperStore.cancelSteps"> Cancel </UButton>
 			<div class="text-right">
-				<UButton
-					class="mr-2"
-					color="neutral"
-					variant="ghost"
-					size="md"
-					:ui="{ color: { gray: { ghost: 'text-gray-900 hover:bg-gray-100' } } }"
-					@click="goBack"
-				>
+				<UButton class="mr-2" color="neutral" variant="ghost" size="md" @click="goBack">
 					Back
 				</UButton>
 
-				<UButton
-					class="bg-primaryOeb-500"
-					variant="solid"
-					size="md"
-					:ui="{ color: { variant: { solid: 'hover:bg-{blue}-500' } } }"
-					@click="submitMetadata"
-				>
+				<UButton class="bg-primaryOeb-500" variant="solid" size="md" @click="submitMetadata">
 					Continue
 				</UButton>
 			</div>

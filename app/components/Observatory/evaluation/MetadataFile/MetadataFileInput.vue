@@ -1,13 +1,12 @@
 <template>
 	<div class="container mx-auto p-4">
-		<UTabs :items="items" class="w-full" :ui="{ list: { tab: { active: 'text-primaryOeb-500' } } }">
+		<UTabs :items="items" class="w-full">
 			<template #content="{ item }">
 				<UCard
 					:ui="{
-						shadow: 'shadow-none',
-						divide: 'divide-none',
-						body: { padding: 'py-0 sm:p-2' },
-						header: { padding: 'py-3' },
+						root: 'shadow-none divide-none',
+						body: 'py-0 sm:p-2',
+						header: 'py-3',
 					}"
 				>
 					<!-- Icon -->

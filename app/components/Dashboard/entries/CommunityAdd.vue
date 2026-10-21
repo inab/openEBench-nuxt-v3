@@ -53,8 +53,7 @@
 														<label for="id">
 															<UTooltip
 																:ui="{
-																	width: 'max-w-lg',
-																	base: 'whitespace-normal break-words',
+																	content: 'max-w-lg whitespace-normal break-words h-auto',
 																}"
 															>
 																<template #text>

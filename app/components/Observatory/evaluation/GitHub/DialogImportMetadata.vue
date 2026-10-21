@@ -37,7 +37,6 @@
 								color="neutral"
 								variant="ghost"
 								size="md"
-								:ui="{ color: { gray: { ghost: 'text-gray-900 hover:bg-gray-100' } } }"
 								@click="cancelImport"
 							/>
 						</div>

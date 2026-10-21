@@ -6,30 +6,17 @@
 			:columns="headers"
 			class="w-full mt-4 cursor-auto"
 			:ui="{
-				tr: {
-					base: 'hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer cursor-auto',
-				},
-				th: {
-					base: 'text-left',
-					padding: 'py-2.5',
-					color: 'text-gray-900 dark:text-white',
-					font: 'font-medium',
-					size: 'text-sm',
-				},
-				td: {
-					base: 'max-w-[0] truncate',
-					padding: 'py-3',
-					font: '',
-					size: 'text-sm',
-				},
+				tr: 'hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer cursor-auto',
+				th: 'text-left py-2.5 text-gray-900 dark:text-white font-medium text-sm',
+				td: 'max-w-[0] truncate py-3 text-sm',
 			}"
 		/>
 		<div class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700">
 			<UPagination
 				v-if="items.length > pageCount"
-				v-model="page"
+				v-model:page="page"
 				class="pagination"
-				:page-count="pageCount"
+				:items-per-page="pageCount"
 				:total="items.length"
 			/>
 		</div>
