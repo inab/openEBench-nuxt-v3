@@ -29,7 +29,7 @@
 					<UInput
 						v-model="state.userName"
 						disabled
-						color="gray"
+						color="neutral"
 						variant="outline"
 						class="custom-input custom-entry-input"
 						placeholder="Your name"
@@ -39,7 +39,7 @@
 					<UInput
 						v-model="state.userEmail"
 						disabled
-						color="gray"
+						color="neutral"
 						variant="outline"
 						class="custom-input custom-entry-input"
 						placeholder="Your email"
@@ -159,7 +159,7 @@
 
 			<div class="row row-spacing-footer">
 				<div class="form-footer">
-					<UButton type="button" color="white" variant="solid" @click="goReset"> Reset </UButton>
+					<UButton type="button" color="neutral" variant="solid" @click="goReset"> Reset </UButton>
 					<UButton type="submit" :disabled="!isAcceptedTerms">Submit</UButton>
 				</div>
 			</div>

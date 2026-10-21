@@ -4,7 +4,7 @@
 			<HeaderAvatar :field="field" :field_name="title" :disabled_tooltip="true" />
 			<span class="text-body title" style="color: #0b579f !important">{{ title }}</span>
 			<UButton
-				color="gray"
+				color="neutral"
 				variant="solid"
 				:ui="{ rounded: 'rounded-full' }"
 				class="p-1.5 mx-2"

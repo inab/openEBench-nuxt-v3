@@ -8,7 +8,7 @@
 
 			<UButton
 				v-if="increasable"
-				color="gray"
+				color="neutral"
 				variant="solid"
 				:ui="{ rounded: 'rounded-full' }"
 				class="p-1.5 mx-2"
@@ -30,7 +30,7 @@
 			</div>
 			<div class="col-1">
 				<UButton
-					color="gray"
+					color="neutral"
 					variant="solid"
 					:ui="{ rounded: 'rounded-full' }"
 					class="p-1.5 top-0.5"

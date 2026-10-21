@@ -91,7 +91,7 @@
 							<UButton
 								v-if="index === stepperStore.steps.length - 1"
 								variant="ghost"
-								color="red"
+								color="error"
 								@click="stepperStore.cancelSteps"
 							>
 								Cancel
@@ -100,7 +100,7 @@
 								<UButton
 									v-if="index > 0"
 									class="mr-2"
-									color="gray"
+									color="neutral"
 									variant="ghost"
 									size="md"
 									:ui="{ color: { gray: { ghost: 'text-gray-900 hover:bg-gray-100' } } }"

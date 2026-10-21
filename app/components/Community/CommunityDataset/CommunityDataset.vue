@@ -9,7 +9,7 @@
 		>
 			<UInput
 				v-model="search"
-				color="white"
+				color="neutral"
 				variant="outline"
 				icon="i-heroicons-magnifying-glass"
 				placeholder="Search ..."

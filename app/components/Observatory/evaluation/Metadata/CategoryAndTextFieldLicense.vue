@@ -20,7 +20,7 @@
 				@input="changeValue"
 			>
 				<UButton
-					color="gray"
+					color="neutral"
 					variant="solid"
 					:ui="{ rounded: 'rounded-full' }"
 					class="p-1.5 mx-4 absolute right-[-55px] top-0.5"

@@ -158,7 +158,7 @@
 								<UAlert
 									:ui="{ gap: 'gap-2', shadow: 'shadow-md' }"
 									icon="mdi-alert-circle"
-									color="sky"
+									color="info"
 									variant="soft"
 									description="Several licenses"
 									class="p-2 text-gray-900"
@@ -409,11 +409,11 @@
 		</UAccordion>
 		<!-- Buttons -->
 		<div class="flex justify-between mt-5">
-			<UButton variant="ghost" color="red" @click="stepperStore.cancelSteps"> Cancel </UButton>
+			<UButton variant="ghost" color="error" @click="stepperStore.cancelSteps"> Cancel </UButton>
 			<div class="text-right">
 				<UButton
 					class="mr-2"
-					color="gray"
+					color="neutral"
 					variant="ghost"
 					size="md"
 					:ui="{ color: { gray: { ghost: 'text-gray-900 hover:bg-gray-100' } } }"

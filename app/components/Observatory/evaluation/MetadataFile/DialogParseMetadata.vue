@@ -21,7 +21,7 @@
 						<div class="flex justify-end mt-4">
 							<UButton
 								label="Cancel"
-								color="gray"
+								color="neutral"
 								variant="ghost"
 								size="md"
 								:ui="{ color: { gray: { ghost: 'text-gray-900 hover:bg-gray-100' } } }"

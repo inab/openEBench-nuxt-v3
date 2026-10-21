@@ -23,7 +23,7 @@
 						<UAccordion :items="ExpandITEM">
 							<template #default="{ item, open }">
 								<UButton
-									color="gray"
+									color="neutral"
 									variant="ghost"
 									class="hover:bg-white font-normal ps-0"
 									:ui="{ rounded: 'rounded-none' }"
@@ -141,7 +141,7 @@
 								<div class="row me-3">
 									<div class="flex justify-end my-3">
 										<UButton
-											color="green"
+											color="success"
 											:disabled="invalid"
 											class="px-3 py-2"
 											@click="makeRequest()"

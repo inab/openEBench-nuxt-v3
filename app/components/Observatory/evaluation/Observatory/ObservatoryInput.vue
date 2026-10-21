@@ -101,7 +101,7 @@
 			<!-- Buttons next steps -->
 			<div class="row justify-center">
 				<div class="col-10 text-right">
-					<UButton class="mr-2" color="gray" variant="ghost" size="md" @click="goBack"
+					<UButton class="mr-2" color="neutral" variant="ghost" size="md" @click="goBack"
 						>Back</UButton
 					>
 					<UButton

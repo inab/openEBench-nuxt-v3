@@ -56,7 +56,7 @@
 			<div class="col-10 text-right">
 				<UButton
 					class="mr-2"
-					color="gray"
+					color="neutral"
 					variant="ghost"
 					size="md"
 					:ui="{ color: { gray: { ghost: 'text-gray-900 hover:bg-gray-100' } } }"

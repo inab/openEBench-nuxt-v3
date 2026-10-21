@@ -56,10 +56,10 @@
 
 					<!-- Actions -->
 					<div class="flex justify-end gap-x-4">
-						<UButton class="px-3" color="red" variant="soft" @click="discardChanges()">
+						<UButton class="px-3" color="error" variant="soft" @click="discardChanges()">
 							Discard Changes</UButton
 						>
-						<UButton class="px-3" color="green" variant="soft" @click="saveJson()">
+						<UButton class="px-3" color="success" variant="soft" @click="saveJson()">
 							Save and Close</UButton
 						>
 					</div>

@@ -22,14 +22,14 @@
 								<span class="">{{ item.label }}</span>
 								<UBadge
 									v-if="item.label == 'Datasets' && datasetsObj.length > 0"
-									color="gray"
+									color="neutral"
 									variant="solid"
 									:ui="{ rounded: 'rounded-full' }"
 									>{{ datasetsObj.length }}</UBadge
 								>
 								<UBadge
 									v-if="item.label == 'Tools' && toolsObj.length > 0"
-									color="gray"
+									color="neutral"
 									variant="solid"
 									:ui="{ rounded: 'rounded-full' }"
 									>{{ toolsObj.length }}</UBadge

@@ -11,7 +11,7 @@
 					<h6>{{ title }}</h6>
 					<span class="text-xs text-slate-600" @click="handleLinkClick" v-html="text"></span><br />
 					<!-- Buttons -->
-					<UButton color="green" class="mt-3 mr-2" @click="openGitHubAppLink">
+					<UButton color="success" class="mt-3 mr-2" @click="openGitHubAppLink">
 						Give Permissions
 						<font-awesome-icon
 							:icon="['fas', 'arrow-up-right-from-square']"
@@ -22,7 +22,7 @@
 					<UButton
 						label="Close"
 						class=""
-						color="gray"
+						color="neutral"
 						variant="ghost"
 						size="md"
 						:ui="{ color: { gray: { ghost: 'text-gray-900 hover:bg-gray-100' } } }"

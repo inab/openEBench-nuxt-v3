@@ -68,7 +68,7 @@
 		</p>
 
 		<UAlert
-			color="orange"
+			color="warning"
 			variant="soft"
 			icon="i-lucide-triangle-alert"
 			description="Most upstream sources we aggregate do not provide dependency fields. Missing values reflect source limitations, not developer practices or lack of dependencies."

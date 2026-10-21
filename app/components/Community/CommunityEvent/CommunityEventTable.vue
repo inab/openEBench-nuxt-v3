@@ -4,7 +4,7 @@
 			<div class="justify-content-end flex py-3.5">
 				<UInput
 					v-model="search"
-					color="white"
+					color="neutral"
 					variant="outline"
 					icon="i-heroicons-magnifying-glass"
 					placeholder="Search ..."

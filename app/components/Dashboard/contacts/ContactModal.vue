@@ -242,7 +242,7 @@
 								</div>
 							</div>
 							<div class="form-footer pt-3">
-								<UButton type="button" color="white" variant="solid" @click="closeModal">
+								<UButton type="button" color="neutral" variant="solid" @click="closeModal">
 									Cancel
 								</UButton>
 								<UButton class="" type="submit"> Submit </UButton>

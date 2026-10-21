@@ -45,7 +45,7 @@
 					</div>
 				</div>
 				<div class="form-footer">
-					<UButton type="button" color="white" variant="solid" @click="goReset"> Reset </UButton>
+					<UButton type="button" color="neutral" variant="solid" @click="goReset"> Reset </UButton>
 					<UButton type="submit"> Submit </UButton>
 				</div>
 			</UForm>

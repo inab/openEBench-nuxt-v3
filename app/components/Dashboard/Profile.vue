@@ -26,7 +26,7 @@
 								<UInput
 									v-model="state.name"
 									disabled
-									color="gray"
+									color="neutral"
 									variant="outline"
 									class="custom-input"
 									placeholder="Account Name"
@@ -36,7 +36,7 @@
 								<UInput
 									v-model="state.orcid"
 									disabled
-									color="gray"
+									color="neutral"
 									variant="outline"
 									class="custom-input"
 									placeholder="ORCID"
@@ -48,7 +48,7 @@
 								<UInput
 									v-model="state.name"
 									disabled
-									color="gray"
+									color="neutral"
 									variant="outline"
 									class="custom-input"
 									placeholder="User Name"
@@ -65,7 +65,7 @@
 									v-model="state.email"
 									disabled
 									class="custom-input"
-									color="gray"
+									color="neutral"
 									variant="outline"
 									placeholder="Email"
 								/>

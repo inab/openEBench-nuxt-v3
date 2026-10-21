@@ -7,7 +7,7 @@
 			</span>
 
 			<UButton
-				color="gray"
+				color="neutral"
 				variant="solid"
 				:ui="{ rounded: 'rounded-full' }"
 				class="p-1.5 mx-2"

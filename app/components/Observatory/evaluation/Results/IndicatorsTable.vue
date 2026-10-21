@@ -41,12 +41,12 @@
 				<div v-if="indicatorsExplanation[row.id].measured === false">
 					<UBadge
 						v-if="!indicatorsExplanation[row.id].types.includes(metaType(row))"
-						color="gray"
+						color="neutral"
 						variant="soft"
 					>
 						NOT APPLICABLE
 					</UBadge>
-					<UBadge v-else color="gray" variant="soft"> NOT MEASURED </UBadge>
+					<UBadge v-else color="neutral" variant="soft"> NOT MEASURED </UBadge>
 				</div>
 				<div v-else>
 					<div
@@ -57,7 +57,7 @@
 					>
 						<UBadge
 							v-if="!indicatorsExplanation[row.id].types.includes(metaType(row))"
-							color="gray"
+							color="neutral"
 							variant="soft"
 						>
 							NOT APPLICABLE
@@ -71,7 +71,7 @@
 					>
 						<UBadge
 							v-if="row.status === true"
-							color="green"
+							color="success"
 							variant="soft"
 							class="bg-green-50 text-green-500 dark:bg-green-400/30 dark:text-green-400"
 						>
@@ -176,7 +176,7 @@
 						<UAlert
 							v-if="!idsMainIndicators.includes(row.id) && indicatorsExplanation[row.id].note != ''"
 							icon="i-heroicons-exclamation-circle"
-							color="orange"
+							color="warning"
 							variant="soft"
 							:description="indicatorsExplanation[row.id].note"
 							class="mt-2 mb-2 ms-5 py-3 text-xs"

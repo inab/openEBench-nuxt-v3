@@ -11,7 +11,7 @@
 				</div>
 				<div class="row">
 					<UAlert
-						color="red"
+						color="error"
 						variant="outline"
 						title="ERROR"
 						:description="failMessage || 'Something went wrong while making the pull request.'"
@@ -22,7 +22,7 @@
 				<!-- Actions -->
 				<div class="mt-2 flex justify-end">
 					<UButton
-						color="gray"
+						color="neutral"
 						variant="ghost"
 						class="mt-2 text-black bg-gray-100"
 						:ui="{ color: { gray: { ghost: 'hover:bg-gray-200' } } }"

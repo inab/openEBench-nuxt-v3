@@ -24,7 +24,7 @@
 								:ui="{ rounded: 'rounded-full' }"
 								size="xs"
 								variant="solid"
-								color="gray"
+								color="neutral"
 								class="py-0.5 my-0.5 bg-gray-200 border-0 ring-transparent"
 							>
 								{{ item }}
@@ -34,7 +34,7 @@
 									variant="solid"
 									:ui="{ rounded: 'rounded-full' }"
 									class="p-0 ms-1 bg-gray-500 text-white"
-									color="black"
+									color="neutral"
 									@click.stop="removeItem(item)"
 								/>
 							</UBadge>

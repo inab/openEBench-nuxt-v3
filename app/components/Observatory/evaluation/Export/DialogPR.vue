@@ -14,7 +14,7 @@
 				<br />
 				<div class="row me-3">
 					<div class="flex justify-end my-3">
-						<UButton color="gray" variant="soft" class="px-3 py-2" @click="cancelRequest">
+						<UButton color="neutral" variant="soft" class="px-3 py-2" @click="cancelRequest">
 							Cancel
 						</UButton>
 					</div>

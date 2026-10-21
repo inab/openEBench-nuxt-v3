@@ -17,7 +17,7 @@
 					</div>
 					<div class="col-2 flex justify-center">
 						<UButton
-							color="gray"
+							color="neutral"
 							variant="ghost"
 							class="mt-3 px-3 text-black bg-gray-100"
 							:ui="{ color: { gray: { ghost: 'hover:bg-gray-200' } } }"
@@ -30,7 +30,7 @@
 
 				<!-- Actions -->
 				<div class="mt-2 flex justify-end">
-					<UButton color="green" variant="soft" class="mt-2" @click="close"> Close </UButton>
+					<UButton color="success" variant="soft" class="mt-2" @click="close"> Close </UButton>
 				</div>
 			</div>
 		</template>
