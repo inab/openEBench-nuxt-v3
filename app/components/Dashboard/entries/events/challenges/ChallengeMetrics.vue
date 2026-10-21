@@ -72,7 +72,7 @@ import type { Metric } from '~~/types/challenge_metric';
 import metricsSearcher from '@/utils/metricsMatch';
 
 const props = defineProps<{
-	metricData: [];
+	metricData: any[];
 	isLoadingData: boolean;
 	challengeId: string;
 }>();
@@ -113,7 +113,7 @@ const metrics_by_categories = computed(() => {
 			acc[metric.category].push(metric);
 		}
 		return acc;
-	}, {});
+	}, {} as Record<string, any[]>);
 });
 </script>
 

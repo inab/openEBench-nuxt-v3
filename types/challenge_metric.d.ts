@@ -16,6 +16,7 @@ export interface Metadata {
 export interface Metric {
 	_id: string;
 	_schema: string;
+	name?: string;
 	title: string;
 	description: string;
 	metrics_contact_ids: string[];

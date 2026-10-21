@@ -7,11 +7,11 @@ const BASE_URL = '/api/stats/tools/';
 
 export const useData = defineStore('data', {
 	state: () => ({
-		countsPerSource: {},
+		countsPerSource: /** @type {any} */ ({}),
 		totalCount: null,
 		features: {},
 		featuresControl: {},
-		featuresLabels: [],
+		featuresLabels: /** @type {any[]} */ ([]),
 		coverageSources: reactive({ counts: {}, counts_cummulative: {} }),
 		completeness: {
 			cummulative_features: {},

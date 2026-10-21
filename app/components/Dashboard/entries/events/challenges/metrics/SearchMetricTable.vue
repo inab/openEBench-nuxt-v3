@@ -79,8 +79,8 @@ import type { Metric } from '~~/types/challenge_metric';
 import MetricModal from '@/components/Dashboard/metrics/MetricModal.vue';
 
 const props = defineProps<{
-	metricRows: [];
-	selectedMetrics: [];
+	metricRows: any[];
+	selectedMetrics: any[];
 }>();
 
 const emits = defineEmits(['handleSelectedMetrics']);

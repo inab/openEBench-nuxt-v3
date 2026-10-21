@@ -38,7 +38,7 @@ export const useMetadataStore = defineStore('metadata', {
 		toolMetadataJSONLD: {},
 		toolMetadataCFF: {},
 		loadedMetadata: false,
-		SPDXLicenses: [],
+		SPDXLicenses: /** @type {any[]} */ ([]),
 		vocabulariesItems: {
 			EDAM: {
 				format: [],

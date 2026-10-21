@@ -8,9 +8,9 @@ export const useCommunity = defineStore('community', {
 		communityData: {},
 		currentEvent: Object,
 		communityReferences: null,
-		events: [],
-		datasets: [],
-		tools: [],
+		events: /** @type {any[]} */ ([]),
+		datasets: /** @type {any[]} */ ([]),
+		tools: /** @type {any[]} */ ([]),
 		pending: true,
 	}),
 

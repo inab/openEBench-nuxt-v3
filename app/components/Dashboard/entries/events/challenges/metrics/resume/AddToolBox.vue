@@ -8,30 +8,30 @@
 				<template #body_custom="{ item }">
 					<div class="add-metrics-box__contents__items__item">
 						<label class="title-label">ID: </label>
-						<label>{{ item.content._id }}</label>
+						<label>{{ item.data._id }}</label>
 					</div>
 					<div class="add-metrics-box__contents__items__item">
 						<label class="title-label">Description: </label>
-						<label>{{ item.content.description }}</label>
+						<label>{{ item.data.description }}</label>
 					</div>
 					<div class="add-metrics-box__contents__items__item">
 						<label class="title-label">Name: </label>
-						<label>{{ item.content.name }}</label>
+						<label>{{ item.data.name }}</label>
 					</div>
 					<div class="add-metrics-box__contents__items__item">
 						<label class="title-label">Original ID: </label>
-						<label>{{ item.content.orig_id }}</label>
+						<label>{{ item.data.orig_id }}</label>
 					</div>
 					<div class="add-metrics-box__contents__items__item">
 						<label class="title-label">Registry Tool ID: </label>
-						<label>{{ item.content.registry_tool_id }}</label>
+						<label>{{ item.data.registry_tool_id }}</label>
 					</div>
 					<div class="add-metrics-box__contents__items__item">
 						<label class="title-label">Community: </label>
 						<table class="w-100 table table-fixed">
 							<tbody>
 								<tr
-									v-for="(community, index) in item.content.community_ids"
+									v-for="(community, index) in item.data.community_ids"
 									:key="index"
 									class="w-100"
 								>
@@ -74,7 +74,7 @@ const items = computed(() => {
 			label: 'Tool: ' + item._id,
 			icon: 'i-lucide-pocket-knife',
 			slot: 'body_custom',
-			content: item,
+			data: item,
 		};
 	});
 });

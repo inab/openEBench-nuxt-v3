@@ -3,8 +3,8 @@ import { decodeDataUrlText } from '~/utils/decodeDataUrlText';
 
 export const useCommunities = defineStore('communities', {
 	state: () => ({
-		communities: [],
-		projects: [],
+		communities: /** @type {any[]} */ ([]),
+		projects: /** @type {any[]} */ ([]),
 	}),
 
 	getters: {

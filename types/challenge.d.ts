@@ -24,6 +24,7 @@ export interface Challenge {
 	acronym?: string;
 	_schema?: string;
 	benchmarking_event_id: string;
+	community_id?: string;
 	challenge_contact_ids?: Array<string>;
 	dates?: ChallengeDates;
 	url?: string;
@@ -31,4 +32,5 @@ export interface Challenge {
 	references?: Array<string>;
 	metrics_categories?: Array<string>;
 	actions?: Partial<CommunityPrivilegeCategories>;
+	privileges?: string;
 }

@@ -5,7 +5,7 @@ const BASE_URL = '/api/stats/tools/';
 
 export const useTrends = defineStore('trends', {
 	state: () => ({
-		licensesSunburst: [],
+		licensesSunburst: /** @type {any[]} */ ([]),
 		licensesOpenSource: {
 			licenses_copyleft: [],
 			counts_copyleft: [],
@@ -14,14 +14,14 @@ export const useTrends = defineStore('trends', {
 			licenses_data: [],
 			counts_data: [],
 		},
-		semanticVersioning: [],
-		versionControlCount: [],
-		versionControlRepositories: [],
-		publications: [],
+		semanticVersioning: /** @type {any[]} */ ([]),
+		versionControlCount: /** @type {any[]} */ ([]),
+		versionControlRepositories: /** @type {any[]} */ ([]),
+		publications: /** @type {any[]} */ ([]),
 
-		dependencies: [],
+		dependencies: /** @type {any[]} */ ([]),
 		dependenciesCount: {},
-		documentation: [],
+		documentation: /** @type {any[]} */ ([]),
 		documentationCount: {},
 		inputFormats: {},
 		outputFormats: {},

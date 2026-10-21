@@ -8,23 +8,23 @@
 				<template #body_custom="{ item }">
 					<div class="add-metrics-box__contents__items__item">
 						<label class="title-label">ID: </label>
-						<label>{{ item.content._id }}</label>
+						<label>{{ item.data._id }}</label>
 					</div>
 					<div class="add-metrics-box__contents__items__item">
 						<label class="title-label">Title: </label>
-						<label>{{ item.content.title }}</label>
+						<label>{{ item.data.title }}</label>
 					</div>
 					<div class="add-metrics-box__contents__items__item">
 						<label class="title-label">Description: </label>
-						<label>{{ item.content.description }}</label>
+						<label>{{ item.data.description }}</label>
 					</div>
 					<div class="add-metrics-box__contents__items__item">
 						<label class="title-label">Formal definition: </label>
-						<label>{{ item.content.formal_definition }}</label>
+						<label>{{ item.data.formal_definition }}</label>
 					</div>
 					<div class="add-metrics-box__contents__items__item">
 						<label class="title-label">Original ID: </label>
-						<label>{{ item.content.orig_id }}</label>
+						<label>{{ item.data.orig_id }}</label>
 					</div>
 				</template>
 			</UAccordion>
@@ -46,7 +46,7 @@ const items = computed(() => {
 			label: 'Metric: ' + item._id,
 			icon: 'i-lucide-box',
 			slot: 'body_custom',
-			content: item,
+			data: item,
 		};
 	});
 });

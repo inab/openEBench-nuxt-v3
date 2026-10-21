@@ -57,13 +57,13 @@ export const useUser = defineStore('user', {
 		setUserCommunitiesRoles(roles: string[] = []) {
 			this.communitiesRoles = roles.reduce<CommunityRole[]>((accumulator, rol) => {
 				if (!rol) return accumulator;
-				const [role, community] = rol.split(':');
+				const [role = '', community = ''] = rol.split(':');
 				accumulator.push({ role, community });
 				return accumulator;
 			}, []);
 		},
 
-		setUserCommunities(userCommunities) {
+		setUserCommunities(userCommunities: Community[]) {
 			this.userCommunities = userCommunities;
 		},
 
@@ -72,7 +72,7 @@ export const useUser = defineStore('user', {
 			this.userCommunitiesEvents.communityEvents = userCommunitiesEvents.communityEvents;
 		},
 
-		setUserCommunitiesChallenges(userCommunitiesChallenges) {
+		setUserCommunitiesChallenges(userCommunitiesChallenges: Challenge[]) {
 			this.userCommunitiesChallenges = userCommunitiesChallenges;
 		},
 
@@ -164,31 +164,6 @@ export const useUser = defineStore('user', {
 			return eventData.communityEvents;
 		},
 
-		async fetchCommunitiesEventsChallenges(token: string, event: string) {
-			const runtimeConfig = useRuntimeConfig();
-			const response = await fetch(
-				`${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Challenge`,
-				{
-					headers: {
-						Authorization: `Bearer ${token}`,
-						Accept: 'application/json',
-					},
-					method: 'GET',
-				}
-			);
-
-			let data = await response.json();
-			data = data.filter((challenge: any) => challenge.benchmarking_event_id === event);
-			data = this.formatCommunityChallengeData(data);
-			data = this.setCommunityChallengePrivileges(data);
-			const eventData = {
-				communityId: community,
-				communityEvents: data,
-			};
-			this.setUserCommunitiesEvents(eventData);
-			return eventData.communityEvents;
-		},
-
 		async fetchCommunitiesChallenge(token: string, event: string) {
 			const runtimeConfig = useRuntimeConfig();
 			const response = await fetch(
@@ -213,13 +188,13 @@ export const useUser = defineStore('user', {
 			return challengeData.eventChallenges;
 		},
 
-		formatCommunityData(data) {
+		formatCommunityData(data: Community[]) {
 			const runtimeConfig = useRuntimeConfig();
 			return data.map((community: Community) => {
 				const links = community.links ?? [];
 				const logo =
 					Array.isArray(links) && links.length > 0
-						? links.find((link: any) => link.comment === '@logo' || link.label === 'Logo')?.uri ||
+						? (links as any[]).find((link) => link.comment === '@logo' || link.label === 'Logo')?.uri ||
 							'https://raw.githubusercontent.com/inab/openEBench-nuxt/refs/heads/master/static/OEB-minimal-logo-blue.svg'
 						: 'https://raw.githubusercontent.com/inab/openEBench-nuxt/refs/heads/master/static/OEB-minimal-logo-blue.svg';
 				return {
@@ -228,7 +203,7 @@ export const useUser = defineStore('user', {
 					logo: logo,
 					links: links,
 					status: community.status,
-					community_contact: community.community_contact_ids.map((contact: string) => {
+					community_contact: (community.community_contact_ids ?? []).map((contact: string) => {
 						return {
 							id: contact.replace(/\./g, ' ').split(':')[1],
 							name: contact.replace(/\./g, ' '),
@@ -242,7 +217,7 @@ export const useUser = defineStore('user', {
 			});
 		},
 
-		formatCommunityEventData(data) {
+		formatCommunityEventData(data: Event[]) {
 			const runtimeConfig = useRuntimeConfig();
 			return data.map((event: Event) => {
 				return {
@@ -250,7 +225,7 @@ export const useUser = defineStore('user', {
 					name: event.name,
 					url: event.url,
 					community_id: event.community_id,
-					bench_contact: event.bench_contact_ids
+					bench_contact: (event.bench_contact_ids ?? [])
 						.map((contact: string) => {
 							return contact.replace(/\./g, ' ');
 						})
@@ -263,7 +238,7 @@ export const useUser = defineStore('user', {
 			});
 		},
 
-		formatCommunityChallengeData(data) {
+		formatCommunityChallengeData(data: Challenge[]) {
 			return data.map((challenge: Challenge) => {
 				return {
 					_id: challenge._id,
@@ -271,7 +246,7 @@ export const useUser = defineStore('user', {
 					acronym: challenge.acronym,
 					_schema: challenge._schema,
 					benchmarking_event_id: challenge.benchmarking_event_id,
-					challenge_contact: challenge.challenge_contact_ids
+					challenge_contact: (challenge.challenge_contact_ids ?? [])
 						.map((contact: string) => {
 							return contact.replace(/\./g, ' ');
 						})
@@ -345,7 +320,7 @@ export const useUser = defineStore('user', {
 
 		setCommunityChallengePrivileges(data: Challenge[]): Challenge[] {
 			const userPrivileges = this.getUserCommunitiesRoles;
-			data.forEach((event: Event) => {
+			data.forEach((event: Challenge) => {
 				event.actions = {};
 				event.privileges = 'None';
 				if (userPrivileges.length > 0) {

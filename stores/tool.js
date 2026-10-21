@@ -3,7 +3,7 @@ import { pickDescription } from '@/utils/toolDescription';
 
 export const useToolStore = defineStore('tool', {
 	state: () => ({
-		tools: [],
+		tools: /** @type {any[]} */ ([]),
 		loading: false,
 	}),
 

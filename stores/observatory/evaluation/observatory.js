@@ -10,7 +10,7 @@ import { useNuxtApp } from 'nuxt/app';
 
 export const useObservatoryStore = defineStore('observatoryData', {
 	state: () => ({
-		observatoryToolsNameTypeSources: [],
+		observatoryToolsNameTypeSources: /** @type {any[]} */ ([]),
 		loadingAutocomplete: false,
 		loading: false,
 		importationResult: null,
