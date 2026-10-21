@@ -705,7 +705,7 @@ async function createCommunity() {
 
 	const markdownDescription = turndownService.turndown(state.value.description);
 
-	const body = {
+	const body: Record<string, any> = {
 		_id: state.value._id,
 		_schema: state.value._schema,
 		name: state.value.name,

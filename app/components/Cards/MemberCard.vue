@@ -156,8 +156,8 @@ function navigateToLink(institution) {
 	}
 }
 
-function getInstitutionFullName(acronym) {
-	const institution = props.institutionMapping[acronym];
+function getInstitutionFullName(acronym: string) {
+	const institution = (props.institutionMapping as Record<string, any>)[acronym];
 	if (institution) {
 		return { name: institution.name, link: institution.link };
 	}

@@ -34,7 +34,7 @@ import { useNuxtApp } from 'nuxt/app';
 export const useMetadataStore = defineStore('metadata', {
 	state: () => ({
 		test: 'test',
-		toolMetadata: {},
+		toolMetadata: /** @type {any} */ ({}),
 		toolMetadataJSONLD: {},
 		toolMetadataCFF: {},
 		loadedMetadata: false,

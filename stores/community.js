@@ -5,7 +5,7 @@ import { decodeDataUrlText } from '~/utils/decodeDataUrlText';
 export const useCommunity = defineStore('community', {
 	state: () => ({
 		communityId: null,
-		communityData: {},
+		communityData: /** @type {any} */ ({}),
 		currentEvent: Object,
 		communityReferences: null,
 		events: /** @type {any[]} */ ([]),

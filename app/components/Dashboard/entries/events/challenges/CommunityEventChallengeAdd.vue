@@ -365,6 +365,7 @@ const props = defineProps<{
 	eventId: string;
 	isView: boolean;
 	challengePrivileges: CommunityPrivilegeCategories;
+	challengeObj?: any;
 }>();
 
 const token = data.value?.accessToken as string;

@@ -822,7 +822,7 @@ async function updateCommunity() {
 
 	const markdownDescription = turndownService.turndown(state.value.description);
 
-	const body = {
+	const body: Record<string, any> = {
 		_id: props.communityObj._id,
 		_schema: state.value._schema,
 		name: state.value.name,
