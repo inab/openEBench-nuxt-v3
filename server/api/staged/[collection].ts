@@ -1,13 +1,13 @@
 // /server/api/staged/[collection].ts
-import { defineEventHandler, readBody } from 'h3';
+import { defineEventHandler, getRequestHeader, getRouterParams, readBody } from 'h3';
 
 export default defineEventHandler(async (event) => {
 	const runtimeConfig = useRuntimeConfig();
 
-	const { collection } = event.context.params;
+	const { collection } = getRouterParams(event);
 	const method = event.req.method;
 	let body = await readBody(event);
-	const token = event.req.headers['authorization'];
+	const token = getRequestHeader(event, 'authorization') ?? '';
 	const community_id = body.community_id;
 
 	console.log('Colección:', collection);
@@ -74,8 +74,8 @@ export default defineEventHandler(async (event) => {
 		}
 	} catch (error) {
 		return {
-			status: response.status,
-			body: JSON.stringify({ error: error.message }),
+			status: 500,
+			body: JSON.stringify({ error: (error as Error).message }),
 		};
 	}
 });

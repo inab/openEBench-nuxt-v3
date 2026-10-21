@@ -55,19 +55,17 @@
           <p>
             <b>Abstract:</b><br />
             <span
-shouldShowExpandIcon(selectedPoster.abstract)"v-html="sanitizeHtml(
-              getFormattedAbstract(
-                selectedPoster.abstract,
-                showFullAbstract,
-              ),
+              v-html="
+                sanitizeHtml(getFormattedAbstract(selectedPoster.abstract, showFullAbstract))
+              "
             ></span>
             <span
-              v-if="
+              v-if="shouldShowExpandIcon(selectedPoster.abstract)"
               class="cursor-pointer text-primary ml-2"
               @click="toggleShowFullAbstract"
             >
               <UIcon
-:name="showFullAbstract
+                :name="
                   showFullAbstract ? 'i-heroicons-minus-16-solid' : 'i-heroicons-plus-16-solid'
                 "
               />

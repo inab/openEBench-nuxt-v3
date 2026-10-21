@@ -1,14 +1,14 @@
-import { defineEventHandler, readBody } from 'h3';
+import { defineEventHandler, getRequestHeader, getRouterParams, readBody } from 'h3';
 
 export default defineEventHandler(async (event) => {
 	const runtimeConfig = useRuntimeConfig();
 
 	console.log(event.context.query);
-	const { collection, id } = event.context.params;
+	const { collection, id } = getRouterParams(event);
 	//const community_id = event.context.query.community_id;
 	const method = event.req.method; // Obtener el método HTTP
 	const body = await readBody(event);
-	const token = event.req.headers['authorization'];
+	const token = getRequestHeader(event, 'authorization') ?? '';
 
 	console.log('Colección:', collection);
 	console.log('ID de comunidad:', id);
@@ -77,7 +77,7 @@ export default defineEventHandler(async (event) => {
 		console.log('An error ocurred: ', error);
 		return {
 			status: responseStatus && responseStatus != 0 ? responseStatus : 500,
-			body: JSON.stringify({ error: error.message }),
+			body: JSON.stringify({ error: (error as Error).message }),
 		};
 	}
 });

@@ -7,10 +7,6 @@ declare module 'nuxt/schema' {
 			provider?: {
 				type: 'authjs';
 			};
-			redirect?: {
-				login?: string;
-				home?: string;
-			};
 			basePath?: string;
 			originEnvKey?: string;
 			baseURL?: string;

@@ -113,10 +113,6 @@ export default defineNuxtConfig({
 		provider: {
 			type: 'authjs',
 		},
-		redirect: {
-			login: '/login',
-			home: '/',
-		},
 		basePath: '/api/auth',
 		originEnvKey: 'AUTH_ORIGIN',
 		baseURL: process.env.APP_BASE_URL || 'https://test-oeb2.openebench.bsc.es',

@@ -1,5 +1,34 @@
 import { NuxtAuthHandler } from '#auth';
+import type { JWT } from 'next-auth/jwt';
 import KeycloakProvider from 'next-auth/providers/keycloak';
+
+declare module 'next-auth' {
+	interface User {
+		orcid?: string;
+		'oeb:roles'?: unknown;
+	}
+	interface Session {
+		accessToken?: string;
+		token?: string;
+		preferred_username?: string;
+		resource_access?: unknown;
+		orcid?: string;
+		oeb_roles?: unknown;
+		user?: User & { 'oeb:roles'?: unknown };
+	}
+}
+
+declare module 'next-auth/jwt' {
+	interface JWT {
+		accessToken?: string;
+		refreshToken?: string;
+		accessTokenExpires?: number;
+		[key: string]: any;
+	}
+}
+
+// The provider is exposed under `.default` when loaded as CJS from the server bundle
+const Keycloak = ((KeycloakProvider as any).default ?? KeycloakProvider) as typeof KeycloakProvider;
 const runtimeConfig = useRuntimeConfig();
 
 // next-auth >= 4.22 only reads NEXTAUTH_URL to build its URLs (it ignores the host nuxt-auth passes)
@@ -52,7 +81,7 @@ const refreshAccessToken = async (token: JWT) => {
 export default NuxtAuthHandler({
 	secret: '2990de7a246eb8aa80684cc357ebd54615a5add237758af78388f25e68383db4',
 	providers: [
-		KeycloakProvider.default({
+		Keycloak({
 			clientId: runtimeConfig.public.KEYCLOAK_CLIENT_ID,
 			clientSecret: '',
 			issuer: `${runtimeConfig.public.KEYCLOAK_HOST}/auth/realms/${runtimeConfig.public.KEYCLOAK_REALM}`,
@@ -74,10 +103,7 @@ export default NuxtAuthHandler({
 					protocol: 'auth2',
 					redirect_uri: `${runtimeConfig.public.BASE_URL}/api/auth/callback/keycloak`,
 				},
-				clientAuthentication: {
-					token_endpoint_auth_method: 'none',
-					method: 'none',
-				},
+				...({ clientAuthentication: { token_endpoint_auth_method: 'none', method: 'none' } } as object),
 				client: {
 					token_endpoint_auth_method: 'none',
 				},
@@ -103,18 +129,18 @@ export default NuxtAuthHandler({
 			},
 		}),
 	],
-	async debugHandler(req, res, next) {
+	async debugHandler(req: { url?: string }, _res: unknown, next: () => void) {
 		console.log('Auth request:', req.url);
 		console.log('Config:', runtimeConfig.public);
 		next();
 	},
 	events: {
-		async signIn() {
-			return true;
-		},
-		async error(message) {
-			console.log('error: ', message);
-		},
+		async signIn() {},
+		...({
+			async error(message: unknown) {
+				console.log('error: ', message);
+			},
+		} as object),
 	},
 	callbacks: {
 		async redirect({ baseUrl }) {
@@ -124,10 +150,10 @@ export default NuxtAuthHandler({
 			if (account && user) {
 				token.accessToken = account.access_token;
 				token.id_token = account.id_token;
-				token.orcid = account.orcid ?? null;
-				token['oeb:roles'] = user['oeb:roles'] || account['oeb:roles'];
+				token.orcid = (account as any).orcid ?? null;
+				token['oeb:roles'] = user['oeb:roles'] || (account as any)['oeb:roles'];
 				token.refreshToken = account.refresh_token;
-				const decodedAccessToken = JSON.parse(atob(account.access_token.split('.')[1]));
+				const decodedAccessToken = JSON.parse(atob(account.access_token!.split('.')[1]!));
 				if (decodedAccessToken['oeb:roles']) {
 					token['oeb:roles'] = decodedAccessToken['oeb:roles'];
 				}
@@ -140,7 +166,7 @@ export default NuxtAuthHandler({
 				}
 			}
 
-			if (Date.now() < token.accessTokenExpires) {
+			if (Date.now() < (token.accessTokenExpires ?? 0)) {
 				return token;
 			}
 
@@ -154,7 +180,7 @@ export default NuxtAuthHandler({
 			session.resource_access = token.resource_access;
 			session.orcid = token.orcid ?? '';
 			session.oeb_roles = token['oeb:roles'];
-			session.user['oeb:roles'] = token['oeb:roles'];
+			if (session.user) session.user['oeb:roles'] = token['oeb:roles'];
 			return session;
 		},
 	},

@@ -53,7 +53,7 @@ export default defineEventHandler(async (event) => {
 	}
 });
 
-function stripHtml(html) {
+function stripHtml(html: string) {
 	return html
 		.replace(/<br\s*\/?>/gi, '\n')
 		.replace(/<\/p>/gi, '\n')
@@ -61,9 +61,9 @@ function stripHtml(html) {
 		.trim();
 }
 
-function escapeHtml(value) {
+function escapeHtml(value: string) {
 	return value.replace(/[&<>"']/g, (character) => {
-		const entities = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
-		return entities[character];
+		const entities: Record<string, string> = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+		return entities[character] ?? character;
 	});
 }
