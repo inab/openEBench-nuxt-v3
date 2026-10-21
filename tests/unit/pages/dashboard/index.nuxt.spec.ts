@@ -4,7 +4,6 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import Index from '@/pages/dashboard/index.vue';
 import authMiddleware from '../../../../app/middleware/requireAuth';
 
-
 const mockFetch = vi.hoisted(() => vi.fn());
 
 vi.mock('#build/fetch.mjs', () => ({
@@ -18,149 +17,148 @@ vi.mock('#imports', async () => {
 		...actual,
 		useRuntimeConfig: () => ({
 			public: {
-				SCIENTIFIC_SERVICE_URL_API:
-					'https://dev.openebench.bsc.es/api/scientific/',
+				SCIENTIFIC_SERVICE_URL_API: 'https://dev.openebench.bsc.es/api/scientific/',
 			},
 		}),
 	};
 });
 
 vi.mock('~~/stores/user', () => ({
-  useUser: () => ({
-    getUserCommunitiesRoles: [],
-    setUserCommunitiesRoles: vi.fn(),
-  }),
+	useUser: () => ({
+		getUserCommunitiesRoles: [],
+		setUserCommunitiesRoles: vi.fn(),
+	}),
 }));
 
 vi.mock('@/middleware/requireAuth', () => ({
-  default: vi.fn((context) => {
-    const { auth } = context;
+	default: vi.fn((context) => {
+		const { auth } = context;
 
-    if (!auth || (auth.authenticatedOnly && context.auth.status === 'unauthenticated')) {
-      context.redirect('/login-required');
-    }
-  }),
+		if (!auth || (auth.authenticatedOnly && context.auth.status === 'unauthenticated')) {
+			context.redirect('/login-required');
+		}
+	}),
 }));
 
 describe('Dashboard Index', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
+	beforeEach(() => {
+		vi.clearAllMocks();
+	});
 
-  it('allows authenticated users', () => {
-    const context = {
-      redirect: vi.fn(),
-      auth: { authenticatedOnly: true, status: 'authenticated' },
-    };
+	it('allows authenticated users', () => {
+		const context = {
+			redirect: vi.fn(),
+			auth: { authenticatedOnly: true, status: 'authenticated' },
+		};
 
-    authMiddleware(context);
-    expect(context.redirect).not.toHaveBeenCalled();
-  });
+		authMiddleware(context);
+		expect(context.redirect).not.toHaveBeenCalled();
+	});
 
-  it('does not render user-specific content for unauthenticated user', async () => {
-    const context = {
-      redirect: vi.fn(),
-      auth: { authenticatedOnly: true, status: 'unauthenticated' },
-    };
+	it('does not render user-specific content for unauthenticated user', async () => {
+		const context = {
+			redirect: vi.fn(),
+			auth: { authenticatedOnly: true, status: 'unauthenticated' },
+		};
 
-    authMiddleware(context);
-    expect(context.redirect).toHaveBeenCalledWith('/login-required');
-  });
+		authMiddleware(context);
+		expect(context.redirect).toHaveBeenCalledWith('/login-required');
+	});
 
-  it('renders the dashboard header with authenticated user', () => {
-    const wrapper = mount(Index, {
-      global: {
-        stubs: ['NuxtLink'],
-      },
-    });
+	it('renders the dashboard header with authenticated user', () => {
+		const wrapper = mount(Index, {
+			global: {
+				stubs: ['NuxtLink'],
+			},
+		});
 
-    const hour = new Date().getHours();
-    let text = '';
-    if (hour < 12) text = `Good morning,`;
-    else if (hour < 18) text = `Good afternoon,`;
-    else text = `Good evening,`;
+		const hour = new Date().getHours();
+		let text = '';
+		if (hour < 12) text = `Good morning,`;
+		else if (hour < 18) text = `Good afternoon,`;
+		else text = `Good evening,`;
 
-    const header = wrapper.find('.dashboard__header__title');
-    expect(header.exists()).toBe(true);
-    expect(header.text()).toBe(text);
-  });
+		const header = wrapper.find('.dashboard__header__title');
+		expect(header.exists()).toBe(true);
+		expect(header.text()).toBe(text);
+	});
 
-  it('updates totalMetrics with the length of fetched data', async () => {
-    const mockResponse = [
-      { id: 1, name: 'Metric 1' },
-      { id: 2, name: 'Metric 2' },
-    ];
+	it('updates totalMetrics with the length of fetched data', async () => {
+		const mockResponse = [
+			{ id: 1, name: 'Metric 1' },
+			{ id: 2, name: 'Metric 2' },
+		];
 
-    mockFetch.mockResolvedValue(mockResponse);
+		mockFetch.mockResolvedValue(mockResponse);
 
-    const wrapper = mount(Index, {
-      global: {
-        stubs: ['NuxtLink'],
-      },
-    });
+		const wrapper = mount(Index, {
+			global: {
+				stubs: ['NuxtLink'],
+			},
+		});
 
-    await wrapper.vm.countTotalMetrics();
+		await wrapper.vm.countTotalMetrics();
 
-    expect(wrapper.vm.totalMetrics).toEqual(mockResponse.length);
-  });
+		expect(wrapper.vm.totalMetrics).toEqual(mockResponse.length);
+	});
 
-  it('update totalTools with the length of fetched data', async () => {
-    const mockResponse = [
-      { id: 1, name: 'Tool 1' },
-      { id: 2, name: 'Tool 2' },
-      { id: 3, name: 'Tool 3' },
-    ];
+	it('update totalTools with the length of fetched data', async () => {
+		const mockResponse = [
+			{ id: 1, name: 'Tool 1' },
+			{ id: 2, name: 'Tool 2' },
+			{ id: 3, name: 'Tool 3' },
+		];
 
-    mockFetch.mockResolvedValue(mockResponse);
+		mockFetch.mockResolvedValue(mockResponse);
 
-    const wrapper = mount(Index, {
-      global: {
-        stubs: ['NuxtLink'],
-      },
-    });
+		const wrapper = mount(Index, {
+			global: {
+				stubs: ['NuxtLink'],
+			},
+		});
 
-    await wrapper.vm.countTotalTools();
+		await wrapper.vm.countTotalTools();
 
-    expect(wrapper.vm.totalTools).toEqual(mockResponse.length);
-  });
+		expect(wrapper.vm.totalTools).toEqual(mockResponse.length);
+	});
 
-  it('update totalCommunities with the length of fetched data', async () => {
-    const mockResponse = [
-      { id: 1, name: 'Community 1' },
-      { id: 2, name: 'Community 2' },
-      { id: 3, name: 'Community 3' },
-    ];
+	it('update totalCommunities with the length of fetched data', async () => {
+		const mockResponse = [
+			{ id: 1, name: 'Community 1' },
+			{ id: 2, name: 'Community 2' },
+			{ id: 3, name: 'Community 3' },
+		];
 
-    mockFetch.mockResolvedValue(mockResponse);
+		mockFetch.mockResolvedValue(mockResponse);
 
-    const wrapper = mount(Index, {
-      global: {
-        stubs: ['NuxtLink'],
-      },
-    });
+		const wrapper = mount(Index, {
+			global: {
+				stubs: ['NuxtLink'],
+			},
+		});
 
-    await wrapper.vm.countTotalCommunities();
+		await wrapper.vm.countTotalCommunities();
 
-    expect(wrapper.vm.totalCommunities).toEqual(mockResponse.length);
-  });
+		expect(wrapper.vm.totalCommunities).toEqual(mockResponse.length);
+	});
 
-  it('update totalContacts with the length of fetched data', async () => {
-    const mockResponse = [
-      { id: 1, name: 'Contact 1' },
-      { id: 2, name: 'Contact 2' },
-      { id: 3, name: 'Contact 3' },
-    ];
+	it('update totalContacts with the length of fetched data', async () => {
+		const mockResponse = [
+			{ id: 1, name: 'Contact 1' },
+			{ id: 2, name: 'Contact 2' },
+			{ id: 3, name: 'Contact 3' },
+		];
 
-    mockFetch.mockResolvedValue(mockResponse);
+		mockFetch.mockResolvedValue(mockResponse);
 
-    const wrapper = mount(Index, {
-      global: {
-        stubs: ['NuxtLink'],
-      },
-    });
+		const wrapper = mount(Index, {
+			global: {
+				stubs: ['NuxtLink'],
+			},
+		});
 
-    await wrapper.vm.countTotalContacts();
+		await wrapper.vm.countTotalContacts();
 
-    expect(wrapper.vm.totalContacts).toEqual(mockResponse.length);
-  });
+		expect(wrapper.vm.totalContacts).toEqual(mockResponse.length);
+	});
 });

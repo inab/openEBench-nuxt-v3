@@ -1,21 +1,21 @@
 <template>
-  <div class="tool h-100">
-    <BreadcrumbsBar :breadcrumbs-array="routeArray" />
+	<div class="tool h-100">
+		<BreadcrumbsBar :breadcrumbs-array="routeArray" />
 
-    <div class="container">
-      <h1>Tools</h1>
+		<div class="container">
+			<h1>Tools</h1>
 
-      <div v-if="loading">Loading...</div>
+			<div v-if="loading">Loading...</div>
 
-      <div v-else>
-        <div v-for="tool in tools" :key="tool.id" class="mb-3">
-          <NuxtLink :to="`/tool/${encodeURIComponent(tool.name)}-${tool.id}`">
-            {{ tool.label || tool.name }}
-          </NuxtLink>
-        </div>
-      </div>
-    </div>
-  </div>
+			<div v-else>
+				<div v-for="tool in tools" :key="tool.id" class="mb-3">
+					<NuxtLink :to="`/tool/${encodeURIComponent(tool.name)}-${tool.id}`">
+						{{ tool.label || tool.name }}
+					</NuxtLink>
+				</div>
+			</div>
+		</div>
+	</div>
 </template>
 
 <script setup lang="ts">
@@ -30,19 +30,19 @@ const tools = computed(() => toolStore.tools);
 const loading = computed(() => toolStore.loading);
 
 onMounted(async () => {
-  if (!toolStore.tools.length) {
-    await toolStore.fetchTools();
-  }
+	if (!toolStore.tools.length) {
+		await toolStore.fetchTools();
+	}
 });
 
 definePageMeta({
-  layout: 'default',
+	layout: 'default',
 });
 
 const routeArray = [
-  {
-    label: 'Tools',
-    isActualRoute: true,
-  },
+	{
+		label: 'Tools',
+		isActualRoute: true,
+	},
 ];
 </script>

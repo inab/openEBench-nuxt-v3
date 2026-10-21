@@ -1,38 +1,49 @@
 <template>
-  <div>
-    <UModal
-      v-model:open="dialogAppInstall"
-      :dismissible="false"
-      :close="false"
-      :ui="{ content: 'w-96', overlay: 'bg-zinc-800/50' }"
-    >
-      <template #content>
-        <div class="px-4 py-3">
-          <h6>{{ title }}</h6>
-          <span class="text-xs text-slate-600" v-html="text" @click="handleLinkClick"></span><br>
-          <!-- Buttons -->
-          <UButton color="green" @click="openGitHubAppLink" class="mt-3 mr-2">
-            Give Permissions
-            <font-awesome-icon :icon="['fas', 'arrow-up-right-from-square']" size="sm" class="mx-1"/>
-          </UButton>
-          <UButton label="Close" class="" color="gray" variant="ghost" size="md"
-            :ui="{color:{gray:{ghost:'text-gray-900 hover:bg-gray-100'}},}" @click="cancelInstall" />
-        </div>
-      </template>
-    </UModal>
-  </div>
+	<div>
+		<UModal
+			v-model:open="dialogAppInstall"
+			:dismissible="false"
+			:close="false"
+			:ui="{ content: 'w-96', overlay: 'bg-zinc-800/50' }"
+		>
+			<template #content>
+				<div class="px-4 py-3">
+					<h6>{{ title }}</h6>
+					<span class="text-xs text-slate-600" @click="handleLinkClick" v-html="text"></span><br />
+					<!-- Buttons -->
+					<UButton color="green" class="mt-3 mr-2" @click="openGitHubAppLink">
+						Give Permissions
+						<font-awesome-icon
+							:icon="['fas', 'arrow-up-right-from-square']"
+							size="sm"
+							class="mx-1"
+						/>
+					</UButton>
+					<UButton
+						label="Close"
+						class=""
+						color="gray"
+						variant="ghost"
+						size="md"
+						:ui="{ color: { gray: { ghost: 'text-gray-900 hover:bg-gray-100' } } }"
+						@click="cancelInstall"
+					/>
+				</div>
+			</template>
+		</UModal>
+	</div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed  } from 'vue';
+import { ref, watch, computed } from 'vue';
 import { useGithub } from '~~/stores/observatory/evaluation/github';
 
 // PROPS
 const props = defineProps<{
-  title: String,
-  text: String,
-  installationUrl: String,
-  initialDialogAppInstall: boolean,
+	title: string;
+	text: string;
+	installationUrl: string;
+	initialDialogAppInstall: boolean;
 }>();
 
 // GITHUB STORE
@@ -41,33 +52,32 @@ const importProgressText = computed(() => githubStore.getImportProgressText);
 const repository = computed(() => githubStore.getRepository);
 
 const handleLinkClick = (event: MouseEvent) => {
-  const target = event.target as HTMLAnchorElement;
-  if (target.tagName === 'A') {
-    window.open(target.href, '_blank');
-  }
+	const target = event.target as HTMLAnchorElement;
+	if (target.tagName === 'A') {
+		window.open(target.href, '_blank');
+	}
 };
-
 
 // STATE
 const dialogAppInstall = ref(props.initialDialogAppInstall);
 const socket = ref(null);
 
 watch(
-  () => props.initialDialogAppInstall, // Watch for changes in the prop
-  (newValue) => {
-    dialogAppInstall.value = newValue; // Update local state
-  }
+	() => props.initialDialogAppInstall, // Watch for changes in the prop
+	(newValue) => {
+		dialogAppInstall.value = newValue; // Update local state
+	}
 );
 
 const emit = defineEmits({
-  cancel: null,
-  ready: null,
+	cancel: null,
+	ready: null,
 });
 const cancelInstall = () => {
-  emit('cancel'); // Emit the 'cancel' event
+	emit('cancel'); // Emit the 'cancel' event
 };
 const openGitHubAppLink = () => {
-  /*
+	/*
   This function is called when the user clicks on the "Install App" button in the dialog.
   It does two things:
   1. [NOT FOR NOW IN PRODUCTION] Opens a socket to listen for the installation ID. This socket:
@@ -81,39 +91,38 @@ const openGitHubAppLink = () => {
   */
 
 	// 1. Open socket to listen for installation ID
-  /*
+	/*
   socket.value = this.$nuxtSocket({
     name: 'main'
   })
   */
 
-  // 1.1. Emit event to server for it to listen for the installation ID
-  // this.socket.emit('installation-requested', this.repository)
+	// 1.1. Emit event to server for it to listen for the installation ID
+	// this.socket.emit('installation-requested', this.repository)
 
-  // 1.2. When server sends the installation ID, store it in the store
+	// 1.2. When server sends the installation ID, store it in the store
 
-  /*
+	/*
   socket.value.on('new-installation', (installation_id) => {
     githubStore.updateInstallationID(installation_id);
     githubStore.updateDialogAppInstall(false) // close "app installation" dialog
     githubStore.updateDialogImportMetadata(true) // open "import metadata" dialog
   */
-  // 1.3. Emit event to parent component to trigger metadata import or PR creation
+	// 1.3. Emit event to parent component to trigger metadata import or PR creation
 	// emit('ready');
 
-  // })
+	// })
 
-  // 2. Open App installation in new window
-  window.open(
-    'https://github.com/apps/metadata-extractor-for-fairsoft/installations/new',
-    '_blank'
-  );
-
-}
+	// 2. Open App installation in new window
+	window.open(
+		'https://github.com/apps/metadata-extractor-for-fairsoft/installations/new',
+		'_blank'
+	);
+};
 </script>
 
 <style scoped>
-.modalAppInstall{
-  max-width: 350px !important;
+.modalAppInstall {
+	max-width: 350px !important;
 }
 </style>

@@ -1,48 +1,56 @@
 <template>
-    <div class="relative">
-        <!-- Options Button -->
-        <PlotWOptions class="copy-icon" :items="dialogItems" :currentCollection="current_collection" />
+	<div class="relative">
+		<!-- Options Button -->
+		<PlotWOptions class="copy-icon" :items="dialogItems" :current-collection="current_collection" />
 
-        <!-- Licensing Header -->
-        <div class="text-center mt-4">
-            <h6 class="text-2xl font-semibold mt-6 mb-4">Licensing</h6>
-            <p class="text-sm text-gray-700">
-                Licensing is one of the most crucial features of a piece of software, determining both its
-                <span class="highlight">Accessibility</span> and
-                <span class="highlight">Reusability</span>.
-            </p>
-        </div>
+		<!-- Licensing Header -->
+		<div class="text-center mt-4">
+			<h6 class="text-2xl font-semibold mt-6 mb-4">Licensing</h6>
+			<p class="text-sm text-gray-700">
+				Licensing is one of the most crucial features of a piece of software, determining both its
+				<span class="highlight">Accessibility</span> and <span class="highlight">Reusability</span>.
+			</p>
+		</div>
 
-        <!-- Visualizations -->
-        <div class="grid grid-cols-12 gap-6 mt-6 pt-3 pb-4">
-            <!-- Sunburst Chart -->
-            <div class="col-span-4 flex justify-center items-center">
-                <div v-if="isLicensesSunburstLoading" class="w-full">
-                    <USkeleton class="h-52 mx-10" />
-                </div>
-                <PlotLicensesPie v-else :labels="sunburstLabels" :parents="sunburstParents" :values="sunburstValues"
-                    :text="sunburstText" />
-            </div>
+		<!-- Visualizations -->
+		<div class="grid grid-cols-12 gap-6 mt-6 pt-3 pb-4">
+			<!-- Sunburst Chart -->
+			<div class="col-span-4 flex justify-center items-center">
+				<div v-if="isLicensesSunburstLoading" class="w-full">
+					<USkeleton class="h-52 mx-10" />
+				</div>
+				<PlotLicensesPie
+					v-else
+					:labels="sunburstLabels"
+					:parents="sunburstParents"
+					:values="sunburstValues"
+					:text="sunburstText"
+				/>
+			</div>
 
-            <!-- Bar Chart -->
-            <div class="col-span-8 flex justify-center items-center">
-                <div v-if="isLicensesOpenSourceLoading" class="w-full">
-                    <USkeleton class="h-52 mx-10" />
-                </div>
-                <PlotLicensesBars v-else :counts_permissive="countsPermissive" :licenses_permissive="licensesPermissive"
-                    :counts_copyleft="countsCopyleft" :licenses_copyleft="licensesCopyleft" :counts_data="countsData"
-                    :licenses_data="licensesData" />
-            </div>
-        </div>
-
-    </div>
+			<!-- Bar Chart -->
+			<div class="col-span-8 flex justify-center items-center">
+				<div v-if="isLicensesOpenSourceLoading" class="w-full">
+					<USkeleton class="h-52 mx-10" />
+				</div>
+				<PlotLicensesBars
+					v-else
+					:counts_permissive="countsPermissive"
+					:licenses_permissive="licensesPermissive"
+					:counts_copyleft="countsCopyleft"
+					:licenses_copyleft="licensesCopyleft"
+					:counts_data="countsData"
+					:licenses_data="licensesData"
+				/>
+			</div>
+		</div>
+	</div>
 </template>
-
 
 <script setup lang="ts">
 import { onBeforeMount, computed } from 'vue';
 import PlotLicensesPie from './PlotLicensesPie.vue';
-import PlotLicensesBars from './PlotLicensesBars.vue'
+import PlotLicensesBars from './PlotLicensesBars.vue';
 import { useTrends } from '~~/stores/observatory/trends';
 import { useObservatory } from '~~/stores/observatory/index.js';
 import PlotWOptions from '~/components/Observatory/PlotWOptions.vue';
@@ -74,26 +82,24 @@ const isLicensesOpenSourceLoading = computed(() => store.Loaded.licensesOpenSour
 
 // Fetch Data on Mount
 onBeforeMount(async () => {
-    await store.getLicensesSunburst();
-    await store.getLicensesOpenSource();
+	await store.getLicensesSunburst();
+	await store.getLicensesOpenSource();
 });
-
 </script>
-
 
 <style scoped>
 .card-content {
-    font-size: 0.9em !important;
+	font-size: 0.9em !important;
 }
 
 .copy-icon {
-    position: absolute;
-    top: 5px;
-    right: 10px;
+	position: absolute;
+	top: 5px;
+	right: 10px;
 }
 
 .highlight {
-    color: #001752f8;
-    font-weight: 500;
+	color: #001752f8;
+	font-weight: 500;
 }
 </style>

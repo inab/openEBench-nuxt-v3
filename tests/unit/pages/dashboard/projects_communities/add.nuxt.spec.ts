@@ -7,63 +7,63 @@ import CommunityAdd from '@/components/Dashboard/entries/CommunityAdd.vue';
 import { useUser } from '~~/stores/user.ts';
 
 vi.mock('@/middleware/requireAuth', () => ({
-  default: vi.fn((context) => {
-    const { auth } = context;
-    if (!auth || (auth.authenticatedOnly && context.auth.status === 'unauthenticated')) {
-      context.redirect('/login-required');
-    }
-  }),
+	default: vi.fn((context) => {
+		const { auth } = context;
+		if (!auth || (auth.authenticatedOnly && context.auth.status === 'unauthenticated')) {
+			context.redirect('/login-required');
+		}
+	}),
 }));
 
 describe('Dashboard Add entry', () => {
-  let wrapper;
-  let userStore;
+	let wrapper;
+	let userStore;
 
-  beforeEach(() => {
-    wrapper = mount(Add, {
-      global: {
-        plugins: [
-          createTestingPinia({
-            initialState: {
-              user: {
-                getUserCommunitiesRoles: [],
-              },
-            },
-            createSpy: vi.fn,
-          }),
-        ],
-        stubs: ['RouterLink', 'FontAwesomeIcon', 'UTooltip'],
-      },
-    });
+	beforeEach(() => {
+		wrapper = mount(Add, {
+			global: {
+				plugins: [
+					createTestingPinia({
+						initialState: {
+							user: {
+								getUserCommunitiesRoles: [],
+							},
+						},
+						createSpy: vi.fn,
+					}),
+				],
+				stubs: ['RouterLink', 'FontAwesomeIcon', 'UTooltip'],
+			},
+		});
 
-    userStore = useUser();
-  });
+		userStore = useUser();
+	});
 
-  it('renders BreadcrumbsBar and CommunityAdd components', () => {
-    expect(wrapper.findComponent(BreadcrumbsBar).exists()).toBe(true);
-    expect(wrapper.findComponent(CommunityAdd).exists()).toBe(true);
-  });
+	it('renders BreadcrumbsBar and CommunityAdd components', () => {
+		expect(wrapper.findComponent(BreadcrumbsBar).exists()).toBe(true);
+		expect(wrapper.findComponent(CommunityAdd).exists()).toBe(true);
+	});
 
-  it('should initialize routeArray correctly', () => {
-    const expectedRoutes = [
-      { label: '', isActualRoute: false },
-      { label: 'Dashboard', isActualRoute: false, route: '/dashboard' },
-      {
-        label: 'Projects & communities',
-        isActualRoute: false,
-        route: '/dashboard/projects_communities',
-      },
-      { label: 'Entry Add', isActualRoute: true },
-    ];
+	it('should initialize routeArray correctly', () => {
+		const expectedRoutes = [
+			{ label: '', isActualRoute: false },
+			{ label: 'Dashboard', isActualRoute: false, route: '/dashboard' },
+			{
+				label: 'Projects & communities',
+				isActualRoute: false,
+				route: '/dashboard/projects_communities',
+			},
+			{ label: 'Entry Add', isActualRoute: true },
+		];
 
-    expect(wrapper.vm.routeArray).toEqual(expectedRoutes);
-  });
+		expect(wrapper.vm.routeArray).toEqual(expectedRoutes);
+	});
 
-  it('calls setUserCommunitiesRoles if userPrivileges is empty', async () => {
-    const { data } = useAuth();
-    data.value.oeb_roles = [{ role: 'manager', community: 'OEBC000' }];
-    expect(userStore.setUserCommunitiesRoles).toHaveBeenCalledWith([
-      { role: 'manager', community: 'OEBC000' },
-    ]);
-  });
+	it('calls setUserCommunitiesRoles if userPrivileges is empty', async () => {
+		const { data } = useAuth();
+		data.value.oeb_roles = [{ role: 'manager', community: 'OEBC000' }];
+		expect(userStore.setUserCommunitiesRoles).toHaveBeenCalledWith([
+			{ role: 'manager', community: 'OEBC000' },
+		]);
+	});
 });

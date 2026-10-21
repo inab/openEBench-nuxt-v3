@@ -2,35 +2,35 @@ import type { Challenge } from '~~/types/challenge';
 const runtimeConfig = useRuntimeConfig();
 
 export default async function metricsSearcher(id: string, token: string) {
-  try {
-    const response = await fetch(
-      `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Challenge`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: 'application/json',
-        },
-        method: 'GET',
-      }
-    );
+	try {
+		const response = await fetch(
+			`${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Challenge`,
+			{
+				headers: {
+					Authorization: `Bearer ${token}`,
+					Accept: 'application/json',
+				},
+				method: 'GET',
+			}
+		);
 
-    const data = await response.json();
+		const data = await response.json();
 
-    const challengeList = [] as Challenge[];
+		const challengeList = [] as Challenge[];
 
-    data.forEach((metric: Challenge) => {
-      if (metric.metrics_categories) {
-        const categoryList = metric.metrics_categories[0].metrics;
-        categoryList.forEach((category: unknown) => {
-          if (category.metrics_id === id) {
-            challengeList.push(metric);
-          }
-        });
-      }
-    });
+		data.forEach((metric: Challenge) => {
+			if (metric.metrics_categories) {
+				const categoryList = metric.metrics_categories[0].metrics;
+				categoryList.forEach((category: unknown) => {
+					if (category.metrics_id === id) {
+						challengeList.push(metric);
+					}
+				});
+			}
+		});
 
-    return challengeList;
-  } catch (error) {
-    console.error(error);
-  }
+		return challengeList;
+	} catch (error) {
+		console.error(error);
+	}
 }

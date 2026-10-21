@@ -1,5 +1,5 @@
 <template>
-    <div ref="plotElement" class="ml-8"></div>
+	<div ref="plotElement" class="ml-8"></div>
 </template>
 
 <script setup lang="ts">
@@ -12,120 +12,120 @@ const plotElement = ref<HTMLDivElement | null>(null);
 
 // Define props with TypeScript types
 const props = defineProps<{
-  tools: object;
-  publications: object;
-  citations: object;
-  title?: string;
-  height?: number;
+	tools: object;
+	publications: object;
+	citations: object;
+	title?: string;
+	height?: number;
 }>();
 
 // Set default values for optional props
 
 // Define layout and configuration objects
 const layout: Partial<Plotly.Layout> = {
-    grid: {
-        rows: 2,
-        columns: 1,
-        roworder: 'top to bottom',
-    },
-    yaxis: {
-        title: 'Number of publications',
-    },
-    yaxis2: {
-        title: 'Citations (last 3 years)',
-        side: 'left',
-        showgrid: false,
-        range: [0, props.citations.y[0] * 1.2],
-    },
-    xaxis: {
-        title: 'journal',
-    },
-    autosize: true,
-    margin: {
-        autoexpand: true,
-        t: 10,
-        l: 90
-    },
-    hoverlabel: {
-        bgcolor: '#FFF',
-    },
-    height: props.height ?? 500,
-    title: {
-        text: props.title || '',
-        font: {
-            size: 16,
-        },
-    },
+	grid: {
+		rows: 2,
+		columns: 1,
+		roworder: 'top to bottom',
+	},
+	yaxis: {
+		title: 'Number of publications',
+	},
+	yaxis2: {
+		title: 'Citations (last 3 years)',
+		side: 'left',
+		showgrid: false,
+		range: [0, props.citations.y[0] * 1.2],
+	},
+	xaxis: {
+		title: 'journal',
+	},
+	autosize: true,
+	margin: {
+		autoexpand: true,
+		t: 10,
+		l: 90,
+	},
+	hoverlabel: {
+		bgcolor: '#FFF',
+	},
+	height: props.height ?? 500,
+	title: {
+		text: props.title || '',
+		font: {
+			size: 16,
+		},
+	},
 };
 
 const config: Partial<Plotly.Config> = {
-    responsive: true,
-    displayModeBar: false,
+	responsive: true,
+	displayModeBar: false,
 };
 
 // Function to initialize the plot
 const plotChart = async () => {
-    await nextTick();
-    const element = plotElement.value;
-    if (!element?.isConnected) {
-        return;
-    }
+	await nextTick();
+	const element = plotElement.value;
+	if (!element?.isConnected) {
+		return;
+	}
 
-    const tracePublications : Partial<Plotly.PlotData> = {
-        x: props.publications.x,
-        y: props.publications.y,
-        type: 'scatter',
-        mode: 'lines+markers',
-        name: 'Publications',
-        marker: {
-            color: '#0e3487',
-            size: 6,
-        },
-        line: {
-            color: '#0e3487',
-            width: 1,
-            dash: 'dash',
-        },
-        hovertemplate: '%{y} publications<extra></extra>',
-        xaxis: 'x',
-        yaxis: 'y',
-        showlegend: false,
-    }
+	const tracePublications: Partial<Plotly.PlotData> = {
+		x: props.publications.x,
+		y: props.publications.y,
+		type: 'scatter',
+		mode: 'lines+markers',
+		name: 'Publications',
+		marker: {
+			color: '#0e3487',
+			size: 6,
+		},
+		line: {
+			color: '#0e3487',
+			width: 1,
+			dash: 'dash',
+		},
+		hovertemplate: '%{y} publications<extra></extra>',
+		xaxis: 'x',
+		yaxis: 'y',
+		showlegend: false,
+	};
 
-    const traceCitations : Partial<Plotly.PlotData> = {
-        x: props.citations.x,
-        y: props.citations.y,
-        name: 'Citation',
-        marker: {
-            color: '#ff213f',
-            size: 6,
-        },
-        line: {
-            color: '#ff213f',
-            width: 1,
-        },
-        hovertemplate: '%{y} citations in the last 3 years <extra></extra>',
-        xaxis: 'x',
-        yaxis: 'y2',
-        showlegend: false,
-    }
-    
-    const data: Partial<Plotly.PlotData>[] = [tracePublications, traceCitations];
+	const traceCitations: Partial<Plotly.PlotData> = {
+		x: props.citations.x,
+		y: props.citations.y,
+		name: 'Citation',
+		marker: {
+			color: '#ff213f',
+			size: 6,
+		},
+		line: {
+			color: '#ff213f',
+			width: 1,
+		},
+		hovertemplate: '%{y} citations in the last 3 years <extra></extra>',
+		xaxis: 'x',
+		yaxis: 'y2',
+		showlegend: false,
+	};
 
-    if (element.classList.contains('js-plotly-plot')) {
-        await Plotly.react(element, data, layout, config);
-    } else {
-        await Plotly.newPlot(element, data, layout, config);
-    }
+	const data: Partial<Plotly.PlotData>[] = [tracePublications, traceCitations];
+
+	if (element.classList.contains('js-plotly-plot')) {
+		await Plotly.react(element, data, layout, config);
+	} else {
+		await Plotly.newPlot(element, data, layout, config);
+	}
 };
 
 // Mount the chart when the component is mounted
 onMounted(() => {
-    plotChart();
+	plotChart();
 });
 
 watch(activeTabIndex, async () => {
-    await nextTick();
-    await resizePlot(plotElement.value, Plotly);
+	await nextTick();
+	await resizePlot(plotElement.value, Plotly);
 });
 </script>

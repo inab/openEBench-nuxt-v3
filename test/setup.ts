@@ -1,20 +1,20 @@
-import { vi } from "vitest";
-import { createPinia, setActivePinia } from "pinia";
-import { ref } from "vue";
+import { vi } from 'vitest';
+import { createPinia, setActivePinia } from 'pinia';
+import { ref } from 'vue';
 
-import { mockNuxtApp } from "./mocks/nuxtAppMock";
+import { mockNuxtApp } from './mocks/nuxtAppMock';
 
-vi.mock("#app", async () => {
-	const actual = await vi.importActual("#app");
+vi.mock('#app', async () => {
+	const actual = await vi.importActual('#app');
 
 	return {
 		...actual,
 		useNuxtApp: () => ({
 			...mockNuxtApp,
 			$auth: {
-				status: ref("authenticated"),
+				status: ref('authenticated'),
 				data: ref({
-					name: "John Doe",
+					name: 'John Doe',
 					oeb_roles: [],
 				}),
 			},
@@ -22,8 +22,8 @@ vi.mock("#app", async () => {
 	};
 });
 
-vi.mock("#imports", async () => {
-	const actual = await vi.importActual("#imports");
+vi.mock('#imports', async () => {
+	const actual = await vi.importActual('#imports');
 
 	return {
 		...actual,

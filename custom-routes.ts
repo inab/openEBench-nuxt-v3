@@ -60,18 +60,12 @@ export const customRoutes = [
 	{
 		name: 'dashboard-community-event-community-add',
 		path: '/dashboard/projects_communities/:community_id/events/:event_id/add',
-		file: resolve(
-			__dirname,
-			'app/pages/dashboard/projects_communities/events/challenges/add.vue'
-		),
+		file: resolve(__dirname, 'app/pages/dashboard/projects_communities/events/challenges/add.vue'),
 	},
 	{
 		name: 'dashboard-community-event-community',
 		path: '/dashboard/projects_communities/:community_id/events/:event_id/challenges/:id',
-		file: resolve(
-			__dirname,
-			'app/pages/dashboard/projects_communities/events/challenges/[id].vue'
-		),
+		file: resolve(__dirname, 'app/pages/dashboard/projects_communities/events/challenges/[id].vue'),
 	},
 	{
 		name: 'dashboard-community-event-community-metric',

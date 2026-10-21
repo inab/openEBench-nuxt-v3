@@ -1,25 +1,25 @@
 <template>
-  <div class="dashboard">
-    <BreadcrumbsBar :breadcrumbs-array="routeArray" />
-    <div class="w-100 container">
-      <SubmissionList />
-    </div>
-  </div>
+	<div class="dashboard">
+		<BreadcrumbsBar :breadcrumbs-array="routeArray" />
+		<div class="w-100 container">
+			<SubmissionList />
+		</div>
+	</div>
 </template>
 <script setup lang="ts">
-import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
-import SubmissionList from "@/components/Dashboard/submissions/SubmissionList.vue";
+import BreadcrumbsBar from '@/components/Common/BreadcrumbsBar.vue';
+import SubmissionList from '@/components/Dashboard/submissions/SubmissionList.vue';
 
 definePageMeta({
-  middleware: "require-auth",
-  auth: {
-    authenticatedOnly: true,
-    navigateUnauthenticatedTo: "/login-required",
-  },
+	middleware: 'require-auth',
+	auth: {
+		authenticatedOnly: true,
+		navigateUnauthenticatedTo: '/login-required',
+	},
 });
 
 const routeArray: Array = [
-  { label: "Dashboard", isActualRoute: false, route: "/dashboard" },
-  { label: "Submissions", isActualRoute: true },
+	{ label: 'Dashboard', isActualRoute: false, route: '/dashboard' },
+	{ label: 'Submissions', isActualRoute: true },
 ];
 </script>

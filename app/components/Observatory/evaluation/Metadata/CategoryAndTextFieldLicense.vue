@@ -1,40 +1,36 @@
 <template>
-  <div class="row me-2 mt-3">
-    <div class="col-6">
-      <USelectMenu
-        v-model="selectLicense"
-        :items="SPDXLicenses"
-        search-input
-        placeholder="License"
-        class="border-1 rounded-md px-0 peer focus-within:ring-primaryOeb-500 focus-within:border-primaryOeb-500 focus-within:text-primaryOeb-500"
-        @update:model-value="changeValueName"
-      >
-      </USelectMenu>
-    </div>
-    <div class="col-6">
-      <UInput
-        v-model="URL"
-        placeholder="URL"
-        :ui="{ base: 'peer' }"
-        class="border-1 rounded-md px-0 text-sm focus-within:ring-primaryOeb-500 focus-within:border-primaryOeb-500 focus-within:text-primaryOeb-500"
-        @input="changeValue"
-      >
-        <UButton
-          color="gray"
-          variant="solid"
-          :ui="{ rounded: 'rounded-full' }"
-          class="p-1.5 mx-4 absolute right-[-55px] top-0.5"
-          @click="emitRemove" 
-        >
-          <UIcon
-            name="i-heroicons-x-circle-20-solid"
-            class="bg-gray-400"
-          />
-        </UButton>
-      </UInput>
-    </div>
-    
-  </div>
+	<div class="row me-2 mt-3">
+		<div class="col-6">
+			<USelectMenu
+				v-model="selectLicense"
+				:items="SPDXLicenses"
+				search-input
+				placeholder="License"
+				class="border-1 rounded-md px-0 peer focus-within:ring-primaryOeb-500 focus-within:border-primaryOeb-500 focus-within:text-primaryOeb-500"
+				@update:model-value="changeValueName"
+			>
+			</USelectMenu>
+		</div>
+		<div class="col-6">
+			<UInput
+				v-model="URL"
+				placeholder="URL"
+				:ui="{ base: 'peer' }"
+				class="border-1 rounded-md px-0 text-sm focus-within:ring-primaryOeb-500 focus-within:border-primaryOeb-500 focus-within:text-primaryOeb-500"
+				@input="changeValue"
+			>
+				<UButton
+					color="gray"
+					variant="solid"
+					:ui="{ rounded: 'rounded-full' }"
+					class="p-1.5 mx-4 absolute right-[-55px] top-0.5"
+					@click="emitRemove"
+				>
+					<UIcon name="i-heroicons-x-circle-20-solid" class="bg-gray-400" />
+				</UButton>
+			</UInput>
+		</div>
+	</div>
 </template>
 <script setup lang="ts">
 import { ref, watch, computed, onMounted } from 'vue';
@@ -46,15 +42,15 @@ const emit = defineEmits(['remove']);
 
 // PROPS
 const props = defineProps<{
-  field: string,
-  item: { name: string; url: string },
-  index : number,
-  id: string,
+	field: string;
+	item: { name: string; url: string };
+	index: number;
+	id: string;
 }>();
 
-onMounted(()=>{
-  findMatchingLicense(selectLicense.value)
-})
+onMounted(() => {
+	findMatchingLicense(selectLicense.value);
+});
 
 // Reactive variables
 const selectLicense = ref(props.item.name);
@@ -66,56 +62,58 @@ const SPDXLicenses = computed<string[]>(() => metadataStore.getSPDXLicenses);
 // Methods
 // Method for finding and assigning a matching licence
 const findMatchingLicense = async (license: string) => {
-  try {
-    const response = await metadataStore.GET_URL('api/spdx/SPDXLicenses/match/' + license);
-    if (response.match === '') {
-      selectLicense.value = license;
-    } else {
-      selectLicense.value = response.match;
-      changeValueName();
-    }
-  } catch (error) {
-    console.error('Error fetching matching license:', error);
-  }
+	try {
+		const response = await metadataStore.GET_URL('api/spdx/SPDXLicenses/match/' + license);
+		if (response.match === '') {
+			selectLicense.value = license;
+		} else {
+			selectLicense.value = response.match;
+			changeValueName();
+		}
+	} catch (error) {
+		console.error('Error fetching matching license:', error);
+	}
 };
 
 // Method to change the value and look up the URL associated with the licence
 const changeValueName = async () => {
-  if (SPDXLicenses.value.length === 0) {
-    // SPDXLicenses has not yet been uploaded → do not check if it includes the licence
-    return;
-  }
+	if (SPDXLicenses.value.length === 0) {
+		// SPDXLicenses has not yet been uploaded → do not check if it includes the licence
+		return;
+	}
 
-  if (SPDXLicenses.value.includes(selectLicense.value)) {
-    try {
-      const response = await metadataStore.GET_URL('api/spdx/SPDXLicenses/url/' + selectLicense.value);
-      URL.value = response.URL;
-    } catch (error) {
-      console.error('Error fetching license URL:', error);
-    }
-  } else {
-    // Only if SPDXLicenses has data and does not include selectLicense then URL will be empty.
-    URL.value = '';
-  }
-  changeValue();
+	if (SPDXLicenses.value.includes(selectLicense.value)) {
+		try {
+			const response = await metadataStore.GET_URL(
+				'api/spdx/SPDXLicenses/url/' + selectLicense.value
+			);
+			URL.value = response.URL;
+		} catch (error) {
+			console.error('Error fetching license URL:', error);
+		}
+	} else {
+		// Only if SPDXLicenses has data and does not include selectLicense then URL will be empty.
+		URL.value = '';
+	}
+	changeValue();
 };
 
 // Method for updating the value in the store
 const changeValue = () => {
-  const newValue = {
-    id: props.id,
-    term: {
-      name: selectLicense.value,
-      url: URL.value,
-    },
-  };
-  const payload = {
-    field: props.field,
-    index: props.index,
-    value: newValue,
-  };
-  console.log(payload)
-  metadataStore.changeEntry(payload);
+	const newValue = {
+		id: props.id,
+		term: {
+			name: selectLicense.value,
+			url: URL.value,
+		},
+	};
+	const payload = {
+		field: props.field,
+		index: props.index,
+		value: newValue,
+	};
+	console.log(payload);
+	metadataStore.changeEntry(payload);
 };
 
 // Watch to automatically update when props change
@@ -132,6 +130,6 @@ const changeValue = () => {
 
 // Method to emit the ‘remove’ event
 const emitRemove = () => {
-  emit('remove', props.index);
+	emit('remove', props.index);
 };
 </script>

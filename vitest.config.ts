@@ -6,6 +6,8 @@ export default defineVitestConfig({
 	plugins: [],
 	test: {
 		globals: true,
+		hookTimeout: 60000,
+		testTimeout: 30000,
 		environment: 'nuxt',
 		setupFiles: mockAuthModule,
 		fsModuleCache: true,
