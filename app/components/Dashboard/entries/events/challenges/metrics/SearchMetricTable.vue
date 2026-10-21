@@ -2,26 +2,31 @@
 	<div class="add-metric-table">
 		<div class="add-metric">
 			<UTable
-				v-model="selectedMetric"
+				v-model:row-selection="rowSelection"
+				:get-row-id="(row: any) => row._id"
 				:columns="columns"
-				:rows="rows"
-				:empty-state="{
-					icon: 'i-heroicons-circle-stack-20-solid',
-					label: 'No items.',
-				}"
+				:data="rows"
 				:ui="{
 					tr: 'hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer',
 					th: 'text-left rtl:text-right px-2.5 py-2.5 text-gray-900 dark:text-white font-semibold text-sm',
 					td: 'px-3 py-3 text-sm',
 				}"
-				@select="select"
+				@select="(_e: Event, row: any) => row.toggleSelected()"
 			>
-				<template #view-data="{ row }">
+				<template #select-cell="{ row }">
+					<UCheckbox
+						:model-value="row.getIsSelected()"
+						aria-label="Select row"
+						@click.stop
+						@update:model-value="(v: boolean | 'indeterminate') => row.toggleSelected(!!v)"
+					/>
+				</template>
+				<template #view-cell="{ row }">
 					<div class="action-btn-group">
 						<button
 							class="btn-custom-badget text-sm text-primaryOeb-950"
 							title="View metric"
-							@click="viewMetric(row)"
+							@click.stop="viewMetric(row.original)"
 						>
 							<font-awesome-icon :icon="['far', 'eye']" />
 							View
@@ -61,7 +66,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, computed, defineEmits, watch } from 'vue';
+import { ref, defineProps, computed, defineEmits } from 'vue';
 import type { Metric } from '~~/types/challenge_metric';
 import MetricModal from '@/components/Dashboard/metrics/MetricModal.vue';
 
@@ -80,23 +85,36 @@ const isMetricEditable = ref(false);
 const token = data.value?.accessToken as string;
 const metricIdOpen = ref('');
 
-const selectedMetric = computed({
-	get: () => props.selectedMetrics,
-	set: (value) => emits('handleSelectedMetrics', value),
+const rowSelection = computed<Record<string, boolean>>({
+	get: () => Object.fromEntries(props.selectedMetrics.map((m) => [m._id, true])),
+	set: (value) => {
+		const ids = Object.keys(value).filter((id) => value[id]);
+		const known = new Map<string, any>(
+			[...props.selectedMetrics, ...props.metricRows].map((m) => [m._id, m])
+		);
+		emits(
+			'handleSelectedMetrics',
+			ids.map((id) => known.get(id)).filter(Boolean)
+		);
+	},
 });
 
 const columns = [
 	{
-		key: 'title',
-		label: 'Title',
+		id: 'select',
+		header: '',
 	},
 	{
-		key: 'description',
-		label: 'Description',
+		accessorKey: 'title',
+		header: 'Title',
 	},
 	{
-		key: 'view',
-		label: 'View',
+		accessorKey: 'description',
+		header: 'Description',
+	},
+	{
+		accessorKey: 'view',
+		header: 'View',
 	},
 ];
 
@@ -134,14 +152,6 @@ const openModal = async (row: Metric) => {
 	isModalOpen.value = true;
 	metricIdOpen.value = row._id;
 };
-
-watch(
-	selectedMetric,
-	(value) => {
-		emits('handleSelectedMetrics', value);
-	},
-	{ deep: true, flush: 'post' }
-);
 </script>
 
 <style lang="scss" scoped></style>

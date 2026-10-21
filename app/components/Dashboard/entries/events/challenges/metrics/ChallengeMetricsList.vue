@@ -6,26 +6,22 @@
 		<UTable
 			:columns="columns"
 			:loading="loadingMetrics"
-			:rows="rows"
-			:empty-state="{
-				icon: 'i-heroicons-circle-stack-20-solid',
-				label: 'No items.',
-			}"
+			:data="rows"
 			:ui="{
 				tr: 'hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer',
 				th: 'text-left rtl:text-right px-2.5 py-2.5 text-gray-900 dark:text-white font-semibold text-sm',
 				td: 'px-3 py-3 text-sm',
 			}"
 		>
-			<template #category-data="{ row }">
+			<template #category-cell="{ row }">
 				<div class="d-flex category-col">
-					<span v-if="row.category === 'assessment'">
+					<span v-if="row.original.category === 'assessment'">
 						<UIcon name="i-heroicons-document-magnifying-glass" class="w-4 h-4"></UIcon>
 					</span>
 					<span v-else>
 						<UIcon name="i-heroicons-document-plus" class="w-4 h-4"></UIcon>
 					</span>
-					{{ row.category }}
+					{{ row.original.category }}
 				</div>
 			</template>
 		</UTable>
@@ -46,20 +42,20 @@ const page = ref(1);
 const pageCount = 5;
 const columns = [
 	{
-		key: 'category',
-		label: 'Category',
+		accessorKey: 'category',
+		header: 'Category',
 	},
 	{
-		key: 'metrics_id',
-		label: 'Metric ID',
+		accessorKey: 'metrics_id',
+		header: 'Metric ID',
 	},
 	{
-		key: 'description',
-		label: 'Description',
+		accessorKey: 'description',
+		header: 'Description',
 	},
 	{
-		key: 'tool_id',
-		label: 'Tool ID',
+		accessorKey: 'tool_id',
+		header: 'Tool ID',
 	},
 ];
 

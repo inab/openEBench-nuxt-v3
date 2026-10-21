@@ -3,19 +3,19 @@
 		<div class="add-metric">
 			<UTable
 				:columns="columns"
-				:rows="rows"
+				:data="rows"
 				:ui="{
 					tr: 'hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer',
 					th: 'text-left rtl:text-right px-2.5 py-2.5 text-gray-900 dark:text-white font-semibold text-sm',
 					td: 'px-3 py-3 text-sm',
 				}"
 			>
-				<template #view-data="{ row }">
+				<template #view-cell="{ row }">
 					<div class="action-btn-group">
 						<button
 							class="btn-custom-badget text-sm text-primaryOeb-950"
 							title="View metric"
-							@click="viewMetric(row)"
+							@click="viewMetric(row.original)"
 						>
 							<font-awesome-icon :icon="['far', 'eye']" />
 							View
@@ -57,22 +57,24 @@ const { data } = useAuth();
 const isModalOpen = ref(false);
 const modalTitle = ref('View Metric');
 const isMetricEditable = ref(false);
+const isSearchingMetric = ref(false);
+const metricIdOpen = ref('');
 const token = data.value?.accessToken as string;
 const page = ref(1);
 const pageCount = 5;
 
 const columns = [
 	{
-		key: '_id',
-		label: 'Challenge ID',
+		accessorKey: '_id',
+		header: 'Challenge ID',
 	},
 	{
-		key: 'name',
-		label: 'Name',
+		accessorKey: 'name',
+		header: 'Name',
 	},
 	{
-		key: 'view',
-		label: 'View',
+		accessorKey: 'view',
+		header: 'View',
 	},
 ];
 

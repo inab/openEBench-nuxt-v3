@@ -2,31 +2,28 @@
 	<div class="status-table">
 		<UTable
 			:columns="columns"
-			:rows="services"
+			:data="services"
 			:loading="isTableLoading"
-			:loading-state="{
-				icon: 'i-heroicons-arrow-path-20-solid',
-				label: 'Loading...',
-			}"
-			:progress="{ color: 'primary', animation: 'carousel' }"
+			:loading-color="'primary'"
+			loading-animation="carousel"
 		>
-			<template #service-data="{ row }">
-				<span v-if="row.status" class="status-ok">
+			<template #service-cell="{ row }">
+				<span v-if="row.original.status" class="status-ok">
 					<font-awesome-icon :icon="['fas', 'circle-check']" />
 				</span>
 				<span v-else class="status-error">
 					<font-awesome-icon :icon="['fas', 'triangle-exclamation']" />
 				</span>
-				{{ row.service }}
+				{{ row.original.service }}
 			</template>
-			<template #status-data="{ row }">
-				{{ row.status ? 'Operational' : 'Down' }}
+			<template #status-cell="{ row }">
+				{{ row.original.status ? 'Operational' : 'Down' }}
 			</template>
-			<template #response-data="{ row }">
-				{{ row.response }}
+			<template #response-cell="{ row }">
+				{{ row.original.response }}
 			</template>
-			<template #page-data="{ row }">
-				<a target="_blank" :href="row.page">{{ row.page }}</a>
+			<template #page-cell="{ row }">
+				<a target="_blank" :href="row.original.page">{{ row.original.page }}</a>
 			</template>
 		</UTable>
 	</div>
@@ -40,20 +37,20 @@ defineProps<{
 
 const columns = [
 	{
-		key: 'service',
-		label: 'Service',
+		accessorKey: 'service',
+		header: 'Service',
 	},
 	{
-		key: 'status',
-		label: 'Status',
+		accessorKey: 'status',
+		header: 'Status',
 	},
 	{
-		key: 'response',
-		label: 'Response time (ms)',
+		accessorKey: 'response',
+		header: 'Response time (ms)',
 	},
 	{
-		key: 'page',
-		label: 'Go to page',
+		accessorKey: 'page',
+		header: 'Go to page',
 	},
 ];
 </script>

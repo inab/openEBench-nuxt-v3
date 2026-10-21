@@ -102,7 +102,6 @@
 												<VueDatePicker
 													v-model="state.dates.challenge_start"
 													:format="dateFormat"
-													locale="en"
 												></VueDatePicker>
 											</div>
 										</div>
@@ -115,7 +114,6 @@
 												<VueDatePicker
 													v-model="state.dates.challenge_stop"
 													:format="dateFormat"
-													locale="en"
 												>
 												</VueDatePicker>
 											</div>

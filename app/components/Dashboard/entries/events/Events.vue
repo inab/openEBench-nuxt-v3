@@ -15,60 +15,60 @@
 				<UTable
 					:columns="columns"
 					:loading="isLoadingData"
-					:rows="filteredRows"
+					:data="filteredRows"
 					:ui="{
 						tr: 'hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer',
 						th: 'text-left rtl:text-right px-2.5 py-2.5 text-gray-900 dark:text-white font-semibold text-sm',
 						td: 'whitespace-nowrap px-3 py-3 text-sm',
 					}"
 				>
-					<template #actions-data="{ row }">
-						{{ row }}
+					<template #actions-cell="{ row }">
+						{{ row.original }}
 
-						<div v-if="row.actions">
-							<div v-if="row.privileges === 'Owner' && row.actions.event">
-								<template v-if="row.actions.event.read">
+						<div v-if="row.original.actions">
+							<div v-if="row.original.privileges === 'Owner' && row.original.actions.event">
+								<template v-if="row.original.actions.event.read">
 									<button title="View community" class="btn-event">
-										<NuxtLink :to="`/dashboard/community/${row._id}?view`">
+										<NuxtLink :to="`/dashboard/community/${row.original._id}?view`">
 											<font-awesome-icon :icon="['fas', 'eye']" />
 										</NuxtLink>
 									</button>
 								</template>
-								<template v-if="row.actions.event.update">
+								<template v-if="row.original.actions.event.update">
 									<button title="Edit community" class="btn-event">
-										<NuxtLink :to="`/dashboard/community/${row._id}`">
+										<NuxtLink :to="`/dashboard/community/${row.original._id}`">
 											<font-awesome-icon :icon="['fas', 'pencil']" />
 										</NuxtLink>
 									</button>
 								</template>
 							</div>
-							<div v-else-if="row.privileges === 'Manager' && row.actions.event">
-								<template v-if="row.actions.event.read">
+							<div v-else-if="row.original.privileges === 'Manager' && row.original.actions.event">
+								<template v-if="row.original.actions.event.read">
 									<button title="View Entry" class="btn-event">
-										<NuxtLink :to="`/dashboard/projects_communities/${row._id}?view`">
+										<NuxtLink :to="`/dashboard/projects_communities/${row.original._id}?view`">
 											<font-awesome-icon :icon="['fas', 'eye']" />
 										</NuxtLink>
 									</button>
 								</template>
-								<template v-if="row.actions.event.create">
+								<template v-if="row.original.actions.event.create">
 									<button title="Create Entry" class="btn-event">
-										<NuxtLink :to="`/dashboard/projects_communities/${row._id}`">
+										<NuxtLink :to="`/dashboard/projects_communities/${row.original._id}`">
 											<font-awesome-icon :icon="['fas', 'plus']" />
 										</NuxtLink>
 									</button>
 								</template>
-								<template v-if="row.actions.event.update">
+								<template v-if="row.original.actions.event.update">
 									<button title="Edit Entry" class="btn-event">
-										<NuxtLink :to="`/dashboard/projects_communities/${row._id}/edit`">
+										<NuxtLink :to="`/dashboard/projects_communities/${row.original._id}/edit`">
 											<font-awesome-icon :icon="['fas', 'pencil']" />
 										</NuxtLink>
 									</button>
 								</template>
 							</div>
-							<div v-else-if="row.privileges === 'anyone' && row.actions.event">
-								<template v-if="row.actions.event.read">
+							<div v-else-if="row.original.privileges === 'anyone' && row.original.actions.event">
+								<template v-if="row.original.actions.event.read">
 									<button title="View community" class="btn-event">
-										<NuxtLink :to="`/dashboard/community/${row._id}/edit`">
+										<NuxtLink :to="`/dashboard/community/${row.original._id}/edit`">
 											<font-awesome-icon :icon="['fas', 'eye']" />
 										</NuxtLink>
 									</button>
@@ -76,9 +76,9 @@
 							</div>
 						</div>
 					</template>
-					<template #challenges-data="{ row }">
+					<template #challenges-cell="{ row }">
 						<NuxtLink
-							:to="`/dashboard/community/${row.community_id}/events/${row._id}/challenges`"
+							:to="`/dashboard/community/${row.original.community_id}/events/${row.original._id}/challenges`"
 							title="View community events challenges"
 							class="user-communities__events"
 						>
@@ -134,20 +134,20 @@ const search = ref<string>('');
 
 const columns = [
 	{
-		key: 'name',
-		label: 'NAME',
+		accessorKey: 'name',
+		header: 'NAME',
 	},
 	{
-		key: 'bench_contact',
-		label: 'MANAGERS',
+		accessorKey: 'bench_contact',
+		header: 'MANAGERS',
 	},
 	{
-		key: 'actions',
-		label: 'ACTIONS',
+		accessorKey: 'actions',
+		header: 'ACTIONS',
 	},
 	{
-		key: 'challenges',
-		label: 'CHALLENGES',
+		accessorKey: 'challenges',
+		header: 'CHALLENGES',
 	},
 ];
 

@@ -2,24 +2,33 @@
 	<div class="add-tool-table">
 		<div class="add-tool">
 			<UTable
-				v-model="selectedToolsTmp"
+				v-model:row-selection="rowSelection"
+				:get-row-id="(row: any) => row._id"
 				:columns="columns"
 				:loading="isTableLoading"
-				:rows="rows"
-				:empty-state="{
-					icon: 'i-heroicons-circle-stack-20-solid',
-					label: 'No items.',
-				}"
+				:data="rows"
 				:ui="{
 					tr: 'hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer',
 					th: 'text-left rtl:text-right px-2.5 py-2.5 text-gray-900 dark:text-white font-semibold text-sm',
 					td: 'px-3 py-3 text-sm',
 				}"
-				@select="select"
+				@select="(_e: Event, row: any) => row.toggleSelected()"
 			>
-				<template #view-data="{ row }">
+				<template #select-cell="{ row }">
+					<UCheckbox
+						:model-value="row.getIsSelected()"
+						aria-label="Select row"
+						@click.stop
+						@update:model-value="(v: boolean | 'indeterminate') => row.toggleSelected(!!v)"
+					/>
+				</template>
+				<template #view-cell="{ row }">
 					<button class="btn-custom-badget text-sm">
-						<NuxtLink :to="`${to}/metrics/add`" class="text-primaryOeb-950">
+						<NuxtLink
+							:to="`/tool/${row.original._id}`"
+							class="text-primaryOeb-950"
+							@click.stop
+						>
 							View <font-awesome-icon :icon="['fas', 'eye']" />
 						</NuxtLink>
 					</button>
@@ -48,9 +57,18 @@ const runtimeConfig = useRuntimeConfig();
 const { data } = useAuth();
 const token = data.value?.accessToken as string;
 
-const selectedToolsTmp = computed({
-	get: () => [...props.selectedTools],
-	set: (value) => emits('handleSelectedTools', value),
+const rowSelection = computed<Record<string, boolean>>({
+	get: () => Object.fromEntries(props.selectedTools.map((t) => [t._id, true])),
+	set: (value) => {
+		const ids = Object.keys(value).filter((id) => value[id]);
+		const known = new Map<string, Tool>(
+			[...props.selectedTools, ...rowTool.value].map((t) => [t._id, t])
+		);
+		emits(
+			'handleSelectedTools',
+			ids.map((id) => known.get(id)).filter(Boolean)
+		);
+	},
 });
 
 const page = ref(1);
@@ -64,20 +82,24 @@ challengeDataList.value = metricsStore.getChallengesData;
 
 const columns = [
 	{
-		key: 'name',
-		label: 'Name',
+		id: 'select',
+		header: '',
 	},
 	{
-		key: 'description',
-		label: 'Description',
+		accessorKey: 'name',
+		header: 'Name',
 	},
 	{
-		key: 'orig_id',
-		label: 'Original ID',
+		accessorKey: 'description',
+		header: 'Description',
 	},
 	{
-		key: 'view',
-		label: 'View',
+		accessorKey: 'orig_id',
+		header: 'Original ID',
+	},
+	{
+		accessorKey: 'view',
+		header: 'View',
 	},
 ];
 
@@ -128,7 +150,7 @@ async function fetchTools(token: string): Promise<Metric[]> {
 		});
 	}
 
-	selectedToolsTmp.value = toolsToSelect;
+	emits('handleSelectedTools', toolsToSelect);
 
 	// Mark selected tools
 	toolsData.sort((a: Tool, b: Tool) => {
