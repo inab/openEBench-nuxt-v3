@@ -5,6 +5,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.production
+      args:
+        # Must match the URL you open in the browser (network_mode: host serves on :3000)
+        APP_BASE_URL: http://localhost:3000
+        # Same data source as Dockerfile.devci (test-oeb2); the Dockerfile.production default is the production dataset
+        SCIENTIFIC_SERVICE_URL: https://test-oeb2.openebench.bsc.es/api/scientific
+        SCIENTIFIC_SERVICE_URL_API: https://test-oeb2.openebench.bsc.es/api/scientific/
     image: ghcr.io/inab/openebench-nuxt-v3:test2
     environment:
       - NODE_ENV=production

@@ -1,57 +1,31 @@
-version: "4"
+# Same as docker-compose.devci.yml (without the nginx proxy) plus file polling,
+# useful when file change events are not propagated into the container.
 volumes:
-  dist-volume:
   node-modules-volume:
+
+x-dev-service: &dev-service
+  build:
+    context: .
+    dockerfile: Dockerfile.devci
+  image: openebench-nuxt3:devci
+  user: ${DEV_UID:-0}:${DEV_GID:-0}
+  volumes:
+    - .:/app
+    - node-modules-volume:/app/node_modules
+
 services:
   npm_ci_deps:
-    build:
-      context: .
-      dockerfile: Dockerfile.localci
-    image: openebench-nuxt3:localci
-    user: ${DEV_UID:-0}:${DEV_GID:-0}
+    <<: *dev-service
     command: npm ci
-    volumes:
-      - ./app/assets:/app/assets:ro
-      - ./app/components:/app/components:ro
-      - ./app/config:/app/config:ro
-      - ./constants:/app/constants:ro
-      - ./app/layouts:/app/layouts:ro
-      - ./app/pages:/app/pages:ro
-      - ./app/plugins:/app/plugins:ro
-      - ./stores:/app/stores:ro
-      - ./test:/app/test:ro
-      - ./app/utils:/app/utils:ro
-      - ./vitest.config.ts:/app/vitest.config.ts:ro
-      - ./nuxt.config.js:/app/nuxt.config.js:ro
-      - ./package.json:/app/package.json:ro
-      - ./package-lock.json:/app/package-lock.json
-      - ./stylelint.config.js:/app/stylelint.config.js:ro
-      - ./server:/app/server:ro
-      - ./types:/app/types:ro
-      - ./tsconfig.json:/app/tsconfig.json:ro
-      - node-modules-volume:/app/node_modules
 
   nuxt:
-    build:
-      context: .
-      dockerfile: Dockerfile.localci
-    image: openebench-nuxt3:localci
-    user: ${DEV_UID:-0}:${DEV_GID:-0}
-
+    <<: *dev-service
     depends_on:
       npm_ci_deps:
         condition: service_completed_successfully
-
     restart: on-failure
-
-    volumes:
-      - .:/app
-      - node-modules-volume:/app/node_modules
-      - dist-volume:/app/dist
-
     ports:
       - "3001:3001"
-
     environment:
       CHOKIDAR_USEPOLLING: "true"
       WATCHPACK_POLLING: "true"

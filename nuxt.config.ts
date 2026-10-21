@@ -7,8 +7,11 @@ const testUtilsModule = process.env.VITEST ? ['@nuxt/test-utils/module'] : [];
 
 export default defineNuxtConfig({
 	compatibilityDate: '2026-09-23',
-	alias: {
-		'next-auth/core': `${process.cwd()}/node_modules/next-auth/core/index.js`,
+	// next-auth 4.24 does not export ./core, which nuxt-auth imports; production is patched in Dockerfile.production
+	$development: {
+		alias: {
+			'next-auth/core': `${process.cwd()}/node_modules/next-auth/core/index.js`,
+		},
 	},
 	devtools: {
 		enabled: true,
