@@ -36,7 +36,7 @@ const metadataStore = useMetadataStore();
 const props = defineProps<{
 	title: string;
 	field: string;
-	value: Array;
+	value: any[];
 	increasable: boolean;
 }>();
 

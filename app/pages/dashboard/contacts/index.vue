@@ -78,7 +78,7 @@ definePageMeta({
 const { data, status } = useAuth();
 const runtimeConfig = useRuntimeConfig();
 
-const routeArray: Array = [
+const routeArray = [
 	{ label: 'Dashboard', isActualRoute: false, route: '/dashboard' },
 	{ label: 'Contacts', isActualRoute: true },
 ];

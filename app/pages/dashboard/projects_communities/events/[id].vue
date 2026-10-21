@@ -147,7 +147,7 @@ const fetchCommunityEventsChallenges = async (token: string, event: string): Pro
 	}
 };
 
-const routeArray: Array = ref([
+const routeArray = ref([
 	{ label: 'Dashboard', isActualRoute: false, route: '/dashboard' },
 	{
 		label: `Community ${communityId}`,

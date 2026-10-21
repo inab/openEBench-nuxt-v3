@@ -98,7 +98,7 @@ const privilegesType = computed(() => {
 
 const communityEvents = ref<Array<Event>>([]);
 
-const routeArray: Array = ref([
+const routeArray = ref([
 	{ label: 'Dashboard', isActualRoute: false, route: '/dashboard' },
 	{
 		label: 'Projects & Communities',

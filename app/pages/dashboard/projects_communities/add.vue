@@ -29,7 +29,7 @@ if (userPrivileges.value.length == 0) {
 	userStore.setUserCommunitiesRoles(data.value.oeb_roles);
 }
 
-const routeArray: Array = ref([
+const routeArray = ref([
 	{ label: 'Dashboard', isActualRoute: false, route: '/dashboard' },
 	{
 		label: 'Projects & communities',

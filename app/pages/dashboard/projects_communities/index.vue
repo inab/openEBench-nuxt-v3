@@ -87,7 +87,7 @@ const HEADER_ITEM = [
 
 const token = computed(() => data.value?.accessToken || '');
 
-const routeArray: Array = [
+const routeArray = [
 	{ label: 'Dashboard', isActualRoute: false, route: '/dashboard' },
 	{ label: 'Projects & communities', isActualRoute: true },
 ];

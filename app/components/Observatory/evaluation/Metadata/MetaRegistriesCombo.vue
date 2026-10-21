@@ -68,8 +68,8 @@ const metadataStore = useMetadataStore();
 const props = defineProps<{
 	title: string;
 	field: string;
-	selected: Array;
-	registries: Array;
+	selected: any[];
+	registries: any[];
 }>();
 
 const selectedItem = ref([...props.selected]);

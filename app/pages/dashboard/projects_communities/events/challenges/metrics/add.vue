@@ -52,7 +52,7 @@ const runtimeConfig = useRuntimeConfig();
 const eventId: string = route.params.event_id;
 const communityId: string = route.params.community_id;
 const challengeId: string = route.params.id;
-const routeArray: Array = ref([
+const routeArray = ref([
 	{ label: 'Dashboard', isActualRoute: false, route: '/dashboard' },
 	{
 		label: 'Entries',

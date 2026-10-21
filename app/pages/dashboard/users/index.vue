@@ -134,7 +134,7 @@ async function fetchContacts(token: string): Promise<Contact[]> {
 	}
 }
 
-const routeArray: Array = [
+const routeArray = [
 	{ label: 'Dashboard', isActualRoute: false, route: '/dashboard' },
 	{ label: 'Users', isActualRoute: true },
 ];

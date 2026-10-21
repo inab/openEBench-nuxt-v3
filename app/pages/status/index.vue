@@ -279,7 +279,7 @@ const checkObservatoryServices = async () => {
 		});
 };
 
-const routeArray: Array = [{ label: 'Status', isActualRoute: true }];
+const routeArray = [{ label: 'Status', isActualRoute: true }];
 
 const fetchAndPlot = async () => {
 	realTraces.value = {

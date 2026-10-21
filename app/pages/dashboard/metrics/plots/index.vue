@@ -131,7 +131,7 @@ const HEADER_ITEM = [
 	},
 ];
 
-const routeArray: Array = [
+const routeArray = [
 	{ label: 'Dashboard', isActualRoute: false, route: '/dashboard' },
 	{ label: 'Metrics', isActualRoute: false, route: '/dashboard/metrics' },
 	{ label: 'Plots', isActualRoute: true },

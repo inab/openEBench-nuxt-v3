@@ -171,7 +171,7 @@ const token: string = data?.value.accessToken;
 const communitiesSelected = ref([]);
 const router = useRouter();
 
-const routeArray: Array = [
+const routeArray = [
 	{ label: 'Dashboard', isActualRoute: false, route: '/dashboard' },
 	{
 		label: `Contacts`,

@@ -43,7 +43,7 @@ const props = defineProps<{
 	title: string;
 	n_cols: string;
 	field: string;
-	value: Array;
+	value: any[];
 	increasable: boolean;
 }>();
 

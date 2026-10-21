@@ -21,7 +21,7 @@
 import { computed, watchEffect } from 'vue';
 
 const props = defineProps<{
-	items: Array;
+	items: any[];
 	selected: string;
 }>();
 

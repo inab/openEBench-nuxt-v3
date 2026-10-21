@@ -112,7 +112,7 @@ async function fetchMetrics(token: string): Promise<Metric[]> {
 	}
 }
 
-const routeArray: Array = [
+const routeArray = [
 	{ label: 'Dashboard', isActualRoute: false, route: '/dashboard' },
 	{ label: 'Metrics', isActualRoute: true },
 ];

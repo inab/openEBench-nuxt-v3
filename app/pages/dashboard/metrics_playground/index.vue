@@ -16,7 +16,7 @@ definePageMeta({
 	},
 });
 
-const routeArray: Array = [
+const routeArray = [
 	{ label: 'Dashboard', isActualRoute: false, route: '/dashboard' },
 	{ label: 'Metrics Playground', isActualRoute: true },
 ];

@@ -71,7 +71,7 @@ const challengePrivileges = computed(() => {
 	return privilege ? privileges[privilege.role].challenge : privileges.anyone.challenge;
 });
 
-const routeArray: Array = ref([
+const routeArray = ref([
 	{ label: 'Dashboard', isActualRoute: false, route: '/dashboard' },
 	{
 		label: 'Entries',

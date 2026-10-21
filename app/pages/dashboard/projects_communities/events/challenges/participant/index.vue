@@ -189,7 +189,7 @@ const modelOptions = [
 
 function onSubmitParticipant() {}
 
-const routeArray: Array = ref([
+const routeArray = ref([
 	{ label: 'Dashboard', isActualRoute: false, route: '/dashboard' },
 	{
 		label: `Community ${communityId}`,

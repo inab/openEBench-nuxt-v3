@@ -34,7 +34,7 @@ import { computed } from 'vue';
 const route = useRoute();
 
 const props = defineProps<{
-	breadcrumbsArray?: Array;
+	breadcrumbsArray?: any[];
 }>();
 
 const routeTitle = {

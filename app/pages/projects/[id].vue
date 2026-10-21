@@ -121,7 +121,7 @@ const tabsItems = [
 	},
 ];
 
-const routeArray: Array = [
+const routeArray = [
 	{ label: 'Project Spaces', isActualRoute: false, route: '/projects' },
 	{ label: community.value?.acronym, isActualRoute: true },
 ];

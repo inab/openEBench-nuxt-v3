@@ -51,7 +51,7 @@ const dialogText = ref('');
 
 const errors = ref<string[]>([]);
 
-const routeArray: Array = ref([
+const routeArray = ref([
 	{ label: 'Dashboard', isActualRoute: false, route: '/dashboard' },
 	{
 		label: 'Entries',

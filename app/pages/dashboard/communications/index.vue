@@ -23,7 +23,7 @@ definePageMeta({
 	},
 });
 
-const routeArray: Array = [
+const routeArray = [
 	{ label: 'Dashboard', isActualRoute: false, route: '/dashboard' },
 	{ label: 'Communications', isActualRoute: true },
 ];
