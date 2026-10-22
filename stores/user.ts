@@ -194,7 +194,8 @@ export const useUser = defineStore('user', {
 				const links = community.links ?? [];
 				const logo =
 					Array.isArray(links) && links.length > 0
-						? (links as any[]).find((link) => link.comment === '@logo' || link.label === 'Logo')?.uri ||
+						? (links as any[]).find((link) => link.comment === '@logo' || link.label === 'Logo')
+								?.uri ||
 							'https://raw.githubusercontent.com/inab/openEBench-nuxt/refs/heads/master/static/OEB-minimal-logo-blue.svg'
 						: 'https://raw.githubusercontent.com/inab/openEBench-nuxt/refs/heads/master/static/OEB-minimal-logo-blue.svg';
 				return {

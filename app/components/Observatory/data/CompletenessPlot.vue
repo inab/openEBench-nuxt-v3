@@ -21,7 +21,9 @@ interface CompletenessData {
 }
 
 const completeness = computed(() => dataStore.completeness as unknown as CompletenessData);
-const completenessControl = computed(() => dataStore.completenessControl as unknown as CompletenessData);
+const completenessControl = computed(
+	() => dataStore.completenessControl as unknown as CompletenessData
+);
 const currentCollection = computed(() => observatoryStore.getCurrentCollection);
 const plotContainer = ref<HTMLElement | null>(null);
 

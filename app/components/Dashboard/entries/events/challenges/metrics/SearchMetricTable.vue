@@ -92,10 +92,7 @@ const rowSelection = computed<Record<string, boolean>>({
 		const known = new Map<string, any>(
 			[...props.selectedMetrics, ...props.metricRows].map((m) => [m._id, m])
 		);
-		emits(
-			'handleSelectedMetrics',
-			ids.map((id) => known.get(id)).filter(Boolean)
-		);
+		emits('handleSelectedMetrics', ids.map((id) => known.get(id)).filter(Boolean));
 	},
 });
 

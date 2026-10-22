@@ -17,7 +17,7 @@
 			</UButton>
 		</div>
 
-		<div v-for="(item, index) in (value as any[])" :key="item.id" class="row">
+		<div v-for="(item, index) in value as any[]" :key="item.id" class="row">
 			<FormField
 				:id="item.id"
 				:item="item.term"

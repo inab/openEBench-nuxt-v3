@@ -263,11 +263,7 @@ import { ref, watch, computed, defineEmits, useTemplateRef, nextTick } from 'vue
 import type { FormSubmitEvent } from '#ui/types';
 import CustomModal from '@/components/Common/CustomModal.vue';
 import { useUser } from '~~/stores/user.ts';
-import type {
-	Community,
-	CommunityPrivileges,
-	UserCommunityRoles,
-} from '~~/types/communities';
+import type { Community, CommunityPrivileges, UserCommunityRoles } from '~~/types/communities';
 import type { Contact } from '~~/types/contact';
 import { object, string, safeParse, array } from 'valibot';
 import { useRouter } from 'vue-router';
@@ -485,10 +481,7 @@ function closeDeleteValidator(index: number) {
 	}
 }
 
-function onAddContact(
-	contact: ContactPrivilege[],
-	arrayRef?: HTMLElement[] | null
-) {
+function onAddContact(contact: ContactPrivilege[], arrayRef?: HTMLElement[] | null) {
 	contact.push({
 		id: '',
 		role: rolesObj.value[0]?.value ?? '',

@@ -18,7 +18,9 @@
 				<div class="ms-auto flex shrink-0 items-center gap-2">
 					<PanelHeader
 						:fields="metadataFields[metadataKeys[index] as keyof typeof metadataFields]"
-						:field_names="metadataFieldNames[metadataKeys[index] as keyof typeof metadataFieldNames]"
+						:field_names="
+							metadataFieldNames[metadataKeys[index] as keyof typeof metadataFieldNames]
+						"
 						:visible_ticks="!open"
 					/>
 					<UIcon

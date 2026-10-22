@@ -50,9 +50,7 @@
 					<div class="flex flex-col md:flex-row justify-between items-center">
 						<div
 							class="w-full"
-							:class="
-								currentCollection.id === 'IMPaCT-Data' ? 'md:w-2/3' : 'md:w-3/4'
-							"
+							:class="currentCollection.id === 'IMPaCT-Data' ? 'md:w-2/3' : 'md:w-3/4'"
 						>
 							<h6 class="text-lg font-bold text-primaryOeb-500">
 								<a :href="currentCollection.homepage" target="_blank">{{
@@ -66,9 +64,7 @@
 						</div>
 						<div
 							class="w-full mt-4 md:mt-0 flex justify-center md:justify-end pr-0 md:pr-4"
-							:class="
-								currentCollection.id === 'IMPaCT-Data' ? 'md:w-1/3' : 'md:w-1/4'
-							"
+							:class="currentCollection.id === 'IMPaCT-Data' ? 'md:w-1/3' : 'md:w-1/4'"
 						>
 							<a target="_blank" :href="currentCollection.homepage"
 								><img
@@ -76,8 +72,7 @@
 									alt="Collection Image"
 									class="rounded-lg collection-image transition-transform duration-500 ease-in-out"
 									:class="{
-										'collection-image--impact-data':
-											currentCollection.id === 'IMPaCT-Data',
+										'collection-image--impact-data': currentCollection.id === 'IMPaCT-Data',
 									}"
 							/></a>
 						</div>

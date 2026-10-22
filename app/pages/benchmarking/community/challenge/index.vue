@@ -156,9 +156,7 @@ const currentEvent = computed(() => {
 	return selectedEvent;
 });
 
-const communityAcronym = computed(
-	() => (community.value as { acronym?: string } | null)?.acronym
-);
+const communityAcronym = computed(() => (community.value as { acronym?: string } | null)?.acronym);
 
 const fromProjects = computed(() => route.query.from === 'projects');
 

@@ -102,7 +102,9 @@ export default NuxtAuthHandler({
 					protocol: 'auth2',
 					redirect_uri: `${runtimeConfig.public.BASE_URL}/api/auth/callback/keycloak`,
 				},
-				...({ clientAuthentication: { token_endpoint_auth_method: 'none', method: 'none' } } as object),
+				...({
+					clientAuthentication: { token_endpoint_auth_method: 'none', method: 'none' },
+				} as object),
 				...({
 					client: {
 						token_endpoint_auth_method: 'none',

@@ -78,7 +78,9 @@ const HEADER_ITEM = [
 
 const isAdmin = computed(() => {
 	if (data.value) {
-		const privileges = (data.value.oeb_roles as string[]).find((privilege) => privilege === 'admin:oeb');
+		const privileges = (data.value.oeb_roles as string[]).find(
+			(privilege) => privilege === 'admin:oeb'
+		);
 
 		return privileges ? true : false;
 	}

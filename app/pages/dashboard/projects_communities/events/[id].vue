@@ -93,7 +93,9 @@ const communityDataEvent = ref<Event | null>(null);
 const eventChallenge = ref<Array<Challenge>>([]);
 
 const isView = computed(() => {
-	return userPrivileges.value.find((privilege: any) => privilege.event === eventId)?.role === 'Owner';
+	return (
+		userPrivileges.value.find((privilege: any) => privilege.event === eventId)?.role === 'Owner'
+	);
 });
 
 if (userPrivileges.value.length == 0) {
@@ -136,7 +138,10 @@ const fetchUserCommunitiesEvents = async (token: string): Promise<void> => {
 	}
 };
 
-const fetchCommunityEventsChallenges = async (token: string, event: string): Promise<Challenge[] | undefined> => {
+const fetchCommunityEventsChallenges = async (
+	token: string,
+	event: string
+): Promise<Challenge[] | undefined> => {
 	try {
 		const eventChallengeResponse = await userStore.fetchCommunitiesChallenge(token, event);
 		const data = await eventChallengeResponse;

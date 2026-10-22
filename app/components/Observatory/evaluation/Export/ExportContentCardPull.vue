@@ -260,7 +260,9 @@ onMounted(() => {
 
 // Methods
 const getFromBoxStatic = (param: any) => {
-	return boxStatic.value[props.type as keyof typeof boxStatic.value][param as keyof (typeof boxStatic.value)['citation']];
+	return boxStatic.value[props.type as keyof typeof boxStatic.value][
+		param as keyof (typeof boxStatic.value)['citation']
+	];
 };
 
 const buildRepositoryURL = () => {

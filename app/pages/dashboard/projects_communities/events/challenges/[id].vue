@@ -87,7 +87,9 @@ const runtimeConfig = useRuntimeConfig();
 const challengeData = ref<Challenge | null>(null);
 
 const isView = computed(() => {
-	return userPrivileges.value.find((privilege: any) => privilege.event === eventId)?.role === 'Owner';
+	return (
+		userPrivileges.value.find((privilege: any) => privilege.event === eventId)?.role === 'Owner'
+	);
 });
 if (userPrivileges.value.length == 0) {
 	userStore.setUserCommunitiesRoles(data.value?.oeb_roles as string[] | undefined);

@@ -465,7 +465,8 @@ const schema = object({
 	orig_id: string(),
 });
 
-const lang = (window.navigator as Navigator & { userLanguage?: string }).userLanguage ||
+const lang =
+	(window.navigator as Navigator & { userLanguage?: string }).userLanguage ||
 	window.navigator.language;
 const dateFormat = computed(() => getLocaleDateString(lang));
 const automatedOptions = [

@@ -51,12 +51,7 @@
 
 			<!-- Accordion - How to read this page -->
 			<div class="px-5">
-				<UAccordion
-					color="white"
-					variant="ghost"
-					class=""
-					:items="items"
-				>
+				<UAccordion color="white" variant="ghost" class="" :items="items">
 					<!-- @vue-expect-error legacy slot, never rendered by Nuxt UI 4 -->
 					<template #item="{ item }">
 						<div class="mx-2.5">

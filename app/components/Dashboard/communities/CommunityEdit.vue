@@ -220,10 +220,9 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
-import type { Community } from '~~/types/communities';
+import type { Community, CommunityPrivilegeActions } from '~~/types/communities';
 import { CommunityStatusLabels, CommunityStatusColors } from '~~/constants/community_const';
 import CustomSubtitle from '@/components/Common/CustomSubtitle.vue';
-import type { CommunityPrivilegeActions } from '~~/types/communities';
 import { useRouter } from 'vue-router';
 import type { FormSubmitEvent } from '#ui/types';
 import * as v from 'valibot';

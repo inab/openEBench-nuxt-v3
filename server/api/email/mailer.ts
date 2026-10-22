@@ -63,7 +63,13 @@ function stripHtml(html: string) {
 
 function escapeHtml(value: string) {
 	return value.replace(/[&<>"']/g, (character) => {
-		const entities: Record<string, string> = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+		const entities: Record<string, string> = {
+			'&': '&amp;',
+			'<': '&lt;',
+			'>': '&gt;',
+			'"': '&quot;',
+			"'": '&#39;',
+		};
 		return entities[character] ?? character;
 	});
 }

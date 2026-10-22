@@ -376,13 +376,16 @@ async function countTotalMetrics() {
 
 async function countTotalTools() {
 	try {
-		const response = await $fetch<any[]>(`${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Tool`, {
-			headers: {
-				Authorization: `Bearer ${token.value}`,
-				Accept: 'application/json',
-			},
-			method: 'GET',
-		});
+		const response = await $fetch<any[]>(
+			`${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Tool`,
+			{
+				headers: {
+					Authorization: `Bearer ${token.value}`,
+					Accept: 'application/json',
+				},
+				method: 'GET',
+			}
+		);
 
 		const data = await response;
 		totalTools.value = data.length;

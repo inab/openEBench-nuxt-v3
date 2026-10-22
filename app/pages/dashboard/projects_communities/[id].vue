@@ -140,7 +140,10 @@ const fetchUserCommunity = async (token: string): Promise<void> => {
 	}
 };
 
-const fetchUserCommunitiesEvents = async (token: string, communityId: string): Promise<Event[] | undefined> => {
+const fetchUserCommunitiesEvents = async (
+	token: string,
+	communityId: string
+): Promise<Event[] | undefined> => {
 	try {
 		const communityEventResponse = await userStore.fetchCommunitiesEvents(token, communityId);
 		const data = await communityEventResponse;

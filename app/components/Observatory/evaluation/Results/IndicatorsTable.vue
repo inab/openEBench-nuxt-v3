@@ -191,9 +191,9 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { indicatorsExplanation as explanationData } from './IndicatorsExplanation.js';
-const indicatorsExplanation: Record<string, any> = explanationData;
 import { useResultStore } from '~~/stores/observatory/evaluation/results';
 import logsSection from './LogsSection.vue';
+const indicatorsExplanation: Record<string, any> = explanationData;
 
 // Obtener el store
 const resultStore = useResultStore();

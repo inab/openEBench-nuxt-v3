@@ -482,9 +482,8 @@ import { useUser } from '~~/stores/user.ts';
 
 import { CommunityStatusLabels, CommunityStatusColors } from '~~/constants/community_const';
 
-import type { Community } from '~~/types/communities';
+import type { Community, CommunityPrivilegeCategories } from '~~/types/communities';
 import type { FormErrorEvent, FormSubmitEvent } from '#ui/types';
-import type { CommunityPrivilegeCategories } from '~~/types/communities';
 import type { Event as OebEvent } from '~~/types/events';
 import type { Contact } from '~~/types/contact';
 

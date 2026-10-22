@@ -9,12 +9,7 @@
 				</div>
 			</div>
 			<div class="w-100">
-				<UForm
-					:schema="schema"
-					:state="state"
-					class="space-y-4"
-					@submit="onSubmitContactAdd"
-				>
+				<UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmitContactAdd">
 					<div class="w-100">
 						<div class="form-card__row__box row pb-3">
 							<div class="col-6">

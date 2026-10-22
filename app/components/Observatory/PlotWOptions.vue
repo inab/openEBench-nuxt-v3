@@ -41,10 +41,7 @@
                 </pre>
 							</div>
 							<div class="col-1">
-								<UTooltip
-									text="Copy to clipboard"
-									:ui="{ content: 'bg-black/50 text-white' }"
-								>
+								<UTooltip text="Copy to clipboard" :ui="{ content: 'bg-black/50 text-white' }">
 									<button
 										class="px-2 py-1 rounded-full hover:bg-gray-100 click-animation"
 										@click="handleCopyClick(item.url)"

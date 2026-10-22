@@ -27,7 +27,7 @@
 					<p v-else>
 						<noDataAvailable
 							:id="null"
-						description="No information found to display."
+							description="No information found to display."
 							btn-path="/benchmarking"
 							btn-text="Benchmarking communities"
 						/>
