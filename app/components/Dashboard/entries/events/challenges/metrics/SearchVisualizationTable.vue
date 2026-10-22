@@ -311,7 +311,7 @@ const updateSelectedTitle = (type: string) => {
   }
 };
 
-const updateVisualization = (type: ChartDefault, isSelected: Boolean) => {
+const updateVisualization = (type: ChartDefault, isSelected: boolean | string) => {
   selectedVisualizationTmp.value = {
     id: type.id,
     name: type.name,
@@ -321,7 +321,7 @@ const updateVisualization = (type: ChartDefault, isSelected: Boolean) => {
   };
 
   if (isSelected) {
-    updateSelectedTitle(type);
+    updateSelectedTitle(type.id);
   } else {
     chartSelected.value = {
       id: "",

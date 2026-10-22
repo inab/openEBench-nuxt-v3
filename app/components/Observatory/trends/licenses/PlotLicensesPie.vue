@@ -24,13 +24,13 @@ const props = defineProps<{
 const { title = '', height = 300 } = props;
 
 // Define layout and config as reactive objects
-const layout = {
-	yaxis: { title: '' },
-	xaxis: { title: '' },
+const layout: Partial<Plotly.Layout> = {
+	yaxis: { title: { text: '' } },
+	xaxis: { title: { text: '' } },
 	height: height,
 	autosize: true,
 	margin: { b: 40, t: 0, r: 0, l: 0 },
-	title: { text: title, x: 0.5, xanchor: 'center', yanchor: 'top' },
+	title: { text: title, x: 0.5, xanchor: 'center' as const, yanchor: 'top' as const },
 	hoverlabel: { bgcolor: '#FFF' },
 };
 
@@ -61,7 +61,7 @@ async function plotChart() {
 		return;
 	}
 
-	const trace = {
+	const trace: Partial<Plotly.PlotData> = {
 		type: 'sunburst',
 		labels: props.labels,
 		parents: props.parents,

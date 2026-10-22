@@ -38,7 +38,7 @@ const props = defineProps<{
 	n_cols: string;
 	field: string;
 	value: any[];
-	increasable: boolean;
+	increasable?: boolean;
 }>();
 
 // Methods

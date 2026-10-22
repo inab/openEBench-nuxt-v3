@@ -103,9 +103,11 @@ export default NuxtAuthHandler({
 					redirect_uri: `${runtimeConfig.public.BASE_URL}/api/auth/callback/keycloak`,
 				},
 				...({ clientAuthentication: { token_endpoint_auth_method: 'none', method: 'none' } } as object),
-				client: {
-					token_endpoint_auth_method: 'none',
-				},
+				...({
+					client: {
+						token_endpoint_auth_method: 'none',
+					},
+				} as object),
 			},
 			httpOptions: {
 				timeout: 100000,
@@ -113,26 +115,27 @@ export default NuxtAuthHandler({
 			userinfo: {
 				url: `${runtimeConfig.public.KEYCLOAK_HOST}/auth/realms/${runtimeConfig.public.KEYCLOAK_REALM}/protocol/openid-connect/userinfo`,
 			},
-			session: {
-				jwt: true,
-				maxAge: 30 * 60 + 10,
-			},
-			cookies: {
-				sessionToken: {
-					name: `__Secure-next-auth.session-token`,
-					options: {
-						httpOnly: true,
-						sameSite: 'lax',
+			...({ session: { jwt: true, maxAge: 30 * 60 + 10 } } as object),
+			...({
+				cookies: {
+					sessionToken: {
+						name: `__Secure-next-auth.session-token`,
+						options: {
+							httpOnly: true,
+							sameSite: 'lax',
+						},
 					},
 				},
-			},
+			} as object),
 		}),
 	],
-	async debugHandler(req: { url?: string }, _res: unknown, next: () => void) {
-		console.log('Auth request:', req.url);
-		console.log('Config:', runtimeConfig.public);
-		next();
-	},
+	...({
+		async debugHandler(req: { url?: string }, _res: unknown, next: () => void) {
+			console.log('Auth request:', req.url);
+			console.log('Config:', runtimeConfig.public);
+			next();
+		},
+	} as object),
 	events: {
 		async signIn() {},
 		...({

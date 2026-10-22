@@ -111,15 +111,15 @@ const build_control_collection_traces = () => {
 onMounted(() => {
 	const traces = build_control_collection_traces();
 	const reversedLabels = Object.values(props.indicators_labels).reverse();
-	const layout = {
+	const layout: Partial<Plotly.Layout> = {
 		yaxis: {
-			title: '',
+			title: { text: '' },
 			showline: false,
 			categoryorder: 'array',
 			categoryarray: reversedLabels,
 		},
 		xaxis: {
-			title: 'Score',
+			title: { text: 'Score' },
 			zeroline: false,
 			showline: true,
 		},
@@ -133,14 +133,10 @@ onMounted(() => {
 			t: 20,
 			l: 150,
 		},
-		title: props.title || '',
+		title: { text: props.title || '' },
 	};
 
-	Plotly.newPlot(props.div_id, {
-		data: traces,
-		layout,
-		config,
-	});
+	Plotly.newPlot(props.div_id, traces, layout, config);
 
 	watch(activeTabIndex, async () => {
 		await nextTick();

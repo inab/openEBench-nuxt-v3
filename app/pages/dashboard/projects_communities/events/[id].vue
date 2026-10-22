@@ -87,17 +87,17 @@ const eventId: string = route.params.id as string;
 const communityId: string = route.params.community_id as string;
 const routeName = ref<string>('');
 const runtimeConfig = useRuntimeConfig();
-const userPrivileges: Array<string> = computed(() => userStore.getUserCommunitiesRoles);
+const userPrivileges = computed(() => userStore.getUserCommunitiesRoles);
 
-const communityDataEvent = ref<Event>(null);
-const eventChallenge = ref<Array<Challenge>>(null);
+const communityDataEvent = ref<Event | null>(null);
+const eventChallenge = ref<Array<Challenge>>([]);
 
 const isView = computed(() => {
-	return userPrivileges.value.filter((privilege: any) => privilege.event === eventId).role === 'Owner';
+	return userPrivileges.value.find((privilege: any) => privilege.event === eventId)?.role === 'Owner';
 });
 
 if (userPrivileges.value.length == 0) {
-	userStore.setUserCommunitiesRoles(data.value.oeb_roles);
+	userStore.setUserCommunitiesRoles(data.value?.oeb_roles as string[] | undefined);
 }
 
 const eventPrivileges = computed(() => {
@@ -128,7 +128,7 @@ const fetchUserCommunitiesEvents = async (token: string): Promise<void> => {
 		communityDataEvent.value = data;
 		isLoadingData.value = false;
 		const communityResponse = await fetchCommunityEventsChallenges(token, eventId);
-		eventChallenge.value = communityResponse;
+		eventChallenge.value = communityResponse ?? [];
 
 		const communityContacts = await fetchCommunityContacts(token, String(eventId));
 	} catch (error) {
@@ -136,7 +136,7 @@ const fetchUserCommunitiesEvents = async (token: string): Promise<void> => {
 	}
 };
 
-const fetchCommunityEventsChallenges = async (token: string, event: string): Promise<void> => {
+const fetchCommunityEventsChallenges = async (token: string, event: string): Promise<Challenge[] | undefined> => {
 	try {
 		const eventChallengeResponse = await userStore.fetchCommunitiesChallenge(token, event);
 		const data = await eventChallengeResponse;

@@ -41,7 +41,7 @@ import { useGithub } from '~~/stores/observatory/evaluation/github';
 const props = defineProps<{
 	title: string;
 	text: string;
-	installationUrl: string;
+	installationUrl?: string;
 	initialDialogAppInstall: boolean;
 }>();
 

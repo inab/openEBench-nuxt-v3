@@ -56,8 +56,8 @@
 					variant="ghost"
 					class=""
 					:items="items"
-					:ui="{ wrapper: 'flex flex-col w-full' }"
 				>
+					<!-- @vue-expect-error legacy slot, never rendered by Nuxt UI 4 -->
 					<template #item="{ item }">
 						<div class="mx-2.5">
 							<UDivider />
@@ -511,8 +511,14 @@ const dialogItemsAccessibility = [embedCodes.accessibilityBubble];
 const dialogItemsInteroperability = [embedCodes.interoperabilityBubble];
 const dialogItemsReusability = [embedCodes.reusabilityBubble];
 
-const fair_scores = computed(() => storeFairness.fairScores);
-const control_fair_scores = computed(() => storeFairness.controlFAIRscores);
+type FairScoresByDimension = Record<
+	'F' | 'A' | 'I' | 'R',
+	{ fair_scores: any[]; id: string; labels: { [key: string]: string } }
+>;
+const fair_scores = computed(() => storeFairness.fairScores as unknown as FairScoresByDimension);
+const control_fair_scores = computed(
+	() => storeFairness.controlFAIRscores as unknown as FairScoresByDimension
+);
 const current_collection = computed(() => observatoryStore.currentCollection);
 const colors = ['#5da4d6', '#ff900e', '#2ca065', '#bd86f0'];
 const colors_lines = ['#0075c7', '#995302', '#046b37', '#5e3d7d'];

@@ -22,7 +22,7 @@ const props = defineProps<{
 const { title = '', height = 280 } = props;
 
 // Define labels for y-axis with links
-const labels = {
+const labels: Record<string, string> = {
 	gitlab: '<a href="https://gitlab.com/gitlab-org/gitlab" target="_blank">GitLab</a>',
 	bitbucket: '<a href="https://bitbucket.org/" target="_blank">Bitbucket</a>',
 	sourceforge: '<a href="https://sourceforge.net/" target="_blank">SourceForge</a>',
@@ -36,7 +36,7 @@ const layout: Partial<Plotly.Layout> = {
 		automargin: true,
 	},
 	xaxis: {
-		title: 'Number of software',
+		title: { text: 'Number of software' },
 	},
 	height: height,
 	autosize: true,
@@ -81,7 +81,7 @@ async function plotChart() {
 		{
 			type: 'bar',
 			x: props.xValues,
-			y: props.yValues.map((value) => labels[value]),
+			y: props.yValues.map((value) => labels[value] as string),
 			orientation: 'h',
 			marker: {
 				color: '#6fad6f',

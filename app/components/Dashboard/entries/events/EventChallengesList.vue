@@ -184,8 +184,8 @@ const totalPages = computed(() => {
 	return Math.ceil(Number(_total.value) / Number(pageCount.value));
 });
 
-function formatClientDate(date: string) {
-	const formattedDate = new Date(date);
+function formatClientDate(date?: string) {
+	const formattedDate = new Date(date ?? NaN);
 	return formattedDate.toLocaleDateString(lang, {
 		day: '2-digit',
 		month: '2-digit',

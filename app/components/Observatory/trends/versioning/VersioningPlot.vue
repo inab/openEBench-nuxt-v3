@@ -22,7 +22,7 @@ const props = defineProps<{
 const { title = '', height = 250 } = props;
 
 // Define layout and config as reactive objects
-const layout = {
+const layout: Partial<Plotly.Layout> = {
 	showlegend: true,
 	hoverlabel: { bgcolor: '#FFF' },
 	height: height,
@@ -33,7 +33,7 @@ const layout = {
 		r: 0,
 		b: 20,
 	},
-	title: { text: title, x: 0.5, xanchor: 'center', yanchor: 'top' },
+	title: { text: title, x: 0.5, xanchor: 'center' as const, yanchor: 'top' as const },
 };
 
 const config = {
@@ -66,9 +66,9 @@ async function plotChart() {
 	const trace = {
 		labels: props.labels,
 		values: props.values,
-		type: 'pie',
+		type: 'pie' as const,
 		hole: 0.4,
-		direction: 'clockwise',
+		direction: 'clockwise' as const,
 		sort: false,
 		marker: {
 			colors: ['#41388c', '#a29cd6', '#c9c5e3'],

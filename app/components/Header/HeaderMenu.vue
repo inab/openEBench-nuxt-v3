@@ -272,6 +272,7 @@ import { activeTabIndex } from '@/components/Common/state.js';
 import NavbarStatus from '@/components/status/NavbarStatus.vue';
 
 const router = useRouter();
+const ahead = ref<string | undefined>(undefined);
 
 function goToObservatory(index: number) {
 	const tab = subMenuEntriesObservatory[index];
@@ -292,7 +293,9 @@ const logInItems = ref<any[]>([]);
 
 const isAdmin = computed(() => {
 	if (data.value) {
-		const privileges = data.value.oeb_roles.find((privilege: any) => privilege === 'admin:oeb');
+		const privileges = Array.isArray(data.value.oeb_roles)
+			? data.value.oeb_roles.find((privilege) => privilege === 'admin:oeb')
+			: undefined;
 
 		return privileges ? true : false;
 	}
@@ -304,7 +307,7 @@ const dropdownStates = ref({
 	observatory: false,
 });
 
-if (data.value) {
+if (data.value?.user) {
 	logInItems.value.push({
 		label: data.value.user.email,
 		slot: 'account',
@@ -354,8 +357,9 @@ onMounted(() => {
 	setupDropdown('observatoryDropdown', 'observatory');
 });
 
-function setupDropdown(dropdownId: any, stateKey: any) {
+function setupDropdown(dropdownId: string, stateKey: 'about' | 'observatory') {
 	const dropdownElement = document.getElementById(dropdownId);
+	if (!dropdownElement) return;
 
 	dropdownElement.addEventListener('show.bs.dropdown', () => {
 		dropdownStates.value[stateKey] = true;

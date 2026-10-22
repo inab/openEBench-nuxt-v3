@@ -17,7 +17,7 @@
 			</UButton>
 		</div>
 
-		<div v-for="(item, index) in value" :key="item.id" class="mt-4">
+		<div v-for="(item, index) in (value as any[])" :key="item.id" class="mt-4">
 			<TextFieldsAuthors
 				:id="item.id"
 				:item="item.term"

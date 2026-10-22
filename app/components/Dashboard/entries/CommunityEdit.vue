@@ -485,7 +485,7 @@ import { CommunityStatusLabels, CommunityStatusColors } from '~~/constants/commu
 import type { Community } from '~~/types/communities';
 import type { FormErrorEvent, FormSubmitEvent } from '#ui/types';
 import type { CommunityPrivilegeCategories } from '~~/types/communities';
-import type { Event } from '~~/types/events';
+import type { Event as OebEvent } from '~~/types/events';
 import type { Contact } from '~~/types/contact';
 
 import EventsList from '@/components/Dashboard/entries/EventsList.vue';
@@ -530,13 +530,13 @@ const turndownService = new TurndownService();
 const router = useRouter();
 const runtimeConfig = useRuntimeConfig();
 const { data } = useAuth();
-const token = ref(data?.value.accessToken);
+const token = ref(data.value?.accessToken);
 const hasSetConsentTab = ref(false);
 
 const userStore = useUser();
 const imageDefault = '~/assets/images/dashboards/empty-logo.jpg';
 
-const inputLabels = {
+const inputLabels: Record<string, { acronym: string; name: string }> = {
 	Community: {
 		acronym: 'Community Acronym',
 		name: 'Community Name',
@@ -553,13 +553,13 @@ const props = defineProps<{
 	loadingData: boolean;
 	commmunityPrivileges: CommunityPrivilegeCategories;
 	isView: boolean;
-	events: Array<Event>;
+	events: Array<OebEvent>;
 	isLoadingEvents: boolean;
 	privilegesType: string;
 	tabIndex: string;
 }>();
 
-const state = ref({
+const state = ref<Record<string, any>>({
 	id: '',
 	acronym: '',
 	status: '',
@@ -601,7 +601,7 @@ const isDialogOpened = ref(false);
 const dialogText = ref('');
 const elementToDelete = ref({
 	index: null as number | null,
-	element: [] as string[],
+	element: [] as unknown[],
 });
 const logo = ref('');
 const errors = ref<string[]>([]);
@@ -684,7 +684,7 @@ const userAvailableRoles = [
 	{ value: 'owner', label: 'Owner' },
 	{ value: 'manager', label: 'Manager' },
 ];
-const userPrivileges: Array<string> = computed(() => userStore.getUserCommunitiesRoles);
+const userPrivileges = computed(() => userStore.getUserCommunitiesRoles);
 
 const labelTitle = ref('');
 const labelButton = ref('');
@@ -776,7 +776,7 @@ const checkEmptyLinks = computed(() => {
 });
 
 const cheEmptyContacts = computed(() => {
-	return localContacts.value.some((contact: string) => contact === '');
+	return localContacts.value.some((contact) => contact.id === '');
 });
 
 const checkEmptyKeywords = computed(() => {
@@ -937,7 +937,7 @@ function validateRequiredFields(data: any): string[] {
 	return errorMessages;
 }
 
-function consentTab(userPrivileges: any) {
+function consentTab(userPrivileges?: { value?: { role: string }[] }) {
 	if (!userPrivileges?.value || !Array.isArray(items.value)) return;
 
 	const canConsent = userPrivileges.value.find(
@@ -964,7 +964,7 @@ function onChangeStatus(newStatus: string) {
 	}
 }
 
-function onAddElement(array: string[], arrayRef?: HTMLInputElement[]) {
+function onAddElement(array: string[], arrayRef?: (HTMLInputElement | null)[]) {
 	array.push('');
 	nextTick(() => {
 		const lastElementIndex = array.length - 1;
@@ -976,18 +976,18 @@ function onAddElement(array: string[], arrayRef?: HTMLInputElement[]) {
 }
 
 function onAddContact(
-	contact: {
+	contacts: {
 		id: string;
 		role: string;
-	},
-	arrayRef?: HTMLInputElement[]
+	}[],
+	arrayRef?: (HTMLElement | null)[] | null
 ) {
-	contact.push({
+	contacts.push({
 		id: '',
 		role: rolesObj.value[0]?.value ?? '',
 	});
 	nextTick(() => {
-		const lastElementIndex = array.length - 1;
+		const lastElementIndex = contacts.length - 1;
 		const inputElement = arrayRef ? arrayRef[lastElementIndex] : null;
 		if (inputElement) {
 			inputElement.focus();
@@ -995,7 +995,7 @@ function onAddContact(
 	});
 }
 
-function onDeleteElement(index: number, element: string[]) {
+function onDeleteElement(index: number, element: unknown[]) {
 	if (element[index] === '') {
 		element.splice(index, 1);
 		restartElementToDelete();
@@ -1045,7 +1045,7 @@ function onFileChange(event: Event) {
 	}
 }
 
-async function fetchContacts(token: string): Promise<Contact[]> {
+async function fetchContacts(token: string): Promise<void> {
 	try {
 		if (userStore.getContactsList && userStore.getContactsList.length > 0) {
 			contactsData.value = userStore.getContactsList;
@@ -1132,8 +1132,7 @@ watchEffect(() => {
 
 	if (!hasSetConsentTab.value) {
 		if (userPrivileges.value.length === 0) {
-			userStore.setUserCommunitiesRoles(data.value.oeb_roles);
-			consentTab(data.value.oeb_role);
+			userStore.setUserCommunitiesRoles(data.value?.oeb_roles as string[] | undefined);
 		} else {
 			consentTab(userPrivileges);
 		}

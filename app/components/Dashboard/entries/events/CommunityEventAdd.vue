@@ -322,7 +322,7 @@ import { computed, ref, onMounted, nextTick } from 'vue';
 import { useUser } from '~~/stores/user.ts';
 import type { CommunityPrivilegeCategories } from '~~/types/communities';
 import CustomDialog from '@/components/Common/CustomDialog.vue';
-import type { FormSubmitEvent } from '#ui/types';
+import type { FormSubmitEvent, FormErrorEvent } from '#ui/types';
 import { object, string, array, safeParse, boolean, optional, date } from 'valibot';
 import { VueDatePicker } from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
@@ -384,10 +384,10 @@ const dialogTitle = ref('');
 const dialogType = ref('yesno');
 const isDialogOpened = ref(false);
 const dialogText = ref('');
-const dialogElement = ref<{ element: string[]; index: number } | null>(null);
+const dialogElement = ref<{ element: unknown[]; index: number } | null>(null);
 const elementToDelete = ref({
 	index: null as number | null,
-	element: [] as string[],
+	element: [] as unknown[],
 });
 
 const automatedOptions = [
@@ -415,18 +415,18 @@ function onAddElement(array: string[]) {
 }
 
 function onAddContact(
-	contact: {
+	contacts: {
 		id: string;
 		role: string;
-	},
-	arrayRef?: HTMLInputElement[]
+	}[],
+	arrayRef?: (HTMLInputElement | null)[]
 ) {
-	contact.push({
+	contacts.push({
 		id: '',
 		role: rolesObj.value[0]?.value ?? '',
 	});
 	nextTick(() => {
-		const lastElementIndex = array.length - 1;
+		const lastElementIndex = contacts.length - 1;
 		const inputElement = arrayRef ? arrayRef[lastElementIndex] : null;
 		if (inputElement) {
 			inputElement.focus();
@@ -473,8 +473,12 @@ async function onSubmitCommunityEvent(event: FormSubmitEvent<Schema>) {
 	}
 }
 
+async function onError(event: FormErrorEvent) {
+	// TODO check error
+}
+
 async function createBenchmarkingEvent() {
-	const cleanContacts = deleteEmptyElements(localContacts.value);
+	const cleanContacts = localContacts.value.filter((contact) => contact.id.trim() !== '');
 	const cleanReferences = deleteEmptyElements(localReferences.value);
 
 	const body = {
@@ -482,7 +486,7 @@ async function createBenchmarkingEvent() {
 		name: state.value.name,
 		community_id: state.value.community_id,
 		bench_contact_ids: cleanContacts.map((element) => {
-			return element;
+			return element.id;
 		}),
 		orig_id: state.value._id,
 		_schema: state.value._schema,
@@ -621,7 +625,7 @@ function elementTranslator(element: string) {
 	return element;
 }
 
-function onDeleteElement(index: number, element: string[]) {
+function onDeleteElement(index: number, element: unknown[]) {
 	dialogElement.value = null;
 	if (element[index] === '') {
 		element.splice(index, 1);

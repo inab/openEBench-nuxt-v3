@@ -10,7 +10,7 @@
 						<div class="mt-3">
 							<UProgress
 								animation="carousel"
-								:ui="{ indicator: { color: 'text-primaryOeb-500' } }"
+								:ui="{ indicator: 'text-primaryOeb-500' }"
 								size="sm"
 							/>
 							<div class="text-sm" style="color: #1565c0">

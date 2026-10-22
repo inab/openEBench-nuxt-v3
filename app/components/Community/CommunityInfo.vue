@@ -87,7 +87,7 @@ import { ref, computed } from 'vue';
 
 const props = defineProps<{
 	community: any;
-	communityReferences: any[];
+	communityReferences: any[] | null;
 }>();
 
 console.log(props.community);

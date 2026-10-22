@@ -78,7 +78,7 @@ const HEADER_ITEM = [
 
 const isAdmin = computed(() => {
 	if (data.value) {
-		const privileges = data.value.oeb_roles.find((privilege: any) => privilege === 'admin:oeb');
+		const privileges = (data.value.oeb_roles as string[]).find((privilege) => privilege === 'admin:oeb');
 
 		return privileges ? true : false;
 	}
@@ -120,8 +120,9 @@ async function fetchContacts(token: string): Promise<Contact[]> {
 			if (!contact.notes || contact.notes === 'Unknown') {
 				contact.notes = null;
 			}
-			if (contact.email) {
-				contact.email = contact.email.split(',');
+			const rawEmail: unknown = contact.email;
+			if (rawEmail && typeof rawEmail === 'string') {
+				contact.email = rawEmail.split(',');
 			}
 			return contact;
 		});

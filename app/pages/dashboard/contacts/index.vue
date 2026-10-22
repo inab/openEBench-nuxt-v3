@@ -125,8 +125,9 @@ async function fetchContacts(token: string): Promise<Contact[]> {
 			if (!contact.notes || contact.notes === 'Unknown') {
 				contact.notes = null;
 			}
-			if (contact.community_id) {
-				contact.community_id = contact.community_id.split(',');
+			const legacyContact = contact as Contact & { community_id?: string | string[] };
+			if (typeof legacyContact.community_id === 'string' && legacyContact.community_id) {
+				legacyContact.community_id = legacyContact.community_id.split(',');
 			}
 			return contact;
 		});

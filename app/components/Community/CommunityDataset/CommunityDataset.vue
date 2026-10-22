@@ -68,8 +68,16 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
+interface Dataset {
+	name?: string;
+	type?: string;
+	datalink?: { uri?: string };
+	datalinks?: { uri?: string }[];
+	[key: string]: unknown;
+}
+
 const props = defineProps<{
-	datasets: object[];
+	datasets: Dataset[];
 	communityId: string;
 }>();
 
@@ -102,8 +110,7 @@ const columns = [
 ];
 
 const datasets = computed(() => {
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	return props.datasets.map((dataset: any) => {
+	return props.datasets.map((dataset) => {
 		return {
 			name: dataset.name,
 			type: dataset.type,
@@ -118,7 +125,7 @@ const filteredRows = computed(() => {
 		return props.datasets.slice((page.value - 1) * pageCount.value, page.value * pageCount.value);
 	}
 
-	const filteredSearcher = props.datasets.filter((challenge: any) => {
+	const filteredSearcher = props.datasets.filter((challenge) => {
 		return Object.values(challenge).some((value) => {
 			return String(value).toLowerCase().includes(search.value.toLowerCase());
 		});

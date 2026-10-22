@@ -1,17 +1,12 @@
 <template>
 	<div>
 		<UTabs :items="items" class="w-full" :default-index="defaultIndex">
-			<template #default="{ item, index, selected }">
+			<template #default="{ item, index }">
 				<div class="flex items-center gap-2 relative truncate w-full" @click="onTabClick(index)">
 					<!-- Render the icon -->
 					<i :class="item.icon" class="text-lg"></i>
 					<!-- Render the label -->
 					<span>{{ item.label }}</span>
-					<!-- Render the active indicator -->
-					<span
-						v-if="selected"
-						class="absolute -right-4 w-2 h-2 rounded-full bg-primary-500 dark:bg-primary-400"
-					/>
 				</div>
 			</template>
 		</UTabs>
@@ -19,11 +14,12 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits } from 'vue';
+import { defineProps, defineEmits, type PropType } from 'vue';
+import type { TabsItem } from '@nuxt/ui';
 
 defineProps({
 	items: {
-		type: Array,
+		type: Array as PropType<TabsItem[]>,
 		required: true, // Array of tabs passed from the parent
 	},
 	defaultIndex: {

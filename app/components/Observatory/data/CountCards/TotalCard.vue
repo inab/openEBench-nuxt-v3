@@ -13,7 +13,7 @@
 <script setup lang="ts">
 // PROPS
 const props = defineProps<{
-	count: null;
+	count: number | null;
 }>();
 
 function formatNumber(value: number) {

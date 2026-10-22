@@ -34,7 +34,7 @@ const metadataStore = useMetadataStore();
 const props = defineProps<{
 	title: string;
 	field: string;
-	valueType: any[];
+	valueType: string;
 	n_cols: string;
 	increasable: boolean;
 	value: any[];
@@ -42,7 +42,7 @@ const props = defineProps<{
 }>();
 
 // Local copy of the value prop
-const localValue = ref(JSON.parse(JSON.stringify(props.value)));
+const localValue = ref<any[]>(JSON.parse(JSON.stringify(props.value)));
 
 // Watch for changes in the `value` prop to keep `localValue` in sync
 watch(
@@ -70,7 +70,7 @@ const addEntry = () => {
 	metadataStore.addEntry(payload);
 };
 
-const updateEntry = ({ index, value }) => {
+const updateEntry = ({ index, value }: { index: number; value: string }) => {
 	const payload = {
 		field: props.field,
 		index,

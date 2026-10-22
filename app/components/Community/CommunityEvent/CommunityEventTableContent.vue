@@ -45,7 +45,7 @@ import CommunityEventClassification from '@/components/Community/CommunityEvent/
 import CommunityEventTable from '@/components/Community/CommunityEvent//CommunityEventTable.vue';
 
 defineProps<{
-	event: object;
+	event: { _id: string; challenges: any[] };
 	communityId: string;
 }>();
 

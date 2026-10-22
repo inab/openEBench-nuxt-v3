@@ -26,7 +26,8 @@
 					</p>
 					<p v-else>
 						<noDataAvailable
-							description="No information found to display."
+							:id="null"
+						description="No information found to display."
 							btn-path="/benchmarking"
 							btn-text="Benchmarking communities"
 						/>
@@ -77,8 +78,8 @@ const route = useRoute();
 const communityStore = useCommunity();
 
 const community_Id = Array.isArray(route.params.community)
-	? route.params.community[0]
-	: route.params.community;
+	? route.params.community[0]!
+	: (route.params.community as string);
 
 const { data: community, pending } = await useAsyncData(`community-events-${community_Id}`, () => {
 	if (communityStore.communityId && communityStore.communityId === community_Id) {
@@ -110,6 +111,6 @@ const routeArray: Array<{
 				isActualRoute: false,
 				route: '/benchmarking',
 			},
-			{ label: community.value.acronym + ' Events', isActualRoute: true },
+			{ label: (community.value as Community).acronym + ' Events', isActualRoute: true },
 		];
 </script>

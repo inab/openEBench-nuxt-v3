@@ -98,7 +98,7 @@ const isversionControlRepositoriesLoading = computed(
 );
 
 // Derived Values
-const x = computed(() => Object.values(data_vc.value || {}));
+const x = computed(() => Object.values(data_vc.value || {}) as number[]);
 const y = computed(() => Object.keys(data_vc.value || {}));
 const percentage = computed(() => {
 	const counts = control_counts.value || { 'version control': 0, 'no version control': 0 };

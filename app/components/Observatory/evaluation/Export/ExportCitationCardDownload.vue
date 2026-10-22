@@ -55,7 +55,7 @@ const download = () => {
 		return;
 	}
 
-	const blob = new Blob([yaml], { type: 'text/yaml' });
+	const blob = new Blob([yaml as BlobPart], { type: 'text/yaml' });
 	const url = window.URL.createObjectURL(blob);
 
 	const link = document.createElement('a');

@@ -43,8 +43,8 @@ const plotChart = () => {
 		y: docTypes,
 		x: sortedData.map((d: any) => d?.[format] ?? 0),
 		name: format,
-		type: 'bar',
-		orientation: 'h',
+		type: 'bar' as const,
+		orientation: 'h' as const,
 		marker: {
 			color: colorMap[format],
 		},
@@ -64,23 +64,23 @@ const plotChart = () => {
 		},
 
 		xaxis: {
-			title: 'Number of Documentation Links',
+			title: { text: 'Number of Documentation Links' },
 		},
 
 		shapes: docTypes
-			.map((_, index) => {
+			.map((_, index): Partial<Plotly.Shape> | null => {
 				if (index % 2 !== 0) {
 					return {
-						type: 'rect',
-						xref: 'paper',
-						yref: 'y',
+						type: 'rect' as const,
+						xref: 'paper' as const,
+						yref: 'y' as const,
 						x0: 0,
 						x1: 1,
 						y0: index - 0.5,
 						y1: index + 0.5,
 						fillcolor: '#ffc971',
 						opacity: 0,
-						layer: 'below',
+						layer: 'below' as const,
 						line: {
 							width: 0,
 						},
@@ -89,7 +89,7 @@ const plotChart = () => {
 
 				return null;
 			})
-			.filter(Boolean),
+			.filter((shape): shape is Partial<Plotly.Shape> => shape !== null),
 
 		margin: {
 			l: 250,

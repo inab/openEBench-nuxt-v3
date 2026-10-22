@@ -100,22 +100,7 @@ const props = defineProps<{
 	to: string;
 }>();
 
-let itemsCommunityLinks: null = null;
-if (props.links) {
-	itemsCommunityLinks = props.links.filter((item: any) => {
-		if (item.comment == '@logo') {
-			return;
-		}
-		return [
-			{
-				label: item.label,
-				href: item.uri,
-				icon: 'i-heroicons-link',
-				target: '_blank',
-			},
-		];
-	});
-}
+const itemsCommunityLinks = (props.links ?? []).filter((item: any) => item.comment !== '@logo');
 
 const statusClass = computed(() => {
 	const normalizedStatus = props.status.toLowerCase();

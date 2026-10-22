@@ -4,7 +4,7 @@
 			v-for="(item, index) in fields"
 			:key="index"
 			:field="item"
-			:field_name="field_names[index]"
+			:field_name="field_names[index] as string"
 		/>
 	</div>
 </template>

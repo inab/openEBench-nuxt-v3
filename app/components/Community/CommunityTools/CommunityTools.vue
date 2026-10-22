@@ -61,8 +61,13 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 
+interface CommunityTool {
+	registry_tool_id?: string;
+	[key: string]: unknown;
+}
+
 const props = defineProps<{
-	tools: object;
+	tools: CommunityTool[];
 	communityId: string;
 }>();
 

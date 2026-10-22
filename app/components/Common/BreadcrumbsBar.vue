@@ -1,6 +1,6 @@
 <template>
 	<div
-		v-if="breadcrumbs.length > 0 && breadcrumbs[0].label != 'index' && breadcrumbs[1].label != ''"
+		v-if="breadcrumbs.length > 0 && breadcrumbs[0]?.label != 'index' && breadcrumbs[1]?.label != ''"
 		class="breadcrumbar"
 	>
 		<ul class="breadcrumbar__wrapper px-4">
@@ -33,17 +33,23 @@ import { computed } from 'vue';
 
 const route = useRoute();
 
+interface Breadcrumb {
+	label: string | undefined;
+	isActualRoute?: boolean;
+	route?: string | undefined;
+	to?: string;
+}
+
 const props = defineProps<{
-	breadcrumbsArray?: any[];
+	breadcrumbsArray?: Breadcrumb[];
 }>();
 
-const routeTitle = {
+const routeTitle: Record<string, string> = {
 	benchmarking: 'Benchmarking Communities',
 };
 
-const breadcrumbs = computed(() => {
-	let fullPath = route.fullPath;
-	fullPath = fullPath.split('/');
+const breadcrumbs = computed<Breadcrumb[]>(() => {
+	const fullPath = route.fullPath.split('/');
 
 	if (props.breadcrumbsArray) {
 		const newRoute = props.breadcrumbsArray;
@@ -73,8 +79,8 @@ function getRouterPath(route: any, routeItem: any) {
 	return matchedSegments.map((segment: any) => segment.name).join('/');
 }
 
-function getCustomTitle(route: string) {
-	return routeTitle[route] ? routeTitle[route] : route;
+function getCustomTitle(route: string | undefined) {
+	return route && routeTitle[route] ? routeTitle[route] : route;
 }
 </script>
 

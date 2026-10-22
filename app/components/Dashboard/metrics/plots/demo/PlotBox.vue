@@ -115,7 +115,7 @@ const isLoadingGraphBar = ref(true);
 
 const preparedBar = ref<any>({});
 const initialValues = ref<any>({});
-const type: string = ref('box-plot');
+const type = ref<string>('box-plot');
 const hasDataError = ref(false);
 const hasDataErrorMessage = ref('');
 const widgetKey = ref(0);
@@ -125,12 +125,12 @@ const state = ref({
 });
 
 const schema = object({
-	challenge_participants: array(object()),
+	challenge_participants: array(object({})),
 });
 
 getPreparedData();
 function getPreparedData() {
-	const bar = demo_bar;
+	const bar: Record<string, any> = demo_bar;
 	const barVisualization = bar.inline_data.visualization;
 	preparedBar.value = {
 		_id: bar._id,

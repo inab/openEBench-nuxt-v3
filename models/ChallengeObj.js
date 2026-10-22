@@ -81,6 +81,7 @@ class ChallengeObj {
 	}
 
 	getParticipants(data = null) {
+		/** @type {Record<string, any>} */
 		let participantsArray = {};
 		let dataObj = {};
 		if (data) {

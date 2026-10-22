@@ -124,7 +124,7 @@ const props = defineProps<{
 	item: any;
 	field: string;
 	index: number;
-	vocabularyLabel: string;
+	vocabularyLabel?: string;
 	acceptedVocabularies?: string[];
 }>();
 
@@ -135,7 +135,7 @@ const emit = defineEmits(['remove']);
 const model = ref('');
 const modelURI = ref('');
 const selectVocabulary = ref('');
-const edamReversed = ref(EDAMreversed);
+const edamReversed = ref<Record<string, Record<string, string>>>(EDAMreversed);
 const uriErrorMessage = ref('Invalid URL');
 const isFocusedSelect = ref(false);
 
@@ -175,13 +175,15 @@ watch(selectVocabulary, () => {
 
 watch(model, (newValue) => {
 	if (selectVocabulary.value === 'EDAM') {
-		modelURI.value = edamReversed.value.format[newValue] || '';
+		modelURI.value = edamReversed.value.format?.[newValue] || '';
 	}
 	updateStore();
 });
 
 // COMPUTED
-const vocabulariesItems = computed(() => metadataStore.getVocabulariesItems);
+const vocabulariesItems = computed(
+	() => metadataStore.getVocabulariesItems as Record<string, Record<string, string[]>>
+);
 const customVocabulary = computed(() => {
 	return !props.acceptedVocabularies?.includes(selectVocabulary.value);
 });

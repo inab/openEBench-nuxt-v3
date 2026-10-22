@@ -27,9 +27,9 @@ const userStore = useUser();
 const { data } = useAuth();
 const communityId: string = route.params.community_id as string;
 
-const userPrivileges: Array<string> = computed(() => userStore.getUserCommunitiesRoles);
+const userPrivileges = computed(() => userStore.getUserCommunitiesRoles);
 if (userPrivileges.value.length == 0) {
-	userStore.setUserCommunitiesRoles(data.value.oeb_roles);
+	userStore.setUserCommunitiesRoles(data.value?.oeb_roles as string[] | undefined);
 }
 
 const eventPrivileges = computed(() => {

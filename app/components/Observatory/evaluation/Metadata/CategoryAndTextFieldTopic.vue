@@ -156,7 +156,7 @@ const props = defineProps<{
 }>();
 
 // Method to emit the ‘remove’ event
-const emit = defineEmits(['remove']);
+const emit = defineEmits(['remove', 'change']);
 const emitRemove = () => {
 	emit('remove', props.index);
 };
@@ -165,7 +165,7 @@ const model = ref('');
 const selectVocabulary = ref('');
 const modelURICustom = ref('');
 const modelURI = ref('');
-const edamReversed = ref(EDAMreversed);
+const edamReversed = ref<Record<string, Record<string, string>>>(EDAMreversed);
 const uriErrorMessage = ref('');
 const isFocused = ref(false);
 const isFocusedSelect = ref(false);
@@ -179,7 +179,9 @@ const selectClasses = computed(() => [
 ]);
 
 // Get data from the store
-const vocabulariesItems = computed(() => metadataStore.getVocabulariesItems);
+const vocabulariesItems = computed(
+	() => metadataStore.getVocabulariesItems as Record<string, Record<string, string[]>>
+);
 // Computed properties
 const customVocabulary = computed(() => {
 	return !props.acceptedVocabularies?.includes(selectVocabulary.value);
@@ -187,8 +189,8 @@ const customVocabulary = computed(() => {
 
 const comboboxItems = computed(() => {
 	// console.log(selectVocabulary.value)
-	if (props.acceptedVocabularies.includes(selectVocabulary.value)) {
-		return vocabulariesItems.value[selectVocabulary.value][props.typeLabel];
+	if (props.acceptedVocabularies?.includes(selectVocabulary.value)) {
+		return vocabulariesItems.value[selectVocabulary.value]?.[props.typeLabel ?? ''];
 	}
 	return [];
 });

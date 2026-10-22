@@ -18,9 +18,9 @@
 						class="source-card-shell py-1 bg-white border border-gray-100 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
 					>
 						<SourceCard
-							:title="cards_info[card.source].title"
+							:title="cards_info[card.source]?.title ?? ''"
 							:count="card.count"
-							:label="cards_info[card.source].label"
+							:label="cards_info[card.source]?.label ?? ''"
 						/>
 					</div>
 				</div>
@@ -71,7 +71,7 @@ const mainCardCaption = computed(() =>
 );
 
 // Cards Info
-const cards_info = reactive({
+const cards_info: Record<string, { title: string; flex: number; label: string }> = reactive({
 	biotools: {
 		title: 'Bio.tools',
 		flex: 3,

@@ -31,7 +31,7 @@ const props = defineProps<{
 	field: string;
 	label: string;
 	n_cols: string;
-	color: string;
+	color: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral';
 	item: boolean;
 }>();
 

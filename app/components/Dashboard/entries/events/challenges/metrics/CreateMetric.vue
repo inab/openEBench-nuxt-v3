@@ -107,12 +107,7 @@ const schema = object({
 	formal_definition: string(),
 	orig_id: string(),
 	type: string(),
-	metrics_contact_ids: array(
-		object({
-			id: string(),
-			name: string(),
-		})
-	),
+	metrics_contact_ids: array(string()),
 });
 
 const getErrors = computed(() => errors.value.join(', '));

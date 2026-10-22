@@ -154,7 +154,6 @@ const columns = [
 const _total = ref(0);
 const filteredRows = computed(() => {
 	if (
-		communitiesEventsData.value.length === 0 ||
 		!communitiesEventsData.value.communityEvents ||
 		communitiesEventsData.value.communityEvents.length === 0
 	) {

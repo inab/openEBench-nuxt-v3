@@ -14,7 +14,7 @@
 			</div>
 
 			<!-- Slot for inputField -->
-			<slot name="inputField" @removeEntry="removeEntry(index, field)"></slot>
+			<slot name="inputField"></slot>
 		</div>
 	</div>
 </template>

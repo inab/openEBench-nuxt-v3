@@ -30,8 +30,15 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{
-	services: any;
+interface ServiceStatus {
+	service: string;
+	status: boolean | null;
+	response: string | number | null;
+	page: string;
+}
+
+const props = defineProps<{
+	services: ServiceStatus[];
 	isTableLoading: boolean;
 }>();
 

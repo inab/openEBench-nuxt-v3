@@ -245,7 +245,7 @@ const submissionStatus = [
 ];
 
 const isModalOpen = ref<boolean>(false);
-const selectedSubmission = ref<Submission>({});
+const selectedSubmission = ref<Submission>({} as Submission);
 
 const statusOptions = submissionStatus.map((status) => ({
 	...status,

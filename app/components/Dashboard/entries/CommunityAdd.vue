@@ -120,7 +120,7 @@
 											<UTooltip text="Unique community acronym">
 												<UIcon name="i-heroicons-information-circle" />
 											</UTooltip>
-											{{ inputLabels[state.type].acronym }}
+											{{ inputLabels[state.type]?.acronym }}
 											<span class="text-red-400 required">*</span>
 										</label>
 										<div class="w-100">
@@ -137,7 +137,7 @@
 								<div class="form-card__row__box">
 									<div class="form-group">
 										<label for="name">
-											{{ inputLabels[state.type].name }}
+											{{ inputLabels[state.type]?.name }}
 											<span class="text-red-400 required">*</span>
 										</label>
 										<div class="w-100">
@@ -450,7 +450,7 @@ const rolesObj = ref([
 	{ label: 'Contributor', value: 'contributor' },
 ]);
 
-const inputLabels = {
+const inputLabels: Record<string, { acronym: string; name: string }> = {
 	Community: {
 		acronym: 'Community Acronym',
 		name: 'Community Name',
@@ -581,10 +581,10 @@ const dialogTitle = ref('');
 const dialogType = ref('yesno');
 const isDialogOpened = ref(false);
 const dialogText = ref('');
-const dialogElement = ref<{ element: string[]; index: number } | null>(null);
+const dialogElement = ref<{ element: unknown[]; index: number } | null>(null);
 const elementToDelete = ref({
 	index: null as number | null,
-	element: [] as string[],
+	element: [] as unknown[],
 });
 
 const errors = ref<string[]>([]);
@@ -619,8 +619,8 @@ const checkEmptyContacts = computed(() => {
 		return false;
 	}
 
-	const filter = localContacts.value.map((contact: string) => {
-		return contact === '';
+	const filter = localContacts.value.map((contact) => {
+		return contact.id === '';
 	});
 
 	return filter[0] ? filter[0] : false;
@@ -631,7 +631,7 @@ const checkEmptyKeywords = computed(() => {
 });
 
 const checkEmptyUsers = computed(() => {
-	return localUsers.value.some((user: string) => user === '');
+	return localUsers.value.some((user) => user.name === '' && user.email === '');
 });
 
 function validateRequiredFields(data: any): string[] {
@@ -685,13 +685,7 @@ async function onSubmitCommunity(event: FormSubmitEvent<Schema>) {
 			errors.value = customErrors;
 		} else {
 			errors.value = [];
-			const response = await createCommunity();
-			const responseObj = response.json();
-			if (responseObj.status >= 200 && responseObj.status < 300) {
-				oks.value = 'Community created successfully';
-			} else {
-				errors.value.push('Community could not be created');
-			}
+			await createCommunity();
 		}
 	} else {
 		errors.value = result.issues.map((issue) => issue.message);
@@ -841,7 +835,7 @@ function onChangeStatus(newStatus: string) {
 	}
 }
 
-function onAddElement(array: string[], arrayRef?: HTMLInputElement[]) {
+function onAddElement(array: string[], arrayRef?: (HTMLInputElement | null)[]) {
 	array.push('');
 	nextTick(() => {
 		const lastElementIndex = array.length - 1;
@@ -853,18 +847,18 @@ function onAddElement(array: string[], arrayRef?: HTMLInputElement[]) {
 }
 
 function onAddContact(
-	contact: {
+	contacts: {
 		id: string;
 		role: string;
-	},
-	arrayRef?: HTMLInputElement[]
+	}[],
+	arrayRef?: (HTMLElement | null)[] | null
 ) {
-	contact.push({
+	contacts.push({
 		id: '',
 		role: rolesObj.value[0]?.value ?? '',
 	});
 	nextTick(() => {
-		const lastElementIndex = array.length - 1;
+		const lastElementIndex = contacts.length - 1;
 		const inputElement = arrayRef ? arrayRef[lastElementIndex] : null;
 		if (inputElement) {
 			inputElement.focus();
@@ -874,7 +868,7 @@ function onAddContact(
 
 function onAddObjectElement(
 	array: { name: string; email: string; role: string }[],
-	arrayRef?: HTMLInputElement[]
+	arrayRef?: (HTMLInputElement | null)[]
 ) {
 	array.push({
 		name: '',
@@ -891,7 +885,7 @@ function onAddObjectElement(
 	});
 }
 
-function onDeleteElement(index: number, element: string[]) {
+function onDeleteElement(index: number, element: unknown[]) {
 	dialogElement.value = null;
 	if (element[index] === '') {
 		element.splice(index, 1);

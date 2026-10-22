@@ -267,12 +267,16 @@ import type {
 	Community,
 	CommunityPrivileges,
 	UserCommunityRoles,
-	UserCommunityPrivilege,
 } from '~~/types/communities';
 import type { Contact } from '~~/types/contact';
 import { object, string, safeParse, array } from 'valibot';
 import { useRouter } from 'vue-router';
 import CustomDialog from '@/components/Common/CustomDialog.vue';
+
+interface ContactPrivilege {
+	id: string;
+	role: string;
+}
 
 const props = defineProps<{
 	isModalOpen: boolean;
@@ -291,17 +295,17 @@ const isSearchingContact = ref(true);
 const errors = ref<string[]>([]);
 const oks = ref<string>('');
 const router = useRouter();
-const allCommunitiesPrivileges = ref<UserCommunityPrivilege[]>([]);
+const allCommunitiesPrivileges = ref<ContactPrivilege[]>([]);
 const rolesObj = ref<UserCommunityRoles[]>([
 	{ label: 'Owner', value: 'owner' },
 	{ label: 'Manager', value: 'manager' },
 	{ label: 'Contributor', value: 'contributor' },
 ]);
 const isValidatorOpened = ref([{ index: null as number | null, isOpened: false }]);
-const dialogElement = ref<{ element: string[]; index: number } | null>(null);
+const dialogElement = ref<{ element: unknown[]; index: number } | null>(null);
 const elementToDelete = ref({
 	index: null as number | null,
-	element: [] as string[],
+	element: [] as unknown[],
 });
 const itemRefs = useTemplateRef('items');
 
@@ -342,7 +346,7 @@ const closeModal = () => {
 	emits('close-modal');
 };
 
-async function fetchContact(id: string): Promise<Contact> {
+async function fetchContact(id: string): Promise<Contact | null> {
 	isSearchingContact.value = true;
 	try {
 		const response = await fetch(
@@ -392,7 +396,7 @@ const fetchUserCommunities = async (token: string): Promise<any[]> => {
 	}
 };
 
-const fetchAllPrivileges = async (token: string): Promise<UserCommunityPrivilege[]> => {
+const fetchAllPrivileges = async (token: string): Promise<ContactPrivilege[]> => {
 	try {
 		const privilegesResponse = await fetch(
 			`${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}query/privileges/${props.contactId}`,
@@ -447,7 +451,7 @@ async function onSubmitContactUpdate(event: FormSubmitEvent<Schema>) {
 	}
 }
 
-function onDeleteElement(index: number, element: string[]) {
+function onDeleteElement(index: number, element: unknown[]) {
 	dialogElement.value = null;
 	if (element[index] === '') {
 		element.splice(index, 1);
@@ -482,11 +486,8 @@ function closeDeleteValidator(index: number) {
 }
 
 function onAddContact(
-	contact: {
-		id: string;
-		role: string;
-	},
-	arrayRef?: HTMLInputElement[]
+	contact: ContactPrivilege[],
+	arrayRef?: HTMLElement[] | null
 ) {
 	contact.push({
 		id: '',
@@ -525,8 +526,7 @@ const checkEmptyContacts = computed(() => {
 		return false;
 	}
 
-	const filter = privileges.map((contact) => contact);
-	return filter[0] ?? { community: '', role: '' };
+	return true;
 });
 
 async function updateContact() {
@@ -585,7 +585,7 @@ async function updateContact() {
 			}
 		}
 	} catch (error) {
-		errors.value.push(error);
+		errors.value.push(error instanceof Error ? error.message : String(error));
 	}
 }
 
@@ -604,7 +604,7 @@ watch(
 	async (newVal) => {
 		if (newVal) {
 			const contactData = await fetchContact(newVal);
-			state.value = contactData ?? { ...state.value };
+			state.value = (contactData as unknown as typeof state.value | null) ?? { ...state.value };
 		}
 	},
 	{ immediate: true }

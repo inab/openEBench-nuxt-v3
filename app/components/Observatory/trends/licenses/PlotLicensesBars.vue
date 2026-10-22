@@ -39,12 +39,12 @@ const labs = {
 	CC: '<a href="https://creativecommons.org/licenses/">CC</a>',
 };
 
-const layout = {
+const layout: Partial<Plotly.Layout> = {
 	yaxis: {
-		title: 'Number of software',
+		title: { text: 'Number of software' },
 	},
 	xaxis: {
-		title: 'License Family/Type',
+		title: { text: 'License Family/Type' },
 		categoryorder: 'total ascending',
 	},
 	hoverlabel: { bgcolor: '#FFF' },
@@ -67,7 +67,7 @@ function buildTrace(
 	color: string,
 	border: string,
 	labs: Record<string, string>
-) {
+): Partial<Plotly.PlotData> {
 	return {
 		type: 'bar',
 		x: x.map((a) => labs[a] || a),
@@ -114,7 +114,7 @@ onMounted(() => {
 		return;
 	}
 
-	const traces = [];
+	const traces: Partial<Plotly.PlotData>[] = [];
 
 	if (props.licenses_copyleft.length > 0) traces.push(trace1.value);
 	if (props.licenses_permissive.length > 0) traces.push(trace2.value);

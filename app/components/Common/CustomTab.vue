@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, watchEffect } from 'vue';
+import { computed } from 'vue';
 
 const props = defineProps<{
 	items: any[];
@@ -28,19 +28,6 @@ const props = defineProps<{
 const selectTab = computed(() => props.selected);
 const itemsTab = computed(() => props.items);
 const emit = defineEmits(['change-selected']);
-
-if (props.selected) {
-	selectTab.value = props.selected;
-}
-
-if (props.items) {
-	itemsTab.value = props.items;
-}
-
-watchEffect(() => {
-	selectTab.value = props.selected;
-	itemsTab.value = props.items;
-});
 </script>
 
 <style scoped lang="scss">

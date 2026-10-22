@@ -145,7 +145,15 @@ const chartDivVre = ref(null);
 const chartDivApi = ref(null);
 const chartDivAuth = ref(null);
 const chartDivObservatory = ref(null);
-const statusGeneral = ref({});
+interface ServiceStatus {
+	service: string;
+	status: boolean | null;
+	response: string | number | null | import('vue').Ref<any>;
+	class: string;
+	page: string;
+}
+
+const statusGeneral = ref<ServiceStatus[]>([]);
 const isTableLoading = ref(true);
 
 const recomendedTraces = [2000, 1000, 2000, 1000];
@@ -341,25 +349,25 @@ const drawChartVre = () => {
 	const traceReal = {
 		x: [vreLatency.value],
 		y: ['VRE'],
-		type: 'bar',
+		type: 'bar' as const,
 		name: 'Real latency',
 		marker: { color: 'rgb(11, 87, 159)', opacity: 0.7 },
-		orientation: 'h',
+		orientation: 'h' as const,
 	};
 
 	const traceRecomended = {
 		x: [recomendedTraces[0]],
 		y: ['VRE'],
-		type: 'bar',
+		type: 'bar' as const,
 		name: 'Recomended maximum latency',
 		marker: { color: 'rgb(204,204,204)', opacity: 0.5 },
-		orientation: 'h',
+		orientation: 'h' as const,
 	};
 
 	Plotly.newPlot(chartDivVre.value, [traceRecomended, traceReal], {
-		title: 'Fetch Time per Service (ms)',
+		title: { text: 'Fetch Time per Service (ms)' },
 		xaxis: { tickangle: -45 },
-		yaxis: { title: 'Time (ms)' },
+		yaxis: { title: { text: 'Time (ms)' } },
 		barmode: 'group',
 	});
 };
@@ -370,25 +378,25 @@ const drawChartApi = () => {
 	const traceReal = {
 		x: [scientificLatency.value],
 		y: ['API'],
-		type: 'bar',
+		type: 'bar' as const,
 		name: 'Real latency',
 		marker: { color: 'rgb(11, 87, 159)', opacity: 0.7 },
-		orientation: 'h',
+		orientation: 'h' as const,
 	};
 
 	const traceRecomended = {
 		x: [recomendedTraces[1]],
 		y: ['API'],
-		type: 'bar',
+		type: 'bar' as const,
 		name: 'Recomended maximum latency',
 		marker: { color: 'rgb(204,204,204)', opacity: 0.5 },
-		orientation: 'h',
+		orientation: 'h' as const,
 	};
 
 	Plotly.newPlot(chartDivApi.value, [traceRecomended, traceReal], {
-		title: 'Fetch Time per Service (ms)',
+		title: { text: 'Fetch Time per Service (ms)' },
 		xaxis: { tickangle: -45 },
-		yaxis: { title: 'Time (ms)' },
+		yaxis: { title: { text: 'Time (ms)' } },
 		barmode: 'group',
 	});
 };
@@ -399,25 +407,25 @@ const drawChartAuth = () => {
 	const traceReal = {
 		x: [keycloakLatency.value],
 		y: ['Auth'],
-		type: 'bar',
+		type: 'bar' as const,
 		name: 'Real latency',
 		marker: { color: 'rgb(11, 87, 159)', opacity: 0.7 },
-		orientation: 'h',
+		orientation: 'h' as const,
 	};
 
 	const traceRecomended = {
 		x: [recomendedTraces[2]],
 		y: ['Auth'],
-		type: 'bar',
+		type: 'bar' as const,
 		name: 'Recomended maximum latency',
 		marker: { color: 'rgb(204,204,204)', opacity: 0.5 },
-		orientation: 'h',
+		orientation: 'h' as const,
 	};
 
 	Plotly.newPlot(chartDivAuth.value, [traceRecomended, traceReal], {
-		title: 'Fetch Time per Service (ms)',
+		title: { text: 'Fetch Time per Service (ms)' },
 		xaxis: { tickangle: -45 },
-		yaxis: { title: 'Time (ms)' },
+		yaxis: { title: { text: 'Time (ms)' } },
 		barmode: 'group',
 	});
 };
@@ -428,25 +436,25 @@ const drawChartObservatory = () => {
 	const traceReal = {
 		x: [observatoryLatency.value],
 		y: ['Observatory'],
-		type: 'bar',
+		type: 'bar' as const,
 		name: 'Real latency',
 		marker: { color: 'rgb(11, 87, 159)', opacity: 0.7 },
-		orientation: 'h',
+		orientation: 'h' as const,
 	};
 
 	const traceRecomended = {
 		x: [recomendedTraces[3]],
 		y: ['Observatory'],
-		type: 'bar',
+		type: 'bar' as const,
 		name: 'Recomended maximum latency',
 		marker: { color: 'rgb(204,204,204)', opacity: 0.5 },
-		orientation: 'h',
+		orientation: 'h' as const,
 	};
 
 	Plotly.newPlot(chartDivObservatory.value, [traceRecomended, traceReal], {
-		title: 'Fetch Time per Service (ms)',
+		title: { text: 'Fetch Time per Service (ms)' },
 		xaxis: { tickangle: -45 },
-		yaxis: { title: 'Time (ms)' },
+		yaxis: { title: { text: 'Time (ms)' } },
 		barmode: 'group',
 	});
 };

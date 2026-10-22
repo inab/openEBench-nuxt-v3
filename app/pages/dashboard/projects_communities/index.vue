@@ -93,7 +93,7 @@ const routeArray = [
 ];
 
 if (userStore.getUserCommunitiesRoles.length == 0) {
-	userStore.setUserCommunitiesRoles(data.value.oeb_roles);
+	userStore.setUserCommunitiesRoles(data.value?.oeb_roles as string[] | undefined);
 }
 
 const isAdmin = computed(() => {

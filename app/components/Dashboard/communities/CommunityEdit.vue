@@ -37,7 +37,7 @@
 										label-key="label"
 										value-key="value"
 										:disabled="!commmunityPrivileges.update || isView"
-										:color="commmunityPrivileges.update ? 'white' : 'gray'"
+										:color="commmunityPrivileges.update ? 'primary' : 'neutral'"
 										@update:model-value="onChangeStatus"
 									>
 										<template #item-leading="{ item }">
@@ -201,7 +201,7 @@
 								</div>
 							</div>
 							<div class="form-footer">
-								<UButton type="button" variant="secondary" @click="goBack"> Cancel </UButton>
+								<UButton type="button" variant="outline" @click="goBack"> Cancel </UButton>
 								<UButton
 									v-if="commmunityPrivileges.update && !isView"
 									type="submit"

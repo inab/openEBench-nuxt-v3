@@ -13,8 +13,8 @@ const plotElement = ref<HTMLDivElement | null>(null);
 // Define props with TypeScript types
 const props = defineProps<{
 	tools: object;
-	publications: object;
-	citations: object;
+	publications: { x: Plotly.Datum[]; y: number[] };
+	citations: { x: Plotly.Datum[]; y: number[] };
 	title?: string;
 	height?: number;
 }>();
@@ -29,16 +29,16 @@ const layout: Partial<Plotly.Layout> = {
 		roworder: 'top to bottom',
 	},
 	yaxis: {
-		title: 'Number of publications',
+		title: { text: 'Number of publications' },
 	},
 	yaxis2: {
-		title: 'Citations (last 3 years)',
+		title: { text: 'Citations (last 3 years)' },
 		side: 'left',
 		showgrid: false,
-		range: [0, props.citations.y[0] * 1.2],
+		range: [0, (props.citations.y[0] as number) * 1.2],
 	},
 	xaxis: {
-		title: 'journal',
+		title: { text: 'journal' },
 	},
 	autosize: true,
 	margin: {
@@ -74,8 +74,8 @@ const plotChart = async () => {
 	const tracePublications: Partial<Plotly.PlotData> = {
 		x: props.publications.x,
 		y: props.publications.y,
-		type: 'scatter',
-		mode: 'lines+markers',
+		type: 'scatter' as const,
+		mode: 'lines+markers' as const,
 		name: 'Publications',
 		marker: {
 			color: '#0e3487',

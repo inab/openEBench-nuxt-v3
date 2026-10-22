@@ -353,6 +353,7 @@ const props = defineProps<{
 
 const { data } = useAuth();
 const route = useRoute();
+const router = useRouter();
 const isLoadingMetrics = ref(true);
 const loadingInput = ref(false);
 const showAdvancedSearch = ref(false);
@@ -368,7 +369,7 @@ const selectedMetricResults = ref<boolean[]>([]);
 const token = data.value?.accessToken as string;
 const processedMetrics = ref(new Set());
 
-const selectedMetric = ref(null);
+const selectedMetric = ref<Metric | null>(null);
 const selectedMetrics = ref<any[]>([]);
 const isShowSearchTable = ref(false);
 
@@ -383,7 +384,6 @@ const isShowResume = ref(false);
 
 const searchMetric = ref<string>('');
 const localContacts = ref<string[]>([]);
-const dialogElement = ref<{ element: string[]; index: number } | null>(null);
 const isModalOpened = ref<boolean>(false);
 const metricAssociatedList = ref<{
 	[key: string]: { count: number; challenges: any[] };
@@ -395,30 +395,36 @@ async function searchMetricResults() {
 	processedMetrics.value.clear();
 	metricAssociatedList.value = {};
 	try {
-		const res = await metricsSearcher(selectedMetric.value._id, token);
+		const currentMetric = selectedMetric.value;
+		if (!currentMetric) {
+			throw new Error('No metric selected');
+		}
+		const res = (await metricsSearcher(currentMetric._id, token)) ?? [];
 
 		res.forEach((challenge) => {
 			if (challenge.metrics_categories) {
-				challenge.metrics_categories.forEach((category) => {
-					category?.metrics.forEach((m: any) => {
-						if (m.metrics_id !== selectedMetric.value._id) {
-							if (!metricAssociatedList.value[m.metrics_id]) {
-								metricAssociatedList.value[m.metrics_id] = {
-									count: 0,
-									challenges: [],
-								};
-							}
+				(challenge.metrics_categories as unknown as ChallengeMetricCategory[]).forEach(
+					(category) => {
+						category?.metrics.forEach((m: any) => {
+							if (m.metrics_id !== currentMetric._id) {
+								if (!metricAssociatedList.value[m.metrics_id]) {
+									metricAssociatedList.value[m.metrics_id] = {
+										count: 0,
+										challenges: [],
+									};
+								}
 
-							const associatedMetric = metricAssociatedList.value[m.metrics_id];
-							if (associatedMetric) {
-								associatedMetric.count += 1;
-								associatedMetric.challenges.push(challenge);
-							}
+								const associatedMetric = metricAssociatedList.value[m.metrics_id];
+								if (associatedMetric) {
+									associatedMetric.count += 1;
+									associatedMetric.challenges.push(challenge);
+								}
 
-							processedMetrics.value.add(m.metrics_id);
-						}
-					});
-				});
+								processedMetrics.value.add(m.metrics_id);
+							}
+						});
+					}
+				);
 			}
 		});
 
@@ -445,7 +451,7 @@ async function search() {
 }
 
 await fetchMetrics(token);
-async function fetchMetrics(token: string): Promise<Metric[]> {
+async function fetchMetrics(token: string): Promise<Metric[] | undefined> {
 	isSearchingMetrics.value = true;
 	try {
 		if (metricsStore.getMetricsData && metricsStore.getMetricsData.length > 0) {
@@ -496,7 +502,7 @@ function onSubmitSearcher() {
 }
 
 const goBack = () => {
-	route.push({
+	router.push({
 		name: 'dashboard-community-event-community-metric',
 		params: {
 			community_id: communityId,
@@ -518,26 +524,6 @@ function goPrevious(index: number) {
 
 function onAddElement(array: string[]) {
 	array.push('');
-}
-
-function onDeleteElement(index: number, element: string[]) {
-	dialogElement.value = null;
-	if (element[index] === '') {
-		element.splice(index, 1);
-		restartElementToDelete();
-	} else {
-		dialogElement.value = {
-			element: element,
-			index: index,
-		};
-		dialogText.value = 'Are you sure you want to delete this element?';
-		dialogTitle.value = 'Delete Element';
-		isDialogOpened.value = true;
-		elementToDelete.value = {
-			index: index,
-			element: element,
-		};
-	}
 }
 
 function addSelectedMetrics(index: number) {
@@ -719,10 +705,10 @@ watch(props.contactsData, (newVal: string[]) => {
 				#f4faf7 40px
 			);
 			font-weight: bold;
-			color: v-bind('text-zinc-800');
+			color: #27272a;
 			cursor: pointer;
 			.stepper-header__item__subtitle {
-				color: v-bind('text-zinc-800');
+				color: #27272a;
 			}
 		}
 

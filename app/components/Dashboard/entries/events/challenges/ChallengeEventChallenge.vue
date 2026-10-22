@@ -328,7 +328,7 @@
 							<ChallengeMetrics
 								:metric-data="metricData"
 								:is-loading-data="isLoadingData"
-								:challenge-id="challengeObj._id"
+								:challenge-id="String(challengeObj._id)"
 							/>
 						</div>
 					</CustomTabBody>
@@ -398,7 +398,25 @@ const metricData = ref<string[]>([]);
 
 const getErrors = computed(() => errors.value.join(', '));
 
-const state = ref({
+const state = ref<{
+	_id: string;
+	community_id: string;
+	name: string;
+	acronym: string;
+	_schema: string;
+	benchmarking_event_id: string;
+	challenge_contact_ids: string[];
+	dates: {
+		challenge_start: Date;
+		challenge_stop: Date;
+	};
+	is_automated: boolean;
+	url: string;
+	orig_id: string;
+	references: string[];
+	metrics_categories: string[];
+	description?: string;
+}>({
 	_id: '',
 	community_id: '',
 	name: '',
@@ -447,7 +465,8 @@ const schema = object({
 	orig_id: string(),
 });
 
-const lang = window.navigator.userLanguage || window.navigator.language;
+const lang = (window.navigator as Navigator & { userLanguage?: string }).userLanguage ||
+	window.navigator.language;
 const dateFormat = computed(() => getLocaleDateString(lang));
 const automatedOptions = [
 	{ label: 'Yes', value: true },
@@ -455,7 +474,7 @@ const automatedOptions = [
 ];
 const elementToDelete = ref({
 	index: null as number | null,
-	element: [] as string[],
+	element: [] as unknown[],
 });
 
 const challengeData = computed(() => {
@@ -514,23 +533,27 @@ if (props.challengeObj && props.challengeObj.dates) {
 	};
 }
 
-function onAddElement(array: []) {
+function onAddElement(array: string[]) {
 	array.push('');
 }
 
+function onDeleteElement(index: number, element: unknown[]) {
+	element.splice(index, 1);
+}
+
 function onAddContact(
-	contact: {
+	contacts: {
 		id: string;
 		role: string;
-	},
-	arrayRef?: HTMLInputElement[]
+	}[],
+	arrayRef?: (HTMLInputElement | null)[]
 ) {
-	contact.push({
+	contacts.push({
 		id: '',
 		role: rolesObj.value[0]?.value ?? '',
 	});
 	nextTick(() => {
-		const lastElementIndex = array.length - 1;
+		const lastElementIndex = contacts.length - 1;
 		const inputElement = arrayRef ? arrayRef[lastElementIndex] : null;
 		if (inputElement) {
 			inputElement.focus();
@@ -765,7 +788,7 @@ async function updateBenchmarkingCommunity() {
 			}
 		}
 	} catch (error) {
-		errors.value = [error];
+		errors.value = [String(error)];
 	}
 }
 

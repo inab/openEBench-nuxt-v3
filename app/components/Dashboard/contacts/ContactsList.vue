@@ -78,7 +78,7 @@
 					:class="`${getCommunityColor(row.original.initial_community_id)} no-hover community-row-badget`"
 				>
 					<font-awesome-icon :icon="['fas', 'external-link-alt']" />
-					{{ parseCommunity(row.original.initial_community_id)?.name }}
+					{{ parseCommunity(row.original.initial_community_id ?? '')?.name }}
 					<NuxtLink
 						:to="`/dashboard/projects_communities/${row.original.initial_community_id}`"
 						class="text-primaryOeb-950 pr-1"
@@ -143,6 +143,12 @@ import type { Contact } from '~~/types/contact';
 import { useUser } from '~~/stores/user.ts';
 import ContactModal from '@/components/Dashboard/contacts/ContactModal.vue';
 
+interface CommunityOption {
+	id: string;
+	name: string;
+	status?: string;
+}
+
 const props = defineProps<{
 	contactsData: Contact[];
 	isLoading: boolean;
@@ -158,7 +164,7 @@ const page = ref<number>(1);
 const pageCount = ref<number>(10);
 const contactIdOpen = ref('');
 const userStore = useUser();
-const communitiesSelected = ref<Community[]>([]);
+const communitiesSelected = ref<CommunityOption[]>([]);
 
 const pageFrom = computed(() => (Number(page.value) - 1) * Number(pageCount.value) + 1);
 
@@ -251,8 +257,8 @@ const filteredRows = computed(() => {
 	);
 });
 
-function viewContact(contact: Contact) {
-	openModal(contact);
+function viewContact(contactId: string) {
+	openModal(contactId);
 }
 
 const closeModal = () => {
@@ -261,12 +267,12 @@ const closeModal = () => {
 	contactIdOpen.value = '';
 };
 
-const openModal = async (row: Contact) => {
+const openModal = async (contactId: string) => {
 	isModalOpen.value = true;
-	contactIdOpen.value = row;
+	contactIdOpen.value = contactId;
 };
 
-const fetchUserCommunities = async () => {
+const fetchUserCommunities = async (): Promise<CommunityOption[]> => {
 	try {
 		const communitiesResponse = await userStore.fetchCommunities(props.token);
 		const response = communitiesResponse.map((community: Community) => {
@@ -276,7 +282,7 @@ const fetchUserCommunities = async () => {
 				status: community.status,
 			};
 		});
-		response.sort((a: Community, b: Community) => {
+		response.sort((a: CommunityOption, b: CommunityOption) => {
 			if (a.name < b.name) {
 				return -1;
 			}
@@ -292,13 +298,13 @@ const fetchUserCommunities = async () => {
 	}
 };
 
-const parseCommunity = (communityRow: Community): Community | undefined => {
+const parseCommunity = (communityRow: string): CommunityOption | undefined => {
 	return globalCommunities.value.find((community) => {
 		return community.id === communityRow;
 	});
 };
 
-const globalCommunities = ref<Community[]>([]);
+const globalCommunities = ref<CommunityOption[]>([]);
 
 function handleCommunityFilter() {
 	if (communitiesSelected.value.length > 0) {
@@ -318,7 +324,7 @@ function handleCommunityFilter() {
 	}
 }
 
-function getCommunityColor(communityId: string) {
+function getCommunityColor(communityId?: string) {
 	const row = globalCommunities.value.find((community) => {
 		return community.id === communityId;
 	});

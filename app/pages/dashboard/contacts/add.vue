@@ -14,7 +14,6 @@
 					:state="state"
 					class="space-y-4"
 					@submit="onSubmitContactAdd"
-					@error="onError"
 				>
 					<div class="w-100">
 						<div class="form-card__row__box row pb-3">
@@ -331,7 +330,7 @@ async function createContact() {
 			}
 		}
 	} catch (error) {
-		errors.value = error;
+		errors.value = [error instanceof Error ? error.message : String(error)];
 	}
 }
 </script>

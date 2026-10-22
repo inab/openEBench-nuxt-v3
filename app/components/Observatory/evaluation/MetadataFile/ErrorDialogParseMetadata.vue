@@ -14,7 +14,7 @@
 						<div class="flex justify-end mt-4">
 							<UButton
 								label="Cancel"
-								color="text-red-500"
+								color="error"
 								variant="ghost"
 								size="md"
 								@click="cancelParse"

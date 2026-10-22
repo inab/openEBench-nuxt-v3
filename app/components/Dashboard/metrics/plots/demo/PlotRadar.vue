@@ -87,7 +87,7 @@ const isLoadingGraphBar = ref(true);
 
 const preparedBar = ref<any>({});
 const initialValues = ref<any>({});
-const type: string = ref('radar-plot');
+const type = ref<string>('radar-plot');
 const hasDataError = ref(false);
 const hasDataErrorMessage = ref('');
 const widgetKey = ref(0);
@@ -97,12 +97,12 @@ const state = ref({
 });
 
 const schema = object({
-	challenge_participants: array(object()),
+	challenge_participants: array(object({})),
 });
 
 getPreparedData();
 function getPreparedData() {
-	const bar = demo_bar;
+	const bar: Record<string, any> = demo_bar;
 	const barVisualization = bar.visualization;
 	preparedBar.value = {
 		_id: bar._id,
@@ -117,7 +117,7 @@ function getPreparedData() {
 			},
 		},
 	};
-	for (const [_key, value] of Object.entries(bar.assessments)) {
+	for (const [_key, value] of Object.entries<any>(bar.assessments)) {
 		const preparedParticipant = {
 			id: value._id,
 			label: value.label,

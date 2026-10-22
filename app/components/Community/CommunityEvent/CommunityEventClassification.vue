@@ -15,9 +15,9 @@ import ClassificationTable from '@/components/Community/CommunityEvent/Community
 import { watch, onMounted } from 'vue';
 
 const props = defineProps<{
-	id: number;
+	id: string;
 	filterArray: Array<any>;
-	debounce: {
+	debounce?: {
 		type: number;
 		required: false;
 		default: 100;

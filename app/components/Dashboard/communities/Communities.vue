@@ -70,14 +70,14 @@
 					<template #name-cell="{ row }">
 						<div class="d-flex f-items-center">
 							<span
-								v-if="row.original.privileges === 'Owner' && row.original.actions.community"
+								v-if="row.original.privileges === 'Owner' && row.original.actions?.community"
 								title="Community Owner"
 								class="row-icon"
 							>
 								<font-awesome-icon :icon="['fas', 'key']" />
 							</span>
 							<span
-								v-if="row.original.privileges === 'Manager' && row.original.actions.community"
+								v-if="row.original.privileges === 'Manager' && row.original.actions?.community"
 								title="Community Manager"
 								class="row-icon"
 							>
@@ -88,34 +88,34 @@
 					</template>
 					<template #actions-cell="{ row }">
 						<div v-if="row.original.actions">
-							<div v-if="row.original.privileges === 'Owner' && row.original.actions.community">
+							<div v-if="row.original.privileges === 'Owner' && row.original.actions?.community">
 								<button title="Edit community" class="btn-event text-neutral-300">
 									<NuxtLink :to="getCommunityEditLink(row)">
 										<font-awesome-icon :icon="['fas', 'pencil']" />
 									</NuxtLink>
 								</button>
-								<template v-if="row.original.actions.community.delete">
+								<template v-if="row.original.actions?.community.delete">
 									<button title="Delete community" class="btn-event text-neutral-300">
 										<font-awesome-icon :icon="['fas', 'trash']" />
 									</button>
 								</template>
 							</div>
 							<div
-								v-else-if="row.original.privileges === 'Manager' && row.original.actions.community"
+								v-else-if="row.original.privileges === 'Manager' && row.original.actions?.community"
 							>
 								<button title="Edit community" class="btn-event text-neutral-300">
 									<NuxtLink :to="getCommunityEditLink(row)">
 										<font-awesome-icon :icon="['fas', 'pencil']" />
 									</NuxtLink>
 								</button>
-								<template v-if="row.original.actions.community.delete">
+								<template v-if="row.original.actions?.community.delete">
 									<button title="Delete community" class="btn-event text-neutral-300">
 										<font-awesome-icon :icon="['fas', 'trash']" />
 									</button>
 								</template>
 							</div>
 							<div
-								v-else-if="row.original.privileges === 'anyone' && row.original.actions.community"
+								v-else-if="row.original.privileges === 'anyone' && row.original.actions?.community"
 							>
 								<button title="Edit community" class="btn-event text-neutral-300">
 									<NuxtLink :to="getCommunityEditLink(row)">

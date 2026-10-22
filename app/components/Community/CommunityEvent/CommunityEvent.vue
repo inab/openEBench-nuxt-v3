@@ -20,7 +20,7 @@ import CommunityEventTableContent from '@/components/Community/CommunityEvent/Co
 import CommunityEmpty from '@/components/Community/CommunityEvent/CommunityEmpty.vue';
 
 defineProps<{
-	currentEvent: object;
+	currentEvent: any;
 	events: Array<any>;
 	communityId: string;
 }>();

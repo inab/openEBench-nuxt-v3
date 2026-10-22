@@ -29,7 +29,7 @@
 								{{ item }}
 								<UButton
 									icon="i-heroicons-x-mark"
-									size="xxs"
+									size="xs"
 									variant="subtle"
 									class="p-0 ms-1 bg-gray-500 text-white rounded-full"
 									color="neutral"

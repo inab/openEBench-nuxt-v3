@@ -112,6 +112,7 @@ const props = defineProps<{
 		institution: string[];
 		orcid: string;
 		github: string;
+		roles: string[];
 	};
 	institutionMapping: object;
 }>();
@@ -119,8 +120,9 @@ const props = defineProps<{
 // CONSTANTS
 const isHovered = ref(false);
 const isRolesExpanded = ref(false);
-const images = import.meta.glob('@/assets/images/members/*.{jpg,jpeg,png}', {
+const images = import.meta.glob<string>('@/assets/images/members/*.{jpg,jpeg,png}', {
 	eager: true,
+	import: 'default',
 });
 const tooltipVisible = ref<boolean[]>(Array(props.member.institution.length).fill(false));
 
@@ -128,7 +130,7 @@ const tooltipVisible = ref<boolean[]>(Array(props.member.institution.length).fil
 const imageUrl = computed(() => {
 	const imageName = props.member.image.replace(/^\//, ''); // Eliminar cualquier barra inicial
 	const image = images[`/assets/images/members/${imageName}`];
-	return image ? image.default : '';
+	return image ?? '';
 });
 
 const sortedRoles = computed(() => {

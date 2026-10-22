@@ -76,7 +76,7 @@ const state = ref({
 });
 
 const schema = object({
-	challenge_participants: array(object()),
+	challenge_participants: array(object({})),
 });
 
 getPreparedData();

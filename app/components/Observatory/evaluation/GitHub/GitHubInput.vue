@@ -198,12 +198,7 @@ const inputExample = (URL: string) => {
 	showError.value = false;
 };
 const fetchMetadata = async () => {
-	const payload = {
-		installationID: githubStore.getInstallationID,
-		repo: githubStore.repository.repo,
-		owner: githubStore.repository.owner,
-	};
-	await githubStore.fetchGitHubMeta(payload);
+	await githubStore.fetchGitHubMeta();
 };
 
 const submitGitHubLink = async () => {

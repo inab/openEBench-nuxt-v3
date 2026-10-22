@@ -61,7 +61,7 @@ import demo_bar from './templates/BARPLOT.json';
 const isLoadingGraphBar = ref(true);
 
 const preparedBar = ref<any>({});
-const type: string = ref('bar-plot');
+const type = ref<string>('bar-plot');
 const widgetKey = ref(0);
 
 const state = ref({
@@ -69,7 +69,7 @@ const state = ref({
 });
 
 const schema = object({
-	challenge_participants: array(object()),
+	challenge_participants: array(object({})),
 });
 
 getPreparedData();

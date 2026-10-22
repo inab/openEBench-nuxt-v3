@@ -134,8 +134,7 @@ const metadataStore = useMetadataStore();
 const loadedMetadata = computed(() => metadataStore.getLoadedMetadata);
 const toolMetadata = computed(() => metadataStore.getToolMetadata);
 
-const { steps, selectedSource, completeStep, goBack, cancelSteps, handleSourceSelected } =
-	storeToRefs(stepperStore);
+const { steps, selectedSource } = storeToRefs(stepperStore);
 </script>
 
 <style scoped>

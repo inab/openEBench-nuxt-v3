@@ -139,14 +139,14 @@ const triggerFileInput = () => {
 const handleFileUpload = (event: Event) => {
 	const input = event.target as HTMLInputElement;
 
-	if (!input.files || input.files.length === 0) {
+	const selectedFile = input.files?.[0];
+	if (!selectedFile) {
 		showError.value = true;
 		errorMessage.value = 'Required.';
 		file.value = null;
 		fileName.value = null;
 		return;
 	}
-	const selectedFile = input.files[0];
 
 	// Aditional Validation: avoid empty folders (type: empty) and check extension·
 	const validExtensions = ['json', 'jsonld'];

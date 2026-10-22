@@ -203,7 +203,7 @@
 																		:disabled="
 																			!eventPrivileges.update || isView || checkEmptyContacts
 																		"
-																		@click="onAddElement(localContacts)"
+																		@click="onAddContact(localContacts)"
 																	>
 																		<font-awesome-icon :icon="['fas', 'plus']" />
 																	</button>
@@ -298,7 +298,7 @@
 				</div>
 			</div>
 		</div>
-		<CustomDialog :is-dialog-open="isDialogOpened" @modal-close="dialogShow">
+		<CustomDialog :is-dialog-open="isDialogOpened" :width="400" @modal-close="dialogShow">
 			<template #header>
 				{{ dialogTitle }}
 			</template>
@@ -373,11 +373,27 @@ const items = [
 	},
 ];
 
-const state = ref({
+const state = ref<{
+	_id: string;
+	name: string;
+	community_id: string;
+	bench_contact_ids: { id: string; name: string }[];
+	dates: {
+		benchmark_start: Date;
+		benchmark_stop: Date;
+		creation: Date;
+		modification: Date;
+	};
+	orig_id: string;
+	_schema: string;
+	references: string[];
+	is_automated: boolean;
+	url: string;
+}>({
 	_id: '',
 	name: '',
 	community_id: '',
-	bench_contact_ids: '',
+	bench_contact_ids: [],
 	dates: {
 		benchmark_start: new Date(),
 		benchmark_stop: new Date(),
@@ -442,7 +458,7 @@ const rolesObj = ref([
 	{ label: 'Contributor', value: 'contributor' },
 ]);
 
-const eventData = computed(() => {
+const eventData = computed<Event>(() => {
 	state.value = {
 		_id: String(props.eventObj?._id || ''),
 		name: props.eventObj?.name || '',
@@ -462,11 +478,11 @@ const eventData = computed(() => {
 		},
 		orig_id: props.eventObj?.orig_id || '',
 		_schema: props.eventObj?._schema || '',
-		references: props.eventObj?.references || array<string>(),
+		references: props.eventObj?.references || [],
 		is_automated: props.eventObj?.is_automated || false,
 		url: props.eventObj?.url || '',
 	};
-	return props.eventObj;
+	return props.eventObj as Event;
 });
 
 if (props.eventObj && props.eventObj.references) {
@@ -508,18 +524,18 @@ function onAddElement(array: string[]) {
 }
 
 function onAddContact(
-	contact: {
+	contacts: {
 		id: string;
 		role: string;
-	},
-	arrayRef?: HTMLInputElement[]
+	}[],
+	arrayRef?: (HTMLInputElement | null)[]
 ) {
-	contact.push({
+	contacts.push({
 		id: '',
 		role: rolesObj.value[0]?.value ?? '',
 	});
 	nextTick(() => {
-		const lastElementIndex = array.length - 1;
+		const lastElementIndex = contacts.length - 1;
 		const inputElement = arrayRef ? arrayRef[lastElementIndex] : null;
 		if (inputElement) {
 			inputElement.focus();
@@ -527,9 +543,10 @@ function onAddContact(
 	});
 }
 
-const elementToDelete = ref<{ index: number; element: string[] } | null>(null);
+const dialogElement = ref<{ element: unknown[]; index: number } | null>(null);
+const elementToDelete = ref<{ index: number | null; element: unknown[] } | null>(null);
 
-function onDeleteElement(index: number, element: string[]) {
+function onDeleteElement(index: number, element: unknown[]) {
 	dialogElement.value = null;
 	if (element[index] === '') {
 		element.splice(index, 1);
@@ -569,7 +586,7 @@ function restartElementToDelete() {
 }
 
 function deleteElement() {
-	if (elementToDelete.value.index !== null) {
+	if (elementToDelete.value && elementToDelete.value.index !== null) {
 		elementToDelete.value.element.splice(elementToDelete.value.index, 1);
 		isDialogOpened.value = false;
 	}
@@ -603,7 +620,7 @@ async function onSubmitCommunityEvent(event: FormSubmitEvent<Schema>) {
 }
 
 async function updateBenchmarkingEvent() {
-	const cleanContacts = deleteEmptyElements(localContacts.value);
+	const cleanContacts = localContacts.value.filter((contact) => contact.id.trim() !== '');
 	const cleanReferences = deleteEmptyElements(localReferences.value);
 
 	const body = {
@@ -611,7 +628,7 @@ async function updateBenchmarkingEvent() {
 		name: state.value.name,
 		community_id: state.value.community_id,
 		bench_contact_ids: cleanContacts.map((element) => {
-			return element;
+			return element.id;
 		}),
 		_schema: state.value._schema,
 		references: cleanReferences.map((element) => {
@@ -705,7 +722,7 @@ async function updateBenchmarkingEvent() {
 		}
 	} catch (error) {
 		console.log(error);
-		errors.value = [error];
+		errors.value = [String(error)];
 	}
 }
 

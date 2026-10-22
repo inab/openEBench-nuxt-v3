@@ -41,7 +41,7 @@
 					:community-id="communityId"
 					:event-id="eventId"
 					:challenge-privileges="challengePrivileges"
-					:challenge-obj="challengeData"
+					:challenge-obj="challengeData as Challenge"
 					:is-view="isView"
 					:is-loading-data="isLoadingData"
 				/>
@@ -52,6 +52,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
 import BreadcrumbsBar from '@/components/Common/BreadcrumbsBar.vue';
+import type { Challenge } from '~~/types/challenge';
 import { useUser } from '~~/stores/user.ts';
 import { privileges } from '~~/constants/privileges';
 import CommunityEventChallenge from '@/components/Dashboard/entries/events/challenges/ChallengeEventChallenge.vue';
@@ -83,13 +84,13 @@ const challengeId: string = route.params.id as string;
 const routeName = ref<string>('');
 const runtimeConfig = useRuntimeConfig();
 
-const challengeData = ref<Challenge>(null);
+const challengeData = ref<Challenge | null>(null);
 
 const isView = computed(() => {
-	return userPrivileges.value.filter((privilege) => privilege.event === eventId).role === 'Owner';
+	return userPrivileges.value.find((privilege: any) => privilege.event === eventId)?.role === 'Owner';
 });
 if (userPrivileges.value.length == 0) {
-	userStore.setUserCommunitiesRoles(data.value.oeb_roles);
+	userStore.setUserCommunitiesRoles(data.value?.oeb_roles as string[] | undefined);
 }
 
 const challengePrivileges = computed(() => {

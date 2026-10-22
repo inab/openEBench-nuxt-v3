@@ -42,7 +42,7 @@
 							Metric: {{ metricData.title }}
 						</div>
 						<UButton
-							color="bg-slate-300"
+							color="neutral"
 							variant="ghost"
 							icon="i-heroicons-x-mark-20-solid"
 							class=""

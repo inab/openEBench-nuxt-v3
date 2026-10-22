@@ -254,7 +254,7 @@ const isSearchingMetric = ref(true);
 const errors = ref<string[]>([]);
 const oks = ref<string>('');
 
-const state = ref({
+const state = ref<Partial<Metric>>({
 	_id: '',
 	orig_id: '',
 	formal_definition: '',
@@ -283,7 +283,7 @@ const closeModal = () => {
 	emits('close-modal');
 };
 
-async function fetchMetric(id: string): Promise<Metric> {
+async function fetchMetric(id: string): Promise<Metric | null> {
 	isSearchingMetric.value = true;
 	try {
 		const response = await fetch(
@@ -304,6 +304,10 @@ async function fetchMetric(id: string): Promise<Metric> {
 	} finally {
 		isSearchingMetric.value = false;
 	}
+}
+
+function onDeleteElement(index: number, element?: string[]) {
+	element?.splice(index, 1);
 }
 
 function validateRequiredFields(data: any): string[] {
@@ -345,7 +349,9 @@ watch(
 	async (newVal) => {
 		if (newVal) {
 			metricObj.value = await fetchMetric(newVal);
-			state.value = metricObj.value;
+			if (metricObj.value) {
+				state.value = metricObj.value;
+			}
 		}
 	}
 );

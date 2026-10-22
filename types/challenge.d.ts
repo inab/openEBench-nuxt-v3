@@ -1,6 +1,8 @@
 import type { CommunityPrivilegeCategories } from './communities';
 
 export interface ChallengeDates {
+	challenge_start?: string;
+	challenge_stop?: string;
 	benchmark_start?: string;
 	benchmark_stop?: string;
 	creation?: string;
@@ -33,4 +35,6 @@ export interface Challenge {
 	metrics_categories?: Array<string>;
 	actions?: Partial<CommunityPrivilegeCategories>;
 	privileges?: string;
+	description?: string;
+	is_automated?: boolean;
 }

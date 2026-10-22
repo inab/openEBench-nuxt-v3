@@ -24,11 +24,7 @@
 				</template>
 				<template #view-cell="{ row }">
 					<button class="btn-custom-badget text-sm">
-						<NuxtLink
-							:to="`/tool/${row.original._id}`"
-							class="text-primaryOeb-950"
-							@click.stop
-						>
+						<NuxtLink :to="`/tool/${row.original._id}`" class="text-primaryOeb-950" @click.stop>
 							View <font-awesome-icon :icon="['fas', 'eye']" />
 						</NuxtLink>
 					</button>
@@ -45,7 +41,12 @@
 import { ref, defineProps, computed, defineEmits, watch, onMounted } from 'vue';
 import { useMetrics } from '~~/stores/metrics.ts';
 import type { Challenge } from '~~/types/challenge';
-import type { Tool, Metric, ChallengeCommonMetric } from '~~/types/challenge_metric';
+import type {
+	Tool,
+	Metric,
+	ChallengeCommonMetric,
+	ChallengeMetricCategory,
+} from '~~/types/challenge_metric';
 
 const props = defineProps<{
 	selectedTools: Tool[];
@@ -64,10 +65,7 @@ const rowSelection = computed<Record<string, boolean>>({
 		const known = new Map<string, Tool>(
 			[...props.selectedTools, ...rowTool.value].map((t) => [t._id, t])
 		);
-		emits(
-			'handleSelectedTools',
-			ids.map((id) => known.get(id)).filter(Boolean)
-		);
+		emits('handleSelectedTools', ids.map((id) => known.get(id)).filter(Boolean));
 	},
 });
 
@@ -178,15 +176,14 @@ async function filterMetricsByChallenge(
 	const toolIds = new Set<string>();
 
 	challengeDataList.forEach((challenge) => {
-		const aggregationMetrics =
-			challenge.metrics_categories && challenge.metrics_categories[1]
-				? challenge.metrics_categories[1].metrics
-				: [];
+		const metricsCategories = challenge.metrics_categories as unknown as
+			ChallengeMetricCategory[] | undefined;
+		const aggregationMetrics = metricsCategories?.[1] ? metricsCategories[1].metrics : [];
 
 		if (aggregationMetrics.length > 0) {
 			selectedMetrics.forEach((metric: Metric) => {
 				aggregationMetrics.forEach((aggregationMetric: ChallengeCommonMetric) => {
-					if (metric._id === aggregationMetric.metrics_id) {
+					if (metric._id === aggregationMetric.metrics_id && aggregationMetric.tool_id) {
 						toolIds.add(aggregationMetric.tool_id);
 					}
 				});

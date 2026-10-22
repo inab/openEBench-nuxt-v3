@@ -1,11 +1,14 @@
 export default defineNuxtRouteMiddleware((to, from) => {
 	const { status } = useAuth();
+	const auth = to.meta.auth as
+		| { authenticatedOnly?: boolean; unauthenticatedOnly?: boolean }
+		| undefined;
 
-	if (to.meta.auth?.authenticatedOnly && status.value !== 'authenticated') {
+	if (auth?.authenticatedOnly && status.value !== 'authenticated') {
 		return navigateTo('/login-required');
 	}
 
-	if (to.meta.auth?.unauthenticatedOnly && status.value === 'authenticated') {
+	if (auth?.unauthenticatedOnly && status.value === 'authenticated') {
 		return navigateTo('/');
 	}
 });

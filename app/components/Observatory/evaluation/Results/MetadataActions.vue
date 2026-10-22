@@ -52,7 +52,7 @@
 		</div>
 	</div>
 
-	<ViewMetadata :key="metadata" :metadata="metadata" />
+	<ViewMetadata :key="metadata as PropertyKey" :metadata="metadata" />
 	<ExportMetadataCardDownload />
 	<ExportContentCardPull :content="metadata" type="metadata" />
 </template>

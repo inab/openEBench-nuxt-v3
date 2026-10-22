@@ -33,8 +33,21 @@ const props = defineProps<{
 }>();
 
 const dataGraph = computed(() => props.data);
-const preparedData: string = ref(null);
-const type: string = ref('');
+interface PreparedGraph {
+	_id?: string;
+	name?: string;
+	dates?: unknown;
+	dataset_contact_ids?: unknown[];
+	inline_data?: {
+		challenge_participants: Record<string, unknown>[];
+		visualization: Record<string, unknown>;
+	};
+	challenge_participants?: Record<string, unknown>[];
+	visualization?: Record<string, unknown>;
+}
+
+const preparedData = ref('');
+const type = ref('');
 
 console.log('dataGraph: ', dataGraph.value);
 
@@ -53,7 +66,7 @@ function getPreparedData() {
 		dataGraph.value.visualization ?? dataGraph.value.inline_data?.visualization ?? {};
 	const graphType = visualization?.type ?? null;
 
-	let prepared = {
+	let prepared: PreparedGraph = {
 		inline_data: {
 			challenge_participants: [],
 			visualization: {},
@@ -88,16 +101,16 @@ function getPreparedData() {
 		const participants = dataGraph.value.challenge_participants ?? [];
 
 		participants.forEach((participant: any) => {
-			const preparedParticipant = {
+			const preparedParticipant: Record<string, unknown> = {
 				tool_id: participant.tool_id,
 				metric_value: participant.metric_value,
 				stderr: participant.stderr ? participant.stderr : null,
 			};
-			prepared.inline_data.challenge_participants.push(preparedParticipant);
+			prepared.inline_data!.challenge_participants.push(preparedParticipant);
 		});
 
 		// Process visualization data for BarPlot
-		prepared.inline_data.visualization = {
+		prepared.inline_data!.visualization = {
 			metric: visualization.metric,
 			type: visualization.type,
 		};
@@ -112,7 +125,7 @@ function getPreparedData() {
 				metric_y: participant.metric_y,
 				stderr_y: participant.stderr_y,
 			};
-			prepared.inline_data.challenge_participants.push(preparedParticipant);
+			prepared.inline_data!.challenge_participants.push(preparedParticipant);
 		});
 
 		const optimization = visualization.optimization ?? null;
@@ -126,7 +139,7 @@ function getPreparedData() {
 			yAxis = metricNames.metricY;
 		}
 
-		prepared.inline_data.visualization = {
+		prepared.inline_data!.visualization = {
 			type: visualization.type,
 			x_axis: xAxis,
 			y_axis: yAxis,
@@ -143,10 +156,10 @@ function getPreparedData() {
 
 		const result = BoxPlotConverter(participants, log2Param);
 
-		prepared.inline_data.challenge_participants = result;
+		prepared.inline_data!.challenge_participants = result;
 
 		// Process visualization data for BoxPlot
-		prepared.inline_data.visualization = {
+		prepared.inline_data!.visualization = {
 			available_metrics: visualization.available_metrics,
 			type: visualization.type,
 		};

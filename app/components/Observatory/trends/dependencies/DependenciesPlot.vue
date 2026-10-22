@@ -35,15 +35,15 @@ const plotChart = () => {
 	const { names, counts } = normalizeData();
 
 	const sticks: Partial<Plotly.PlotData>[] = names.map((name, index) => ({
-		type: 'scatter',
-		x: [0, counts[index]],
+		type: 'scatter' as const,
+		x: [0, counts[index] as number],
 		y: [name, name],
-		mode: 'lines',
+		mode: 'lines' as const,
 		line: {
 			color: '#ABC8F5',
 			width: 2,
 		},
-		hoverinfo: 'none',
+		hoverinfo: 'none' as const,
 		showlegend: false,
 	}));
 
@@ -51,7 +51,7 @@ const plotChart = () => {
 		type: 'scatter',
 		x: counts,
 		y: names,
-		mode: 'markers+text',
+		mode: 'text+markers',
 		marker: {
 			color: '#6696DE',
 			size: 16,
@@ -61,7 +61,7 @@ const plotChart = () => {
 			},
 		},
 		text: counts.map(String),
-		textposition: 'right',
+		textposition: 'middle center',
 		hovertemplate: '<b>%{y}</b><br>Used by: %{x} projects<extra></extra>',
 		name: 'Dependencies',
 		showlegend: false,
@@ -69,7 +69,7 @@ const plotChart = () => {
 
 	const layout: Partial<Plotly.Layout> = {
 		xaxis: {
-			title: 'Number of Dependent Projects',
+			title: { text: 'Number of Dependent Projects' },
 			zeroline: false,
 		},
 

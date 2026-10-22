@@ -91,8 +91,6 @@ const metadataStore = useMetadataStore();
 const isSubmitting = ref(false);
 
 const dialogInstallApp = computed(() => fileStore.getDialogInstallApp);
-const test = computed(() => fileStore.getTest);
-const installationID = computed(() => fileStore.getInstallationID);
 
 // Validation State
 const showError = ref(false);

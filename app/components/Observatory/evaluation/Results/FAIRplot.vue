@@ -44,7 +44,7 @@ const layout = ref({
 });
 
 // Plotly settings to make the menu smaller
-const config = {
+const config: Partial<Plotly.Config> = {
 	modeBarButtonsToRemove: [
 		'pan2d',
 		'select2d',
@@ -81,7 +81,7 @@ onMounted(() => {
 
 // Construction of data for the chart
 const buildTraces = () => {
-	const traces = [];
+	const traces: Partial<Plotly.PlotData>[] = [];
 
 	// Verifica si dataControl.value.data es un objeto vacío
 	const data =
@@ -108,10 +108,10 @@ const buildTraces = () => {
 		}
 
 		traces.push({
-			type: 'scatterpolar',
+			type: 'scatterpolar' as const,
 			r,
 			theta,
-			fill: 'toself',
+			fill: 'toself' as const,
 			name: names[i],
 			line: {
 				color: colors[i],

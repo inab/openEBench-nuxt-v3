@@ -18,5 +18,5 @@ const markdownString: ComputedRef<string | null> = computed(
 	() => props.metadata.project_summary ?? null
 );
 
-const markup = computed(() => DOMPurify.sanitize(marked(markdownString.value ?? '')));
+const markup = computed(() => DOMPurify.sanitize(marked.parse(markdownString.value ?? '', { async: false })));
 </script>

@@ -493,7 +493,7 @@ export const useFileStore = defineStore('file', {
 			this.setDialogParseMetadata(value);
 		},
 
-		updateDialogInstallApp() {
+		updateDialogInstallApp(value) {
 			this.setDialogInstallApp(value);
 		},
 

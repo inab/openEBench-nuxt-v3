@@ -260,7 +260,7 @@ onMounted(() => {
 
 // Methods
 const getFromBoxStatic = (param: any) => {
-	return boxStatic.value[props.type][param];
+	return boxStatic.value[props.type as keyof typeof boxStatic.value][param as keyof (typeof boxStatic.value)['citation']];
 };
 
 const buildRepositoryURL = () => {
@@ -311,8 +311,8 @@ const makeRequest = async () => {
 			branch: branch.value,
 			filename: filename.value,
 			content: toString(props.content),
-			title: pullRequest.value[props.type].title,
-			message: pullRequest.value[props.type].message,
+			title: pullRequest.value[props.type as keyof typeof pullRequest.value].title,
+			message: pullRequest.value[props.type as keyof typeof pullRequest.value].message,
 			installationID: installationID.value,
 		};
 

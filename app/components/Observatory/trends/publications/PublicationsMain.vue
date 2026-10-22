@@ -56,8 +56,8 @@ import { embedCodes } from '~/components/Observatory/visualizations/embedCodes.j
 type PublicationsResponse = {
 	data: {
 		tools: object;
-		publications: object;
-		citations: object;
+		publications: { x: (string | number)[]; y: number[] };
+		citations: { x: (string | number)[]; y: number[] };
 		IF_tools?: { x?: unknown[] };
 	};
 };

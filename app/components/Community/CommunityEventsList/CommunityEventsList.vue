@@ -31,7 +31,7 @@
 				<UPagination
 					:page="currentPage"
 					:items-per-page="itemsPerPage"
-					:total="props.events.length"
+					:total="props.events?.length ?? 0"
 					active-variant="outline"
 					variant="outline"
 					color="neutral"

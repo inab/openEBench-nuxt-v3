@@ -33,25 +33,25 @@
 
 				<div v-if="community" class="community-tabs md:flex">
 					<UTabs :key="tabsItems.map((tab) => tab.slot).join()" :items="tabsItems" class="w-full">
-						<template #default="{ item, index, selected }">
+						<template #default="slotProps">
 							<div class="flex items-center gap-2 relative truncate">
-								<span class="">{{ item.label }}</span>
+								<span class="">{{ slotProps.item.label }}</span>
 								<UBadge
-									v-if="item.label == 'Datasets' && datasetsObj.length > 0"
+									v-if="slotProps.item.label == 'Datasets' && datasetsObj.length > 0"
 									color="neutral"
 									variant="subtle"
 									class="rounded-full"
 									>{{ datasetsObj.length }}</UBadge
 								>
 								<UBadge
-									v-if="item.label == 'Tools' && toolsObj.length > 0"
+									v-if="slotProps.item.label == 'Tools' && toolsObj.length > 0"
 									color="neutral"
 									variant="subtle"
 									class="rounded-full"
 									>{{ toolsObj.length }}</UBadge
 								>
 								<span
-									v-if="selected"
+									v-if="isTabSelected(slotProps)"
 									class="absolute -right-4 w-2 h-2 rounded-full bg-primary-500 dark:bg-primary-400"
 								/>
 							</div>
@@ -177,6 +177,10 @@ const tabsItems = computed(() => {
 	return items;
 });
 
+function isTabSelected(slot: object): boolean {
+	return 'selected' in slot && slot.selected === true;
+}
+
 const routeArray = computed(() => {
 	if (!community.value) {
 		// If the community is not found, define an alternative route
@@ -200,7 +204,7 @@ const routeArray = computed(() => {
 			route: '/benchmarking',
 		},
 		{
-			label: community.value.acronym + ' ' + 'Events',
+			label: (community.value as { acronym: string }).acronym + ' ' + 'Events',
 			isActualRoute: false,
 			route: '/benchmarking/' + communityId + '/events',
 		},

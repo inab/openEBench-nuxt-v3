@@ -24,10 +24,10 @@ const scientificUrl = `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL}`;
 const keycloakUrl = `${runtimeConfig.public.KEYCLOAK_HOST}`;
 const observatoryUrl = `${runtimeConfig.public.OBSERVATORY_API_URL}`;
 
-const isVreServicesUp = ref(null);
-const isScientificServicesUp = ref(null);
-const isKeycloakServiceUp = ref(null);
-const isObservatoryServiceUp = ref(null);
+const isVreServicesUp = ref<boolean | null>(null);
+const isScientificServicesUp = ref<boolean | null>(null);
+const isKeycloakServiceUp = ref<boolean | null>(null);
+const isObservatoryServiceUp = ref<boolean | null>(null);
 
 const globalStatus = computed(() => {
 	if (

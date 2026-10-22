@@ -111,10 +111,7 @@
 													Challenge End Date
 													<span class="text-red-400 required">*</span>
 												</label>
-												<VueDatePicker
-													v-model="state.dates.challenge_stop"
-													:format="dateFormat"
-												>
+												<VueDatePicker v-model="state.dates.challenge_stop" :format="dateFormat">
 												</VueDatePicker>
 											</div>
 										</div>
@@ -285,9 +282,7 @@
 																	label-key="name"
 																>
 																</USelectMenu>
-																<USelect
-																	v-model="contact.role" :items="rolesObj" class="w-48"
-																/>
+																<USelect v-model="contact.role" :items="rolesObj" class="w-48" />
 																<button
 																	v-if="challengePrivileges.challenge.update && !isView"
 																	class="btn-delete-input"
@@ -364,6 +359,7 @@ const props = defineProps<{
 	isView: boolean;
 	challengePrivileges: CommunityPrivilegeCategories;
 	challengeObj?: any;
+	isLoadingData?: boolean;
 }>();
 
 const token = data.value?.accessToken as string;
@@ -391,7 +387,20 @@ const errors = ref<string[]>([]);
 const oks = ref<string>('');
 const runtimeConfig = useRuntimeConfig();
 
-const state = ref({
+const state = ref<{
+	_id: string;
+	benchmarking_event_id: string;
+	name: string;
+	acronym: string;
+	is_automated: boolean;
+	orig_id: string;
+	dates: { challenge_start: Date; challenge_stop: Date };
+	_schema: string;
+	challenge_contact_ids: string[];
+	url: string;
+	references: string[];
+	description: string;
+}>({
 	_id: '',
 	benchmarking_event_id: eventId.value,
 	name: '',
@@ -427,15 +436,18 @@ const schema = object({
 	description: string(),
 });
 
-const lang = window.navigator.userLanguage || window.navigator.language;
+const lang =
+	(window.navigator as Navigator & { userLanguage?: string }).userLanguage ||
+	window.navigator.language;
 const dateFormat = computed(() => getLocaleDateString(lang));
 const automatedOptions = [
 	{ label: 'Yes', value: true },
 	{ label: 'No', value: false },
 ];
+const dialogElement = ref<{ element: unknown[]; index: number } | null>(null);
 const elementToDelete = ref({
 	index: null as number | null,
-	element: [] as string[],
+	element: [] as unknown[],
 });
 
 if (props.challengeObj && props.challengeObj.references) {
@@ -449,7 +461,7 @@ if (props.challengeObj && props.challengeObj.metrics_categories) {
 if (props.challengeObj && props.challengeObj.challenge_contact_ids) {
 	localContacts.value =
 		props.challengeObj.challenge_contact_ids.map((contact: string) => {
-			return contact.replace(/\./g, ' ');
+			return { id: contact.replace(/\./g, ' '), role: rolesObj.value[0]?.value ?? '' };
 		}) || [];
 }
 
@@ -460,23 +472,23 @@ challengeStop.setMonth(challengeStop.getMonth() + 1);
 state.value.dates.challenge_start = challengeStart;
 state.value.dates.challenge_stop = challengeStop;
 
-function onAddElement(array: []) {
+function onAddElement(array: string[]) {
 	array.push('');
 }
 
 function onAddContact(
-	contact: {
+	contacts: {
 		id: string;
 		role: string;
-	},
-	arrayRef?: HTMLInputElement[]
+	}[],
+	arrayRef?: (HTMLInputElement | null)[]
 ) {
-	contact.push({
+	contacts.push({
 		id: '',
 		role: rolesObj.value[0]?.value ?? '',
 	});
 	nextTick(() => {
-		const lastElementIndex = array.length - 1;
+		const lastElementIndex = contacts.length - 1;
 		const inputElement = arrayRef ? arrayRef[lastElementIndex] : null;
 		if (inputElement) {
 			inputElement.focus();
@@ -492,7 +504,7 @@ const checkEmptyReferences = computed(() => {
 	return localReferences.value.some((keyword: string) => keyword === '');
 });
 
-function onDeleteElement(index: number, element: string[]) {
+function onDeleteElement(index: number, element: unknown[]) {
 	dialogElement.value = null;
 	if (element[index] === '') {
 		element.splice(index, 1);
@@ -559,8 +571,8 @@ function validateRequiredFields(data: any): string[] {
 	if (localContacts.value.length == 0) {
 		errorMessages.push(`challenge_contact_ids cannot be empty`);
 	} else {
-		localContacts.value.forEach((contact: string, index: number) => {
-			if (contact.trim() === '') {
+		localContacts.value.forEach((contact) => {
+			if (contact.id.trim() === '') {
 				errorMessages.push(`challenge_contact_ids  cannot be empty`);
 			}
 		});
@@ -577,7 +589,7 @@ function validateRequiredFields(data: any): string[] {
 }
 
 async function createChallenge() {
-	const cleanContacts = deleteEmptyElements(localContacts.value);
+	const cleanContacts = localContacts.value.filter((contact) => contact.id.trim() !== '');
 	const cleanReferences = deleteEmptyElements(localReferences.value);
 
 	const body = {
@@ -586,7 +598,7 @@ async function createChallenge() {
 		acronym: state.value.acronym,
 		benchmarking_event_id: state.value.benchmarking_event_id,
 		challenge_contact_ids: cleanContacts.map((element) => {
-			return element;
+			return element.id;
 		}),
 		description: state.value.description,
 		orig_id: state.value._id,

@@ -42,7 +42,7 @@ const colors_primary = [
 	'#DADADA',
 	'#F0F0F0',
 ];
-const titles = {
+const titles: Record<string, string> = {
 	github: 'GitHub',
 	galaxy: 'Galaxy Europe',
 	bioconda: 'Bioconda',
@@ -54,13 +54,13 @@ const titles = {
 };
 
 // Layout y configuración
-const layout_base = {
+const layout_base: Partial<Plotly.Layout> = {
 	barmode: 'stack',
 	xaxis: {
-		title: 'Number of sources',
+		title: { text: 'Number of sources' },
 	},
 	yaxis: {
-		title: 'Number of software',
+		title: { text: 'Number of software' },
 	},
 	autosize: true,
 	height: 390,
@@ -87,17 +87,17 @@ const layout = computed(() => {
 	if (props.small) {
 		l.height = 420;
 		l.margin = { ...layout_base.margin, b: 140 };
-		l.legend.y = -0.4;
+		if (l.legend) l.legend.y = -0.4;
 	}
 	return l;
 });
 
 // Function to construct bar traces
-function build_bar_traces(colors: any) {
-	const traces = [];
+function build_bar_traces(colors: Record<string, string | undefined>) {
+	const traces: Partial<Plotly.PlotData>[] = [];
 	if (coverageData.value?.counts) {
 		for (const [key] of Object.entries(coverageData.value.counts)) {
-			const counts = coverageData.value.counts[key];
+			const counts = coverageData.value.counts[key] ?? [];
 			const sourceTitle = titles[key] ?? key;
 			const trace = {
 				x: counts.map((_, index) => index + 1),
@@ -106,7 +106,7 @@ function build_bar_traces(colors: any) {
 				marker: {
 					color: colors[key] ?? colors_primary[0],
 				},
-				type: 'bar',
+				type: 'bar' as const,
 				meta: sourceTitle,
 				hovertemplate:
 					'Of instances found in %{x} sources: <br>' +
@@ -119,8 +119,10 @@ function build_bar_traces(colors: any) {
 }
 
 // Function to construct the line trace
-function build_line_trace(n: any) {
-	return coverageData.value?.counts_cummulative ? coverageData.value.counts_cummulative[n] : 0;
+function build_line_trace(n: number): number {
+	return coverageData.value?.counts_cummulative
+		? (coverageData.value.counts_cummulative[n] as number)
+		: 0;
 }
 
 async function updatePlot() {
@@ -141,11 +143,11 @@ async function updatePlot() {
 		.filter(Number.isFinite)
 		.sort((a, b) => a - b);
 
-	const lineData = {
+	const lineData: Partial<Plotly.PlotData> = {
 		x: cumulativeSourceCount,
 		y: cumulativeSourceCount.map(build_line_trace),
-		type: 'scatter',
-		mode: 'lines+markers',
+		type: 'scatter' as const,
+		mode: 'lines+markers' as const,
 		marker: {
 			color: '#FFD700',
 		},

@@ -14,9 +14,9 @@
 	</div>
 </template>
 <script setup lang="ts">
-const props = defineProps({
-	steps: Array,
-	activeStep: Number,
-	setActiveStep: Function,
-});
+const props = defineProps<{
+	steps: unknown[];
+	activeStep: number;
+	setActiveStep: (index: number) => void;
+}>();
 </script>

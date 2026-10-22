@@ -32,7 +32,6 @@ import BreadcrumbsBar from '@/components/Common/BreadcrumbsBar.vue';
 import { useUser } from '~~/stores/user.ts';
 import { privileges } from '~~/constants/privileges';
 import CommunityEventChallengeAdd from '@/components/Dashboard/entries/events/challenges/CommunityEventChallengeAdd.vue';
-import type { ComputedRef } from 'vue';
 
 definePageMeta({
 	middleware: 'require-auth',
@@ -47,15 +46,13 @@ const { data } = useAuth();
 const communityId: string = route.params.community_id as string;
 const eventId: string = route.params.event_id as string;
 const userStore = useUser();
-const userPrivileges: ComputedRef<Array<{ role: string; community: string }>> = computed(
-	() => userStore.getUserCommunitiesRoles
-);
+const userPrivileges = computed(() => userStore.getUserCommunitiesRoles);
 
 const isView = computed(() => {
-	return userPrivileges.value.filter((privilege) => privilege.event === eventId).role === 'Owner';
+	return userPrivileges.value.find((privilege: any) => privilege.event === eventId)?.role === 'Owner';
 });
 if (userPrivileges.value.length == 0) {
-	userStore.setUserCommunitiesRoles(data.value.oeb_roles);
+	userStore.setUserCommunitiesRoles(data.value?.oeb_roles as string[] | undefined);
 }
 
 const challengePrivileges = computed(() => {

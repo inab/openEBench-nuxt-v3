@@ -60,8 +60,8 @@ const eventsObj: any[] = communityStore.getEvents;
 const challengeId = route.params.challenge;
 const chatAvailable = ref<boolean>(false);
 const datasets = ref<any[]>([]);
-const participants: any = ref(null);
-const metrics = ref(null);
+const participants = ref<any[]>([]);
+const metrics = ref<any[]>([]);
 const challenge: any = ref(null);
 const tab = ref(0);
 const itemSelected = ref(null);
@@ -73,8 +73,7 @@ await challengeAPI(challengeId).then(async (response: any) => {
 	challenge.value = challengeObj.getChallenge();
 	metrics.value = challengeObj.getMetrics();
 	datasets.value = challengeObj.getDatasets();
-	participants.value = challengeObj.getParticipants();
-	participants.value = Object.values(participants.value);
+	participants.value = Object.values(challengeObj.getParticipants());
 	items.value = [];
 
 	console.log('datasets.value:', datasets.value);
@@ -157,6 +156,10 @@ const currentEvent = computed(() => {
 	return selectedEvent;
 });
 
+const communityAcronym = computed(
+	() => (community.value as { acronym?: string } | null)?.acronym
+);
+
 const fromProjects = computed(() => route.query.from === 'projects');
 
 const routeArray = computed(() => {
@@ -169,7 +172,7 @@ const routeArray = computed(() => {
 				route: '/projects',
 			},
 			{
-				label: community.value?.acronym ?? communityId,
+				label: communityAcronym.value ?? communityId,
 				isActualRoute: false,
 				route: `/projects/${communityId}`,
 			},
@@ -188,7 +191,7 @@ const routeArray = computed(() => {
 			route: '/benchmarking',
 		},
 		{
-			label: (community.value?.acronym ?? communityId) + ' ' + 'Events',
+			label: (communityAcronym.value ?? communityId) + ' ' + 'Events',
 			isActualRoute: false,
 			route: '/benchmarking/' + communityId + '/events',
 		},

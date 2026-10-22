@@ -117,7 +117,15 @@ const { status, data } = useAuth();
 const userInfo = ref<any>(null);
 const runtimeConfig = useRuntimeConfig();
 
-const state = reactive({
+const state = reactive<{
+	username?: string;
+	given_name?: string;
+	orcid?: string;
+	name?: string;
+	surname?: string;
+	email?: string;
+	roles?: string[];
+}>({
 	username: undefined,
 	given_name: undefined,
 	orcid: undefined,
@@ -138,8 +146,6 @@ const schema = v.object({
 });
 
 const selectedRoles = ref<any[]>([]);
-
-type Schema = v.InferOutput<typeof schema>;
 
 const fetchUserInfo = async () => {
 	if (status.value === 'authenticated') {
@@ -180,7 +186,7 @@ const fetchUserInfo = async () => {
 	}
 };
 
-async function onSubmit(event: FormSubmitEvent<Schema>) {
+async function onSubmit(event: FormSubmitEvent<unknown>) {
 	console.log(event.data);
 	/* TODO */
 }

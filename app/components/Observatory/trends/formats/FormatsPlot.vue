@@ -50,7 +50,7 @@ const plotChart = () => {
 
 	const layout: Partial<Plotly.Layout> = {
 		xaxis: {
-			title: 'Count',
+			title: { text: 'Count' },
 			showticklabels: false,
 		},
 

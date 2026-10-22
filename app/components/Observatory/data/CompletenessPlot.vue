@@ -15,35 +15,40 @@ const dataStore = useData();
 const observatoryStore = useObservatory();
 
 // Getters
-const completeness = computed(() => dataStore.completeness);
-const completenessControl = computed(() => dataStore.completenessControl);
+interface CompletenessData {
+	cummulative_features: { count_cumm_pct: Plotly.Datum[]; feat_num: Plotly.Datum[] };
+	distribution_features: { x: Plotly.Datum[]; y: Plotly.Datum[] };
+}
+
+const completeness = computed(() => dataStore.completeness as unknown as CompletenessData);
+const completenessControl = computed(() => dataStore.completenessControl as unknown as CompletenessData);
 const currentCollection = computed(() => observatoryStore.getCurrentCollection);
 const plotContainer = ref<HTMLElement | null>(null);
 
-const layout = {
+const layout: Partial<Plotly.Layout> = {
 	grid: {
 		rows: 2,
 		columns: 1,
 		roworder: 'bottom to top',
 	},
 	yaxis: {
-		title: 'Percentage of <br> software',
+		title: { text: 'Percentage of <br> software' },
 		tickformat: ',.0%',
 	},
 	xaxis: {
 		ticksuffix: ' features or less',
 		tickmode: 'array',
-		showticksuffix: false,
+		showticksuffix: 'all',
 		showticklabels: false,
 	},
 	xaxis2: {
-		title: 'Number of features',
+		title: { text: 'Number of features' },
 		ticksuffix: ' features',
 		tickmode: 'array',
-		showticksuffix: false,
+		showticksuffix: 'all',
 	},
 	yaxis2: {
-		title: 'Percentage of <br> software',
+		title: { text: 'Percentage of <br> software' },
 		tickformat: ',.0%',
 	},
 	showlegend: true,
@@ -71,10 +76,10 @@ const config = {
 // Methods
 function buildTraces() {
 	// Trace Line
-	const traceLine = {
+	const traceLine: Partial<Plotly.PlotData> = {
 		y: completeness.value.cummulative_features.count_cumm_pct,
 		x: completeness.value.cummulative_features.feat_num,
-		type: 'scatter',
+		type: 'scatter' as const,
 		mode: 'lines',
 		marker: {
 			color: '#3978ed',
@@ -87,10 +92,10 @@ function buildTraces() {
 	};
 
 	// Trace Line Control
-	const traceLineControl = {
+	const traceLineControl: Partial<Plotly.PlotData> = {
 		y: completenessControl.value.cummulative_features.count_cumm_pct,
 		x: completenessControl.value.cummulative_features.feat_num,
-		type: 'scatter',
+		type: 'scatter' as const,
 		mode: 'lines',
 		marker: {
 			color: 'lightgrey',
@@ -103,10 +108,10 @@ function buildTraces() {
 	};
 
 	// Trace Bar
-	const traceBar = {
+	const traceBar: Partial<Plotly.PlotData> = {
 		y: completeness.value.distribution_features.x,
 		x: completeness.value.distribution_features.y,
-		type: 'bar',
+		type: 'bar' as const,
 		xaxis: 'x2',
 		name: currentCollection.value,
 		legendgroup: currentCollection.value,
@@ -117,10 +122,10 @@ function buildTraces() {
 	};
 
 	// Trace Bar Control
-	const traceBarControl = {
+	const traceBarControl: Partial<Plotly.PlotData> = {
 		y: completenessControl.value.distribution_features.x,
 		x: completenessControl.value.distribution_features.y,
-		type: 'bar',
+		type: 'bar' as const,
 		xaxis: 'x2',
 		legendgroup: 'All tools',
 		marker: {
@@ -130,7 +135,7 @@ function buildTraces() {
 		hovertemplate: '%{y} of software have <br> %{x} features<extra></extra>',
 	};
 
-	let data;
+	let data: Partial<Plotly.PlotData>[];
 
 	if (currentCollection.value === 'tools') {
 		data = [traceBar, traceLine];

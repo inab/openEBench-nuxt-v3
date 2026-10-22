@@ -45,11 +45,11 @@
 						}"
 						@update:model-value="handleTabSelection"
 					>
-						<template #default="{ item, index, selected }">
+						<template #default="slotProps">
 							<div class="flex items-center gap-2 relative truncate">
-								<span class="">{{ item.label }}</span>
+								<span class="">{{ slotProps.item.label }}</span>
 								<span
-									v-if="selected"
+									v-if="isTabSelected(slotProps)"
 									class="absolute -right-4 w-2 h-2 rounded-full bg-primary-500 dark:bg-primary-400"
 								/>
 							</div>
@@ -190,8 +190,12 @@ function selectOption(option: string, tab: string) {
 }
 
 // Handle tab selection and set the default option for each tab
-function handleTabSelection(selected: string) {
-	selectedTab.value = selected;
+function isTabSelected(slot: object): boolean {
+	return 'selected' in slot && slot.selected === true;
+}
+
+function handleTabSelection(selected: string | number) {
+	selectedTab.value = String(selected);
 
 	if (selected === 'papers' && !selectedPapersOption.value) {
 		selectedPapersOption.value = 'core';

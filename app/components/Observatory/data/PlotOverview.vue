@@ -90,33 +90,34 @@ function map_feat_names(featureKey: any) {
 
 // Build scatter traces
 function build_scatter_traces(scatterData: any) {
-	const scatterPlot = [];
+	const scatterPlot: Partial<Plotly.PlotData>[] = [];
 
 	for (let index: number = 0; index < scatterData.values.length; ++index) {
 		const arr = scatterData.values[index];
-		const newX = [];
-		const newY = [];
-		const newColL = [];
-		const newCol = [];
-		const labels = [];
+		const newX: string[] = [];
+		const newY: string[] = [];
+		const newColL: string[] = [];
+		const newCol: string[] = [];
+		const labels: string[] = [];
+		const featLabel = feat_labels[features_names[index] as keyof typeof feat_labels] as string;
 
 		for (let i = 0; i < arr.length; ++i) {
 			if (arr[i] !== 0) {
-				newX.push(feat_labels[features_names[index]]);
-				newY.push(scatterData.source[i]);
-				newCol.push(colors[i % colors.length]);
-				newColL.push(colors_l[i % colors_l.length]);
-				labels.push(feat_labels[features_names[index]]);
+				newX.push(featLabel);
+				newY.push(scatterData.source[i] as string);
+				newCol.push(colors[i % colors.length] as string);
+				newColL.push(colors_l[i % colors_l.length] as string);
+				labels.push(featLabel);
 			}
 		}
-		const trace = {
+		const trace: Partial<Plotly.PlotData> = {
 			x: newX,
 			y: newY,
 			name: getTraceName(index),
 			xaxis: 'x',
 			yaxis: 'y2',
-			type: 'scatter',
-			mode: 'markers',
+			type: 'scatter' as const,
+			mode: 'markers' as const,
 			marker: {
 				size: 8,
 				color: newCol,
@@ -145,7 +146,7 @@ function getTraceName(index: any) {
 
 // Restructure the Barplot data
 function bar_plot_data_restruct(features: any) {
-	const newValues = [];
+	const newValues: [string, unknown][] = [];
 	for (const [key, value] of Object.entries(features)) {
 		newValues.push([key, value]);
 	}
@@ -167,12 +168,12 @@ async function updatePlot() {
 	const data = build_scatter_traces(scatterData);
 	const barsData = bar_plot_data_restruct(structuredClone(toRaw(features.value)));
 
-	const barsPlot = {
+	const barsPlot: Partial<Plotly.PlotData> = {
 		x: barsData.map((item) => item[0]),
-		y: barsData.map((item) => item[1]),
+		y: barsData.map((item) => item[1] as Plotly.Datum),
 		xaxis: 'x1',
 		yaxis: 'y1',
-		type: 'bar',
+		type: 'bar' as const,
 		marker: {
 			color: '#77A7D4',
 			opacity: 1,
@@ -187,12 +188,12 @@ async function updatePlot() {
 
 	// Data Control
 	const barsDataControl = bar_plot_data_restruct(toRaw(featuresControl.value));
-	const barsPlotControl = {
+	const barsPlotControl: Partial<Plotly.PlotData> = {
 		x: barsDataControl.map((item) => item[0]),
-		y: barsDataControl.map((item) => item[1]),
+		y: barsDataControl.map((item) => item[1] as Plotly.Datum),
 		xaxis: 'x1',
 		yaxis: 'y1',
-		type: 'bar',
+		type: 'bar' as const,
 		marker: {
 			color: '#E4E4E4',
 			opacity: 1,
@@ -209,19 +210,19 @@ async function updatePlot() {
 	// Config
 	const config = { responsive: true, displayModeBar: false };
 	// Layout
-	const layout = {
+	const layout: Partial<Plotly.Layout> = {
 		grid: {
 			rows: 2,
 			columns: 1,
 			roworder: 'bottom to top',
 		},
 		xaxis: {
-			title: 'Feature',
+			title: { text: 'Feature' },
 			tickangle: -45,
 			automargin: true,
 		},
 		yaxis: {
-			title: 'Software',
+			title: { text: 'Software' },
 			automargin: true,
 			tickformat: ',.0%',
 		},
@@ -231,7 +232,6 @@ async function updatePlot() {
 		xaxis2: {
 			showticklabels: false,
 			automargin: true,
-			match: 'x',
 		},
 		autosize: true,
 		margin: {
@@ -249,9 +249,6 @@ async function updatePlot() {
 			yanchor: 'bottom',
 			orientation: 'h',
 		},
-		font_size: 12,
-		font_color: 'black',
-		font_family: 'Balto, sans-serif',
 		bargap: 0.1,
 		bargroupgap: 0.0,
 		hoverdistance: 1,

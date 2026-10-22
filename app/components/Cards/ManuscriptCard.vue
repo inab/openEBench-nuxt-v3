@@ -132,6 +132,7 @@ async function fetchAllPaperDetails() {
 	try {
 		for (let i = 0; i < props.papers.length; i++) {
 			const paper = props.papers[i];
+			if (!paper) continue;
 			const details = await fetchPaperInfo(paper.doi);
 			if (details) {
 				// Keep the original DOI when merging details

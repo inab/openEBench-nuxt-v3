@@ -19,15 +19,15 @@ const types_data_control = computed(() => dataStore.typesControl);
 const currentCollection = computed(() => observatoryStore.getCurrentCollection);
 const plotContainer = ref<HTMLElement | null>(null);
 
-const layout = {
+const layout: Partial<Plotly.Layout> = {
 	autosize: true,
 	height: 340,
 	yaxis: {
-		title: '',
-		categoryorder: 'total ascending',
+		title: { text: '' },
+		categoryorder: 'total ascending' as const,
 	},
 	xaxis: {
-		title: 'Percentage of software',
+		title: { text: 'Percentage of software' },
 		tickformat: ',.0%',
 	},
 	margin: {
@@ -52,7 +52,7 @@ const config = {
 
 // Methods
 function buildData(typesData: any) {
-	const typeLabels = {
+	const typeLabels: Record<string, string> = {
 		cmd: 'Command-line tool',
 		web: 'Web application',
 		lib: 'Library',
@@ -70,7 +70,7 @@ function buildData(typesData: any) {
 		ontology: 'Ontology',
 	};
 
-	const newValues = {
+	const newValues: { values: Plotly.Datum[]; types: string[] } = {
 		values: [],
 		types: [],
 	};
@@ -78,7 +78,7 @@ function buildData(typesData: any) {
 	for (const [key, value] of Object.entries(typesData)) {
 		const label = typeLabels[key] || key; // fallback to key if no mapping exists
 		newValues.types.push(label + '  ');
-		newValues.values.push(value);
+		newValues.values.push(value as Plotly.Datum);
 	}
 
 	return newValues;
@@ -93,11 +93,11 @@ async function updatePlot() {
 	const dataControl = buildData(types_data_control.value);
 
 	//
-	const trace = {
+	const trace: Partial<Plotly.PlotData> = {
 		x: data.values,
 		y: data.types,
-		type: 'bar',
-		orientation: 'h',
+		type: 'bar' as const,
+		orientation: 'h' as const,
 		marker: {
 			color: '#6fc765',
 		},
@@ -106,11 +106,11 @@ async function updatePlot() {
 	};
 
 	//
-	const traceControl = {
+	const traceControl: Partial<Plotly.PlotData> = {
 		x: dataControl.values,
 		y: dataControl.types,
-		type: 'bar',
-		orientation: 'h',
+		type: 'bar' as const,
+		orientation: 'h' as const,
 		marker: {
 			color: 'lightgrey',
 		},
@@ -118,7 +118,7 @@ async function updatePlot() {
 		name: 'All tools',
 	};
 
-	const traces = [];
+	const traces: Partial<Plotly.PlotData>[] = [];
 	if (currentCollection.value !== 'tools') {
 		traces.push(traceControl);
 	}

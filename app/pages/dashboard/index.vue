@@ -343,15 +343,13 @@ const userName = computed(() => {
 });
 
 if (status.value == 'authenticated') {
-	const privileges: Array<string> = computed(() => {
+	const privileges = computed(() => {
 		return userStore.getUserCommunitiesRoles.map((role: { role: string }) => role.role);
 	});
 
 	if (privileges.value && privileges.value.length === 0) {
-		userStore.setUserCommunitiesRoles(data.value.oeb_roles);
+		userStore.setUserCommunitiesRoles(data.value?.oeb_roles as string[] | undefined);
 	}
-} else {
-	userName.value = '';
 }
 
 async function countTotalMetrics() {

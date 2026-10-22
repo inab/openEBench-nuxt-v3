@@ -415,7 +415,7 @@ async function onSubmitContribute() {
 			submiting.value = false;
 
 			if (data?.success === false) {
-				errors.value.push(`Server error: ${data.error}`);
+				errors.value.push(`Server error: ${(data as { error?: string }).error}`);
 				return;
 			}
 

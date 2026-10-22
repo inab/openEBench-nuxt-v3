@@ -13,25 +13,25 @@
 				<CommunityInfo :community="summaryObj" :community-references="communityReferences" />
 				<div class="community-tabs md:flex">
 					<UTabs :items="tabsItems" class="w-full">
-						<template #default="{ item, index, selected }">
+						<template #default="slotProps">
 							<div class="flex items-center gap-2 relative truncate">
-								<span class="">{{ item.label }}</span>
+								<span class="">{{ slotProps.item.label }}</span>
 								<UBadge
-									v-if="item.label == 'Datasets' && datasetsObj.length > 0"
+									v-if="slotProps.item.label == 'Datasets' && datasetsObj.length > 0"
 									color="neutral"
 									variant="subtle"
 									class="rounded-full"
 									>{{ datasetsObj.length }}</UBadge
 								>
 								<UBadge
-									v-if="item.label == 'Tools' && toolsObj.length > 0"
+									v-if="slotProps.item.label == 'Tools' && toolsObj.length > 0"
 									color="neutral"
 									variant="subtle"
 									class="rounded-full"
 									>{{ toolsObj.length }}</UBadge
 								>
 								<span
-									v-if="selected"
+									v-if="isTabSelected(slotProps)"
 									class="absolute -right-4 w-2 h-2 rounded-full bg-primary-500 dark:bg-primary-400"
 								/>
 							</div>
@@ -80,6 +80,10 @@ import { useCommunity } from '~~/stores/community';
 const route = useRoute();
 const communityStore = useCommunity();
 
+function isTabSelected(slot: object): boolean {
+	return 'selected' in slot && slot.selected === true;
+}
+
 const communityId = route.params.id as string;
 
 const { data: community, pending } = await useAsyncData(`project-community-${communityId}`, () =>
@@ -89,7 +93,7 @@ const { data: community, pending } = await useAsyncData(`project-community-${com
 const summaryObj = communityStore.getCommunityData;
 const datasetsObj = communityStore.getDatasets;
 const toolsObj = communityStore.getTools;
-const eventsObj: [] = communityStore.getEvents;
+const eventsObj: any[] = communityStore.getEvents;
 const communityReferences = communityStore.getCommunityReferences;
 const currentEvent = computed(() => communityStore.getCurrentEvent);
 const eventData = computed(() => communityStore.getCommunityData);
@@ -119,7 +123,7 @@ const tabsItems = [
 
 const routeArray = [
 	{ label: 'Project Spaces', isActualRoute: false, route: '/projects' },
-	{ label: community.value?.acronym, isActualRoute: true },
+	{ label: (community.value as { acronym?: string } | null)?.acronym, isActualRoute: true },
 ];
 </script>
 

@@ -17,8 +17,8 @@
 			<template #trailing="{ index, open }">
 				<div class="ms-auto flex shrink-0 items-center gap-2">
 					<PanelHeader
-						:fields="metadataFields[metadataKeys[index]]"
-						:field_names="metadataFieldNames[metadataKeys[index]]"
+						:fields="metadataFields[metadataKeys[index] as keyof typeof metadataFields]"
+						:field_names="metadataFieldNames[metadataKeys[index] as keyof typeof metadataFieldNames]"
 						:visible_ticks="!open"
 					/>
 					<UIcon
@@ -88,15 +88,13 @@
 						</MetaTextArea>
 						<!-- Alert -->
 						<div
-							v-if="toolMetadata.description.length > 1 > 0"
+							v-if="toolMetadata.description.length > 1"
 							class="offset-1 col-3"
 							style="padding-top: 32px"
 						>
 							<UAlert
 								:ui="{
 									root: 'bg-[#DBEAFE] text-gray-900 ring-1 ring-blue-200',
-									gap: 'gap-2',
-									shadow: 'shadow-md',
 								}"
 								icon="mdi-alert-circle"
 								description="Only the first description will appear in the exported
@@ -119,15 +117,13 @@
 						/>
 						<!-- Alert -->
 						<div
-							v-if="toolMetadata.webpage.length > 1 > 0"
+							v-if="toolMetadata.webpage.length > 1"
 							class="offset-1 col-3"
 							style="padding-top: 16px"
 						>
 							<UAlert
 								:ui="{
 									root: 'bg-[#DBEAFE] text-gray-900 ring-1 ring-blue-200',
-									gap: 'gap-2',
-									shadow: 'shadow-md',
 								}"
 								icon="mdi-alert-circle"
 								description="Only the first URL will appear in the exported
@@ -156,7 +152,6 @@
 								class="col-3 pt-4"
 							>
 								<UAlert
-									:ui="{ gap: 'gap-2', shadow: 'shadow-md' }"
 									icon="mdi-alert-circle"
 									color="info"
 									variant="soft"

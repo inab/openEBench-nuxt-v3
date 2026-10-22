@@ -118,7 +118,7 @@
 					</template>
 					<template #type-cell="{ row }">
 						<div class="inline-block rounded-full text-left not-inline">
-							<template v-if="row.original._metadata && row.original._metadata != ''">
+							<template v-if="row.original._metadata">
 								<font-awesome-icon :icon="['fas', 'diagram-project']" />
 								<span> Project </span>
 							</template>
@@ -160,7 +160,7 @@
 					<template #role-cell="{ row }">
 						<div class="not-inline">
 							<span
-								v-if="row.original.privileges === 'Owner' && row.original.actions.community"
+								v-if="row.original.privileges === 'Owner' && row.original.actions?.community"
 								title="Community Owner"
 								class="row-icon"
 							>
@@ -168,7 +168,7 @@
 								Owner
 							</span>
 							<span
-								v-else-if="row.original.privileges === 'Manager' && row.original.actions.community"
+								v-else-if="row.original.privileges === 'Manager' && row.original.actions?.community"
 								title="Community Manager"
 								class="row-icon"
 							>
@@ -211,13 +211,19 @@ import { ref, computed } from 'vue';
 import { useUser } from '~~/stores/user.ts';
 import { CommunityStatusLabels } from '~~/constants/community_const';
 import Multiselect from 'vue-multiselect';
+import type { Community, CommunityMetadata } from '~~/types/communities';
 
 defineProps<{
 	isLoadingData: any;
 }>();
 
 const userStore = useUser();
-const communitiesData = computed(() => userStore.getUserCommunities);
+type CommunityRow = Omit<Community, 'status' | '_metadata'> & {
+	status: string;
+	_metadata?: CommunityMetadata | '';
+	community_contact?: { id: string; name: string }[];
+};
+const communitiesData = computed(() => userStore.getUserCommunities as unknown as CommunityRow[]);
 const page = ref<number>(1);
 const pageCount = ref<number>(10);
 const pageFrom = computed(() => (Number(page.value) - 1) * Number(pageCount.value) + 1);

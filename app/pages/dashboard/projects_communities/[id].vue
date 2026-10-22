@@ -69,10 +69,10 @@ const isView = computed(() => {
 const userPrivileges = computed(() => userStore.getUserCommunitiesRoles);
 
 if (userPrivileges.value.length == 0) {
-	userStore.setUserCommunitiesRoles(data.value.oeb_roles);
+	userStore.setUserCommunitiesRoles(data.value?.oeb_roles as string[] | undefined);
 }
 
-const communityData = ref<Community>(null);
+const communityData = ref<Community | null>(null);
 
 const communityPrivileges = computed(() => {
 	const isAdmin = userPrivileges.value.filter((privilege) => privilege.role === 'admin');
@@ -133,14 +133,14 @@ const fetchUserCommunity = async (token: string): Promise<void> => {
 		loadingData.value = false;
 		routeName.value = `Community ${communityData.value?.acronym}`;
 
-		const eventResponse = await fetchUserCommunitiesEvents(token, String(communityData.value._id));
-		communityEvents.value = eventResponse;
+		const eventResponse = await fetchUserCommunitiesEvents(token, String(data._id));
+		communityEvents.value = eventResponse ?? [];
 	} catch (error) {
 		console.error('Error fetching communities data:', error);
 	}
 };
 
-const fetchUserCommunitiesEvents = async (token: string, communityId: string): Promise<void> => {
+const fetchUserCommunitiesEvents = async (token: string, communityId: string): Promise<Event[] | undefined> => {
 	try {
 		const communityEventResponse = await userStore.fetchCommunitiesEvents(token, communityId);
 		const data = await communityEventResponse;

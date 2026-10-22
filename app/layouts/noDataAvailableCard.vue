@@ -23,7 +23,7 @@ import emptyImg from '~/assets/images/illustrations/empty-state.svg?component';
 const props = withDefaults(
 	defineProps<{
 		description: any;
-		id: any;
+		id?: any;
 		btnPath?: any;
 		btnText?: any;
 	}>(),
