@@ -348,8 +348,8 @@ const state = ref({
 	url: '',
 	is_automated: false,
 	dates: {
-		benchmark_start: '',
-		benchmark_stop: '',
+		benchmark_start: new Date(),
+		benchmark_stop: new Date(),
 	},
 });
 
@@ -590,7 +590,7 @@ function validateRequiredFields(data: any): string[] {
 	return errorMessages;
 }
 
-function convertToUTCFullDate(dateString: string): string {
+function convertToUTCFullDate(dateString: string | Date): string {
 	const date = new Date(dateString);
 	return date.toISOString();
 }

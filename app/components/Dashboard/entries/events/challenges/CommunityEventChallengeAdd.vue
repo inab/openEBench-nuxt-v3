@@ -399,8 +399,8 @@ const state = ref({
 	is_automated: false,
 	orig_id: '',
 	dates: {
-		challenge_start: '',
-		challenge_stop: '',
+		challenge_start: new Date(),
+		challenge_stop: new Date(),
 	},
 	_schema: 'https://www.elixir-europe.org/excelerate/WP2/json-schemas/1.0/BenchmarkingEvent',
 	challenge_contact_ids: [],
@@ -452,12 +452,6 @@ if (props.challengeObj && props.challengeObj.challenge_contact_ids) {
 			return contact.replace(/\./g, ' ');
 		}) || [];
 }
-
-state.value.dates.challenge_start = new Date();
-state.value.dates.challenge_stop = new Date(state.value.dates.challenge_start);
-state.value.dates.challenge_stop = state.value.dates.challenge_stop.setMonth(
-	state.value.dates.challenge_stop.getMonth() + 1
-);
 
 const challengeStart = new Date();
 const challengeStop = new Date(challengeStart);
@@ -651,7 +645,7 @@ async function createChallenge() {
 	}
 }
 
-function convertToUTCFullDate(dateString: string): string {
+function convertToUTCFullDate(dateString: string | Date): string {
 	const date = new Date(dateString);
 	return date.toISOString();
 }

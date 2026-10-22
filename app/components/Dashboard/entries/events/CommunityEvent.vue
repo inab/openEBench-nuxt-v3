@@ -379,10 +379,10 @@ const state = ref({
 	community_id: '',
 	bench_contact_ids: '',
 	dates: {
-		benchmark_start: '',
-		benchmark_stop: '',
-		creation: '',
-		modification: '',
+		benchmark_start: new Date(),
+		benchmark_stop: new Date(),
+		creation: new Date(),
+		modification: new Date(),
 	},
 	orig_id: '',
 	_schema: '',
@@ -492,10 +492,10 @@ if (props.eventObj && props.eventObj.is_automated) {
 
 if (props.eventObj && props.eventObj.dates) {
 	localDates.value.dates = {
-		benchmark_start: new Date(props.eventObj.dates.benchmark_start),
-		benchmark_stop: new Date(props.eventObj.dates.benchmark_stop),
-		creation: new Date(props.eventObj.dates.creation),
-		modification: new Date(props.eventObj.dates.modification),
+		benchmark_start: new Date(props.eventObj.dates.benchmark_start ?? Date.now()),
+		benchmark_stop: new Date(props.eventObj.dates.benchmark_stop ?? Date.now()),
+		creation: new Date(props.eventObj.dates.creation ?? Date.now()),
+		modification: new Date(props.eventObj.dates.modification ?? Date.now()),
 	};
 }
 
@@ -842,10 +842,10 @@ watch(
 		}
 		if (newVal && newVal.dates) {
 			localDates.value.dates = {
-				benchmark_start: new Date(newVal.dates.benchmark_start),
-				benchmark_stop: new Date(newVal.dates.benchmark_stop),
-				creation: new Date(newVal.dates.creation),
-				modification: new Date(newVal.dates.modification),
+				benchmark_start: new Date(newVal.dates.benchmark_start ?? Date.now()),
+				benchmark_stop: new Date(newVal.dates.benchmark_stop ?? Date.now()),
+				creation: new Date(newVal.dates.creation ?? Date.now()),
+				modification: new Date(newVal.dates.modification ?? Date.now()),
 			};
 		}
 	},

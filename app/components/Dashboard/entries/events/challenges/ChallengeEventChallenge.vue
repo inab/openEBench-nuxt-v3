@@ -407,8 +407,8 @@ const state = ref({
 	benchmarking_event_id: '',
 	challenge_contact_ids: [],
 	dates: {
-		challenge_start: '',
-		challenge_stop: '',
+		challenge_start: new Date(),
+		challenge_stop: new Date(),
 	},
 	is_automated: false,
 	url: '',
@@ -507,10 +507,10 @@ if (props.challengeObj && props.challengeObj.challenge_contact_ids) {
 
 if (props.challengeObj && props.challengeObj.dates) {
 	localDates.value.dates = {
-		challenge_start: new Date(props.challengeObj.dates.challenge_start),
-		challenge_stop: new Date(props.challengeObj.dates.challenge_stop),
-		creation: new Date(props.challengeObj.dates.creation),
-		modification: new Date(props.challengeObj.dates.modification),
+		challenge_start: new Date(props.challengeObj.dates.challenge_start ?? Date.now()),
+		challenge_stop: new Date(props.challengeObj.dates.challenge_stop ?? Date.now()),
+		creation: new Date(props.challengeObj.dates.creation ?? Date.now()),
+		modification: new Date(props.challengeObj.dates.modification ?? Date.now()),
 	};
 }
 
@@ -799,10 +799,10 @@ watch(
 		}
 		if (newVal && newVal.dates) {
 			localDates.value.dates = {
-				challenge_start: new Date(newVal.dates.challenge_start),
-				challenge_stop: new Date(newVal.dates.challenge_stop),
-				creation: new Date(newVal.dates.creation),
-				modification: new Date(newVal.dates.modification),
+				challenge_start: new Date(newVal.dates.challenge_start ?? Date.now()),
+				challenge_stop: new Date(newVal.dates.challenge_stop ?? Date.now()),
+				creation: new Date(newVal.dates.creation ?? Date.now()),
+				modification: new Date(newVal.dates.modification ?? Date.now()),
 			};
 		}
 
