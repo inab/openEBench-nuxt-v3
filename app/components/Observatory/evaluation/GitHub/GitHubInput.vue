@@ -209,8 +209,14 @@ const fetchMetadata = async () => {
 const submitGitHubLink = async () => {
 	validateInput();
 	if (!showError.value) {
-		const owner = value.value.split('/')[3];
-		const repo = value.value.split('/')[4].split('.git')[0];
+		const urlParts = value.value.split('/');
+		const owner = urlParts[3];
+		const repoPath = urlParts[4];
+		if (!owner || !repoPath) {
+			showError.value = true;
+			return;
+		}
+		const repo = repoPath.split('.git')[0];
 
 		// 1. Check if the app is installed
 		githubStore.updateRepository({ owner, repo });

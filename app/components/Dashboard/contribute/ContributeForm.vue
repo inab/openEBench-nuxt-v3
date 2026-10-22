@@ -227,7 +227,7 @@ const requestOptions = [
 const state = ref({
 	userName: '',
 	userEmail: '',
-	requestType: requestOptions[0].value,
+	requestType: requestOptions[0]?.value ?? '',
 	community: requestCommunity.value || '',
 	event: '',
 	subject: '',
@@ -295,7 +295,7 @@ async function fetchCommunities() {
 		if (requestCommunity.value) {
 			state.value.community = requestCommunity.value;
 		} else {
-			state.value.community = communities.value[0].value;
+			state.value.community = communities.value[0]?.value ?? '';
 		}
 		await fetchUserCommunitiesEvents(state.value.community);
 	} catch (error) {
@@ -372,7 +372,7 @@ function getEventById(eventId: string): string {
 }
 
 function goReset() {
-	state.value.requestType = requestOptions[0].value;
+	state.value.requestType = requestOptions[0]?.value ?? '';
 	state.value.subject = '';
 	description.value = '';
 	eventsList.value = [];

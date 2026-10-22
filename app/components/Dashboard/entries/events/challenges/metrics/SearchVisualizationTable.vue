@@ -272,14 +272,18 @@ const recomendedVisualization = computed(() => {
       metric.representation_hints &&
       metric.representation_hints?.visualization
     ) {
-      const type = metricsByType.filter((item) => item.name === "Bar Plot");
-      type[0].total += 1;
+      const type = metricsByType.find((item) => item.name === "Bar Plot");
+      if (type) {
+        type.total += 1;
+      }
     } else if (
       metric.representation_hints &&
       metric.representation_hints.other_property
     ) {
-      const type = metricsByType.filter((item) => item.name === "Line Plot");
-      type[0].total += 1;
+      const type = metricsByType.find((item) => item.name === "Line Plot");
+      if (type) {
+        type.total += 1;
+      }
     }
   });
 

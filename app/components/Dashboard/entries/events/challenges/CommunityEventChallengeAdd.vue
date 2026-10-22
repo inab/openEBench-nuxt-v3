@@ -275,7 +275,7 @@
 															<div class="input-wrapper big d-flex">
 																<USelectMenu
 																	:ref="`contact_${index}`"
-																	v-model="localContacts[index].id"
+																	v-model="contact.id"
 																	class="w-full lg:w-100"
 																	search-input
 																	selected-icon="i-heroicons-check-16-solid"
@@ -286,9 +286,7 @@
 																>
 																</USelectMenu>
 																<USelect
-																	v-model="localContacts[index].role"
-																	:items="rolesObj"
-																	class="w-48"
+																	v-model="contact.role" :items="rolesObj" class="w-48"
 																/>
 																<button
 																	v-if="challengePrivileges.challenge.update && !isView"
@@ -481,7 +479,7 @@ function onAddContact(
 ) {
 	contact.push({
 		id: '',
-		role: rolesObj.value[0].value,
+		role: rolesObj.value[0]?.value ?? '',
 	});
 	nextTick(() => {
 		const lastElementIndex = array.length - 1;

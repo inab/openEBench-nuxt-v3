@@ -239,7 +239,7 @@
 												<div class="card-plot-title">
 													<h3>Bar plots</h3>
 													<div class="card-plot-title-sub">
-														<span>{{ metricsByType[0].total }} plots</span>
+														<span>{{ metricsByType[0]?.total ?? 0 }} plots</span>
 														<div class="card-plot-img">
 															<BarSvg />
 														</div>
@@ -252,7 +252,7 @@
 												<div class="card-plot-title">
 													<h3>Scatter plot</h3>
 													<div class="card-plot-title-sub">
-														<span>{{ metricsByType[1].total }} plots</span>
+														<span>{{ metricsByType[1]?.total ?? 0 }} plots</span>
 														<div class="card-plot-img">
 															<ScatterSvg />
 														</div>
@@ -265,7 +265,7 @@
 												<div class="card-plot-title">
 													<h3>Line plot</h3>
 													<div class="card-plot-title-sub">
-														<span>{{ metricsByType[2].total }} plots</span>
+														<span>{{ metricsByType[2]?.total ?? 0 }} plots</span>
 														<div class="card-plot-img">
 															<LineSvg />
 														</div>
@@ -278,7 +278,7 @@
 												<div class="card-plot-title">
 													<h3>Box plot</h3>
 													<div class="card-plot-title-sub">
-														<span>{{ metricsByType[3].total }} plots</span>
+														<span>{{ metricsByType[3]?.total ?? 0 }} plots</span>
 														<div class="card-plot-img">
 															<BoxSvg />
 														</div>
@@ -451,11 +451,15 @@ async function getMetricsByType(metrics: any) {
 
 	metrics.forEach((metric: any) => {
 		if (metric.representation_hints && metric.representation_hints.visualization) {
-			const type = metricsByType.value.filter((item) => item.name === typeMap.visualization);
-			type[0].total += 1;
+			const type = metricsByType.value.find((item) => item.name === typeMap.visualization);
+			if (type) {
+				type.total += 1;
+			}
 		} else if (metric.representation_hints && metric.representation_hints.optimization) {
-			const type = metricsByType.value.filter((item) => item.name === typeMap.optimization);
-			type[0].total += 1;
+			const type = metricsByType.value.find((item) => item.name === typeMap.optimization);
+			if (type) {
+				type.total += 1;
+			}
 		}
 	});
 }

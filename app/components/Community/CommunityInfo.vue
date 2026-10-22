@@ -4,7 +4,7 @@
 			<UAccordion
 				class="intro-accordion"
 				:items="HEADER_ITEM"
-				:default-value="HEADER_ITEM[0].value"
+				:default-value="HEADER_ITEM[0]?.value"
 			>
 				<template #default="{ item }">
 					<div>

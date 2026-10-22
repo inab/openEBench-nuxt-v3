@@ -171,7 +171,7 @@
 												<div class="input-wrapper big d-flex">
 													<USelectMenu
 														:ref="`contact_${index}`"
-														v-model="allCommunitiesPrivileges[index].id"
+														v-model="contact.id"
 														class="w-full lg:w-100"
 														selected-icon="i-heroicons-check-16-solid"
 														placeholder="Select a Community"
@@ -181,7 +181,7 @@
 													>
 													</USelectMenu>
 													<USelect
-														v-model="allCommunitiesPrivileges[index].role"
+														v-model="contact.role"
 														:items="rolesObj"
 														class="w-48"
 														label-key="label"
@@ -196,7 +196,7 @@
 													</button>
 												</div>
 												<div
-													v-if="isValidatorOpened[index].isOpened"
+													v-if="isValidatorOpened[index]?.isOpened"
 													class="w-100 delete-validator alert alert-danger text-center"
 												>
 													<label class="w-100">Are you sure you want to delete this element?</label>
@@ -204,7 +204,7 @@
 														<button
 															type="button"
 															class="btn-dialog bg-slate-50 btn-nok"
-															@click="isValidatorOpened[index].isOpened = false"
+															@click="closeDeleteValidator(index)"
 														>
 															No
 														</button>
@@ -474,6 +474,13 @@ function deleteElement(index: number) {
 	}
 }
 
+function closeDeleteValidator(index: number) {
+	const validator = isValidatorOpened.value[index];
+	if (validator) {
+		validator.isOpened = false;
+	}
+}
+
 function onAddContact(
 	contact: {
 		id: string;
@@ -483,7 +490,7 @@ function onAddContact(
 ) {
 	contact.push({
 		id: '',
-		role: rolesObj.value[0].value,
+		role: rolesObj.value[0]?.value ?? '',
 	});
 
 	nextTick(() => {

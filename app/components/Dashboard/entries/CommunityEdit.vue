@@ -311,7 +311,7 @@
 																<span>{{ index + 1 }}.</span>
 																<USelectMenu
 																	:ref="`contact_${index}`"
-																	v-model="localContacts[index].id"
+																	v-model="contact.id"
 																	class="w-full lg:w-100"
 																	selected-icon="i-heroicons-check-16-solid"
 																	placeholder="Select a contact"
@@ -322,7 +322,7 @@
 																>
 																</USelectMenu>
 																<USelect
-																	v-model="localContacts[index].role"
+																	v-model="contact.role"
 																	:items="rolesObj"
 																	label-key="label"
 																	value-key="value"
@@ -806,7 +806,11 @@ async function onSubmitCommunity(event: FormSubmitEvent<Schema>) {
 }
 
 async function onError(event: FormErrorEvent) {
-	const element = document.getElementById(event.errors[0].id);
+	const errorId = event.errors[0]?.id;
+	if (!errorId) {
+		return;
+	}
+	const element = document.getElementById(errorId);
 	element?.focus();
 	element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
@@ -980,7 +984,7 @@ function onAddContact(
 ) {
 	contact.push({
 		id: '',
-		role: rolesObj.value[0].value,
+		role: rolesObj.value[0]?.value ?? '',
 	});
 	nextTick(() => {
 		const lastElementIndex = array.length - 1;

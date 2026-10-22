@@ -409,8 +409,11 @@ async function searchMetricResults() {
 								};
 							}
 
-							metricAssociatedList.value[m.metrics_id].count += 1;
-							metricAssociatedList.value[m.metrics_id].challenges.push(challenge);
+							const associatedMetric = metricAssociatedList.value[m.metrics_id];
+							if (associatedMetric) {
+								associatedMetric.count += 1;
+								associatedMetric.challenges.push(challenge);
+							}
 
 							processedMetrics.value.add(m.metrics_id);
 						}

@@ -247,7 +247,7 @@
 													<div class="input-wrapper big d-flex">
 														<USelectMenu
 															:ref="`contact_${index}`"
-															v-model="localContacts[index].id"
+															v-model="contact.id"
 															class="w-full lg:w-100"
 															selected-icon="i-heroicons-check-16-solid"
 															placeholder="Select a contact"
@@ -257,7 +257,7 @@
 														>
 														</USelectMenu>
 														<USelect
-															v-model="localContacts[index].role"
+															v-model="contact.role"
 															:items="rolesObj"
 															label-key="label"
 															value-key="value"
@@ -861,7 +861,7 @@ function onAddContact(
 ) {
 	contact.push({
 		id: '',
-		role: rolesObj.value[0].value,
+		role: rolesObj.value[0]?.value ?? '',
 	});
 	nextTick(() => {
 		const lastElementIndex = array.length - 1;

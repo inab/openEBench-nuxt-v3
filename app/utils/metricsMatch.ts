@@ -19,7 +19,7 @@ export default async function metricsSearcher(id: string, token: string) {
 		const challengeList = [] as Challenge[];
 
 		data.forEach((metric: Challenge) => {
-			if (metric.metrics_categories) {
+			if (metric.metrics_categories?.[0]?.metrics) {
 				const categoryList = metric.metrics_categories[0].metrics;
 				categoryList.forEach((category: unknown) => {
 					if (category.metrics_id === id) {

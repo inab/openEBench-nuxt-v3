@@ -198,11 +198,18 @@ function handleUpdateSort({ column, direction }: { column: string; direction: st
 	sort.value.direction = direction;
 
 	const sortedRows = props.metricRows.sort((a, b) => {
-		if (direction === 'asc') {
-			return a[column as keyof Metric] > b[column as keyof Metric] ? 1 : -1;
-		} else {
-			return a[column as keyof Metric] < b[column as keyof Metric] ? 1 : -1;
+		const aValue = a[column as keyof Metric];
+		const bValue = b[column as keyof Metric];
+		if (aValue === undefined || bValue === undefined) {
+			if (aValue === bValue) return 0;
+			const missingValueOrder = aValue === undefined ? -1 : 1;
+			return direction === 'asc' ? missingValueOrder : -missingValueOrder;
 		}
+
+		if (direction === 'asc') {
+			return aValue > bValue ? 1 : aValue < bValue ? -1 : 0;
+		}
+		return aValue < bValue ? 1 : aValue > bValue ? -1 : 0;
 	});
 
 	return sortedRows;

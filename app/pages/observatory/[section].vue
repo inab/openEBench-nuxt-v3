@@ -58,7 +58,11 @@ watch(
 
 // --- Tab → URL (cuando cambia la tab)
 watch(activeTabIndex, (newIndex) => {
-	const newRoute = `/${tabsItems[newIndex].path}`;
+	const selectedTab = tabsItems[newIndex];
+	if (!selectedTab) {
+		return;
+	}
+	const newRoute = `/${selectedTab.path}`;
 	if (route.fullPath !== newRoute) {
 		router.replace(newRoute);
 	}
@@ -82,7 +86,7 @@ const currentTabComponent = computed(() => tabComponents[activeTabIndex.value]);
 // Breadcrumbs
 const breadcrumbs = ref([
 	{ label: 'Observatory', isActualRoute: true },
-	{ label: tabsItems[activeTabIndex.value].label, isActualRoute: true },
+	{ label: tabsItems[activeTabIndex.value]?.label || 'Default', isActualRoute: true },
 ]);
 </script>
 
