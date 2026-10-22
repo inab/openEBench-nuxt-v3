@@ -1,8 +1,8 @@
 <template>
 	<div class="container px-5 mb-4">
 		<div class="row">
-			<UAlert class="py-4">
-				<template #icon>
+			<UAlert color="neutral" variant="outline" class="py-4 bg-white">
+				<template #leading>
 					<div
 						class="bg-gray-100 w-16 h-16 rounded-full flex justify-center flex-wrap content-center"
 					>
@@ -13,7 +13,7 @@
 					{{ alert.title }}
 				</template>
 				<template #description>
-					<UDivider class="mb-4" />
+					<USeparator class="mb-4" />
 
 					<div class="row">
 						<div class="col-10">
@@ -39,7 +39,7 @@
 			>
 				<div
 					:class="[
-						'relative mx-auto p-4 border w-11/12 md:w-2/3 shadow-lg rounded-md bg-white',
+						'relative mx-auto p-4 border w-11/12 md:w-5/6 shadow-lg rounded-md bg-white',
 						dialogAnimation,
 					]"
 				>
@@ -49,8 +49,9 @@
 						color="primary"
 						variant="outline"
 						autoresize
+						:ui="{ base: 'w-full' }"
 						resize
-						class="border-1 textTextarea rounded-md border-primaryOeb-500 max-h-[50vh] overflow-y-auto mb-3"
+						class="w-full border-1 textTextarea rounded-md border-primaryOeb-500 max-h-[50vh] overflow-y-auto mb-3"
 					>
 					</UTextarea>
 

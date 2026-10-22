@@ -1,8 +1,8 @@
 <template>
 	<div class="container px-5 mb-4">
 		<div class="row">
-			<UAlert class="py-4">
-				<template #icon>
+			<UAlert color="neutral" variant="outline" class="py-4 bg-white">
+				<template #leading>
 					<div
 						class="bg-gray-100 w-16 h-16 rounded-full flex justify-center flex-wrap content-center"
 					>
@@ -13,7 +13,7 @@
 					{{ alert.title }}
 				</template>
 				<template #description>
-					<UDivider class="mb-4" />
+					<USeparator class="mb-4" />
 
 					<div class="row">
 						<div class="col-10">
@@ -38,7 +38,7 @@
 			>
 				<div
 					:class="[
-						'relative mx-auto p-4 border w-11/12 md:w-2/3 shadow-lg rounded-md bg-white',
+						'relative mx-auto p-4 border w-11/12 md:w-5/6 shadow-lg rounded-md bg-white',
 						dialogAnimation,
 					]"
 				>
@@ -48,8 +48,9 @@
 						color="primary"
 						variant="outline"
 						autoresize
+						:ui="{ base: 'w-full' }"
 						resize
-						class="border p-2 textTextarea rounded-md focus-within:ring-primaryOeb-500 focus-within:border-primaryOeb-500 focus-within:text-primaryOeb-500 max-h-[50vh] mb-3 relative"
+						class="w-full border p-2 textTextarea rounded-md focus-within:ring-primaryOeb-500 focus-within:border-primaryOeb-500 focus-within:text-primaryOeb-500 max-h-[50vh] mb-3 relative"
 					>
 						<template #default>
 							<span class="absolute -top-2 left-2 bg-white text-xs px-1 z-50"> YAML Content </span>
@@ -71,7 +72,7 @@
 	</div>
 </template>
 <script setup lang="ts">
-import yaml from 'js-yaml';
+import { dump, load } from 'js-yaml';
 
 import { ref, watch, computed } from 'vue';
 import { useMetadataStore } from '~~/stores/observatory/evaluation/metadata';
@@ -107,14 +108,14 @@ const closeDialog = () => {
 
 // Discard changes
 const discardChanges = () => {
-	yamlContent.value = yaml.dump(props.citation);
+	yamlContent.value = dump(props.citation);
 	dialog.value = false;
 };
 
 // Save changes
 const saveYaml = () => {
 	try {
-		const parsed = yaml.load(yamlContent.value);
+		const parsed = load(yamlContent.value);
 		metadataStore.updateToolMetadataCFF(parsed);
 		dialog.value = false;
 	} catch (err) {
@@ -127,7 +128,7 @@ watch(
 	() => props.citation,
 	(newVal) => {
 		if (newVal) {
-			const rawYaml = yaml.dump(newVal);
+			const rawYaml = dump(newVal);
 			// Remove first line break ONLY if it follows an ‘|’.
 			yamlContent.value = rawYaml.replace(/^\|\n/, '');
 		}

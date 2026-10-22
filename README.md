@@ -133,7 +133,7 @@ NPM_RUN="test -- --run" docker compose -f docker-compose.devci.yml run npm_run
 
 ## Known vulnerabilities
 
-`npm audit` currently reports 10 high severity findings (last checked 2026-10-21). All are **transitive** and **no fixed version exists yet**:
+`npm audit` currently reports 10 high severity findings (last checked 2026-10-22). All are **transitive** and **no fixed version exists yet**:
 
 | Package      | Advisory                                                                                                          | Reached through                                                |
 | ------------ | ----------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
@@ -146,3 +146,12 @@ NPM_RUN="test -- --run" docker compose -f docker-compose.devci.yml run npm_run
 - `npm audit fix --force` suggests downgrading `@sidebase/nuxt-auth` to 0.3.2: **do not run it**.
 - They are used by build and dev tooling (glob matching and the dev server's TLS helper), not in the request handling of the production server.
 - To clear them: wait for an upstream `nitropack` release that drops or updates these dependencies, then update and re-run `npm audit`.
+
+## Outdated dependencies
+
+`npm outdated` (checked 2026-10-22) lists only these packages after updating the rest:
+
+| Package                  | Current       | Latest | Decision                                                                                                                                                                               |
+| ------------------------ | ------------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `typescript`             | 6.0.3         | 7.0.2  | **Stay on 6.x.** `@typescript-eslint/*` (pulled in by `@nuxt/eslint`) declares the peer range `>=4.8.4 <6.1.0`, so 7 is not supported yet. Revisit when typescript-eslint supports it. |
+| `vue-observe-visibility` | 2.0.0-alpha.1 | 1.0.0  | **Keep.** npm reports 1.0.0 as "latest" only because 2.0.0-alpha.1 is a prerelease; this is not a real update.                                                                         |

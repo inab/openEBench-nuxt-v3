@@ -1,8 +1,8 @@
 <template>
 	<div class="container px-5 mb-4">
 		<div class="row">
-			<UAlert class="py-4">
-				<template #icon>
+			<UAlert color="neutral" variant="outline" class="py-4 bg-white">
+				<template #leading>
 					<div
 						class="bg-gray-100 w-16 h-16 rounded-full flex justify-center flex-wrap content-center"
 					>
@@ -15,12 +15,12 @@
 				</template>
 
 				<template #description>
-					<UDivider class="mb-4" />
+					<USeparator class="mb-4" />
 
 					<!-- Expad -->
 					<div class="row">
 						<!--  -->
-						<UAccordion :items="ExpandITEM">
+						<UAccordion :items="ExpandITEM" :ui="{ trailingIcon: 'hidden' }">
 							<template #default="{ item, open }">
 								<UButton
 									color="neutral"
