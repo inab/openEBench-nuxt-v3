@@ -12,9 +12,8 @@
 
 <script setup lang="ts">
 import ClassificationTable from '@/components/Community/CommunityEvent/CommunityClassificationTable.vue';
-import { watch, onMounted } from 'vue';
 
-const props = defineProps<{
+defineProps<{
 	id: string;
 	filterArray: Array<any>;
 	debounce?: {

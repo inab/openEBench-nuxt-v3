@@ -15,7 +15,7 @@
 </template>
 <script setup lang="ts">
 // PROPS
-const props = defineProps<{
+defineProps<{
 	title: string;
 	count: number;
 	label: string;

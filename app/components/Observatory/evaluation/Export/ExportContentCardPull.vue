@@ -21,7 +21,7 @@
 					<div class="row">
 						<!--  -->
 						<UAccordion :items="ExpandITEM" :ui="{ trailingIcon: 'hidden' }">
-							<template #default="{ item, open }">
+							<template #default="{ open }">
 								<UButton
 									color="neutral"
 									variant="ghost"
@@ -212,7 +212,6 @@ const boxStatic = ref({
 		iconText: 'Make Request',
 	},
 });
-const dialog = ref(true);
 const owner = ref('');
 const repo = ref('');
 const branch = ref('main');
@@ -263,10 +262,6 @@ const getFromBoxStatic = (param: any) => {
 	return boxStatic.value[props.type as keyof typeof boxStatic.value][
 		param as keyof (typeof boxStatic.value)['citation']
 	];
-};
-
-const buildRepositoryURL = () => {
-	return `https://github.com/${owner.value}/${repo.value}`;
 };
 
 const cancel = () => {

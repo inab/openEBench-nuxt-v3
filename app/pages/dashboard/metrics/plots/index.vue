@@ -88,7 +88,7 @@ definePageMeta({
 	},
 });
 
-const { data, status } = useAuth();
+const { status } = useAuth();
 const route = useRoute();
 const plotTypes = [
 	{

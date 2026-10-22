@@ -215,7 +215,7 @@ const checkScientificServices = async () => {
 		method: 'HEAD',
 		mode: 'cors',
 	})
-		.then(async (response) => {
+		.then(async (_response) => {
 			isScientificServicesUp.value = true;
 			performance.mark(markEnd);
 			performance.measure(measureName, markStart, markEnd);

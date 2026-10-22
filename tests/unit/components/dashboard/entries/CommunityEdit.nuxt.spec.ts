@@ -5,7 +5,6 @@ import { createTestingPinia } from '@pinia/testing';
 import { setActivePinia, defineStore, createPinia } from 'pinia';
 import { computed, ref } from 'vue';
 import { mockDashboardLinks } from '~~/test/mocks/dashboardMoks';
-import { CommunityPrivileges } from '~~/types/communities';
 
 vi.mock('@/middleware/requireAuth', () => ({
 	default: vi.fn((context) => {

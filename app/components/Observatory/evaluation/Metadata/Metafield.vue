@@ -44,15 +44,6 @@ const addEntry = (addedValue: any) => {
 	metadataStore.addEntry(payload);
 	// this.$forceUpdate();
 };
-
-const removeEntry = (index: any) => {
-	const payload = {
-		field: props.field,
-		index,
-	};
-	metadataStore.removeEntry(payload);
-	// this.$forceUpdate();
-};
 </script>
 <style scoped>
 #title {

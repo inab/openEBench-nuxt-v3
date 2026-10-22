@@ -37,7 +37,7 @@
 	</div>
 </template>
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import HeaderAvatar from '@/components/Observatory/evaluation/Metadata/HeaderAvatar.vue';
 import { useMetadataStore } from '~~/stores/observatory/evaluation/metadata';
 

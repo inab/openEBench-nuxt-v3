@@ -291,17 +291,6 @@ const route = useRoute();
 
 const logInItems = ref<any[]>([]);
 
-const isAdmin = computed(() => {
-	if (data.value) {
-		const privileges = Array.isArray(data.value.oeb_roles)
-			? data.value.oeb_roles.find((privilege) => privilege === 'admin:oeb')
-			: undefined;
-
-		return privileges ? true : false;
-	}
-	return false;
-});
-
 const dropdownStates = ref({
 	about: false,
 	observatory: false,
@@ -377,10 +366,6 @@ const handleToggleMenu = () => {
 const isActive = (path: string) => {
 	return route.path === path || route.path.startsWith(path);
 };
-
-const isActiveObservatory = computed(() => {
-	return route.path.startsWith('/observatory');
-});
 
 const isActiveAbout = computed(() => {
 	const aboutPaths = ['/publications', '/collaboration', '/team'];

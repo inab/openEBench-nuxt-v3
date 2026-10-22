@@ -27,7 +27,7 @@
 	</div>
 </template>
 <script setup lang="ts">
-import { computed, ref, onMounted } from 'vue';
+import { computed, ref } from 'vue';
 import BreadcrumbsBar from '@/components/Common/BreadcrumbsBar.vue';
 import { useUser } from '~~/stores/user.ts';
 import { privileges } from '~~/constants/privileges';

@@ -19,7 +19,7 @@
 							track-by="label"
 							@tag="addTag"
 						>
-							<template #selection="{ values, search, isOpen }">
+							<template #selection="{ values }">
 								<div
 									v-for="value in values"
 									:key="value.value"
@@ -179,12 +179,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useUser } from '~~/stores/user.ts';
-import {
-	CommunityStatusColors,
-	CommunityStatusLabels,
-	CommunityStatusTextColors,
-	CommunityStatusBackgroundColors,
-} from '~~/constants/community_const';
+import { CommunityStatusLabels } from '~~/constants/community_const';
 import Multiselect from 'vue-multiselect';
 
 defineProps<{

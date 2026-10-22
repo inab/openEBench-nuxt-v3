@@ -320,7 +320,7 @@ function prepareTableData(aggregations, chunk_size, mode, community_id) {
 
 			// Aggregation specific cell
 			if (aggregation.aggregation_id !== undefined) {
-				aggregation.metrics.forEach((m_entry, m_entry_i) => {
+				aggregation.metrics.forEach((m_entry, _m_entry_i) => {
 					if (m_entry == null) {
 						console.log('FIXME: metrics label not in challenge', aggregation);
 					}

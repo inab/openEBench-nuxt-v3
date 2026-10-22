@@ -3,7 +3,6 @@ import type { Community } from '~~/types/communities';
 import type { Event } from '~~/types/events';
 import type { Challenge } from '~~/types/challenge';
 import { privileges } from '~~/constants/privileges';
-import parseDataURL from 'data-urls';
 
 interface CommunityRole {
 	role: string;

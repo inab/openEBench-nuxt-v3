@@ -133,7 +133,7 @@ async function fetchContacts(token: string): Promise<Contact[]> {
 		});
 		contactsList.value = data;
 		return data;
-	} catch (error) {
+	} catch {
 		return [];
 	} finally {
 		isLoadingContacts.value = false;

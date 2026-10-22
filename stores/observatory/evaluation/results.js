@@ -55,7 +55,7 @@ export const useResultStore = defineStore('result', {
 					if (Array.isArray(field)) {
 						payload.data.tool_metadata[fieldName] = field.map((item) => {
 							if (item.term && (!item.term.uri || item.term.uri.trim() === '')) {
-								const { uri, ...rest } = item.term;
+								const { ...rest } = item.term;
 								return {
 									...item,
 									term: { ...rest }, // uri excluida

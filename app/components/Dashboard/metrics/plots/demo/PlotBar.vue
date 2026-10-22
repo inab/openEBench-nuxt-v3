@@ -54,7 +54,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { array, object, string, safeParse } from 'valibot';
+import { array, object, safeParse } from 'valibot';
 import type { FormSubmitEvent } from '#ui/types';
 
 import demo_bar from './templates/BARPLOT.json';
@@ -114,7 +114,7 @@ function regeneratePlot(newData: any) {
 
 type Schema = import('valibot').InferOutput<typeof schema>;
 
-async function onSubmit(event: FormSubmitEvent<Schema>) {
+async function onSubmit(_event: FormSubmitEvent<Schema>) {
 	const result = safeParse(schema, state.value);
 	if (result.success) {
 		const data = state.value.challenge_participants.map((item) => {

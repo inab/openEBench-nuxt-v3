@@ -473,10 +473,6 @@ const automatedOptions = [
 	{ label: 'Yes', value: true },
 	{ label: 'No', value: false },
 ];
-const elementToDelete = ref({
-	index: null as number | null,
-	element: [] as unknown[],
-});
 
 const challengeData = computed(() => {
 	state.value = {
@@ -617,7 +613,7 @@ function validateRequiredFields(data: any): string[] {
 					id: string;
 					role: string;
 				},
-				index: number
+				_index: number
 			) => {
 				if (contact.id.trim() === '') {
 					errorMessages.push(`community_contact_ids  cannot be empty`);
@@ -646,7 +642,7 @@ function deleteEmptyContact(array: { id: string; role: string }[]) {
 
 type Schema = import('valibot').InferOutput<typeof schema>;
 
-async function onSubmitChallenge(event: FormSubmitEvent<Schema>) {
+async function onSubmitChallenge(_event: FormSubmitEvent<Schema>) {
 	const result = safeParse(schema, state.value);
 	if (result.success) {
 		const customErrors = validateRequiredFields(state.value);
@@ -795,7 +791,7 @@ async function updateBenchmarkingCommunity() {
 
 async function showOkMessage(msg: string) {
 	oks.value = msg;
-	return new Promise((resolve, reject) => {
+	return new Promise((resolve, _reject) => {
 		setTimeout(() => {
 			oks.value = '';
 			resolve('done');

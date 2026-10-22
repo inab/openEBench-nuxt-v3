@@ -53,7 +53,7 @@
 			<div class="px-5">
 				<UAccordion color="white" variant="ghost" class="" :items="items">
 					<!-- @vue-expect-error legacy slot, never rendered by Nuxt UI 4 -->
-					<template #item="{ item }">
+					<template #item>
 						<div class="mx-2.5">
 							<UDivider />
 							<ul class="list-disc pl-5 space-y-2 text-xs mt-2 text-slate-800">
@@ -469,7 +469,6 @@ import collectionSelector from '@/components/Observatory/CollectionSelector.vue'
 import BubbleChart from './BubbleChart.vue';
 import PlotWOptions from '@/components/Observatory/PlotWOptions.vue';
 import { embedCodes } from '@/components/Observatory/visualizations/embedCodes.js';
-import { activeTabIndex } from '@/components/Common/state.js';
 
 // Store Data
 const storeFairness = useFairness();
@@ -517,23 +516,6 @@ const control_fair_scores = computed(
 const current_collection = computed(() => observatoryStore.currentCollection);
 const colors = ['#5da4d6', '#ff900e', '#2ca065', '#bd86f0'];
 const colors_lines = ['#0075c7', '#995302', '#046b37', '#5e3d7d'];
-
-// Alert state and handler
-const showAlert = ref(true);
-const closeButtonOptions = {
-	icon: 'i-heroicons-x-circle-16-solid',
-	color: 'gray',
-	variant: 'link',
-	padded: false,
-};
-
-function handleClose() {
-	showAlert.value = false;
-}
-
-function goToEvaluatorTab() {
-	activeTabIndex.value = 2;
-}
 </script>
 
 <style scoped>

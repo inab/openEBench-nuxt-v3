@@ -345,7 +345,7 @@ import { useUser } from '~~/stores/user.ts';
 import type { CommunityPrivilegeCategories } from '~~/types/communities';
 import { VueDatePicker } from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
-import { object, string, array, safeParse, boolean, optional, date, description } from 'valibot';
+import { object, string, array, safeParse, boolean, date } from 'valibot';
 import type { FormSubmitEvent, FormErrorEvent } from '#ui/types';
 import { getLocaleDateString } from '~~/constants/global_const';
 
@@ -364,7 +364,6 @@ const props = defineProps<{
 
 const token = data.value?.accessToken as string;
 const dialogTitle = ref('');
-const dialogType = ref('yesno');
 const isDialogOpened = ref(false);
 const dialogText = ref('');
 const eventId = computed(() => props.eventId);
@@ -533,7 +532,7 @@ function restartElementToDelete() {
 
 type Schema = import('valibot').InferOutput<typeof schema>;
 
-async function onSubmitChallenge(event: FormSubmitEvent<Schema>) {
+async function onSubmitChallenge(_event: FormSubmitEvent<Schema>) {
 	const result = safeParse(schema, state.value);
 	if (result.success) {
 		const customErrors = validateRequiredFields(state.value);
@@ -666,19 +665,12 @@ function deleteEmptyElements(array: string[]): string[] {
 	return array.filter((element) => element.trim() !== '');
 }
 
-function checkIdPattern(id: string) {
-	const text = communityId.value.slice(0, 3); // Gets the first part
-	const IDNumber = communityId.value.slice(4);
-	const pattern = new RegExp(`^${text}X${IDNumber}[A-Z0-9]{7}$`);
-	return pattern.test(id);
-}
-
 function errorClean(errors: string[]): string[] {
 	const cleanedErrors = errors.map((element: string) => elementTranslator(element.trim()));
 	return cleanedErrors;
 }
 
-async function onError(event: FormErrorEvent) {
+async function onError(_event: FormErrorEvent) {
 	// TODO check error
 }
 
@@ -714,10 +706,6 @@ const fetchContacts = async (token: string): Promise<void> => {
 		console.error('Error fetching contacts data:', error);
 	}
 };
-
-const checkEmptyMetricsCategories = computed(() => {
-	return localMetricsCategories.value.some((category: string) => category === '');
-});
 
 function goBack() {
 	router.push(

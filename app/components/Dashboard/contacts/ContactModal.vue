@@ -263,11 +263,10 @@ import { ref, watch, computed, defineEmits, useTemplateRef, nextTick } from 'vue
 import type { FormSubmitEvent } from '#ui/types';
 import CustomModal from '@/components/Common/CustomModal.vue';
 import { useUser } from '~~/stores/user.ts';
-import type { Community, CommunityPrivileges, UserCommunityRoles } from '~~/types/communities';
+import type { Community, UserCommunityRoles } from '~~/types/communities';
 import type { Contact } from '~~/types/contact';
 import { object, string, safeParse, array } from 'valibot';
 import { useRouter } from 'vue-router';
-import CustomDialog from '@/components/Common/CustomDialog.vue';
 
 interface ContactPrivilege {
 	id: string;
@@ -392,7 +391,7 @@ const fetchUserCommunities = async (token: string): Promise<any[]> => {
 	}
 };
 
-const fetchAllPrivileges = async (token: string): Promise<ContactPrivilege[]> => {
+const fetchAllPrivileges = async (_token: string): Promise<ContactPrivilege[]> => {
 	try {
 		const privilegesResponse = await fetch(
 			`${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}query/privileges/${props.contactId}`,
@@ -433,7 +432,7 @@ function validateRequiredFields(data: any): string[] {
 
 type Schema = import('valibot').InferOutput<typeof schema>;
 
-async function onSubmitContactUpdate(event: FormSubmitEvent<Schema>) {
+async function onSubmitContactUpdate(_event: FormSubmitEvent<Schema>) {
 	const result = safeParse(schema, state.value);
 	if (result.success) {
 		const customErrors = validateRequiredFields(state.value);
@@ -550,7 +549,7 @@ async function updateContact() {
 		const data = await response.json();
 		if (data.status >= 200 && data.status < 300) {
 			const privilegesObj = allCommunitiesPrivileges;
-			const updatePrivileges = await fetch(
+			await fetch(
 				`${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}query/privileges/${props.contactId}`,
 				{
 					method: 'PATCH',
@@ -584,7 +583,7 @@ async function updateContact() {
 
 async function showOkMessage(msg: string) {
 	oks.value = msg;
-	return new Promise((resolve, reject) => {
+	return new Promise((resolve, _reject) => {
 		setTimeout(() => {
 			oks.value = '';
 			resolve('done');

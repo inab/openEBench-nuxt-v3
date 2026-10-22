@@ -12,7 +12,7 @@
 
 <script setup lang="ts">
 // PROPS
-const props = defineProps<{
+defineProps<{
 	count: number | null;
 }>();
 

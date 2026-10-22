@@ -88,10 +88,9 @@
 
 <script setup lang="ts">
 import type { Metric } from '~~/types/challenge_metric';
-import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 
-const props = defineProps<{
+defineProps<{
 	metric: Metric;
 	isSearchingMetric: boolean;
 }>();

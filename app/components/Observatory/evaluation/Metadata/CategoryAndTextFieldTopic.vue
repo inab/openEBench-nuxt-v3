@@ -163,7 +163,6 @@ const emitRemove = () => {
 
 const model = ref('');
 const selectVocabulary = ref('');
-const modelURICustom = ref('');
 const modelURI = ref('');
 const edamReversed = ref<Record<string, Record<string, string>>>(EDAMreversed);
 const uriErrorMessage = ref('');
@@ -217,13 +216,6 @@ const onURIChange = () => {
 	} else {
 		uriErrorMessage.value = 'Please enter a valid URI';
 	}
-};
-
-const clearTerm = () => {
-	model.value = '';
-	modelURI.value = '';
-	modelURICustom.value = '';
-	changeValue();
 };
 
 const changeValue = () => {

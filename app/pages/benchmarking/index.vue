@@ -117,7 +117,7 @@ const fetchCommunitiesData = async () => {
 
 			statusRef.value = 'success';
 		}
-	} catch (error) {
+	} catch {
 		statusRef.value = 'error';
 	}
 };

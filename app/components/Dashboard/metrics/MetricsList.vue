@@ -87,7 +87,6 @@ const props = defineProps<{
 	token: string;
 }>();
 
-const runtimeConfig = useRuntimeConfig();
 const isModalOpen = ref(false);
 const isSearchingMetric = ref(false);
 const modalTitle = ref('');
@@ -136,12 +135,6 @@ const sort = ref({
 	direction: 'asc',
 });
 
-const cleanContacts = (contacts: any) => {
-	return contacts.map((contact: any) => {
-		return contact.replaceAll('.', ' ');
-	});
-};
-
 const filteredRows = computed(() => {
 	if (!search.value) {
 		_total.value = props.metricRows.length;
@@ -160,10 +153,6 @@ const filteredRows = computed(() => {
 		(Number(page.value) - 1) * Number(pageCount.value),
 		Number(page.value) * Number(pageCount.value)
 	);
-});
-
-const totalPages = computed(() => {
-	return Math.ceil(Number(_total.value) / Number(pageCount.value));
 });
 
 const closeModal = () => {
@@ -188,10 +177,6 @@ const openModal = async (row: Metric) => {
 	isModalOpen.value = true;
 	metricIdOpen.value = row._id;
 };
-
-function onDeleteElement(index: number, list: any[]) {
-	list.splice(index, 1);
-}
 
 function handleUpdateSort({ column, direction }: { column: string; direction: string }) {
 	sort.value.column = column;

@@ -299,7 +299,7 @@ async function fetchMetric(id: string): Promise<Metric | null> {
 		const data = await response.json();
 		metricObj.value = data;
 		return data;
-	} catch (error) {
+	} catch {
 		return null;
 	} finally {
 		isSearchingMetric.value = false;
@@ -322,14 +322,14 @@ function validateRequiredFields(data: any): string[] {
 	return errorMessages;
 }
 
-async function onError(event: FormErrorEvent) {
+async function onError(_event: FormErrorEvent) {
 	// console.log("state: ", state.value);
 	// console.log("event: ", event);
 }
 
 type Schema = import('valibot').InferOutput<typeof schema>;
 
-async function onSubmitNewMetric(event: FormSubmitEvent<Schema>) {
+async function onSubmitNewMetric(_event: FormSubmitEvent<Schema>) {
 	const result = safeParse(schema, state.value);
 	if (result.success) {
 		const customErrors = validateRequiredFields(state.value);

@@ -57,7 +57,7 @@
 	<ExportContentCardPull :content="metadata" type="metadata" />
 </template>
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
 import ExportMetadataCardDownload from '~/components/Observatory/evaluation/Export/ExportMetadataCardDownload.vue';
 import ExportContentCardPull from '~/components/Observatory/evaluation/Export/ExportContentCardPull.vue';
 import ViewMetadata from '~/components/Observatory/evaluation/Export/ViewMetadata.vue';

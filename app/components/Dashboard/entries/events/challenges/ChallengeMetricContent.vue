@@ -130,7 +130,7 @@
 import { ref, onMounted, computed } from 'vue';
 import type { MetricData } from '~~/types/challenge_metric';
 import type { ChartDefault } from '~~/types/visualizations';
-import { ChartBar, ChartBox, ChartRadar, ChartScatter } from '~~/constants/visualization_const';
+import { ChartBar, ChartScatter } from '~~/constants/visualization_const';
 
 const props = defineProps<{
 	isLoadingData: boolean;
@@ -140,12 +140,6 @@ const props = defineProps<{
 
 const metricId = computed(() => {
 	return props.metricId;
-});
-
-const metricVisualizationDefault = ref({});
-
-const metricTool = computed(() => {
-	return props.metricTool;
 });
 
 const isOpen = ref(false);

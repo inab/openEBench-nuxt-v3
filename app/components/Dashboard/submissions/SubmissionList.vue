@@ -52,7 +52,7 @@
 						label="label"
 						track-by="value"
 					>
-						<template #selection="{ values, search, isOpen }">
+						<template #selection="{ values }">
 							<div
 								v-for="value in values"
 								:key="value.value"
@@ -222,7 +222,7 @@
 import { ref, computed } from 'vue';
 import Multiselect from 'vue-multiselect';
 import { object, string, number, optional } from 'valibot';
-import type { FormErrorEvent, FormSubmitEvent } from '#ui/types';
+import type { FormSubmitEvent } from '#ui/types';
 import CustomModal from '@/components/Common/CustomModal.vue';
 
 interface Submission {
@@ -352,7 +352,7 @@ function getDotColor(statusValue: string) {
 
 type Schema = import('valibot').InferOutput<typeof schema>;
 
-async function onSubmissionUpdate(event: FormSubmitEvent<Schema>) {
+async function onSubmissionUpdate(_event: FormSubmitEvent<Schema>) {
 	const index = mockSubmissions.value.findIndex((sub) => sub.id === selectedSubmission.value.id);
 
 	if (index !== -1) {

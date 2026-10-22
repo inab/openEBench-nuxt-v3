@@ -263,7 +263,7 @@ function validateRequiredFields(data: any): string[] {
 
 type Schema = import('valibot').InferOutput<typeof schema>;
 
-async function onSubmitContactAdd(event: FormSubmitEvent<Schema>) {
+async function onSubmitContactAdd(_event: FormSubmitEvent<Schema>) {
 	const result = safeParse(schema, state.value);
 	if (result.success) {
 		const customErrors = validateRequiredFields(state.value);
@@ -274,7 +274,7 @@ async function onSubmitContactAdd(event: FormSubmitEvent<Schema>) {
 			errors.value = customErrors;
 		} else {
 			errors.value = [];
-			const response = await createContact();
+			await createContact();
 		}
 	} else {
 		errors.value = result.issues.map((issue) => issue.message);

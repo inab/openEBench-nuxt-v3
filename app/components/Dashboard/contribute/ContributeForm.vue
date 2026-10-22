@@ -234,7 +234,6 @@ const state = ref({
 	details: '',
 });
 
-const subjectTextUpgrade = ref('Request to upgrade role for ##userfullname##');
 const detailsTextUpgrade = ref(`
   Dear user,</br></br>
   The user ##userfullname## would like to upgrade its role to contributor.</br>
@@ -429,7 +428,7 @@ async function onSubmitContribute() {
 
 async function showOkMessage(msg: string) {
 	oks.value = msg;
-	return new Promise((resolve, reject) => {
+	return new Promise((resolve, _reject) => {
 		setTimeout(() => {
 			oks.value = '';
 			resolve('done');

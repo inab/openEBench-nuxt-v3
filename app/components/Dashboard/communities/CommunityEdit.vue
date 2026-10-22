@@ -220,8 +220,8 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
-import type { Community, CommunityPrivilegeActions } from '~~/types/communities';
-import { CommunityStatusLabels, CommunityStatusColors } from '~~/constants/community_const';
+import type { CommunityPrivilegeActions } from '~~/types/communities';
+import { CommunityStatusLabels } from '~~/constants/community_const';
 import CustomSubtitle from '@/components/Common/CustomSubtitle.vue';
 import { useRouter } from 'vue-router';
 import type { FormSubmitEvent } from '#ui/types';
@@ -322,7 +322,7 @@ async function onSubmitCommunity(event: FormSubmitEvent<Schema>) {
 
 	const result = v.safeParse(schema, state.value);
 	if (result.success) {
-		const response = await updateCommunity();
+		await updateCommunity();
 		/* TODO */
 	} else {
 		errors.value = result.issues.map((issue) => issue.message);

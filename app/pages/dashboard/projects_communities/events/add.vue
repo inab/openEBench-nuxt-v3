@@ -44,13 +44,6 @@ const eventPrivileges = computed(() => {
 	return privileges[privilege?.role ?? 'anyone'] ?? privileges.anyone;
 });
 
-const dialogTitle = ref('');
-const dialogType = ref('yesno');
-const isDialogOpened = ref(false);
-const dialogText = ref('');
-
-const errors = ref<string[]>([]);
-
 const routeArray = ref([
 	{ label: 'Dashboard', isActualRoute: false, route: '/dashboard' },
 	{

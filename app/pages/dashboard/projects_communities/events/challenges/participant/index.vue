@@ -83,7 +83,6 @@
 import { computed, ref } from 'vue';
 import CustomSubtitle from '@/components/Common/CustomSubtitle.vue';
 import BreadcrumbsBar from '@/components/Common/BreadcrumbsBar.vue';
-import TurndownService from 'turndown';
 import {
 	ClassicEditor,
 	Essentials,

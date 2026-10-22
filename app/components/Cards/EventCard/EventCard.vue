@@ -36,7 +36,7 @@ interface Event {
 	challenges: Challenge[];
 }
 
-const props = defineProps<{
+defineProps<{
 	event?: Event;
 	communityId: string;
 }>();

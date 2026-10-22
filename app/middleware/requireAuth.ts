@@ -1,4 +1,4 @@
-export default defineNuxtRouteMiddleware((to, from) => {
+export default defineNuxtRouteMiddleware((to, _from) => {
 	const { status } = useAuth();
 	const auth = to.meta.auth as
 		{ authenticatedOnly?: boolean; unauthenticatedOnly?: boolean } | undefined;

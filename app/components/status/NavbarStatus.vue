@@ -49,7 +49,7 @@ const checkVreServices = async () => {
 		.then(async () => {
 			isVreServicesUp.value = true;
 		})
-		.catch((error) => {
+		.catch((_error) => {
 			return false;
 		});
 };
@@ -62,7 +62,7 @@ const checkScientificServices = async () => {
 		.then(async () => {
 			isScientificServicesUp.value = true;
 		})
-		.catch((error) => {
+		.catch((_error) => {
 			console.log('Error on fetch');
 			return false;
 		});
@@ -75,7 +75,7 @@ const checkKeycloakServices = async () => {
 		.then(async () => {
 			isKeycloakServiceUp.value = true;
 		})
-		.catch((error) => {
+		.catch((_error) => {
 			return false;
 		});
 };

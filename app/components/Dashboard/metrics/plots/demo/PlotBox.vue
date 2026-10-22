@@ -212,7 +212,7 @@ function recalculateMedians(params: any) {
 
 type Schema = import('valibot').InferOutput<typeof schema>;
 
-async function onSubmit(event: FormSubmitEvent<Schema>) {
+async function onSubmit(_event: FormSubmitEvent<Schema>) {
 	const result = safeParse(schema, state.value);
 	hasDataError.value = false;
 	hasDataErrorMessage.value = '';

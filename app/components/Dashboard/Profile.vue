@@ -145,8 +145,6 @@ const schema = v.object({
 	roles: v.pipe(v.string()),
 });
 
-const selectedRoles = ref<any[]>([]);
-
 const fetchUserInfo = async () => {
 	if (status.value === 'authenticated') {
 		try {

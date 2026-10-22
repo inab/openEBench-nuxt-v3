@@ -86,7 +86,7 @@
 	</div>
 </template>
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useMetadataStore } from '~~/stores/observatory/evaluation/metadata';
 const metadataStore = useMetadataStore();
 
@@ -115,30 +115,6 @@ onMounted(() => {
 });
 
 // Methods
-const checkIfRequired = (field: any) => {
-	if (field === 'DOI') {
-		if (doi.value === '' && pmid.value === '' && pmcid.value === '') {
-			return 'At least one ID is required';
-		} else {
-			return true;
-		}
-	}
-	if (field === 'PMID') {
-		if (pmid.value === '' && doi.value === '' && pmcid.value === '') {
-			return 'At least one ID is required';
-		} else {
-			return true;
-		}
-	}
-
-	if (field === 'PMCID') {
-		if (pmid.value === '' && doi.value === '' && pmid.value === '') {
-			return 'At least one ID is required';
-		} else {
-			return true;
-		}
-	}
-};
 
 const changeValue = () => {
 	const newItem = {

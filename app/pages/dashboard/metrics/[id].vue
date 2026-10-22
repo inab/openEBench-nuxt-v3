@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import type { Metric } from '~~/types/challenge_metric';
 import BreadcrumbsBar from '@/components/Common/BreadcrumbsBar.vue';
 import MetricEdit from '@/components/Dashboard/metrics/MetricEdit.vue';
@@ -55,7 +55,7 @@ async function fetchMetrics(token: string): Promise<Metric[]> {
 		metricsData.value = data;
 		isSearchingMetric.value = false;
 		return data;
-	} catch (error) {
+	} catch {
 		isSearchingMetric.value = false;
 		return [];
 	}

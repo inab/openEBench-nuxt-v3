@@ -1,11 +1,6 @@
 import { defineStore } from 'pinia';
-import { useAsyncData } from 'nuxt/app';
-import customApi from '~/composables/useAPI';
-import { useNuxtApp, useRuntimeConfig } from '#app';
+import { useNuxtApp } from '#app';
 import { decodeDataUrlText } from '~/utils/decodeDataUrlText';
-import useAPI from '~/composables/useAPI';
-
-const BASE_URL = '/api/stats/tools/';
 
 export const useDashboard = defineStore('dashboard', {
 	state: () => ({

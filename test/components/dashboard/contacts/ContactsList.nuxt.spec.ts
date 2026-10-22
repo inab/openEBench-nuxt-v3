@@ -1,12 +1,10 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { mount } from '@vue/test-utils';
 import ContactsList from '@/components/Dashboard/contacts/ContactsList.vue';
-import { ref } from 'vue';
 import { useUser } from '~~/stores/user.ts';
 
 describe('Dashboard Contacts List', () => {
 	let wrapper;
-	let userStore;
 
 	beforeEach(async () => {
 		wrapper = mount(ContactsList, {
@@ -36,7 +34,7 @@ describe('Dashboard Contacts List', () => {
 			},
 		});
 
-		userStore = useUser();
+		useUser();
 	});
 
 	it('should render the component', () => {

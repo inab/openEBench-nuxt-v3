@@ -85,7 +85,7 @@ import {
 import { Ckeditor } from '@ckeditor/ckeditor5-vue';
 import 'ckeditor5/ckeditor5.css';
 
-const props = defineProps<{
+defineProps<{
 	communityId: string;
 }>();
 
@@ -162,7 +162,7 @@ const schema = object({
 
 type Schema = import('valibot').InferOutput<typeof schema>;
 
-async function onSubmitTerms(event: FormSubmitEvent<Schema>) {
+async function onSubmitTerms(_event: FormSubmitEvent<Schema>) {
 	const result = safeParse(schema, state.value);
 	if (result.success) {
 		const customErrors = validateRequiredFields(state.value);
@@ -197,7 +197,7 @@ function goReset() {
 
 async function showOkMessage(msg: string) {
 	oks.value = msg;
-	return new Promise((resolve, reject) => {
+	return new Promise((resolve, _reject) => {
 		setTimeout(() => {
 			oks.value = '';
 			resolve('done');

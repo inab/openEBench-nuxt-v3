@@ -36,12 +36,12 @@
 								/>
 							</div>
 						</template>
-						<template #summary="{ item }">
+						<template #summary>
 							<div class="p-5 custom-tab">
 								<CommunityEventSummary :markdown="eventData"> </CommunityEventSummary>
 							</div>
 						</template>
-						<template #results="{ item }">
+						<template #results>
 							<div class="p-5 custom-tab">
 								<CommunityEvent
 									:current-event="currentEvent"
@@ -50,12 +50,12 @@
 								/>
 							</div>
 						</template>
-						<template #datasets="{ item }">
+						<template #datasets>
 							<div class="p-5 custom-tab">
 								<CommunityDataset :datasets="datasetsObj" :community-id="communityId" />
 							</div>
 						</template>
-						<template #tools="{ item }">
+						<template #tools>
 							<div class="p-5 custom-tab">
 								<CommunityTools :tools="toolsObj" :community-id="communityId" />
 							</div>
@@ -68,7 +68,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
 import CommunityInfo from '@/components/Community/CommunityInfo.vue';
 import CommunityEvent from '@/components/Community/CommunityEvent/CommunityEvent.vue';
 import CommunityDataset from '@/components/Community/CommunityDataset/CommunityDataset.vue';

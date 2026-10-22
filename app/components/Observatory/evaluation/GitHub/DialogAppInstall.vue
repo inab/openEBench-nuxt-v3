@@ -34,8 +34,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue';
-import { useGithub } from '~~/stores/observatory/evaluation/github';
+import { ref, watch } from 'vue';
 
 // PROPS
 const props = defineProps<{
@@ -44,11 +43,6 @@ const props = defineProps<{
 	installationUrl?: string;
 	initialDialogAppInstall: boolean;
 }>();
-
-// GITHUB STORE
-const githubStore = useGithub();
-const importProgressText = computed(() => githubStore.getImportProgressText);
-const repository = computed(() => githubStore.getRepository);
 
 const handleLinkClick = (event: MouseEvent) => {
 	const target = event.target as HTMLAnchorElement;
@@ -59,7 +53,6 @@ const handleLinkClick = (event: MouseEvent) => {
 
 // STATE
 const dialogAppInstall = ref(props.initialDialogAppInstall);
-const socket = ref(null);
 
 watch(
 	() => props.initialDialogAppInstall, // Watch for changes in the prop

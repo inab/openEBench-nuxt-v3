@@ -43,7 +43,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
 import MetadataFileUpload from './MetadataFileUpload.vue';
 import MetadataFileURL from './MetadataFileURL.vue';
 import DialogParseMetadata from './DialogParseMetadata.vue';

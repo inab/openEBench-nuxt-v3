@@ -25,7 +25,7 @@ onMounted(() => {
 			body: JSON.stringify({ accessToken, idToken, expiresIn }),
 		})
 			.then((response) => response.json())
-			.then((data) => {
+			.then((_data) => {
 				router.push('/dashboard');
 			})
 			.catch((error) => {

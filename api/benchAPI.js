@@ -1,5 +1,5 @@
 export async function fetchAPI(name, URL, type, customBody) {
-	const { data: items, status } = await useAsyncData(name, async () => {
+	await useAsyncData(name, async () => {
 		const [items] = await Promise.all([
 			$fetch(URL, {
 				method: type,
@@ -12,4 +12,4 @@ export async function fetchAPI(name, URL, type, customBody) {
 	});
 }
 
-export function graphApi(name, graph) {}
+export function graphApi() {}

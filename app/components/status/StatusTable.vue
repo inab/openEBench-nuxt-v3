@@ -37,7 +37,7 @@ interface ServiceStatus {
 	page: string;
 }
 
-const props = defineProps<{
+defineProps<{
 	services: ServiceStatus[];
 	isTableLoading: boolean;
 }>();

@@ -118,7 +118,7 @@ function regeneratePlot(newData: any) {
 
 type Schema = import('valibot').InferOutput<typeof schema>;
 
-async function onSubmit(event: FormSubmitEvent<Schema>) {
+async function onSubmit(_event: FormSubmitEvent<Schema>) {
 	const result = safeParse(schema, state.value);
 	if (result.success) {
 		const data = state.value.challenge_participants.map((item) => {
@@ -127,8 +127,6 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 			const itemMetricX = metricValueStringX.replace(',', '.');
 			const metricValueX = parseFloat(itemMetricX);
 
-			const metricValueStringY =
-				typeof item.metric_y === 'string' ? item.metric_y : String(item.metric_y || '');
 			const itemMetricY = metricValueStringX.replace(',', '.');
 			const metricValueY = parseFloat(itemMetricY);
 

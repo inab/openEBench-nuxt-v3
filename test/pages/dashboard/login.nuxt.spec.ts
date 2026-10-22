@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils';
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it } from 'vitest';
 
 describe.skip('Dashboard Page', () => {
 	it('should not render user name when there is a 404 error', async () => {

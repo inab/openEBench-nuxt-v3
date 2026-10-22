@@ -400,13 +400,12 @@
 <script setup lang="ts">
 import { computed, ref, nextTick, onMounted, useTemplateRef } from 'vue';
 import { useUser } from '~~/stores/user.ts';
-import type { Community } from '~~/types/communities';
 import { CommunityStatusLabels } from '~~/constants/community_const';
 import { useRouter } from 'vue-router';
 import CustomSubtitle from '@/components/Common/CustomSubtitle.vue';
 import type { FormSubmitEvent } from '#ui/types';
 import CustomDialog from '@/components/Common/CustomDialog.vue';
-import { object, string, array, safeParse, nonEmpty, is } from 'valibot';
+import { object, string, array, safeParse } from 'valibot';
 import CustomBorder from '@/components/Common/CustomBorder.vue';
 import TurndownService from 'turndown';
 import {
@@ -471,13 +470,6 @@ const localContacts = ref<
 	}[]
 >([]);
 const contactsData = ref<string[]>([]);
-const localUsers = ref<
-	{
-		name: string;
-		email: string;
-		role: string;
-	}[]
->([]);
 const turndownService = new TurndownService();
 const state = ref({
 	_id: '',
@@ -590,9 +582,7 @@ const elementToDelete = ref({
 const errors = ref<string[]>([]);
 const oks = ref<string>('');
 const inputLinkRefs = ref<(HTMLInputElement | null)[]>([]);
-const inputContactsRefs = ref<(HTMLInputElement | null)[]>([]);
 const inputKeywordsRefs = ref<(HTMLInputElement | null)[]>([]);
-const inputUsersRefs = ref<(HTMLInputElement | null)[]>([]);
 const itemRefs = useTemplateRef('items');
 
 // Default value is active?
@@ -602,13 +592,6 @@ const localStatus = ref({
 });
 
 state.value.status = localStatus.value.value;
-
-const localPrivilegesType = [
-	{
-		value: 'owner',
-		label: 'Owner',
-	},
-];
 
 const checkEmptyLinks = computed(() => {
 	return localLinks.value.some((link: string) => link === '');
@@ -630,10 +613,6 @@ const checkEmptyKeywords = computed(() => {
 	return localKeywords.value.some((keyword: string) => keyword === '');
 });
 
-const checkEmptyUsers = computed(() => {
-	return localUsers.value.some((user) => user.name === '' && user.email === '');
-});
-
 function validateRequiredFields(data: any): string[] {
 	const requiredFields = ['_id', '_schema', 'acronym', 'name', 'status', 'community_contact_ids'];
 	const errorMessages: string[] = [];
@@ -653,7 +632,7 @@ function validateRequiredFields(data: any): string[] {
 					id: string;
 					role: string;
 				},
-				index: number
+				_index: number
 			) => {
 				if (contact.id.trim() === '') {
 					errorMessages.push(`community_contact_ids  cannot be empty`);
@@ -736,7 +715,6 @@ async function createCommunity() {
 	}
 
 	// call to exist community
-	let responseCommunity = null;
 	try {
 		const res = await fetch(
 			`${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Community/${state.value._id}`,
@@ -748,7 +726,7 @@ async function createCommunity() {
 			}
 		);
 		if (res.status === 404) {
-			responseCommunity = null;
+			// no existing community: id is available
 		} else if (!res.ok) {
 			throw new Error(`Error al comprobar la comunidad: ${res.status} ${res.statusText}`);
 		} else {
@@ -813,7 +791,7 @@ async function createCommunity() {
 
 async function showOkMessage(msg: string) {
 	oks.value = msg;
-	return new Promise((resolve, reject) => {
+	return new Promise((resolve, _reject) => {
 		setTimeout(() => {
 			oks.value = '';
 			resolve('done');
@@ -859,25 +837,6 @@ function onAddContact(
 	});
 	nextTick(() => {
 		const lastElementIndex = contacts.length - 1;
-		const inputElement = arrayRef ? arrayRef[lastElementIndex] : null;
-		if (inputElement) {
-			inputElement.focus();
-		}
-	});
-}
-
-function onAddObjectElement(
-	array: { name: string; email: string; role: string }[],
-	arrayRef?: (HTMLInputElement | null)[]
-) {
-	array.push({
-		name: '',
-		email: '',
-		role: 'owner',
-	});
-
-	nextTick(() => {
-		const lastElementIndex = array.length - 1;
 		const inputElement = arrayRef ? arrayRef[lastElementIndex] : null;
 		if (inputElement) {
 			inputElement.focus();

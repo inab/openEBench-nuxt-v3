@@ -56,7 +56,6 @@
 </template>
 
 <script setup>
-import CommunityImg from '@/assets/images/illustrations/chart-person_anim.svg?component';
 import HeaderImage from '@/components/Landing/HeaderImage';
 </script>
 

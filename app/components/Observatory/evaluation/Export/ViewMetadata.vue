@@ -70,7 +70,7 @@
 	</div>
 </template>
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue';
+import { ref, watch } from 'vue';
 import { useMetadataStore } from '~~/stores/observatory/evaluation/metadata';
 
 const metadataStore = useMetadataStore();

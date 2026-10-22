@@ -73,7 +73,7 @@ import IndicatorsTable from './IndicatorsTable.vue';
 const metadataStore = useMetadataStore();
 
 // PROPS
-const props = defineProps<{
+defineProps<{
 	title: string;
 	color: string;
 	items: Array<any>;

@@ -17,7 +17,7 @@
 <script setup lang="ts">
 import type { ChartDefault } from '~~/types/visualizations';
 
-const props = defineProps<{
+defineProps<{
 	selectedVisualization: ChartDefault;
 }>();
 </script>

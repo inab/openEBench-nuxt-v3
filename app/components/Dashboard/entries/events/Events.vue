@@ -116,7 +116,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useUser } from '~~/stores/user.ts';
-import type { EventColumnsDashboard } from '~~/types/events';
 
 defineProps<{
 	isLoadingData: any;

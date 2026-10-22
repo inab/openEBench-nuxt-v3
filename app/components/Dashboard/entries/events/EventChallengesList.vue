@@ -110,10 +110,8 @@
 import { computed, ref } from 'vue';
 import type { CommunityPrivilegeActions } from '~~/types/communities';
 import type { Challenge } from '~~/types/challenge';
-import { getLocaleDateString } from '~~/constants/global_const';
 
 const lang = import.meta.client ? window.navigator.language : 'en';
-const dateFormat = computed(() => getLocaleDateString(lang));
 
 const props = defineProps<{
 	challenges?: Array<Challenge>;
@@ -145,15 +143,6 @@ const pageTo = computed(() =>
 );
 
 const _total = ref(0);
-
-const challengesData = computed(() => {
-	if (!props.challenges) return [];
-	return props.challenges.map((challenge) => {
-		return {
-			...challenge,
-		};
-	});
-});
 
 const filteredRows = computed(() => {
 	if (!props.challenges) return [];

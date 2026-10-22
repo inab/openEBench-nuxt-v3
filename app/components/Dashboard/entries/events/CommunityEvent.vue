@@ -331,7 +331,7 @@ import CustomTabBody from '@/components/Common/CustomTabBody.vue';
 import { VueDatePicker } from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import { object, string, array, safeParse, boolean, optional, date } from 'valibot';
-import type { FormSubmitEvent, FormErrorEvent } from '#ui/types';
+import type { FormSubmitEvent } from '#ui/types';
 
 const router = useRouter();
 const { data } = useAuth();
@@ -585,13 +585,6 @@ function restartElementToDelete() {
 	};
 }
 
-function deleteElement() {
-	if (elementToDelete.value && elementToDelete.value.index !== null) {
-		elementToDelete.value.element.splice(elementToDelete.value.index, 1);
-		isDialogOpened.value = false;
-	}
-}
-
 function changeSelected(index: string) {
 	selectedTab.value = index;
 }
@@ -604,7 +597,7 @@ const getErrors = computed(() => errors.value.join(', '));
 
 type Schema = import('valibot').InferOutput<typeof schema>;
 
-async function onSubmitCommunityEvent(event: FormSubmitEvent<Schema>) {
+async function onSubmitCommunityEvent(_event: FormSubmitEvent<Schema>) {
 	const result = safeParse(schema, state.value);
 	if (result.success) {
 		const customErrors = validateRequiredFields(state.value);
@@ -728,7 +721,7 @@ async function updateBenchmarkingEvent() {
 
 async function showOkMessage(msg: string) {
 	oks.value = msg;
-	return new Promise((resolve, reject) => {
+	return new Promise((resolve, _reject) => {
 		setTimeout(() => {
 			oks.value = '';
 			resolve('done');
@@ -746,11 +739,6 @@ const checkEmptyReferences = computed(() => {
 
 function goBack() {
 	router.push(`/dashboard/projects_communities/${state.value.community_id}`);
-}
-
-function convertToUTCFullDate(dateString: string): string {
-	const date = new Date(dateString);
-	return date.toISOString();
 }
 
 function deleteEmptyElements(array: string[]): string[] {
@@ -784,7 +772,7 @@ function validateRequiredFields(data: any): string[] {
 					id: string;
 					role: string;
 				},
-				index: number
+				_index: number
 			) => {
 				if (contact.id.trim() === '') {
 					errorMessages.push(`community_contact_ids  cannot be empty`);
@@ -806,11 +794,6 @@ function validateRequiredFields(data: any): string[] {
 function errorClean(errors: string[]): string[] {
 	const cleanedErrors = errors.map((element: string) => elementTranslator(element.trim()));
 	return cleanedErrors;
-}
-
-function checkIdPattern(id: string) {
-	const pattern = new RegExp('^OEBE[0-9]{3}[A-Z0-9]{7}$');
-	return pattern.test(id);
 }
 
 function elementTranslator(element: string) {

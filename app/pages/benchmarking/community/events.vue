@@ -41,7 +41,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
 import BreadcrumbsBar from '@/components/Common/BreadcrumbsBar.vue';
 import CommunityInfo from '@/components/Community/CommunityInfo.vue';
 import CommunityEventsList from '@/components/Community/CommunityEventsList/CommunityEventsList.vue';
@@ -64,14 +63,6 @@ interface Community {
 	references: any[] | null;
 	community_contact_ids: string[];
 	links: Link[];
-}
-
-interface Challenge {
-	_id: string;
-	name: string;
-	acronym: string;
-	url: string;
-	__typename: string;
 }
 
 const route = useRoute();

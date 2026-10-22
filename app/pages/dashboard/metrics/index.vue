@@ -61,7 +61,7 @@ definePageMeta({
 	},
 });
 
-const userStore = useUser();
+useUser();
 const { data, status } = useAuth();
 const isLoadingMetrics = ref(false);
 const runtimeConfig = useRuntimeConfig();
@@ -105,7 +105,7 @@ async function fetchMetrics(token: string): Promise<Metric[]> {
 		metricsList.value = data;
 
 		return data;
-	} catch (error) {
+	} catch {
 		return [];
 	} finally {
 		isLoadingMetrics.value = false;

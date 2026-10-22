@@ -33,7 +33,7 @@
 	<ExportContentCardPull :content="citation" type="citation" />
 </template>
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
 import ViewCitation from '~/components/Observatory/evaluation/Export/ViewCitation.vue';
 import ExportCitationCardDownload from '~/components/Observatory/evaluation/Export/ExportCitationCardDownload.vue';
 import ExportContentCardPull from '~/components/Observatory/evaluation/Export/ExportContentCardPull.vue';

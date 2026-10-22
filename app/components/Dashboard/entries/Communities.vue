@@ -19,7 +19,7 @@
 							track-by="label"
 							@tag="addTag"
 						>
-							<template #selection="{ values, search, isOpen }">
+							<template #selection="{ values }">
 								<div
 									v-for="value in values"
 									:key="value.value"
@@ -319,10 +319,6 @@ const filteredRows = computed(() => {
 		(Number(page.value) - 1) * Number(pageCount.value),
 		Number(page.value) * Number(pageCount.value)
 	);
-});
-
-const totalPages = computed(() => {
-	return Math.ceil(Number(_total.value) / Number(pageCount.value));
 });
 
 function addTag(newTag: string) {

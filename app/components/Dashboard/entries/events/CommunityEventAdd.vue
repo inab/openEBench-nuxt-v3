@@ -457,7 +457,7 @@ const getErrors = computed(() => errors.value.join(', '));
 
 type Schema = import('valibot').InferOutput<typeof schema>;
 
-async function onSubmitCommunityEvent(event: FormSubmitEvent<Schema>) {
+async function onSubmitCommunityEvent(_event: FormSubmitEvent<Schema>) {
 	const result = safeParse(schema, state.value);
 	if (result.success) {
 		const customErrors = validateRequiredFields(state.value);
@@ -473,7 +473,7 @@ async function onSubmitCommunityEvent(event: FormSubmitEvent<Schema>) {
 	}
 }
 
-async function onError(event: FormErrorEvent) {
+async function onError(_event: FormErrorEvent) {
 	// TODO check error
 }
 
@@ -575,7 +575,7 @@ function validateRequiredFields(data: any): string[] {
 					id: string;
 					role: string;
 				},
-				index: number
+				_index: number
 			) => {
 				if (contact.id.trim() === '') {
 					errorMessages.push(`community_contact_ids  cannot be empty`);
@@ -674,11 +674,6 @@ const fetchContacts = async (token: string): Promise<void> => {
 		console.error('Error fetching contacts data:', error);
 	}
 };
-
-function checkIdPattern(id: string) {
-	const pattern = new RegExp(`^${state.value.community_id}[A-Z0-9]{7}$`);
-	return pattern.test(id);
-}
 
 onMounted(() => {
 	fetchContacts(token);

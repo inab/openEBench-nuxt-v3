@@ -49,14 +49,10 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, computed, ref } from 'vue';
+import { defineProps, computed } from 'vue';
 import ChallengeMetric from '@/components/Dashboard/entries/events/challenges/ChallengeMetric.vue';
 import CustomSubtitle from '@/components/Common/CustomSubtitle.vue';
-import CustomBorder from '@/components/Common/CustomBorder.vue';
-import CustomSearcherLoader from '@/components/Common/CustomSearcherLoader.vue';
 import { useMetrics } from '~~/stores/metrics.ts';
-import type { Metric } from '~~/types/challenge_metric';
-import metricsSearcher from '@/utils/metricsMatch';
 
 const props = defineProps<{
 	metricData: any[];
@@ -64,31 +60,8 @@ const props = defineProps<{
 	challengeId: string;
 }>();
 
-const columnsMetricsSearcher = [
-	{
-		key: 'challenge',
-		label: 'Name',
-	},
-	{
-		key: 'view',
-		label: 'View',
-	},
-	{
-		key: 'title',
-		label: 'Title',
-	},
-];
-
-const { data } = useAuth();
-const metricsStore = useMetrics();
-const isSearchingMetrics = ref(false);
-const isMetricOpen = ref(false);
-const token = data.value?.accessToken as string;
-const selected = ref(null);
-const isSearchingSelectedMetric = ref(false);
-const selectedMetricResults = ref<any[]>([]);
-const loadingInput = ref(false);
-const showAdvancedSearch = ref(false);
+useAuth();
+useMetrics();
 const to = props.challengeId;
 
 const metrics_by_categories = computed(() => {

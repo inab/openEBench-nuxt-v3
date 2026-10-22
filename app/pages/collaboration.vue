@@ -67,7 +67,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onBeforeMount } from 'vue';
+import { ref, computed } from 'vue';
 import BreadcrumbsBar from '@/components/Common/BreadcrumbsBar.vue';
 import CollaboratorsCard from '@/components/Cards/CollaboratorsCard.vue';
 import Img1 from '~/assets/collaboration/eucaim.png';

@@ -11,7 +11,7 @@
 				content: 'pt-1.5 pb-3 text-sm text-gray-500',
 			}"
 		>
-			<template #default="{ item, index, open }">
+			<template #default="{ item }">
 				<span class="min-w-0 flex-1 truncate ms-3">{{ item.label }}</span>
 			</template>
 			<template #trailing="{ index, open }">
@@ -442,7 +442,6 @@ import MetaFieldPublication from './MetaFieldPublication.vue';
 import MetaFieldAuthors from './MetaFieldAuthors.vue';
 
 import PanelHeader from './PanelHeader.vue';
-import { value } from 'valibot';
 
 const metadataStore = useMetadataStore();
 const resultsStore = useResultStore();
@@ -459,8 +458,6 @@ const items = [
 	{ label: '7. Recognition' },
 ];
 const versionControl = ref(false);
-const selectedType = '';
-const selectedVersion = '';
 const registries = [
 	'Conda',
 	'DockerHub',
@@ -520,8 +517,6 @@ const metadataFields = {
 
 // Computed
 const toolMetadata = computed(() => metadataStore.getToolMetadata);
-const output = computed(() => toolMetadata.value.output);
-const input = computed(() => toolMetadata.value.input);
 
 // Watch
 watch(versionControl, (newVal) => {
@@ -570,12 +565,6 @@ const goBack = () => {
 	metadataStore.updateToolsMetadata({});
 	const currentStepIndex = 2; // Actualiza con el índice del paso actual
 	stepperStore.goBack(currentStepIndex);
-};
-
-const cancel = () => {
-	metadataStore.updateLoadedMetadata(false);
-	metadataStore.updateToolsMetadata({});
-	stepperStore.goBack(0);
 };
 
 const nameTextClass = () => {

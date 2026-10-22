@@ -69,7 +69,7 @@ const refreshAccessToken = async (token: JWT) => {
 			accessTokenExpires: Date.now() + refreshedTokens.expires_at * 1000,
 			refreshToken: refreshedTokens.refresh_token ?? token.refreshToken, // Si no hay nuevo refresh token, usar el antiguo
 		};
-	} catch (error) {
+	} catch {
 		return {
 			...token,
 			error: 'RefreshAccessTokenError',
@@ -150,7 +150,7 @@ export default NuxtAuthHandler({
 		async redirect({ baseUrl }) {
 			return baseUrl;
 		},
-		async jwt({ token, user, account, profile }) {
+		async jwt({ token, user, account }) {
 			if (account && user) {
 				token.accessToken = account.access_token;
 				token.id_token = account.id_token;

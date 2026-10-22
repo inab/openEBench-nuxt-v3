@@ -63,14 +63,9 @@ const participants = ref<any[]>([]);
 const metrics = ref<any[]>([]);
 const challenge: any = ref(null);
 
-const page = ref(1);
-const pageCount = ref(15);
-
 const selectedParticipant = ref('');
 
 const itemSelected = ref<any>(null);
-
-const items = [];
 
 let itemObj: Record<string, any> = {
 	data: {
@@ -140,15 +135,6 @@ const metricsTable: {
 	metrics: any[];
 	dataMatrix: any[][];
 } = getMetricsTable();
-
-const itemsTable = () => {
-	return metricsTable.participants.map((participant: any, participantI: number) => {
-		return {
-			id: participant._id,
-			participant_label: participant.participant_label,
-		};
-	});
-};
 
 if (metricsTable.participants.length > 0) {
 	selectedParticipant.value = metricsTable.participants[0]._id;

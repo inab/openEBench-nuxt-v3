@@ -117,7 +117,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
 import { useStepperStore } from '~~/stores/observatory/evaluation/index';
 import { useMetadataStore } from '~~/stores/observatory/evaluation/metadata';
 import { storeToRefs } from 'pinia';
@@ -132,9 +132,8 @@ const stepperStore = useStepperStore();
 const metadataStore = useMetadataStore();
 // Getters
 const loadedMetadata = computed(() => metadataStore.getLoadedMetadata);
-const toolMetadata = computed(() => metadataStore.getToolMetadata);
 
-const { steps, selectedSource } = storeToRefs(stepperStore);
+storeToRefs(stepperStore);
 </script>
 
 <style scoped>

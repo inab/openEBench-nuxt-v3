@@ -15,7 +15,7 @@
 
 <script setup lang="ts">
 import emptyImg from '~/assets/images/illustrations/empty-state.svg?component';
-const props = defineProps<{
+defineProps<{
 	info?: string;
 }>();
 </script>

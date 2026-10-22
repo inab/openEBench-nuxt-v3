@@ -1,6 +1,3 @@
-import { vi } from 'vitest';
-import { createPinia, setActivePinia } from 'pinia';
-
 import { createResolver, defineNuxtModule } from '@nuxt/kit';
 
 export default defineNuxtModule({

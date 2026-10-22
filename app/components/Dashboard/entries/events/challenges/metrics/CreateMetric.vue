@@ -124,23 +124,13 @@ function validateRequiredFields(data: any): string[] {
 	return errorMessages;
 }
 
-async function showOkMessage(msg: string) {
-	oks.value = msg;
-	return new Promise((resolve, reject) => {
-		setTimeout(() => {
-			oks.value = '';
-			resolve('done');
-		}, 5000);
-	});
-}
-
 function closeModal() {
 	emit('modal-close');
 }
 
 type Schema = import('valibot').InferOutput<typeof schema>;
 
-async function onSubmitNewMetric(event: FormSubmitEvent<Schema>) {
+async function onSubmitNewMetric(_event: FormSubmitEvent<Schema>) {
 	const result = safeParse(schema, state.value);
 	if (result.success) {
 		const customErrors = validateRequiredFields(state.value);
@@ -153,16 +143,6 @@ async function onSubmitNewMetric(event: FormSubmitEvent<Schema>) {
 	} else {
 		errors.value = result.issues.map((issue) => issue.message);
 	}
-}
-
-async function addNewMetric() {
-	const body = {
-		title: state.value.title,
-		description: state.value.description,
-		formal_definition: state.value.formal_definition,
-		orig_id: state.value.orig_id,
-		type: state.value.type,
-	};
 }
 </script>
 

@@ -95,7 +95,6 @@ const emit = defineEmits(['handleChangeChallengers']);
 
 const route = useRoute();
 
-const community = computed(() => props.communityId);
 const page = ref<number>(1);
 const pageCount = ref<number>(10);
 const search = ref<string>('');

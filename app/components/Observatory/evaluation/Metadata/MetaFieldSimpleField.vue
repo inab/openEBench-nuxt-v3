@@ -31,7 +31,6 @@
 	</div>
 </template>
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
 import HeaderAvatar from '@/components/Observatory/evaluation/Metadata/HeaderAvatar.vue';
 import FormField from './FormField.vue';
 import { useMetadataStore } from '~~/stores/observatory/evaluation/metadata';
@@ -52,8 +51,6 @@ const props = withDefaults(
 		increasable: true,
 	}
 );
-
-const model = ref('');
 
 // Methods
 const addEntry = () => {

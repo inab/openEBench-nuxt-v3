@@ -96,7 +96,7 @@ export const useFileStore = defineStore('file', {
 							maintainer: false,
 						};
 						newAuthors.push(newAuthor);
-					} catch (error) {
+					} catch {
 						console.debug('Author type not found, skipping author');
 					}
 				}
@@ -307,7 +307,7 @@ export const useFileStore = defineStore('file', {
 		},
 
 		async parseFromURL({ url }) {
-			const { $githubapp } = useNuxtApp();
+			useNuxtApp();
 			this.setParseProgressText('Downloading file from URL...');
 			this.setDialogParseMetadata(true);
 

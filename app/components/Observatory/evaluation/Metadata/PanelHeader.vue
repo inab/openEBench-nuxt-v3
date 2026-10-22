@@ -13,7 +13,7 @@
 import HeaderAvatar from '@/components/Observatory/evaluation/Metadata/HeaderAvatar.vue';
 
 // PROPS
-const props = defineProps<{
+defineProps<{
 	fields: string[];
 	field_names: string[];
 	visible_ticks: boolean;

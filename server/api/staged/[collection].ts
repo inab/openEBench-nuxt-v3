@@ -16,8 +16,6 @@ export default defineEventHandler(async (event) => {
 	console.log('Cuerpo de la solicitud:', body);
 	console.log('token:', token);
 
-	const responseStatus = 0;
-
 	try {
 		if (method === 'POST') {
 			console.log('Simulando respuesta para solicitud POST...');

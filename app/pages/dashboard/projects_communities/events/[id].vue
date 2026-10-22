@@ -85,7 +85,6 @@ if (status.value !== 'authenticated') {
 const token = data.value?.accessToken as string;
 const eventId: string = route.params.id as string;
 const communityId: string = route.params.community_id as string;
-const routeName = ref<string>('');
 const runtimeConfig = useRuntimeConfig();
 const userPrivileges = computed(() => userStore.getUserCommunitiesRoles);
 
@@ -132,7 +131,7 @@ const fetchUserCommunitiesEvents = async (token: string): Promise<void> => {
 		const communityResponse = await fetchCommunityEventsChallenges(token, eventId);
 		eventChallenge.value = communityResponse ?? [];
 
-		const communityContacts = await fetchCommunityContacts(token, String(eventId));
+		await fetchCommunityContacts(token, String(eventId));
 	} catch (error) {
 		console.error('Error fetching communities data: ', error);
 	}

@@ -480,12 +480,11 @@
 import { computed, ref, nextTick, onMounted, useTemplateRef, watch, watchEffect } from 'vue';
 import { useUser } from '~~/stores/user.ts';
 
-import { CommunityStatusLabels, CommunityStatusColors } from '~~/constants/community_const';
+import { CommunityStatusLabels } from '~~/constants/community_const';
 
-import type { Community, CommunityPrivilegeCategories } from '~~/types/communities';
-import type { FormErrorEvent, FormSubmitEvent } from '#ui/types';
+import type { CommunityPrivilegeCategories } from '~~/types/communities';
+import type { FormSubmitEvent } from '#ui/types';
 import type { Event as OebEvent } from '~~/types/events';
-import type { Contact } from '~~/types/contact';
 
 import EventsList from '@/components/Dashboard/entries/EventsList.vue';
 import CustomSubtitle from '@/components/Common/CustomSubtitle.vue';
@@ -533,7 +532,6 @@ const token = ref(data.value?.accessToken);
 const hasSetConsentTab = ref(false);
 
 const userStore = useUser();
-const imageDefault = '~/assets/images/dashboards/empty-logo.jpg';
 
 const inputLabels: Record<string, { acronym: string; name: string }> = {
 	Community: {
@@ -602,12 +600,8 @@ const elementToDelete = ref({
 	index: null as number | null,
 	element: [] as unknown[],
 });
-const logo = ref('');
 const errors = ref<string[]>([]);
 const oks = ref<string>('');
-const inputLinkRefs = ref<(HTMLInputElement | null)[]>([]);
-const inputContactsRefs = ref<(HTMLInputElement | null)[]>([]);
-const inputKeywordsRefs = ref<(HTMLInputElement | null)[]>([]);
 const itemRefs = useTemplateRef('itemsContact');
 const rolesObj = ref([
 	{ label: 'Owner', value: 'owner' },
@@ -679,10 +673,6 @@ const items = ref([
 ]);
 
 const getErrors = computed(() => errors.value.join(', '));
-const userAvailableRoles = [
-	{ value: 'owner', label: 'Owner' },
-	{ value: 'manager', label: 'Manager' },
-];
 const userPrivileges = computed(() => userStore.getUserCommunitiesRoles);
 
 const labelTitle = ref('');
@@ -719,19 +709,8 @@ const localLinks = ref<string[]>([]);
 const localKeywords = ref<string[]>([]);
 const contactsData = ref<string[]>([]);
 const localLogo = ref<string | null>(null);
-const localUsers = ref<
-	{
-		name: string;
-		email: string;
-		role: string;
-	}[]
->([]);
 
 const selectedTab = ref(props.tabIndex);
-
-const localPrivilegesType = computed(() => {
-	return props.privilegesType;
-});
 
 const localStatus = ref({
 	value: '',
@@ -788,7 +767,7 @@ function goBack() {
 
 type Schema = import('valibot').InferOutput<typeof schema>;
 
-async function onSubmitCommunity(event: FormSubmitEvent<Schema>) {
+async function onSubmitCommunity(_event: FormSubmitEvent<Schema>) {
 	const result = safeParse(schema, state.value);
 	if (result.success) {
 		const customErrors = validateRequiredFields(state.value);
@@ -802,16 +781,6 @@ async function onSubmitCommunity(event: FormSubmitEvent<Schema>) {
 	} else {
 		errors.value = result.issues.map((issue) => issue.message);
 	}
-}
-
-async function onError(event: FormErrorEvent) {
-	const errorId = event.errors[0]?.id;
-	if (!errorId) {
-		return;
-	}
-	const element = document.getElementById(errorId);
-	element?.focus();
-	element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
 function deleteEmptyElements(array: string[]) {
@@ -898,7 +867,7 @@ async function updateCommunity() {
 
 async function showOkMessage(msg: string) {
 	oks.value = msg;
-	return new Promise((resolve, reject) => {
+	return new Promise((resolve, _reject) => {
 		setTimeout(() => {
 			oks.value = '';
 			resolve('done');
@@ -925,7 +894,7 @@ function validateRequiredFields(data: any): string[] {
 					id: string;
 					role: string;
 				},
-				index: number
+				_index: number
 			) => {
 				if (contact.id.trim() === '') {
 					errorMessages.push(`community_contact_ids  cannot be empty`);

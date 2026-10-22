@@ -31,8 +31,8 @@ const buildControlColors = () => {
 	return Array(Object.keys(props.indicators_labels).length).fill('#bfbfbf');
 };
 
-const controlColors = buildControlColors();
-const controlColorsLines = buildControlColors();
+buildControlColors();
+buildControlColors();
 
 const build_trace = (
 	scores: Array<any>,

@@ -27,7 +27,6 @@ import { useUser } from '~~/stores/user.ts';
 import { privileges } from '~~/constants/privileges';
 import type { Community } from '~~/types/communities';
 import type { Event } from '~~/types/events';
-import type { Contact } from '~~/types/contact';
 import { decodeDataUrlText } from '@/utils/decodeDataUrlText';
 
 definePageMeta({
@@ -48,9 +47,6 @@ const token = data.value?.accessToken as string;
 const userStore = useUser();
 const routeName = ref<string>('');
 const isLoadingEvents = ref<boolean>(true);
-const isAdmin = ref<boolean>(false);
-const isLoadingCommunityContacts = ref<boolean>(false);
-const communityContacts = ref<Contact[]>([]);
 
 const isView = computed(() => {
 	if (userPrivileges.value.length === 0) return true;
@@ -147,7 +143,7 @@ const fetchUserCommunitiesEvents = async (
 	try {
 		const communityEventResponse = await userStore.fetchCommunitiesEvents(token, communityId);
 		const data = await communityEventResponse;
-		const formatResponse = data.map((item: any) => {
+		data.map((item: any) => {
 			if (Array.isArray(item.bench_contact)) {
 				return {
 					...item,

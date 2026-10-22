@@ -125,7 +125,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue';
+import { ref, computed, watch, onMounted, nextTick } from 'vue';
 import { useStepperStore } from '~~/stores/observatory/evaluation/index';
 import { useObservatoryStore } from '~~/stores/observatory/evaluation/observatory';
 import { useMetadataStore } from '~~/stores/observatory/evaluation/metadata';
@@ -201,7 +201,6 @@ onMounted(async () => {
 let menuElement: HTMLElement | null = null;
 let observer: MutationObserver | null = null;
 let scrollHandler: ((e: Event) => void) | null = null;
-const inputListenerCleanup: (() => void) | null = null;
 
 const selectorsToTry = [
 	'.u-input-menu-panel',

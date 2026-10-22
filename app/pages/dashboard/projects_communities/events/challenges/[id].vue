@@ -81,7 +81,6 @@ const token = data.value?.accessToken as string;
 const eventId: string = route.params.event_id as string;
 const communityId: string = route.params.community_id as string;
 const challengeId: string = route.params.id as string;
-const routeName = ref<string>('');
 const runtimeConfig = useRuntimeConfig();
 
 const challengeData = ref<Challenge | null>(null);
@@ -124,13 +123,6 @@ const routeArray = ref([
 		isActualRoute: true,
 	},
 ]);
-
-const eventPrivileges = computed(() => {
-	const privilege = userPrivileges.value.find((privilege) => {
-		return privilege.community === communityId;
-	});
-	return (privileges[privilege?.role ?? 'anyone'] ?? privileges.anyone).challenge;
-});
 
 const fetchUserCommunityEventChallenge = async (token: string): Promise<void> => {
 	try {

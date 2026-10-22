@@ -94,7 +94,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed, defineAsyncComponent } from 'vue';
+import { watch, computed, defineAsyncComponent } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import CommunityDataset from '@/components/Community/CommunityDataset/CommunityDataset.vue';
 import CommunityTools from '@/components/Community/CommunityTools/CommunityTools.vue';

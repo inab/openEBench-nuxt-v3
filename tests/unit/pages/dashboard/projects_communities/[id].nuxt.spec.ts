@@ -19,7 +19,6 @@ vi.mock('@/middleware/requireAuth', () => ({
 
 describe('Dashboard Edit entry', () => {
 	let wrapper;
-	let userStore;
 
 	beforeEach(() => {
 		wrapper = mount(Edit, {
@@ -70,7 +69,7 @@ describe('Dashboard Edit entry', () => {
 			},
 		});
 
-		userStore = useUser();
+		useUser();
 	});
 
 	it('renders BreadcrumbsBar and CommunityEdit components', () => {

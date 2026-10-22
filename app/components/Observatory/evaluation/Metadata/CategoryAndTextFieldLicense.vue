@@ -32,7 +32,7 @@
 	</div>
 </template>
 <script setup lang="ts">
-import { ref, watch, computed, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useMetadataStore } from '~~/stores/observatory/evaluation/metadata';
 
 const metadataStore = useMetadataStore();

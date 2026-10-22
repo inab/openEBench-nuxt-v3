@@ -123,28 +123,13 @@ await challengeAPI(challengeId).then(async (response: any) => {
 	itemSelected.value = items.value[0] ?? null;
 });
 
-const { data: community, pending } = await useAsyncData(
-	`challenge-community-${communityId}`,
-	() => {
-		if (communityStore.communityId === communityId) {
-			return communityStore.getCommunityData;
-		}
-
-		return communityStore.requestCommunityData(communityId);
+const { data: community } = await useAsyncData(`challenge-community-${communityId}`, () => {
+	if (communityStore.communityId === communityId) {
+		return communityStore.getCommunityData;
 	}
-);
 
-function getVisualizationType(item: any) {
-	try {
-		const data = (item?.datalink ?? item?.datalinks?.[0])?.inline_data;
-		const parsed = typeof data === 'string' ? JSON.parse(data) : data;
-
-		return parsed?.visualization?.type || '';
-	} catch (e) {
-		console.warn('Invalid inline_data:', e);
-		return '';
-	}
-}
+	return communityStore.requestCommunityData(communityId);
+});
 
 const currentEvent = computed(() => {
 	const selectedEvent = communityStore.getCurrentEvent;

@@ -7,7 +7,7 @@
 					<span class="text-sm">Tool: {{ item.tool_id }}</span>
 				</div>
 			</template>
-			<template #content="{ item }">
+			<template #content>
 				<ChallengeMetricContent
 					:is-loading-data="isLoadingData"
 					:metric-id="metricData.metrics_id || ''"

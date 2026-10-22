@@ -155,7 +155,6 @@ const props = defineProps<{
 	token: string;
 }>();
 
-const runtimeConfig = useRuntimeConfig();
 const isModalOpen = ref(false);
 const isSearchingContact = ref(false);
 const search = ref('');
