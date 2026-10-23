@@ -37,13 +37,9 @@ declare module 'next-auth/jwt' {
 }
 
 // The provider is exposed under `.default` when loaded as CJS from the server bundle
-const providerModule: unknown = KeycloakProvider;
-const Keycloak =
-	typeof providerModule === 'function' &&
-	'default' in providerModule &&
-	typeof providerModule.default === 'function'
-		? providerModule.default
-		: KeycloakProvider;
+const providerModule = KeycloakProvider as unknown as
+	typeof KeycloakProvider | { default: typeof KeycloakProvider };
+const Keycloak = typeof providerModule === 'function' ? providerModule : providerModule.default;
 
 function isRecord(value: unknown): value is Record<string, unknown> {
 	return typeof value === 'object' && value !== null;

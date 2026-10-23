@@ -61,7 +61,11 @@
 					</div>
 				</div>
 			</div>
-			<div v-else class="row g-4">
+			<noDataAvailable
+				v-else-if="statusRef === 'error'"
+				description="The benchmarking communities could not be loaded. Please try again later."
+			/>
+			<div v-else-if="communities?.length" class="row g-4">
 				<div
 					v-for="(community, index) in communities"
 					:key="index"
@@ -81,6 +85,7 @@
 					/>
 				</div>
 			</div>
+			<noDataAvailable v-else description="No benchmarking communities are available." />
 		</div>
 	</div>
 </template>
@@ -89,6 +94,7 @@
 import { ref } from 'vue';
 import CommunityCard from '@/components/Cards/CommunityCard/CommunityCard.vue';
 import BreadcrumbsBar from '@/components/Common/BreadcrumbsBar.vue';
+import noDataAvailable from '@/layouts/noDataAvailableCard.vue';
 import { useCommunities } from '~~/stores/communities';
 import type { LinkItem } from '~~/types/pages-types';
 

@@ -53,9 +53,10 @@
 					</div>
 				</div>
 			</div>
-			<p v-else-if="status === 'error'" class="text-red-600" role="alert">
-				Project spaces could not be loaded. Please try again later.
-			</p>
+			<noDataAvailable
+				v-else-if="status === 'error'"
+				description="The project spaces could not be loaded. Please try again later."
+			/>
 			<div v-else-if="projects?.length" class="row g-4">
 				<div
 					v-for="project in projects"
@@ -76,7 +77,7 @@
 					/>
 				</div>
 			</div>
-			<p v-else class="text-gray-500">No project spaces are available.</p>
+			<noDataAvailable v-else description="No project spaces are available." />
 		</div>
 	</div>
 </template>
@@ -84,6 +85,7 @@
 <script setup lang="ts">
 import CommunityCard from '@/components/Cards/CommunityCard/CommunityCard.vue';
 import BreadcrumbsBar from '@/components/Common/BreadcrumbsBar.vue';
+import noDataAvailable from '@/layouts/noDataAvailableCard.vue';
 import { useCommunities } from '~~/stores/communities';
 
 const communitiesStore = useCommunities();
