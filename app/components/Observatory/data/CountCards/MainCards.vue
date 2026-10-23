@@ -34,7 +34,8 @@
 				<TotalCard :count="totalC" />
 			</div>
 			<div class="col-12 col-md-4 flex items-center justify-center pt-3 pt-md-2">
-				<p class="card-caption-side" v-html="mainCardCaption"></p>
+				<!-- eslint-disable-next-line vue/no-v-html -- content sanitized with DOMPurify -->
+				<p class="card-caption-side" v-html="sanitizeHtml(mainCardCaption)"></p>
 			</div>
 		</div>
 	</div>

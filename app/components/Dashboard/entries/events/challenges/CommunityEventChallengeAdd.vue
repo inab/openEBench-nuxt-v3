@@ -312,7 +312,8 @@
 							</div>
 							<div v-if="errors.length > 0" class="form-card__row">
 								<div class="col-12">
-									<div class="alert alert-danger" v-html="getErrors"></div>
+									<!-- eslint-disable-next-line vue/no-v-html -- content sanitized with DOMPurify -->
+									<div class="alert alert-danger" v-html="sanitizeHtml(getErrors)"></div>
 								</div>
 							</div>
 							<div class="form-card__row">

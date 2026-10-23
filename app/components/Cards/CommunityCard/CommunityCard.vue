@@ -89,7 +89,7 @@ import pluralize from 'pluralize';
 import type { LinkItem } from '~~/types/pages-types';
 
 const props = defineProps<{
-	_id: string;
+	id: string;
 	acronym: string;
 	name: string;
 	logo: string;

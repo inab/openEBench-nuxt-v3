@@ -9,7 +9,14 @@
 			<template #content>
 				<div class="px-4 py-3">
 					<h6>{{ title }}</h6>
-					<span class="text-xs text-slate-600" @click="handleLinkClick" v-html="text"></span><br />
+					<!-- eslint-disable vue/no-v-html -- content sanitized with DOMPurify -->
+					<span
+						class="text-xs text-slate-600"
+						@click="handleLinkClick"
+						v-html="sanitizeHtml(text)"
+					></span
+					><br />
+					<!-- eslint-enable vue/no-v-html -->
 					<!-- Buttons -->
 					<UButton color="success" class="mt-3 mr-2" @click="openGitHubAppLink">
 						Give Permissions

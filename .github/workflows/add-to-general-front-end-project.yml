@@ -1,9 +1,8 @@
-
 name: Auto Add to Org Projects
 
 on:
   issues:
-    types: 
+    types:
       - opened
       - assigned
       - reopened

@@ -21,17 +21,17 @@ npm run dev
 
 ### Useful scripts
 
-| Command             | What it does                                    |
-| ------------------- | ----------------------------------------------- |
-| `npm run build`     | Production build into `.output/`                |
-| `npm run preview`   | Preview the production build                    |
-| `npm test`          | Unit tests (Vitest)                             |
-| `npm run coverage`  | Tests with coverage                             |
-| `npm run lint`      | ESLint (`npm run lint:fix` to apply fixes)      |
-| `npm run format`    | Prettier                                        |
-| `npm run typecheck` | `nuxt prepare` + `vue-tsc` (see the note below) |
+| Command             | What it does                               |
+| ------------------- | ------------------------------------------ |
+| `npm run build`     | Production build into `.output/`           |
+| `npm run preview`   | Preview the production build               |
+| `npm test`          | Unit tests (Vitest)                        |
+| `npm run coverage`  | Tests with coverage                        |
+| `npm run lint`      | ESLint (`npm run lint:fix` to apply fixes) |
+| `npm run format`    | Prettier                                   |
+| `npm run typecheck` | `nuxt prepare` + `vue-tsc`                 |
 
-> The project currently has a large number of known type errors, so `npm run typecheck` does not pass yet. They are being fixed progressively.
+`npm run typecheck`, `npm run lint` (0 errors) and the unit tests all pass. Keep it that way: avoid `any` (`@typescript-eslint/no-explicit-any` is an error), and when you change a component prop, update every call site.
 
 ## Authentication
 
@@ -133,7 +133,7 @@ NPM_RUN="test -- --run" docker compose -f docker-compose.devci.yml run npm_run
 
 ## Known vulnerabilities
 
-`npm audit` currently reports 10 high severity findings (last checked 2026-10-22). All are **transitive** and **no fixed version exists yet**:
+`npm audit` currently reports 10 high severity findings (last checked 2026-10-23). All are **transitive** and **no fixed version exists yet**:
 
 | Package      | Advisory                                                                                                          | Reached through                                                |
 | ------------ | ----------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |

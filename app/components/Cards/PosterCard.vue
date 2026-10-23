@@ -54,9 +54,11 @@
 					</p>
 					<p>
 						<b>Abstract:</b><br />
+						<!-- eslint-disable vue/no-v-html -- content sanitized with DOMPurify -->
 						<span
 							v-html="sanitizeHtml(getFormattedAbstract(selectedPoster.abstract, showFullAbstract))"
 						></span>
+						<!-- eslint-enable vue/no-v-html -->
 						<span
 							v-if="shouldShowExpandIcon(selectedPoster.abstract)"
 							class="cursor-pointer text-primary ml-2"
@@ -94,6 +96,7 @@
 							<div class="card-body d-flex flex-column justify-content-between">
 								<!-- Title -->
 								<h5 class="card-title cursor-pointer text-center" @click="selectPoster(poster)">
+									<!-- eslint-disable-next-line vue/no-v-html -- content sanitized with DOMPurify -->
 									<span v-html="sanitizeHtml(formattedTitle(poster.title))"></span>
 								</h5>
 							</div>
@@ -140,7 +143,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import emptyImg from '@/assets/images/illustrations/empty-state.svg?component';
-import DOMPurify from 'dompurify';
 
 // Define the type for a poster
 interface Poster {
@@ -223,10 +225,6 @@ function shouldShowExpandIcon(abstract: string) {
 
 function toggleShowFullAbstract() {
 	showFullAbstract.value = !showFullAbstract.value;
-}
-
-function sanitizeHtml(htmlContent: string) {
-	return DOMPurify.sanitize(htmlContent);
 }
 
 function formatDate(dateString: string): string {

@@ -68,7 +68,7 @@
 					class="col-sm-6 col-md-4 col-lg-3 community-card-item"
 				>
 					<CommunityCard
-						:_id="community._id"
+						:id="community._id"
 						:acronym="community.acronym"
 						:name="community.name"
 						:logo="community.logo"

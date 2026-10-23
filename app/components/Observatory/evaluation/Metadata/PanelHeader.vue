@@ -1,10 +1,10 @@
 <template>
-	<div v-if="visible_ticks" class="inline-flex shrink-0 items-center gap-1">
+	<div v-if="visibleTicks" class="inline-flex shrink-0 items-center gap-1">
 		<HeaderAvatar
 			v-for="(item, index) in fields"
 			:key="index"
 			:field="item"
-			:field_name="field_names[index] as string"
+			:field-name="fieldNames[index] as string"
 		/>
 	</div>
 </template>
@@ -15,8 +15,8 @@ import HeaderAvatar from '@/components/Observatory/evaluation/Metadata/HeaderAva
 // PROPS
 defineProps<{
 	fields: string[];
-	field_names: string[];
-	visible_ticks: boolean;
+	fieldNames: string[];
+	visibleTicks: boolean;
 }>();
 </script>
 <style scoped></style>

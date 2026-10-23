@@ -35,12 +35,12 @@
 				</div>
 				<PlotLicensesBars
 					v-else
-					:counts_permissive="countsPermissive"
-					:licenses_permissive="licensesPermissive"
-					:counts_copyleft="countsCopyleft"
-					:licenses_copyleft="licensesCopyleft"
-					:counts_data="countsData"
-					:licenses_data="licensesData"
+					:counts-permissive="countsPermissive"
+					:licenses-permissive="licensesPermissive"
+					:counts-copyleft="countsCopyleft"
+					:licenses-copyleft="licensesCopyleft"
+					:counts-data="countsData"
+					:licenses-data="licensesData"
 				/>
 			</div>
 		</div>

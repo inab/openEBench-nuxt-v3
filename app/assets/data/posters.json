@@ -3,11 +3,7 @@
 		{
 			"title": "The FAIRsoft evaluator – A tool for developers and users to assess how specific software complies with FAIR for software indicators",
 			"date": "07 Jun 2023",
-			"authors": [
-				"Eva Martín del Pico",
-				"Josep Lluis Gelpi",
-				"Salvador Capella-Gutierrez"
-			],
+			"authors": ["Eva Martín del Pico", "Josep Lluis Gelpi", "Salvador Capella-Gutierrez"],
 			"presented_loc": "ELIXIR All Hands 2023",
 			"link": "https://doi.org/10.7490/f1000research.1119456.1",
 			"citation": "Martín del Pico E, Gelpi JL and Capella-Gutierrez S. The FAIRsoft evaluator – A tool for developers and users to assess how specific software complies with FAIR for software indicators [version 1; not peer reviewed]. F1000Research 2023, 12(ELIXIR):614 (poster) (https://doi.org/10.7490/f1000research.1119456.1)",

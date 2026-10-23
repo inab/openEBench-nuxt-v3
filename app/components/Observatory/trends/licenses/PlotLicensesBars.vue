@@ -12,12 +12,12 @@ const plotElement = ref<HTMLDivElement | null>(null);
 
 // Define props
 const props = defineProps<{
-	counts_permissive: number[];
-	licenses_permissive: string[];
-	counts_copyleft: number[];
-	licenses_copyleft: string[];
-	counts_data: number[];
-	licenses_data: string[];
+	countsPermissive: number[];
+	licensesPermissive: string[];
+	countsCopyleft: number[];
+	licensesCopyleft: string[];
+	countsData: number[];
+	licensesData: string[];
 	title?: string;
 	height?: number;
 }>();
@@ -89,13 +89,13 @@ function buildTrace(
 
 // Define traces as computed properties
 const trace1 = computed(() =>
-	buildTrace(props.licenses_copyleft, props.counts_copyleft, 'Copyleft', '#233757', '#ffffff', labs)
+	buildTrace(props.licensesCopyleft, props.countsCopyleft, 'Copyleft', '#233757', '#ffffff', labs)
 );
 
 const trace2 = computed(() =>
 	buildTrace(
-		props.licenses_permissive,
-		props.counts_permissive,
+		props.licensesPermissive,
+		props.countsPermissive,
 		'Permissive',
 		'#568bdb',
 		'#ffffff',
@@ -104,7 +104,7 @@ const trace2 = computed(() =>
 );
 
 const trace3 = computed(() =>
-	buildTrace(props.licenses_data, props.counts_data, 'Data', '#a2c3f5', '#ffffff', labs)
+	buildTrace(props.licensesData, props.countsData, 'Data', '#a2c3f5', '#ffffff', labs)
 );
 
 // Plot the chart on mount
@@ -116,9 +116,9 @@ onMounted(() => {
 
 	const traces: Partial<Plotly.PlotData>[] = [];
 
-	if (props.licenses_copyleft.length > 0) traces.push(trace1.value);
-	if (props.licenses_permissive.length > 0) traces.push(trace2.value);
-	if (props.licenses_data.length > 0) traces.push(trace3.value);
+	if (props.licensesCopyleft.length > 0) traces.push(trace1.value);
+	if (props.licensesPermissive.length > 0) traces.push(trace2.value);
+	if (props.licensesData.length > 0) traces.push(trace3.value);
 
 	Plotly.newPlot(element, traces, layout, config);
 });

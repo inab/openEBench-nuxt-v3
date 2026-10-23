@@ -12,7 +12,8 @@
 				{{ title }}
 			</div>
 			<div class="flex-1">
-				<p class="mt-3 text-sm" v-html="description"></p>
+				<!-- eslint-disable-next-line vue/no-v-html -- content sanitized with DOMPurify -->
+				<p class="mt-3 text-sm" v-html="sanitizeHtml(description)"></p>
 			</div>
 			<div class="mt-auto pt-4">
 				<UButton class="bg-primaryOeb-500" variant="solid" size="md" @click="selectSource">

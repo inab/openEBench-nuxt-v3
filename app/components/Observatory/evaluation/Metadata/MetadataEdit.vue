@@ -18,10 +18,10 @@
 				<div class="ms-auto flex shrink-0 items-center gap-2">
 					<PanelHeader
 						:fields="metadataFields[metadataKeys[index] as keyof typeof metadataFields]"
-						:field_names="
+						:field-names="
 							metadataFieldNames[metadataKeys[index] as keyof typeof metadataFieldNames]
 						"
-						:visible_ticks="!open"
+						:visible-ticks="!open"
 					/>
 					<UIcon
 						name="i-heroicons-chevron-right-20-solid"
@@ -37,7 +37,7 @@
 				<div v-if="item.label == '0. Identity'" class="p-4">
 					<div class="mt-0 row mx-0">
 						<!-- Name -->
-						<MetaField title="Name" field="label" value-type="" n_cols="col-4" :increasable="false">
+						<MetaField title="Name" field="label" value-type="" n-cols="col-4" :increasable="false">
 							<template #inputField>
 								<FormField
 									field="label"
@@ -53,7 +53,7 @@
 							title="Type of Software"
 							field="type"
 							value-type=""
-							n_cols="col-3"
+							n-cols="col-3"
 							:increasable="false"
 						>
 							<template #inputField>
@@ -66,7 +66,7 @@
 							title="Version"
 							field="version"
 							value-type=""
-							n_cols="col-4"
+							n-cols="col-4"
 							:increasable="false"
 						>
 							<template #inputField>
@@ -85,7 +85,7 @@
 							title="Description"
 							field="description"
 							:value="toolMetadata.description"
-							n_cols="col-8"
+							n-cols="col-8"
 						>
 						</MetaTextArea>
 						<!-- Alert -->
@@ -113,7 +113,7 @@
 							:value="toolMetadata.webpage"
 							field="webpage"
 							value-type="string"
-							n_cols="col-8"
+							n-cols="col-8"
 							label="URL"
 							:increasable="true"
 						/>
@@ -189,7 +189,7 @@
 							:value="toolMetadata.src"
 							field="src"
 							value-type="string"
-							n_cols="col-9"
+							n-cols="col-9"
 							label="URL"
 							:increasable="true"
 						/>
@@ -202,7 +202,7 @@
 							:value="toolMetadata.links"
 							field="links"
 							value-type="string"
-							n_cols="col-9"
+							n-cols="col-9"
 							label="URL"
 							:increasable="true"
 						/>
@@ -216,7 +216,7 @@
 							color="primary"
 							field="registration_not_mandatory"
 							title="Registration Not Mandatory"
-							n_cols="col-12"
+							n-cols="col-12"
 						/>
 					</div>
 
@@ -229,7 +229,7 @@
 							color="primary"
 							field="api_lib"
 							title="Availability as library or API"
-							n_cols="col-12"
+							n-cols="col-12"
 						/>
 					</div>
 				</div>
@@ -241,7 +241,7 @@
 						title="Documentation"
 						:value="toolMetadata.documentation"
 						field="documentation"
-						n_cols="col-12"
+						n-cols="col-12"
 						:increable="true"
 					/>
 
@@ -251,7 +251,7 @@
 						:value="toolMetadata.topics"
 						field="topics"
 						value-type=""
-						n_cols="col-12"
+						n-cols="col-12"
 						class="mr-auto mt-4"
 						type-label="topic"
 						:accepted-vocabularies="['EDAM']"
@@ -263,7 +263,7 @@
 						:value="toolMetadata.operations"
 						field="operations"
 						value-type=""
-						n_cols="col-12"
+						n-cols="col-12"
 						class="mr-auto mt-4"
 						type-label="operation"
 						:accepted-vocabularies="['EDAM']"
@@ -279,7 +279,7 @@
 							:value="toolMetadata.test"
 							field="test"
 							value-type="string"
-							n_cols="col-9"
+							n-cols="col-9"
 							label="URL"
 							:increasable="true"
 						/>
@@ -295,7 +295,7 @@
 							:value="toolMetadata.input"
 							field="input"
 							value-type=""
-							n_cols="col-12"
+							n-cols="col-12"
 							class="mb-4"
 							type-label="format"
 							:accepted-vocabularies="['EDAM']"
@@ -307,7 +307,7 @@
 							:value="toolMetadata.output"
 							field="output"
 							value-type=""
-							n_cols="col-12"
+							n-cols="col-12"
 							class=""
 							type-label="format"
 							:accepted-vocabularies="['EDAM']"
@@ -324,7 +324,7 @@
 							:value="toolMetadata.repository"
 							field="repository"
 							value-type="string"
-							n_cols="col-9"
+							n-cols="col-9"
 							label="URL"
 							:increasable="true"
 						/>
@@ -366,7 +366,7 @@
 							:value="toolMetadata.dependencies"
 							field="dependencies"
 							value-type=""
-							n_cols="col-5"
+							n-cols="col-5"
 						/>
 
 						<!-- Operating System -->
@@ -375,7 +375,7 @@
 							:value="toolMetadata.os"
 							field="os"
 							value-type=""
-							n_cols="col-5"
+							n-cols="col-5"
 							class="mr-auto"
 						/>
 					</div>
@@ -390,7 +390,7 @@
 							field="publication"
 							:value="toolMetadata.publication"
 							value-type=""
-							n_cols="col-12"
+							n-cols="col-12"
 							class="mb-4"
 						/>
 						<!-- Authors -->

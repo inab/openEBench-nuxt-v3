@@ -1,8 +1,8 @@
 <template>
-	<div :class="n_cols">
+	<div :class="nCols">
 		<div>
 			<div class="d-flex">
-				<HeaderAvatar :field="field" :field_name="title" :disabled_tooltip="true" />
+				<HeaderAvatar :field="field" :field-name="title" :disabled-tooltip="true" />
 
 				<span id="title" class="text-body" style="color: #0b579f !important">
 					{{ title }}
@@ -27,7 +27,7 @@ const metadataStore = useMetadataStore();
 // PROPS
 const props = defineProps<{
 	title: string;
-	n_cols: string;
+	nCols: string;
 	field: string;
 	valueType: string;
 	increasable: boolean;

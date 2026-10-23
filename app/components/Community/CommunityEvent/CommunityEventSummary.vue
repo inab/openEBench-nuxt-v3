@@ -1,5 +1,6 @@
 <template>
 	<div v-if="markdownString" class="community-event-summary">
+		<!-- eslint-disable-next-line vue/no-v-html -- content sanitized with DOMPurify -->
 		<div class="community-event-summary__markup" v-html="markup"></div>
 	</div>
 </template>
@@ -7,7 +8,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { marked } from 'marked';
-import DOMPurify from 'dompurify';
 
 const props = defineProps<{
 	markdown: {
@@ -56,7 +56,7 @@ function indentBulletHeadingSections(markdown: string): string {
 const markup = computed(() => {
 	const markdown = convertAnchors(markdownString.value ?? '');
 	const tokens = marked.lexer(indentBulletHeadingSections(markdown));
-	return DOMPurify.sanitize(marked.parser(tokens));
+	return sanitizeHtml(marked.parser(tokens));
 });
 </script>
 

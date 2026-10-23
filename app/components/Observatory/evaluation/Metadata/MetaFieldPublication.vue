@@ -1,7 +1,7 @@
 <template>
-	<div :class="n_cols">
+	<div :class="nCols">
 		<div class="d-flex mb-2">
-			<HeaderAvatar :field="field" :field_name="title" :disabled_tooltip="true" />
+			<HeaderAvatar :field="field" :field-name="title" :disabled-tooltip="true" />
 			<span id="title" class="text-body" style="color: #0b579f !important">
 				{{ title }}
 			</span>
@@ -52,7 +52,7 @@ const props = withDefaults(
 	defineProps<{
 		title: string;
 		field: string;
-		n_cols: string;
+		nCols: string;
 		value: Record<string, unknown>[];
 		increasable?: boolean;
 	}>(),

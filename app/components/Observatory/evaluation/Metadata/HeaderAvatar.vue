@@ -1,7 +1,7 @@
 <template>
 	<UTooltip
-		:text="field_name"
-		:disabled="disabled_tooltip"
+		:text="fieldName"
+		:disabled="disabledTooltip"
 		class="inline-flex shrink-0 items-center"
 		:ui="{ content: 'bg-black/80 text-white' }"
 	>
@@ -21,11 +21,11 @@ const metadataStore = useMetadataStore();
 const props = withDefaults(
 	defineProps<{
 		field: string;
-		field_name: string;
-		disabled_tooltip?: boolean;
+		fieldName: string;
+		disabledTooltip?: boolean;
 	}>(),
 	{
-		disabled_tooltip: false,
+		disabledTooltip: false,
 	}
 );
 

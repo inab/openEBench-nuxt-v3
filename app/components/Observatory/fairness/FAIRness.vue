@@ -134,13 +134,13 @@
 								<!-- Plot -->
 								<BubbleChart
 									v-else
-									div_id="findability"
+									div-id="findability"
 									:collection="current_collection"
-									:collection_scores="fair_scores.F.fair_scores"
-									:indicators_labels="fair_scores.F.labels"
-									:control_scores="control_fair_scores.F.fair_scores"
-									:collection_colors="colors"
-									:collection_colors_lines="colors_lines"
+									:collection-scores="fair_scores.F.fair_scores"
+									:indicators-labels="fair_scores.F.labels"
+									:control-scores="control_fair_scores.F.fair_scores"
+									:collection-colors="colors"
+									:collection-colors-lines="colors_lines"
 								/>
 							</div>
 						</div>
@@ -214,13 +214,13 @@
 								<!-- Plot -->
 								<BubbleChart
 									v-else
-									div_id="accessibility"
+									div-id="accessibility"
 									:collection="current_collection"
-									:collection_scores="fair_scores.A.fair_scores"
-									:indicators_labels="fair_scores.A.labels"
-									:control_scores="control_fair_scores.A.fair_scores"
-									:collection_colors="colors"
-									:collection_colors_lines="colors_lines"
+									:collection-scores="fair_scores.A.fair_scores"
+									:indicators-labels="fair_scores.A.labels"
+									:control-scores="control_fair_scores.A.fair_scores"
+									:collection-colors="colors"
+									:collection-colors-lines="colors_lines"
 								/>
 							</div>
 						</div>
@@ -291,13 +291,13 @@
 								<!-- Plot -->
 								<BubbleChart
 									v-else
-									div_id="interoperability"
+									div-id="interoperability"
 									:collection="current_collection"
-									:collection_scores="fair_scores.I.fair_scores"
-									:indicators_labels="fair_scores.I.labels"
-									:control_scores="control_fair_scores.I.fair_scores"
-									:collection_colors="colors"
-									:collection_colors_lines="colors_lines"
+									:collection-scores="fair_scores.I.fair_scores"
+									:indicators-labels="fair_scores.I.labels"
+									:control-scores="control_fair_scores.I.fair_scores"
+									:collection-colors="colors"
+									:collection-colors-lines="colors_lines"
 								/>
 							</div>
 						</div>
@@ -379,13 +379,13 @@
 								<!-- Plot -->
 								<BubbleChart
 									v-else
-									div_id="reusability"
+									div-id="reusability"
 									:collection="current_collection"
-									:collection_scores="fair_scores.R.fair_scores"
-									:indicators_labels="fair_scores.R.labels"
-									:control_scores="control_fair_scores.R.fair_scores"
-									:collection_colors="colors"
-									:collection_colors_lines="colors_lines"
+									:collection-scores="fair_scores.R.fair_scores"
+									:indicators-labels="fair_scores.R.labels"
+									:control-scores="control_fair_scores.R.fair_scores"
+									:collection-colors="colors"
+									:collection-colors-lines="colors_lines"
 								/>
 							</div>
 						</div>

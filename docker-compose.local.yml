@@ -25,10 +25,10 @@ services:
         condition: service_completed_successfully
     restart: on-failure
     ports:
-      - "3001:3001"
+      - '3001:3001'
     environment:
-      CHOKIDAR_USEPOLLING: "true"
-      WATCHPACK_POLLING: "true"
-      AUTH_ORIGIN: "http://localhost:3001"
-      APP_BASE_URL: "http://localhost:3001"
-      NUXT_AUTH_SECRET: "${NUXT_AUTH_SECRET:-local-dev-only-secret-change-me}"
+      CHOKIDAR_USEPOLLING: 'true'
+      WATCHPACK_POLLING: 'true'
+      AUTH_ORIGIN: 'http://localhost:3001'
+      APP_BASE_URL: 'http://localhost:3001'
+      NUXT_AUTH_SECRET: '${NUXT_AUTH_SECRET:-local-dev-only-secret-change-me}'

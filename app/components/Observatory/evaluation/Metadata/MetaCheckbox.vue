@@ -1,7 +1,7 @@
 <template>
-	<div :class="n_cols">
+	<div :class="nCols">
 		<div class="d-flex align-items-center mt-2">
-			<HeaderAvatar :field="field" :field_name="title" :disabled_tooltip="true" />
+			<HeaderAvatar :field="field" :field-name="title" :disabled-tooltip="true" />
 			<span class="text-body title ms-2" style="color: #0b579f !important">{{ title }}</span>
 		</div>
 
@@ -30,7 +30,7 @@ const props = defineProps<{
 	title: string;
 	field: string;
 	label: string;
-	n_cols: string;
+	nCols: string;
 	color: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error' | 'neutral';
 	item: boolean;
 }>();

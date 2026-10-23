@@ -1,5 +1,6 @@
 <template>
 	<div class="community-summary">
+		<!-- eslint-disable-next-line vue/no-v-html -- content sanitized with DOMPurify -->
 		<div v-html="markup"></div>
 	</div>
 </template>
@@ -8,7 +9,6 @@
 import { computed } from 'vue';
 import type { CommunityMetadata } from '~~/types/communities';
 import { marked } from 'marked';
-import DOMPurify from 'dompurify';
 
 const props = defineProps<{
 	metadata: CommunityMetadata;
@@ -19,6 +19,6 @@ const markdownString: ComputedRef<string | null> = computed(
 );
 
 const markup = computed(() =>
-	DOMPurify.sanitize(marked.parse(markdownString.value ?? '', { async: false }))
+	sanitizeHtml(marked.parse(markdownString.value ?? '', { async: false }))
 );
 </script>

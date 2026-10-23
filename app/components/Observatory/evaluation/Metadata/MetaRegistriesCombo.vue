@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<div class="d-flex mb-2">
-			<HeaderAvatar :field="field" :field_name="title" :disabled_tooltip="true" />
+			<HeaderAvatar :field="field" :field-name="title" :disabled-tooltip="true" />
 			<span class="text-body title" style="color: #0b579f !important">{{ title }}</span>
 		</div>
 

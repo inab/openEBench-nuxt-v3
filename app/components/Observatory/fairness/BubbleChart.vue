@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<div :id="props.div_id"></div>
+		<div :id="props.divId"></div>
 	</div>
 </template>
 
@@ -18,13 +18,13 @@ interface BubbleScore {
 }
 
 const props = defineProps<{
-	div_id: string;
+	divId: string;
 	collection: string;
-	collection_scores: BubbleScore[];
-	indicators_labels: { [key: string]: string };
-	control_scores: BubbleScore[];
-	collection_colors: Array<string>;
-	collection_colors_lines: Array<string>;
+	collectionScores: BubbleScore[];
+	indicatorsLabels: { [key: string]: string };
+	controlScores: BubbleScore[];
+	collectionColors: Array<string>;
+	collectionColorsLines: Array<string>;
 	title?: string;
 	height?: number;
 }>();
@@ -35,7 +35,7 @@ const config = {
 };
 
 const buildControlColors = () => {
-	return Array(Object.keys(props.indicators_labels).length).fill('#bfbfbf');
+	return Array(Object.keys(props.indicatorsLabels).length).fill('#bfbfbf');
 };
 
 buildControlColors();
@@ -89,11 +89,11 @@ const build_control_collection_traces = () => {
 	// control scores
 	if (props.collection !== 'tools') {
 		const traceControl = build_trace(
-			props.control_scores,
-			props.indicators_labels,
+			props.controlScores,
+			props.indicatorsLabels,
 			'All tools',
-			Array(props.control_scores.length).fill('#bfbfbf'),
-			Array(props.control_scores.length).fill('#bfbfbf'),
+			Array(props.controlScores.length).fill('#bfbfbf'),
+			Array(props.controlScores.length).fill('#bfbfbf'),
 			'markers'
 		);
 
@@ -103,11 +103,11 @@ const build_control_collection_traces = () => {
 	// collection scores
 	const collectionTitle = props.collection === 'tools' ? 'All tools' : props.collection;
 	const traceCollection = build_trace(
-		props.collection_scores,
-		props.indicators_labels,
+		props.collectionScores,
+		props.indicatorsLabels,
 		collectionTitle,
-		props.collection_colors,
-		props.collection_colors_lines,
+		props.collectionColors,
+		props.collectionColorsLines,
 		'markers+text'
 	);
 	controlCollectionTraces = controlCollectionTraces.concat(traceCollection);
@@ -117,7 +117,7 @@ const build_control_collection_traces = () => {
 
 onMounted(() => {
 	const traces = build_control_collection_traces();
-	const reversedLabels = Object.values(props.indicators_labels).reverse();
+	const reversedLabels = Object.values(props.indicatorsLabels).reverse();
 	const layout: Partial<Plotly.Layout> = {
 		yaxis: {
 			title: { text: '' },
@@ -143,11 +143,11 @@ onMounted(() => {
 		title: { text: props.title || '' },
 	};
 
-	Plotly.newPlot(props.div_id, traces, layout, config);
+	Plotly.newPlot(props.divId, traces, layout, config);
 
 	watch(activeTabIndex, async () => {
 		await nextTick();
-		await resizePlot(props.div_id, Plotly);
+		await resizePlot(props.divId, Plotly);
 	});
 });
 </script>

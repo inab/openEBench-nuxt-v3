@@ -27,11 +27,13 @@
 									variant="ghost"
 									class="hover:bg-white font-normal ps-0 rounded-none"
 								>
+									<!-- eslint-disable vue/no-v-html -- content sanitized with DOMPurify -->
 									<span
 										class="text-left text-xs text-gray-700"
-										v-html="getFromBoxStatic('description')"
+										v-html="sanitizeHtml(getFromBoxStatic('description'))"
 									>
 									</span>
+									<!-- eslint-enable vue/no-v-html -->
 
 									<template #trailing>
 										<UIcon
