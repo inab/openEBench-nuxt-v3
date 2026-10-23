@@ -27,6 +27,7 @@ const props = defineProps({
 	initialSelectedType: {
 		type: [String, Array],
 		required: false,
+		default: '',
 	},
 	field: {
 		type: String,

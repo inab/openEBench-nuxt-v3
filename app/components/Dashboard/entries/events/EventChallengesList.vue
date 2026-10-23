@@ -142,32 +142,24 @@ const pageTo = computed(() =>
 	Math.min(Number(page.value) * Number(pageCount.value), Number(totalPages.value))
 );
 
-const _total = ref(0);
-
-const filteredRows = computed(() => {
+const filteredData = computed(() => {
 	if (!props.challenges) return [];
+	if (!search.value) return props.challenges;
 
-	if (!search.value) {
-		_total.value = props.challenges.length;
-		return props.challenges.slice(
-			(Number(page.value) - 1) * Number(pageCount.value),
-			Number(page.value) * Number(pageCount.value)
-		);
-	}
-
-	const filteredSearcher = props.challenges.filter((challenge: any) => {
-		return Object.values(challenge).some((value) => {
-			return String(value).toLowerCase().includes(search.value.toLowerCase());
-		});
-	});
-
-	_total.value = filteredSearcher.length;
-
-	return filteredSearcher.slice(
-		(Number(page.value) - 1) * Number(pageCount.value),
-		Number(page.value) * Number(pageCount.value)
+	return props.challenges.filter((challenge: any) =>
+		Object.values(challenge).some((value) =>
+			String(value).toLowerCase().includes(search.value.toLowerCase())
+		)
 	);
 });
+
+const _total = computed(() => filteredData.value.length);
+const filteredRows = computed(() =>
+	filteredData.value.slice(
+		(Number(page.value) - 1) * Number(pageCount.value),
+		Number(page.value) * Number(pageCount.value)
+	)
+);
 
 const totalPages = computed(() => {
 	return Math.ceil(Number(_total.value) / Number(pageCount.value));

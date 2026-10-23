@@ -83,12 +83,7 @@ class ChallengeObj {
 	getParticipants(data = null) {
 		/** @type {Record<string, any>} */
 		let participantsArray = {};
-		let dataObj = {};
-		if (data) {
-			dataObj = data;
-		} else {
-			dataObj = this.data;
-		}
+		const dataObj = data || this.data;
 		dataObj.getChallenges[0].participant_datasets.forEach((participant) => {
 			if (participant._metadata && participant._metadata[EXCLUDE_PARTICIPANT_KEY]) {
 				return;

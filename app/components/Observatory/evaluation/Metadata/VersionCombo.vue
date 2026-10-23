@@ -27,6 +27,7 @@ const props = defineProps({
 	initialSelectedVersion: {
 		type: String,
 		required: false,
+		default: '',
 	},
 	versions: {
 		type: Array,
@@ -53,7 +54,7 @@ const errorMessage = ref('');
 watch(
 	() => props.initialSelectedVersion,
 	(newVal) => {
-		selectedVersion.value = newVal;
+		selectedVersion.value = newVal || '';
 	}
 );
 

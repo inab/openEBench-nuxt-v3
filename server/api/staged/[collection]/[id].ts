@@ -20,7 +20,7 @@ export default defineEventHandler(async (event) => {
 	try {
 		switch (method) {
 			case 'PUT':
-			case 'PATCH':
+			case 'PATCH': {
 				console.log(`-*-${method}`);
 				console.log(body);
 				if (!body._id) {
@@ -72,6 +72,7 @@ export default defineEventHandler(async (event) => {
 						}),
 					};
 				}
+			}
 		}
 	} catch (error) {
 		console.log('An error ocurred: ', error);

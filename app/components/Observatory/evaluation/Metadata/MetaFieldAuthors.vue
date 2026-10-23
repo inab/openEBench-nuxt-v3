@@ -40,7 +40,7 @@ const props = withDefaults(
 	defineProps<{
 		title: string;
 		field: string;
-		value: any;
+		value?: any;
 		increasable?: boolean;
 	}>(),
 	{

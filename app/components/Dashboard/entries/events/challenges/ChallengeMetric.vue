@@ -1,6 +1,6 @@
 <template>
 	<div class="challenge-metric">
-		<UAccordion color="primary" variant="soft" size="sm" :items="item">
+		<UAccordion color="primary" variant="soft" size="sm" :items="accordionItems">
 			<template #header="{ item }">
 				<div class="flex flex-col">
 					<span class="font-bold">Metric: {{ item.metrics_id }}</span>
@@ -31,7 +31,7 @@ const metricData = computed(() => {
 	return props.metric;
 });
 
-const item = ref([
+const accordionItems = ref([
 	{
 		label: `Metric:${metricData.value.metrics_id} | Tool:${metricData.value.tool_id}`,
 		content: 'Metric',

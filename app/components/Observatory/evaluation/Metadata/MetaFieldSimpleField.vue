@@ -48,6 +48,7 @@ const props = withDefaults(
 		increasable?: boolean;
 	}>(),
 	{
+		label: '',
 		increasable: true,
 	}
 );

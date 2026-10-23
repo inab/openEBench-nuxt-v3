@@ -38,7 +38,7 @@ export const useMetrics = defineStore('metrics', {
 
 			const data = await response.json();
 			if (!data) {
-				[];
+				return [];
 			}
 
 			const dataFiltered = data.filter((metric: Metric) => {
@@ -69,7 +69,7 @@ export const useMetrics = defineStore('metrics', {
 
 			const data = await response.json();
 			if (!data) {
-				[];
+				return [];
 			}
 
 			data.forEach((challenge: Challenge) => {

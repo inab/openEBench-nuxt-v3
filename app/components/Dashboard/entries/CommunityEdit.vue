@@ -302,7 +302,6 @@
 													<div class="w-100 row no-space">
 														<div
 															v-for="(contact, index) in localContacts"
-															v-if="localContacts.length > 0"
 															:key="index"
 															ref="itemsContact"
 															class="col-12 pt-0"
@@ -338,7 +337,7 @@
 																</button>
 															</div>
 														</div>
-														<div v-else class="col-12 pt-0">
+														<div v-if="localContacts.length === 0" class="col-12 pt-0">
 															<div class="w-100 empty-elements text-slate-400">
 																<span>There are no contacts associated with this community</span>
 															</div>

@@ -20,11 +20,11 @@
 					<div v-if="metric?._id" class="flex flex-col gap-3 metric__modal pt-3">
 						<div class="flex gap-3">
 							<UFormGroup label="Metric ID">
-								<input v-model="metric._id" class="form-control" disabled placeholder="Metric ID" />
+								<input :value="metric._id" class="form-control" disabled placeholder="Metric ID" />
 							</UFormGroup>
 							<UFormGroup label="Original ID">
 								<input
-									v-model="metric.orig_id"
+									:value="metric.orig_id"
 									class="form-control"
 									disabled
 									placeholder="Original ID"
@@ -32,7 +32,7 @@
 							</UFormGroup>
 							<UFormGroup label="Formal definition">
 								<input
-									v-model="metric.formal_definition"
+									:value="metric.formal_definition"
 									class="form-control"
 									disabled
 									placeholder="Formal definition"
@@ -40,7 +40,7 @@
 							</UFormGroup>
 							<UFormGroup label="Original ID">
 								<input
-									v-model="metric.orig_id"
+									:value="metric.orig_id"
 									class="form-control"
 									disabled
 									placeholder="Original ID"
@@ -61,13 +61,13 @@
 						</div>
 						<div class="flex gap-3 w-100">
 							<UFormGroup label="Title" class="w-100">
-								<input v-model="metric.title" class="form-control" disabled placeholder="Title" />
+								<input :value="metric.title" class="form-control" disabled placeholder="Title" />
 							</UFormGroup>
 						</div>
 						<div class="flex gap-3 w-100">
 							<UFormGroup label="Description" class="w-100">
 								<textarea
-									v-model="metric.description"
+									:value="metric.description"
 									class="form-control"
 									rows="10"
 									disabled

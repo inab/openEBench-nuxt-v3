@@ -86,9 +86,8 @@ export const useFileStore = defineStore('file', {
 			if (authors) {
 				for (let i = 0; i < authors.length; i++) {
 					const author = authors[i];
-					let type = null;
 					try {
-						type = author['@type'].split('/').slice(-1)[0].toLowerCase();
+						const type = author['@type'].split('/').slice(-1)[0].toLowerCase();
 						const newAuthor = {
 							type,
 							name: author['schema:name'],
@@ -131,7 +130,7 @@ export const useFileStore = defineStore('file', {
 						uri,
 						vocabulary: 'EDAM',
 					};
-					items.push(removeEmptyValues(newIO));
+					items.push(this.removeEmptyValues(newIO));
 				}
 				return items;
 			} else {
@@ -189,7 +188,7 @@ export const useFileStore = defineStore('file', {
 					}
 
 					if (Object.keys(newPub).length > 0) {
-						newPublications.push(removeEmptyValues(newPub));
+						newPublications.push(this.removeEmptyValues(newPub));
 					}
 				}
 			}
@@ -282,8 +281,8 @@ export const useFileStore = defineStore('file', {
       */
 
 			const { $githubapp } = useNuxtApp();
-			setDialogParseMetadata(true);
-			setParseProgressText('Retrieving file...');
+			this.setDialogParseMetadata(true);
+			this.setParseProgressText('Retrieving file...');
 
 			// make request to GitHub API
 			try {
@@ -301,8 +300,8 @@ export const useFileStore = defineStore('file', {
 				}
 			} catch (error) {
 				console.debug('Error while fetching metadata: ' + error);
-				setDialogParseMetadata(true);
-				setParseProgressText('Retrieving file...');
+				this.setDialogParseMetadata(true);
+				this.setParseProgressText('Retrieving file...');
 			}
 		},
 
@@ -313,7 +312,7 @@ export const useFileStore = defineStore('file', {
 
 			try {
 				// Crear una instancia de Axios si es necesario, o usa directamente axios
-				const axiosInstance = this.$axios?.create ? this.$axios.create() : axios;
+				const axiosInstance = this.$axios?.create ? this.$axios.create() : this.$axios;
 				axiosInstance.defaults.baseURL = url;
 
 				const response = await axiosInstance.get('');
@@ -459,7 +458,7 @@ export const useFileStore = defineStore('file', {
 				edam_operations: this.buildFeEdamTopicsOperations(
 					parsedContent?.['schema:featureList'] || []
 				),
-				label: [parsedContent?.['schema:name']] || [],
+				label: parsedContent?.['schema:name'] !== undefined ? [parsedContent['schema:name']] : [],
 				src: parsedContent?.['schema:codeRepository'] || [],
 				links: this.buildFeLinks(parsedContent || {}),
 				publication: this.buildFePublication(

@@ -1,4 +1,4 @@
 declare module 'plotly.js-dist' {
-	import Plotly = require('plotly.js');
+	import * as Plotly from 'plotly.js';
 	export = Plotly;
 }

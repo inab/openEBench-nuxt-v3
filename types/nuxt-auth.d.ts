@@ -11,7 +11,9 @@ declare module 'nuxt/schema' {
 		};
 	}
 
-	interface NuxtOptions extends NuxtConfig {}
+	interface NuxtOptions extends NuxtConfig {
+		auth?: NuxtConfig['auth'];
+	}
 }
 
 export {};

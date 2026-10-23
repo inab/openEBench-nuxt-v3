@@ -1,7 +1,7 @@
 <template>
 	<div class="container mx-auto p-4">
 		<UTabs :items="items" class="w-full">
-			<template #content="{ item }">
+			<template #content="{ item: tab }">
 				<UCard
 					:ui="{
 						root: 'shadow-none divide-none',
@@ -22,15 +22,15 @@
 					<!-- Header -->
 					<template #header>
 						<p class="mt-1 text-sm dark:text-gray-400">
-							{{ item.description }}
+							{{ tab.description }}
 						</p>
 					</template>
 
 					<!-- Content -->
-					<div v-if="item.key === 'upload file'">
+					<div v-if="tab.key === 'upload file'">
 						<MetadataFileUpload />
 					</div>
-					<div v-else-if="item.key === 'enter url'" class="space-y-3">
+					<div v-else-if="tab.key === 'enter url'" class="space-y-3">
 						<MetadataFileURL />
 					</div>
 				</UCard>

@@ -153,31 +153,24 @@ const pageFrom = computed(() => (Number(page.value) - 1) * Number(pageCount.valu
 const pageTo = computed(() =>
 	Math.min(Number(page.value) * Number(pageCount.value), Number(totalPages.value))
 );
-const _total = ref(0);
-
-const filteredRows = computed(() => {
+const filteredData = computed(() => {
 	if (!props.events) return [];
-	if (!search.value) {
-		_total.value = props.events.length;
-		return props.events.slice(
-			(Number(page.value) - 1) * Number(pageCount.value),
-			Number(page.value) * Number(pageCount.value)
-		);
-	}
+	if (!search.value) return props.events;
 
-	const filteredSearcher = props.events.filter((event) => {
-		return Object.values(event).some((value) => {
-			return String(value).toLowerCase().includes(search.value.toLowerCase());
-		});
-	});
-
-	_total.value = filteredSearcher.length;
-
-	return filteredSearcher.slice(
-		(Number(page.value) - 1) * Number(pageCount.value),
-		Number(page.value) * Number(pageCount.value)
+	return props.events.filter((event) =>
+		Object.values(event).some((value) =>
+			String(value).toLowerCase().includes(search.value.toLowerCase())
+		)
 	);
 });
+
+const _total = computed(() => filteredData.value.length);
+const filteredRows = computed(() =>
+	filteredData.value.slice(
+		(Number(page.value) - 1) * Number(pageCount.value),
+		Number(page.value) * Number(pageCount.value)
+	)
+);
 
 const eventPrivileges = computed(() => {
 	return props.commmunityPrivileges.event;

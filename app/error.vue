@@ -26,7 +26,7 @@ import type { NuxtError } from '#app';
 import CommunityImg from '@/assets/images/illustrations/chart-person.svg?component';
 
 defineProps({
-	error: Object as () => NuxtError,
+	error: { type: Object as () => NuxtError, required: true },
 });
 
 const otherError = 'An error occurred';

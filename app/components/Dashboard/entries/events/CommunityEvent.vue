@@ -32,7 +32,7 @@
 														<div class="w-100">
 															<input
 																id="id"
-																v-model="eventData._id"
+																:value="eventData._id"
 																type="text"
 																class="form-control custom-entry-input"
 																placeholder="Event id"
@@ -50,7 +50,7 @@
 														<div class="w-100">
 															<input
 																id="id"
-																v-model="eventData.community_id"
+																:value="eventData.community_id"
 																type="text"
 																class="form-control custom-entry-input"
 																placeholder="Community id"
@@ -164,7 +164,6 @@
 															<div class="w-100 row no-space">
 																<div
 																	v-for="(reference, index) in localReferences"
-																	v-if="localReferences.length > 0"
 																	:key="index"
 																	class="col-12 pt-0 pb-1"
 																>
@@ -183,7 +182,7 @@
 																		</button>
 																	</div>
 																</div>
-																<div v-else class="col-12 pt-0">
+																<div v-if="localReferences.length === 0" class="col-12 pt-0">
 																	<div class="w-100 empty-elements text-slate-400">
 																		<span>There are no reference associated with this event</span>
 																	</div>
@@ -212,7 +211,6 @@
 															<div class="w-100 row no-space">
 																<div
 																	v-for="(contact, index) in localContacts"
-																	v-if="localContacts.length > 0"
 																	:key="index"
 																	class="col-12 pt-0 pb-1"
 																>
@@ -244,7 +242,7 @@
 																		</button>
 																	</div>
 																</div>
-																<div v-else class="col-12 pt-0">
+																<div v-if="localContacts.length === 0" class="col-12 pt-0">
 																	<div class="w-100 empty-elements text-slate-400">
 																		<span>There are no contacts associated with this event</span>
 																	</div>
@@ -458,32 +456,7 @@ const rolesObj = ref([
 	{ label: 'Contributor', value: 'contributor' },
 ]);
 
-const eventData = computed<Event>(() => {
-	state.value = {
-		_id: String(props.eventObj?._id || ''),
-		name: props.eventObj?.name || '',
-		community_id: props.eventObj?.community_id || '',
-		bench_contact_ids:
-			props.eventObj?.bench_contact_ids?.map((contact: string) => {
-				return {
-					id: contact,
-					name: contact,
-				};
-			}) || [],
-		dates: {
-			benchmark_start: new Date(props.eventObj?.dates?.benchmark_start ?? Date.now()),
-			benchmark_stop: new Date(props.eventObj?.dates?.benchmark_stop ?? Date.now()),
-			creation: new Date(props.eventObj?.dates?.creation ?? Date.now()),
-			modification: new Date(props.eventObj?.dates?.modification ?? Date.now()),
-		},
-		orig_id: props.eventObj?.orig_id || '',
-		_schema: props.eventObj?._schema || '',
-		references: props.eventObj?.references || [],
-		is_automated: props.eventObj?.is_automated || false,
-		url: props.eventObj?.url || '',
-	};
-	return props.eventObj as Event;
-});
+const eventData = computed<Event>(() => props.eventObj as Event);
 
 if (props.eventObj && props.eventObj.references) {
 	localReferences.value =
@@ -824,6 +797,29 @@ onMounted(() => {
 watch(
 	() => props.eventObj,
 	(newVal) => {
+		state.value = {
+			_id: String(newVal?._id || ''),
+			name: newVal?.name || '',
+			community_id: newVal?.community_id || '',
+			bench_contact_ids:
+				newVal?.bench_contact_ids?.map((contact: string) => {
+					return {
+						id: contact,
+						name: contact,
+					};
+				}) || [],
+			dates: {
+				benchmark_start: new Date(newVal?.dates?.benchmark_start ?? Date.now()),
+				benchmark_stop: new Date(newVal?.dates?.benchmark_stop ?? Date.now()),
+				creation: new Date(newVal?.dates?.creation ?? Date.now()),
+				modification: new Date(newVal?.dates?.modification ?? Date.now()),
+			},
+			orig_id: newVal?.orig_id || '',
+			_schema: newVal?._schema || '',
+			references: newVal?.references || [],
+			is_automated: newVal?.is_automated || false,
+			url: newVal?.url || '',
+		};
 		if (newVal && newVal.bench_contact_ids) {
 			localContacts.value =
 				newVal.bench_contact_ids.map((contact: string) => {

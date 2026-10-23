@@ -103,52 +103,32 @@ const pageTo = computed(() =>
 	Math.min(Number(page.value) * Number(pageCount.value), Number(totalPages.value))
 );
 const selected = ref<any[]>([]);
-const _total = ref(0);
-
 const columns = [
-	{
-		id: 'checkbox',
-		header: '',
-		enableSorting: false,
-	},
-	{
-		id: '_id',
-		accessorKey: '_id',
-		header: 'Acronym',
-		enableSorting: false,
-	},
-	{
-		id: 'participant',
-		header: 'Participant',
-		enableSorting: false,
-	},
-	{
-		id: 'name',
-		header: 'Name',
-		enableSorting: false,
-	},
+	{ id: 'checkbox', header: '', enableSorting: false },
+	{ id: '_id', accessorKey: '_id', header: 'Acronym', enableSorting: false },
+	{ id: 'participant', header: 'Participant', enableSorting: false },
+	{ id: 'name', header: 'Name', enableSorting: false },
 ];
-
-// Keeps all rows (without pagination) to refer to the complete data
 const allRows = ref(props.eventChallenges ?? []);
-
-// Computed for rows filtered by search and pagination
-const filteredRows = computed(() => {
-	const filteredData = search.value
-		? allRows.value.filter((challenge: any) => {
-				return Object.values(challenge).some((value) => {
-					return String(value).toLowerCase().includes(search.value.toLowerCase());
-				});
-			})
+const filteredData = computed(() => {
+	const filtered = search.value
+		? allRows.value.filter((challenge: any) =>
+				Object.values(challenge).some((value) =>
+					String(value).toLowerCase().includes(search.value.toLowerCase())
+				)
+			)
 		: allRows.value;
 
-	_total.value = filteredData.length;
+	return filtered;
+});
 
-	return filteredData.slice(
+const _total = computed(() => filteredData.value.length);
+const filteredRows = computed(() =>
+	filteredData.value.slice(
 		(Number(page.value) - 1) * Number(pageCount.value),
 		Number(page.value) * Number(pageCount.value)
-	);
-});
+	)
+);
 
 const totalPages = computed(() => {
 	return Math.ceil(Number(_total.value) / Number(pageCount.value));

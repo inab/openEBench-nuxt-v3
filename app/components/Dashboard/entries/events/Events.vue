@@ -150,37 +150,25 @@ const columns = [
 	},
 ];
 
-const _total = ref(0);
-const filteredRows = computed(() => {
-	if (
-		!communitiesEventsData.value.communityEvents ||
-		communitiesEventsData.value.communityEvents.length === 0
-	) {
-		return [];
-	}
-	if (!search.value || search.value === '') {
-		_total.value = communitiesEventsData.value.communityEvents.length;
-		return communitiesEventsData.value.communityEvents.slice(
-			(Number(page.value) - 1) * Number(pageCount.value),
-			Number(page.value) * Number(pageCount.value)
-		);
-	}
+const filteredData = computed(() => {
+	const events = communitiesEventsData.value.communityEvents;
+	if (!events || events.length === 0) return [];
+	if (!search.value) return events;
 
-	const filteredSearcher = communitiesEventsData.value.communityEvents.filter(
-		(communityEvent: any) => {
-			return Object.values(communityEvent).some((ch) => {
-				return String(ch).toLowerCase().includes(search.value.toLowerCase());
-			});
-		}
-	);
-
-	_total.value = filteredSearcher.length;
-
-	return filteredSearcher.slice(
-		(Number(page.value) - 1) * Number(pageCount.value),
-		Number(page.value) * Number(pageCount.value)
+	return events.filter((communityEvent: any) =>
+		Object.values(communityEvent).some((value) =>
+			String(value).toLowerCase().includes(search.value.toLowerCase())
+		)
 	);
 });
+
+const _total = computed(() => filteredData.value.length);
+const filteredRows = computed(() =>
+	filteredData.value.slice(
+		(Number(page.value) - 1) * Number(pageCount.value),
+		Number(page.value) * Number(pageCount.value)
+	)
+);
 
 const totalPages = computed(() => {
 	return Math.ceil(Number(_total.value) / Number(pageCount.value));

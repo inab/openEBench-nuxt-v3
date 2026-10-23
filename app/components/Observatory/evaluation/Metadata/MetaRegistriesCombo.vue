@@ -97,7 +97,9 @@ const changeValue = () => {
 // Eliminar la opción del estado
 const removeItem = (item: string) => {
 	selectedItem.value = selectedItem.value.filter((i) => i !== item);
-	delete selectedStates.value[item];
+	selectedStates.value = Object.fromEntries(
+		Object.entries(selectedStates.value).filter(([key]) => key !== item)
+	);
 	changeValue();
 };
 </script>

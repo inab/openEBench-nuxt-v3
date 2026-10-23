@@ -73,10 +73,7 @@ describe('Dashboard Index', () => {
 		});
 
 		const hour = new Date().getHours();
-		let text = '';
-		if (hour < 12) text = `Good morning,`;
-		else if (hour < 18) text = `Good afternoon,`;
-		else text = `Good evening,`;
+		const text = hour < 12 ? 'Good morning,' : hour < 18 ? 'Good afternoon,' : 'Good evening,';
 
 		const header = wrapper.find('.dashboard__header__title');
 		expect(header.exists()).toBe(true);

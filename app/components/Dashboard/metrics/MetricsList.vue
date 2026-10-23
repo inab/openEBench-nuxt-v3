@@ -92,7 +92,7 @@ const isSearchingMetric = ref(false);
 const modalTitle = ref('');
 const isMetricEditable = ref(false);
 const search = ref('');
-const _total = ref(0);
+const _total = computed(() => props.metricRows.length);
 const page = ref<number>(1);
 const pageCount = ref<number>(10);
 const metricIdOpen = ref('');
@@ -135,21 +135,34 @@ const sort = ref({
 	direction: 'asc',
 });
 
-const filteredRows = computed(() => {
-	if (!search.value) {
-		_total.value = props.metricRows.length;
-		return props.metricRows.slice((page.value - 1) * pageCount.value, page.value * pageCount.value);
-	}
+const sortedRows = computed(() => {
+	const { column, direction } = sort.value;
+	return [...props.metricRows].sort((a, b) => {
+		const aValue = a[column as keyof Metric];
+		const bValue = b[column as keyof Metric];
+		if (aValue === undefined || bValue === undefined) {
+			if (aValue === bValue) return 0;
+			const missingValueOrder = aValue === undefined ? -1 : 1;
+			return direction === 'asc' ? missingValueOrder : -missingValueOrder;
+		}
 
-	const filteredSearcher = props.metricRows.filter((metric: any) => {
-		return Object.values(metric).some((value) => {
-			return String(value).toLowerCase().includes(search.value.toLowerCase());
-		});
+		if (direction === 'asc') {
+			return aValue > bValue ? 1 : aValue < bValue ? -1 : 0;
+		}
+		return aValue < bValue ? 1 : aValue > bValue ? -1 : 0;
 	});
+});
 
-	_total.value = props.metricRows.length;
+const filteredRows = computed(() => {
+	const filtered = search.value
+		? sortedRows.value.filter((metric: any) =>
+				Object.values(metric).some((value) =>
+					String(value).toLowerCase().includes(search.value.toLowerCase())
+				)
+			)
+		: sortedRows.value;
 
-	return filteredSearcher.slice(
+	return filtered.slice(
 		(Number(page.value) - 1) * Number(pageCount.value),
 		Number(page.value) * Number(pageCount.value)
 	);
@@ -181,23 +194,6 @@ const openModal = async (row: Metric) => {
 function handleUpdateSort({ column, direction }: { column: string; direction: string }) {
 	sort.value.column = column;
 	sort.value.direction = direction;
-
-	const sortedRows = props.metricRows.sort((a, b) => {
-		const aValue = a[column as keyof Metric];
-		const bValue = b[column as keyof Metric];
-		if (aValue === undefined || bValue === undefined) {
-			if (aValue === bValue) return 0;
-			const missingValueOrder = aValue === undefined ? -1 : 1;
-			return direction === 'asc' ? missingValueOrder : -missingValueOrder;
-		}
-
-		if (direction === 'asc') {
-			return aValue > bValue ? 1 : aValue < bValue ? -1 : 0;
-		}
-		return aValue < bValue ? 1 : aValue > bValue ? -1 : 0;
-	});
-
-	return sortedRows;
 }
 </script>
 

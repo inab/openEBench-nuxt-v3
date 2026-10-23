@@ -19,7 +19,7 @@
 									>
 										<UIcon name="i-heroicons-magnifying-glass" class="w-5 h-5" />
 									</button>
-									<div class="pl-1 reset-col" v-if="searchList.length > 0">
+									<div v-if="searchList.length > 0" class="pl-1 reset-col">
 										<button class="btn btn-primary" type="button" @click="handleResetSearcher">
 											<UIcon name="i-heroicons-arrow-path-16-solid" />
 											Reset Searcher
@@ -292,14 +292,14 @@
 							</div>
 						</div>
 					</div>
-					<div class="w-100 existed-metrics" v-else>
-						<div class="w-100" v-if="isLoadingChallengeMetrics">
+					<div v-else class="w-100 existed-metrics">
+						<div v-if="isLoadingChallengeMetrics" class="w-100">
 							<div class="space-y-2">
 								<USkeleton class="h-4 w-[700px]" />
 								<USkeleton class="h-4 w-[700px]" />
 							</div>
 						</div>
-						<div class="w-100" v-else>
+						<div v-else class="w-100">
 							<ChallengeMetricsList
 								:metrics-list="challengeMetrics"
 								:loading-metrics="isLoadingChallengeMetrics"
@@ -334,7 +334,6 @@ import type { Metric, Tool, ChallengeMetricCategory } from '~~/types/challenge_m
 import type { ChartDefault } from '~~/types/visualizations';
 import { useMetrics } from '~~/stores/metrics.ts';
 
-import metricsSearcher from '@/utils/metricsMatch';
 import SearchMetricTable from '@/components/Dashboard/entries/events/challenges/metrics/SearchMetricTable.vue';
 import SearchToolsTable from '@/components/Dashboard/entries/events/challenges/metrics/SearchToolsTable.vue';
 import SearchVisualizationTable from '@/components/Dashboard/entries/events/challenges/metrics/SearchVisualizationTable.vue';
@@ -352,24 +351,14 @@ const props = defineProps<{
 }>();
 
 const { data } = useAuth();
-const route = useRoute();
-const router = useRouter();
 const isLoadingMetrics = ref(true);
 const loadingInput = ref(false);
-const showAdvancedSearch = ref(false);
-const eventId: string = route.params.event_id as string;
-const communityId: string = route.params.community_id as string;
-const challengeId: string = route.params.id as string;
 const metricDataList = ref<Metric[] | never[]>([]);
 const metricsStore = useMetrics();
 const isSearchingMetrics = ref(false);
-const isSearchingSelectedMetric = ref(false);
 const searchList = ref<Metric[]>([]);
-const selectedMetricResults = ref<boolean[]>([]);
 const token = data.value?.accessToken as string;
-const processedMetrics = ref(new Set());
 
-const selectedMetric = ref<Metric | null>(null);
 const selectedMetrics = ref<any[]>([]);
 const isShowSearchTable = ref(false);
 
@@ -378,63 +367,13 @@ const selectedTools = ref<any[]>([]);
 const isShowToolsTable = ref(false);
 
 const isShowVisualizationTable = ref(false);
-const selectedVisualization = ref(<ChartDefault>{});
+const selectedVisualization = ref({} as ChartDefault);
 
 const isShowResume = ref(false);
 
 const searchMetric = ref<string>('');
 const localContacts = ref<string[]>([]);
 const isModalOpened = ref<boolean>(false);
-const metricAssociatedList = ref<{
-	[key: string]: { count: number; challenges: any[] };
-}>({});
-
-async function searchMetricResults() {
-	isSearchingSelectedMetric.value = true;
-	showAdvancedSearch.value = true;
-	processedMetrics.value.clear();
-	metricAssociatedList.value = {};
-	try {
-		const currentMetric = selectedMetric.value;
-		if (!currentMetric) {
-			throw new Error('No metric selected');
-		}
-		const res = (await metricsSearcher(currentMetric._id, token)) ?? [];
-
-		res.forEach((challenge) => {
-			if (challenge.metrics_categories) {
-				(challenge.metrics_categories as unknown as ChallengeMetricCategory[]).forEach(
-					(category) => {
-						category?.metrics.forEach((m: any) => {
-							if (m.metrics_id !== currentMetric._id) {
-								if (!metricAssociatedList.value[m.metrics_id]) {
-									metricAssociatedList.value[m.metrics_id] = {
-										count: 0,
-										challenges: [],
-									};
-								}
-
-								const associatedMetric = metricAssociatedList.value[m.metrics_id];
-								if (associatedMetric) {
-									associatedMetric.count += 1;
-									associatedMetric.challenges.push(challenge);
-								}
-
-								processedMetrics.value.add(m.metrics_id);
-							}
-						});
-					}
-				);
-			}
-		});
-
-		selectedMetricResults.value = Array.from({ length: processedMetrics.value.size }, () => false);
-	} catch (error) {
-		console.error('Error fetching metric data:', error);
-	}
-
-	isSearchingSelectedMetric.value = false;
-}
 
 async function search() {
 	loadingInput.value = true;
@@ -468,10 +407,6 @@ async function fetchMetrics(token: string): Promise<Metric[] | undefined> {
 	}
 }
 
-function handleChangeMetricSelected(index: number) {
-	selectedMetricResults.value[index] = !selectedMetricResults.value[index];
-}
-
 function handleStepperClick(index: number) {
 	if (index === 1) {
 		isShowSearchTable.value = true;
@@ -501,17 +436,6 @@ function onSubmitSearcher() {
 	search();
 }
 
-const goBack = () => {
-	router.push({
-		name: 'dashboard-community-event-community-metric',
-		params: {
-			community_id: communityId,
-			event_id: eventId,
-			id: challengeId,
-		},
-	});
-};
-
 const handleResetSearcher = () => {
 	searchMetric.value = '';
 	searchList.value = [];
@@ -520,10 +444,6 @@ const handleResetSearcher = () => {
 function goPrevious(index: number) {
 	stepperIndex.value = index;
 	handleStepperClick(index);
-}
-
-function onAddElement(array: string[]) {
-	array.push('');
 }
 
 function addSelectedMetrics(index: number) {

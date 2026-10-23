@@ -21,7 +21,7 @@
 									<label for="acronym">Acronym</label>
 									<input
 										id="acronym"
-										v-model="communityData.acronym"
+										v-model="state.acronym"
 										type="text"
 										class="form-control"
 										:disabled="!commmunityPrivileges.update || isView"
@@ -54,7 +54,7 @@
 									<label for="description">Name</label>
 									<input
 										id="name"
-										v-model="communityData.name"
+										v-model="state.name"
 										type="text"
 										class="form-control"
 										:disabled="!commmunityPrivileges.update || isView"
@@ -66,7 +66,7 @@
 									<label for="description">Description</label>
 									<textarea
 										id="description"
-										v-model="communityData.description"
+										v-model="state.description"
 										class="form-control"
 										rows="10"
 										:disabled="!commmunityPrivileges.update || isView"
@@ -256,16 +256,7 @@ const schema = v.object({
 
 const errors = ref<string[]>([]);
 
-const communityData = computed(() => {
-	const obj = props.communityObj;
-	state.value = {
-		acronym: obj.acronym,
-		status: obj.status,
-		name: obj.name,
-		description: obj.description,
-	};
-	return obj;
-});
+const communityData = ref({ ...props.communityObj });
 
 const localStatus = ref({
 	value: '',
@@ -374,6 +365,15 @@ function onAddElement(array: string[]) {
 watch(
 	() => props.communityObj,
 	(newVal) => {
+		if (newVal) {
+			communityData.value = { ...newVal };
+			state.value = {
+				acronym: newVal.acronym,
+				status: newVal.status,
+				name: newVal.name,
+				description: newVal.description,
+			};
+		}
 		if (newVal && typeof newVal.status === 'string') {
 			localStatus.value.label = newVal.status.charAt(0).toUpperCase() + newVal.status.slice(1);
 			localStatus.value.value = newVal.status;

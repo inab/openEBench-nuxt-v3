@@ -127,7 +127,7 @@ export const useUser = defineStore('user', {
 			console.log('data: ', data);
 
 			if (!data) {
-				[];
+				return [];
 			}
 			return data.map((d: any) => ({
 				id: d._id,

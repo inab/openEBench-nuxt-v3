@@ -235,21 +235,15 @@ const columns = [
 	},
 ];
 
-const _total = ref(0);
-
-const filteredRows = computed(() => {
+const filteredData = computed(() => {
 	if (communitiesData.value.length === 0) {
 		return [];
 	}
 	if (!search.value && selectedStatus.value.length === 0) {
-		_total.value = communitiesData.value.length;
-		return communitiesData.value.slice(
-			(Number(page.value) - 1) * Number(pageCount.value),
-			Number(page.value) * Number(pageCount.value)
-		);
+		return communitiesData.value;
 	}
 
-	const filteredSearcher = communitiesData.value.filter((challenge: any) => {
+	return communitiesData.value.filter((challenge: any) => {
 		return Object.values(challenge).some((ch) => {
 			if (selectedStatus.value.length > 0) {
 				return selectedStatus.value.some((status) => {
@@ -264,19 +258,19 @@ const filteredRows = computed(() => {
 					}
 					return status.value === challenge.status;
 				});
-			} else {
-				return String(ch).toLowerCase().includes(search.value.toLowerCase());
 			}
+			return String(ch).toLowerCase().includes(search.value.toLowerCase());
 		});
 	});
+});
 
-	_total.value = filteredSearcher.length;
-
-	return filteredSearcher.slice(
+const _total = computed(() => filteredData.value.length);
+const filteredRows = computed(() =>
+	filteredData.value.slice(
 		(Number(page.value) - 1) * Number(pageCount.value),
 		Number(page.value) * Number(pageCount.value)
-	);
-});
+	)
+);
 
 const totalPages = computed(() => {
 	return Math.ceil(Number(_total.value) / Number(pageCount.value));

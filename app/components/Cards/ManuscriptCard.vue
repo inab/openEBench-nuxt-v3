@@ -8,7 +8,7 @@
 			/>
 		</div>
 		<div v-else class="paper-container mt-8">
-			<div v-for="(paper, index) in papers" :key="paper.doi" class="paper">
+			<div v-for="(paper, index) in localPapers" :key="paper.doi" class="paper">
 				<!-- Link -->
 				<h5>
 					<a :href="`https://doi.org/${paper.doi}`" target="_blank">
@@ -32,13 +32,13 @@
 				</p>
 				<!-- Date -->
 				<p v-if="paper.publicationDate">
-					Publication Date: &nbsp <i>{{ formatDate(paper.publicationDate) }}</i>
+					Publication Date: &nbsp;<i>{{ formatDate(paper.publicationDate) }}</i>
 				</p>
 				<hr />
 			</div>
 		</div>
 
-		<div v-if="papers.length === 0" class="no-papers text-center">
+		<div v-if="localPapers.length === 0" class="no-papers text-center">
 			<emptyImg alt="working" viewBox="0 0 650 900" />
 			<span style="margin-top: -100px"
 				>There are no papers available.<br />We are working on it!</span
@@ -48,7 +48,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import emptyImg from '~/assets/images/illustrations/empty-state.svg?component';
 
 // Types
@@ -64,6 +64,12 @@ const props = defineProps<{
 	papers: Paper[];
 }>();
 
+const localPapers = ref([...props.papers]);
+watch(
+	() => props.papers,
+	(papers) => (localPapers.value = [...papers]),
+	{ deep: true }
+);
 const loading = ref(true);
 
 // State
@@ -130,17 +136,17 @@ async function fetchPaperInfo(doi: string): Promise<Paper | null> {
 async function fetchAllPaperDetails() {
 	loading.value = true;
 	try {
-		for (let i = 0; i < props.papers.length; i++) {
-			const paper = props.papers[i];
+		for (let i = 0; i < localPapers.value.length; i++) {
+			const paper = localPapers.value[i];
 			if (!paper) continue;
 			const details = await fetchPaperInfo(paper.doi);
 			if (details) {
 				// Keep the original DOI when merging details
-				props.papers[i] = { ...details, doi: paper.doi };
+				localPapers.value[i] = { ...details, doi: paper.doi };
 			}
 		}
 		// Sort papers by publication date after fetching all details
-		props.papers.sort(
+		localPapers.value.sort(
 			(a, b) =>
 				new Date(b.publicationDate || '').getTime() - new Date(a.publicationDate || '').getTime()
 		);

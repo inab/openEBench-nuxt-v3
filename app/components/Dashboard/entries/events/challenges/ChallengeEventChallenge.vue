@@ -204,7 +204,6 @@
 															<div class="w-100 row no-space">
 																<div
 																	v-for="(reference, index) in localReferences"
-																	v-if="localReferences.length > 0"
 																	:key="index"
 																	class="col-12 pt-0 pb-1"
 																>
@@ -223,7 +222,7 @@
 																		</button>
 																	</div>
 																</div>
-																<div v-else class="col-12 pt-0">
+																<div v-if="localReferences.length === 0" class="col-12 pt-0">
 																	<div class="w-100 empty-elements text-slate-400">
 																		<span>There are no reference associated with this event</span>
 																	</div>
@@ -254,7 +253,6 @@
 															<div class="w-100 row no-space">
 																<div
 																	v-for="(contact, index) in localContacts"
-																	v-if="localContacts.length > 0"
 																	:key="index"
 																	class="col-12 pt-0 pb-1"
 																>
@@ -285,7 +283,7 @@
 																		</button>
 																	</div>
 																</div>
-																<div v-else class="col-12 pt-0">
+																<div v-if="localContacts.length === 0" class="col-12 pt-0">
 																	<div class="w-100 empty-elements text-slate-400">
 																		<span>There are no contacts associated with this event</span>
 																	</div>
@@ -473,35 +471,6 @@ const automatedOptions = [
 	{ label: 'Yes', value: true },
 	{ label: 'No', value: false },
 ];
-
-const challengeData = computed(() => {
-	state.value = {
-		_id: props.challengeObj?._id?.toString() || '',
-		community_id: props.communityId || '',
-		name: props.challengeObj?.name || '',
-		acronym: props.challengeObj?.acronym || '',
-		_schema: props.challengeObj?._schema || '',
-		benchmarking_event_id: props.challengeObj?.benchmarking_event_id || '',
-		challenge_contact_ids: props.challengeObj?.challenge_contact_ids || ([] as string[]),
-		dates: {
-			challenge_start: props.challengeObj?.dates?.challenge_start
-				? new Date(props.challengeObj.dates.challenge_start)
-				: new Date(),
-			challenge_stop: props.challengeObj?.dates?.challenge_stop
-				? new Date(props.challengeObj.dates.challenge_stop)
-				: new Date(),
-		},
-		url: props.challengeObj?.url || '',
-		orig_id: props.challengeObj?.orig_id || '',
-		references: props.challengeObj?.references || ([] as string[]),
-		metrics_categories: props.challengeObj?.metrics_categories || ([] as string[]),
-		is_automated: props.challengeObj?.is_automated || false,
-	};
-
-	return state;
-});
-
-challengeData.value;
 
 if (props.challengeObj && props.challengeObj.references) {
 	localReferences.value = props.challengeObj.references;
@@ -802,6 +771,28 @@ async function showOkMessage(msg: string) {
 watch(
 	() => props.challengeObj,
 	(newVal) => {
+		state.value = {
+			_id: newVal?._id?.toString() || '',
+			community_id: props.communityId || '',
+			name: newVal?.name || '',
+			acronym: newVal?.acronym || '',
+			_schema: newVal?._schema || '',
+			benchmarking_event_id: newVal?.benchmarking_event_id || '',
+			challenge_contact_ids: newVal?.challenge_contact_ids || ([] as string[]),
+			dates: {
+				challenge_start: newVal?.dates?.challenge_start
+					? new Date(newVal.dates.challenge_start)
+					: new Date(),
+				challenge_stop: newVal?.dates?.challenge_stop
+					? new Date(newVal.dates.challenge_stop)
+					: new Date(),
+			},
+			url: newVal?.url || '',
+			orig_id: newVal?.orig_id || '',
+			references: newVal?.references || ([] as string[]),
+			metrics_categories: newVal?.metrics_categories || ([] as string[]),
+			is_automated: newVal?.is_automated || false,
+		};
 		if (newVal && newVal.references) {
 			localReferences.value = newVal.references;
 		}
