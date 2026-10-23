@@ -18,7 +18,7 @@
 					>
 						<div v-if="index == tab && item">
 							<ChartDescriptionCard
-								:type="item.visualization?.type"
+								:type="item.visualization?.type ?? ''"
 								:label="challenge.challenge_label"
 							/>
 						</div>
@@ -52,23 +52,32 @@ import CustomTabs from '@/components/Widgets/CustomTabs.vue';
 import BreadcrumbsBar from '@/components/Common/BreadcrumbsBar.vue';
 import { useCommunity } from '~~/stores/community';
 import emptyImg from '~/assets/images/illustrations/empty-state.svg?component';
+import type {
+	ChallengeApiResponse,
+	ChallengeDataset,
+	ChallengeInfo,
+	ChallengeParticipant,
+	EventWithChallenges,
+	GraphData,
+	GraphMetric,
+} from '~~/types/pages-types';
 
 const route = useRoute();
 const communityStore = useCommunity();
 const communityId: string = route.params.community as string;
-const eventsObj: any[] = communityStore.getEvents;
+const eventsObj: EventWithChallenges[] = communityStore.getEvents;
 const challengeId = route.params.challenge;
 const chatAvailable = ref<boolean>(false);
-const datasets = ref<any[]>([]);
-const participants = ref<any[]>([]);
-const metrics = ref<any[]>([]);
-const challenge: any = ref(null);
+const datasets = ref<ChallengeDataset[]>([]);
+const participants = ref<ChallengeParticipant[]>([]);
+const metrics = ref<GraphMetric[]>([]);
+const challenge = ref<ChallengeInfo>({ _id: '', acronym: '', name: '', challenge_label: '' });
 const tab = ref(0);
-const itemSelected = ref(null);
-const items = ref<any[]>([]);
+const itemSelected = ref<GraphData | null>(null);
+const items = ref<GraphData[]>([]);
 
-await challengeAPI(challengeId).then(async (response: any) => {
-	const challengeObj = new ChallengeObj(challengeId, response.data);
+await challengeAPI(challengeId).then(async (response) => {
+	const challengeObj = new ChallengeObj(challengeId, (response as ChallengeApiResponse).data);
 	challengeObj.formatData();
 	challenge.value = challengeObj.getChallenge();
 	metrics.value = challengeObj.getMetrics();
@@ -84,7 +93,7 @@ await challengeAPI(challengeId).then(async (response: any) => {
 
 		console.log('dataset:', dataset._id, 'graphData:', graphData);
 
-		if (!graphData || !graphData.visualization) {
+		if (!graphData || !graphData.visualization || !datalink) {
 			console.log('Skipping dataset (no graphData or visualization):', dataset._id);
 			continue;
 		}
@@ -138,7 +147,7 @@ const currentEvent = computed(() => {
 		communityStore.setCurrentEvent(firstEvent);
 		return firstEvent;
 	}
-	return selectedEvent;
+	return selectedEvent as unknown as EventWithChallenges;
 });
 
 const communityAcronym = computed(() => (community.value as { acronym?: string } | null)?.acronym);

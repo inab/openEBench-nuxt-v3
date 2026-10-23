@@ -88,15 +88,26 @@ import type { FormSubmitEvent } from '#ui/types';
 import demo_bar from './templates/LINEPLOT.json';
 const isLoadingGraphBar = ref(true);
 
-const preparedBar = ref<any>({});
-const initialValues = ref<any>({});
+interface LinePlotParticipant {
+	name: string;
+	metric_id: string;
+	x_value: number[];
+	y_value: number[];
+	t_error: unknown;
+}
+interface LineFormParticipant extends Omit<LinePlotParticipant, 'x_value' | 'y_value'> {
+	x_value: string[];
+	y_value: string[];
+}
+const preparedBar = ref('');
+const initialValues = ref<LinePlotParticipant[]>([]);
 const type = ref<string>('line-plot');
 const hasDataError = ref(false);
 const hasDataErrorMessage = ref('');
 const widgetKey = ref(0);
 
 const state = ref({
-	challenge_participants: [] as any[],
+	challenge_participants: [] as LineFormParticipant[],
 });
 
 const schema = object({
@@ -105,14 +116,13 @@ const schema = object({
 
 getPreparedData();
 function getPreparedData() {
-	const bar: Record<string, any> = demo_bar;
+	const bar = demo_bar;
 	const barVisualization = bar.inline_data.visualization;
-	preparedBar.value = {
+	const prepared = {
 		_id: bar._id,
-		name: bar.name,
 		dates: bar.dates,
 		inline_data: {
-			challenge_participants: [],
+			challenge_participants: [] as LinePlotParticipant[],
 			visualization: {
 				dates: barVisualization.dates,
 				type: barVisualization.type,
@@ -121,8 +131,8 @@ function getPreparedData() {
 			},
 		},
 	};
-	preparedBar.value.inline_data.challenge_participants = bar.inline_data.challenge_participants.map(
-		(participant: any) => {
+	prepared.inline_data.challenge_participants = bar.inline_data.challenge_participants.map(
+		(participant) => {
 			const preparedParticipant = {
 				name: participant.name,
 				metric_id: participant.metric_id,
@@ -134,14 +144,18 @@ function getPreparedData() {
 		}
 	);
 
-	initialValues.value = JSON.parse(
-		JSON.stringify(preparedBar.value.inline_data.challenge_participants)
+	initialValues.value = JSON.parse(JSON.stringify(prepared.inline_data.challenge_participants));
+	state.value.challenge_participants = prepared.inline_data.challenge_participants.map(
+		(participant) => ({
+			...participant,
+			x_value: participant.x_value.map((x) => String(x)),
+			y_value: participant.y_value.map((y) => String(y)),
+		})
 	);
-	state.value.challenge_participants = preparedBar.value.inline_data.challenge_participants;
-	preparedBar.value = JSON.stringify(preparedBar.value);
+	preparedBar.value = JSON.stringify(prepared);
 }
 
-function regeneratePlot(newData: any) {
+function regeneratePlot(newData: LinePlotParticipant[]) {
 	const preparedObj = JSON.parse(preparedBar.value);
 	if (preparedObj.inline_data) {
 		preparedObj.inline_data.challenge_participants = newData;
@@ -160,15 +174,9 @@ async function onSubmit(_event: FormSubmitEvent<Schema>) {
 
 	if (result.success) {
 		const data = state.value.challenge_participants.map((item) => {
-			const xValues = item.x_value.map((x: any) => {
-				const xValueString = typeof x === 'string' ? x : x === 0 ? '0' : String(x || '');
-				return parseFloat(xValueString);
-			});
+			const xValues = item.x_value.map((x) => parseFloat(x));
 
-			const yValues = item.y_value.map((y: any) => {
-				const yValueString = typeof y === 'string' ? y : y === 0 ? '0' : String(y || '');
-				return parseFloat(yValueString);
-			});
+			const yValues = item.y_value.map((y) => parseFloat(y));
 
 			return {
 				name: item.name,

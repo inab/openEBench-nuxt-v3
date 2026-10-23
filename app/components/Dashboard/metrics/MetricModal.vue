@@ -310,12 +310,12 @@ function onDeleteElement(index: number, element?: string[]) {
 	element?.splice(index, 1);
 }
 
-function validateRequiredFields(data: any): string[] {
+function validateRequiredFields(data: Record<string, unknown>): string[] {
 	const requiredFields = ['_id', 'original_id', 'formal_definition', 'title', 'description'];
 	const errorMessages: string[] = [];
 
 	requiredFields.forEach((field) => {
-		if (typeof data[field] === 'string' && data[field].trim() === '') {
+		if (typeof data[field] === 'string' && (data[field] as string).trim() === '') {
 			errorMessages.push(`${field} cannot be empty`);
 		}
 	});

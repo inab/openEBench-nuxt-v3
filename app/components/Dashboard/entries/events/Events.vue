@@ -118,7 +118,7 @@ import { ref, computed } from 'vue';
 import { useUser } from '~~/stores/user.ts';
 
 defineProps<{
-	isLoadingData: any;
+	isLoadingData: boolean;
 }>();
 
 const userStore = useUser();
@@ -155,7 +155,7 @@ const filteredData = computed(() => {
 	if (!events || events.length === 0) return [];
 	if (!search.value) return events;
 
-	return events.filter((communityEvent: any) =>
+	return events.filter((communityEvent) =>
 		Object.values(communityEvent).some((value) =>
 			String(value).toLowerCase().includes(search.value.toLowerCase())
 		)

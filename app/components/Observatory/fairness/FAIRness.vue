@@ -505,9 +505,15 @@ const dialogItemsAccessibility = [embedCodes.accessibilityBubble];
 const dialogItemsInteroperability = [embedCodes.interoperabilityBubble];
 const dialogItemsReusability = [embedCodes.reusabilityBubble];
 
+interface FairScore {
+	indicator: string;
+	scores: number[];
+	count: number[];
+	percent: number[];
+}
 type FairScoresByDimension = Record<
 	'F' | 'A' | 'I' | 'R',
-	{ fair_scores: any[]; id: string; labels: { [key: string]: string } }
+	{ fair_scores: FairScore[]; id: string; labels: { [key: string]: string } }
 >;
 const fair_scores = computed(() => storeFairness.fairScores as unknown as FairScoresByDimension);
 const control_fair_scores = computed(

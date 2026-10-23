@@ -26,7 +26,7 @@
 						<div class="row">
 							<!-- Col for Image: Hidden on small screens -->
 							<div class="col-2 d-none d-md-flex community-info__header__body__left">
-								<img :src="logo" alt="welcome-header-image" />
+								<img :src="logo ?? undefined" alt="welcome-header-image" />
 							</div>
 							<!-- Col for Text: Full width on small screens, majority width on larger screens -->
 							<div class="col-12 col-md-10 community-info__header__body__right">
@@ -84,10 +84,11 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import type { CommunityDetail, CommunityReference } from '~~/types/pages-types';
 
 const props = defineProps<{
-	community: any;
-	communityReferences: any[] | null;
+	community: CommunityDetail;
+	communityReferences: CommunityReference[] | null;
 }>();
 
 console.log(props.community);
@@ -118,7 +119,7 @@ const logo = computed(() => {
 
 const communityLinks = computed(() => {
 	if (!props.community.links) return [];
-	return props.community.links.filter((link: { comment: string }) => {
+	return props.community.links.filter((link) => {
 		if (link.comment !== '@logo') {
 			return link;
 		}

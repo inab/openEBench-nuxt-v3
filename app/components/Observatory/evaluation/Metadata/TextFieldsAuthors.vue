@@ -98,7 +98,7 @@ const metadataStore = useMetadataStore();
 
 // PROPS
 const props = defineProps<{
-	item: any;
+	item: { name: string; email: string; type: string; maintainer: boolean };
 	field: string;
 	index: number;
 	id: number;

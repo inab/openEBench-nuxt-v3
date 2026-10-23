@@ -145,7 +145,7 @@ const metadataStore = useMetadataStore();
 
 // PROPS
 const props = defineProps<{
-	item: any;
+	item: { vocabulary: string; term: string; uri: string };
 	id: number;
 	field: string;
 	index: number;

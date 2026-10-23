@@ -76,8 +76,8 @@ const metadataStore = useMetadataStore();
 defineProps<{
 	title: string;
 	color: string;
-	items: Array<any>;
-	indicatorsLabel: Array<any>;
+	items: { id: string; type?: string; name?: string; avatar?: string }[];
+	indicatorsLabel: string[];
 }>();
 
 const dialog = ref(false);

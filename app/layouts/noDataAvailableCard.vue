@@ -22,10 +22,10 @@ import { useRouter } from 'vue-router';
 import emptyImg from '~/assets/images/illustrations/empty-state.svg?component';
 const props = withDefaults(
 	defineProps<{
-		description: any;
-		id?: any;
-		btnPath?: any;
-		btnText?: any;
+		description: string;
+		id?: string | number | null;
+		btnPath?: string | null;
+		btnText?: string | null;
 	}>(),
 	{
 		btnPath: null,

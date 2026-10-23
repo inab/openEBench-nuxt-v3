@@ -40,7 +40,7 @@ const props = withDefaults(
 	defineProps<{
 		title: string;
 		field: string;
-		value?: any;
+		value?: Record<string, unknown>[];
 		increasable?: boolean;
 	}>(),
 	{
@@ -63,7 +63,7 @@ const addEntry = () => {
 	metadataStore.addEntry(payload);
 };
 
-const removeEntry = (index: any) => {
+const removeEntry = (index: number) => {
 	const payload = {
 		field: props.field,
 		index,

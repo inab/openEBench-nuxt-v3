@@ -90,7 +90,7 @@
 						<div v-if="row.original.actions">
 							<div v-if="row.original.privileges === 'Owner' && row.original.actions?.community">
 								<button title="Edit community" class="btn-event text-neutral-300">
-									<NuxtLink :to="getCommunityEditLink(row)">
+									<NuxtLink :to="getCommunityEditLink(row.original)">
 										<font-awesome-icon :icon="['fas', 'pencil']" />
 									</NuxtLink>
 								</button>
@@ -104,7 +104,7 @@
 								v-else-if="row.original.privileges === 'Manager' && row.original.actions?.community"
 							>
 								<button title="Edit community" class="btn-event text-neutral-300">
-									<NuxtLink :to="getCommunityEditLink(row)">
+									<NuxtLink :to="getCommunityEditLink(row.original)">
 										<font-awesome-icon :icon="['fas', 'pencil']" />
 									</NuxtLink>
 								</button>
@@ -118,7 +118,7 @@
 								v-else-if="row.original.privileges === 'anyone' && row.original.actions?.community"
 							>
 								<button title="Edit community" class="btn-event text-neutral-300">
-									<NuxtLink :to="getCommunityEditLink(row)">
+									<NuxtLink :to="getCommunityEditLink(row.original)">
 										<font-awesome-icon :icon="['fas', 'pencil']" />
 									</NuxtLink>
 								</button>
@@ -181,13 +181,18 @@ import { ref, computed } from 'vue';
 import { useUser } from '~~/stores/user.ts';
 import { CommunityStatusLabels } from '~~/constants/community_const';
 import Multiselect from 'vue-multiselect';
+import type { Community, CommunityMetadata } from '~~/types/communities';
 
 defineProps<{
-	isLoadingData: any;
+	isLoadingData: boolean;
 }>();
 
 const userStore = useUser();
-const communitiesData = computed(() => userStore.getUserCommunities);
+type CommunityRow = Omit<Community, 'status' | '_metadata'> & {
+	status: string;
+	_metadata?: CommunityMetadata | '';
+};
+const communitiesData = computed(() => userStore.getUserCommunities as unknown as CommunityRow[]);
 const page = ref<number>(1);
 const pageCount = ref<number>(10);
 const pageFrom = computed(() => (Number(page.value) - 1) * Number(pageCount.value) + 1);
@@ -243,7 +248,7 @@ const filteredData = computed(() => {
 		return communitiesData.value;
 	}
 
-	return communitiesData.value.filter((challenge: any) => {
+	return communitiesData.value.filter((challenge) => {
 		return Object.values(challenge).some((ch) => {
 			if (selectedStatus.value.length > 0) {
 				return selectedStatus.value.some((status) => {
@@ -290,8 +295,8 @@ function removeTag(tagName: StatusOption) {
 	});
 }
 
-function getCommunityEditLink(row: any) {
-	return row.privileges === 'Owner' && row.actions.community && row.actions.community.update
+function getCommunityEditLink(row: CommunityRow) {
+	return row.privileges === 'Owner' && row.actions?.community && row.actions.community.update
 		? `/dashboard/community/${row._id}`
 		: `/dashboard/community/${row._id}?view`;
 }

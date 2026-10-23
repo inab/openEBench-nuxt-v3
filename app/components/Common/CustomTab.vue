@@ -21,7 +21,7 @@
 import { computed } from 'vue';
 
 const props = defineProps<{
-	items: any[];
+	items: Array<{ id?: string | number; index: string | number; icon: string; label: string }>;
 	selected: string;
 }>();
 

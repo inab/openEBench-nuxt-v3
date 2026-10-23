@@ -317,6 +317,7 @@
 </template>
 
 <script setup lang="ts">
+import type { ContactOption } from '~~/types/dashboard-types';
 import { computed, ref, onMounted, watch, nextTick } from 'vue';
 import { useUser } from '~~/stores/user.ts';
 import type { Event } from '~~/types/events';
@@ -346,7 +347,7 @@ const props = defineProps<{
 	challenges: Array<Challenge>;
 	isLoadinChallenges: boolean;
 	tabIndex: string;
-	eventContacts: Array<any>;
+	eventContacts: Array<{ orcid: string; role: string }>;
 }>();
 
 const dialogTitle = ref('');
@@ -433,7 +434,7 @@ const automatedOptions = [
 ];
 const errors = ref<string[]>([]);
 const oks = ref<string>('');
-const contactsData = ref<string[]>([]);
+const contactsData = ref<ContactOption[]>([]);
 const localReferences = ref<string[]>([]);
 const localContacts = ref<
 	{
@@ -678,7 +679,7 @@ async function updateBenchmarkingEvent() {
 			} else if (responseData.error) {
 				errors.value = [responseData.error];
 			} else {
-				errors.value = data.error.map((error: any) => {
+				errors.value = data.error.map((error: { pointer?: string; message: string }) => {
 					if (error.pointer) {
 						return `${error.message}`;
 					}
@@ -703,7 +704,7 @@ async function showOkMessage(msg: string) {
 }
 
 const checkEmptyContacts = computed(() => {
-	return localContacts.value.some((contact: any) => contact.id === '');
+	return localContacts.value.some((contact) => contact.id === '');
 });
 
 const checkEmptyReferences = computed(() => {
@@ -718,7 +719,7 @@ function deleteEmptyElements(array: string[]): string[] {
 	return array.filter((element) => element.trim() !== '');
 }
 
-function validateRequiredFields(data: any): string[] {
+function validateRequiredFields(data: Record<string, unknown>): string[] {
 	const requiredFields = [
 		'_id',
 		'_schema',
@@ -731,7 +732,7 @@ function validateRequiredFields(data: any): string[] {
 	const errorMessages: string[] = [];
 
 	requiredFields.forEach((field) => {
-		if (typeof data[field] === 'string' && data[field].trim() === '') {
+		if (typeof data[field] === 'string' && (data[field] as string).trim() === '') {
 			errorMessages.push(`${field} cannot be empty`);
 		}
 	});

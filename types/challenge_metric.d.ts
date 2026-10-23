@@ -23,7 +23,7 @@ export interface Metric {
 	formal_definition?: string;
 	references?: string[];
 	orig_id: string;
-	representation_hints?: Record<string, any>;
+	representation_hints?: Record<string, unknown>;
 	optimization?: string;
 	_metadata?: Metadata;
 }
@@ -53,5 +53,5 @@ export interface MetricData {
 	references: string[];
 	orig_id: string;
 	_metadata: Record<string, string>;
-	representation_hints?: Record<string, any>;
+	representation_hints?: Record<string, unknown>;
 }

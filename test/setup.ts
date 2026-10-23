@@ -27,7 +27,7 @@ vi.mock('#imports', async () => {
 
 	return {
 		...actual,
-		definePageMeta: (_meta: any) => {},
+		definePageMeta: (_meta: unknown) => {},
 	};
 });
 

@@ -10,12 +10,19 @@ import Plotly from 'plotly.js-dist';
 import { activeTabIndex } from '@/components/Common/state.js';
 import { resizePlot } from '~/utils/resizePlot';
 
+interface BubbleScore {
+	indicator: string;
+	scores: number[];
+	count: number[];
+	percent: number[];
+}
+
 const props = defineProps<{
 	div_id: string;
 	collection: string;
-	collection_scores: Array<any>;
+	collection_scores: BubbleScore[];
 	indicators_labels: { [key: string]: string };
-	control_scores: Array<any>;
+	control_scores: BubbleScore[];
 	collection_colors: Array<string>;
 	collection_colors_lines: Array<string>;
 	title?: string;
@@ -35,7 +42,7 @@ buildControlColors();
 buildControlColors();
 
 const build_trace = (
-	scores: Array<any>,
+	scores: BubbleScore[],
 	labels: { [key: string]: string },
 	collectionTitle: string,
 	colors: Array<string>,
@@ -43,10 +50,10 @@ const build_trace = (
 	mode: string
 ) => {
 	const traces = [];
-	let item;
 
 	for (let i = 0, len = scores.length; i < len; i++) {
-		item = scores[i];
+		const item = scores[i];
+		if (!item) continue;
 		const trace = {
 			y: Array(item.scores.length).fill(labels[item.indicator]),
 			x: item.scores,
@@ -77,7 +84,7 @@ const build_trace = (
 };
 
 const build_control_collection_traces = () => {
-	let controlCollectionTraces: any[] = [];
+	let controlCollectionTraces: ReturnType<typeof build_trace> = [];
 
 	// control scores
 	if (props.collection !== 'tools') {

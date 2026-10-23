@@ -8,8 +8,10 @@ import Plotly from 'plotly.js-dist';
 import { activeTabIndex } from '@/components/Common/state.js';
 import { getPlotElement, resizePlot } from '~/utils/resizePlot';
 
+type DocumentationCounts = Partial<Record<string, number>>;
+
 const props = defineProps<{
-	data: Record<string, any>;
+	data: Record<string, DocumentationCounts | null | undefined>;
 }>();
 
 const colorMap: Record<string, string> = {
@@ -33,7 +35,7 @@ const plotChart = () => {
 	}
 
 	const sortedEntries = Object.entries(props.data).sort(
-		([, a]: any, [, b]: any) => (a?.total ?? 0) - (b?.total ?? 0)
+		([, a], [, b]) => (a?.total ?? 0) - (b?.total ?? 0)
 	);
 
 	const docTypes = sortedEntries.map(([key]) => key);
@@ -41,7 +43,7 @@ const plotChart = () => {
 
 	const traces: Partial<Plotly.PlotData>[] = formats.map((format) => ({
 		y: docTypes,
-		x: sortedData.map((d: any) => d?.[format] ?? 0),
+		x: sortedData.map((d) => d?.[format] ?? 0),
 		name: format,
 		type: 'bar' as const,
 		orientation: 'h' as const,

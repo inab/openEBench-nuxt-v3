@@ -177,12 +177,12 @@ async function onSubmitTerms(_event: FormSubmitEvent<Schema>) {
 	}
 }
 
-function validateRequiredFields(data: any): string[] {
+function validateRequiredFields(data: Record<string, unknown>): string[] {
 	const requiredFields = ['terms'];
 	const errorMessages: string[] = [];
 
 	requiredFields.forEach((field) => {
-		if (typeof data[field] === 'string' && data[field].trim() === '') {
+		if (typeof data[field] === 'string' && (data[field] as string).trim() === '') {
 			errorMessages.push(`${field} cannot be empty`);
 		}
 	});

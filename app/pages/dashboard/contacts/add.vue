@@ -158,11 +158,16 @@ const userStore = useUser();
 const { data } = useAuth();
 const contactTypeOptions = ['person', 'helpdesk', 'other'];
 const runtimeConfig = useRuntimeConfig();
-const communities = ref<Community[]>([]);
+interface CommunityOption {
+	id: string;
+	name: string;
+	status: Community['status'];
+}
+const communities = ref<CommunityOption[]>([]);
 const errors = ref<string[]>([]);
 const oks = ref<string>('');
 const token = data.value?.accessToken as string;
-const communitiesSelected = ref<any[]>([]);
+const communitiesSelected = ref<CommunityOption[]>([]);
 const router = useRouter();
 
 const routeArray = [
@@ -211,7 +216,7 @@ const fetchUserCommunities = async (token: string): Promise<void> => {
 				status: community.status,
 			};
 		});
-		response.sort((a: Community, b: Community) => {
+		response.sort((a: CommunityOption, b: CommunityOption) => {
 			if (a.name < b.name) {
 				return -1;
 			}
@@ -247,14 +252,14 @@ function valueToName(value: string): string {
 	}
 }
 
-function validateRequiredFields(data: any): string[] {
+function validateRequiredFields(data: Record<string, unknown>): string[] {
 	const requiredFields = ['givenName', 'surname', 'email'];
 	const errorMessages: string[] = [];
 	requiredFields.forEach((field) => {
-		if (typeof data[field] === 'string' && data[field].trim() === '') {
+		if (typeof data[field] === 'string' && (data[field] as string).trim() === '') {
 			errorMessages.push(`${valueToName(field)} cannot be empty`);
 		}
-		if (typeof data[field] === 'object' && data[field].length === 0) {
+		if (Array.isArray(data[field]) && (data[field] as unknown[]).length === 0) {
 			errorMessages.push(`${valueToName(field)} cannot be empty`);
 		}
 	});
@@ -287,7 +292,7 @@ async function createContact() {
 		_schema: 'https://www.elixir-europe.org/excelerate/WP2/json-schemas/1.0/Contact',
 		contact_type: state.value.contact_type,
 		email: state.value.email,
-		community_id: communitiesSelected.value[0].id,
+		community_id: communitiesSelected.value[0]?.id,
 	};
 
 	try {
@@ -316,7 +321,7 @@ async function createContact() {
 			if (typeof errorResponse.error === 'string') {
 				errors.value.push(errorResponse.error);
 			} else {
-				errors.value = errorResponse.error.map((error: any) => {
+				errors.value = errorResponse.error.map((error: { pointer?: string; message: string }) => {
 					if (error.pointer) {
 						return `${error.message}`;
 					}

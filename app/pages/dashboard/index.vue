@@ -318,7 +318,14 @@ defineExpose({
 	countTotalMetrics,
 });
 
-const auth = useNuxtApp().$auth as any;
+interface AuthSession {
+	accessToken?: string;
+	statusCode?: string;
+	user?: { name?: string };
+	oeb_roles?: string[];
+}
+const auth = useNuxtApp().$auth as
+	{ data?: { value?: AuthSession | null }; status?: { value?: string } } | undefined;
 const data = computed(() => auth?.data?.value ?? null);
 const status = computed(() => auth?.status?.value ?? 'loading');
 
@@ -352,9 +359,17 @@ if (status.value == 'authenticated') {
 	}
 }
 
+interface StagedMetric {
+	representation_hints?: {
+		visualization?: unknown;
+		optimization?: unknown;
+		[key: string]: unknown;
+	};
+}
+
 async function countTotalMetrics() {
 	try {
-		const response = await $fetch<any[]>(
+		const response = await $fetch<StagedMetric[]>(
 			`${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Metrics`,
 			{
 				headers: {
@@ -376,7 +391,7 @@ async function countTotalMetrics() {
 
 async function countTotalTools() {
 	try {
-		const response = await $fetch<any[]>(
+		const response = await $fetch<unknown[]>(
 			`${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Tool`,
 			{
 				headers: {
@@ -396,7 +411,7 @@ async function countTotalTools() {
 
 async function countTotalCommunities() {
 	try {
-		const response = await $fetch<any[]>(
+		const response = await $fetch<{ status?: string }[]>(
 			`${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Community`,
 			{
 				headers: {
@@ -424,7 +439,7 @@ async function countTotalCommunities() {
 
 async function countTotalContacts() {
 	try {
-		const response = await $fetch<any[]>(
+		const response = await $fetch<unknown[]>(
 			`${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Contact`,
 			{
 				headers: {
@@ -442,7 +457,7 @@ async function countTotalContacts() {
 	}
 }
 
-async function getMetricsByType(metrics: any) {
+async function getMetricsByType(metrics: StagedMetric[]) {
 	const typeMap = {
 		visualization: 'Bar Plot',
 		optimization: 'Scatter Plot',
@@ -450,7 +465,7 @@ async function getMetricsByType(metrics: any) {
 		visualizationLine: 'Line Plot',
 	};
 
-	metrics.forEach((metric: any) => {
+	metrics.forEach((metric: StagedMetric) => {
 		if (metric.representation_hints && metric.representation_hints.visualization) {
 			const type = metricsByType.value.find((item) => item.name === typeMap.visualization);
 			if (type) {

@@ -27,6 +27,7 @@
 </template>
 
 <script setup lang="ts">
+import type { ContactOption } from '~~/types/dashboard-types';
 import { ref, onMounted } from 'vue';
 import type { ChallengeMetricCategory } from '~~/types/challenge_metric';
 import AddMetric from '@/components/Dashboard/entries/events/challenges/metrics/AddMetric.vue';
@@ -45,7 +46,7 @@ const route = useRoute();
 const userStore = useUser();
 const { data } = useAuth();
 const token = data.value?.accessToken as string;
-const contactsData = ref<string[]>([]);
+const contactsData = ref<ContactOption[]>([]);
 const challengeMetrics = ref<ChallengeMetricCategory[]>([]);
 const isLoadingChallengeMetrics = ref(true);
 const runtimeConfig = useRuntimeConfig();

@@ -66,8 +66,8 @@ const metadataStore = useMetadataStore();
 const props = defineProps<{
 	title: string;
 	field: string;
-	selected: any[];
-	registries: any[];
+	selected: string[];
+	registries: string[];
 }>();
 
 const selectedItem = ref([...props.selected]);
@@ -78,7 +78,7 @@ const selectedStates = ref<{ [key: string]: boolean }>({});
 // Inicializar los estados de selección según las opciones seleccionadas
 watch(selectedItem, (newValue) => {
 	// Inicializamos los estados de las opciones seleccionadas
-	selectedStates.value = newValue.reduce((acc, item) => {
+	selectedStates.value = newValue.reduce<Record<string, boolean>>((acc, item) => {
 		acc[item] = true; // Marcamos como true las opciones seleccionadas
 		return acc;
 	}, {});

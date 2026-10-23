@@ -60,7 +60,7 @@ interface Community {
 	description: string;
 	status: string;
 	keywords: string[];
-	references: any[] | null;
+	references: unknown[] | null;
 	community_contact_ids: string[];
 	links: Link[];
 }

@@ -221,6 +221,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import type { CommunityPrivilegeActions } from '~~/types/communities';
+import type { CommunityObject } from '~~/types/dashboard-types';
 import { CommunityStatusLabels } from '~~/constants/community_const';
 import CustomSubtitle from '@/components/Common/CustomSubtitle.vue';
 import { useRouter } from 'vue-router';
@@ -234,7 +235,7 @@ const token = data.value?.accessToken as string;
 
 const props = defineProps<{
 	id: string;
-	communityObj: any;
+	communityObj: CommunityObject | null;
 	loadingData: boolean;
 	commmunityPrivileges: CommunityPrivilegeActions;
 	isView: boolean;
@@ -330,7 +331,7 @@ async function updateCommunity() {
 
 	try {
 		await fetch(
-			`${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Community/${props.communityObj._id}`,
+			`${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Community/${props.communityObj?._id}`,
 			{
 				headers: {
 					Authorization: `Bearer ${token}`,

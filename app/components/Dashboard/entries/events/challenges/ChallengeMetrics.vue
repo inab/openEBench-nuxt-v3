@@ -31,11 +31,11 @@
 						</div>
 					</template>
 					<div class="challenge-metrics-categories__category__description">
-						{{ metric[0].description }}
+						{{ metric[0]?.description }}
 					</div>
 					<div class="challenge-metrics-categories__category__metrics row">
 						<div
-							v-for="(m, i) in metric[0].metrics"
+							v-for="(m, i) in metric[0]?.metrics"
 							:key="i"
 							class="col-6 challenge-metrics-categories__category__metric"
 						>
@@ -53,9 +53,10 @@ import { defineProps, computed } from 'vue';
 import ChallengeMetric from '@/components/Dashboard/entries/events/challenges/ChallengeMetric.vue';
 import CustomSubtitle from '@/components/Common/CustomSubtitle.vue';
 import { useMetrics } from '~~/stores/metrics.ts';
+import type { ChallengeMetrics as ChallengeMetricsType } from '~~/types/challenge';
 
 const props = defineProps<{
-	metricData: any[];
+	metricData: ChallengeMetricsType[];
 	isLoadingData: boolean;
 	challengeId: string;
 }>();
@@ -68,14 +69,11 @@ const metrics_by_categories = computed(() => {
 	return props.metricData.reduce(
 		(acc, metric) => {
 			if (metric.category === 'aggregation') {
-				if (!acc[metric.category]) {
-					acc[metric.category] = [];
-				}
-				acc[metric.category].push(metric);
+				(acc[metric.category] ??= []).push(metric);
 			}
 			return acc;
 		},
-		{} as Record<string, any[]>
+		{} as Record<string, ChallengeMetricsType[]>
 	);
 });
 </script>

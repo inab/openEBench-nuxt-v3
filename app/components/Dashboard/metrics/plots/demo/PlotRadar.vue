@@ -85,15 +85,27 @@ import type { FormSubmitEvent } from '#ui/types';
 import demo_bar from './templates/RADARPLOT.json';
 const isLoadingGraphBar = ref(true);
 
-const preparedBar = ref<any>({});
-const initialValues = ref<any>({});
+interface RadarPlotParticipant {
+	id: string;
+	label: string;
+	value: number | null;
+	error: number;
+}
+interface RadarFormParticipant {
+	id: string;
+	label: string;
+	value: string;
+	error: string;
+}
+const preparedBar = ref('');
+const initialValues = ref<RadarPlotParticipant[]>([]);
 const type = ref<string>('radar-plot');
 const hasDataError = ref(false);
 const hasDataErrorMessage = ref('');
 const widgetKey = ref(0);
 
 const state = ref({
-	challenge_participants: [] as any[],
+	challenge_participants: [] as RadarFormParticipant[],
 });
 
 const schema = object({
@@ -102,14 +114,13 @@ const schema = object({
 
 getPreparedData();
 function getPreparedData() {
-	const bar: Record<string, any> = demo_bar;
+	const bar = demo_bar;
 	const barVisualization = bar.visualization;
-	preparedBar.value = {
+	const prepared = {
 		_id: bar._id,
 		name: bar.name,
-		dates: bar.dates,
 		inline_data: {
-			challenge_participants: [],
+			challenge_participants: [] as RadarPlotParticipant[],
 			visualization: {
 				dates: barVisualization.dates,
 				type: barVisualization.type,
@@ -117,24 +128,28 @@ function getPreparedData() {
 			},
 		},
 	};
-	for (const [_key, value] of Object.entries<any>(bar.assessments)) {
-		const preparedParticipant = {
+	for (const [_key, value] of Object.entries(bar.assessments)) {
+		const preparedParticipant: RadarPlotParticipant = {
 			id: value._id,
 			label: value.label,
 			value: value.value,
 			error: value.error,
 		};
-		preparedBar.value.inline_data.challenge_participants.push(preparedParticipant);
+		prepared.inline_data.challenge_participants.push(preparedParticipant);
 	}
 
-	initialValues.value = JSON.parse(
-		JSON.stringify(preparedBar.value.inline_data.challenge_participants)
+	initialValues.value = JSON.parse(JSON.stringify(prepared.inline_data.challenge_participants));
+	state.value.challenge_participants = prepared.inline_data.challenge_participants.map(
+		(participant) => ({
+			...participant,
+			value: String(participant.value ?? ''),
+			error: String(participant.error ?? ''),
+		})
 	);
-	state.value.challenge_participants = preparedBar.value.inline_data.challenge_participants;
-	preparedBar.value = JSON.stringify(preparedBar.value);
+	preparedBar.value = JSON.stringify(prepared);
 }
 
-function regeneratePlot(newData: any) {
+function regeneratePlot(newData: RadarPlotParticipant[]) {
 	const preparedObj = JSON.parse(preparedBar.value);
 	if (preparedObj.inline_data) {
 		preparedObj.inline_data.challenge_participants = newData;

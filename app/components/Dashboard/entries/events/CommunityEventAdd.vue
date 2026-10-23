@@ -316,6 +316,7 @@
 </template>
 
 <script setup lang="ts">
+import type { ContactOption } from '~~/types/dashboard-types';
 import { computed, ref, onMounted, nextTick } from 'vue';
 import { useUser } from '~~/stores/user.ts';
 import type { CommunityPrivilegeCategories } from '~~/types/communities';
@@ -406,7 +407,7 @@ const localContacts = ref<
 		role: string;
 	}[]
 >([]);
-const contactsData = ref<string[]>([]);
+const contactsData = ref<ContactOption[]>([]);
 
 function onAddElement(array: string[]) {
 	array.push('');
@@ -433,7 +434,7 @@ function onAddContact(
 }
 
 const cheEmptyContacts = computed(() => {
-	return localContacts.value.some((contact: any) => contact.id === '');
+	return localContacts.value.some((contact) => contact.id === '');
 });
 
 const checkEmptyReferences = computed(() => {
@@ -525,12 +526,7 @@ async function createBenchmarkingEvent() {
 			let errorResponse = JSON.parse(responseData.body);
 			errorResponse = errorResponse.error || [];
 			if (errorResponse.error) {
-				errors.value = errorResponse.error.map((error: any) => {
-					if (error) {
-						return `${error}`;
-					}
-					return error.message;
-				});
+				errors.value = errorResponse.error.map((error: unknown) => `${error}`);
 			} else if (errorResponse.message) {
 				errors.value = [errorResponse.message];
 			} else {
@@ -546,7 +542,7 @@ function deleteEmptyElements(array: string[]): string[] {
 	return array.filter((element) => element.trim() !== '');
 }
 
-function validateRequiredFields(data: any): string[] {
+function validateRequiredFields(data: Record<string, unknown>): string[] {
 	const requiredFields = [
 		'_id',
 		'_schema',
@@ -559,7 +555,7 @@ function validateRequiredFields(data: any): string[] {
 	const errorMessages: string[] = [];
 
 	requiredFields.forEach((field) => {
-		if (typeof data[field] === 'string' && data[field].trim() === '') {
+		if (typeof data[field] === 'string' && (data[field] as string).trim() === '') {
 			errorMessages.push(`${field} cannot be empty`);
 		}
 	});

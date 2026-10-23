@@ -25,12 +25,13 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
+import type { MetricsTable } from '~~/types/pages-types';
 
 const props = defineProps<{
-	metricsTable: any;
+	metricsTable: MetricsTable;
 }>();
 
-const formatName = (text: string) => {
+const formatName = (text?: string) => {
 	if (typeof text === 'string' && text.startsWith('Dataset_participant:3D:2022-12-17_')) {
 		return text.replace('Dataset_participant:3D:2022-12-17_', '');
 	}
@@ -44,7 +45,7 @@ const sorting = ref([
 	},
 ]);
 
-const headers = props.metricsTable.metrics.map((metric: any, metricsI: number) => {
+const headers = props.metricsTable.metrics.map((metric, metricsI: number) => {
 	return {
 		id: `metricsValues_${metricsI}`,
 		accessorKey: `metricsValues_${metricsI}`,
@@ -60,17 +61,17 @@ headers.unshift({
 	enableSorting: true,
 });
 const items = computed(() => {
-	return props.metricsTable.participants.map((participant: any, participantI: number) => {
+	return props.metricsTable.participants.map((participant, participantI: number) => {
 		const item = {
 			_id: participant._id,
 			participant_label: formatName(participant.participant_label),
 			metricsValues: props.metricsTable.dataMatrix[participantI],
 		};
 
-		const values = item.metricsValues.reduce(
-			(acc: Record<string, any>, metric: any, metricI: number) => {
+		const values = (item.metricsValues ?? []).reduce(
+			(acc: Record<string, unknown>, metric, metricI: number) => {
 				acc[`metricsValues_${metricI}`] =
-					metric === null || metric.value === null ? '-' : metric.value;
+					metric == null || metric.value === null ? '-' : metric.value;
 
 				return acc;
 			},

@@ -84,11 +84,12 @@
 <script setup lang="ts">
 import { ref, computed, watch, onBeforeUnmount } from 'vue';
 import { useRoute } from 'vue-router';
+import type { ChallengeRow } from '~~/types/pages-types';
 
 const props = defineProps<{
-	eventChallenges: Array<any>;
+	eventChallenges?: Array<ChallengeRow>;
 	communityId: string;
-	filterArray: Array<any>;
+	filterArray: Array<string>;
 }>();
 
 const emit = defineEmits(['handleChangeChallengers']);
@@ -102,7 +103,7 @@ const pageFrom = computed(() => (Number(page.value) - 1) * Number(pageCount.valu
 const pageTo = computed(() =>
 	Math.min(Number(page.value) * Number(pageCount.value), Number(totalPages.value))
 );
-const selected = ref<any[]>([]);
+const selected = ref<ChallengeRow[]>([]);
 const columns = [
 	{ id: 'checkbox', header: '', enableSorting: false },
 	{ id: '_id', accessorKey: '_id', header: 'Acronym', enableSorting: false },
@@ -112,7 +113,7 @@ const columns = [
 const allRows = ref(props.eventChallenges ?? []);
 const filteredData = computed(() => {
 	const filtered = search.value
-		? allRows.value.filter((challenge: any) =>
+		? allRows.value.filter((challenge) =>
 				Object.values(challenge).some((value) =>
 					String(value).toLowerCase().includes(search.value.toLowerCase())
 				)
@@ -149,8 +150,8 @@ function getChallengeLink(challengePath: string) {
 }
 
 // Function for selecting/deselecting a single element
-function select(row: any) {
-	const index = selected.value.findIndex((item: any) => item._id === row._id);
+function select(row: ChallengeRow) {
+	const index = selected.value.findIndex((item) => item._id === row._id);
 	if (index === -1) {
 		selected.value.push(row);
 	} else {
@@ -158,8 +159,8 @@ function select(row: any) {
 	}
 }
 
-function isSelected(row: any) {
-	return selected.value.some((item: any) => item._id === row._id);
+function isSelected(row: ChallengeRow) {
+	return selected.value.some((item) => item._id === row._id);
 }
 
 // Function to select/deselect all elements of the current page

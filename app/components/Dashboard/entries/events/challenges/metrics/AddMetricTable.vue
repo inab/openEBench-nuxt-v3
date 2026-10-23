@@ -49,7 +49,7 @@ import MetricModal from '@/components/Dashboard/metrics/MetricModal.vue';
 import type { Metric } from '~~/types/challenge_metric';
 
 const props = defineProps<{
-	challengeRows: any[];
+	challengeRows: Metric[];
 	challengeId: string;
 }>();
 

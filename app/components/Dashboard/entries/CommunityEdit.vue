@@ -183,7 +183,7 @@
 													<UTooltip text="Unique community acronym">
 														<UIcon name="i-heroicons-information-circle" />
 													</UTooltip>
-													{{ inputLabels[state.type]?.acronym ?? 'Acronym' }}
+													{{ inputLabels[state.type ?? '']?.acronym ?? 'Acronym' }}
 													<span class="text-red-400 required">*</span>
 												</label>
 												<input
@@ -198,7 +198,7 @@
 										<div class="form-card__row__box">
 											<div class="form-group">
 												<label for="description">
-													{{ inputLabels[state.type]?.name ?? 'Name' }}
+													{{ inputLabels[state.type ?? '']?.name ?? 'Name' }}
 													<span class="text-red-400 required">*</span>
 												</label>
 												<input
@@ -482,6 +482,12 @@ import { useUser } from '~~/stores/user.ts';
 import { CommunityStatusLabels } from '~~/constants/community_const';
 
 import type { CommunityPrivilegeCategories } from '~~/types/communities';
+import type {
+	CommunityObject,
+	ContactOption,
+	CommunityObjLink,
+	CommunityRequestBody,
+} from '~~/types/dashboard-types';
 import type { FormSubmitEvent } from '#ui/types';
 import type { Event as OebEvent } from '~~/types/events';
 
@@ -545,7 +551,7 @@ const inputLabels: Record<string, { acronym: string; name: string }> = {
 
 const props = defineProps<{
 	id: string;
-	communityObj?: any;
+	communityObj?: CommunityObject | null;
 	loadingData: boolean;
 	commmunityPrivileges: CommunityPrivilegeCategories;
 	isView: boolean;
@@ -555,7 +561,21 @@ const props = defineProps<{
 	tabIndex: string;
 }>();
 
-const state = ref<Record<string, any>>({
+interface CommunityFormState {
+	id?: string;
+	acronym?: string;
+	status?: string;
+	name?: string;
+	description?: string;
+	links: CommunityObjLink[];
+	keywords: string[];
+	_schema?: string;
+	_metadata?: Record<string, unknown> | '';
+	community_contact_ids: { id: string; name: string }[];
+	type?: string;
+	privileges?: string;
+}
+const state = ref<CommunityFormState>({
 	id: '',
 	acronym: '',
 	status: '',
@@ -706,7 +726,7 @@ const localContacts = ref<
 >([]);
 const localLinks = ref<string[]>([]);
 const localKeywords = ref<string[]>([]);
-const contactsData = ref<string[]>([]);
+const contactsData = ref<ContactOption[]>([]);
 const localLogo = ref<string | null>(null);
 
 const selectedTab = ref(props.tabIndex);
@@ -791,10 +811,10 @@ async function updateCommunity() {
 	const cleanKeywords = deleteEmptyElements(localKeywords.value);
 	const cleanContacts = deleteEmptyContact(localContacts.value);
 
-	const markdownDescription = turndownService.turndown(state.value.description);
+	const markdownDescription = turndownService.turndown(state.value.description ?? '');
 
-	const body: Record<string, any> = {
-		_id: props.communityObj._id,
+	const body: CommunityRequestBody = {
+		_id: props.communityObj?._id,
 		_schema: state.value._schema,
 		name: state.value.name,
 		acronym: state.value.acronym,
@@ -830,7 +850,7 @@ async function updateCommunity() {
 
 	try {
 		const response = await fetch(
-			`${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Community/${props.communityObj._id}`,
+			`${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Community/${props.communityObj?._id}`,
 			{
 				method: 'PATCH',
 				headers: {
@@ -874,12 +894,12 @@ async function showOkMessage(msg: string) {
 	});
 }
 
-function validateRequiredFields(data: any): string[] {
+function validateRequiredFields(data: Record<string, unknown>): string[] {
 	const requiredFields = ['_id', '_schema', 'acronym', 'name', 'status', 'community_contact_ids'];
 	const errorMessages: string[] = [];
 
 	requiredFields.forEach((field) => {
-		if (typeof data[field] === 'string' && data[field].trim() === '') {
+		if (typeof data[field] === 'string' && (data[field] as string).trim() === '') {
 			errorMessages.push(`${field} cannot be empty`);
 		}
 	});
@@ -908,7 +928,7 @@ function consentTab(userPrivileges?: { value?: { role: string }[] }) {
 	if (!userPrivileges?.value || !Array.isArray(items.value)) return;
 
 	const canConsent = userPrivileges.value.find(
-		(privilege: any) => privilege.role === 'admin' || privilege.role === 'owner'
+		(privilege) => privilege.role === 'admin' || privilege.role === 'owner'
 	);
 
 	const existItem = items.value.find((item) => item.index === 3);

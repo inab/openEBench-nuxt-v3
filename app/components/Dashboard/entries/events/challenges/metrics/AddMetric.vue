@@ -329,6 +329,7 @@
 </template>
 
 <script setup lang="ts">
+import type { ContactOption } from '~~/types/dashboard-types';
 import { ref, watch } from 'vue';
 import type { Metric, Tool, ChallengeMetricCategory } from '~~/types/challenge_metric';
 import type { ChartDefault } from '~~/types/visualizations';
@@ -345,7 +346,7 @@ import AddVisualizationBox from '@/components/Dashboard/entries/events/challenge
 import ChallengeMetricsList from '@/components/Dashboard/entries/events/challenges/metrics/ChallengeMetricsList.vue';
 
 const props = defineProps<{
-	contactsData: string[];
+	contactsData: ContactOption[];
 	challengeMetrics: ChallengeMetricCategory[];
 	isLoadingChallengeMetrics: boolean;
 }>();
@@ -359,11 +360,11 @@ const isSearchingMetrics = ref(false);
 const searchList = ref<Metric[]>([]);
 const token = data.value?.accessToken as string;
 
-const selectedMetrics = ref<any[]>([]);
+const selectedMetrics = ref<Metric[]>([]);
 const isShowSearchTable = ref(false);
 
 const stepperIndex = ref(1);
-const selectedTools = ref<any[]>([]);
+const selectedTools = ref<Tool[]>([]);
 const isShowToolsTable = ref(false);
 
 const isShowVisualizationTable = ref(false);
@@ -372,7 +373,7 @@ const selectedVisualization = ref({} as ChartDefault);
 const isShowResume = ref(false);
 
 const searchMetric = ref<string>('');
-const localContacts = ref<string[]>([]);
+const localContacts = ref<ContactOption[]>([]);
 const isModalOpened = ref<boolean>(false);
 
 async function search() {
@@ -470,7 +471,7 @@ function handleSelectedTools(selectedToolsData: Tool[]) {
 	selectedTools.value = selectedToolsData;
 }
 
-function handleSelectedVisualization(selectedVisualizationData: any) {
+function handleSelectedVisualization(selectedVisualizationData: ChartDefault) {
 	selectedVisualization.value = selectedVisualizationData;
 }
 
@@ -478,7 +479,7 @@ function closeModal() {
 	isModalOpened.value = false;
 }
 
-watch(props.contactsData, (newVal: string[]) => {
+watch(props.contactsData, (newVal: ContactOption[]) => {
 	localContacts.value = newVal;
 });
 </script>

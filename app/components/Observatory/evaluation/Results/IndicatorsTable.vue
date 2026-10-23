@@ -20,9 +20,9 @@
 
 			<!-----    STATUS COLUMN  ---------->
 			<template #status-cell="{ row }">
-				<div v-if="indicatorsExplanation[row.original.id].measured === false">
+				<div v-if="explain(row.original.id).measured === false">
 					<UBadge
-						v-if="!indicatorsExplanation[row.original.id].types.includes(metaType(row.original))"
+						v-if="!explain(row.original.id).types?.includes(metaType(row.original))"
 						color="neutral"
 						variant="soft"
 					>
@@ -34,11 +34,11 @@
 					<div
 						v-if="
 							!idsMainIndicators.includes(row.original.id) &&
-							!indicatorsExplanation[row.original.id].types.includes(metaType(row.original))
+							!explain(row.original.id).types?.includes(metaType(row.original))
 						"
 					>
 						<UBadge
-							v-if="!indicatorsExplanation[row.original.id].types.includes(metaType(row.original))"
+							v-if="!explain(row.original.id).types?.includes(metaType(row.original))"
 							color="neutral"
 							variant="soft"
 						>
@@ -48,7 +48,7 @@
 					<div
 						v-if="
 							!idsMainIndicators.includes(row.original.id) &&
-							indicatorsExplanation[row.original.id].types.includes(metaType(row.original))
+							explain(row.original.id).types?.includes(metaType(row.original))
 						"
 					>
 						<UBadge
@@ -97,7 +97,7 @@
 						<div v-if="idsMainIndicators.includes(row.original.id)" class="my-3 ms-5 text-xs">
 							<span class="font-semibold"> What it is: </span>
 							<span>
-								{{ indicatorsExplanation[row.original.id].what }}
+								{{ explain(row.original.id).what }}
 							</span>
 						</div>
 
@@ -106,7 +106,7 @@
 							<li>
 								<span class="font-semibold">What it is: </span>
 								<span>
-									{{ indicatorsExplanation[row.original.id].what }}
+									{{ explain(row.original.id).what }}
 								</span>
 							</li>
 						</div>
@@ -114,16 +114,16 @@
 							<li>
 								<span class="font-semibold">Why it is important: </span>
 								<span>
-									{{ indicatorsExplanation[row.original.id].why }}
+									{{ explain(row.original.id).why }}
 								</span>
 							</li>
 						</div>
 						<div v-if="!idsMainIndicators.includes(row.original.id)" class="mb-2 ms-5 text-xs">
 							<li>
 								<span class="font-semibold">How it is measured: </span>
-								<span>{{ indicatorsExplanation[row.original.id].how }}</span>
+								<span>{{ explain(row.original.id).how }}</span>
 
-								<span v-if="indicatorsExplanation[row.original.id].how === 'Not measured.'">
+								<span v-if="explain(row.original.id).how === 'Not measured.'">
 									<a href="#not-measured">
 										<UIcon name="i-heroicons-information-circle" class="w-4 h-4 text-gray-600" />
 									</a>
@@ -133,11 +133,11 @@
 						<div v-if="!idsMainIndicators.includes(row.original.id)" class="mb-2 ms-5 text-xs">
 							<li>
 								<span class="font-semibold">Types of software it applies to: </span>
-								<span v-if="indicatorsExplanation[row.original.id].types.length === 2">
+								<span v-if="explain(row.original.id).types?.length === 2">
 									"web" and "non-web"
 								</span>
-								<span v-if="indicatorsExplanation[row.original.id].types.length === 1">
-									"{{ indicatorsExplanation[row.original.id].types[0] }}"
+								<span v-if="explain(row.original.id).types?.length === 1">
+									"{{ explain(row.original.id).types?.[0] }}"
 								</span>
 								<a href="#types">
 									<UIcon name="i-heroicons-information-circle" class="w-4 h-4 text-gray-600" />
@@ -172,13 +172,12 @@
 					<div class="col-11 pe-4">
 						<UAlert
 							v-if="
-								!idsMainIndicators.includes(row.original.id) &&
-								indicatorsExplanation[row.original.id].note != ''
+								!idsMainIndicators.includes(row.original.id) && explain(row.original.id).note != ''
 							"
 							icon="i-heroicons-exclamation-circle"
 							color="warning"
 							variant="soft"
-							:description="indicatorsExplanation[row.original.id].note"
+							:description="explain(row.original.id).note"
 							class="mt-2 mb-2 ms-5 py-3 text-xs"
 						/>
 					</div>
@@ -193,7 +192,22 @@ import { ref, computed } from 'vue';
 import { indicatorsExplanation as explanationData } from './IndicatorsExplanation.js';
 import { useResultStore } from '~~/stores/observatory/evaluation/results';
 import logsSection from './LogsSection.vue';
-const indicatorsExplanation: Record<string, any> = explanationData;
+interface IndicatorExplanation {
+	what?: string;
+	why?: string;
+	how?: string;
+	types?: string[];
+	measured?: boolean;
+	note?: string;
+}
+interface Indicator {
+	id: string;
+	type?: string;
+	name?: string;
+	avatar?: string;
+}
+const indicatorsExplanation: Record<string, IndicatorExplanation> = explanationData;
+const explain = (id: string): IndicatorExplanation => indicatorsExplanation[id] ?? {};
 
 // Obtener el store
 const resultStore = useResultStore();
@@ -202,8 +216,8 @@ const FAIRIndicatorsLogs = computed(() => resultStore.getFAIRIndicatorsLogs);
 
 // Props
 const props = defineProps<{
-	indicators: any[];
-	idsMainIndicators: any[];
+	indicators: Indicator[];
+	idsMainIndicators: string[];
 }>();
 
 const webTypes = ref(['web', 'app', 'api', 'rest', 'suite']);
@@ -219,17 +233,17 @@ const formatIndicatorStyle = (id: string) => {
 	}
 };
 
-const indicatorFullfilled = (indicator: any) => {
+const indicatorFullfilled = (indicator: Indicator) => {
 	const value = FAIRIndicatorsTool.value?.[indicator.id];
 	return value === 1 || value === 1.0 || value === true;
 };
 
-const indicatorLogs = (indicator: any) => {
+const indicatorLogs = (indicator: Indicator) => {
 	return FAIRIndicatorsLogs.value?.[indicator.id] || [];
 };
 
-const metaType = (indicator: any) => {
-	if (webTypes.value.includes(indicator.type)) {
+const metaType = (indicator: Indicator) => {
+	if (webTypes.value.includes(indicator.type ?? '')) {
 		return 'web';
 	} else {
 		return 'non-web';

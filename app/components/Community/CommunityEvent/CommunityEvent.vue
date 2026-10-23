@@ -18,10 +18,11 @@
 import CommunityEventSelector from '@/components/Community/CommunityEvent/CommunityEventSelector.vue';
 import CommunityEventTableContent from '@/components/Community/CommunityEvent/CommunityEventTableContent.vue';
 import CommunityEmpty from '@/components/Community/CommunityEvent/CommunityEmpty.vue';
+import type { EventWithChallenges } from '~~/types/pages-types';
 
 defineProps<{
-	currentEvent: any;
-	events: Array<any>;
+	currentEvent: EventWithChallenges;
+	events: Array<EventWithChallenges>;
 	communityId: string;
 }>();
 </script>

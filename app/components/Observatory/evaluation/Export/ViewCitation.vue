@@ -79,7 +79,7 @@ import { useMetadataStore } from '~~/stores/observatory/evaluation/metadata';
 const metadataStore = useMetadataStore();
 
 const props = defineProps<{
-	citation: any;
+	citation: Record<string, unknown>;
 }>();
 
 const alert = ref({

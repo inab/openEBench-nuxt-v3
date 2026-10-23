@@ -7,6 +7,10 @@ declare module 'next-auth' {
 		orcid?: string;
 		'oeb:roles'?: unknown;
 	}
+	interface Account {
+		orcid?: string;
+		'oeb:roles'?: unknown;
+	}
 	interface Session {
 		accessToken?: string;
 		token?: string;
@@ -23,12 +27,27 @@ declare module 'next-auth/jwt' {
 		accessToken?: string;
 		refreshToken?: string;
 		accessTokenExpires?: number;
-		[key: string]: any;
+		id_token?: string;
+		orcid?: string | null;
+		preferred_username?: string;
+		resource_access?: unknown;
+		'oeb:roles'?: unknown;
+		error?: string;
 	}
 }
 
 // The provider is exposed under `.default` when loaded as CJS from the server bundle
-const Keycloak = ((KeycloakProvider as any).default ?? KeycloakProvider) as typeof KeycloakProvider;
+const providerModule: unknown = KeycloakProvider;
+const Keycloak =
+	typeof providerModule === 'function' &&
+	'default' in providerModule &&
+	typeof providerModule.default === 'function'
+		? providerModule.default
+		: KeycloakProvider;
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+	return typeof value === 'object' && value !== null;
+}
 const runtimeConfig = useRuntimeConfig();
 
 // next-auth >= 4.22 only reads NEXTAUTH_URL to build its URLs (it ignores the host nuxt-auth passes)
@@ -44,9 +63,9 @@ const refreshAccessToken = async (token: JWT) => {
 		};
 		const formBody: string[] = [];
 
-		Object.entries(details).forEach(([key, value]: [string, any]) => {
+		Object.entries(details).forEach(([key, value]) => {
 			const encodedKey = encodeURIComponent(key);
-			const encodedValue = encodeURIComponent(value);
+			const encodedValue = encodeURIComponent(String(value));
 			formBody.push(encodedKey + '=' + encodedValue);
 		});
 
@@ -154,11 +173,11 @@ export default NuxtAuthHandler({
 			if (account && user) {
 				token.accessToken = account.access_token;
 				token.id_token = account.id_token;
-				token.orcid = (account as any).orcid ?? null;
-				token['oeb:roles'] = user['oeb:roles'] || (account as any)['oeb:roles'];
+				token.orcid = account.orcid ?? null;
+				token['oeb:roles'] = user['oeb:roles'] || account['oeb:roles'];
 				token.refreshToken = account.refresh_token;
-				const decodedAccessToken = JSON.parse(atob(account.access_token!.split('.')[1]!));
-				if (decodedAccessToken['oeb:roles']) {
+				const decodedAccessToken: unknown = JSON.parse(atob(account.access_token!.split('.')[1]!));
+				if (isRecord(decodedAccessToken) && decodedAccessToken['oeb:roles']) {
 					token['oeb:roles'] = decodedAccessToken['oeb:roles'];
 				}
 			}

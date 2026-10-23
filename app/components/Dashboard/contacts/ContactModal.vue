@@ -376,10 +376,10 @@ async function fetchContact(id: string): Promise<Contact | null> {
 	}
 }
 
-const fetchUserCommunities = async (token: string): Promise<any[]> => {
+const fetchUserCommunities = async (token: string): Promise<Community[]> => {
 	try {
-		const communitiesResponse = await userStore.fetchCommunities(token);
-		return communitiesResponse.map((community: any) => {
+		const communitiesResponse: Community[] = await userStore.fetchCommunities(token);
+		return communitiesResponse.map((community) => {
 			return {
 				...community,
 				name: `${community._id} - ${community.name}`,
@@ -416,13 +416,13 @@ const fetchAllPrivileges = async (_token: string): Promise<ContactPrivilege[]> =
 	}
 };
 
-function validateRequiredFields(data: any): string[] {
+function validateRequiredFields(data: Record<string, unknown>): string[] {
 	const requiredFields = ['givenName', 'surname', 'email'];
 	const errorMessages: string[] = [];
 	requiredFields.forEach((field) => {
 		if (
-			(typeof data[field] === 'string' && data[field].trim() === '') ||
-			(Array.isArray(data[field]) && data[field].length === 0)
+			(typeof data[field] === 'string' && (data[field] as string).trim() === '') ||
+			(Array.isArray(data[field]) && (data[field] as unknown[]).length === 0)
 		) {
 			errorMessages.push(`${field} cannot be empty`);
 		}

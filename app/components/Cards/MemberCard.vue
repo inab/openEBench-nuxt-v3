@@ -138,7 +138,7 @@ const sortedRoles = computed(() => {
 });
 
 // METHODS
-function getMemberAltText(member: any) {
+function getMemberAltText(member: { name: string }) {
 	return `Photo of ${member.name}`;
 }
 
@@ -151,7 +151,7 @@ function hideTooltip(index: number) {
 	tooltipVisible.value[index] = false;
 }
 
-function navigateToLink(institution: any) {
+function navigateToLink(institution: string) {
 	const institutionInfo = getInstitutionFullName(institution);
 	if (institutionInfo.link) {
 		window.open(institutionInfo.link, '_blank');
@@ -159,14 +159,16 @@ function navigateToLink(institution: any) {
 }
 
 function getInstitutionFullName(acronym: string) {
-	const institution = (props.institutionMapping as Record<string, any>)[acronym];
+	const institution = (props.institutionMapping as Record<string, { name: string; link: string }>)[
+		acronym
+	];
 	if (institution) {
 		return { name: institution.name, link: institution.link };
 	}
 	return { name: acronym, link: '#' };
 }
 
-function toggleHovered(value: any) {
+function toggleHovered(value: boolean) {
 	isHovered.value = value;
 }
 

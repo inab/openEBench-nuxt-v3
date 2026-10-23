@@ -84,16 +84,20 @@ const colors = ['#fab370', '#fab370', '#fab370', '#fab370', '#fab370', '#fab370'
 const colors_l = ['#ed8828', '#ed8828', '#ed8828', '#ed8828', '#ed8828', '#ed8828', '#ed8828'];
 
 // FUNCTIONS
-function map_feat_names(featureKey: any) {
+function map_feat_names(featureKey: string) {
 	return sources.value.map((src) => src.features[featureKey] || 0);
 }
 
 // Build scatter traces
-function build_scatter_traces(scatterData: any) {
+function build_scatter_traces(scatterData: {
+	source: string[];
+	values: number[][];
+	xaxis: string;
+}) {
 	const scatterPlot: Partial<Plotly.PlotData>[] = [];
 
 	for (let index: number = 0; index < scatterData.values.length; ++index) {
-		const arr = scatterData.values[index];
+		const arr = scatterData.values[index] ?? [];
 		const newX: string[] = [];
 		const newY: string[] = [];
 		const newColL: string[] = [];
@@ -139,13 +143,13 @@ function build_scatter_traces(scatterData: any) {
 	return scatterPlot;
 }
 
-function getTraceName(index: any) {
+function getTraceName(index: number) {
 	if (index === 17) return 'All tools';
 	return '';
 }
 
 // Restructure the Barplot data
-function bar_plot_data_restruct(features: any) {
+function bar_plot_data_restruct(features: Record<string, unknown>) {
 	const newValues: [string, unknown][] = [];
 	for (const [key, value] of Object.entries(features)) {
 		newValues.push([key, value]);

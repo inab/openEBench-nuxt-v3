@@ -121,7 +121,11 @@ async function fetchPaperInfo(doi: string): Promise<Paper | null> {
 			return {
 				doi, // Ensure DOI is part of the returned object
 				title: title && title[0],
-				authors: author && author.map((a: any) => `${a.given} ${a.family}`).join(', '),
+				authors:
+					author &&
+					author
+						.map((a: { given?: string; family?: string }) => `${a.given} ${a.family}`)
+						.join(', '),
 				publicationDate: publicationDate || 'Unknown',
 			};
 		} else {

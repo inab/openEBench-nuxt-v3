@@ -258,7 +258,7 @@ onMounted(() => {
 });
 
 // Methods
-const getFromBoxStatic = (param: any) => {
+const getFromBoxStatic = (param: string) => {
 	return boxStatic.value[props.type as keyof typeof boxStatic.value][
 		param as keyof (typeof boxStatic.value)['citation']
 	];
@@ -268,7 +268,7 @@ const cancel = () => {
 	exportStore.cancelRequest();
 };
 
-const toString = (object: any) => {
+const toString = (object: unknown) => {
 	/*
   Transform a JSON object to a base64 string
   */

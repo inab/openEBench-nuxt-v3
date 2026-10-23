@@ -71,8 +71,8 @@ import type { Metric } from '~~/types/challenge_metric';
 import MetricModal from '@/components/Dashboard/metrics/MetricModal.vue';
 
 const props = defineProps<{
-	metricRows: any[];
-	selectedMetrics: any[];
+	metricRows: Metric[];
+	selectedMetrics: Metric[];
 }>();
 
 const emits = defineEmits(['handleSelectedMetrics']);
@@ -89,7 +89,7 @@ const rowSelection = computed<Record<string, boolean>>({
 	get: () => Object.fromEntries(props.selectedMetrics.map((m) => [m._id, true])),
 	set: (value) => {
 		const ids = Object.keys(value).filter((id) => value[id]);
-		const known = new Map<string, any>(
+		const known = new Map<string, Metric>(
 			[...props.selectedMetrics, ...props.metricRows].map((m) => [m._id, m])
 		);
 		emits('handleSelectedMetrics', ids.map((id) => known.get(id)).filter(Boolean));

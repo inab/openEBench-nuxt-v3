@@ -289,7 +289,16 @@ const toggleMenu = ref(false);
 const isMobile = ref(false);
 const route = useRoute();
 
-const logInItems = ref<any[]>([]);
+interface LogInItem {
+	label?: string | null;
+	slot?: string;
+	icon?: string;
+	href?: string;
+	disabled?: boolean;
+	click?: () => void;
+}
+
+const logInItems = ref<LogInItem[]>([]);
 
 const dropdownStates = ref({
 	about: false,

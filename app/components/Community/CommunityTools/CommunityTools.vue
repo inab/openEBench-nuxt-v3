@@ -104,7 +104,7 @@ const filteredRows = computed(() => {
 		return props.tools.slice((page.value - 1) * pageCount.value, page.value * pageCount.value);
 	}
 
-	const filteredSearcher = props.tools.filter((challenge: any) => {
+	const filteredSearcher = props.tools.filter((challenge) => {
 		return Object.values(challenge).some((value) => {
 			return String(value).toLowerCase().includes(search.value.toLowerCase());
 		});

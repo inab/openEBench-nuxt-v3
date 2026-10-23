@@ -30,12 +30,12 @@ const metadataStore = useMetadataStore();
 const props = defineProps<{
 	title: string;
 	field: string;
-	value: any[];
+	value: { id: string; term: { name: string; url: string } }[];
 	increasable: boolean;
 }>();
 
 // Methods
-const removeEntry = (index: any) => {
+const removeEntry = (index: number) => {
 	const payload = {
 		field: props.field,
 		index,

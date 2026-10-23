@@ -146,7 +146,7 @@ const filteredData = computed(() => {
 	if (!props.challenges) return [];
 	if (!search.value) return props.challenges;
 
-	return props.challenges.filter((challenge: any) =>
+	return props.challenges.filter((challenge) =>
 		Object.values(challenge).some((value) =>
 			String(value).toLowerCase().includes(search.value.toLowerCase())
 		)
@@ -174,11 +174,11 @@ function formatClientDate(date?: string) {
 	});
 }
 
-const getCommunityChallengeEditLink = (row: any) => {
+const getCommunityChallengeEditLink = (row: Challenge) => {
 	return `/dashboard/projects_communities/${props.communityId}/events/${props.eventId}/challenges/${row._id}`;
 };
 
-const getCommunityChallengeParticipant = (row: any) => {
+const getCommunityChallengeParticipant = (row: Challenge) => {
 	return `/dashboard/projects_communities/${props.communityId}/events/${props.eventId}/challenges/${row._id}/participant`;
 };
 </script>

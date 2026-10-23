@@ -92,7 +92,7 @@ const metadataStore = useMetadataStore();
 
 // PROPS
 const props = defineProps<{
-	item: any;
+	item: { year: string; title: string; doi: string; pmid: string; pmcid: string };
 	id: number;
 	field: string;
 	index: number;
@@ -100,7 +100,7 @@ const props = defineProps<{
 
 // State and logic
 const title = ref('');
-const year = ref(null);
+const year = ref('');
 const doi = ref('');
 const pmid = ref('');
 const pmcid = ref('');

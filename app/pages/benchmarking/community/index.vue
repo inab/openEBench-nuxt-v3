@@ -96,6 +96,7 @@
 <script setup lang="ts">
 import { watch, computed, defineAsyncComponent } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import type { EventWithChallenges } from '~~/types/pages-types';
 import CommunityDataset from '@/components/Community/CommunityDataset/CommunityDataset.vue';
 import CommunityTools from '@/components/Community/CommunityTools/CommunityTools.vue';
 import CommunityEventSummary from '@/components/Community/CommunityEvent/CommunityEventSummary.vue';
@@ -128,7 +129,7 @@ const { data: community, pending } = await useAsyncData(
 );
 const datasetsObj = communityStore.getDatasets;
 const toolsObj = communityStore.getTools;
-const eventsObj: any[] = communityStore.getEvents;
+const eventsObj: EventWithChallenges[] = communityStore.getEvents;
 
 const communityReferences = communityStore.getCommunityReferences;
 
@@ -136,11 +137,11 @@ const currentEvent = computed(() => {
 	const selectedEvent = communityStore.getCurrentEvent;
 
 	if (!selectedEvent && eventsObj.length > 0) {
-		const firstEvent = eventsObj[0];
+		const firstEvent = eventsObj[0]!;
 		communityStore.setCurrentEvent(firstEvent);
 		return firstEvent;
 	}
-	return selectedEvent;
+	return selectedEvent as unknown as EventWithChallenges;
 });
 
 const eventData = computed(() => communityStore.getCommunityData);
@@ -167,7 +168,7 @@ const tabsItems = computed(() => {
 			slot: 'tools',
 		});
 	}
-	if (eventData.value && (eventData.value as { summary?: any }).summary) {
+	if (eventData.value && (eventData.value as { summary?: unknown }).summary) {
 		items.push({
 			label: 'Summary',
 			icon: 'i-heroicons-squares-2x2-16-solid',

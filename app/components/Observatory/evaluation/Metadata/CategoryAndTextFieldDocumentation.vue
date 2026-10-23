@@ -70,7 +70,7 @@ import { useMetadataStore } from '~~/stores/observatory/evaluation/metadata';
 const metadataStore = useMetadataStore();
 // PROPS
 const props = defineProps<{
-	item: any;
+	item: { type: string; url: string };
 	field: string;
 	id: string;
 	index: number;

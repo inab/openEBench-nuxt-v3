@@ -19,6 +19,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import BoxPlotConverter from '@/utils/BoxPlotConverter.js';
+import type { GraphData, GraphMetric, GraphParticipant } from '~~/types/pages-types';
 
 const isLoadingGraph = ref(true);
 onMounted(async () => {
@@ -28,8 +29,8 @@ onMounted(async () => {
 });
 
 const props = defineProps<{
-	data: any;
-	metrics: any[];
+	data: GraphData;
+	metrics: GraphMetric[];
 }>();
 
 const dataGraph = computed(() => props.data);
@@ -37,7 +38,7 @@ interface PreparedGraph {
 	_id?: string;
 	name?: string;
 	dates?: unknown;
-	dataset_contact_ids?: unknown[];
+	dataset_contact_ids?: unknown;
 	inline_data?: {
 		challenge_participants: Record<string, unknown>[];
 		visualization: Record<string, unknown>;
@@ -47,7 +48,7 @@ interface PreparedGraph {
 }
 
 const preparedData = ref('');
-const type = ref('');
+const type = ref<string | null>('');
 
 console.log('dataGraph: ', dataGraph.value);
 
@@ -100,7 +101,7 @@ function getPreparedData() {
 		// Process challenge_participants data for BarPlot
 		const participants = dataGraph.value.challenge_participants ?? [];
 
-		participants.forEach((participant: any) => {
+		participants.forEach((participant: GraphParticipant) => {
 			const preparedParticipant: Record<string, unknown> = {
 				tool_id: participant.tool_id,
 				metric_value: participant.metric_value,
@@ -117,7 +118,7 @@ function getPreparedData() {
 	} else if (graphType === '2D-plot') {
 		// Process challenge_participants data for ScatterPlot
 		const participants = dataGraph.value?.challenge_participants ?? [];
-		participants.forEach((participant: any) => {
+		participants.forEach((participant: GraphParticipant) => {
 			const preparedParticipant = {
 				tool_id: participant.tool_id,
 				metric_x: participant.metric_x,
@@ -149,8 +150,8 @@ function getPreparedData() {
 		// Process challenge_participants data for BoxPlot
 		const participants = dataGraph.value?.challenge_participants ?? [];
 		const log2Param =
-			dataGraph.value?.visualization.axes_scale &&
-			dataGraph.value?.visualization.axes_scale === '?log2=true'
+			dataGraph.value?.visualization?.axes_scale &&
+			dataGraph.value?.visualization?.axes_scale === '?log2=true'
 				? true
 				: false;
 
@@ -173,7 +174,7 @@ function getPreparedData() {
 		const participantLabel = dataGraph.value.label ?? dataGraph.value.name ?? '';
 		const rawEntries = dataGraph.value.inline_data?.challenge_participants ?? [];
 
-		const radarParticipants = rawEntries.map((entry: any) => ({
+		const radarParticipants = rawEntries.map((entry) => ({
 			label: participantLabel,
 			metric_id: entry.label, // metric id was stored under "label" upstream
 			values: [{ v: entry.value, e: entry.error ?? 0 }],
@@ -182,14 +183,14 @@ function getPreparedData() {
 		const radarMetricIds = [
 			...new Set(
 				rawEntries
-					.map((entry: any) => entry.label)
-					.filter((metricId: any) => metricId != null && metricId !== '')
-					.map((metricId: any) => String(metricId))
+					.map((entry) => entry.label)
+					.filter((metricId) => metricId != null && metricId !== '')
+					.map((metricId) => String(metricId))
 			),
 		];
 
 		const metricsSeries = radarMetricIds.map((metricId) => {
-			const metric = (props.metrics ?? []).find((candidate: any) => {
+			const metric = (props.metrics ?? []).find((candidate) => {
 				const rawId = candidate._metadata?.['level_2:metric_id'] ?? candidate._id;
 				return rawId != null && String(rawId) === metricId;
 			});
@@ -222,14 +223,14 @@ function getPreparedData() {
 	type.value = graphType;
 }
 
-function getMetricsNames(metricX: string, metricY: string) {
+function getMetricsNames(metricX: string | undefined, metricY: string | undefined) {
 	if (!metricX || !metricY || props.metrics.length === 0) {
 		return { metricX, metricY };
 	}
 
 	const metricNames = { metricX, metricY };
 
-	props.metrics.forEach((metric: any) => {
+	props.metrics.forEach((metric) => {
 		const rawId = metric._metadata?.['level_2:metric_id'] ?? metric._id;
 		const id = rawId != null ? String(rawId).toLowerCase() : null;
 

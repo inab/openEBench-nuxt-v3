@@ -87,7 +87,8 @@ const challengeData = ref<Challenge | null>(null);
 
 const isView = computed(() => {
 	return (
-		userPrivileges.value.find((privilege: any) => privilege.event === eventId)?.role === 'Owner'
+		userPrivileges.value.find((privilege) => 'event' in privilege && privilege.event === eventId)
+			?.role === 'Owner'
 	);
 });
 if (userPrivileges.value.length == 0) {

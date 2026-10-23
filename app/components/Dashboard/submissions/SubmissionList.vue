@@ -341,7 +341,7 @@ const filteredSubmissions = computed(() => {
 	);
 });
 
-function removeTag(tag: any) {
+function removeTag(tag: { value: string }) {
 	selectedStatus.value = selectedStatus.value.filter((t) => t.value !== tag.value);
 }
 

@@ -155,7 +155,7 @@ const sortedRows = computed(() => {
 
 const filteredRows = computed(() => {
 	const filtered = search.value
-		? sortedRows.value.filter((metric: any) =>
+		? sortedRows.value.filter((metric) =>
 				Object.values(metric).some((value) =>
 					String(value).toLowerCase().includes(search.value.toLowerCase())
 				)

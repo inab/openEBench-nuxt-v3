@@ -132,15 +132,15 @@ const scientificUrl = `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL}`;
 const keycloakUrl = `${runtimeConfig.public.KEYCLOAK_HOST}`;
 const observatoryUrl = `${runtimeConfig.public.OBSERVATORY_API_URL}`;
 
-const isVreServicesUp = ref<any>(null);
-const isScientificServicesUp = ref<any>(null);
-const isKeycloakServiceUp = ref<any>(null);
-const isObservatoryServiceUp = ref<any>(null);
+const isVreServicesUp = ref<boolean | null>(null);
+const isScientificServicesUp = ref<boolean | null>(null);
+const isKeycloakServiceUp = ref<boolean | null>(null);
+const isObservatoryServiceUp = ref<boolean | null>(null);
 
-const vreLatency = ref<any>(null);
-const scientificLatency = ref<any>(null);
-const keycloakLatency = ref<any>(null);
-const observatoryLatency = ref<any>(null);
+const vreLatency = ref<string | null>(null);
+const scientificLatency = ref<string | null>(null);
+const keycloakLatency = ref<string | null>(null);
+const observatoryLatency = ref<string | null>(null);
 const chartDivVre = ref(null);
 const chartDivApi = ref(null);
 const chartDivAuth = ref(null);
@@ -148,7 +148,7 @@ const chartDivObservatory = ref(null);
 interface ServiceStatus {
 	service: string;
 	status: boolean | null;
-	response: string | number | null | import('vue').Ref<any>;
+	response: string | number | null | import('vue').Ref<string | null>;
 	class: string;
 	page: string;
 }
@@ -157,7 +157,7 @@ const statusGeneral = ref<ServiceStatus[]>([]);
 const isTableLoading = ref(true);
 
 const recomendedTraces = [2000, 1000, 2000, 1000];
-const realTraces = ref<Record<string, any>>({
+const realTraces = ref<Record<string, string | null>>({
 	vre: null,
 	scientific: null,
 	keycloak: null,
@@ -356,7 +356,7 @@ const drawChartVre = () => {
 	};
 
 	const traceRecomended = {
-		x: [recomendedTraces[0]],
+		x: [recomendedTraces[0] ?? null],
 		y: ['VRE'],
 		type: 'bar' as const,
 		name: 'Recomended maximum latency',
@@ -385,7 +385,7 @@ const drawChartApi = () => {
 	};
 
 	const traceRecomended = {
-		x: [recomendedTraces[1]],
+		x: [recomendedTraces[1] ?? null],
 		y: ['API'],
 		type: 'bar' as const,
 		name: 'Recomended maximum latency',
@@ -414,7 +414,7 @@ const drawChartAuth = () => {
 	};
 
 	const traceRecomended = {
-		x: [recomendedTraces[2]],
+		x: [recomendedTraces[2] ?? null],
 		y: ['Auth'],
 		type: 'bar' as const,
 		name: 'Recomended maximum latency',
@@ -443,7 +443,7 @@ const drawChartObservatory = () => {
 	};
 
 	const traceRecomended = {
-		x: [recomendedTraces[3]],
+		x: [recomendedTraces[3] ?? null],
 		y: ['Observatory'],
 		type: 'bar' as const,
 		name: 'Recomended maximum latency',

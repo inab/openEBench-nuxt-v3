@@ -90,9 +90,21 @@ import { ref } from 'vue';
 import CommunityCard from '@/components/Cards/CommunityCard/CommunityCard.vue';
 import BreadcrumbsBar from '@/components/Common/BreadcrumbsBar.vue';
 import { useCommunities } from '~~/stores/communities';
+import type { LinkItem } from '~~/types/pages-types';
+
+interface BenchmarkCommunity {
+	_id: string;
+	acronym: string;
+	name: string;
+	logo: string;
+	links?: LinkItem[];
+	status: string;
+	benchmarkingEvents: unknown[];
+	summary: string;
+}
 
 const communitiesStore = useCommunities();
-const communities: Ref<any> = ref(null);
+const communities = ref<BenchmarkCommunity[] | null>(null);
 const statusRef = ref('pending');
 
 const HEADER_ITEM = [

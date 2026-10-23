@@ -337,8 +337,9 @@
 </template>
 
 <script setup lang="ts">
+import type { ContactOption } from '~~/types/dashboard-types';
 import { computed, ref, watch, onMounted, nextTick } from 'vue';
-import type { Challenge } from '~~/types/challenge';
+import type { Challenge, ChallengeMetrics as ChallengeMetricsType } from '~~/types/challenge';
 import type { CommunityPrivilegeCategories } from '~~/types/communities';
 import '@vuepic/vue-datepicker/dist/main.css';
 import { object, string, boolean, date, safeParse } from 'valibot';
@@ -375,7 +376,7 @@ const localContacts = ref<
 >([]);
 const localMetricsCategories = ref<string[]>([]);
 const eventId = ref(props.eventId);
-const contactsData = ref<string[]>([]);
+const contactsData = ref<ContactOption[]>([]);
 const errors = ref<string[]>([]);
 const oks = ref<string>('');
 const selectedTab = ref('0');
@@ -392,7 +393,7 @@ const rolesObj = ref([
 	{ label: 'Manager', value: 'manager' },
 	{ label: 'Contributor', value: 'contributor' },
 ]);
-const metricData = ref<string[]>([]);
+const metricData = ref<ChallengeMetricsType[]>([]);
 
 const getErrors = computed(() => errors.value.join(', '));
 
@@ -528,7 +529,7 @@ function onAddContact(
 }
 
 const checkEmptyContacts = computed(() => {
-	return localContacts.value.some((contact: any) => contact.id === '');
+	return localContacts.value.some((contact) => contact.id === '');
 });
 
 const checkEmptyReferences = computed(() => {
@@ -557,7 +558,7 @@ function goBack() {
 	);
 }
 
-function validateRequiredFields(data: any): string[] {
+function validateRequiredFields(data: Record<string, unknown>): string[] {
 	const requiredFields = [
 		'_id',
 		'name',
@@ -568,7 +569,7 @@ function validateRequiredFields(data: any): string[] {
 	const errorMessages: string[] = [];
 
 	requiredFields.forEach((field) => {
-		if (typeof data[field] === 'string' && data[field].trim() === '') {
+		if (typeof data[field] === 'string' && (data[field] as string).trim() === '') {
 			errorMessages.push(`${field} cannot be empty`);
 		}
 	});
@@ -745,7 +746,7 @@ async function updateBenchmarkingCommunity() {
 			if (typeof errorResponse.error === 'string') {
 				errors.value.push(errorResponse.error);
 			} else {
-				errors.value = errorResponse.error.map((error: any) => {
+				errors.value = errorResponse.error.map((error: { pointer?: string; message: string }) => {
 					if (error.pointer) {
 						return `${error.message}`;
 					}
@@ -818,7 +819,8 @@ watch(
 		}
 
 		if (newVal && newVal.metrics_categories) {
-			metricData.value = newVal.metrics_categories;
+			// The shared Challenge type declares string[], but the API returns category objects
+			metricData.value = newVal.metrics_categories as unknown as ChallengeMetricsType[];
 		}
 
 		if (newVal && newVal.is_automated) {

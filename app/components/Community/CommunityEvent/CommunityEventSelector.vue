@@ -50,8 +50,8 @@ import { useCommunity } from '~~/stores/community';
 
 // PROPS
 const props = defineProps<{
-	currentEvent: { _id?: string; name?: string; url?: string; challenges?: any[] } | null;
-	events: Array<{ _id: string; name: string; url?: string; challenges?: any[] }>;
+	currentEvent: { _id?: string; name?: string; url?: string; challenges?: unknown[] } | null;
+	events: Array<{ _id: string; name: string; url?: string; challenges?: unknown[] }>;
 	communityId: string;
 }>();
 

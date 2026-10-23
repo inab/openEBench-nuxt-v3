@@ -114,7 +114,18 @@ import * as v from 'valibot';
 import type { FormSubmitEvent } from '#ui/types';
 
 const { status, data } = useAuth();
-const userInfo = ref<any>(null);
+interface UserInfo {
+	picture?: string;
+	given_name?: string;
+	name?: string;
+	orcid?: string;
+	family_name?: string;
+	email?: string;
+	preferred_username?: string;
+	resource_access?: { account?: { roles?: string[] } };
+	'oeb:roles'?: string[];
+}
+const userInfo = ref<UserInfo | null>(null);
 const runtimeConfig = useRuntimeConfig();
 
 const state = reactive<{
@@ -161,16 +172,17 @@ const fetchUserInfo = async () => {
 			);
 
 			if (response.ok) {
-				userInfo.value = await response.json();
-				state.given_name = userInfo.value.given_name;
-				state.username = userInfo.value.name;
-				state.orcid = userInfo.value.orcid;
-				state.surname = userInfo.value.family_name;
-				state.email = userInfo.value.email;
-				state.name = userInfo.value.preferred_username;
-				state.roles = userInfo.value.resource_access?.account?.roles
-					? userInfo.value.resource_access?.account?.roles
-					: userInfo.value['oeb:roles'];
+				const info: UserInfo = await response.json();
+				userInfo.value = info;
+				state.given_name = info.given_name;
+				state.username = info.name;
+				state.orcid = info.orcid;
+				state.surname = info.family_name;
+				state.email = info.email;
+				state.name = info.preferred_username;
+				state.roles = info.resource_access?.account?.roles
+					? info.resource_access?.account?.roles
+					: info['oeb:roles'];
 			} else {
 				console.error(
 					'Error al obtener la información del usuario:',

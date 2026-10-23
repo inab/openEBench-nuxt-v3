@@ -67,12 +67,23 @@ import type { FormSubmitEvent } from '#ui/types';
 
 import demo_scatter from './templates/SCATTERPLOT.json';
 const isLoadingGraphBar = ref(true);
-const preparedScatter = ref<any>({});
+interface ScatterParticipant {
+	tool_id: string;
+	metric_x: number | string | null;
+	stderr_x?: number | string;
+	metric_y: number | string | null;
+	stderr_y?: number | string;
+}
+interface ScatterFormParticipant extends ScatterParticipant {
+	metric_x: string;
+	metric_y: string;
+}
+const preparedScatter = ref('');
 const type: string = '2D-plot';
 const widgetKey = ref(0);
 
 const state = ref({
-	challenge_participants: [] as any[],
+	challenge_participants: [] as ScatterFormParticipant[],
 });
 
 const schema = object({
@@ -83,16 +94,16 @@ getPreparedData();
 function getPreparedData() {
 	const scatter = demo_scatter;
 	const barVisualization = scatter.inline_data.visualization;
-	preparedScatter.value = {
+	const prepared = {
 		_id: scatter._id,
 		dates: scatter.dates,
 		inline_data: {
-			challenge_participants: [],
+			challenge_participants: [] as ScatterParticipant[],
 			visualization: barVisualization,
 		},
 	};
-	preparedScatter.value.inline_data.challenge_participants =
-		scatter.inline_data.challenge_participants.map((participant: any) => {
+	prepared.inline_data.challenge_participants = scatter.inline_data.challenge_participants.map(
+		(participant) => {
 			const preparedParticipant = {
 				tool_id: participant.tool_id,
 				metric_x: participant.metric_x,
@@ -101,12 +112,19 @@ function getPreparedData() {
 				stderr_y: participant.stderr_y,
 			};
 			return preparedParticipant;
-		});
-	state.value.challenge_participants = preparedScatter.value.inline_data.challenge_participants;
-	preparedScatter.value = JSON.stringify(preparedScatter.value);
+		}
+	);
+	state.value.challenge_participants = prepared.inline_data.challenge_participants.map(
+		(participant) => ({
+			...participant,
+			metric_x: String(participant.metric_x ?? ''),
+			metric_y: String(participant.metric_y ?? ''),
+		})
+	);
+	preparedScatter.value = JSON.stringify(prepared);
 }
 
-function regeneratePlot(newData: any) {
+function regeneratePlot(newData: ScatterParticipant[]) {
 	const preparedObj = JSON.parse(preparedScatter.value);
 	if (preparedObj.inline_data) {
 		preparedObj.inline_data.challenge_participants = newData;
@@ -132,8 +150,8 @@ async function onSubmit(_event: FormSubmitEvent<Schema>) {
 
 			return {
 				tool_id: item.tool_id,
-				metric_x: isNaN(itemMetricX) ? null : metricValueX,
-				metric_y: isNaN(itemMetricY) ? null : metricValueY,
+				metric_x: Number.isNaN(Number(itemMetricX)) ? null : metricValueX,
+				metric_y: Number.isNaN(Number(itemMetricY)) ? null : metricValueY,
 				stderr_x: item.stderr_x,
 				stderr_y: item.stderr_y,
 			};

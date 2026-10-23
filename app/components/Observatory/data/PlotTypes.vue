@@ -51,7 +51,7 @@ const config = {
 };
 
 // Methods
-function buildData(typesData: any) {
+function buildData(typesData: Record<string, unknown>) {
 	const typeLabels: Record<string, string> = {
 		cmd: 'Command-line tool',
 		web: 'Web application',

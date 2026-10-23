@@ -43,16 +43,17 @@
 import { ref, computed } from 'vue';
 import CommunityEventClassification from '@/components/Community/CommunityEvent/CommunityEventClassification.vue';
 import CommunityEventTable from '@/components/Community/CommunityEvent//CommunityEventTable.vue';
+import type { ChallengeRow } from '~~/types/pages-types';
 
 defineProps<{
-	event: { _id: string; challenges: any[] };
+	event: { _id: string; challenges?: ChallengeRow[] };
 	communityId: string;
 }>();
 
-const selected = ref<any[]>([]);
-const selectedIds = computed(() => selected.value.map((item: any) => item._id));
+const selected = ref<ChallengeRow[]>([]);
+const selectedIds = computed(() => selected.value.map((item) => item._id));
 
-function handleChangeChallengers(currentSelected: any) {
+function handleChangeChallengers(currentSelected: ChallengeRow[]) {
 	selected.value = currentSelected;
 }
 </script>

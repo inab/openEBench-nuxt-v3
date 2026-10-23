@@ -86,21 +86,22 @@
 
 <script setup lang="ts">
 import pluralize from 'pluralize';
+import type { LinkItem } from '~~/types/pages-types';
 
 const props = defineProps<{
 	_id: string;
 	acronym: string;
 	name: string;
 	logo: string;
-	links: any[] | undefined;
+	links: LinkItem[] | undefined;
 	status: string;
-	benchmarkingEvents: Array<any>;
-	referenceTools: Array<any>;
+	benchmarkingEvents: Array<unknown>;
+	referenceTools: Array<unknown>;
 	summary: string;
 	to: string;
 }>();
 
-const itemsCommunityLinks = (props.links ?? []).filter((item: any) => item.comment !== '@logo');
+const itemsCommunityLinks = (props.links ?? []).filter((item) => item.comment !== '@logo');
 
 const statusClass = computed(() => {
 	const normalizedStatus = props.status.toLowerCase();

@@ -47,7 +47,7 @@ const metadataStore = useMetadataStore();
 const props = defineProps<{
 	title: string;
 	field: string;
-	value: any[];
+	value: { id?: number; term?: string }[];
 	n_cols: string;
 }>();
 
@@ -58,7 +58,7 @@ const clearLink = () => {
 	description.value = [{}];
 };
 
-const closeEntry = (index: any) => {
+const closeEntry = (index: number) => {
 	const payload = {
 		field: props.field,
 		index,

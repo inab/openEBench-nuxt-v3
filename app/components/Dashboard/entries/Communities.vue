@@ -214,7 +214,7 @@ import Multiselect from 'vue-multiselect';
 import type { Community, CommunityMetadata } from '~~/types/communities';
 
 defineProps<{
-	isLoadingData: any;
+	isLoadingData: boolean;
 }>();
 
 const userStore = useUser();
@@ -286,7 +286,7 @@ const filteredData = computed(() => {
 		return communitiesData.value;
 	}
 
-	return communitiesData.value.filter((challenge: any) => {
+	return communitiesData.value.filter((challenge) => {
 		return Object.values(challenge).some((ch) => {
 			if (selectedStatus.value.length > 0) {
 				return selectedStatus.value.some((status) => {
@@ -329,7 +329,7 @@ function removeTag(tagName: StatusOption) {
 	});
 }
 
-function getCommunityEditLink(row: any, isEvent: boolean = false) {
+function getCommunityEditLink(row: { _id: string }, isEvent: boolean = false) {
 	if (isEvent) {
 		return `/dashboard/projects_communities/${row._id}?events=true`;
 	}

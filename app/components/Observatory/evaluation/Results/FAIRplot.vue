@@ -19,7 +19,7 @@ const props = defineProps<{
 	height: number;
 	colorFill: string;
 	toolName: string;
-	indicatorsLabel: Array<any>;
+	indicatorsLabel: string[];
 }>();
 
 // Layout
@@ -104,7 +104,7 @@ const buildTraces = () => {
 		const r = [];
 
 		for (let j = 0; j < theta.length; j++) {
-			r.push(data[i][theta[j]]);
+			r.push(data[i]?.[theta[j] as string]);
 		}
 
 		traces.push({

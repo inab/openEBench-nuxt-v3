@@ -25,7 +25,7 @@ import BreadcrumbsBar from '@/components/Common/BreadcrumbsBar.vue';
 import CommunityEdit from '@/components/Dashboard/entries/CommunityEdit.vue';
 import { useUser } from '~~/stores/user.ts';
 import { privileges } from '~~/constants/privileges';
-import type { Community } from '~~/types/communities';
+import type { CommunityObject } from '~~/types/dashboard-types';
 import type { Event } from '~~/types/events';
 import { decodeDataUrlText } from '@/utils/decodeDataUrlText';
 
@@ -68,7 +68,7 @@ if (userPrivileges.value.length == 0) {
 	userStore.setUserCommunitiesRoles(data.value?.oeb_roles as string[] | undefined);
 }
 
-const communityData = ref<Community | null>(null);
+const communityData = ref<CommunityObject | null>(null);
 
 const communityPrivileges = computed(() => {
 	const isAdmin = userPrivileges.value.filter((privilege) => privilege.role === 'admin');
@@ -143,11 +143,11 @@ const fetchUserCommunitiesEvents = async (
 	try {
 		const communityEventResponse = await userStore.fetchCommunitiesEvents(token, communityId);
 		const data = await communityEventResponse;
-		data.map((item: any) => {
+		data.map((item) => {
 			if (Array.isArray(item.bench_contact)) {
 				return {
 					...item,
-					bench_contact: item.bench_contact.map((contact: any) => {
+					bench_contact: item.bench_contact.map((contact) => {
 						if (typeof contact === 'object' && contact !== null) {
 							return {
 								...contact,

@@ -74,13 +74,14 @@
 <script setup lang="ts">
 import LoaderChartWidgets from '@/components/Widgets/LoaderChartWidgets.vue';
 import { ref, computed } from 'vue';
+import type { GraphData, GraphMetric } from '~~/types/pages-types';
 
 const props = defineProps<{
-	data: any;
-	metrics: any[];
+	data: GraphData[];
+	metrics: GraphMetric[];
 }>();
 
-const formatName = (text: string, type?: string) => {
+const formatName = (text: string | undefined, type?: string) => {
 	if (typeof text === 'string' && text.startsWith('Dataset_participant:3D:2022-12-17_')) {
 		if (type == 'tooltip') {
 			return text.replace('Dataset_participant:', '');

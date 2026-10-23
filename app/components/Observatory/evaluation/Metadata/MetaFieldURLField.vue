@@ -37,12 +37,12 @@ const props = defineProps<{
 	valueType: string;
 	n_cols: string;
 	increasable: boolean;
-	value: any[];
+	value: { id: number; term: string }[];
 	label: string;
 }>();
 
 // Local copy of the value prop
-const localValue = ref<any[]>(JSON.parse(JSON.stringify(props.value)));
+const localValue = ref<{ id: number; term: string }[]>(JSON.parse(JSON.stringify(props.value)));
 
 // Watch for changes in the `value` prop to keep `localValue` in sync
 watch(
@@ -54,7 +54,7 @@ watch(
 );
 
 // Methods
-const removeEntry = (index: any) => {
+const removeEntry = (index: number) => {
 	const payload = {
 		field: props.field,
 		index,
@@ -76,7 +76,8 @@ const updateEntry = ({ index, value }: { index: number; value: string }) => {
 		index,
 		value,
 	};
-	localValue.value[index].term = value; // Update local value
+	const entry = localValue.value[index];
+	if (entry) entry.term = value; // Update local value
 	metadataStore.changeEntry(payload); // Update Vuex store
 };
 </script>

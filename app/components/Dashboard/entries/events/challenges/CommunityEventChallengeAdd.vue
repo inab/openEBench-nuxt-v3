@@ -338,9 +338,11 @@
 </template>
 
 <script setup lang="ts">
+import type { ContactOption } from '~~/types/dashboard-types';
 import { computed, ref, watch, onMounted } from 'vue';
 import { useUser } from '~~/stores/user.ts';
 import type { CommunityPrivilegeCategories } from '~~/types/communities';
+import type { Challenge } from '~~/types/challenge';
 import { VueDatePicker } from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import { object, string, array, safeParse, boolean, date } from 'valibot';
@@ -356,7 +358,7 @@ const props = defineProps<{
 	eventId: string;
 	isView: boolean;
 	challengePrivileges: CommunityPrivilegeCategories;
-	challengeObj?: any;
+	challengeObj?: Challenge;
 	isLoadingData?: boolean;
 }>();
 
@@ -366,7 +368,7 @@ const isDialogOpened = ref(false);
 const dialogText = ref('');
 const eventId = computed(() => props.eventId);
 const communityId = computed(() => props.communityId);
-const contactsData = ref<string[]>([]);
+const contactsData = ref<ContactOption[]>([]);
 const localContacts = ref<
 	{
 		id: string;
@@ -494,7 +496,7 @@ function onAddContact(
 }
 
 const checkEmptyContacts = computed(() => {
-	return localContacts.value.some((contact: any) => contact.id === '');
+	return localContacts.value.some((contact) => contact.id === '');
 });
 
 const checkEmptyReferences = computed(() => {
@@ -547,7 +549,7 @@ async function onSubmitChallenge(_event: FormSubmitEvent<Schema>) {
 
 const getErrors = computed(() => errors.value.join(', '));
 
-function validateRequiredFields(data: any): string[] {
+function validateRequiredFields(data: Record<string, unknown>): string[] {
 	const requiredFields = [
 		'_id',
 		'_schema',
@@ -560,7 +562,7 @@ function validateRequiredFields(data: any): string[] {
 	const errorMessages: string[] = [];
 
 	requiredFields.forEach((field) => {
-		if (typeof data[field] === 'string' && data[field].trim() === '') {
+		if (typeof data[field] === 'string' && (data[field] as string).trim() === '') {
 			errorMessages.push(`${field} cannot be empty`);
 		}
 	});
@@ -637,12 +639,7 @@ async function createChallenge() {
 			let errorResponse = JSON.parse(responseData.body);
 			errorResponse = errorResponse.error || [];
 			if (errorResponse.error) {
-				errors.value = errorResponse.error.map((error: any) => {
-					if (error) {
-						return `${error}`;
-					}
-					return error.message;
-				});
+				errors.value = errorResponse.error.map((error: unknown) => `${error}`);
 			} else if (errorResponse.message) {
 				errors.value = [errorResponse.message];
 			} else {
@@ -720,7 +717,7 @@ watch(
 		if (newVal && newVal.challenge_contact_ids) {
 			localContacts.value =
 				newVal.challenge_contact_ids.map((contact: string) => {
-					return contact.replace(/\./g, ' ');
+					return { id: contact.replace(/\./g, ' '), role: rolesObj.value[0]?.value ?? '' };
 				}) || [];
 		}
 		if (newVal && newVal.metrics_categories) {
@@ -728,7 +725,7 @@ watch(
 		}
 
 		if (newVal && newVal._id) {
-			state.value._id = newVal._id;
+			state.value._id = String(newVal._id);
 		}
 	},
 	{ immediate: true }

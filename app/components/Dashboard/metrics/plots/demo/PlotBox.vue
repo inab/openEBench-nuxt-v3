@@ -113,39 +113,74 @@ import type { FormSubmitEvent } from '#ui/types';
 import demo_bar from './templates/BOXPLOT.json';
 const isLoadingGraphBar = ref(true);
 
-const preparedBar = ref<any>({});
-const initialValues = ref<any>({});
+interface BoxParticipant {
+	name: string;
+	metric_id: string;
+	q1: number;
+	mean: number;
+	median: number;
+	q3: number;
+	lowerfence: number;
+	upperfence: number;
+}
+interface BoxFormParticipant {
+	name: string;
+	metric_id: string;
+	q1: string;
+	mean: string;
+	median: string;
+	q3: string;
+	lowerfence: string;
+	upperfence: string;
+}
+interface BoxPlotData {
+	inline_data?: { challenge_participants: BoxParticipant[] };
+}
+
+const preparedBar = ref('');
+const initialValues = ref<BoxParticipant[]>([]);
 const type = ref<string>('box-plot');
 const hasDataError = ref(false);
 const hasDataErrorMessage = ref('');
 const widgetKey = ref(0);
 
 const state = ref({
-	challenge_participants: [] as any[],
+	challenge_participants: [] as BoxFormParticipant[],
 });
 
 const schema = object({
 	challenge_participants: array(object({})),
 });
 
+function toFormParticipant(participant: BoxParticipant): BoxFormParticipant {
+	return {
+		name: participant.name,
+		metric_id: participant.metric_id,
+		q1: String(participant.q1),
+		mean: String(participant.mean),
+		median: String(participant.median),
+		q3: String(participant.q3),
+		lowerfence: String(participant.lowerfence),
+		upperfence: String(participant.upperfence),
+	};
+}
+
 getPreparedData();
 function getPreparedData() {
-	const bar: Record<string, any> = demo_bar;
+	const bar = demo_bar;
 	const barVisualization = bar.inline_data.visualization;
-	preparedBar.value = {
+	const prepared = {
 		_id: bar._id,
-		name: bar.name,
 		dates: bar.dates,
 		inline_data: {
-			challenge_participants: [],
+			challenge_participants: [] as BoxParticipant[],
 			visualization: {
-				metric: barVisualization.metric,
 				type: barVisualization.type,
 			},
 		},
 	};
-	preparedBar.value.inline_data.challenge_participants = bar.inline_data.challenge_participants.map(
-		(participant: any) => {
+	prepared.inline_data.challenge_participants = bar.inline_data.challenge_participants.map(
+		(participant) => {
 			const preparedParticipant = {
 				name: participant.name,
 				metric_id: participant.metric_id,
@@ -160,26 +195,24 @@ function getPreparedData() {
 		}
 	);
 
-	initialValues.value = JSON.parse(
-		JSON.stringify(preparedBar.value.inline_data.challenge_participants)
-	);
-	state.value.challenge_participants = preparedBar.value.inline_data.challenge_participants;
-	preparedBar.value = JSON.stringify(preparedBar.value);
+	initialValues.value = JSON.parse(JSON.stringify(prepared.inline_data.challenge_participants));
+	state.value.challenge_participants =
+		prepared.inline_data.challenge_participants.map(toFormParticipant);
+	preparedBar.value = JSON.stringify(prepared);
 }
 
-function recalculateMedians(params: any) {
-	const preparedObj = JSON.parse(preparedBar.value);
+function recalculateMedians(params: Pick<BoxParticipant, 'name' | 'q1' | 'q3'>[]) {
+	const preparedObj: BoxPlotData = JSON.parse(preparedBar.value);
 	if (preparedObj.inline_data) {
 		const initialValuesMap = Object.fromEntries(
-			initialValues.value.map((item: any) => [item.metric_id, item])
+			initialValues.value.map((item) => [item.metric_id, item])
 		);
 
-		const preparedObj = JSON.parse(preparedBar.value);
-
 		preparedObj.inline_data.challenge_participants =
-			preparedObj.inline_data.challenge_participants.map((item: any) => {
-				const paramItem = params.find((param: any) => param.name === item.name);
+			preparedObj.inline_data.challenge_participants.map((item) => {
+				const paramItem = params.find((param) => param.name === item.name);
 				const initialItem = initialValuesMap[item.metric_id];
+				if (!paramItem || !initialItem) return item;
 
 				const { q1: oldQ1, q3: oldQ3, mean: oldMean, median: oldMedian } = initialItem;
 
@@ -205,7 +238,8 @@ function recalculateMedians(params: any) {
 			});
 
 		preparedBar.value = JSON.stringify(preparedObj);
-		state.value.challenge_participants = preparedObj.inline_data.challenge_participants;
+		state.value.challenge_participants =
+			preparedObj.inline_data.challenge_participants.map(toFormParticipant);
 		widgetKey.value++;
 	}
 }
@@ -218,36 +252,22 @@ async function onSubmit(_event: FormSubmitEvent<Schema>) {
 	hasDataErrorMessage.value = '';
 
 	if (result.success) {
-		const data = state.value.challenge_participants.map((item) => {
-			if (!item.q1 || !item.q3 || isNaN(item.q1) || isNaN(item.q3)) {
+		const data: Pick<BoxParticipant, 'name' | 'q1' | 'q3'>[] = [];
+		for (const item of state.value.challenge_participants) {
+			const q1 = parseFloat(item.q1.replace(',', '.'));
+			const q3 = parseFloat(item.q3.replace(',', '.'));
+			if (!item.q1 || !item.q3 || Number.isNaN(Number(item.q1)) || Number.isNaN(Number(item.q3))) {
 				hasDataError.value = true;
 				hasDataErrorMessage.value = 'Q1 and Q3 values are required';
-				return;
-			} else if (item.q1 > item.q3) {
+				continue;
+			} else if (Number(item.q1) > Number(item.q3)) {
 				hasDataError.value = true;
 				hasDataErrorMessage.value = 'Q1 value should be less than Q3 value';
-				return;
+				continue;
 			}
 
-			const metricValueQ1String = typeof item.q1 === 'string' ? item.q1 : String(item.q1 || '');
-			const itemMetricQ1 = metricValueQ1String.replace(',', '.');
-			const metricValueQ1 = parseFloat(itemMetricQ1);
-
-			const metricValueQ3String = typeof item.q3 === 'string' ? item.q3 : String(item.q3 || '');
-			const itemMetricQ3 = metricValueQ3String.replace(',', '.');
-			const metricValueQ3 = parseFloat(itemMetricQ3);
-
-			return {
-				name: item.name,
-				metric_id: item.metric_id,
-				q1: isNaN(itemMetricQ1) ? null : metricValueQ1,
-				mean: item.mean,
-				median: item.median,
-				q3: isNaN(itemMetricQ3) ? null : metricValueQ3,
-				lowerfence: item.lowerfence,
-				upperfence: item.upperfence,
-			};
-		});
+			data.push({ name: item.name, q1, q3 });
+		}
 
 		if (hasDataError.value) {
 			return;

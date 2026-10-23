@@ -69,6 +69,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import type { EventWithChallenges } from '~~/types/pages-types';
 import CommunityInfo from '@/components/Community/CommunityInfo.vue';
 import CommunityEvent from '@/components/Community/CommunityEvent/CommunityEvent.vue';
 import CommunityDataset from '@/components/Community/CommunityDataset/CommunityDataset.vue';
@@ -93,9 +94,11 @@ const { data: community, pending } = await useAsyncData(`project-community-${com
 const summaryObj = communityStore.getCommunityData;
 const datasetsObj = communityStore.getDatasets;
 const toolsObj = communityStore.getTools;
-const eventsObj: any[] = communityStore.getEvents;
+const eventsObj: EventWithChallenges[] = communityStore.getEvents;
 const communityReferences = communityStore.getCommunityReferences;
-const currentEvent = computed(() => communityStore.getCurrentEvent);
+const currentEvent = computed(
+	() => communityStore.getCurrentEvent as unknown as EventWithChallenges
+);
 const eventData = computed(() => communityStore.getCommunityData);
 
 const tabsItems = [

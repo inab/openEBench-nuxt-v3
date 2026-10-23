@@ -15,7 +15,7 @@ import ClassificationTable from '@/components/Community/CommunityEvent/Community
 
 defineProps<{
 	id: string;
-	filterArray: Array<any>;
+	filterArray: Array<string>;
 	debounce?: {
 		type: number;
 		required: false;

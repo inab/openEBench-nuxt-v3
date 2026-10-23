@@ -34,7 +34,7 @@ const props = defineProps<{
 }>();
 
 // Continuar con los metodos addEntry y removeEntry
-const addEntry = (addedValue: any) => {
+const addEntry = (addedValue: unknown) => {
 	// addedvalue is the value of the input field, which is always empty
 	// sometimes it is an object, sometimes it is an array
 	const payload = {

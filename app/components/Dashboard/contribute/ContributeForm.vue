@@ -320,10 +320,11 @@ async function fetchUserCommunitiesEvents(communityId: string) {
 			}
 		);
 
-		let data = await response.json();
-		data = data.filter((event: any) => event.community_id === communityId);
+		const data: { _id: string; name: string; community_id: string }[] = (
+			await response.json()
+		).filter((event: { community_id: string }) => event.community_id === communityId);
 
-		eventsList.value = data.map((item: any) => ({
+		eventsList.value = data.map((item) => ({
 			label: `${item._id} - ${item.name}`,
 			value: item._id,
 		}));
@@ -389,7 +390,7 @@ async function onSubmitContribute() {
 	} else if (description.value === '') {
 		errors.value.push('Message details cannot be empty');
 	} else {
-		const body: Record<string, any> = {
+		const body: Record<string, unknown> = {
 			name: state.value.userName,
 			email: state.value.userEmail,
 			requestType: state.value.requestType,

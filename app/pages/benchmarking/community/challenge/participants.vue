@@ -49,6 +49,18 @@ import noDataAvailable from '@/layouts/noDataAvailableCard.vue';
 import CustomTabs from '@/components/Widgets/CustomTabs.vue';
 import BreadcrumbsBar from '@/components/Common/BreadcrumbsBar.vue';
 import { useCommunity } from '~~/stores/community';
+import type {
+	ChallengeApiResponse,
+	ChallengeDataset,
+	ChallengeInfo,
+	ChallengeParticipant,
+	EventWithChallenges,
+	GraphMetric,
+	InlineData,
+	MetricsTable,
+	ParticipantAssessment,
+	ParticipantRadarItem,
+} from '~~/types/pages-types';
 
 const METRIC_ID_KEY = 'level_2:metric_id';
 
@@ -56,34 +68,34 @@ const route = useRoute();
 const challengeId = route.params.id;
 const communityStore = useCommunity();
 const communityId: string = route.params.community as string;
-const eventsObj: any[] = communityStore.getEvents;
+const eventsObj: EventWithChallenges[] = communityStore.getEvents;
 
-const datasets = ref<any[]>([]);
-const participants = ref<any[]>([]);
-const metrics = ref<any[]>([]);
-const challenge: any = ref(null);
+const datasets = ref<ChallengeDataset[]>([]);
+const participants = ref<ChallengeParticipant[]>([]);
+const metrics = ref<GraphMetric[]>([]);
+const challenge = ref<ChallengeInfo>({ _id: '', acronym: '', name: '', challenge_label: '' });
 
 const selectedParticipant = ref('');
 
-const itemSelected = ref<any>(null);
+const itemSelected = ref<ParticipantRadarItem | null>(null);
 
-let itemObj: Record<string, any> = {
-	data: {
-		_id: '',
-		name: '',
-		dates: '',
-		dataset_contact_ids: '',
-		inline_data: {
-			challenge_participants: [],
-			visualization: {},
-		},
+let itemObj: ParticipantRadarItem = {
+	_id: '',
+	name: '',
+	key: '',
+	label: '',
+	dates: '',
+	dataset_contact_ids: '',
+	inline_data: {
+		challenge_participants: [],
+		visualization: {},
 	},
 };
 
-const itemsObjList: Record<string, any>[] = [];
+const itemsObjList: ParticipantRadarItem[] = [];
 
-await challengeAPI(challengeId).then((response: any) => {
-	const challengeObj = new ChallengeObj(challengeId, response.data);
+await challengeAPI(challengeId).then((response) => {
+	const challengeObj = new ChallengeObj(challengeId, (response as ChallengeApiResponse).data);
 	challengeObj.formatData();
 	challenge.value = challengeObj.getChallenge();
 	metrics.value = challengeObj.getMetrics();
@@ -92,9 +104,9 @@ await challengeAPI(challengeId).then((response: any) => {
 	participants.value = Object.values(participants.value);
 
 	if (participants.value.length > 0) {
-		const charData = participants.value[0].assessments?.[0]?.dates ?? null;
+		const charData = participants.value[0]!.assessments?.[0]?.dates ?? null;
 
-		for (const [_key, value] of Object.entries(participants.value) as Array<[string, any]>) {
+		for (const [_key, value] of Object.entries(participants.value)) {
 			itemObj = {
 				_id: value._id,
 				key: value._id,
@@ -111,7 +123,7 @@ await challengeAPI(challengeId).then((response: any) => {
 					},
 				},
 			};
-			value.assessments.forEach((assessment: any) => {
+			value.assessments.forEach((assessment: ParticipantAssessment) => {
 				if (!assessment.datalink?.inline_data) {
 					return;
 				}
@@ -126,75 +138,72 @@ await challengeAPI(challengeId).then((response: any) => {
 			itemsObjList.push(itemObj);
 		}
 
-		itemSelected.value = itemsObjList[0];
+		itemSelected.value = itemsObjList[0] ?? null;
 	}
 });
 
-const metricsTable: {
-	participants: any[];
-	metrics: any[];
-	dataMatrix: any[][];
-} = getMetricsTable();
+const metricsTable: MetricsTable = getMetricsTable();
 
 if (metricsTable.participants.length > 0) {
-	selectedParticipant.value = metricsTable.participants[0]._id;
+	selectedParticipant.value = metricsTable.participants[0]!._id;
 }
 
 function getMetricsTable() {
 	// Gather the metrics
-	const metricsIdsDict: Record<string, { metric: any; participants: Record<string, any> }> = {};
+	const metricsIdsDict: Record<
+		string,
+		{ metric: GraphMetric; participants: Record<string, InlineData> }
+	> = {};
 	for (const [_key, participant] of Object.entries(participants.value)) {
-		participant.assessments.forEach((assessment: any) => {
-			if (
-				typeof assessment.depends_on.metrics_id !== 'string' &&
-				!(assessment.depends_on.metrics_id instanceof String)
-			) {
+		participant.assessments.forEach((assessment) => {
+			const rawMetricsId = assessment.depends_on.metrics_id;
+			if (typeof rawMetricsId !== 'string' && !(rawMetricsId instanceof String)) {
 				return;
 			}
+			const metricsId = String(rawMetricsId);
 
 			// This metric value is unavailable or hidden for some reason
-			if (!assessment.datalink.inline_data || assessment.datalink.inline_data.hide) {
+			const inlineData = assessment.datalink?.inline_data;
+			if (!inlineData || inlineData.hide) {
 				return;
 			}
 
-			if (!(assessment.depends_on.metrics_id in metricsIdsDict)) {
-				metricsIdsDict[assessment.depends_on.metrics_id] = {
-					metric: {},
+			if (!(metricsId in metricsIdsDict)) {
+				metricsIdsDict[metricsId] = {
+					metric: { _id: metricsId },
 					participants: {},
 				};
 			}
-			metricsIdsDict[assessment.depends_on.metrics_id]!.participants[participant._id] =
-				assessment.datalink.inline_data;
+			metricsIdsDict[metricsId]!.participants[participant._id] = inlineData;
 		});
 	}
 
 	for (const [_key, participant] of Object.entries(participants.value)) {
-		participant.assessments.forEach((assessment: any) => {
-			if (
-				typeof assessment.depends_on.metrics_id !== 'string' &&
-				!(assessment.depends_on.metrics_id instanceof String)
-			) {
+		participant.assessments.forEach((assessment) => {
+			const rawMetricsId = assessment.depends_on.metrics_id;
+			if (typeof rawMetricsId !== 'string' && !(rawMetricsId instanceof String)) {
 				return;
 			}
+			const metricsId = String(rawMetricsId);
 
 			// This metric value is unavailable or hidden for some reason
-			if (!assessment.datalink.inline_data || assessment.datalink.inline_data.hide) {
+			const inlineData = assessment.datalink?.inline_data;
+			if (!inlineData || inlineData.hide) {
 				return;
 			}
 
-			if (!(assessment.depends_on.metrics_id in metricsIdsDict)) {
-				metricsIdsDict[assessment.depends_on.metrics_id] = {
-					metric: {},
+			if (!(metricsId in metricsIdsDict)) {
+				metricsIdsDict[metricsId] = {
+					metric: { _id: metricsId },
 					participants: {},
 				};
 			}
-			metricsIdsDict[assessment.depends_on.metrics_id]!.participants[participant._id] =
-				assessment.datalink.inline_data;
+			metricsIdsDict[metricsId]!.participants[participant._id] = inlineData;
 		});
 	}
 
 	// And their metadata
-	metrics.value.forEach((metric: any) => {
+	metrics.value.forEach((metric) => {
 		if (metric._id in metricsIdsDict) {
 			metricsIdsDict[metric._id]!.metric = metric;
 		}
@@ -202,8 +211,8 @@ function getMetricsTable() {
 
 	const sortedMetricsIds = Object.keys(metricsIdsDict).sort();
 
-	const dataMatrix = participants.value.map((participant: any) => {
-		return sortedMetricsIds.map((metricsId: any) => {
+	const dataMatrix = participants.value.map((participant) => {
+		return sortedMetricsIds.map((metricsId) => {
 			if (
 				!(metricsId in metricsIdsDict) ||
 				!(participant._id in metricsIdsDict[metricsId]!.participants)
@@ -242,7 +251,7 @@ const currentEvent = computed(() => {
 		communityStore.setCurrentEvent(firstEvent);
 		return firstEvent;
 	}
-	return selectedEvent;
+	return selectedEvent as unknown as EventWithChallenges;
 });
 
 const fromProjects = computed(() => route.query.from === 'projects');

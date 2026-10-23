@@ -427,6 +427,7 @@ import {
 } from 'ckeditor5';
 import { Ckeditor } from '@ckeditor/ckeditor5-vue';
 import 'ckeditor5/ckeditor5.css';
+import type { CommunityRequestBody, ContactOption } from '~~/types/dashboard-types';
 
 const runtimeConfig = useRuntimeConfig();
 const userStore = useUser();
@@ -463,7 +464,7 @@ const localContacts = ref<
 		role: string;
 	}[]
 >([]);
-const contactsData = ref<string[]>([]);
+const contactsData = ref<ContactOption[]>([]);
 const turndownService = new TurndownService();
 const state = ref({
 	_id: '',
@@ -607,12 +608,12 @@ const checkEmptyKeywords = computed(() => {
 	return localKeywords.value.some((keyword: string) => keyword === '');
 });
 
-function validateRequiredFields(data: any): string[] {
+function validateRequiredFields(data: Record<string, unknown>): string[] {
 	const requiredFields = ['_id', '_schema', 'acronym', 'name', 'status', 'community_contact_ids'];
 	const errorMessages: string[] = [];
 
 	requiredFields.forEach((field) => {
-		if (typeof data[field] === 'string' && data[field].trim() === '') {
+		if (typeof data[field] === 'string' && (data[field] as string).trim() === '') {
 			errorMessages.push(`${field} cannot be empty`);
 		}
 	});
@@ -672,7 +673,7 @@ async function createCommunity() {
 
 	const markdownDescription = turndownService.turndown(state.value.description);
 
-	const body: Record<string, any> = {
+	const body: CommunityRequestBody = {
 		_id: state.value._id,
 		_schema: state.value._schema,
 		name: state.value.name,
@@ -769,7 +770,7 @@ async function createCommunity() {
 			} else if (responseData.error) {
 				errors.value = [responseData.error];
 			} else {
-				errors.value = data.error.map((error: any) => {
+				errors.value = data.error.map((error: { pointer?: string; message: string }) => {
 					if (error.pointer) {
 						return `${error.message}`;
 					}

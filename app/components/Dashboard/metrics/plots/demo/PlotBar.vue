@@ -60,12 +60,20 @@ import type { FormSubmitEvent } from '#ui/types';
 import demo_bar from './templates/BARPLOT.json';
 const isLoadingGraphBar = ref(true);
 
-const preparedBar = ref<any>({});
+interface BarParticipant {
+	tool_id: string;
+	metric_value: number | string | null;
+	stderr?: number | string;
+}
+interface BarFormParticipant extends BarParticipant {
+	metric_value: string;
+}
+const preparedBar = ref('');
 const type = ref<string>('bar-plot');
 const widgetKey = ref(0);
 
 const state = ref({
-	challenge_participants: [] as any[],
+	challenge_participants: [] as BarFormParticipant[],
 });
 
 const schema = object({
@@ -76,20 +84,20 @@ getPreparedData();
 function getPreparedData() {
 	const bar = demo_bar;
 	const barVisualization = bar.inline_data.visualization;
-	preparedBar.value = {
+	const prepared = {
 		_id: bar._id,
 		name: bar.name,
 		dates: bar.dates,
 		inline_data: {
-			challenge_participants: [],
+			challenge_participants: [] as BarParticipant[],
 			visualization: {
 				metric: barVisualization.metric,
 				type: barVisualization.type,
 			},
 		},
 	};
-	preparedBar.value.inline_data.challenge_participants = bar.inline_data.challenge_participants.map(
-		(participant: any) => {
+	prepared.inline_data.challenge_participants = bar.inline_data.challenge_participants.map(
+		(participant) => {
 			const preparedParticipant = {
 				tool_id: participant.tool_id,
 				metric_value: participant.metric_value,
@@ -98,11 +106,13 @@ function getPreparedData() {
 			return preparedParticipant;
 		}
 	);
-	state.value.challenge_participants = preparedBar.value.inline_data.challenge_participants;
-	preparedBar.value = JSON.stringify(preparedBar.value);
+	state.value.challenge_participants = prepared.inline_data.challenge_participants.map(
+		(participant) => ({ ...participant, metric_value: String(participant.metric_value ?? '') })
+	);
+	preparedBar.value = JSON.stringify(prepared);
 }
 
-function regeneratePlot(newData: any) {
+function regeneratePlot(newData: BarParticipant[]) {
 	const preparedObj = JSON.parse(preparedBar.value);
 	if (preparedObj.inline_data) {
 		preparedObj.inline_data.challenge_participants = newData;

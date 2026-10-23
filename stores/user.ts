@@ -14,6 +14,67 @@ interface CommunityEvents {
 	communityEvents: Event[];
 }
 
+interface ContactListItem {
+	id: string;
+	name: string;
+}
+
+interface ContactApiRecord {
+	_id: string;
+	givenName: string;
+	surname: string;
+}
+
+interface CommunityLink {
+	comment?: string;
+	label?: string;
+	uri?: string;
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+	return typeof value === 'object' && value !== null;
+}
+
+function isContactApiRecord(value: unknown): value is ContactApiRecord {
+	return (
+		isRecord(value) &&
+		typeof value._id === 'string' &&
+		typeof value.givenName === 'string' &&
+		typeof value.surname === 'string'
+	);
+}
+
+function isCommunityLink(value: unknown): value is CommunityLink {
+	return (
+		isRecord(value) &&
+		(value.comment === undefined || typeof value.comment === 'string') &&
+		(value.label === undefined || typeof value.label === 'string') &&
+		(value.uri === undefined || typeof value.uri === 'string')
+	);
+}
+
+function isEvent(value: unknown): value is Event {
+	return (
+		isRecord(value) &&
+		typeof value._id === 'number' &&
+		typeof value.community_id === 'string' &&
+		(value.bench_contact_ids === undefined ||
+			(Array.isArray(value.bench_contact_ids) &&
+				value.bench_contact_ids.every((contact) => typeof contact === 'string')))
+	);
+}
+
+function isChallenge(value: unknown): value is Challenge {
+	return (
+		isRecord(value) &&
+		typeof value._id === 'number' &&
+		typeof value.benchmarking_event_id === 'string' &&
+		(value.challenge_contact_ids === undefined ||
+			(Array.isArray(value.challenge_contact_ids) &&
+				value.challenge_contact_ids.every((contact) => typeof contact === 'string')))
+	);
+}
+
 export const useUser = defineStore('user', {
 	state: () => ({
 		userInfo: {} as object,
@@ -25,7 +86,7 @@ export const useUser = defineStore('user', {
 			communityEvents: [],
 		} as CommunityEvents,
 		userCommunitiesChallenges: [] as Challenge[],
-		contactsList: [] as any[],
+		contactsList: [] as ContactListItem[],
 	}),
 
 	getters: {
@@ -123,15 +184,15 @@ export const useUser = defineStore('user', {
 					},
 				}
 			);
-			const data = await response.json();
+			const data: unknown = await response.json();
 			console.log('data: ', data);
 
-			if (!data) {
+			if (!Array.isArray(data)) {
 				return [];
 			}
-			return data.map((d: any) => ({
-				id: d._id,
-				name: d.givenName + ' ' + d.surname,
+			return data.filter(isContactApiRecord).map((contact) => ({
+				id: contact._id,
+				name: `${contact.givenName} ${contact.surname}`,
 			}));
 		},
 
@@ -148,11 +209,13 @@ export const useUser = defineStore('user', {
 				}
 			);
 
-			let data = await response.json();
-			if (!data) {
+			const payload: unknown = await response.json();
+			if (!Array.isArray(payload)) {
 				return [];
 			}
-			data = data.filter((event: any) => event.community_id === community);
+			let data = payload.filter(
+				(event: unknown): event is Event => isEvent(event) && event.community_id === community
+			);
 			data = this.formatCommunityEventData(data);
 			data = this.setCommunityEventPrivileges(data);
 			const eventData = {
@@ -176,8 +239,14 @@ export const useUser = defineStore('user', {
 				}
 			);
 
-			let data = await response.json();
-			data = data.filter((challenge: any) => challenge.benchmarking_event_id === event);
+			const payload: unknown = await response.json();
+			if (!Array.isArray(payload)) {
+				return [];
+			}
+			let data = payload.filter(
+				(challenge: unknown): challenge is Challenge =>
+					isChallenge(challenge) && challenge.benchmarking_event_id === event
+			);
 			data = this.formatCommunityChallengeData(data);
 			data = this.setCommunityChallengePrivileges(data);
 			const challengeData = {
@@ -191,10 +260,13 @@ export const useUser = defineStore('user', {
 			const runtimeConfig = useRuntimeConfig();
 			return data.map((community: Community) => {
 				const links = community.links ?? [];
+				const linkEntries: unknown = links;
 				const logo =
-					Array.isArray(links) && links.length > 0
-						? (links as any[]).find((link) => link.comment === '@logo' || link.label === 'Logo')
-								?.uri ||
+					Array.isArray(linkEntries) && linkEntries.length > 0
+						? linkEntries.find(
+								(link: unknown): link is CommunityLink =>
+									isCommunityLink(link) && (link.comment === '@logo' || link.label === 'Logo')
+							)?.uri ||
 							'https://raw.githubusercontent.com/inab/openEBench-nuxt/refs/heads/master/static/OEB-minimal-logo-blue.svg'
 						: 'https://raw.githubusercontent.com/inab/openEBench-nuxt/refs/heads/master/static/OEB-minimal-logo-blue.svg';
 				return {

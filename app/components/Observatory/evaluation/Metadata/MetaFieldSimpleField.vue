@@ -39,12 +39,12 @@ const metadataStore = useMetadataStore();
 // PROPS
 const props = withDefaults(
 	defineProps<{
-		title: any; // Cambié `Array` por `any` ya que `item` parece ser un objeto
+		title: string;
 		n_cols: string;
 		field: string;
 		valueType: string;
 		label?: string;
-		value: any;
+		value: string[];
 		increasable?: boolean;
 	}>(),
 	{
@@ -62,7 +62,7 @@ const addEntry = () => {
 	metadataStore.addEntry(payload);
 };
 
-const removeEntry = (index: any) => {
+const removeEntry = (index: number) => {
 	const payload = {
 		field: props.field,
 		index,

@@ -37,7 +37,7 @@ const props = defineProps<{
 	title: string;
 	n_cols: string;
 	field: string;
-	value: any[];
+	value: { id: string; term: { type: string; url: string } }[];
 	increasable?: boolean;
 }>();
 
@@ -51,7 +51,7 @@ const addEntry = () => {
 	metadataStore.addEntry(payload);
 };
 
-const removeEntry = (index: any) => {
+const removeEntry = (index: number) => {
 	const payload = {
 		field: props.field,
 		index,
