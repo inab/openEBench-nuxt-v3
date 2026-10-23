@@ -88,11 +88,10 @@ The environment-specific values (URLs, Keycloak realm...) are `ARG`/`ENV` entrie
 [docker-compose.devci.yml](docker-compose.devci.yml) runs the dev server in a container with the repository mounted at `/app` (so edits are picked up by hot reload) and `node_modules` kept in a Docker volume.
 
 ```bash
-# use your own ids so files created by the container are not owned by root
-export DEV_UID=$(id -u) DEV_GID=$(id -g)
-
 docker compose -f docker-compose.devci.yml up
 ```
+
+Set `DEV_UID` and `DEV_GID` in your `.env` (see [.env.example](.env.example); get the values with `id -u` and `id -g`). The container then runs as your user, so files it creates (`.nuxt`, `node_modules`) are not owned by root. If they are missing, the container runs as root and you will hit permission errors; in that case fix the ownership with `sudo chown -R "$USER": .nuxt` and remove the `node-modules-volume` volume.
 
 - Nuxt is available at <http://localhost:3001>. Use this URL to log in: the auth origin is set to it.
 - An nginx proxy (see [nginx.conf.devci](nginx.conf.devci)) is available at <http://localhost:8080>.

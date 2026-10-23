@@ -251,7 +251,7 @@ const currentEvent = computed(() => {
 		communityStore.setCurrentEvent(firstEvent);
 		return firstEvent;
 	}
-	return selectedEvent as unknown as EventWithChallenges;
+	return selectedEvent as EventWithChallenges;
 });
 
 const fromProjects = computed(() => route.query.from === 'projects');

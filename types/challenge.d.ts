@@ -32,7 +32,7 @@ export interface Challenge {
 	url?: string;
 	orig_id?: string;
 	references?: Array<string>;
-	metrics_categories?: Array<string>;
+	metrics_categories?: Array<ChallengeMetrics>;
 	actions?: Partial<CommunityPrivilegeCategories>;
 	privileges?: string;
 	description?: string;

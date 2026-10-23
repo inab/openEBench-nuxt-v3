@@ -145,7 +145,9 @@ async function onSubmit(_event: FormSubmitEvent<Schema>) {
 			const itemMetricX = metricValueStringX.replace(',', '.');
 			const metricValueX = parseFloat(itemMetricX);
 
-			const itemMetricY = metricValueStringX.replace(',', '.');
+			const metricValueStringY =
+				typeof item.metric_y === 'string' ? item.metric_y : String(item.metric_y || '');
+			const itemMetricY = metricValueStringY.replace(',', '.');
 			const metricValueY = parseFloat(itemMetricY);
 
 			return {

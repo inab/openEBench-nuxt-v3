@@ -343,7 +343,7 @@ import type { ContactOption } from '~~/types/dashboard-types';
 import { computed, ref, watch, onMounted } from 'vue';
 import { useUser } from '~~/stores/user.ts';
 import type { CommunityPrivilegeCategories } from '~~/types/communities';
-import type { Challenge } from '~~/types/challenge';
+import type { Challenge, ChallengeMetrics } from '~~/types/challenge';
 import { VueDatePicker } from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import { object, string, array, safeParse, boolean, date } from 'valibot';
@@ -382,7 +382,7 @@ const rolesObj = ref([
 	{ label: 'Contributor', value: 'contributor' },
 ]);
 const localReferences = ref<string[]>([]);
-const localMetricsCategories = ref<string[]>([]);
+const localMetricsCategories = ref<ChallengeMetrics[]>([]);
 const errors = ref<string[]>([]);
 const oks = ref<string>('');
 const runtimeConfig = useRuntimeConfig();

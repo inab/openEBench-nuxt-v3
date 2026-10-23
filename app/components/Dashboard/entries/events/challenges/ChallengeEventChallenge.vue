@@ -375,7 +375,7 @@ const localContacts = ref<
 		role: string;
 	}[]
 >([]);
-const localMetricsCategories = ref<string[]>([]);
+const localMetricsCategories = ref<ChallengeMetricsType[]>([]);
 const eventId = ref(props.eventId);
 const contactsData = ref<ContactOption[]>([]);
 const errors = ref<string[]>([]);
@@ -414,7 +414,7 @@ const state = ref<{
 	url: string;
 	orig_id: string;
 	references: string[];
-	metrics_categories: string[];
+	metrics_categories: ChallengeMetricsType[];
 	description?: string;
 }>({
 	_id: '',
@@ -792,7 +792,7 @@ watch(
 			url: newVal?.url || '',
 			orig_id: newVal?.orig_id || '',
 			references: newVal?.references || ([] as string[]),
-			metrics_categories: newVal?.metrics_categories || ([] as string[]),
+			metrics_categories: newVal?.metrics_categories || ([] as ChallengeMetricsType[]),
 			is_automated: newVal?.is_automated || false,
 		};
 		if (newVal && newVal.references) {
@@ -820,8 +820,7 @@ watch(
 		}
 
 		if (newVal && newVal.metrics_categories) {
-			// The shared Challenge type declares string[], but the API returns category objects
-			metricData.value = newVal.metrics_categories as unknown as ChallengeMetricsType[];
+			metricData.value = newVal.metrics_categories;
 		}
 
 		if (newVal && newVal.is_automated) {

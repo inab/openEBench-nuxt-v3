@@ -176,8 +176,7 @@ async function filterMetricsByChallenge(
 	const toolIds = new Set<string>();
 
 	challengeDataList.forEach((challenge) => {
-		const metricsCategories = challenge.metrics_categories as unknown as
-			ChallengeMetricCategory[] | undefined;
+		const metricsCategories = challenge.metrics_categories as ChallengeMetricCategory[] | undefined;
 		const aggregationMetrics = metricsCategories?.[1] ? metricsCategories[1].metrics : [];
 
 		if (aggregationMetrics.length > 0) {

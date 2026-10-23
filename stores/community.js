@@ -6,7 +6,7 @@ export const useCommunity = defineStore('community', {
 	state: () => ({
 		communityId: null,
 		communityData: /** @type {any} */ ({}),
-		currentEvent: Object,
+		currentEvent: /** @type {any} */ ({}),
 		communityReferences: null,
 		events: /** @type {any[]} */ ([]),
 		datasets: /** @type {any[]} */ ([]),

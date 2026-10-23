@@ -96,9 +96,7 @@ const datasetsObj = communityStore.getDatasets;
 const toolsObj = communityStore.getTools;
 const eventsObj: EventWithChallenges[] = communityStore.getEvents;
 const communityReferences = communityStore.getCommunityReferences;
-const currentEvent = computed(
-	() => communityStore.getCurrentEvent as unknown as EventWithChallenges
-);
+const currentEvent = computed(() => communityStore.getCurrentEvent as EventWithChallenges);
 const eventData = computed(() => communityStore.getCommunityData);
 
 const tabsItems = [
