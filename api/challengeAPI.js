@@ -1,5 +1,8 @@
-export async function challengeAPI(challengeID) {
-	return await useNuxtApp().$graphql('/graphql', {
+// TEMPORARY: the Dataset field is `datalinks` in the new schema (test2) and `datalink` in the old one
+// (production). We try the new name and retry with the old one if the API rejects it.
+// TODO: remove the fallback (keep only `datalinks`) once the new schema is stable in every environment.
+const fetchChallenge = (challengeID, datalinkField) =>
+	useNuxtApp().$graphql('/graphql', {
 		method: 'POST',
 		headers: {
 			Accept: 'text/plain, */*',
@@ -20,7 +23,7 @@ export async function challengeAPI(challengeID) {
 							participant_datasets: datasets(datasetFilters: {type: "participant"}) {
 								_id
 								orig_id
-								datalinks {
+								${datalinkField} {
 									inline_data
 									schema_url
 									uri
@@ -39,7 +42,7 @@ export async function challengeAPI(challengeID) {
 							assessment_datasets: datasets(datasetFilters: {type: "assessment"}) {
 								_id
 								orig_id
-								datalinks {
+								${datalinkField} {
 									inline_data
 									schema_url
 									uri
@@ -62,7 +65,7 @@ export async function challengeAPI(challengeID) {
 						getDatasets(
 							datasetFilters: { challenge_id: $id, type: "aggregation" }
 						) {
-							datalinks {
+							${datalinkField} {
 								inline_data
 							}
 							dates {
@@ -85,6 +88,14 @@ export async function challengeAPI(challengeID) {
 			},
 		}),
 	});
+
+export async function challengeAPI(challengeID) {
+	let response = await fetchChallenge(challengeID, 'datalinks');
+	// TODO: remove this retry together with the one in stores/community.js
+	if (response?.errors?.some((e) => /datalinks/.test(e.message ?? ''))) {
+		response = await fetchChallenge(challengeID, 'datalink');
+	}
+	return response;
 }
 
 export async function getGraphData(dataset) {

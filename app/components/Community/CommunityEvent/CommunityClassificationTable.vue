@@ -172,7 +172,7 @@
 											<div>
 												<a
 													v-if="tableData.toolElixirIds[tool]"
-													:href="`https://${props.mode}.bsc.es/tool/${tableData.toolElixirIds[tool]}`"
+													:href="`/tool/${tableData.toolElixirIds[tool]}`"
 													target="_blank"
 													class="oeb-link"
 												>
@@ -386,7 +386,7 @@ function prepareTableData(aggregations, chunk_size, mode, community_id) {
 			seen[agg._id] = {
 				id: agg._id,
 				acronym: agg.challenge_acronym ?? agg.acronym,
-				url: `https://${mode}.bsc.es/scientific/${community_id}/${agg._id}`,
+				url: `/scientific/${community_id}/${agg._id}`,
 				colspan: 1,
 				hasData: hasParticipants,
 			};

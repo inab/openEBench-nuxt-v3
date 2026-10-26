@@ -71,7 +71,62 @@ Images are built by GitHub Actions workflows in [.github/workflows](.github/work
 
 The `main` workflow also runs the unit tests before building. On the VM, [Watchtower](https://containrrr.dev/watchtower/) detects the new tag and recreates the container.
 
-The environment-specific values (URLs, Keycloak realm...) are `ARG`/`ENV` entries in the Dockerfile. The docker compose files for the oeb landscape are in <https://github.com/inab/oeb-docker-compose>.
+### Runtime configuration (test2, preprod, sandbox)
+
+The image is identical for every environment. URLs, Keycloak realm/client, etc. are **not** compiled in: the browser fetches `/config.json` before any API or Keycloak call, and the server reads the same file at start-up. The file is [config/config.json](config/config.json) (defaults = test2), located at `/app/config/config.json` in the container (override the path with `OEB_CONFIG_FILE`). To reconfigure an instance, bind-mount your own file read-only over it:
+
+```yaml
+volumes:
+  - ./config/preprod.json:/app/config/config.json:ro
+```
+
+or with `docker run`:
+
+```bash
+docker run --rm -ti -e NUXT_AUTH_SECRET=<secret> \
+  -v $PWD/preprod.json:/app/config/config.json:ro \
+  -p 3000:3000 ghcr.io/inab/openebench-nuxt-v3:preprod
+```
+
+The same trick works for any file baked into the image, e.g. replacing the logo:
+
+```bash
+docker run --rm -ti -e NUXT_AUTH_SECRET=<secret> \
+  -v $PWD/my_logo.png:/app/.output/public/_nuxt/opeb_logo.k4Txqcx6.gif:ro \
+  -p 3000:3000 ghcr.io/inab/openebench-nuxt-v3:test2
+```
+
+(the hash in the logo file name changes between builds; check `.output/public/_nuxt/`).
+
+#### Environment mapping
+
+| Environment   | Branch    | Image tag     | Config file mounted at `/app/config/config.json`                                                               |
+| ------------- | --------- | ------------- | -------------------------------------------------------------------------------------------------------------- |
+| Production    | `main`    | `:test2`      | [config/config.json](config/config.json) (built into the image, no mount needed)                               |
+| Preprod       | `preprod` | `:preprod`    | `preprod.json`: your own copy of [config/config.json](config/config.json) with preprod values, mounted over it |
+| Sandbox       | `sandbox` | `:sandbox`    | `sandbox.json`: your own copy of [config/config.json](config/config.json) with sandbox values, mounted over it |
+| Local compose | -         | built locally | [config/local.json](config/local.json)                                                                         |
+| Devci         | -         | built locally | [config/devci.json](config/devci.json) (via `OEB_CONFIG_FILE`)                                                 |
+
+Keep one file per environment next to the compose file on its VM, each with that environment's `BASE_URL`, `AUTH_ORIGIN`, Keycloak realm and API URLs.
+
+#### Applying a change to the config file
+
+The browser gets the new values on the next page reload, but the server (login, staged API proxy) reads the file only at start-up, so restart the container after editing:
+
+```bash
+# docker compose (run in the folder with the compose file)
+docker compose restart app            # service name: app in this repo's docker-compose.yml
+
+# plain docker
+docker restart <container-name>
+
+# check what the running instance is using
+curl -s http://localhost:3000/config.json
+docker exec <container-name> cat /app/config/config.json
+```
+
+If your editor saves by replacing the file and the container still shows the old content, recreate it instead: `docker compose up -d --force-recreate app`. Hard-reload the browser (Ctrl+Shift+R) if the page still looks stale. Keys are those of `runtimeConfig.public` in [nuxt.config.ts](nuxt.config.ts) (`BASE_URL`, `AUTH_ORIGIN`, `KEYCLOAK_HOST`, `KEYCLOAK_REALM`, `KEYCLOAK_CLIENT_ID`, `SCIENTIFIC_SERVICE_URL(_API)`, `MONITORING.baseURL`...); missing keys fall back to the built-in defaults, and a missing/invalid file falls back to all defaults. The file is public, so never put secrets in it: `NUXT_AUTH_SECRET` and the SMTP settings stay environment variables. Changes are picked up after restarting the container (see below). The docker compose files for the oeb landscape are in <https://github.com/inab/oeb-docker-compose>.
 
 ## Project structure
 

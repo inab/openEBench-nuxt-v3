@@ -1,7 +1,7 @@
 import { defineEventHandler, getRequestHeader, getRouterParams, readBody } from 'h3';
 
 export default defineEventHandler(async (event) => {
-	const runtimeConfig = useRuntimeConfig();
+	const runtimeConfig = { ...useRuntimeConfig(), public: usePublicConfig() };
 
 	console.log(event.context.query);
 	const { collection, id } = getRouterParams(event);

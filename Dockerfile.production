@@ -2,41 +2,6 @@
 FROM node:22.23.2-alpine AS build
 WORKDIR /app
 
-# Environment-specific values baked into the build
-ARG ENVIRONMENT=test-oeb2
-ARG APP_BASE_URL=https://test-oeb2.openebench.bsc.es
-ARG OEB_LEGACY_ANGULAR_URI=https://legacy.openebench.bsc.es/
-ARG VRE_URI=https://openebench.bsc.es/vre/home/
-ARG OBSERVATORY_URI=https://observatory.openebench.bsc.es
-ARG REST_API_URL=https://openebench.bsc.es/monitor/rest/
-ARG SCIENTIFIC_SERVICE_URL=https://openebench.bsc.es/api/scientific
-ARG SCIENTIFIC_SERVICE_URL_API=https://openebench.bsc.es/api/scientific/
-ARG BENCH_EVENT_API_URL=https://openebench.bsc.es/rest/bench_event_api
-ARG KEYCLOAK_HOST=https://inb.bsc.es
-ARG KEYCLOAK_REALM=oeb2dev
-ARG KEYCLOAK_CLIENT_ID=oeb-frontend
-ARG OBSERVATORY_API_URL=https://observatory.openebench.bsc.es/api
-ARG GITHUBAPP_API_URL=https://observatory.openebench.bsc.es/github-metadata-api
-
-ENV ENVIRONMENT=$ENVIRONMENT \
-    OEB_LEGACY_ANGULAR_URI=$OEB_LEGACY_ANGULAR_URI \
-    VRE_URI=$VRE_URI \
-    OBSERVATORY_URI=$OBSERVATORY_URI \
-    REST_API_URL=$REST_API_URL \
-    SCIENTIFIC_SERVICE_URL=$SCIENTIFIC_SERVICE_URL \
-    SCIENTIFIC_SERVICE_URL_API=$SCIENTIFIC_SERVICE_URL_API \
-    BENCH_EVENT_API_URL=$BENCH_EVENT_API_URL \
-    KEYCLOAK_HOST=$KEYCLOAK_HOST \
-    KEYCLOAK_REALM=$KEYCLOAK_REALM \
-    KEYCLOAK_CLIENT_ID=$KEYCLOAK_CLIENT_ID \
-    OBSERVATORY_API_URL=$OBSERVATORY_API_URL \
-    GITHUBAPP_API_URL=$GITHUBAPP_API_URL \
-    APP_BASE_URL=$APP_BASE_URL \
-    AUTH_ORIGIN=$APP_BASE_URL \
-    NITRO_PORT=3000 \
-    NITRO_HOST=0.0.0.0
-# NUXT_AUTH_SECRET is intentionally not set here: provide it at runtime (docker run -e / orchestrator secret)
-
 COPY package*.json .npmrc ./
 RUN npm install --global npm@12.0.2
 RUN npm ci
@@ -47,8 +12,14 @@ RUN npm run build
 RUN grep -rlE "next-auth/(core|jwt)'" .output/server/chunks | xargs -r sed -i -E "s#next-auth/(core|jwt)'#../../../../node_modules/next-auth/\1/index.js'#g"
 
 # Runtime stage
+# Runtime configuration is not baked in: the browser and server read /app/config/config.json at start-up;
+# mount your own file over it (see README). NUXT_AUTH_SECRET must also be provided at runtime.
 FROM node:22.23.2-alpine
+WORKDIR /app
+ENV NITRO_PORT=3000 \
+    NITRO_HOST=0.0.0.0
 COPY --from=build /app/.output /app/.output
+COPY config/config.json /app/config/config.json
 # The traced next-auth lacks the core/ files (and their deps) that nuxt-auth imports
 COPY --from=build /app/node_modules/next-auth/package.json /tmp/next-auth-package.json
 RUN NA_VERSION=$(node -p "require('/tmp/next-auth-package.json').version") \

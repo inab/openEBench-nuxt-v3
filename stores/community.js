@@ -30,13 +30,16 @@ export const useCommunity = defineStore('community', {
 
 	actions: {
 		async requestCommunityData(id, event) {
-			const responseData = await useNuxtApp().$graphql('/graphql', {
-				method: 'POST',
-				headers: {
-					Accept: 'text/plain, */*',
-				},
-				body: JSON.stringify({
-					query: `
+			// TEMPORARY: the Dataset field is `datalinks` in the new schema (test2) and `datalink` in the old
+			// one (production). TODO: remove the fallback once the new schema is stable everywhere.
+			const fetchCommunity = (datalinkField) =>
+				useNuxtApp().$graphql('/graphql', {
+					method: 'POST',
+					headers: {
+						Accept: 'text/plain, */*',
+					},
+					body: JSON.stringify({
+						query: `
                                 query ($community_id: String!) {
                                     getCommunities(communityFilters: {id: $community_id}) {
                                     _id
@@ -75,7 +78,7 @@ export const useCommunity = defineStore('community', {
                                     getDatasets(datasetFilters: {community_id: $community_id, visibility: "public"}) {
                                         name
                                         type
-                                        datalinks {
+                                        ${datalinkField} {
                                             uri
                                             __typename
                                         }
@@ -91,11 +94,17 @@ export const useCommunity = defineStore('community', {
                                     }
                                 }
                             `,
-					variables: {
-						community_id: id,
-					},
-				}),
-			});
+						variables: {
+							community_id: id,
+						},
+					}),
+				});
+
+			let responseData = await fetchCommunity('datalinks');
+			// TODO: remove this retry together with the one in api/challengeAPI.js
+			if (responseData?.errors?.some((e) => /datalinks/.test(e.message ?? ''))) {
+				responseData = await fetchCommunity('datalink');
+			}
 
 			this.communityId = id;
 

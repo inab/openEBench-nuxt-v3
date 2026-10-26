@@ -1,0 +1,7 @@
+{
+	"ENVIRONMENT": "local",
+	"BASE_URL": "http://localhost:3000",
+	"AUTH_ORIGIN": "http://localhost:3000",
+	"SCIENTIFIC_SERVICE_URL": "https://openebench.bsc.es/api/scientific",
+	"SCIENTIFIC_SERVICE_URL_API": "https://openebench.bsc.es/api/scientific/"
+}

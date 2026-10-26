@@ -74,6 +74,7 @@ export default defineNuxtConfig({
 	ssr: false,
 
 	plugins: [
+		'~/plugins/runtimeConfigFile',
 		'~/plugins/useGraphql',
 		'~/plugins/useObservatory',
 		'~/plugins/useGithubapp',

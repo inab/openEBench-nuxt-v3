@@ -44,7 +44,7 @@ const Keycloak = typeof providerModule === 'function' ? providerModule : provide
 function isRecord(value: unknown): value is Record<string, unknown> {
 	return typeof value === 'object' && value !== null;
 }
-const runtimeConfig = useRuntimeConfig();
+const runtimeConfig = { ...useRuntimeConfig(), public: usePublicConfig() };
 
 // next-auth >= 4.22 only reads NEXTAUTH_URL to build its URLs (it ignores the host nuxt-auth passes)
 process.env.NEXTAUTH_URL ||= runtimeConfig.public.BASE_URL;
