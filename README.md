@@ -187,19 +187,15 @@ NPM_RUN="test -- --run" docker compose -f docker-compose.devci.yml run npm_run
 
 ## Known vulnerabilities
 
-`npm audit` currently reports 10 high severity findings (last checked 2026-10-23). All are **transitive** and **no fixed version exists yet**:
+Run `npm audit` with the Node.js and npm versions specified in [package.json](package.json) to check the current lockfile. Last checked 2026-10-26, it reports **6 high-severity package findings**, all propagated from one underlying transitive advisory:
 
-| Package      | Advisory                                                                                                          | Reached through                                                |
-| ------------ | ----------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
-| `braces`     | [GHSA-vfj7-8cjw-p6xm](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm) (DoS on deeply nested patterns)          | `nitropack` > `globby` > `fast-glob` > `micromatch` > `braces` |
-| `node-forge` | [GHSA-86w9-cpqp-85rv](https://github.com/advisories/GHSA-86w9-cpqp-85rv) (RSA PKCS#1 v1.5 signature verification) | `nitropack` > `listhen` > `node-forge`                         |
+| Vulnerable package | Advisory                                                                                                          | Dependency path                                         |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| `node-forge` 1.4.0 | [GHSA-86w9-cpqp-85rv](https://github.com/advisories/GHSA-86w9-cpqp-85rv) (RSA PKCS#1 v1.5 signature verification) | `nuxt` / `@sidebase/nuxt-auth` > `nitropack` > `listhen` > `node-forge` |
 
-`nuxt`, `@nuxt/nitro-server` and `@sidebase/nuxt-auth` are listed by `npm audit` only because they depend on `nitropack`.
+The six count is npm's affected-package entries (`nuxt`, `@nuxt/nitro-server`, `@sidebase/nuxt-auth`, `nitropack`, `listhen` and `node-forge`), not six separate advisories. `npm audit fix` updates compatible dependencies and clears the previously reported low-severity `serialize-javascript` finding, but cannot fix this high-severity issue: `listhen` already accepts `node-forge` `^1.4.0`, and 1.4.0 is currently the latest published version while still in the advisory's affected range.
 
-- Both vulnerable packages are already at their latest published version, so overrides cannot help.
-- `npm audit fix --force` suggests downgrading `@sidebase/nuxt-auth` to 0.3.2: **do not run it**.
-- They are used by build and dev tooling (glob matching and the dev server's TLS helper), not in the request handling of the production server.
-- To clear them: wait for an upstream `nitropack` release that drops or updates these dependencies, then update and re-run `npm audit`.
+Do **not** use `npm audit fix --force`: npm proposes downgrading `@sidebase/nuxt-auth` to 0.3.2 (and Nuxt to 4.1.3), which are breaking, older releases and do not constitute a safe dependency update. Re-run `npm audit` after an upstream `node-forge` release outside the affected range or an upstream dependency change.
 
 ## Outdated dependencies
 
