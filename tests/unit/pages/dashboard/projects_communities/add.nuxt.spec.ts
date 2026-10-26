@@ -20,6 +20,16 @@ describe('Dashboard Add entry', () => {
 	let userStore;
 
 	beforeEach(() => {
+		// The auth mock keeps module-level state that other specs can reset, so set it before mounting
+		const { data } = useAuth();
+		data.value = {
+			role: 'admin',
+			email: 'hi@sidebase.io',
+			name: 'John Doe',
+			accessToken: 'aaaa',
+			oeb_roles: [{ role: 'manager', community: 'OEBC000' }],
+		};
+
 		wrapper = mount(Add, {
 			global: {
 				plugins: [
@@ -59,9 +69,7 @@ describe('Dashboard Add entry', () => {
 		expect(wrapper.vm.routeArray).toEqual(expectedRoutes);
 	});
 
-	it('calls setUserCommunitiesRoles if userPrivileges is empty', async () => {
-		const { data } = useAuth();
-		data.value.oeb_roles = [{ role: 'manager', community: 'OEBC000' }];
+	it('calls setUserCommunitiesRoles if userPrivileges is empty', () => {
 		expect(userStore.setUserCommunitiesRoles).toHaveBeenCalledWith([
 			{ role: 'manager', community: 'OEBC000' },
 		]);
