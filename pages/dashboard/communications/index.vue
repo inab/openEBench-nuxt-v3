@@ -16,7 +16,7 @@ import { ref, onMounted } from "vue";
 import BreadcrumbsBar from "@/components/Common/BreadcrumbsBar.vue";
 
 definePageMeta({
-  middleware: "auth",
+  middleware: "requireAuth",
   auth: {
     authenticatedOnly: true,
     navigateUnauthenticatedTo: "/login-required",

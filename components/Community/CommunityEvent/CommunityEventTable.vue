@@ -1,83 +1,51 @@
 <template>
   <div class="community-event-table">
-    <div
-      class="community-event-table__border py-3.5 relative not-prose bg-white overflow-hidden"
-    >
+    <div class="community-event-table__border py-3.5 relative not-prose bg-white overflow-hidden">
       <div class="justify-content-end flex py-3.5">
-        <UInput
-          v-model="search"
-          color="white"
-          variant="outline"
-          icon="i-heroicons-magnifying-glass"
-          placeholder="Search ..."
-          class="input-search"
-        />
+        <UInput v-model="search" color="white" variant="outline" icon="i-heroicons-magnifying-glass"
+          placeholder="Search ..." class="input-search" />
       </div>
 
       <!-- Checkbox in header to select/deselect all visible elements on the current page -->
-      <input
-        type="checkbox"
-        class="allChecks"
-        :checked="isAllSelected"
-        @change="toggleSelectAll"
-      />
-      <UTable
-        v-model:selected="selected"
-        :rows="filteredRows"
-        :columns="columns"
-        :ui="{
-          tr: {
-            base: 'hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer',
-          },
-          th: {
-            base: 'text-left rtl:text-right',
-            padding: 'py-2.5',
-            color: 'text-gray-900 dark:text-white',
-            font: 'font-semibold',
-            size: 'text-sm',
-          },
-          td: {
-            base: 'whitespace-nowrap',
-            padding: 'py-3',
-            font: '',
-            size: 'text-sm',
-          },
-        }"
-      >
+      <input type="checkbox" class="allChecks" :checked="isAllSelected" @change="toggleSelectAll" />
+      <UTable v-model:selected="selected" :rows="filteredRows" :columns="columns" :ui="{
+        tr: {
+          base: 'hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer',
+        },
+        th: {
+          base: 'text-left rtl:text-right',
+          padding: 'py-2.5',
+          color: 'text-gray-900 dark:text-white',
+          font: 'font-semibold',
+          size: 'text-sm',
+        },
+        td: {
+          base: 'whitespace-nowrap',
+          padding: 'py-3',
+          font: '',
+          size: 'text-sm',
+        },
+      }">
         <template #checkbox-data="{ row }">
-          <input
-            type="checkbox"
-            :checked="isSelected(row)"
-            @change="select(row)"
-          />
+          <input type="checkbox" :checked="isSelected(row)" @change="select(row)" />
         </template>
 
         <template #name-data="{ row }">
-          <span
-            :class="[
-              isSelected(row) && 'text-primaryOeb-500 dark:text-primary-400',
-            ]"
-          >
+          <span :class="[
+            isSelected(row) && 'text-primaryOeb-500 dark:text-primary-400',
+          ]">
             {{ row.name }}
           </span>
         </template>
         <template #_id-data="{ row }">
-          <NuxtLink
-            class="text-primary-500 dark:text-primary-400"
-            title="Go to challenge"
-            :to="`/benchmarking/${community}/${row._id}`"
-          >
+          <NuxtLink class="text-primary-500 dark:text-primary-400" title="Go to challenge"
+            :to="getChallengeLink(row._id)">
             {{ row.acronym }}
           </NuxtLink>
         </template>
         <template #participant-data="{ row }">
-          <NuxtLink
-            v-if="!loadingRows.includes(row._id)"
-            class="text-primary-500 dark:text-primary-400"
-            title="Go to participant"
-            :to="`/benchmarking/${community}/${row._id}/participants`"
-            @click="handleClick(row._id)"
-          >
+          <NuxtLink v-if="!loadingRows.includes(row._id)" class="text-primary-500 dark:text-primary-400"
+            title="Go to participant" :to="getChallengeLink(`${row._id}/participants`)" @click="handleClick(row._id)">
             Participant
           </NuxtLink>
           <span v-else>
@@ -98,21 +66,15 @@
             results
           </span>
         </div>
-        <UPagination
-          v-model="page"
-          class="pagination"
-          :page-count="pageCount"
-          :total="_total"
-          :ui="{
-            wrapper: 'flex items-center',
-            default: {
-              activeButton: {
-                base: 'bg-primary-500 dark:bg-primary-400',
-                color: 'text-white',
-              },
+        <UPagination v-model="page" class="pagination" :page-count="pageCount" :total="_total" :ui="{
+          wrapper: 'flex items-center',
+          default: {
+            activeButton: {
+              base: 'bg-primary-500 dark:bg-primary-400',
+              color: 'text-white',
             },
-          }"
-        />
+          },
+        }" />
       </div>
     </div>
   </div>
@@ -120,6 +82,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
+import { useRoute } from "vue-router";
 
 const props = defineProps<{
   eventChallenges: Array<any>;
@@ -128,6 +91,8 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits(["handleChangeChallengers"]);
+
+const route = useRoute();
 
 const community = computed(() => props.communityId);
 const page = ref<number>(1);
@@ -165,18 +130,18 @@ const columns = [
 ];
 
 // Keeps all rows (without pagination) to refer to the complete data
-const allRows = ref(props.eventChallenges);
+const allRows = ref(props.eventChallenges ?? []);
 
 // Computed for rows filtered by search and pagination
 const filteredRows = computed(() => {
   const filteredData = search.value
     ? allRows.value.filter((challenge: any) => {
-        return Object.values(challenge).some((value) => {
-          return String(value)
-            .toLowerCase()
-            .includes(search.value.toLowerCase());
-        });
-      })
+      return Object.values(challenge).some((value) => {
+        return String(value)
+          .toLowerCase()
+          .includes(search.value.toLowerCase());
+      });
+    })
     : allRows.value;
 
   _total.value = filteredData.length;
@@ -190,6 +155,20 @@ const filteredRows = computed(() => {
 const totalPages = computed(() => {
   return Math.ceil(Number(_total.value) / Number(pageCount.value));
 });
+
+// Builds the link for a challenge/participant row, swapping /projects/ -> /scientific/
+// and tagging the URL with ?from=projects when navigation originated from the projects section.
+function getChallengeLink(challengePath: string) {
+  const currentPath = route.path.replace("/projects/", "/scientific/");
+
+  const fromProjects = route.path.includes("/projects/");
+
+  if (fromProjects) {
+    return `${currentPath}/${challengePath}?from=projects`;
+  }
+
+  return `${currentPath}/${challengePath}`;
+}
 
 // Function for selecting/deselecting a single element
 function select(row: any) {
@@ -249,14 +228,25 @@ watch(
   },
   { deep: true },
 );
+
+watch(
+  () => props.eventChallenges,
+  (newChallenges) => {
+    allRows.value = newChallenges ?? [];
+    selected.value = [];
+    page.value = 1;
+  },
+);
 </script>
 
 <style scoped lang="scss">
 .community-event-table {
   border: none;
+
   .input-search {
     input {
       box-shadow: none !important;
+
       :focus {
         border: 1px solid theme("colors.primary.500");
       }
@@ -267,12 +257,14 @@ watch(
     a {
       color: theme("colors.primary.500");
       text-decoration: none;
+
       &:hover {
         color: theme("colors.primary.400");
       }
     }
   }
 }
+
 .form-checkbox:checked,
 .form-checkbox:indeterminate {
   background-color: currentColor !important;

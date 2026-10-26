@@ -138,15 +138,18 @@ const eventId = route.query.event as string;
 //   community.value = data.value ?? null;
 // }
 
-const { data: community, pending } = await useAsyncData("community", () => {
-  if (
-    communityStore.communityId &&
-    communityStore.communityId === communityId
-  ) {
-    return Promise.resolve(communityStore.getCommunityData);
-  }
-  return communityStore.requestCommunityData(communityId, eventId);
-});
+const { data: community, pending } = await useAsyncData(
+  `benchmarking-community-${communityId}-${eventId ?? "default"}`,
+  () => {
+    if (
+      communityStore.communityId &&
+      communityStore.communityId === communityId
+    ) {
+      return Promise.resolve(communityStore.getCommunityData);
+    }
+    return communityStore.requestCommunityData(communityId, eventId);
+  },
+);
 
 const datasetsObj = communityStore.getDatasets;
 const toolsObj = communityStore.getTools;

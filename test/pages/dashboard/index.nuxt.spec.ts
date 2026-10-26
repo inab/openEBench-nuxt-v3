@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import Index from "@/pages/dashboard/index.vue";
 import { ref } from "vue";
 import { nuxtTestUtilSetup } from "../../utils";
-import authMiddleware from "../../../middleware/auth";
+import authMiddleware from "../../../middleware/requireAuth";
 
 await nuxtTestUtilSetup();
 
@@ -16,7 +16,7 @@ vi.mock("@/stores/user", () => ({
   }),
 }));
 
-vi.mock("@/middleware/auth", () => ({
+vi.mock("@/middleware/requireAuth", () => ({
   default: vi.fn((context) => {
     const { auth } = context;
     if (
@@ -91,9 +91,15 @@ describe("Dashboard Index", () => {
       },
     });
 
+    const hour = new Date().getHours();
+    let text = "";
+    if (hour < 12) text = `Good morning,`;
+    else if (hour < 18) text = `Good afternoon,`;
+    else text = `Good evening,`;
+
     const header = wrapper.find(".dashboard__header__title");
     expect(header.exists()).toBe(true);
-    expect(header.text()).toBe("Dashboard");
+    expect(header.text()).toContain(text);
   });
 
   it("updates totalMetrics with the length of fetched data", async () => {

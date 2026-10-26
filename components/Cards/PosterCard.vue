@@ -115,7 +115,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
-import emptyImg from "../../public/images/illustrations/empty-state.svg?component";
+import emptyImg from "~/assets/images/illustrations/empty-state.svg?component";
 import DOMPurify from "dompurify";
 
 // Define the type for a poster

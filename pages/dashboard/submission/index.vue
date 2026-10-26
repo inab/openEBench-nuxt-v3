@@ -30,7 +30,7 @@ import BreadcrumbsBar from '@/components/Common/BreadcrumbsBar.vue';
 import SubmissionForm from '@/components/Dashboard/submissions/SubmissionForm.vue';
 
 definePageMeta({
-  middleware: 'auth',
+  middleware: 'requireAuth',
   auth: {
     authenticatedOnly: true,
     navigateUnauthenticatedTo: '/login-required',

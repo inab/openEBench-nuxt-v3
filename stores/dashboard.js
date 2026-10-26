@@ -3,7 +3,7 @@ import { useAsyncData } from 'nuxt/app';
 import customApi from "~/composables/useAPI";
 import { useNuxtApp, useRuntimeConfig } from "#app";
 import parseDataURL from "data-urls";
-import { labelToName, decode } from "whatwg-encoding";
+import { TextDecoder } from "@exodus/bytes/encoding.js";
 import useAPI from "~/composables/useAPI";
 
 const BASE_URL = '/api/stats/tools/';
@@ -18,7 +18,6 @@ export const useDashboard = defineStore("dashboard", {
 
   getters: {
     ResourcesCount: (state) => state.resourcesCount,
-    ToolsCount: (state) => state.toolsCount,
     CommunitiesCount: (state) => state.communitiesCount,
     ProjectsCount: (state) => state.projectsCount
   },
@@ -70,11 +69,10 @@ export const useDashboard = defineStore("dashboard", {
 
               if (dataURL) {
                 const encodingName =
-                  labelToName(
-                    dataURL.mimeType.parameters.get("charset") || "utf-8"
-                  ) || "utf-8";
-
-                const decodedSummary = decode(dataURL.body, encodingName);
+                  dataURL.mimeType.parameters.get("charset") || "utf-8";
+                const decodedSummary = new TextDecoder(encodingName).decode(
+                  dataURL.body,
+                );
                 community.summary = decodedSummary;
                 community._metadata["project:summary"] = decodedSummary;
               } else {
@@ -105,26 +103,6 @@ export const useDashboard = defineStore("dashboard", {
       }
     },
 
-    async getToolsCount() {
-      const { $api } = useNuxtApp();
-      try {
-        const response = await $api.raw("aggregate", {
-          method: "HEAD",
-          params: { limit: 1 },
-        });
-    
-        const contentRange = response.headers.get("content-range");
-    
-        if (contentRange) {
-          const matches = contentRange.match(/(\d+)-(\d+|\*)\/(\d+|\*)/);
-          if (matches) {
-            this.toolsCount = parseInt(matches[3]);
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching tools count:", error);
-      }
-    }
     
   }
 })

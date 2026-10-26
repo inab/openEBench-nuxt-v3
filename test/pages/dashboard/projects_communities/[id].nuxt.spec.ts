@@ -9,7 +9,7 @@ import { privileges } from "@/constants/privileges";
 import { ref } from "vue";
 import { mockDashboardLinks } from "@/test/mocks/dashboardMoks";
 
-vi.mock("@/middleware/auth", () => ({
+vi.mock("@/middleware/requireAuth", () => ({
   default: vi.fn((context) => {
     const { auth } = context;
     if (

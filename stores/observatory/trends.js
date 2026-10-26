@@ -19,6 +19,15 @@ export const useTrends = defineStore("trends", {
     versionControlCount: [],
     versionControlRepositories: [],
     publications: [],
+
+    dependencies: [],
+	  dependenciesCount: {},
+	  documentation: [],
+	  documentationCount: {},
+	  inputFormats: {},
+	  outputFormats: {},
+	  formatsCount: {},
+
     unLoaded: {
       licensesSunburst: true,
       licensesOpenSource: true,
@@ -26,6 +35,15 @@ export const useTrends = defineStore("trends", {
       versionControlCount: true,
       versionControlRepositories: true,
       publications: true,
+
+      dependencies: true,
+      dependenciesCount: true,
+      documentation: true,
+      documentationCount: true,
+      inputFormats: true,
+      outputFormats: true,
+      formatsCount: true,
+
       FAIRscores: true,
     },
   }),
@@ -37,6 +55,15 @@ export const useTrends = defineStore("trends", {
     VersionControlCount: (state) => state.versionControlCount,
     VersionControlRepositories: (state) => state.versionControlRepositories,
     Publications: (state) => state.publications,
+
+    Dependencies: (state) => state.dependencies,
+    DependenciesCount: (state) => state.dependenciesCount,
+    Documentation: (state) => state.documentation,
+    DocumentationCount: (state) => state.documentationCount,
+    InputFormats: (state) => state.inputFormats,
+    OutputFormats: (state) => state.outputFormats,
+    FormatsCount: (state) => state.formatsCount,
+
     Loaded: (state) => state.unLoaded,
   },
 
@@ -94,6 +121,27 @@ export const useTrends = defineStore("trends", {
     },
     getPublications() {
       this.fetchData("publications", "publications_journals_IF");
+    },
+    getDependencies() {
+      this.fetchData("dependencies", "dependencies_count");
+    },
+    getDependenciesCount() {
+      this.fetchData("dependenciesCount", "dependencies_coverage");
+    },
+    getDocumentation() {
+      this.fetchData("documentation", "documentation");
+    },
+    getDocumentationCount() {
+      this.fetchData("documentationCount", "documentation_coverage");
+    },
+    getInputFormats() {
+      this.fetchData("inputFormats", "input_formats");
+    },
+    getOutputFormats() {
+      this.fetchData("outputFormats", "output_formats");
+    },
+    getFormatsCount() {
+      this.fetchData("formatsCount", "formats_coverage");
     },
   },
 });

@@ -19,7 +19,7 @@
 
 <script setup lang="ts">
 import { useRouter } from "vue-router";
-import emptyImg from "../../public/images/illustrations/empty-state.svg?component";
+import emptyImg from "~/assets/images/illustrations/empty-state.svg?component";
 const props = withDefaults(
   defineProps<{
     description: any;

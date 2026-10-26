@@ -175,7 +175,7 @@ function forceUpdate() {
   position: relative;
 }
 
-::v-deep .carousel__viewport {
+:deep(.carousel__viewport) {
   overflow: hidden !important;
   margin-right: 20px !important;
   margin-left: 20px !important;
@@ -236,8 +236,8 @@ function forceUpdate() {
   transform: scale(1.05);
 }
 
-::v-deep .carousel__next--disabled,
-::v-deep .carousel__prev--disabled {
+:deep(.carousel__next--disabled),
+:deep(.carousel__prev--disabled) {
   cursor: not-allowed !important;
   opacity: 0.5;
 }

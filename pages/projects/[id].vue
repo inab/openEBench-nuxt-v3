@@ -67,7 +67,7 @@ const communityStore = useCommunity();
 const community: Ref<any> = ref(null);
 const communityId: string = route.params.id;
 const { data, pending }: { data: any; pending: boolean } = await useAsyncData(
-  "community",
+  `project-community-${communityId}`,
   () => communityStore.requestCommunityData(communityId),
 );
 

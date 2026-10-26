@@ -331,7 +331,7 @@ import LineSvg from '../../public/images/plots/line-chart.svg?component';
 import BoxSvg from '../../public/images/plots/box-chart.svg?component';
 
 definePageMeta({
-  middleware: 'auth',
+  middleware: 'requireAuth',
   auth: {
     authenticatedOnly: true,
     navigateUnauthenticatedTo: '/login-required',
@@ -374,8 +374,6 @@ if (status.value == 'authenticated') {
   if (privileges.value && privileges.value.length === 0) {
     userStore.setUserCommunitiesRoles(data.value.oeb_roles);
   }
-} else {
-  userName.value = '';
 }
 
 async function countTotalMetrics() {

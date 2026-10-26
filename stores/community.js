@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import parseDataURL from "data-urls";
-import { labelToName, decode } from "whatwg-encoding";
+import { TextDecoder } from "@exodus/bytes/encoding.js";
 
 // OpenEBench API
 export const useCommunity = defineStore("community", {
@@ -76,7 +76,7 @@ export const useCommunity = defineStore("community", {
                                     getDatasets(datasetFilters: {community_id: $community_id, visibility: "public"}) {
                                         name
                                         type
-                                        datalinks {
+                                        datalink {
                                             uri
                                             __typename
                                         }
@@ -101,30 +101,41 @@ export const useCommunity = defineStore("community", {
       this.communityId = id;
 
       // Community
+      const community = responseData?.data?.getCommunities?.[0] ?? null;
+      if (!community) {
+        this.communityData = null;
+        this.setEvents([]);
+        this.setCurrentEvent(null);
+        this.setDatasets([]);
+        this.setTools([]);
+        this.setCommunityReferences([]);
+        return null;
+      }
+
       this.communityData = this.formatCommunityData(
-        responseData.data.getCommunities[0],
+        community,
       );
 
       // Events
-      this.setEvents(responseData.data.getBenchmarkingEvents);
+      this.setEvents(responseData?.data?.getBenchmarkingEvents ?? []);
 
       let defaultEvent = this.events[0] ?? null;
       if (event) {
-        defaultEvent = responseData.data.getBenchmarkingEvents.filter(
+        defaultEvent = (responseData?.data?.getBenchmarkingEvents ?? []).filter(
           (e) => e._id == event,
         )[0];
       }
       this.setCurrentEvent(defaultEvent);
 
       // Datasets
-      this.setDatasets(responseData.data.getDatasets);
+      this.setDatasets(responseData?.data?.getDatasets ?? []);
 
       // Tools
-      this.setTools(responseData.data.getTools);
+      this.setTools(responseData?.data?.getTools ?? []);
 
       // Community References
       this.setCommunityReferences(
-        responseData.data.getCommunities[0].references,
+        community.references,
       );
 
       return this.communityData;
@@ -175,20 +186,25 @@ export const useCommunity = defineStore("community", {
 
     // Format community data
     formatCommunityData(data) {
+      data.links = data.links ?? [];
       data.links.forEach((link) => {
         if (link.comment === "@logo") {
           data.logo = link.uri;
         }
       });
 
-      data._metadata = JSON.parse(data._metadata);
+      data._metadata =
+        typeof data._metadata === "string"
+          ? JSON.parse(data._metadata)
+          : (data._metadata ?? {});
       if (data._metadata && "project:summary" in data._metadata) {
         const dataURL = parseDataURL(data._metadata["project:summary"]);
 
-        const encodingName = labelToName(
-          dataURL.mimeType.parameters.get("charset") || "utf-8",
+        const encodingName =
+          dataURL.mimeType.parameters.get("charset") || "utf-8";
+        const decodedSummary = new TextDecoder(encodingName).decode(
+          dataURL.body,
         );
-        const decodedSummary = decode(dataURL.body, encodingName);
         data.summary = decodedSummary;
         data._metadata["project:summary"] = decodedSummary;
       } else {

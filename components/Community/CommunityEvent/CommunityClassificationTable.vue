@@ -1,24 +1,17 @@
 <template>
-  <div
-    v-for="(table, index) in computedTables"
-    :key="index"
-    :id="table.divId"
-    :data-benchmarkingevent="table.dataId"
-  >
-    <!-- Error message -->
-    <p v-if="errors[table.divId]" class="my-4">{{ errors[table.divId] }}</p>
+  <div v-for="(table, index) in computedTables" :key="index" :id="table.divId" :data-benchmarkingevent="table.dataId">
+    <!-- Alert message: no-data / server-error / info -->
+    <p v-if="errors[table.divId]" class="my-4 mt-4 alert" :class="alertClass(errorTypes[table.divId])">
+      {{ errors[table.divId] }}
+    </p>
 
     <div v-else class="border rounded-lg p-4 shadow-sm mb-4 mt-4">
       <!-- Dropdown de clasificación -->
       <label :for="table.divId + '_bench_dropdown_list'">
         Classification Method:
       </label>
-      <select
-        :id="table.divId + '_bench_dropdown_list'"
-        v-model="classifiers[table.divId]"
-        class="classificator_list py-1"
-        @change="onClassifierChange(table.divId)"
-      >
+      <select :id="table.divId + '_bench_dropdown_list'" v-model="classifiers[table.divId]"
+        class="classificator_list py-1" @change="onClassifierChange(table.divId)">
         <optgroup label="Select a classification method:">
           <option value="squares">SQUARE QUARTILES</option>
           <option value="diagonals">DIAGONAL QUARTILES</option>
@@ -27,56 +20,38 @@
       </select>
 
       <!-- Spinner -->
-      <div v-if="loading[table.divId]" 
-        class="spinner-container flex justify-center items-center">
-        <img
-          :src="loaderImage"
-          loading="lazy"
-          class="spinner w-8 h-8"
-          alt="Loading..."
-        />
+      <div v-if="loading[table.divId]" class="spinner-container flex justify-center items-center">
+        <img :src="loaderImage" loading="lazy" class="spinner w-8 h-8" alt="Loading..." />
       </div>
 
       <div v-else id="table-content-{{ table.divId }}">
-        
+
         <!-- Tabs -->
         <div v-if="tableData && tableData.aggregation_slices.length > 0" class="mb-4 mt-5">
           <div class="flex items-stretch gap-2">
-            <button
-              v-if="totalPages > 1"
-              @click="currentPage = Math.max(currentPage - 1, 0)"
+            <button v-if="totalPages > 1" @click="currentPage = Math.max(currentPage - 1, 0)"
               :disabled="currentPage === 0"
-              class="px-1 font-bold rounded-l-md border bg-gray-300 text-gray-700 hover:bg-gray-200 disabled:opacity-50 flex items-center justify-center"
-            >
+              class="px-1 font-bold rounded-l-md border bg-gray-300 text-gray-700 hover:bg-gray-200 disabled:opacity-50 flex items-center justify-center">
               ⟨
             </button>
 
             <!-- Tabs -->
-            <div
-            :class="paginatedSlices.length >= 5
+            <div :class="paginatedSlices.length >= 5
               ? 'grid grid-cols-5 gap-2 flex-1 bg-gray-300 p-2 items-stretch'
-              : 'flex justify-center gap-2 flex-1 bg-gray-300 p-2 items-stretch'"
-            >
-              <button
-                v-for="(slice, idx) in paginatedSlices"
-                :key="idx"
+              : 'flex justify-center gap-2 flex-1 bg-gray-300 p-2 items-stretch'">
+              <button v-for="(slice, idx) in paginatedSlices" :key="idx"
                 @click="activeSliceIndex = currentPage * tabsPerPage + idx"
                 class="px-3 py-1 rounded-lg border texto-truncado h-full"
-                :class="activeSliceIndex === (currentPage * tabsPerPage + idx)
-                  ? 'bg-primaryOeb-500 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
-              >
+                :class="tabClass(slice, currentPage * tabsPerPage + idx)"
+                :title="slice.empty_challenge ? 'No data available for this challenge' : ''">
                 {{ slice.from }}
                 <span v-if="slice.from !== slice.to">→ {{ slice.to }}</span>
               </button>
             </div>
 
-            <button
-              v-if="totalPages > 1"
-              @click="currentPage = Math.min(currentPage + 1, totalPages - 1)"
+            <button v-if="totalPages > 1" @click="currentPage = Math.min(currentPage + 1, totalPages - 1)"
               :disabled="currentPage === totalPages - 1"
-              class="px-1 font-bold rounded-r-md border bg-gray-300 text-gray-700 hover:bg-gray-200 disabled:opacity-50 flex items-center justify-center"
-            >
+              class="px-1 font-bold rounded-r-md border bg-gray-300 text-gray-700 hover:bg-gray-200 disabled:opacity-50 flex items-center justify-center">
               ⟩
             </button>
           </div>
@@ -91,11 +66,11 @@
               {{ tableData.num_charts }} charts
             </p>
             <div v-if="paginationInfo && totalPages > 1" class="text-sm text-gray-600">
-              {{ paginationInfo.start }}–{{ paginationInfo.end }} tabs of {{ paginationInfo.totalTabs }} tabs, 
+              {{ paginationInfo.start }}–{{ paginationInfo.end }} tabs of {{ paginationInfo.totalTabs }} tabs,
               {{ paginationInfo.currentPage }}/{{ paginationInfo.totalPages }} pages
             </div>
           </div>
-          
+
           <!-- Tabla -->
           <div v-if="tableData.aggregation_slices[activeSliceIndex]">
 
@@ -110,18 +85,19 @@
                     </th>
                     <th
                       v-for="(ch, i) in tableData.challengeHeaders.filter(h => tableData.aggregation_slices[activeSliceIndex].members.some(m => m._id === h.id))"
-                      :key="i"
-                      class="border px-2 py-1 text-center font-bold"
-                      :colspan="ch.colspan"
-                    >
+                      :key="i" class="border px-2 py-1 text-center font-bold" :colspan="ch.colspan">
                       <a
-                        :href="ch.url"
-                        target="_blank"
-                        class="text-blue-600 hover:underline"
-                        :title="ch.acronym"
+                      v-if="ch.hasData"
+                      :href="ch.url"
+                      target="_blank"
+                      class="oeb-link"
+                      :title="ch.acronym"
                       >
-                        {{ ch.acronym }}
+                      {{ ch.acronym }}
                       </a>
+                      <span v-else class="oeb-link-disabled" :title="`${ch.acronym} - No data available`">
+                        {{ ch.acronym }}
+                      </span>
                     </th>
                   </tr>
                   <tr>
@@ -129,10 +105,8 @@
                       Charts → <br />
                       Participants ↓
                     </th>
-                    <th
-                      v-for="(aggregation, i) in tableData.aggregation_slices[activeSliceIndex].members" :key="i"
-                      class="border px-2 py-1 text-center"
-                    >
+                    <th v-for="(aggregation, i) in tableData.aggregation_slices[activeSliceIndex].members" :key="i"
+                      class="border px-2 py-1 text-center">
                       <div>
                         <template v-if="aggregation.metrics && aggregation.metrics.length">
                           <template v-for="(m, idx) in aggregation.metrics" :key="idx">
@@ -159,25 +133,21 @@
                     <td class="border px-2 py-1.5 font-semibold sticky left-0 z-10 bg-white min-w-44">
                       <div>
                         <a
-                          v-if="tableData.toolElixirIds[tool]"
-                          :href="`https://${props.mode}.bsc.es/tool/${tableData.toolElixirIds[tool]}`"
-                          target="_blank"
-                          class="aggregation_cell_2"
-                          
+                        v-if="tableData.toolElixirIds[tool]"
+                        :href="`https://${props.mode}.bsc.es/tool/${tableData.toolElixirIds[tool]}`"
+                        target="_blank"
+                        class="oeb-link"
                         >
-                          {{ tool }}
+                        {{ tool }}
                         </a>
                         <span v-else class="text-black cursor-default" :title="tool">
                           {{ tool }}
                         </span>
                       </div>
                     </td>
-                    <td
-                      v-for="(aggregation, i) in tableData.aggregation_slices[activeSliceIndex].members"
-                      :key="i"
+                    <td v-for="(aggregation, i) in tableData.aggregation_slices[activeSliceIndex].members" :key="i"
                       class="border px-2 py-1.5 text-center"
-                      :class="aggregation.participants[tool] ? 'Q' + aggregation.participants[tool] : ''"
-                    >
+                      :class="aggregation.participants[tool] ? 'Q' + aggregation.participants[tool] : ''">
                       {{ aggregation.participants[tool] ? 'Q' + aggregation.participants[tool] : '-' }}
                     </td>
 
@@ -211,10 +181,12 @@ const tableData = ref(null)
 const classifiers = ref({})
 const loading = ref({})
 const errors = ref({})
+// Tracks which kind of alert to render per table: 'no-data' | 'server-error' | null
+const errorTypes = ref({})
 const results = ref({})
 // Paginator
 const activeSliceIndex = ref(0)
-const tabsPerPage = 10          
+const tabsPerPage = 10
 const currentPage = ref(0)
 
 
@@ -253,8 +225,35 @@ function setLoading(divId, isLoading) {
   loading.value[divId] = isLoading
 }
 
+// Alert styling helper
+function alertClass(type) {
+  switch (type) {
+    case 'no-data':
+      return 'alert-warning'
+    case 'server-error':
+      return 'alert-danger'
+    default:
+      return 'alert-info'
+  }
+}
+
+// Tab styling helper — flags empty/unfilled challenges in red
+function tabClass(slice, sliceIdx) {
+  const isActive = activeSliceIndex.value === sliceIdx
+
+  if (slice.empty_challenge) {
+    return isActive
+      ? 'bg-red-500 text-white border-red-600'
+      : 'bg-red-100 text-red-700 border-red-400 hover:bg-red-200'
+  }
+
+  return isActive
+    ? 'bg-primaryOeb-500 text-white'
+    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+}
+
 // Prepare the data in the table.
-function prepareTableData( aggregations, chunk_size, mode, community_id) {
+function prepareTableData(aggregations, chunk_size, mode, community_id) {
   let known_tools = {}
   let ordered_tools = []
   let challenges = {}
@@ -280,7 +279,7 @@ function prepareTableData( aggregations, chunk_size, mode, community_id) {
       }
 
       // Aggregation specific cell
-      if (aggregation.aggregation_id !== undefined){
+      if (aggregation.aggregation_id !== undefined) {
         aggregation.metrics.forEach((m_entry, m_entry_i) => {
           if (m_entry == null) {
             console.log("FIXME: metrics label not in challenge", aggregation);
@@ -337,20 +336,27 @@ function prepareTableData( aggregations, chunk_size, mode, community_id) {
   force_break = true
   aggregation_slices = empty_challenges_list.reduce(reduce_lambda, aggregation_slices)
 
-  // Building headers with colspan and URLs
+  // Building headers with colspan, URLs, and data availability
   const challengeHeaders = []
   const seen = {}
   challenges_list.flat().forEach(agg => {
+    const hasParticipants = !!agg.participants && Object.keys(agg.participants).length > 0
+
     if (!seen[agg._id]) {
       seen[agg._id] = {
         id: agg._id,
         acronym: agg.challenge_acronym ?? agg.acronym,
         url: `https://${mode}.bsc.es/scientific/${community_id}/${agg._id}`,
-        colspan: 1
+        colspan: 1,
+        hasData: hasParticipants
       }
       challengeHeaders.push(seen[agg._id])
     } else {
       seen[agg._id].colspan++
+      // If ANY member sharing this challenge id has data, treat the header as clickable
+      if (hasParticipants) {
+        seen[agg._id].hasData = true
+      }
     }
   })
 
@@ -359,7 +365,7 @@ function prepareTableData( aggregations, chunk_size, mode, community_id) {
     challenges_list,
     num_charts,
     aggregation_slices,
-    challengeHeaders 
+    challengeHeaders
   }
 }
 
@@ -368,6 +374,7 @@ function prepareTableData( aggregations, chunk_size, mode, community_id) {
 async function compute_classification(divId, selectedClassifier, challengeList, chunkSize) {
   setLoading(divId, true)
   errors.value[divId] = null
+  errorTypes.value[divId] = null
   results.value[divId] = null
 
   try {
@@ -387,6 +394,7 @@ async function compute_classification(divId, selectedClassifier, challengeList, 
 
     if (!resultsJson || resultsJson.length === 0 || resultsJson.data === null) {
       errors.value[divId] = `No data available for benchmarking event: '${divId}'`
+      errorTypes.value[divId] = 'no-data'
       return
     }
 
@@ -435,6 +443,7 @@ async function compute_classification(divId, selectedClassifier, challengeList, 
   } catch (err) {
     console.error('❌ Error en compute_classification:', err)
     errors.value[divId] = 'There is an error in the server. Please try again or contact with the support team.'
+    errorTypes.value[divId] = 'server-error'
   } finally {
     setLoading(divId, false)
   }
@@ -486,7 +495,6 @@ watch([() => props.challengeList, () => props.activeTable], () => {
 </script>
 
 <style scoped>
-
 .classificator_list {
   background-color: #0b579f;
   color: #fff;
@@ -530,6 +538,7 @@ select.classificator_list {
   width: 150px;
   height: 100px;
 }
+
 /* Cells color */
 .Q1 {
   background-color: #238b45;
@@ -558,16 +567,18 @@ select.classificator_list {
 
 .oeb-table {
   margin-bottom: 0px;
-  table-layout: auto; /* Default, mantiene el comportamiento normal */ 
+  table-layout: auto;
+  /* Default, mantiene el comportamiento normal */
 }
 
-.oeb-table th{
+.oeb-table th {
   background: #fff;
 }
 
 .oeb-table th,
 .oeb-table td {
-  border: 1px solid #0000003d !important; /* color gris claro de ejemplo */
+  border: 1px solid #0000003d !important;
+  /* color gris claro de ejemplo */
 }
 
 .oeb-table thead th {
@@ -583,8 +594,50 @@ select.classificator_list {
   position: sticky;
 }
 
-.tool-column{
+.tool-column {
   width: 100px !important;
 }
 
+/* Site-wide link style */
+.oeb-link {
+  color: #0b579f;
+  text-decoration: none;
+}
+
+.oeb-link:hover {
+  text-decoration: underline;
+  color: #6a98c4;
+}
+
+/* Challenge header with no data — not clickable */
+.oeb-link-disabled {
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* Alerts */
+.alert {
+  padding: 0.75rem 1rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  border: 1px solid transparent;
+}
+
+.alert-info {
+  background-color: #e7f1fb;
+  color: #0b579f;
+  border-color: #b6d4f0;
+}
+
+.alert-warning {
+  background-color: #fff7e6;
+  color: #92620a;
+  border-color: #f5d68b;
+}
+
+.alert-danger {
+  background-color: #fdecea;
+  color: #b3261e;
+  border-color: #f5c2c0;
+}
 </style>

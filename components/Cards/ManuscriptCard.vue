@@ -49,7 +49,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import emptyImg from "../../public/images/illustrations/empty-state.svg?component";
+import emptyImg from "~/assets/images/illustrations/empty-state.svg?component";
 
 // Types
 interface Paper {

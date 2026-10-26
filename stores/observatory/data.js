@@ -1,7 +1,6 @@
 // stores/data.js
 import { defineStore } from 'pinia';
 import { useObservatory } from '@/stores/observatory/index.js';
-import { useAsyncData } from 'nuxt/app';
 import { reactive } from 'vue';
 
 const BASE_URL = '/api/stats/tools/';
@@ -99,15 +98,10 @@ export const useData = defineStore('data', {
     // ------------------------------------------------------------------------
 
     async GET_URL(URL) {
-      const result =
-        await useAsyncData("GET_URL", () =>
-          $observatory(URL, {
-            method: "GET",
-          }),
-        );
-
-      console.log(result);
-      return result.data.data;
+      const { $observatory } = useNuxtApp();
+      return await $observatory(URL, {
+        method: "GET",
+      });
     },
 
     async getCountsPerSource() {
@@ -117,15 +111,13 @@ export const useData = defineStore('data', {
       
       try {
         this.setLoaded({ countsPerSource: true });
-        const { data } = await useAsyncData("countsPerSource", () =>
-          $observatory(URL, {
-            method: "GET", // Cambiar a POST si el endpoint lo requiere
-          })
-        );
-
-        // Accede a data.value.data, que es el array que contiene los resultados
-        const result = data.value?.data;
-        const nonZeroSources = result.filter((element) => element.count > 0);
+        const result = await $observatory(URL, {
+          method: "GET",
+        });
+        const sourceCounts = Array.isArray(result) ? result : result?.data;
+        const nonZeroSources = Array.isArray(sourceCounts)
+          ? sourceCounts.filter((element) => element.count > 0)
+          : [];
         this.setCountsPerSource(nonZeroSources);
 
         // If no errors
@@ -144,16 +136,11 @@ export const useData = defineStore('data', {
       
       try {
         this.setLoaded({ totalCount: true });
-        const resources =
-          await useAsyncData("resources", () =>
-            $observatory(URL, {
-              method: "GET",
-            }),
-        );
-        // Verifica la estructura de result
-        if (resources && resources.data._value.length > 0) {
-          this.setTotalCount(resources.data._value[0].data)
-        }
+        const resources = await $observatory(URL, {
+          method: "GET",
+        });
+        const totalCount = Array.isArray(resources) && resources[0]?.data;
+        this.setTotalCount(totalCount ?? 0);
 
         // If no errors
         this.setLoaded({ totalCount: false });
@@ -205,14 +192,11 @@ export const useData = defineStore('data', {
       
       try {
         this.setLoaded({ coverageSources : true});
-        const result =
-          await useAsyncData('CoverageSources', () =>
-            $observatory(URL, {
-              method: "GET",
-          })
-        );
+        const result = await $observatory(URL, {
+          method: "GET",
+        });
 
-        if(result.data === null) {
+        if(result === null || result === undefined) {
           console.log('CoverageSources no data available');
           this.setLoaded({ coverageSources : true})
         }else{
