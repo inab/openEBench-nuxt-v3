@@ -4,7 +4,7 @@ OpenEBench web frontend, built with [Nuxt 4](https://nuxt.com) (Vue 3, Pinia, Nu
 
 ## Requirements
 
-- Node.js `>=22.23.2 <23` and npm `>=12.0.2 <13` (see `engines` in [package.json](package.json))
+- Node.js `>=24.22.1 <25` and npm `>=12.2.1 <13` (see `engines` in [package.json](package.json))
 
 ## Getting started
 
