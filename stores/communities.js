@@ -1,32 +1,31 @@
-import { defineStore } from "pinia";
-import parseDataURL from "data-urls";
-import { TextDecoder } from "@exodus/bytes/encoding.js";
+import { defineStore } from 'pinia';
+import { decodeDataUrlText } from '~/utils/decodeDataUrlText';
 
-export const useCommunities = defineStore("communities", {
-  state: () => ({
-    communities: [],
-    projects: [],
-  }),
+export const useCommunities = defineStore('communities', {
+	state: () => ({
+		communities: /** @type {any[]} */ ([]),
+		projects: /** @type {any[]} */ ([]),
+	}),
 
-  getters: {
-    getCommunities: (state) => state.communities,
-    getProjects: (state) => state.projects,
-  },
+	getters: {
+		getCommunities: (state) => state.communities,
+		getProjects: (state) => state.projects,
+	},
 
-  actions: {
-    async requestCommunitiesData(type) {
-      const { $graphql } = useNuxtApp();
-      if (!$graphql) {
-        throw new Error("$graphql is not available in the current context");
-      }
+	actions: {
+		async requestCommunitiesData(type) {
+			const { $graphql } = useNuxtApp();
+			if (!$graphql) {
+				throw new Error('$graphql is not available in the current context');
+			}
 
-      return await $graphql("/graphql", {
-        method: "POST",
-        headers: {
-          Accept: "text/plain, */*",
-        },
-        body: JSON.stringify({
-          query: `
+			const returnData = await $graphql('/graphql', {
+				method: 'POST',
+				headers: {
+					Accept: 'text/plain, */*',
+				},
+				body: JSON.stringify({
+					query: `
                                 {
                                 getCommunities {
                                     _id
@@ -46,65 +45,61 @@ export const useCommunities = defineStore("communities", {
                                     _metadata
                                 }
                             }`,
-        }),
-      })
-        .then((returnData) => {
-          let data = returnData.data.getCommunities;
-          let dataFormatted = this.formatData(data ?? null);
-          this.communities = this.filterCommunities(dataFormatted);
-          this.projects = this.filterProjects(dataFormatted);
+				}),
+			});
 
-          if (type && type === "projects") {
-            return this.projects;
-          }
+			const data = returnData.data.getCommunities;
+			const dataFormatted = await this.formatData(data ?? []);
+			this.communities = this.filterCommunities(dataFormatted);
+			this.projects = this.filterProjects(dataFormatted);
 
-          return this.communities;
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-        });
-    },
+			if (type && type === 'projects') {
+				return this.projects;
+			}
 
-    formatData(data) {
-      return data.map((community) => {
-        if (!community.links) {
-          community.links = [];
-        }
+			return this.communities;
+		},
 
-        community.logo = "/opeb_logo.gif";
+		async formatData(data) {
+			return Promise.all(
+				data.map(async (community) => {
+					if (!community.links) {
+						community.links = [];
+					}
 
-        community.links.forEach((link) => {
-          if (link.label === "Logo" || link.comment === "@logo") {
-            community.logo = link.uri;
-          }
-        });
-        community._metadata = JSON.parse(community._metadata);
-        if (community._metadata && "project:summary" in community._metadata) {
-          const dataURL = parseDataURL(community._metadata["project:summary"]);
-          const encodingName =
-            dataURL.mimeType.parameters.get("charset") || "utf-8";
-          const decodedSummary = new TextDecoder(encodingName).decode(
-            dataURL.body,
-          );
+					community.logo = '/opeb_logo.gif';
 
-          community.summary = decodedSummary;
-          community._metadata["project:summary"] = decodedSummary;
-        }
-        if (community.status === "abandoned") community.status = "inactive";
-        return community;
-      });
-    },
+					community.links.forEach((link) => {
+						if (link.label === 'Logo' || link.comment === '@logo') {
+							community.logo = link.uri;
+						}
+					});
+					community._metadata =
+						typeof community._metadata === 'string'
+							? JSON.parse(community._metadata)
+							: (community._metadata ?? {});
+					if (community._metadata && 'project:summary' in community._metadata) {
+						const decodedSummary = await decodeDataUrlText(community._metadata['project:summary']);
 
-    filterCommunities(data) {
-      return data.filter((community) =>
-        community._metadata ? !community._metadata.project_spaces : true,
-      );
-    },
+						community.summary = decodedSummary;
+						community._metadata['project:summary'] = decodedSummary;
+					}
+					if (community.status === 'abandoned') community.status = 'inactive';
+					return community;
+				})
+			);
+		},
 
-    filterProjects(data) {
-      return data.filter((community) =>
-        community._metadata ? community._metadata.project_spaces : false,
-      );
-    },
-  },
+		filterCommunities(data) {
+			return data.filter((community) =>
+				community._metadata ? !community._metadata.project_spaces : true
+			);
+		},
+
+		filterProjects(data) {
+			return data.filter((community) =>
+				community._metadata ? community._metadata.project_spaces : false
+			);
+		},
+	},
 });

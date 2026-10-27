@@ -1,76 +1,34 @@
-version: "4"
+# Same as docker-compose.devci.yml (without the nginx proxy) plus file polling,
+# useful when file change events are not propagated into the container.
 volumes:
-  dist-volume:
   node-modules-volume:
+
+x-dev-service: &dev-service
+  build:
+    context: .
+    dockerfile: Dockerfile.devci
+  image: openebench-nuxt3:devci
+  user: ${DEV_UID:-0}:${DEV_GID:-0}
+  volumes:
+    - .:/app
+    - node-modules-volume:/app/node_modules
+
 services:
   npm_ci_deps:
-    build:
-      context: .
-      dockerfile: Dockerfile.localci
-    image: openebench-nuxt3:localci
-    user: ${DEV_UID:-0}:${DEV_GID:-0}
+    <<: *dev-service
     command: npm ci
-    volumes:
-      - ./assets:/app/assets:ro
-      - ./components:/app/components:ro
-      - ./config:/app/config:ro
-      - ./constants:/app/constants:ro
-      - ./layouts:/app/layouts:ro
-      - ./pages:/app/pages:ro
-      - ./plugins:/app/plugins:ro
-      - ./static:/app/static
-      - ./stores:/app/stores:ro
-      - ./stories:/app/stories:ro
-      - ./test:/app/test:ro
-      - ./utils:/app/utils:ro
-      - ./vitest.config.ts:/app/vitest.config.ts:ro
-      - ./nuxt.config.js:/app/nuxt.config.js:ro
-      - ./package.json:/app/package.json:ro
-      - ./package-lock.json:/app/package-lock.json
-      - ./stylelint.config.js:/app/stylelint.config.js:ro
-      - ./server:/app/server:ro
-      - ./types:/app/types:ro
-      - ./tsconfig.json:/app/tsconfig.json:ro
-      - node-modules-volume:/app/node_modules
 
   nuxt:
-    build:
-      context: .
-      dockerfile: Dockerfile.localci
-    image: openebench-nuxt3:localci
-    user: ${DEV_UID:-0}:${DEV_GID:-0}
+    <<: *dev-service
     depends_on:
       npm_ci_deps:
         condition: service_completed_successfully
     restart: on-failure
-    volumes:
-      - ./assets:/app/assets:ro
-      - ./components:/app/components:ro
-      - ./constants:/app/constants:ro
-      - ./config:/app/config:ro
-      - ./layouts:/app/layouts:ro
-      - ./pages:/app/pages:ro
-      - ./plugins:/app/plugins:ro
-      - ./static:/app/static
-      - ./stores:/app/stores:ro
-      - ./stories:/app/stories:ro
-      - ./test:/app/test:ro
-      - ./utils:/app/utils:ro
-      - ./vitest.config.ts:/app/vitest.config.ts:ro
-      - ./nuxt.config.js:/app/nuxt.config.js:ro
-      - ./package.json:/app/package.json:ro
-      - ./package-lock.json:/app/package-lock.json
-      - ./server:/app/server:ro
-      - ./types:/app/types:ro
-      - ./stylelint.config.js:/app/stylelint.config.js:ro
-      - ./tsconfig.json:/app/tsconfig.json:ro
-      - ./models:/app/models
-      - ./api:/app/api
-      - node-modules-volume:/app/node_modules
-      - dist-volume:/app/dist
     ports:
-      - 3001:3001
+      - '3001:3001'
     environment:
-      CHOKIDAR_USEPOLLING: "true"
-      AUTH_ORIGIN: "http://localhost:3001"
-      APP_BASE_URL: "http://localhost:3001"
+      CHOKIDAR_USEPOLLING: 'true'
+      WATCHPACK_POLLING: 'true'
+      AUTH_ORIGIN: 'http://localhost:3001'
+      APP_BASE_URL: 'http://localhost:3001'
+      NUXT_AUTH_SECRET: '${NUXT_AUTH_SECRET:-local-dev-only-secret-change-me}'

@@ -1,18 +1,23 @@
 import { defineVitestConfig } from '@nuxt/test-utils/config';
+
 const mockAuthModule = process.env.VITEST ? ['test/mocks/setup'] : [];
 
 export default defineVitestConfig({
-  plugins: [],
-  test: {
-    globals: true,
-    environment: 'jsdom',
-    setupFiles: mockAuthModule,
-    coverage: {
-      reporter: ['text', 'json', 'html'],
-      provider: 'istanbul',
-    },
-    reporters: ['verbose'],
-    include: ['tests/unit/**/*.spec.ts', 'tests/unit/**/*.test.ts'],
-    exclude: ['node_modules/**', '**/migrations/**', '**/coverage/**'],
-  },
+	plugins: [],
+	test: {
+		globals: true,
+		hookTimeout: 60000,
+		testTimeout: 30000,
+		environment: 'nuxt',
+		setupFiles: mockAuthModule,
+		fsModuleCache: true,
+		isolate: false,
+		coverage: {
+			reporter: ['text', 'json', 'html'],
+			provider: 'istanbul',
+		},
+		reporters: ['verbose'],
+		include: ['tests/unit/**/*.spec.ts', 'tests/unit/**/*.test.ts'],
+		exclude: ['node_modules/**', '**/migrations/**', '**/coverage/**'],
+	},
 });

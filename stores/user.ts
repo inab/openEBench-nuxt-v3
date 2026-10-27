@@ -1,404 +1,423 @@
-import { defineStore } from "pinia";
-import type { Community } from "@/types/communities";
-import type { Event } from "@/types/events";
-import type { Challenge } from "@/types/challenges";
-import { privileges } from "@/constants/privileges";
-import parseDataURL from "data-urls";
-
-const runtimeConfig = useRuntimeConfig();
+import { defineStore } from 'pinia';
+import type { Community } from '~~/types/communities';
+import type { Event } from '~~/types/events';
+import type { Challenge } from '~~/types/challenge';
+import { privileges } from '~~/constants/privileges';
 
 interface CommunityRole {
-  role: string;
-  community: string;
+	role: string;
+	community: string;
 }
 
 interface CommunityEvents {
-  communityId: string;
-  communityEvents: [];
+	communityId: string;
+	communityEvents: Event[];
 }
 
-export const useUser = defineStore("user", {
-  state: () => ({
-    userInfo: {} as object,
-    userRoles: [] as string[],
-    communitiesRoles: [] as CommunityRole[],
-    userCommunities: [],
-    userCommunitiesEvents: {
-      communityId: "",
-      communityEvents: [],
-    } as CommunityEvents,
-    userCommunitiesChallenges: [],
-    contactsList: [],
-  }),
+interface ContactListItem {
+	id: string;
+	name: string;
+}
 
-  getters: {
-    getUserInfo: (state) => state.userInfo,
+interface ContactApiRecord {
+	_id: string;
+	givenName: string;
+	surname: string;
+}
 
-    getUserRoles: (state) => state.userRoles,
+interface CommunityLink {
+	comment?: string;
+	label?: string;
+	uri?: string;
+}
 
-    getUserCommunitiesRoles: (state) => state.communitiesRoles || [],
+function isRecord(value: unknown): value is Record<string, unknown> {
+	return typeof value === 'object' && value !== null;
+}
 
-    getUserCommunities: (state) => state.userCommunities,
+function isContactApiRecord(value: unknown): value is ContactApiRecord {
+	return (
+		isRecord(value) &&
+		typeof value._id === 'string' &&
+		typeof value.givenName === 'string' &&
+		typeof value.surname === 'string'
+	);
+}
 
-    getUserCommunitiesEvents: (state) => state.userCommunitiesEvents,
+function isCommunityLink(value: unknown): value is CommunityLink {
+	return (
+		isRecord(value) &&
+		(value.comment === undefined || typeof value.comment === 'string') &&
+		(value.label === undefined || typeof value.label === 'string') &&
+		(value.uri === undefined || typeof value.uri === 'string')
+	);
+}
 
-    getUserCommunitiesChallenges: (state) => state.userCommunitiesChallenges,
+function isEvent(value: unknown): value is Event {
+	return (
+		isRecord(value) &&
+		typeof value._id === 'number' &&
+		typeof value.community_id === 'string' &&
+		(value.bench_contact_ids === undefined ||
+			(Array.isArray(value.bench_contact_ids) &&
+				value.bench_contact_ids.every((contact) => typeof contact === 'string')))
+	);
+}
 
-    getContactsList: (state) => state.contactsList,
-  },
+function isChallenge(value: unknown): value is Challenge {
+	return (
+		isRecord(value) &&
+		typeof value._id === 'number' &&
+		typeof value.benchmarking_event_id === 'string' &&
+		(value.challenge_contact_ids === undefined ||
+			(Array.isArray(value.challenge_contact_ids) &&
+				value.challenge_contact_ids.every((contact) => typeof contact === 'string')))
+	);
+}
 
-  actions: {
-    setUserInfo(userInfo: object) {
-      this.userInfo = userInfo;
-    },
+export const useUser = defineStore('user', {
+	state: () => ({
+		userInfo: {} as object,
+		userRoles: [] as string[],
+		communitiesRoles: [] as CommunityRole[],
+		userCommunities: [] as Community[],
+		userCommunitiesEvents: {
+			communityId: '',
+			communityEvents: [],
+		} as CommunityEvents,
+		userCommunitiesChallenges: [] as Challenge[],
+		contactsList: [] as ContactListItem[],
+	}),
 
-    setUserRoles(userRoles: string[]) {
-      this.userRoles = userRoles;
-    },
+	getters: {
+		getUserInfo: (state) => state.userInfo,
 
-    setUserCommunitiesRoles(roles: string[] = []) {
-      this.communitiesRoles = roles.reduce<CommunityRole[]>(
-        (accumulator, rol) => {
-          if (!rol) return accumulator;
-          const [role, community] = rol.split(":");
-          accumulator.push({ role, community });
-          return accumulator;
-        },
-        [],
-      );
-    },
+		getUserRoles: (state) => state.userRoles,
 
-    setUserCommunities(userCommunities) {
-      this.userCommunities = userCommunities;
-    },
+		getUserCommunitiesRoles: (state) => state.communitiesRoles || [],
 
-    setUserCommunitiesEvents(userCommunitiesEvents: CommunityEvents) {
-      this.userCommunitiesEvents.communityId =
-        userCommunitiesEvents.communityId;
-      this.userCommunitiesEvents.communityEvents =
-        userCommunitiesEvents.communityEvents;
-    },
+		getUserCommunities: (state) => state.userCommunities,
 
-    setUserCommunitiesChallenges(userCommunitiesChallenges) {
-      this.userCommunitiesChallenges = userCommunitiesChallenges;
-    },
+		getUserCommunitiesEvents: (state) => state.userCommunitiesEvents,
 
-    async fetchUserPrivileges(token: string) {
-      return await fetch(
-        `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}query/privileges`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: "application/json",
-          },
-          method: "GET",
-        },
-      )
-        .then((response) => response.json())
-        .then((data) => {
-          this.setUserCommunitiesRoles(data);
-          return data;
-        })
-        .catch((error) => console.error("Error:", error));
-    },
+		getUserCommunitiesChallenges: (state) => state.userCommunitiesChallenges,
 
-    async fetchCommunities(token: string) {
-      return await fetch(
-        `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Community`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: "application/json",
-          },
-          method: "GET",
-        },
-      )
-        .then((response) => response.json())
-        .then((data) => {
-          data = this.formatCommunityData(data);
-          data = this.setCommunityPrivileges(data);
-          this.setUserCommunities(data);
-          return data;
-        })
-        .catch((error) => console.error("Error:", error));
-    },
+		getContactsList: (state) => state.contactsList,
+	},
 
-    async fetchContacts(token: string) {
-      const response = await fetch(
-        `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Contact`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: "application/json",
-          },
-        },
-      );
-      const data = await response.json();
-      console.log("data: " , data)
+	actions: {
+		setUserInfo(userInfo: object) {
+			this.userInfo = userInfo;
+		},
 
-      if (!data) {
-        [];
-      }
-      return data.map((d: any) => ({
-        id: d._id,
-        name: d.givenName + " " + d.surname,
-      }));
-    },
+		setUserRoles(userRoles: string[]) {
+			this.userRoles = userRoles;
+		},
 
-    async fetchCommunitiesEvents(token: string, community: string) {
-      const response = await fetch(
-        `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/BenchmarkingEvent`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: "application/json",
-          },
-          method: "GET",
-        },
-      );
+		setUserCommunitiesRoles(roles: string[] = []) {
+			this.communitiesRoles = roles.reduce<CommunityRole[]>((accumulator, rol) => {
+				if (!rol) return accumulator;
+				const [role = '', community = ''] = rol.split(':');
+				accumulator.push({ role, community });
+				return accumulator;
+			}, []);
+		},
 
-      let data = await response.json();
-      if (!data) {
-        return [];
-      }
-      data = data.filter((event: any) => event.community_id === community);
-      data = this.formatCommunityEventData(data);
-      data = this.setCommunityEventPrivileges(data);
-      const eventData = {
-        communityId: community,
-        communityEvents: data,
-      };
-      this.setUserCommunitiesEvents(eventData);
-      return eventData.communityEvents;
-    },
+		setUserCommunities(userCommunities: Community[]) {
+			this.userCommunities = userCommunities;
+		},
 
-    async fetchCommunitiesEventsChallenges(token: string, event: string) {
-      const response = await fetch(
-        `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Challenge`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: "application/json",
-          },
-          method: "GET",
-        },
-      );
+		setUserCommunitiesEvents(userCommunitiesEvents: CommunityEvents) {
+			this.userCommunitiesEvents.communityId = userCommunitiesEvents.communityId;
+			this.userCommunitiesEvents.communityEvents = userCommunitiesEvents.communityEvents;
+		},
 
-      let data = await response.json();
-      data = data.filter(
-        (challenge: any) => challenge.benchmarking_event_id === event,
-      );
-      data = this.formatCommunityChallengeData(data);
-      data = this.setCommunityChallengePrivileges(data);
-      const eventData = {
-        communityId: community,
-        communityEvents: data,
-      };
-      this.setUserCommunitiesEvents(eventData);
-      return eventData.communityEvents;
-    },
+		setUserCommunitiesChallenges(userCommunitiesChallenges: Challenge[]) {
+			this.userCommunitiesChallenges = userCommunitiesChallenges;
+		},
 
-    async fetchCommunitiesChallenge(token: string, event: string) {
-      const response = await fetch(
-        `${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Challenge`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: "application/json",
-          },
-          method: "GET",
-        },
-      );
+		async fetchUserPrivileges(token: string) {
+			const runtimeConfig = useRuntimeConfig();
+			return await fetch(`${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}query/privileges`, {
+				headers: {
+					Authorization: `Bearer ${token}`,
+					Accept: 'application/json',
+				},
+				method: 'GET',
+			})
+				.then((response) => response.json())
+				.then((data) => {
+					this.setUserCommunitiesRoles(data);
+					return data;
+				})
+				.catch((error) => console.error('Error:', error));
+		},
 
-      let data = await response.json();
-      data = data.filter(
-        (challenge: any) => challenge.benchmarking_event_id === event,
-      );
-      data = this.formatCommunityChallengeData(data);
-      data = this.setCommunityChallengePrivileges(data);
-      const challengeData = {
-        eventId: event,
-        eventChallenges: data,
-      };
-      return challengeData.eventChallenges;
-    },
+		async fetchCommunities(token: string) {
+			const runtimeConfig = useRuntimeConfig();
+			return await fetch(`${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Community`, {
+				headers: {
+					Authorization: `Bearer ${token}`,
+					Accept: 'application/json',
+				},
+				method: 'GET',
+			})
+				.then((response) => response.json())
+				.then((data) => {
+					data = this.formatCommunityData(data);
+					data = this.setCommunityPrivileges(data);
+					this.setUserCommunities(data);
+					return data;
+				})
+				.catch((error) => console.error('Error:', error));
+		},
 
-    formatCommunityData(data) {
-      return data.map((community: Community) => {
-        const links = community.links ?? [];
-        const logo =
-          Array.isArray(links) && links.length > 0
-            ? links.find(
-                (link: any) =>
-                  link.comment === "@logo" || link.label === "Logo",
-              )?.uri ||
-              "https://raw.githubusercontent.com/inab/openEBench-nuxt/refs/heads/master/static/OEB-minimal-logo-blue.svg"
-            : "https://raw.githubusercontent.com/inab/openEBench-nuxt/refs/heads/master/static/OEB-minimal-logo-blue.svg";
-        return {
-          _id: community._id,
-          name: community.acronym,
-          logo: logo,
-          links: links,
-          status: community.status,
-          community_contact: community.community_contact_ids
-            .map((contact: string) => {
-              return {
-                id: contact.replace(/\./g, " ").split(":")[1],
-                name: contact.replace(/\./g, " ")
-              }
-            }),
-          _metadata: community._metadata ? community._metadata : "",
-          to: `${runtimeConfig.public.BASE_URL}/benchmarking/${community._id}`,
-          privileges: community.privileges,
-          actions: community.actions || [],
-        };
-      });
-    },
+		async fetchContacts(token: string) {
+			const runtimeConfig = useRuntimeConfig();
+			const response = await fetch(
+				`${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Contact`,
+				{
+					method: 'GET',
+					headers: {
+						Authorization: `Bearer ${token}`,
+						Accept: 'application/json',
+					},
+				}
+			);
+			const data: unknown = await response.json();
+			console.log('data: ', data);
 
-    formatCommunityEventData(data) {
-      return data.map((event: Event) => {
-        return {
-          _id: event._id,
-          name: event.name,
-          url: event.url,
-          community_id: event.community_id,
-          bench_contact: event.bench_contact_ids
-            .map((contact: string) => {
-              return contact.replace(/\./g, " ");
-            })
-            .join(", "),
-          dates: event.dates,
-          to: `${runtimeConfig.public.BASE_URL}/benchmarking/${event.community_id}/event/${event._id}`,
-          privileges: event.privileges || "",
-          actions: event.actions || [],
-        };
-      });
-    },
+			if (!Array.isArray(data)) {
+				return [];
+			}
+			return data.filter(isContactApiRecord).map((contact) => ({
+				id: contact._id,
+				name: `${contact.givenName} ${contact.surname}`,
+			}));
+		},
 
-    formatCommunityChallengeData(data) {
-      return data.map((challenge: Challenge) => {
-        return {
-          _id: challenge._id,
-          name: challenge.name,
-          acronym: challenge.acronym,
-          _schema: challenge._schema,
-          benchmarking_event_id: challenge.benchmarking_event_id,
-          challenge_contact: challenge.challenge_contact_ids
-            .map((contact: string) => {
-              return contact.replace(/\./g, " ");
-            })
-            .join(", "),
-          dates: challenge.dates,
-          references: challenge.references,
-          metrics_categories: challenge.metrics_categories,
-          url: challenge.url,
-          orig_id: challenge.orig_id,
-          privileges: challenge.privileges || "",
-          actions: challenge.actions || [],
-        };
-      });
-    },
+		async fetchCommunitiesEvents(token: string, community: string) {
+			const runtimeConfig = useRuntimeConfig();
+			const response = await fetch(
+				`${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/BenchmarkingEvent`,
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+						Accept: 'application/json',
+					},
+					method: 'GET',
+				}
+			);
 
-    setCommunityPrivileges(data: Community[]): Community[] {
-      const userPrivileges = this.getUserCommunitiesRoles;
-      data.forEach((community: Community) => {
-        community.actions = [];
-        community.privileges = "None";
-        if (userPrivileges.length > 0) {
-          userPrivileges.some((value: { role: string; community: string }) => {
-            if (value.role === "owner" && value.community === community._id) {
-              community.actions = privileges.owner;
-              community.privileges = "Owner";
-              return true;
-            } else if (
-              value.role === "manager" &&
-              value.community === community._id
-            ) {
-              community.actions = privileges.manager;
-              community.privileges = "Manager";
-              return true;
-            } else {
-              community.actions = privileges.anyone;
-              community.privileges = "anyone";
-              return false;
-            }
-          });
-        }
-      });
-      return data; // Return the modified data array
-    },
+			const payload: unknown = await response.json();
+			if (!Array.isArray(payload)) {
+				return [];
+			}
+			let data = payload.filter(
+				(event: unknown): event is Event => isEvent(event) && event.community_id === community
+			);
+			data = this.formatCommunityEventData(data);
+			data = this.setCommunityEventPrivileges(data);
+			const eventData = {
+				communityId: community,
+				communityEvents: data,
+			};
+			this.setUserCommunitiesEvents(eventData);
+			return eventData.communityEvents;
+		},
 
-    setCommunityEventPrivileges(data: Event[]): Event[] {
-      const userPrivileges = this.getUserCommunitiesRoles;
-      data.forEach((event: Event) => {
-        event.actions = [];
-        event.privileges = "None";
-        if (userPrivileges.length > 0) {
-          userPrivileges.some((value: { role: string; community: string }) => {
-            if (value.role === "admin") {
-              event.actions = privileges.owner;
-              event.privileges = "Owner";
-              return true;
-            } else if (
-              value.role === "owner" &&
-              value.community === event.community_id
-            ) {
-              event.actions = privileges.owner;
-              event.privileges = "Owner";
-              return true;
-            } else if (
-              value.role === "manager" &&
-              value.community === event.community_id
-            ) {
-              event.actions = privileges.manager;
-              event.privileges = "Manager";
-              return true;
-            } else {
-              event.actions = privileges.anyone;
-              event.privileges = "anyone";
-              return false;
-            }
-          });
-        }
-      });
-      return data;
-    },
+		async fetchCommunitiesChallenge(token: string, event: string) {
+			const runtimeConfig = useRuntimeConfig();
+			const response = await fetch(
+				`${runtimeConfig.public.SCIENTIFIC_SERVICE_URL_API}staged/Challenge`,
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+						Accept: 'application/json',
+					},
+					method: 'GET',
+				}
+			);
 
-    setCommunityChallengePrivileges(data: Challenge[]): Challenge[] {
-      const userPrivileges = this.getUserCommunitiesRoles;
-      data.forEach((event: Event) => {
-        event.actions = [];
-        event.privileges = "None";
-        if (userPrivileges.length > 0) {
-          userPrivileges.some((value: { role: string; community: string }) => {
-            if (value.role === "admin") {
-              event.actions = privileges.owner;
-              event.privileges = "Owner";
-              return true;
-            } else if (
-              value.role === "owner" &&
-              value.community === event.community_id
-            ) {
-              event.actions = privileges.owner;
-              event.privileges = "Owner";
-              return true;
-            } else if (
-              value.role === "manager" &&
-              value.community === event.community_id
-            ) {
-              event.actions = privileges.manager;
-              event.privileges = "Manager";
-              return true;
-            } else {
-              event.actions = privileges.anyone;
-              event.privileges = "anyone";
-              return false;
-            }
-          });
-        }
-      });
-      return data;
-    },
-  },
+			const payload: unknown = await response.json();
+			if (!Array.isArray(payload)) {
+				return [];
+			}
+			let data = payload.filter(
+				(challenge: unknown): challenge is Challenge =>
+					isChallenge(challenge) && challenge.benchmarking_event_id === event
+			);
+			data = this.formatCommunityChallengeData(data);
+			data = this.setCommunityChallengePrivileges(data);
+			const challengeData = {
+				eventId: event,
+				eventChallenges: data,
+			};
+			return challengeData.eventChallenges;
+		},
+
+		formatCommunityData(data: Community[]) {
+			const runtimeConfig = useRuntimeConfig();
+			return data.map((community: Community) => {
+				const links = community.links ?? [];
+				const linkEntries: unknown = links;
+				const logo =
+					Array.isArray(linkEntries) && linkEntries.length > 0
+						? linkEntries.find(
+								(link: unknown): link is CommunityLink =>
+									isCommunityLink(link) && (link.comment === '@logo' || link.label === 'Logo')
+							)?.uri ||
+							'https://raw.githubusercontent.com/inab/openEBench-nuxt/refs/heads/master/static/OEB-minimal-logo-blue.svg'
+						: 'https://raw.githubusercontent.com/inab/openEBench-nuxt/refs/heads/master/static/OEB-minimal-logo-blue.svg';
+				return {
+					_id: community._id,
+					name: community.acronym,
+					logo: logo,
+					links: links,
+					status: community.status,
+					community_contact: (community.community_contact_ids ?? []).map((contact: string) => {
+						return {
+							id: contact.replace(/\./g, ' ').split(':')[1],
+							name: contact.replace(/\./g, ' '),
+						};
+					}),
+					_metadata: community._metadata ? community._metadata : '',
+					to: `${runtimeConfig.public.BASE_URL}/benchmarking/${community._id}`,
+					privileges: community.privileges,
+					actions: community.actions || {},
+				};
+			});
+		},
+
+		formatCommunityEventData(data: Event[]) {
+			const runtimeConfig = useRuntimeConfig();
+			return data.map((event: Event) => {
+				return {
+					_id: event._id,
+					name: event.name,
+					url: event.url,
+					community_id: event.community_id,
+					bench_contact: (event.bench_contact_ids ?? [])
+						.map((contact: string) => {
+							return contact.replace(/\./g, ' ');
+						})
+						.join(', '),
+					dates: event.dates,
+					to: `${runtimeConfig.public.BASE_URL}/benchmarking/${event.community_id}/event/${event._id}`,
+					privileges: event.privileges || '',
+					actions: event.actions || {},
+				};
+			});
+		},
+
+		formatCommunityChallengeData(data: Challenge[]) {
+			return data.map((challenge: Challenge) => {
+				return {
+					_id: challenge._id,
+					name: challenge.name,
+					acronym: challenge.acronym,
+					_schema: challenge._schema,
+					benchmarking_event_id: challenge.benchmarking_event_id,
+					challenge_contact: (challenge.challenge_contact_ids ?? [])
+						.map((contact: string) => {
+							return contact.replace(/\./g, ' ');
+						})
+						.join(', '),
+					dates: challenge.dates,
+					references: challenge.references,
+					metrics_categories: challenge.metrics_categories,
+					url: challenge.url,
+					orig_id: challenge.orig_id,
+					privileges: challenge.privileges || '',
+					actions: challenge.actions || {},
+				};
+			});
+		},
+
+		setCommunityPrivileges(data: Community[]): Community[] {
+			const userPrivileges = this.getUserCommunitiesRoles;
+			data.forEach((community: Community) => {
+				community.actions = {};
+				community.privileges = 'None';
+				if (userPrivileges.length > 0) {
+					userPrivileges.some((value: { role: string; community: string }) => {
+						if (value.role === 'owner' && value.community === community._id) {
+							community.actions = privileges.owner;
+							community.privileges = 'Owner';
+							return true;
+						} else if (value.role === 'manager' && value.community === community._id) {
+							community.actions = privileges.manager;
+							community.privileges = 'Manager';
+							return true;
+						} else {
+							community.actions = privileges.anyone;
+							community.privileges = 'anyone';
+							return false;
+						}
+					});
+				}
+			});
+			return data; // Return the modified data array
+		},
+
+		setCommunityEventPrivileges(data: Event[]): Event[] {
+			const userPrivileges = this.getUserCommunitiesRoles;
+			data.forEach((event: Event) => {
+				event.actions = {};
+				event.privileges = 'None';
+				if (userPrivileges.length > 0) {
+					userPrivileges.some((value: { role: string; community: string }) => {
+						if (value.role === 'admin') {
+							event.actions = privileges.owner;
+							event.privileges = 'Owner';
+							return true;
+						} else if (value.role === 'owner' && value.community === event.community_id) {
+							event.actions = privileges.owner;
+							event.privileges = 'Owner';
+							return true;
+						} else if (value.role === 'manager' && value.community === event.community_id) {
+							event.actions = privileges.manager;
+							event.privileges = 'Manager';
+							return true;
+						} else {
+							event.actions = privileges.anyone;
+							event.privileges = 'anyone';
+							return false;
+						}
+					});
+				}
+			});
+			return data;
+		},
+
+		setCommunityChallengePrivileges(data: Challenge[]): Challenge[] {
+			const userPrivileges = this.getUserCommunitiesRoles;
+			data.forEach((event: Challenge) => {
+				event.actions = {};
+				event.privileges = 'None';
+				if (userPrivileges.length > 0) {
+					userPrivileges.some((value: { role: string; community: string }) => {
+						if (value.role === 'admin') {
+							event.actions = privileges.owner;
+							event.privileges = 'Owner';
+							return true;
+						} else if (value.role === 'owner' && value.community === event.community_id) {
+							event.actions = privileges.owner;
+							event.privileges = 'Owner';
+							return true;
+						} else if (value.role === 'manager' && value.community === event.community_id) {
+							event.actions = privileges.manager;
+							event.privileges = 'Manager';
+							return true;
+						} else {
+							event.actions = privileges.anyone;
+							event.privileges = 'anyone';
+							return false;
+						}
+					});
+				}
+			});
+			return data;
+		},
+	},
 });

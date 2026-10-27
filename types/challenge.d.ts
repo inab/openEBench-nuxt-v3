@@ -1,34 +1,40 @@
-import type { CommunityPrivileges } from './communities';
+import type { CommunityPrivilegeCategories } from './communities';
 
 export interface ChallengeDates {
-  benchmark_start?: string;
-  benchmark_stop?: string;
-  creation?: string;
-  modification?: string;
+	challenge_start?: string;
+	challenge_stop?: string;
+	benchmark_start?: string;
+	benchmark_stop?: string;
+	creation?: string;
+	modification?: string;
 }
 
 export interface ChallengeMetric {
-  metrics_id?: string;
-  tool_id?: string;
+	metrics_id?: string;
+	tool_id?: string;
 }
 
 export interface ChallengeMetrics {
-  category: string;
-  description: string;
-  metrics: Array<ChallengeMetric>;
+	category: string;
+	description: string;
+	metrics: Array<ChallengeMetric>;
 }
 
 export interface Challenge {
-  _id: number;
-  name?: string;
-  acronym?: string;
-  _schema?: string;
-  benchmarking_event_id: string;
-  challenge_contact_ids?: Array<string>;
-  dates?: ChallengeDates;
-  url?: string;
-  orig_id?: string;
-  references?: Array<string>;
-  metrics_categories?: Array<string>;
-  actions?: Array<CommunityPrivileges>;
+	_id: number;
+	name?: string;
+	acronym?: string;
+	_schema?: string;
+	benchmarking_event_id: string;
+	community_id?: string;
+	challenge_contact_ids?: Array<string>;
+	dates?: ChallengeDates;
+	url?: string;
+	orig_id?: string;
+	references?: Array<string>;
+	metrics_categories?: Array<ChallengeMetrics>;
+	actions?: Partial<CommunityPrivilegeCategories>;
+	privileges?: string;
+	description?: string;
+	is_automated?: boolean;
 }

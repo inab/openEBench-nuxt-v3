@@ -1,0 +1,83 @@
+<template>
+	<div :class="nCols">
+		<div class="d-flex">
+			<HeaderAvatar :field="field" :field-name="title" :disabled-tooltip="true" />
+			<span class="text-body title" style="color: #0b579f !important">{{ title }}</span>
+			<UButton color="neutral" variant="ghost" class="p-1.5 mx-2 rounded-full" @click="addEntry">
+				<UIcon name="i-heroicons-plus-circle-20-solid" class="text-gray-500" />
+			</UButton>
+		</div>
+		<div class="relative mt-2 ms-1">
+			<UTextarea
+				v-for="(item, index) in description"
+				:key="item.id"
+				:value="item.term"
+				variant="none"
+				:ui="{
+					root: 'mb-2 w-full rounded-md border border-gray-300 p-1 focus-within:border-primaryOeb-500 focus-within:ring-1 focus-within:ring-primaryOeb-500',
+					base: 'w-full resize-none border-0 bg-transparent shadow-none focus:outline-none focus:ring-0',
+				}"
+			>
+				<!-- clear description -->
+				<button v-if="value" class="absolute right-2 top-2" @click="clearLink">
+					<UIcon name="i-heroicons-x-circle-20-solid" class="size-4" />
+				</button>
+
+				<!-- Close Entry -->
+				<UButton
+					color="neutral"
+					variant="ghost"
+					class="p-1.5 mx-3 absolute right-[-55px] top-0.5 rounded-full"
+					@click="closeEntry(index)"
+				>
+					<UIcon name="i-heroicons-x-circle-20-solid" class="text-gray-500" />
+				</UButton>
+			</UTextarea>
+		</div>
+	</div>
+</template>
+<script setup lang="ts">
+import { ref } from 'vue';
+import HeaderAvatar from '@/components/Observatory/evaluation/Metadata/HeaderAvatar.vue';
+import { useMetadataStore } from '~~/stores/observatory/evaluation/metadata';
+
+const metadataStore = useMetadataStore();
+
+// PROPS
+const props = defineProps<{
+	title: string;
+	field: string;
+	value: { id?: number; term?: string }[];
+	nCols: string;
+}>();
+
+const description = ref(props.value);
+
+// Methods
+const clearLink = () => {
+	description.value = [{}];
+};
+
+const closeEntry = (index: number) => {
+	const payload = {
+		field: props.field,
+		index,
+	};
+	metadataStore.removeEntry(payload);
+};
+
+const addEntry = () => {
+	// do you want to add the empty value or do you want to add the new value?
+	const payload = {
+		field: props.field,
+		value: '',
+	};
+	metadataStore.addEntry(payload);
+};
+</script>
+<style scoped>
+.title {
+	font-size: 1rem !important;
+	color: #0b579f !important;
+}
+</style>

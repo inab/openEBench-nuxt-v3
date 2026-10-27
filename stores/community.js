@@ -1,43 +1,45 @@
-import { defineStore } from "pinia";
-import parseDataURL from "data-urls";
-import { TextDecoder } from "@exodus/bytes/encoding.js";
+import { defineStore } from 'pinia';
+import { decodeDataUrlText } from '~/utils/decodeDataUrlText';
 
 // OpenEBench API
-export const useCommunity = defineStore("community", {
-  state: () => ({
-    communityId: null,
-    communityData: {},
-    currentEvent: Object,
-    communityReferences: null,
-    events: [],
-    datasets: [],
-    tools: [],
-    pending: true,
-  }),
+export const useCommunity = defineStore('community', {
+	state: () => ({
+		communityId: null,
+		communityData: /** @type {any} */ ({}),
+		currentEvent: /** @type {any} */ ({}),
+		communityReferences: null,
+		events: /** @type {any[]} */ ([]),
+		datasets: /** @type {any[]} */ ([]),
+		tools: /** @type {any[]} */ ([]),
+		pending: true,
+	}),
 
-  getters: {
-    getCommunityData: (state) => state.communityData,
+	getters: {
+		getCommunityData: (state) => state.communityData,
 
-    getCurrentEvent: (state) => state.currentEvent,
+		getCurrentEvent: (state) => state.currentEvent,
 
-    getCommunityReferences: (state) => state.communityReferences,
+		getCommunityReferences: (state) => state.communityReferences,
 
-    getEvents: (state) => state.events,
+		getEvents: (state) => state.events,
 
-    getDatasets: (state) => state.datasets,
+		getDatasets: (state) => state.datasets,
 
-    getTools: (state) => state.tools,
-  },
+		getTools: (state) => state.tools,
+	},
 
-  actions: {
-    async requestCommunityData(id, event) {
-      const responseData = await useNuxtApp().$graphql("/graphql", {
-        method: "POST",
-        headers: {
-          Accept: "text/plain, */*",
-        },
-        body: JSON.stringify({
-          query: `
+	actions: {
+		async requestCommunityData(id, event) {
+			// TEMPORARY: the Dataset field is `datalinks` in the new schema (test2) and `datalink` in the old
+			// one (production). TODO: remove the fallback once the new schema is stable everywhere.
+			const fetchCommunity = (datalinkField) =>
+				useNuxtApp().$graphql('/graphql', {
+					method: 'POST',
+					headers: {
+						Accept: 'text/plain, */*',
+					},
+					body: JSON.stringify({
+						query: `
                                 query ($community_id: String!) {
                                     getCommunities(communityFilters: {id: $community_id}) {
                                     _id
@@ -76,7 +78,7 @@ export const useCommunity = defineStore("community", {
                                     getDatasets(datasetFilters: {community_id: $community_id, visibility: "public"}) {
                                         name
                                         type
-                                        datalink {
+                                        ${datalinkField} {
                                             uri
                                             __typename
                                         }
@@ -92,127 +94,121 @@ export const useCommunity = defineStore("community", {
                                     }
                                 }
                             `,
-          variables: {
-            community_id: id,
-          },
-        }),
-      });
+						variables: {
+							community_id: id,
+						},
+					}),
+				});
 
-      this.communityId = id;
+			let responseData = await fetchCommunity('datalinks');
+			// TODO: remove this retry together with the one in api/challengeAPI.js
+			if (responseData?.errors?.some((e) => /datalinks/.test(e.message ?? ''))) {
+				responseData = await fetchCommunity('datalink');
+			}
 
-      // Community
-      const community = responseData?.data?.getCommunities?.[0] ?? null;
-      if (!community) {
-        this.communityData = null;
-        this.setEvents([]);
-        this.setCurrentEvent(null);
-        this.setDatasets([]);
-        this.setTools([]);
-        this.setCommunityReferences([]);
-        return null;
-      }
+			this.communityId = id;
 
-      this.communityData = this.formatCommunityData(
-        community,
-      );
+			// Community
+			const community = responseData?.data?.getCommunities?.[0] ?? null;
+			if (!community) {
+				this.communityData = null;
+				this.setEvents([]);
+				this.setCurrentEvent(null);
+				this.setDatasets([]);
+				this.setTools([]);
+				this.setCommunityReferences([]);
+				return null;
+			}
 
-      // Events
-      this.setEvents(responseData?.data?.getBenchmarkingEvents ?? []);
+			this.communityData = await this.formatCommunityData(community);
 
-      let defaultEvent = this.events[0] ?? null;
-      if (event) {
-        defaultEvent = (responseData?.data?.getBenchmarkingEvents ?? []).filter(
-          (e) => e._id == event,
-        )[0];
-      }
-      this.setCurrentEvent(defaultEvent);
+			// Events
+			this.setEvents(responseData?.data?.getBenchmarkingEvents ?? []);
 
-      // Datasets
-      this.setDatasets(responseData?.data?.getDatasets ?? []);
+			let defaultEvent = this.events[0] ?? null;
+			if (event) {
+				defaultEvent = (responseData?.data?.getBenchmarkingEvents ?? []).filter(
+					(e) => e._id == event
+				)[0];
+			}
+			this.setCurrentEvent(defaultEvent);
 
-      // Tools
-      this.setTools(responseData?.data?.getTools ?? []);
+			// Datasets
+			this.setDatasets(responseData?.data?.getDatasets ?? []);
 
-      // Community References
-      this.setCommunityReferences(
-        community.references,
-      );
+			// Tools
+			this.setTools(responseData?.data?.getTools ?? []);
 
-      return this.communityData;
-    },
+			// Community References
+			this.setCommunityReferences(community.references);
 
-    // Setting events
-    setEvents(eventsData) {
-      this.events = eventsData.sort((a, b) => {
-        if (a._id < b._id) {
-          return 1;
-        }
-        if (a._id > b._id) {
-          return -1;
-        }
-        return 0;
-      });
-    },
+			return this.communityData;
+		},
 
-    // Setting datasets
-    setDatasets(datasetsData) {
-      this.datasets = datasetsData;
-    },
+		// Setting events
+		setEvents(eventsData) {
+			this.events = eventsData.sort((a, b) => {
+				if (a._id < b._id) {
+					return 1;
+				}
+				if (a._id > b._id) {
+					return -1;
+				}
+				return 0;
+			});
+		},
 
-    // Setting tools
-    setTools(toolsData) {
-      this.tools = toolsData;
-    },
+		// Setting datasets
+		setDatasets(datasetsData) {
+			this.datasets = datasetsData;
+		},
 
-    // Setting community references
-    setCommunityReferences(references) {
-      this.communityReferences = references
-        ? references.map((reference) => {
-            return {
-              href: "https://doi.org/" + reference.split(":")[1],
-              doi: reference,
-            };
-          })
-        : [];
-    },
+		// Setting tools
+		setTools(toolsData) {
+			this.tools = toolsData;
+		},
 
-    setCurrentEvent(event) {
-      if (!event && this.getEvents.length > 0) {
-        this.currentEvent = this.getEvents[0];
-      } else {
-        this.currentEvent = event;
-      }
-    },
+		// Setting community references
+		setCommunityReferences(references) {
+			this.communityReferences = references
+				? references.map((reference) => {
+						return {
+							href: 'https://doi.org/' + reference.split(':')[1],
+							doi: reference,
+						};
+					})
+				: [];
+		},
 
-    // Format community data
-    formatCommunityData(data) {
-      data.links = data.links ?? [];
-      data.links.forEach((link) => {
-        if (link.comment === "@logo") {
-          data.logo = link.uri;
-        }
-      });
+		setCurrentEvent(event) {
+			if (!event && this.getEvents.length > 0) {
+				this.currentEvent = this.getEvents[0];
+			} else {
+				this.currentEvent = event;
+			}
+		},
 
-      data._metadata =
-        typeof data._metadata === "string"
-          ? JSON.parse(data._metadata)
-          : (data._metadata ?? {});
-      if (data._metadata && "project:summary" in data._metadata) {
-        const dataURL = parseDataURL(data._metadata["project:summary"]);
+		// Format community data
+		async formatCommunityData(data) {
+			data.links = data.links ?? [];
+			data.links.forEach((link) => {
+				if (link.comment === '@logo') {
+					data.logo = link.uri;
+				}
+			});
 
-        const encodingName =
-          dataURL.mimeType.parameters.get("charset") || "utf-8";
-        const decodedSummary = new TextDecoder(encodingName).decode(
-          dataURL.body,
-        );
-        data.summary = decodedSummary;
-        data._metadata["project:summary"] = decodedSummary;
-      } else {
-        data.summary = null;
-      }
+			data._metadata =
+				typeof data._metadata === 'string' ? JSON.parse(data._metadata) : (data._metadata ?? {});
+			if (data._metadata && 'project:summary' in data._metadata) {
+				const decodedSummary = await decodeDataUrlText(data._metadata['project:summary']);
+				data.summary = decodedSummary;
+				data._metadata['project:summary'] = decodedSummary;
+			} else {
+				data.summary = null;
+			}
 
-      if (data.status === "abandoned") data.status = "inactive";
-      return data;
-    },
-  },
+			if (data.status === 'abandoned') data.status = 'inactive';
+			return data;
+		},
+	},
 });

@@ -1,0 +1,260 @@
+<template>
+	<div class="benchmarking-community">
+		<BreadcrumbsBar :breadcrumbs-array="routeArray" />
+		<div class="mx-auto container">
+			<div v-if="pending" class="skeleton-wrapper">
+				<USkeleton class="h-[200px] w-full mb-4" />
+				<USkeleton class="h-6 w-[300px] mb-2" />
+				<USkeleton class="h-4 w-[200px] mb-2" />
+				<USkeleton class="h-4 w-[250px]" />
+			</div>
+			<div v-else>
+				<CommunityInfo
+					v-if="community"
+					:community="community"
+					:community-references="communityReferences"
+				/>
+				<div v-else>
+					<p v-if="!community && !pending">
+						<noDataAvailable
+							:id="`'` + communityId + `'.`"
+							description="No community found for Id "
+							btn-path="/benchmarking"
+							btn-text="Benchmarking communities"
+						/>
+					</p>
+					<p v-else>
+						<noDataAvailable
+							description="No information found to display."
+							btn-path="/benchmarking"
+						/>
+					</p>
+				</div>
+
+				<div v-if="community" class="community-tabs md:flex">
+					<UTabs :key="tabsItems.map((tab) => tab.slot).join()" :items="tabsItems" class="w-full">
+						<template #default="slotProps">
+							<div class="flex items-center gap-2 relative truncate">
+								<span class="">{{ slotProps.item.label }}</span>
+								<UBadge
+									v-if="slotProps.item.label == 'Datasets' && datasetsObj.length > 0"
+									color="neutral"
+									variant="subtle"
+									class="rounded-full"
+									>{{ datasetsObj.length }}</UBadge
+								>
+								<UBadge
+									v-if="slotProps.item.label == 'Tools' && toolsObj.length > 0"
+									color="neutral"
+									variant="subtle"
+									class="rounded-full"
+									>{{ toolsObj.length }}</UBadge
+								>
+								<span
+									v-if="isTabSelected(slotProps)"
+									class="absolute -right-4 w-2 h-2 rounded-full bg-primary-500 dark:bg-primary-400"
+								/>
+							</div>
+						</template>
+						<template #results>
+							<div class="p-4 custom-tab">
+								<CommunityEvent
+									:current-event="currentEvent"
+									:events="eventsObj"
+									:community-id="communityId"
+								/>
+							</div>
+						</template>
+						<template #datasets>
+							<div class="custom-tab">
+								<div class="p-4">
+									<CommunityDataset :datasets="datasetsObj" :community-id="communityId" />
+								</div>
+							</div>
+						</template>
+						<template #tools>
+							<div class="custom-tab">
+								<div class="p-4">
+									<CommunityTools :tools="toolsObj" :community-id="communityId" />
+								</div>
+							</div>
+						</template>
+						<template #summary>
+							<div class="custom-tab">
+								<div class="p-4">
+									<CommunityEventSummary :markdown="eventData"> </CommunityEventSummary>
+								</div>
+							</div>
+						</template>
+					</UTabs>
+				</div>
+			</div>
+		</div>
+	</div>
+</template>
+
+<script setup lang="ts">
+import { watch, computed, defineAsyncComponent } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import type { EventWithChallenges } from '~~/types/pages-types';
+import CommunityDataset from '@/components/Community/CommunityDataset/CommunityDataset.vue';
+import CommunityTools from '@/components/Community/CommunityTools/CommunityTools.vue';
+import CommunityEventSummary from '@/components/Community/CommunityEvent/CommunityEventSummary.vue';
+import BreadcrumbsBar from '@/components/Common/BreadcrumbsBar.vue';
+import noDataAvailable from '@/layouts/noDataAvailableCard.vue';
+import { useCommunity } from '~~/stores/community';
+const CommunityInfo = defineAsyncComponent(
+	() => import('@/components/Community/CommunityInfo.vue')
+);
+const CommunityEvent = defineAsyncComponent(
+	() => import('@/components/Community/CommunityEvent/CommunityEvent.vue')
+);
+
+const route = useRoute();
+const router = useRouter();
+const communityStore = useCommunity();
+
+const communityId = route.params.community as string;
+const eventId = route.query.event as string;
+
+const { data: community, pending } = await useAsyncData(
+	`benchmarking-community-${communityId}-${eventId ?? 'default'}`,
+	() => {
+		if (communityStore.communityId && communityStore.communityId === communityId) {
+			return communityStore.getCommunityData;
+		}
+
+		return communityStore.requestCommunityData(communityId, eventId);
+	}
+);
+const datasetsObj = communityStore.getDatasets;
+const toolsObj = communityStore.getTools;
+const eventsObj: EventWithChallenges[] = communityStore.getEvents;
+
+const communityReferences = communityStore.getCommunityReferences;
+
+const currentEvent = computed(() => {
+	const selectedEvent = communityStore.getCurrentEvent;
+
+	if (!selectedEvent && eventsObj.length > 0) {
+		const firstEvent = eventsObj[0]!;
+		communityStore.setCurrentEvent(firstEvent);
+		return firstEvent;
+	}
+	return selectedEvent as EventWithChallenges;
+});
+
+const eventData = computed(() => communityStore.getCommunityData);
+
+const tabsItems = computed(() => {
+	const items = [
+		{
+			label: 'Results',
+			icon: 'i-heroicons-squares-2x2-16-solid',
+			slot: 'results',
+		},
+	];
+	if (datasetsObj && datasetsObj.length > 0) {
+		items.push({
+			label: 'Datasets',
+			icon: 'i-heroicons-folder-open-16-solid',
+			slot: 'datasets',
+		});
+	}
+	if (toolsObj && toolsObj.length > 0) {
+		items.push({
+			label: 'Tools',
+			icon: 'i-heroicons-cube-16-solid',
+			slot: 'tools',
+		});
+	}
+	if (eventData.value && (eventData.value as { summary?: unknown }).summary) {
+		items.push({
+			label: 'Summary',
+			icon: 'i-heroicons-squares-2x2-16-solid',
+			slot: 'summary',
+		});
+	}
+	return items;
+});
+
+function isTabSelected(slot: object): boolean {
+	return 'selected' in slot && slot.selected === true;
+}
+
+const routeArray = computed(() => {
+	if (!community.value) {
+		// If the community is not found, define an alternative route
+		return [
+			{
+				label: 'Benchmarking Communities',
+				isActualRoute: false,
+				route: '/benchmarking',
+			},
+			{
+				label: 'Community Not Found',
+				isActualRoute: true,
+			},
+		];
+	}
+	// Route in case of finding the community
+	return [
+		{
+			label: 'Benchmarking Communities',
+			isActualRoute: false,
+			route: '/benchmarking',
+		},
+		{
+			label: (community.value as { acronym: string }).acronym + ' ' + 'Events',
+			isActualRoute: false,
+			route: '/benchmarking/' + communityId + '/events',
+		},
+		{
+			label: currentEvent.value?.name,
+			isActualRoute: true,
+		},
+	];
+});
+
+watch(
+	() => route.query.eventId,
+	async (newEventId) => {
+		if (newEventId) {
+			const newEvent = eventsObj.find((event) => event._id === newEventId);
+
+			if (newEvent) {
+				communityStore.setCurrentEvent(newEvent);
+			} else {
+				// If the event is not found in the current list, makes a request to get the event data.
+				await communityStore.requestCommunityData(communityId, newEventId);
+				if (currentEvent.value) {
+					// Here we replace the route with the correct event ID
+					router.replace({ query: { event: currentEvent.value._id } });
+				}
+			}
+		} else {
+			// If no event is selected, make sure `currentEvent` is null.
+			communityStore.setCurrentEvent(null);
+		}
+	},
+	{ immediate: true }
+);
+</script>
+
+<style lang="scss" scoped>
+.community-tabs ul {
+	margin: 0;
+	padding: 0;
+}
+
+.custom-tab {
+	border: 1px solid rgba(243, 244, 246);
+	border-radius: 0.5rem;
+}
+.skeleton-wrapper {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 2rem;
+}
+</style>

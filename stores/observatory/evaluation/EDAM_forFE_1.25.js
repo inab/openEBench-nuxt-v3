@@ -43,17 +43,13 @@ export const EDAMDict = {
 	'http://edamontology.org/data_0872': 'Phylogenetic tree',
 	'http://edamontology.org/data_0874': 'Comparison matrix',
 	'http://edamontology.org/data_0875': 'Protein topology',
-	'http://edamontology.org/data_0876':
-		'Protein features report (secondary structure)',
-	'http://edamontology.org/data_0877':
-		'Protein features report (super-secondary)',
+	'http://edamontology.org/data_0876': 'Protein features report (secondary structure)',
+	'http://edamontology.org/data_0877': 'Protein features report (super-secondary)',
 	'http://edamontology.org/data_0878': 'Protein secondary structure alignment',
-	'http://edamontology.org/data_0879':
-		'Secondary structure alignment metadata (protein)',
+	'http://edamontology.org/data_0879': 'Secondary structure alignment metadata (protein)',
 	'http://edamontology.org/data_0880': 'RNA secondary structure',
 	'http://edamontology.org/data_0881': 'RNA secondary structure alignment',
-	'http://edamontology.org/data_0882':
-		'Secondary structure alignment metadata (RNA)',
+	'http://edamontology.org/data_0882': 'Secondary structure alignment metadata (RNA)',
 	'http://edamontology.org/data_0883': 'Structure',
 	'http://edamontology.org/data_0884': 'Tertiary structure record',
 	'http://edamontology.org/data_0885': 'Structure database search results',
@@ -63,8 +59,7 @@ export const EDAMDict = {
 	'http://edamontology.org/data_0889': 'Structural profile',
 	'http://edamontology.org/data_0890': 'Structural (3D) profile alignment',
 	'http://edamontology.org/data_0891': 'Sequence-3D profile alignment',
-	'http://edamontology.org/data_0892':
-		'Protein sequence-structure scoring matrix',
+	'http://edamontology.org/data_0892': 'Protein sequence-structure scoring matrix',
 	'http://edamontology.org/data_0893': 'Sequence-structure alignment',
 	'http://edamontology.org/data_0894': 'Amino acid annotation',
 	'http://edamontology.org/data_0895': 'Peptide annotation',
@@ -100,8 +95,7 @@ export const EDAMDict = {
 	'http://edamontology.org/data_0933': 'SAGE experimental data',
 	'http://edamontology.org/data_0934': 'MPSS experimental data',
 	'http://edamontology.org/data_0935': 'SBS experimental data',
-	'http://edamontology.org/data_0936':
-		'Sequence tag profile (with gene assignment)',
+	'http://edamontology.org/data_0936': 'Sequence tag profile (with gene assignment)',
 	'http://edamontology.org/data_0937': 'Electron density map',
 	'http://edamontology.org/data_0938': 'Raw NMR data',
 	'http://edamontology.org/data_0939': 'CD spectra',
@@ -202,8 +196,7 @@ export const EDAMDict = {
 	'http://edamontology.org/data_1038': 'Protein domain ID',
 	'http://edamontology.org/data_1039': 'SCOP domain identifier',
 	'http://edamontology.org/data_1040': 'CATH domain ID',
-	'http://edamontology.org/data_1041':
-		'SCOP concise classification string (sccs)',
+	'http://edamontology.org/data_1041': 'SCOP concise classification string (sccs)',
 	'http://edamontology.org/data_1042': 'SCOP sunid',
 	'http://edamontology.org/data_1043': 'CATH node ID',
 	'http://edamontology.org/data_1044': 'Kingdom name',
@@ -228,8 +221,7 @@ export const EDAMDict = {
 	'http://edamontology.org/data_1064': 'Sequence set ID',
 	'http://edamontology.org/data_1065': 'Sequence signature identifier',
 	'http://edamontology.org/data_1066': 'Sequence alignment ID',
-	'http://edamontology.org/data_1067':
-		'Phylogenetic distance matrix identifier',
+	'http://edamontology.org/data_1067': 'Phylogenetic distance matrix identifier',
 	'http://edamontology.org/data_1068': 'Phylogenetic tree ID',
 	'http://edamontology.org/data_1069': 'Comparison matrix identifier',
 	'http://edamontology.org/data_1070': 'Structure ID',
@@ -365,13 +357,10 @@ export const EDAMDict = {
 	'http://edamontology.org/data_1238': 'Proteolytic digest',
 	'http://edamontology.org/data_1239': 'Restriction digest',
 	'http://edamontology.org/data_1240': 'PCR primers',
-	'http://edamontology.org/data_1241':
-		'vectorstrip cloning vector definition file',
-	'http://edamontology.org/data_1242':
-		'Primer3 internal oligo mishybridizing library',
+	'http://edamontology.org/data_1241': 'vectorstrip cloning vector definition file',
+	'http://edamontology.org/data_1242': 'Primer3 internal oligo mishybridizing library',
 	'http://edamontology.org/data_1243': 'Primer3 mispriming library file',
-	'http://edamontology.org/data_1244':
-		'primersearch primer pairs sequence record',
+	'http://edamontology.org/data_1244': 'primersearch primer pairs sequence record',
 	'http://edamontology.org/data_1245': 'Sequence cluster (protein)',
 	'http://edamontology.org/data_1246': 'Sequence cluster (nucleic acid)',
 	'http://edamontology.org/data_1249': 'Sequence length',
@@ -420,25 +409,19 @@ export const EDAMDict = {
 	'http://edamontology.org/data_1301': 'Mobile genetic elements',
 	'http://edamontology.org/data_1303': 'Nucleic acid features (quadruplexes)',
 	'http://edamontology.org/data_1306': 'Nucleosome exclusion sequences',
-	'http://edamontology.org/data_1309':
-		'Gene features (exonic splicing enhancer)',
+	'http://edamontology.org/data_1309': 'Gene features (exonic splicing enhancer)',
 	'http://edamontology.org/data_1310': 'Nucleic acid features (microRNA)',
 	'http://edamontology.org/data_1313': 'Coding region',
 	'http://edamontology.org/data_1314': 'Gene features (SECIS element)',
 	'http://edamontology.org/data_1315': 'Transcription factor binding sites',
 	'http://edamontology.org/data_1321': 'Protein features (sites)',
-	'http://edamontology.org/data_1322':
-		'Protein features report (signal peptides)',
-	'http://edamontology.org/data_1323':
-		'Protein features report (cleavage sites)',
-	'http://edamontology.org/data_1324':
-		'Protein features (post-translation modifications)',
+	'http://edamontology.org/data_1322': 'Protein features report (signal peptides)',
+	'http://edamontology.org/data_1323': 'Protein features report (cleavage sites)',
+	'http://edamontology.org/data_1324': 'Protein features (post-translation modifications)',
 	'http://edamontology.org/data_1325': 'Protein features report (active sites)',
-	'http://edamontology.org/data_1326':
-		'Protein features report (binding sites)',
+	'http://edamontology.org/data_1326': 'Protein features report (binding sites)',
 	'http://edamontology.org/data_1327': 'Protein features (epitopes)',
-	'http://edamontology.org/data_1328':
-		'Protein features report (nucleic acid binding sites)',
+	'http://edamontology.org/data_1328': 'Protein features report (nucleic acid binding sites)',
 	'http://edamontology.org/data_1329': 'MHC Class I epitopes report',
 	'http://edamontology.org/data_1330': 'MHC Class II epitopes report',
 	'http://edamontology.org/data_1331': 'Protein features (PEST sites)',
@@ -471,8 +454,7 @@ export const EDAMDict = {
 	'http://edamontology.org/data_1377': 'Protein conserved site signature',
 	'http://edamontology.org/data_1378': 'Protein active site signature',
 	'http://edamontology.org/data_1379': 'Protein binding site signature',
-	'http://edamontology.org/data_1380':
-		'Protein post-translational modification signature',
+	'http://edamontology.org/data_1380': 'Protein post-translational modification signature',
 	'http://edamontology.org/data_1381': 'Pair sequence alignment',
 	'http://edamontology.org/data_1382': 'Sequence alignment (multiple)',
 	'http://edamontology.org/data_1383': 'Nucleic acid sequence alignment',
@@ -503,40 +485,30 @@ export const EDAMDict = {
 	'http://edamontology.org/data_1411': 'Terminal gap extension penalty',
 	'http://edamontology.org/data_1412': 'Sequence identity',
 	'http://edamontology.org/data_1413': 'Sequence similarity',
-	'http://edamontology.org/data_1414':
-		'Sequence alignment metadata (quality report)',
-	'http://edamontology.org/data_1415':
-		'Sequence alignment report (site conservation)',
-	'http://edamontology.org/data_1416':
-		'Sequence alignment report (site correlation)',
-	'http://edamontology.org/data_1417':
-		'Sequence-profile alignment (Domainatrix signature)',
+	'http://edamontology.org/data_1414': 'Sequence alignment metadata (quality report)',
+	'http://edamontology.org/data_1415': 'Sequence alignment report (site conservation)',
+	'http://edamontology.org/data_1416': 'Sequence alignment report (site correlation)',
+	'http://edamontology.org/data_1417': 'Sequence-profile alignment (Domainatrix signature)',
 	'http://edamontology.org/data_1418': 'Sequence-profile alignment (HMM)',
-	'http://edamontology.org/data_1420':
-		'Sequence-profile alignment (fingerprint)',
-	'http://edamontology.org/data_1426':
-		'Phylogenetic continuous quantitative data',
+	'http://edamontology.org/data_1420': 'Sequence-profile alignment (fingerprint)',
+	'http://edamontology.org/data_1426': 'Phylogenetic continuous quantitative data',
 	'http://edamontology.org/data_1427': 'Phylogenetic discrete data',
 	'http://edamontology.org/data_1428': 'Phylogenetic character cliques',
 	'http://edamontology.org/data_1429': 'Phylogenetic invariants',
 	'http://edamontology.org/data_1438': 'Phylogenetic report',
 	'http://edamontology.org/data_1439': 'DNA substitution model',
 	'http://edamontology.org/data_1440': 'Phylogenetic tree report (tree shape)',
-	'http://edamontology.org/data_1441':
-		'Phylogenetic tree report (tree evaluation)',
+	'http://edamontology.org/data_1441': 'Phylogenetic tree report (tree evaluation)',
 	'http://edamontology.org/data_1442': 'Phylogenetic tree distances',
-	'http://edamontology.org/data_1443':
-		'Phylogenetic tree report (tree stratigraphic)',
+	'http://edamontology.org/data_1443': 'Phylogenetic tree report (tree stratigraphic)',
 	'http://edamontology.org/data_1444': 'Phylogenetic character contrasts',
 	'http://edamontology.org/data_1446': 'Comparison matrix (integers)',
 	'http://edamontology.org/data_1447': 'Comparison matrix (floats)',
 	'http://edamontology.org/data_1448': 'Comparison matrix (nucleotide)',
 	'http://edamontology.org/data_1449': 'Comparison matrix (amino acid)',
-	'http://edamontology.org/data_1450':
-		'Nucleotide comparison matrix (integers)',
+	'http://edamontology.org/data_1450': 'Nucleotide comparison matrix (integers)',
 	'http://edamontology.org/data_1451': 'Nucleotide comparison matrix (floats)',
-	'http://edamontology.org/data_1452':
-		'Amino acid comparison matrix (integers)',
+	'http://edamontology.org/data_1452': 'Amino acid comparison matrix (integers)',
 	'http://edamontology.org/data_1453': 'Amino acid comparison matrix (floats)',
 	'http://edamontology.org/data_1459': 'Nucleic acid structure',
 	'http://edamontology.org/data_1460': 'Protein structure',
@@ -559,24 +531,17 @@ export const EDAMDict = {
 	'http://edamontology.org/data_1481': 'Protein structure alignment',
 	'http://edamontology.org/data_1482': 'Nucleic acid structure alignment',
 	'http://edamontology.org/data_1483': 'Structure alignment (protein pair)',
-	'http://edamontology.org/data_1484':
-		'Multiple protein tertiary structure alignment',
-	'http://edamontology.org/data_1485':
-		'Structure alignment (protein all atoms)',
-	'http://edamontology.org/data_1486':
-		'Structure alignment (protein C-alpha atoms)',
-	'http://edamontology.org/data_1487':
-		'Pairwise protein tertiary structure alignment (all atoms)',
+	'http://edamontology.org/data_1484': 'Multiple protein tertiary structure alignment',
+	'http://edamontology.org/data_1485': 'Structure alignment (protein all atoms)',
+	'http://edamontology.org/data_1486': 'Structure alignment (protein C-alpha atoms)',
+	'http://edamontology.org/data_1487': 'Pairwise protein tertiary structure alignment (all atoms)',
 	'http://edamontology.org/data_1488':
 		'Pairwise protein tertiary structure alignment (C-alpha atoms)',
-	'http://edamontology.org/data_1489':
-		'Multiple protein tertiary structure alignment (all atoms)',
+	'http://edamontology.org/data_1489': 'Multiple protein tertiary structure alignment (all atoms)',
 	'http://edamontology.org/data_1490':
 		'Multiple protein tertiary structure alignment (C-alpha atoms)',
-	'http://edamontology.org/data_1491':
-		'Structure alignment (nucleic acid pair)',
-	'http://edamontology.org/data_1492':
-		'Multiple nucleic acid tertiary structure alignment',
+	'http://edamontology.org/data_1491': 'Structure alignment (nucleic acid pair)',
+	'http://edamontology.org/data_1492': 'Multiple nucleic acid tertiary structure alignment',
 	'http://edamontology.org/data_1493': 'RNA structure alignment',
 	'http://edamontology.org/data_1494': 'Structural transformation matrix',
 	'http://edamontology.org/data_1495': 'DaliLite hit table',
@@ -586,8 +551,7 @@ export const EDAMDict = {
 	'http://edamontology.org/data_1499': '3D-1D scoring matrix',
 	'http://edamontology.org/data_1501': 'Amino acid index',
 	'http://edamontology.org/data_1502': 'Amino acid index (chemical classes)',
-	'http://edamontology.org/data_1503':
-		'Amino acid pair-wise contact potentials',
+	'http://edamontology.org/data_1503': 'Amino acid pair-wise contact potentials',
 	'http://edamontology.org/data_1505': 'Amino acid index (molecular weight)',
 	'http://edamontology.org/data_1506': 'Amino acid index (hydropathy)',
 	'http://edamontology.org/data_1507': 'Amino acid index (White-Wimley data)',
@@ -613,8 +577,7 @@ export const EDAMDict = {
 	'http://edamontology.org/data_1536': 'MHC peptide immunogenicity report',
 	'http://edamontology.org/data_1537': 'Protein structure report',
 	'http://edamontology.org/data_1539': 'Protein structural quality report',
-	'http://edamontology.org/data_1540':
-		'Protein non-covalent interactions report',
+	'http://edamontology.org/data_1540': 'Protein non-covalent interactions report',
 	'http://edamontology.org/data_1541': 'Protein flexibility or motion report',
 	'http://edamontology.org/data_1542': 'Protein solvent accessibility',
 	'http://edamontology.org/data_1543': 'Protein surface report',
@@ -637,8 +600,7 @@ export const EDAMDict = {
 	'http://edamontology.org/data_1564': 'Protein fold recognition report',
 	'http://edamontology.org/data_1565': 'Protein-protein interaction report',
 	'http://edamontology.org/data_1566': 'Protein-ligand interaction report',
-	'http://edamontology.org/data_1567':
-		'Protein-nucleic acid interactions report',
+	'http://edamontology.org/data_1567': 'Protein-nucleic acid interactions report',
 	'http://edamontology.org/data_1583': 'Nucleic acid melting profile',
 	'http://edamontology.org/data_1584': 'Nucleic acid enthalpy',
 	'http://edamontology.org/data_1585': 'Nucleic acid entropy',
@@ -651,8 +613,7 @@ export const EDAMDict = {
 	'http://edamontology.org/data_1592': 'Vienna RNA structure constraints',
 	'http://edamontology.org/data_1593': 'Vienna RNA concentration data',
 	'http://edamontology.org/data_1594': 'Vienna RNA calculated energy',
-	'http://edamontology.org/data_1595':
-		'Base pairing probability matrix dotplot',
+	'http://edamontology.org/data_1595': 'Base pairing probability matrix dotplot',
 	'http://edamontology.org/data_1596': 'Nucleic acid folding report',
 	'http://edamontology.org/data_1597': 'Codon usage table',
 	'http://edamontology.org/data_1598': 'Genetic code',
@@ -665,14 +626,11 @@ export const EDAMDict = {
 	'http://edamontology.org/data_1634': 'Linkage disequilibrium (report)',
 	'http://edamontology.org/data_1636': 'Heat map',
 	'http://edamontology.org/data_1642': 'Affymetrix probe sets library file',
-	'http://edamontology.org/data_1643':
-		'Affymetrix probe sets information library file',
+	'http://edamontology.org/data_1643': 'Affymetrix probe sets information library file',
 	'http://edamontology.org/data_1646': 'Molecular weights standard fingerprint',
 	'http://edamontology.org/data_1656': 'Metabolic pathway report',
-	'http://edamontology.org/data_1657':
-		'Genetic information processing pathway report',
-	'http://edamontology.org/data_1658':
-		'Environmental information processing pathway report',
+	'http://edamontology.org/data_1657': 'Genetic information processing pathway report',
+	'http://edamontology.org/data_1658': 'Environmental information processing pathway report',
 	'http://edamontology.org/data_1659': 'Signal transduction pathway report',
 	'http://edamontology.org/data_1660': 'Cellular process pathways report',
 	'http://edamontology.org/data_1661': 'Disease pathway or network report',
@@ -749,10 +707,8 @@ export const EDAMDict = {
 	'http://edamontology.org/data_1758': 'PDB residue name',
 	'http://edamontology.org/data_1759': 'PDB model number',
 	'http://edamontology.org/data_1762': 'CATH domain report',
-	'http://edamontology.org/data_1764':
-		'CATH representative domain sequences (ATOM)',
-	'http://edamontology.org/data_1765':
-		'CATH representative domain sequences (COMBS)',
+	'http://edamontology.org/data_1764': 'CATH representative domain sequences (ATOM)',
+	'http://edamontology.org/data_1765': 'CATH representative domain sequences (COMBS)',
 	'http://edamontology.org/data_1766': 'CATH domain sequences (ATOM)',
 	'http://edamontology.org/data_1767': 'CATH domain sequences (COMBS)',
 	'http://edamontology.org/data_1771': 'Sequence version',
@@ -775,8 +731,7 @@ export const EDAMDict = {
 	'http://edamontology.org/data_1797': 'Gene ID (GeneDB Glossina morsitans)',
 	'http://edamontology.org/data_1798': 'Gene ID (GeneDB Leishmania major)',
 	'http://edamontology.org/data_1799': 'Gene ID (GeneDB Plasmodium falciparum)',
-	'http://edamontology.org/data_1800':
-		'Gene ID (GeneDB Schizosaccharomyces pombe)',
+	'http://edamontology.org/data_1800': 'Gene ID (GeneDB Schizosaccharomyces pombe)',
 	'http://edamontology.org/data_1801': 'Gene ID (GeneDB Trypanosoma brucei)',
 	'http://edamontology.org/data_1802': 'Gene ID (Gramene)',
 	'http://edamontology.org/data_1803': 'Gene ID (Virginia microbial)',
@@ -940,8 +895,7 @@ export const EDAMDict = {
 	'http://edamontology.org/data_2179': 'Exactly 2',
 	'http://edamontology.org/data_2180': '2 or more',
 	'http://edamontology.org/data_2190': 'Sequence checksum',
-	'http://edamontology.org/data_2191':
-		'Protein features report (chemical modifications)',
+	'http://edamontology.org/data_2191': 'Protein features report (chemical modifications)',
 	'http://edamontology.org/data_2192': 'Error',
 	'http://edamontology.org/data_2193': 'Database entry metadata',
 	'http://edamontology.org/data_2198': 'Gene cluster',
@@ -1186,15 +1140,13 @@ export const EDAMDict = {
 	'http://edamontology.org/data_2687': "Ensembl ID ('Monodelphis domestica')",
 	'http://edamontology.org/data_2688': "Ensembl ID ('Mus musculus')",
 	'http://edamontology.org/data_2689': "Ensembl ID ('Myotis lucifugus')",
-	'http://edamontology.org/data_2690':
-		'"Ensembl ID (""Ornithorhynchus anatinus\\"")"',
+	'http://edamontology.org/data_2690': '"Ensembl ID (""Ornithorhynchus anatinus\\"")"',
 	'http://edamontology.org/data_2691': "Ensembl ID ('Oryctolagus cuniculus')",
 	'http://edamontology.org/data_2692': "Ensembl ID ('Oryzias latipes')",
 	'http://edamontology.org/data_2693': "Ensembl ID ('Otolemur garnettii')",
 	'http://edamontology.org/data_2694': "Ensembl ID ('Pan troglodytes')",
 	'http://edamontology.org/data_2695': "Ensembl ID ('Rattus norvegicus')",
-	'http://edamontology.org/data_2696':
-		"Ensembl ID ('Spermophilus tridecemlineatus')",
+	'http://edamontology.org/data_2696': "Ensembl ID ('Spermophilus tridecemlineatus')",
 	'http://edamontology.org/data_2697': "Ensembl ID ('Takifugu rubripes')",
 	'http://edamontology.org/data_2698': "Ensembl ID ('Tupaia belangeri')",
 	'http://edamontology.org/data_2699': "Ensembl ID ('Xenopus tropicalis')",
@@ -1216,8 +1168,7 @@ export const EDAMDict = {
 	'http://edamontology.org/data_2719': 'dbProbe ID',
 	'http://edamontology.org/data_2720': 'Dinucleotide property',
 	'http://edamontology.org/data_2721': 'DiProDB ID',
-	'http://edamontology.org/data_2722':
-		'Protein features report (disordered structure)',
+	'http://edamontology.org/data_2722': 'Protein features report (disordered structure)',
 	'http://edamontology.org/data_2723': 'Protein ID (DisProt)',
 	'http://edamontology.org/data_2724': 'Embryo report',
 	'http://edamontology.org/data_2725': 'Ensembl transcript ID',
@@ -1392,8 +1343,7 @@ export const EDAMDict = {
 	'http://edamontology.org/data_2985': 'Nucleic acid thermodynamic data',
 	'http://edamontology.org/data_2986': 'Nucleic acid classification',
 	'http://edamontology.org/data_2987': 'Classification report',
-	'http://edamontology.org/data_2989':
-		'Protein features report (key folding sites)',
+	'http://edamontology.org/data_2989': 'Protein features report (key folding sites)',
 	'http://edamontology.org/data_2991': 'Protein geometry data',
 	'http://edamontology.org/data_2992': 'Protein structure image',
 	'http://edamontology.org/data_2994': 'Phylogenetic character weights',
@@ -1410,8 +1360,7 @@ export const EDAMDict = {
 	'http://edamontology.org/data_3035': 'Structure identifier',
 	'http://edamontology.org/data_3036': 'Matrix identifier',
 	'http://edamontology.org/data_3085': 'Protein sequence composition',
-	'http://edamontology.org/data_3086':
-		'Nucleic acid sequence composition (report)',
+	'http://edamontology.org/data_3086': 'Nucleic acid sequence composition (report)',
 	'http://edamontology.org/data_3101': 'Protein domain classification node',
 	'http://edamontology.org/data_3102': 'CAS number',
 	'http://edamontology.org/data_3103': 'ATC code',
@@ -1427,10 +1376,8 @@ export const EDAMDict = {
 	'http://edamontology.org/data_3115': 'Microarray metadata',
 	'http://edamontology.org/data_3116': 'Microarray protocol annotation',
 	'http://edamontology.org/data_3117': 'Microarray hybridisation data',
-	'http://edamontology.org/data_3119':
-		'Sequence features (compositionally-biased regions)',
-	'http://edamontology.org/data_3122':
-		'Nucleic acid features (difference and change)',
+	'http://edamontology.org/data_3119': 'Sequence features (compositionally-biased regions)',
+	'http://edamontology.org/data_3122': 'Nucleic acid features (difference and change)',
 	'http://edamontology.org/data_3128': 'Nucleic acid structure report',
 	'http://edamontology.org/data_3129': 'Protein features report (repeats)',
 	'http://edamontology.org/data_3130': 'Sequence motif matches (protein)',
@@ -1440,8 +1387,7 @@ export const EDAMDict = {
 	'http://edamontology.org/data_3134': 'Gene transcript report',
 	'http://edamontology.org/data_3137': 'Non-coding RNA',
 	'http://edamontology.org/data_3138': 'Transcriptional features (report)',
-	'http://edamontology.org/data_3140':
-		'Nucleic acid features (immunoglobulin gene structure)',
+	'http://edamontology.org/data_3140': 'Nucleic acid features (immunoglobulin gene structure)',
 	'http://edamontology.org/data_3141': 'SCOP class',
 	'http://edamontology.org/data_3142': 'SCOP fold',
 	'http://edamontology.org/data_3143': 'SCOP superfamily',
@@ -1602,15 +1548,12 @@ export const EDAMDict = {
 	'http://edamontology.org/format_1392': 'DIALIGN format',
 	'http://edamontology.org/format_1393': 'daf',
 	'http://edamontology.org/format_1419': 'Sequence-MEME profile alignment',
-	'http://edamontology.org/format_1421':
-		'HMMER profile alignment (sequences versus HMMs)',
-	'http://edamontology.org/format_1422':
-		'HMMER profile alignment (HMM versus sequences)',
+	'http://edamontology.org/format_1421': 'HMMER profile alignment (sequences versus HMMs)',
+	'http://edamontology.org/format_1422': 'HMMER profile alignment (HMM versus sequences)',
 	'http://edamontology.org/format_1423': 'Phylip distance matrix',
 	'http://edamontology.org/format_1424': 'ClustalW dendrogram',
 	'http://edamontology.org/format_1425': 'Phylip tree raw',
-	'http://edamontology.org/format_1430':
-		'Phylip continuous quantitative characters',
+	'http://edamontology.org/format_1430': 'Phylip continuous quantitative characters',
 	'http://edamontology.org/format_1431': 'Phylogenetic property values format',
 	'http://edamontology.org/format_1432': 'Phylip character frequencies format',
 	'http://edamontology.org/format_1433': 'Phylip discrete states format',
@@ -1622,14 +1565,12 @@ export const EDAMDict = {
 	'http://edamontology.org/format_1454': 'dssp',
 	'http://edamontology.org/format_1455': 'hssp',
 	'http://edamontology.org/format_1457': 'Dot-bracket format',
-	'http://edamontology.org/format_1458':
-		'Vienna local RNA secondary structure format',
+	'http://edamontology.org/format_1458': 'Vienna local RNA secondary structure format',
 	'http://edamontology.org/format_1475': 'PDB database entry format',
 	'http://edamontology.org/format_1476': 'PDB',
 	'http://edamontology.org/format_1477': 'mmCIF',
 	'http://edamontology.org/format_1478': 'PDBML',
-	'http://edamontology.org/format_1500':
-		'Domainatrix 3D-1D scoring matrix format',
+	'http://edamontology.org/format_1500': 'Domainatrix 3D-1D scoring matrix format',
 	'http://edamontology.org/format_1504': 'aaindex',
 	'http://edamontology.org/format_1511': 'IntEnz enzyme report format',
 	'http://edamontology.org/format_1512': 'BRENDA enzyme report format',
@@ -1639,8 +1580,7 @@ export const EDAMDict = {
 	'http://edamontology.org/format_1516': 'REBASE withrefm enzyme report format',
 	'http://edamontology.org/format_1551': 'Pcons report format',
 	'http://edamontology.org/format_1552': 'ProQ report format',
-	'http://edamontology.org/format_1563':
-		'SMART domain assignment report format',
+	'http://edamontology.org/format_1563': 'SMART domain assignment report format',
 	'http://edamontology.org/format_1568': 'BIND entry format',
 	'http://edamontology.org/format_1569': 'IntAct entry format',
 	'http://edamontology.org/format_1570': 'InterPro entry format',
@@ -1648,8 +1588,7 @@ export const EDAMDict = {
 	'http://edamontology.org/format_1572': 'Gene3D entry format',
 	'http://edamontology.org/format_1573': 'PIRSF entry format',
 	'http://edamontology.org/format_1574': 'PRINTS entry format',
-	'http://edamontology.org/format_1575':
-		'Panther Families and HMMs entry format',
+	'http://edamontology.org/format_1575': 'Panther Families and HMMs entry format',
 	'http://edamontology.org/format_1576': 'Pfam entry format',
 	'http://edamontology.org/format_1577': 'SMART entry format',
 	'http://edamontology.org/format_1578': 'Superfamily entry format',
@@ -1711,8 +1650,7 @@ export const EDAMDict = {
 	'http://edamontology.org/format_1701': 'PubChem entry format',
 	'http://edamontology.org/format_1702': 'ChemSpider entry format',
 	'http://edamontology.org/format_1703': 'ChEBI entry format',
-	'http://edamontology.org/format_1704':
-		'MSDchem ligand dictionary entry format',
+	'http://edamontology.org/format_1704': 'MSDchem ligand dictionary entry format',
 	'http://edamontology.org/format_1705': 'HET group dictionary entry format',
 	'http://edamontology.org/format_1706': 'KEGG DRUG entry format',
 	'http://edamontology.org/format_1734': 'PubMed citation',
@@ -1824,8 +1762,7 @@ export const EDAMDict = {
 	'http://edamontology.org/format_2006': 'Phylogenetic tree format',
 	'http://edamontology.org/format_2013': 'Biological pathway or network format',
 	'http://edamontology.org/format_2014': 'Sequence-profile alignment format',
-	'http://edamontology.org/format_2015':
-		'Sequence-profile alignment (HMM) format',
+	'http://edamontology.org/format_2015': 'Sequence-profile alignment (HMM) format',
 	'http://edamontology.org/format_2017': 'Amino acid index format',
 	'http://edamontology.org/format_2020': 'Article format',
 	'http://edamontology.org/format_2021': 'Text mining report format',
@@ -1837,16 +1774,12 @@ export const EDAMDict = {
 	'http://edamontology.org/format_2034': 'Biological model format',
 	'http://edamontology.org/format_2035': 'Chemical formula format',
 	'http://edamontology.org/format_2036': 'Phylogenetic character data format',
-	'http://edamontology.org/format_2037':
-		'Phylogenetic continuous quantitative character format',
+	'http://edamontology.org/format_2037': 'Phylogenetic continuous quantitative character format',
 	'http://edamontology.org/format_2038': 'Phylogenetic discrete states format',
-	'http://edamontology.org/format_2039':
-		'Phylogenetic tree report (cliques) format',
-	'http://edamontology.org/format_2040':
-		'Phylogenetic tree report (invariants) format',
+	'http://edamontology.org/format_2039': 'Phylogenetic tree report (cliques) format',
+	'http://edamontology.org/format_2040': 'Phylogenetic tree report (invariants) format',
 	'http://edamontology.org/format_2045': 'Electron microscopy model format',
-	'http://edamontology.org/format_2049':
-		'Phylogenetic tree report (tree distances) format',
+	'http://edamontology.org/format_2049': 'Phylogenetic tree report (tree distances) format',
 	'http://edamontology.org/format_2051': 'Polymorphism report format',
 	'http://edamontology.org/format_2052': 'Protein family report format',
 	'http://edamontology.org/format_2054': 'Protein interaction format',
@@ -1854,24 +1787,20 @@ export const EDAMDict = {
 	'http://edamontology.org/format_2056': 'Microarray experiment data format',
 	'http://edamontology.org/format_2057': 'Sequence trace format',
 	'http://edamontology.org/format_2058': 'Gene expression report format',
-	'http://edamontology.org/format_2059':
-		'Genotype and phenotype annotation format',
+	'http://edamontology.org/format_2059': 'Genotype and phenotype annotation format',
 	'http://edamontology.org/format_2060': 'Map format',
-	'http://edamontology.org/format_2061':
-		'Nucleic acid features (primers) format',
+	'http://edamontology.org/format_2061': 'Nucleic acid features (primers) format',
 	'http://edamontology.org/format_2062': 'Protein report format',
 	'http://edamontology.org/format_2063': 'Protein report (enzyme) format',
 	'http://edamontology.org/format_2064': '3D-1D scoring matrix format',
-	'http://edamontology.org/format_2065':
-		'Protein structure report (quality evaluation) format',
+	'http://edamontology.org/format_2065': 'Protein structure report (quality evaluation) format',
 	'http://edamontology.org/format_2066': 'Database hits (sequence) format',
 	'http://edamontology.org/format_2067': 'Sequence distance matrix format',
 	'http://edamontology.org/format_2068': 'Sequence motif format',
 	'http://edamontology.org/format_2069': 'Sequence profile format',
 	'http://edamontology.org/format_2072': 'Hidden Markov model format',
 	'http://edamontology.org/format_2074': 'Dirichlet distribution format',
-	'http://edamontology.org/format_2075':
-		'HMM emission and transition counts format',
+	'http://edamontology.org/format_2075': 'HMM emission and transition counts format',
 	'http://edamontology.org/format_2076': 'RNA secondary structure format',
 	'http://edamontology.org/format_2077': 'Protein secondary structure format',
 	'http://edamontology.org/format_2078': 'Sequence range format',
@@ -1880,13 +1809,11 @@ export const EDAMDict = {
 	'http://edamontology.org/format_2096': 'unambiguous sequence',
 	'http://edamontology.org/format_2097': 'ambiguous',
 	'http://edamontology.org/format_2155': 'Sequence features (repeats) format',
-	'http://edamontology.org/format_2158':
-		'Nucleic acid features (restriction sites) format',
+	'http://edamontology.org/format_2158': 'Nucleic acid features (restriction sites) format',
 	'http://edamontology.org/format_2159': 'Gene features (coding region) format',
 	'http://edamontology.org/format_2170': 'Sequence cluster format',
 	'http://edamontology.org/format_2171': 'Sequence cluster format (protein)',
-	'http://edamontology.org/format_2172':
-		'Sequence cluster format (nucleic acid)',
+	'http://edamontology.org/format_2172': 'Sequence cluster format (nucleic acid)',
 	'http://edamontology.org/format_2175': 'Gene cluster format',
 	'http://edamontology.org/format_2181': 'EMBL-like (text)',
 	'http://edamontology.org/format_2182': 'FASTQ-like format (text)',
@@ -1952,11 +1879,9 @@ export const EDAMDict = {
 	'http://edamontology.org/format_2562': 'Amino acid identifier format',
 	'http://edamontology.org/format_2566': 'completely unambiguous',
 	'http://edamontology.org/format_2567': 'completely unambiguous pure',
-	'http://edamontology.org/format_2568':
-		'completely unambiguous pure nucleotide',
+	'http://edamontology.org/format_2568': 'completely unambiguous pure nucleotide',
 	'http://edamontology.org/format_2569': 'completely unambiguous pure dna',
-	'http://edamontology.org/format_2570':
-		'completely unambiguous pure rna sequence',
+	'http://edamontology.org/format_2570': 'completely unambiguous pure rna sequence',
 	'http://edamontology.org/format_2571': 'Raw sequence format',
 	'http://edamontology.org/format_2572': 'BAM',
 	'http://edamontology.org/format_2573': 'SAM',
@@ -1991,10 +1916,8 @@ export const EDAMDict = {
 	'http://edamontology.org/format_3020': 'BCF',
 	'http://edamontology.org/format_3033': 'Matrix format',
 	'http://edamontology.org/format_3097': 'Protein domain classification format',
-	'http://edamontology.org/format_3098':
-		'Raw SCOP domain classification format',
-	'http://edamontology.org/format_3099':
-		'Raw CATH domain classification format',
+	'http://edamontology.org/format_3098': 'Raw SCOP domain classification format',
+	'http://edamontology.org/format_3099': 'Raw CATH domain classification format',
 	'http://edamontology.org/format_3100': 'CATH domain report format',
 	'http://edamontology.org/format_3155': 'SBRML',
 	'http://edamontology.org/format_3156': 'BioPAX',
@@ -2006,8 +1929,7 @@ export const EDAMDict = {
 	'http://edamontology.org/format_3162': 'MAGE-TAB',
 	'http://edamontology.org/format_3163': 'GCDML',
 	'http://edamontology.org/format_3164': 'GTrack',
-	'http://edamontology.org/format_3166':
-		'Biological pathway or network report format',
+	'http://edamontology.org/format_3166': 'Biological pathway or network report format',
 	'http://edamontology.org/format_3167': 'Experiment annotation format',
 	'http://edamontology.org/format_3235': 'Cytoband format',
 	'http://edamontology.org/format_3239': 'CopasiML',
@@ -2099,8 +2021,7 @@ export const EDAMDict = {
 	'http://edamontology.org/format_3603': 'PNG',
 	'http://edamontology.org/format_3604': 'SVG',
 	'http://edamontology.org/format_3605': 'rast',
-	'http://edamontology.org/format_3606':
-		'Sequence quality report format (text)',
+	'http://edamontology.org/format_3606': 'Sequence quality report format (text)',
 	'http://edamontology.org/format_3607': 'qual',
 	'http://edamontology.org/format_3608': 'qualsolexa',
 	'http://edamontology.org/format_3609': 'qualillumina',
@@ -2305,8 +2226,7 @@ export const EDAMDict = {
 	'http://edamontology.org/format_4007': 'MATLAB script',
 	'http://edamontology.org/operation_0004': 'Operation',
 	'http://edamontology.org/operation_0224': 'Query and retrieval',
-	'http://edamontology.org/operation_0225':
-		'Data retrieval (database cross-reference)',
+	'http://edamontology.org/operation_0225': 'Data retrieval (database cross-reference)',
 	'http://edamontology.org/operation_0226': 'Annotation',
 	'http://edamontology.org/operation_0227': 'Indexing',
 	'http://edamontology.org/operation_0228': 'Data index analysis',
@@ -2322,12 +2242,10 @@ export const EDAMDict = {
 	'http://edamontology.org/operation_0238': 'Sequence motif discovery',
 	'http://edamontology.org/operation_0239': 'Sequence motif recognition',
 	'http://edamontology.org/operation_0240': 'Sequence motif comparison',
-	'http://edamontology.org/operation_0241':
-		'Transcription regulatory sequence analysis',
+	'http://edamontology.org/operation_0241': 'Transcription regulatory sequence analysis',
 	'http://edamontology.org/operation_0242':
 		'Conserved transcription regulatory sequence identification',
-	'http://edamontology.org/operation_0243':
-		'Protein property calculation (from structure)',
+	'http://edamontology.org/operation_0243': 'Protein property calculation (from structure)',
 	'http://edamontology.org/operation_0244': 'Simulation analysis',
 	'http://edamontology.org/operation_0245': 'Structural motif discovery',
 	'http://edamontology.org/operation_0246': 'Protein domain recognition',
@@ -2340,8 +2258,7 @@ export const EDAMDict = {
 	'http://edamontology.org/operation_0254': 'Data retrieval (feature table)',
 	'http://edamontology.org/operation_0255': 'Feature table query',
 	'http://edamontology.org/operation_0256': 'Sequence feature comparison',
-	'http://edamontology.org/operation_0257':
-		'Data retrieval (sequence alignment)',
+	'http://edamontology.org/operation_0257': 'Data retrieval (sequence alignment)',
 	'http://edamontology.org/operation_0258': 'Sequence alignment analysis',
 	'http://edamontology.org/operation_0259': 'Sequence alignment comparison',
 	'http://edamontology.org/operation_0260': 'Sequence alignment conversion',
@@ -2350,52 +2267,41 @@ export const EDAMDict = {
 	'http://edamontology.org/operation_0264': 'Alternative splicing prediction',
 	'http://edamontology.org/operation_0265': 'Frameshift detection',
 	'http://edamontology.org/operation_0266': 'Vector sequence detection',
-	'http://edamontology.org/operation_0267':
-		'Protein secondary structure prediction',
-	'http://edamontology.org/operation_0268':
-		'Protein super-secondary structure prediction',
+	'http://edamontology.org/operation_0267': 'Protein secondary structure prediction',
+	'http://edamontology.org/operation_0268': 'Protein super-secondary structure prediction',
 	'http://edamontology.org/operation_0269': 'Transmembrane protein prediction',
 	'http://edamontology.org/operation_0270': 'Transmembrane protein analysis',
 	'http://edamontology.org/operation_0271': 'Structure prediction',
 	'http://edamontology.org/operation_0272': 'Residue contact prediction',
-	'http://edamontology.org/operation_0273':
-		'Protein interaction raw data analysis',
+	'http://edamontology.org/operation_0273': 'Protein interaction raw data analysis',
 	'http://edamontology.org/operation_0274':
 		'Protein-protein interaction prediction (from protein sequence)',
 	'http://edamontology.org/operation_0275':
 		'Protein-protein interaction prediction (from protein structure)',
-	'http://edamontology.org/operation_0276':
-		'Protein interaction network analysis',
+	'http://edamontology.org/operation_0276': 'Protein interaction network analysis',
 	'http://edamontology.org/operation_0277': 'Pathway or network comparison',
-	'http://edamontology.org/operation_0278':
-		'RNA secondary structure prediction',
+	'http://edamontology.org/operation_0278': 'RNA secondary structure prediction',
 	'http://edamontology.org/operation_0279': 'Nucleic acid folding analysis',
-	'http://edamontology.org/operation_0280':
-		'Data retrieval (restriction enzyme annotation)',
+	'http://edamontology.org/operation_0280': 'Data retrieval (restriction enzyme annotation)',
 	'http://edamontology.org/operation_0281': 'Genetic marker identification',
 	'http://edamontology.org/operation_0282': 'Genetic mapping',
 	'http://edamontology.org/operation_0283': 'Linkage analysis',
 	'http://edamontology.org/operation_0284': 'Codon usage table generation',
 	'http://edamontology.org/operation_0285': 'Codon usage table comparison',
 	'http://edamontology.org/operation_0286': 'Codon usage analysis',
-	'http://edamontology.org/operation_0287':
-		'Base position variability plotting',
+	'http://edamontology.org/operation_0287': 'Base position variability plotting',
 	'http://edamontology.org/operation_0288': 'Sequence word comparison',
-	'http://edamontology.org/operation_0289':
-		'Sequence distance matrix generation',
+	'http://edamontology.org/operation_0289': 'Sequence distance matrix generation',
 	'http://edamontology.org/operation_0290': 'Sequence redundancy removal',
 	'http://edamontology.org/operation_0291': 'Sequence clustering',
 	'http://edamontology.org/operation_0292': 'Sequence alignment',
-	'http://edamontology.org/operation_0293':
-		'Hybrid sequence alignment construction',
-	'http://edamontology.org/operation_0294':
-		'Structure-based sequence alignment',
+	'http://edamontology.org/operation_0293': 'Hybrid sequence alignment construction',
+	'http://edamontology.org/operation_0294': 'Structure-based sequence alignment',
 	'http://edamontology.org/operation_0295': 'Structure alignment',
 	'http://edamontology.org/operation_0296': 'Sequence profile generation',
 	'http://edamontology.org/operation_0297': '3D profile generation',
 	'http://edamontology.org/operation_0298': 'Profile-profile alignment',
-	'http://edamontology.org/operation_0299':
-		'3D profile-to-3D profile alignment',
+	'http://edamontology.org/operation_0299': '3D profile-to-3D profile alignment',
 	'http://edamontology.org/operation_0300': 'Sequence profile alignment',
 	'http://edamontology.org/operation_0301': 'Sequence-to-3D-profile alignment',
 	'http://edamontology.org/operation_0302': 'Protein threading',
@@ -2407,19 +2313,15 @@ export const EDAMDict = {
 	'http://edamontology.org/operation_0308': 'PCR primer design',
 	'http://edamontology.org/operation_0309': 'Microarray probe design',
 	'http://edamontology.org/operation_0310': 'Sequence assembly',
-	'http://edamontology.org/operation_0311':
-		'Microarray data standardisation and normalisation',
-	'http://edamontology.org/operation_0312':
-		'Sequencing-based expression profile data processing',
+	'http://edamontology.org/operation_0311': 'Microarray data standardisation and normalisation',
+	'http://edamontology.org/operation_0312': 'Sequencing-based expression profile data processing',
 	'http://edamontology.org/operation_0313': 'Expression profile clustering',
 	'http://edamontology.org/operation_0314': 'Gene expression profiling',
 	'http://edamontology.org/operation_0315': 'Expression profile comparison',
 	'http://edamontology.org/operation_0316': 'Functional profiling',
 	'http://edamontology.org/operation_0317': 'EST and cDNA sequence analysis',
-	'http://edamontology.org/operation_0318':
-		'Structural genomics target selection',
-	'http://edamontology.org/operation_0319':
-		'Protein secondary structure assignment',
+	'http://edamontology.org/operation_0318': 'Structural genomics target selection',
+	'http://edamontology.org/operation_0319': 'Protein secondary structure assignment',
 	'http://edamontology.org/operation_0320': 'Protein structure assignment',
 	'http://edamontology.org/operation_0321': 'Protein structure validation',
 	'http://edamontology.org/operation_0322': 'Molecular model refinement',
@@ -2429,8 +2331,7 @@ export const EDAMDict = {
 	'http://edamontology.org/operation_0326': 'Phylogenetic tree editing',
 	'http://edamontology.org/operation_0327': 'Phylogenetic footprinting',
 	'http://edamontology.org/operation_0328': 'Protein folding simulation',
-	'http://edamontology.org/operation_0329':
-		'Protein folding pathway prediction',
+	'http://edamontology.org/operation_0329': 'Protein folding pathway prediction',
 	'http://edamontology.org/operation_0330': 'Protein SNP mapping',
 	'http://edamontology.org/operation_0331': 'Variant effect prediction',
 	'http://edamontology.org/operation_0332': 'Immunogen design',
@@ -2444,17 +2345,13 @@ export const EDAMDict = {
 	'http://edamontology.org/operation_0340': 'Protein secondary database search',
 	'http://edamontology.org/operation_0341': 'Motif database search',
 	'http://edamontology.org/operation_0342': 'Sequence profile database search',
-	'http://edamontology.org/operation_0343':
-		'Transmembrane protein database search',
+	'http://edamontology.org/operation_0343': 'Transmembrane protein database search',
 	'http://edamontology.org/operation_0344': 'Sequence retrieval (by code)',
 	'http://edamontology.org/operation_0345': 'Sequence retrieval (by keyword)',
 	'http://edamontology.org/operation_0346': 'Sequence similarity search',
-	'http://edamontology.org/operation_0347':
-		'Sequence database search (by motif or pattern)',
-	'http://edamontology.org/operation_0348':
-		'Sequence database search (by amino acid composition)',
-	'http://edamontology.org/operation_0349':
-		'Sequence database search (by property)',
+	'http://edamontology.org/operation_0347': 'Sequence database search (by motif or pattern)',
+	'http://edamontology.org/operation_0348': 'Sequence database search (by amino acid composition)',
+	'http://edamontology.org/operation_0349': 'Sequence database search (by property)',
 	'http://edamontology.org/operation_0350':
 		'Sequence database search (by sequence using word-based methods)',
 	'http://edamontology.org/operation_0351':
@@ -2465,14 +2362,11 @@ export const EDAMDict = {
 		'Sequence database search (by sequence using global alignment-based methods)',
 	'http://edamontology.org/operation_0354':
 		'Sequence database search (by sequence for primer sequences)',
-	'http://edamontology.org/operation_0355':
-		'Sequence database search (by molecular weight)',
-	'http://edamontology.org/operation_0356':
-		'Sequence database search (by isoelectric point)',
+	'http://edamontology.org/operation_0355': 'Sequence database search (by molecular weight)',
+	'http://edamontology.org/operation_0356': 'Sequence database search (by isoelectric point)',
 	'http://edamontology.org/operation_0357': 'Structure retrieval (by code)',
 	'http://edamontology.org/operation_0358': 'Structure retrieval (by keyword)',
-	'http://edamontology.org/operation_0359':
-		'Structure database search (by sequence)',
+	'http://edamontology.org/operation_0359': 'Structure database search (by sequence)',
 	'http://edamontology.org/operation_0360': 'Structural similarity search',
 	'http://edamontology.org/operation_0361': 'Sequence annotation',
 	'http://edamontology.org/operation_0362': 'Genome annotation',
@@ -2480,79 +2374,54 @@ export const EDAMDict = {
 	'http://edamontology.org/operation_0364': 'Random sequence generation',
 	'http://edamontology.org/operation_0365': 'Restriction digest',
 	'http://edamontology.org/operation_0366': 'Protein sequence cleavage',
-	'http://edamontology.org/operation_0367':
-		'Sequence mutation and randomisation',
+	'http://edamontology.org/operation_0367': 'Sequence mutation and randomisation',
 	'http://edamontology.org/operation_0368': 'Sequence masking',
 	'http://edamontology.org/operation_0369': 'Sequence cutting',
 	'http://edamontology.org/operation_0370': 'Restriction site creation',
 	'http://edamontology.org/operation_0371': 'DNA translation',
 	'http://edamontology.org/operation_0372': 'DNA transcription',
-	'http://edamontology.org/operation_0377':
-		'Sequence composition calculation (nucleic acid)',
-	'http://edamontology.org/operation_0378':
-		'Sequence composition calculation (protein)',
+	'http://edamontology.org/operation_0377': 'Sequence composition calculation (nucleic acid)',
+	'http://edamontology.org/operation_0378': 'Sequence composition calculation (protein)',
 	'http://edamontology.org/operation_0379': 'Repeat sequence detection',
-	'http://edamontology.org/operation_0380':
-		'Repeat sequence organisation analysis',
-	'http://edamontology.org/operation_0383':
-		'Protein hydropathy calculation (from structure)',
+	'http://edamontology.org/operation_0380': 'Repeat sequence organisation analysis',
+	'http://edamontology.org/operation_0383': 'Protein hydropathy calculation (from structure)',
 	'http://edamontology.org/operation_0384': 'Accessible surface calculation',
-	'http://edamontology.org/operation_0385':
-		'Protein hydropathy cluster calculation',
+	'http://edamontology.org/operation_0385': 'Protein hydropathy cluster calculation',
 	'http://edamontology.org/operation_0386': 'Protein dipole moment calculation',
 	'http://edamontology.org/operation_0387': 'Molecular surface calculation',
-	'http://edamontology.org/operation_0388':
-		'Protein binding site prediction (from structure)',
-	'http://edamontology.org/operation_0389':
-		'Protein-nucleic acid interaction analysis',
+	'http://edamontology.org/operation_0388': 'Protein binding site prediction (from structure)',
+	'http://edamontology.org/operation_0389': 'Protein-nucleic acid interaction analysis',
 	'http://edamontology.org/operation_0390': 'Protein peeling',
-	'http://edamontology.org/operation_0391':
-		'Protein distance matrix calculation',
+	'http://edamontology.org/operation_0391': 'Protein distance matrix calculation',
 	'http://edamontology.org/operation_0392': 'Contact map calculation',
 	'http://edamontology.org/operation_0393': 'Residue cluster calculation',
 	'http://edamontology.org/operation_0394': 'Hydrogen bond calculation',
-	'http://edamontology.org/operation_0395':
-		'Residue non-canonical interaction detection',
+	'http://edamontology.org/operation_0395': 'Residue non-canonical interaction detection',
 	'http://edamontology.org/operation_0396': 'Ramachandran plot calculation',
 	'http://edamontology.org/operation_0397': 'Ramachandran plot validation',
-	'http://edamontology.org/operation_0398':
-		'Protein molecular weight calculation',
-	'http://edamontology.org/operation_0399':
-		'Protein extinction coefficient calculation',
+	'http://edamontology.org/operation_0398': 'Protein molecular weight calculation',
+	'http://edamontology.org/operation_0399': 'Protein extinction coefficient calculation',
 	'http://edamontology.org/operation_0400': 'Protein pKa calculation',
-	'http://edamontology.org/operation_0401':
-		'Protein hydropathy calculation (from sequence)',
+	'http://edamontology.org/operation_0401': 'Protein hydropathy calculation (from sequence)',
 	'http://edamontology.org/operation_0402': 'Protein titration curve plotting',
-	'http://edamontology.org/operation_0403':
-		'Protein isoelectric point calculation',
-	'http://edamontology.org/operation_0404':
-		'Protein hydrogen exchange rate calculation',
-	'http://edamontology.org/operation_0405':
-		'Protein hydrophobic region calculation',
-	'http://edamontology.org/operation_0406':
-		'Protein aliphatic index calculation',
-	'http://edamontology.org/operation_0407':
-		'Protein hydrophobic moment plotting',
+	'http://edamontology.org/operation_0403': 'Protein isoelectric point calculation',
+	'http://edamontology.org/operation_0404': 'Protein hydrogen exchange rate calculation',
+	'http://edamontology.org/operation_0405': 'Protein hydrophobic region calculation',
+	'http://edamontology.org/operation_0406': 'Protein aliphatic index calculation',
+	'http://edamontology.org/operation_0407': 'Protein hydrophobic moment plotting',
 	'http://edamontology.org/operation_0408': 'Protein globularity prediction',
 	'http://edamontology.org/operation_0409': 'Protein solubility prediction',
-	'http://edamontology.org/operation_0410':
-		'Protein crystallizability prediction',
-	'http://edamontology.org/operation_0411':
-		'Protein signal peptide detection (eukaryotes)',
-	'http://edamontology.org/operation_0412':
-		'Protein signal peptide detection (bacteria)',
-	'http://edamontology.org/operation_0413':
-		'MHC peptide immunogenicity prediction',
-	'http://edamontology.org/operation_0414':
-		'Protein feature prediction (from sequence)',
+	'http://edamontology.org/operation_0410': 'Protein crystallizability prediction',
+	'http://edamontology.org/operation_0411': 'Protein signal peptide detection (eukaryotes)',
+	'http://edamontology.org/operation_0412': 'Protein signal peptide detection (bacteria)',
+	'http://edamontology.org/operation_0413': 'MHC peptide immunogenicity prediction',
+	'http://edamontology.org/operation_0414': 'Protein feature prediction (from sequence)',
 	'http://edamontology.org/operation_0415': 'Nucleic acid feature detection',
 	'http://edamontology.org/operation_0416': 'Epitope mapping',
 	'http://edamontology.org/operation_0417': 'PTM site prediction',
 	'http://edamontology.org/operation_0418': 'Protein signal peptide detection',
-	'http://edamontology.org/operation_0419':
-		'Protein binding site prediction (from sequence)',
-	'http://edamontology.org/operation_0420':
-		'Nucleic acids-binding site prediction',
+	'http://edamontology.org/operation_0419': 'Protein binding site prediction (from sequence)',
+	'http://edamontology.org/operation_0420': 'Nucleic acids-binding site prediction',
 	'http://edamontology.org/operation_0421': 'Protein folding site prediction',
 	'http://edamontology.org/operation_0422': 'Protein cleavage site prediction',
 	'http://edamontology.org/operation_0423': 'Epitope mapping (MHC Class I)',
@@ -2561,8 +2430,7 @@ export const EDAMDict = {
 	'http://edamontology.org/operation_0426': 'Gene component prediction',
 	'http://edamontology.org/operation_0427': 'Transposon prediction',
 	'http://edamontology.org/operation_0428': 'PolyA signal detection',
-	'http://edamontology.org/operation_0429':
-		'Quadruplex formation site detection',
+	'http://edamontology.org/operation_0429': 'Quadruplex formation site detection',
 	'http://edamontology.org/operation_0430': 'CpG island and isochore detection',
 	'http://edamontology.org/operation_0431': 'Restriction site recognition',
 	'http://edamontology.org/operation_0432': 'Nucleosome position prediction',
@@ -2571,57 +2439,37 @@ export const EDAMDict = {
 	'http://edamontology.org/operation_0435': 'Operon prediction',
 	'http://edamontology.org/operation_0436': 'Coding region prediction',
 	'http://edamontology.org/operation_0437': 'SECIS element prediction',
-	'http://edamontology.org/operation_0438':
-		'Transcriptional regulatory element prediction',
-	'http://edamontology.org/operation_0439':
-		'Translation initiation site prediction',
+	'http://edamontology.org/operation_0438': 'Transcriptional regulatory element prediction',
+	'http://edamontology.org/operation_0439': 'Translation initiation site prediction',
 	'http://edamontology.org/operation_0440': 'Promoter prediction',
 	'http://edamontology.org/operation_0441': 'cis-regulatory element prediction',
 	'http://edamontology.org/operation_0442':
 		'Transcriptional regulatory element prediction (RNA-cis)',
-	'http://edamontology.org/operation_0443':
-		'trans-regulatory element prediction',
+	'http://edamontology.org/operation_0443': 'trans-regulatory element prediction',
 	'http://edamontology.org/operation_0444': 'S/MAR prediction',
-	'http://edamontology.org/operation_0445':
-		'Transcription factor binding site prediction',
-	'http://edamontology.org/operation_0446':
-		'Exonic splicing enhancer prediction',
+	'http://edamontology.org/operation_0445': 'Transcription factor binding site prediction',
+	'http://edamontology.org/operation_0446': 'Exonic splicing enhancer prediction',
 	'http://edamontology.org/operation_0447': 'Sequence alignment validation',
-	'http://edamontology.org/operation_0448':
-		'Sequence alignment analysis (conservation)',
-	'http://edamontology.org/operation_0449':
-		'Sequence alignment analysis (site correlation)',
+	'http://edamontology.org/operation_0448': 'Sequence alignment analysis (conservation)',
+	'http://edamontology.org/operation_0449': 'Sequence alignment analysis (site correlation)',
 	'http://edamontology.org/operation_0450': 'Chimera detection',
 	'http://edamontology.org/operation_0451': 'Recombination detection',
 	'http://edamontology.org/operation_0452': 'Indel detection',
-	'http://edamontology.org/operation_0453':
-		'Nucleosome formation potential prediction',
-	'http://edamontology.org/operation_0455':
-		'Nucleic acid thermodynamic property calculation',
-	'http://edamontology.org/operation_0456':
-		'Nucleic acid melting profile plotting',
-	'http://edamontology.org/operation_0457':
-		'Nucleic acid stitch profile plotting',
-	'http://edamontology.org/operation_0458':
-		'Nucleic acid melting curve plotting',
-	'http://edamontology.org/operation_0459':
-		'Nucleic acid probability profile plotting',
-	'http://edamontology.org/operation_0460':
-		'Nucleic acid temperature profile plotting',
-	'http://edamontology.org/operation_0461':
-		'Nucleic acid curvature calculation',
+	'http://edamontology.org/operation_0453': 'Nucleosome formation potential prediction',
+	'http://edamontology.org/operation_0455': 'Nucleic acid thermodynamic property calculation',
+	'http://edamontology.org/operation_0456': 'Nucleic acid melting profile plotting',
+	'http://edamontology.org/operation_0457': 'Nucleic acid stitch profile plotting',
+	'http://edamontology.org/operation_0458': 'Nucleic acid melting curve plotting',
+	'http://edamontology.org/operation_0459': 'Nucleic acid probability profile plotting',
+	'http://edamontology.org/operation_0460': 'Nucleic acid temperature profile plotting',
+	'http://edamontology.org/operation_0461': 'Nucleic acid curvature calculation',
 	'http://edamontology.org/operation_0463': 'miRNA target prediction',
 	'http://edamontology.org/operation_0464': 'tRNA gene prediction',
-	'http://edamontology.org/operation_0465':
-		'siRNA binding specificity prediction',
-	'http://edamontology.org/operation_0467':
-		'Protein secondary structure prediction (integrated)',
-	'http://edamontology.org/operation_0468':
-		'Protein secondary structure prediction (helices)',
-	'http://edamontology.org/operation_0469':
-		'Protein secondary structure prediction (turns)',
-	'http://edamontology.org/operation_0470':
-		'Protein secondary structure prediction (coils)',
+	'http://edamontology.org/operation_0465': 'siRNA binding specificity prediction',
+	'http://edamontology.org/operation_0467': 'Protein secondary structure prediction (integrated)',
+	'http://edamontology.org/operation_0468': 'Protein secondary structure prediction (helices)',
+	'http://edamontology.org/operation_0469': 'Protein secondary structure prediction (turns)',
+	'http://edamontology.org/operation_0470': 'Protein secondary structure prediction (coils)',
 	'http://edamontology.org/operation_0471': 'Disulfide bond prediction',
 	'http://edamontology.org/operation_0472': 'GPCR prediction',
 	'http://edamontology.org/operation_0473': 'GPCR analysis',
@@ -2639,60 +2487,41 @@ export const EDAMDict = {
 	'http://edamontology.org/operation_0485': 'Radiation Hybrid Mapping',
 	'http://edamontology.org/operation_0486': 'Functional mapping',
 	'http://edamontology.org/operation_0487': 'Haplotype mapping',
-	'http://edamontology.org/operation_0488':
-		'Linkage disequilibrium calculation',
+	'http://edamontology.org/operation_0488': 'Linkage disequilibrium calculation',
 	'http://edamontology.org/operation_0489': 'Genetic code prediction',
 	'http://edamontology.org/operation_0490': 'Dot plot plotting',
 	'http://edamontology.org/operation_0491': 'Pairwise sequence alignment',
 	'http://edamontology.org/operation_0492': 'Multiple sequence alignment',
-	'http://edamontology.org/operation_0493':
-		'Pairwise sequence alignment generation (local)',
-	'http://edamontology.org/operation_0494':
-		'Pairwise sequence alignment generation (global)',
+	'http://edamontology.org/operation_0493': 'Pairwise sequence alignment generation (local)',
+	'http://edamontology.org/operation_0494': 'Pairwise sequence alignment generation (global)',
 	'http://edamontology.org/operation_0495': 'Local alignment',
 	'http://edamontology.org/operation_0496': 'Global alignment',
 	'http://edamontology.org/operation_0497': 'Constrained sequence alignment',
-	'http://edamontology.org/operation_0498':
-		'Consensus-based sequence alignment',
+	'http://edamontology.org/operation_0498': 'Consensus-based sequence alignment',
 	'http://edamontology.org/operation_0499': 'Tree-based sequence alignment',
-	'http://edamontology.org/operation_0500':
-		'Secondary structure alignment generation',
-	'http://edamontology.org/operation_0501':
-		'Protein secondary structure alignment generation',
+	'http://edamontology.org/operation_0500': 'Secondary structure alignment generation',
+	'http://edamontology.org/operation_0501': 'Protein secondary structure alignment generation',
 	'http://edamontology.org/operation_0502': 'RNA secondary structure alignment',
 	'http://edamontology.org/operation_0503': 'Pairwise structure alignment',
 	'http://edamontology.org/operation_0504': 'Multiple structure alignment',
 	'http://edamontology.org/operation_0505': 'Structure alignment (protein)',
 	'http://edamontology.org/operation_0506': 'Structure alignment (RNA)',
-	'http://edamontology.org/operation_0507':
-		'Pairwise structure alignment generation (local)',
-	'http://edamontology.org/operation_0508':
-		'Pairwise structure alignment generation (global)',
+	'http://edamontology.org/operation_0507': 'Pairwise structure alignment generation (local)',
+	'http://edamontology.org/operation_0508': 'Pairwise structure alignment generation (global)',
 	'http://edamontology.org/operation_0509': 'Local structure alignment',
 	'http://edamontology.org/operation_0510': 'Global structure alignment',
-	'http://edamontology.org/operation_0511':
-		'Profile-profile alignment (pairwise)',
-	'http://edamontology.org/operation_0512':
-		'Sequence alignment generation (multiple profile)',
-	'http://edamontology.org/operation_0513':
-		'3D profile-to-3D profile alignment (pairwise)',
-	'http://edamontology.org/operation_0514':
-		'Structural profile alignment generation (multiple)',
+	'http://edamontology.org/operation_0511': 'Profile-profile alignment (pairwise)',
+	'http://edamontology.org/operation_0512': 'Sequence alignment generation (multiple profile)',
+	'http://edamontology.org/operation_0513': '3D profile-to-3D profile alignment (pairwise)',
+	'http://edamontology.org/operation_0514': 'Structural profile alignment generation (multiple)',
 	'http://edamontology.org/operation_0515': 'Data retrieval (tool metadata)',
-	'http://edamontology.org/operation_0516':
-		'Data retrieval (database metadata)',
-	'http://edamontology.org/operation_0517':
-		'PCR primer design (for large scale sequencing)',
-	'http://edamontology.org/operation_0518':
-		'PCR primer design (for genotyping polymorphisms)',
-	'http://edamontology.org/operation_0519':
-		'PCR primer design (for gene transcription profiling)',
-	'http://edamontology.org/operation_0520':
-		'PCR primer design (for conserved primers)',
-	'http://edamontology.org/operation_0521':
-		'PCR primer design (based on gene structure)',
-	'http://edamontology.org/operation_0522':
-		'PCR primer design (for methylation PCRs)',
+	'http://edamontology.org/operation_0516': 'Data retrieval (database metadata)',
+	'http://edamontology.org/operation_0517': 'PCR primer design (for large scale sequencing)',
+	'http://edamontology.org/operation_0518': 'PCR primer design (for genotyping polymorphisms)',
+	'http://edamontology.org/operation_0519': 'PCR primer design (for gene transcription profiling)',
+	'http://edamontology.org/operation_0520': 'PCR primer design (for conserved primers)',
+	'http://edamontology.org/operation_0521': 'PCR primer design (based on gene structure)',
+	'http://edamontology.org/operation_0522': 'PCR primer design (for methylation PCRs)',
 	'http://edamontology.org/operation_0523': 'Mapping assembly',
 	'http://edamontology.org/operation_0524': 'De-novo assembly',
 	'http://edamontology.org/operation_0525': 'Genome assembly',
@@ -2703,51 +2532,35 @@ export const EDAMDict = {
 	'http://edamontology.org/operation_0530': 'SBS data processing',
 	'http://edamontology.org/operation_0531': 'Heat map generation',
 	'http://edamontology.org/operation_0532': 'Gene expression profile analysis',
-	'http://edamontology.org/operation_0533':
-		'Expression profile pathway mapping',
+	'http://edamontology.org/operation_0533': 'Expression profile pathway mapping',
 	'http://edamontology.org/operation_0534':
 		'Protein secondary structure assignment (from coordinate data)',
-	'http://edamontology.org/operation_0535':
-		'Protein secondary structure assignment (from CD data)',
+	'http://edamontology.org/operation_0535': 'Protein secondary structure assignment (from CD data)',
 	'http://edamontology.org/operation_0536':
 		'Protein structure assignment (from X-ray crystallographic data)',
-	'http://edamontology.org/operation_0537':
-		'Protein structure assignment (from NMR data)',
-	'http://edamontology.org/operation_0538':
-		'Phylogenetic inference (data centric)',
-	'http://edamontology.org/operation_0539':
-		'Phylogenetic inference (method centric)',
-	'http://edamontology.org/operation_0540':
-		'Phylogenetic inference (from molecular sequences)',
+	'http://edamontology.org/operation_0537': 'Protein structure assignment (from NMR data)',
+	'http://edamontology.org/operation_0538': 'Phylogenetic inference (data centric)',
+	'http://edamontology.org/operation_0539': 'Phylogenetic inference (method centric)',
+	'http://edamontology.org/operation_0540': 'Phylogenetic inference (from molecular sequences)',
 	'http://edamontology.org/operation_0541':
 		'Phylogenetic inference (from continuous quantitative characters)',
-	'http://edamontology.org/operation_0542':
-		'Phylogenetic inference (from gene frequencies)',
-	'http://edamontology.org/operation_0543':
-		'Phylogenetic inference (from polymorphism data)',
+	'http://edamontology.org/operation_0542': 'Phylogenetic inference (from gene frequencies)',
+	'http://edamontology.org/operation_0543': 'Phylogenetic inference (from polymorphism data)',
 	'http://edamontology.org/operation_0544': 'Species tree construction',
-	'http://edamontology.org/operation_0545':
-		'Phylogenetic inference (parsimony methods)',
-	'http://edamontology.org/operation_0546':
-		'Phylogenetic inference (minimum distance methods)',
+	'http://edamontology.org/operation_0545': 'Phylogenetic inference (parsimony methods)',
+	'http://edamontology.org/operation_0546': 'Phylogenetic inference (minimum distance methods)',
 	'http://edamontology.org/operation_0547':
 		'Phylogenetic inference (maximum likelihood and Bayesian methods)',
-	'http://edamontology.org/operation_0548':
-		'Phylogenetic inference (quartet methods)',
-	'http://edamontology.org/operation_0549':
-		'Phylogenetic inference (AI methods)',
+	'http://edamontology.org/operation_0548': 'Phylogenetic inference (quartet methods)',
+	'http://edamontology.org/operation_0549': 'Phylogenetic inference (AI methods)',
 	'http://edamontology.org/operation_0550': 'DNA substitution modelling',
-	'http://edamontology.org/operation_0551':
-		'Phylogenetic tree topology analysis',
+	'http://edamontology.org/operation_0551': 'Phylogenetic tree topology analysis',
 	'http://edamontology.org/operation_0552': 'Phylogenetic tree bootstrapping',
 	'http://edamontology.org/operation_0553': 'Gene tree construction',
-	'http://edamontology.org/operation_0554':
-		'Allele frequency distribution analysis',
+	'http://edamontology.org/operation_0554': 'Allele frequency distribution analysis',
 	'http://edamontology.org/operation_0555': 'Consensus tree construction',
-	'http://edamontology.org/operation_0556':
-		'Phylogenetic sub/super tree construction',
-	'http://edamontology.org/operation_0557':
-		'Phylogenetic tree distances calculation',
+	'http://edamontology.org/operation_0556': 'Phylogenetic sub/super tree construction',
+	'http://edamontology.org/operation_0557': 'Phylogenetic tree distances calculation',
 	'http://edamontology.org/operation_0558': 'Phylogenetic tree annotation',
 	'http://edamontology.org/operation_0559': 'Immunogenicity prediction',
 	'http://edamontology.org/operation_0560': 'DNA vaccine design',
@@ -2758,24 +2571,19 @@ export const EDAMDict = {
 	'http://edamontology.org/operation_0565': 'Sequence alignment visualisation',
 	'http://edamontology.org/operation_0566': 'Sequence cluster visualisation',
 	'http://edamontology.org/operation_0567': 'Phylogenetic tree visualisation',
-	'http://edamontology.org/operation_0568':
-		'RNA secondary structure visualisation',
-	'http://edamontology.org/operation_0569':
-		'Protein secondary structure visualisation',
+	'http://edamontology.org/operation_0568': 'RNA secondary structure visualisation',
+	'http://edamontology.org/operation_0569': 'Protein secondary structure visualisation',
 	'http://edamontology.org/operation_0570': 'Structure visualisation',
 	'http://edamontology.org/operation_0571': 'Expression data visualisation',
-	'http://edamontology.org/operation_0572':
-		'Protein interaction network visualisation',
+	'http://edamontology.org/operation_0572': 'Protein interaction network visualisation',
 	'http://edamontology.org/operation_0573': 'Map drawing',
 	'http://edamontology.org/operation_0574': 'Sequence motif rendering',
 	'http://edamontology.org/operation_0575': 'Restriction map drawing',
 	'http://edamontology.org/operation_0577': 'DNA linear map rendering',
 	'http://edamontology.org/operation_0578': 'Plasmid map drawing',
 	'http://edamontology.org/operation_0579': 'Operon drawing',
-	'http://edamontology.org/operation_1768':
-		'Nucleic acid folding family identification',
-	'http://edamontology.org/operation_1769':
-		'Nucleic acid folding energy calculation',
+	'http://edamontology.org/operation_1768': 'Nucleic acid folding family identification',
+	'http://edamontology.org/operation_1769': 'Nucleic acid folding energy calculation',
 	'http://edamontology.org/operation_1774': 'Annotation retrieval',
 	'http://edamontology.org/operation_1777': 'Protein function prediction',
 	'http://edamontology.org/operation_1778': 'Protein function comparison',
@@ -2785,83 +2593,64 @@ export const EDAMDict = {
 	'http://edamontology.org/operation_1813': 'Sequence retrieval',
 	'http://edamontology.org/operation_1814': 'Structure retrieval',
 	'http://edamontology.org/operation_1816': 'Surface rendering',
-	'http://edamontology.org/operation_1817':
-		'Protein atom surface calculation (accessible)',
+	'http://edamontology.org/operation_1817': 'Protein atom surface calculation (accessible)',
 	'http://edamontology.org/operation_1818':
 		'Protein atom surface calculation (accessible molecular)',
-	'http://edamontology.org/operation_1819':
-		'Protein residue surface calculation (accessible)',
+	'http://edamontology.org/operation_1819': 'Protein residue surface calculation (accessible)',
 	'http://edamontology.org/operation_1820':
 		'Protein residue surface calculation (vacuum accessible)',
 	'http://edamontology.org/operation_1821':
 		'Protein residue surface calculation (accessible molecular)',
 	'http://edamontology.org/operation_1822':
 		'Protein residue surface calculation (vacuum molecular)',
-	'http://edamontology.org/operation_1823':
-		'Protein surface calculation (accessible molecular)',
-	'http://edamontology.org/operation_1824':
-		'Protein surface calculation (accessible)',
-	'http://edamontology.org/operation_1825':
-		'Backbone torsion angle calculation',
+	'http://edamontology.org/operation_1823': 'Protein surface calculation (accessible molecular)',
+	'http://edamontology.org/operation_1824': 'Protein surface calculation (accessible)',
+	'http://edamontology.org/operation_1825': 'Backbone torsion angle calculation',
 	'http://edamontology.org/operation_1826': 'Full torsion angle calculation',
-	'http://edamontology.org/operation_1827':
-		'Cysteine torsion angle calculation',
+	'http://edamontology.org/operation_1827': 'Cysteine torsion angle calculation',
 	'http://edamontology.org/operation_1828': 'Tau angle calculation',
 	'http://edamontology.org/operation_1829': 'Cysteine bridge detection',
 	'http://edamontology.org/operation_1830': 'Free cysteine detection',
 	'http://edamontology.org/operation_1831': 'Metal-bound cysteine detection',
-	'http://edamontology.org/operation_1832':
-		'Residue contact calculation (residue-nucleic acid)',
+	'http://edamontology.org/operation_1832': 'Residue contact calculation (residue-nucleic acid)',
 	'http://edamontology.org/operation_1834': 'Protein-metal contact calculation',
-	'http://edamontology.org/operation_1835':
-		'Residue contact calculation (residue-negative ion)',
+	'http://edamontology.org/operation_1835': 'Residue contact calculation (residue-negative ion)',
 	'http://edamontology.org/operation_1836': 'Residue bump detection',
-	'http://edamontology.org/operation_1837':
-		'Residue symmetry contact calculation',
-	'http://edamontology.org/operation_1838':
-		'Residue contact calculation (residue-ligand)',
+	'http://edamontology.org/operation_1837': 'Residue symmetry contact calculation',
+	'http://edamontology.org/operation_1838': 'Residue contact calculation (residue-ligand)',
 	'http://edamontology.org/operation_1839': 'Salt bridge calculation',
 	'http://edamontology.org/operation_1841': 'Rotamer likelihood prediction',
-	'http://edamontology.org/operation_1842':
-		'Proline mutation value calculation',
+	'http://edamontology.org/operation_1842': 'Proline mutation value calculation',
 	'http://edamontology.org/operation_1843': 'Residue packing validation',
 	'http://edamontology.org/operation_1844': 'Protein geometry validation',
 	'http://edamontology.org/operation_1845': 'PDB file sequence retrieval',
 	'http://edamontology.org/operation_1846': 'HET group detection',
-	'http://edamontology.org/operation_1847':
-		'DSSP secondary structure assignment',
+	'http://edamontology.org/operation_1847': 'DSSP secondary structure assignment',
 	'http://edamontology.org/operation_1848': 'Structure formatting',
-	'http://edamontology.org/operation_1850':
-		'Protein cysteine and disulfide bond assignment',
+	'http://edamontology.org/operation_1850': 'Protein cysteine and disulfide bond assignment',
 	'http://edamontology.org/operation_1913': 'Residue validation',
 	'http://edamontology.org/operation_1914': 'Structure retrieval (water)',
 	'http://edamontology.org/operation_2008': 'siRNA duplex prediction',
 	'http://edamontology.org/operation_2089': 'Sequence alignment refinement',
 	'http://edamontology.org/operation_2120': 'Listfile processing',
 	'http://edamontology.org/operation_2121': 'Sequence file editing',
-	'http://edamontology.org/operation_2122':
-		'Sequence alignment file processing',
+	'http://edamontology.org/operation_2122': 'Sequence alignment file processing',
 	'http://edamontology.org/operation_2123': 'Small molecule data processing',
-	'http://edamontology.org/operation_2222':
-		'Data retrieval (ontology annotation)',
+	'http://edamontology.org/operation_2222': 'Data retrieval (ontology annotation)',
 	'http://edamontology.org/operation_2224': 'Data retrieval (ontology concept)',
-	'http://edamontology.org/operation_2233':
-		'Representative sequence identification',
+	'http://edamontology.org/operation_2233': 'Representative sequence identification',
 	'http://edamontology.org/operation_2234': 'Structure file processing',
 	'http://edamontology.org/operation_2237': 'Data retrieval (sequence profile)',
 	'http://edamontology.org/operation_2238': 'Statistical calculation',
 	'http://edamontology.org/operation_2239': '3D-1D scoring matrix generation',
-	'http://edamontology.org/operation_2241':
-		'Transmembrane protein visualisation',
+	'http://edamontology.org/operation_2241': 'Transmembrane protein visualisation',
 	'http://edamontology.org/operation_2246': 'Demonstration',
-	'http://edamontology.org/operation_2264':
-		'Data retrieval (pathway or network)',
+	'http://edamontology.org/operation_2264': 'Data retrieval (pathway or network)',
 	'http://edamontology.org/operation_2265': 'Data retrieval (identifier)',
 	'http://edamontology.org/operation_2284': 'Nucleic acid density plotting',
 	'http://edamontology.org/operation_2403': 'Sequence analysis',
 	'http://edamontology.org/operation_2404': 'Sequence motif analysis',
-	'http://edamontology.org/operation_2405':
-		'Protein interaction data processing',
+	'http://edamontology.org/operation_2405': 'Protein interaction data processing',
 	'http://edamontology.org/operation_2406': 'Protein structure analysis',
 	'http://edamontology.org/operation_2407': 'Annotation processing',
 	'http://edamontology.org/operation_2408': 'Sequence feature analysis',
@@ -2872,10 +2661,8 @@ export const EDAMDict = {
 	'http://edamontology.org/operation_2413': 'Sequence profile processing',
 	'http://edamontology.org/operation_2414': 'Protein function analysis',
 	'http://edamontology.org/operation_2415': 'Protein folding analysis',
-	'http://edamontology.org/operation_2416':
-		'Protein secondary structure analysis',
-	'http://edamontology.org/operation_2417':
-		'Physicochemical property data processing',
+	'http://edamontology.org/operation_2416': 'Protein secondary structure analysis',
+	'http://edamontology.org/operation_2417': 'Physicochemical property data processing',
 	'http://edamontology.org/operation_2419': 'Primer and probe design',
 	'http://edamontology.org/operation_2420': 'Operation (typed)',
 	'http://edamontology.org/operation_2421': 'Database search',
@@ -2890,57 +2677,42 @@ export const EDAMDict = {
 	'http://edamontology.org/operation_2430': 'Design',
 	'http://edamontology.org/operation_2432': 'Microarray data processing',
 	'http://edamontology.org/operation_2433': 'Codon usage table processing',
-	'http://edamontology.org/operation_2434':
-		'Data retrieval (codon usage table)',
-	'http://edamontology.org/operation_2435':
-		'Gene expression profile processing',
+	'http://edamontology.org/operation_2434': 'Data retrieval (codon usage table)',
+	'http://edamontology.org/operation_2435': 'Gene expression profile processing',
 	'http://edamontology.org/operation_2436': 'Gene-set enrichment analysis',
-	'http://edamontology.org/operation_2437':
-		'Gene regulatory network prediction',
+	'http://edamontology.org/operation_2437': 'Gene regulatory network prediction',
 	'http://edamontology.org/operation_2438': 'Pathway or network processing',
 	'http://edamontology.org/operation_2439': 'RNA secondary structure analysis',
 	'http://edamontology.org/operation_2440': 'Structure processing (RNA)',
 	'http://edamontology.org/operation_2441': 'RNA structure prediction',
 	'http://edamontology.org/operation_2442': 'DNA structure prediction',
 	'http://edamontology.org/operation_2443': 'Phylogenetic tree processing',
-	'http://edamontology.org/operation_2444':
-		'Protein secondary structure processing',
-	'http://edamontology.org/operation_2445':
-		'Protein interaction network processing',
+	'http://edamontology.org/operation_2444': 'Protein secondary structure processing',
+	'http://edamontology.org/operation_2445': 'Protein interaction network processing',
 	'http://edamontology.org/operation_2446': 'Sequence processing',
 	'http://edamontology.org/operation_2447': 'Sequence processing (protein)',
-	'http://edamontology.org/operation_2448':
-		'Sequence processing (nucleic acid)',
+	'http://edamontology.org/operation_2448': 'Sequence processing (nucleic acid)',
 	'http://edamontology.org/operation_2451': 'Sequence comparison',
 	'http://edamontology.org/operation_2452': 'Sequence cluster processing',
 	'http://edamontology.org/operation_2453': 'Feature table processing',
 	'http://edamontology.org/operation_2454': 'Gene prediction',
 	'http://edamontology.org/operation_2456': 'GPCR classification',
-	'http://edamontology.org/operation_2457':
-		'GPCR coupling selectivity prediction',
+	'http://edamontology.org/operation_2457': 'GPCR coupling selectivity prediction',
 	'http://edamontology.org/operation_2459': 'Structure processing (protein)',
 	'http://edamontology.org/operation_2460': 'Protein atom surface calculation',
-	'http://edamontology.org/operation_2461':
-		'Protein residue surface calculation',
+	'http://edamontology.org/operation_2461': 'Protein residue surface calculation',
 	'http://edamontology.org/operation_2462': 'Protein surface calculation',
 	'http://edamontology.org/operation_2463': 'Sequence alignment processing',
-	'http://edamontology.org/operation_2464':
-		'Protein-protein binding site prediction',
+	'http://edamontology.org/operation_2464': 'Protein-protein binding site prediction',
 	'http://edamontology.org/operation_2465': 'Structure processing',
 	'http://edamontology.org/operation_2466': 'Map annotation',
-	'http://edamontology.org/operation_2467':
-		'Data retrieval (protein annotation)',
-	'http://edamontology.org/operation_2468':
-		'Data retrieval (phylogenetic tree)',
-	'http://edamontology.org/operation_2469':
-		'Data retrieval (protein interaction annotation)',
-	'http://edamontology.org/operation_2470':
-		'Data retrieval (protein family annotation)',
-	'http://edamontology.org/operation_2471':
-		'Data retrieval (RNA family annotation)',
+	'http://edamontology.org/operation_2467': 'Data retrieval (protein annotation)',
+	'http://edamontology.org/operation_2468': 'Data retrieval (phylogenetic tree)',
+	'http://edamontology.org/operation_2469': 'Data retrieval (protein interaction annotation)',
+	'http://edamontology.org/operation_2470': 'Data retrieval (protein family annotation)',
+	'http://edamontology.org/operation_2471': 'Data retrieval (RNA family annotation)',
 	'http://edamontology.org/operation_2472': 'Data retrieval (gene annotation)',
-	'http://edamontology.org/operation_2473':
-		'Data retrieval (genotype and phenotype annotation)',
+	'http://edamontology.org/operation_2473': 'Data retrieval (genotype and phenotype annotation)',
 	'http://edamontology.org/operation_2474': 'Protein architecture comparison',
 	'http://edamontology.org/operation_2475': 'Protein architecture recognition',
 	'http://edamontology.org/operation_2476': 'Molecular dynamics',
@@ -2953,22 +2725,16 @@ export const EDAMDict = {
 	'http://edamontology.org/operation_2485': 'Helical wheel drawing',
 	'http://edamontology.org/operation_2486': 'Topology diagram drawing',
 	'http://edamontology.org/operation_2487': 'Protein structure comparison',
-	'http://edamontology.org/operation_2488':
-		'Protein secondary structure comparison',
-	'http://edamontology.org/operation_2489':
-		'Subcellular localisation prediction',
-	'http://edamontology.org/operation_2490':
-		'Residue contact calculation (residue-residue)',
-	'http://edamontology.org/operation_2491':
-		'Hydrogen bond calculation (inter-residue)',
+	'http://edamontology.org/operation_2488': 'Protein secondary structure comparison',
+	'http://edamontology.org/operation_2489': 'Subcellular localisation prediction',
+	'http://edamontology.org/operation_2490': 'Residue contact calculation (residue-residue)',
+	'http://edamontology.org/operation_2491': 'Hydrogen bond calculation (inter-residue)',
 	'http://edamontology.org/operation_2492': 'Protein interaction prediction',
 	'http://edamontology.org/operation_2493': 'Codon usage data processing',
 	'http://edamontology.org/operation_2495': 'Expression analysis',
-	'http://edamontology.org/operation_2496':
-		'Gene regulatory network processing',
+	'http://edamontology.org/operation_2496': 'Gene regulatory network processing',
 	'http://edamontology.org/operation_2497': 'Pathway or network analysis',
-	'http://edamontology.org/operation_2498':
-		'Sequencing-based expression profile data analysis',
+	'http://edamontology.org/operation_2498': 'Sequencing-based expression profile data analysis',
 	'http://edamontology.org/operation_2499': 'Splicing analysis',
 	'http://edamontology.org/operation_2500': 'Microarray raw data analysis',
 	'http://edamontology.org/operation_2501': 'Nucleic acid analysis',
@@ -2976,34 +2742,27 @@ export const EDAMDict = {
 	'http://edamontology.org/operation_2503': 'Sequence data processing',
 	'http://edamontology.org/operation_2504': 'Structural data processing',
 	'http://edamontology.org/operation_2505': 'Text processing',
-	'http://edamontology.org/operation_2506':
-		'Protein sequence alignment analysis',
-	'http://edamontology.org/operation_2507':
-		'Nucleic acid sequence alignment analysis',
+	'http://edamontology.org/operation_2506': 'Protein sequence alignment analysis',
+	'http://edamontology.org/operation_2507': 'Nucleic acid sequence alignment analysis',
 	'http://edamontology.org/operation_2508': 'Nucleic acid sequence comparison',
 	'http://edamontology.org/operation_2509': 'Protein sequence comparison',
 	'http://edamontology.org/operation_2510': 'DNA back-translation',
 	'http://edamontology.org/operation_2511': 'Sequence editing (nucleic acid)',
 	'http://edamontology.org/operation_2512': 'Sequence editing (protein)',
-	'http://edamontology.org/operation_2513':
-		'Sequence generation (nucleic acid)',
+	'http://edamontology.org/operation_2513': 'Sequence generation (nucleic acid)',
 	'http://edamontology.org/operation_2514': 'Sequence generation (protein)',
-	'http://edamontology.org/operation_2515':
-		'Nucleic acid sequence visualisation',
+	'http://edamontology.org/operation_2515': 'Nucleic acid sequence visualisation',
 	'http://edamontology.org/operation_2516': 'Protein sequence visualisation',
 	'http://edamontology.org/operation_2518': 'Nucleic acid structure comparison',
-	'http://edamontology.org/operation_2519':
-		'Structure processing (nucleic acid)',
+	'http://edamontology.org/operation_2519': 'Structure processing (nucleic acid)',
 	'http://edamontology.org/operation_2520': 'DNA mapping',
 	'http://edamontology.org/operation_2521': 'Map data processing',
 	'http://edamontology.org/operation_2574': 'Protein hydropathy calculation',
 	'http://edamontology.org/operation_2575': 'Binding site prediction',
 	'http://edamontology.org/operation_2844': 'Structure clustering',
-	'http://edamontology.org/operation_2871':
-		'Sequence tagged site (STS) mapping',
+	'http://edamontology.org/operation_2871': 'Sequence tagged site (STS) mapping',
 	'http://edamontology.org/operation_2928': 'Alignment',
-	'http://edamontology.org/operation_2929':
-		'Protein fragment weight comparison',
+	'http://edamontology.org/operation_2929': 'Protein fragment weight comparison',
 	'http://edamontology.org/operation_2930': 'Protein property comparison',
 	'http://edamontology.org/operation_2931': 'Secondary structure comparison',
 	'http://edamontology.org/operation_2932': 'Hopp and Woods plotting',
@@ -3022,8 +2781,7 @@ export const EDAMDict = {
 	'http://edamontology.org/operation_2946': 'Alignment analysis',
 	'http://edamontology.org/operation_2947': 'Article analysis',
 	'http://edamontology.org/operation_2948': 'Molecular interaction analysis',
-	'http://edamontology.org/operation_2949':
-		'Protein-protein interaction analysis',
+	'http://edamontology.org/operation_2949': 'Protein-protein interaction analysis',
 	'http://edamontology.org/operation_2950': 'Residue distance calculation',
 	'http://edamontology.org/operation_2951': 'Alignment processing',
 	'http://edamontology.org/operation_2952': 'Structure alignment processing',
@@ -3031,31 +2789,23 @@ export const EDAMDict = {
 	'http://edamontology.org/operation_2963': 'Codon usage bias plotting',
 	'http://edamontology.org/operation_2964': 'Codon usage fraction calculation',
 	'http://edamontology.org/operation_2990': 'Classification',
-	'http://edamontology.org/operation_2993':
-		'Molecular interaction data processing',
+	'http://edamontology.org/operation_2993': 'Molecular interaction data processing',
 	'http://edamontology.org/operation_2995': 'Sequence classification',
 	'http://edamontology.org/operation_2996': 'Structure classification',
 	'http://edamontology.org/operation_2997': 'Protein comparison',
 	'http://edamontology.org/operation_2998': 'Nucleic acid comparison',
-	'http://edamontology.org/operation_3023':
-		'Prediction and recognition (protein)',
-	'http://edamontology.org/operation_3024':
-		'Prediction and recognition (nucleic acid)',
+	'http://edamontology.org/operation_3023': 'Prediction and recognition (protein)',
+	'http://edamontology.org/operation_3024': 'Prediction and recognition (nucleic acid)',
 	'http://edamontology.org/operation_3080': 'Structure editing',
 	'http://edamontology.org/operation_3081': 'Sequence alignment editing',
 	'http://edamontology.org/operation_3083': 'Pathway or network visualisation',
-	'http://edamontology.org/operation_3084':
-		'Protein function prediction (from sequence)',
-	'http://edamontology.org/operation_3087':
-		'Protein sequence feature detection',
-	'http://edamontology.org/operation_3088':
-		'Protein property calculation (from sequence)',
-	'http://edamontology.org/operation_3090':
-		'Protein feature prediction (from structure)',
+	'http://edamontology.org/operation_3084': 'Protein function prediction (from sequence)',
+	'http://edamontology.org/operation_3087': 'Protein sequence feature detection',
+	'http://edamontology.org/operation_3088': 'Protein property calculation (from sequence)',
+	'http://edamontology.org/operation_3090': 'Protein feature prediction (from structure)',
 	'http://edamontology.org/operation_3092': 'Protein feature detection',
 	'http://edamontology.org/operation_3093': 'Database search (by sequence)',
-	'http://edamontology.org/operation_3094':
-		'Protein interaction network prediction',
+	'http://edamontology.org/operation_3094': 'Protein interaction network prediction',
 	'http://edamontology.org/operation_3095': 'Nucleic acid design',
 	'http://edamontology.org/operation_3096': 'Editing',
 	'http://edamontology.org/operation_3180': 'Sequence assembly validation',
@@ -3096,8 +2846,7 @@ export const EDAMDict = {
 	'http://edamontology.org/operation_3219': 'Read pre-processing',
 	'http://edamontology.org/operation_3221': 'Species frequency estimation',
 	'http://edamontology.org/operation_3222': 'Peak calling',
-	'http://edamontology.org/operation_3223':
-		'Differential gene expression profiling',
+	'http://edamontology.org/operation_3223': 'Differential gene expression profiling',
 	'http://edamontology.org/operation_3224': 'Gene set testing',
 	'http://edamontology.org/operation_3225': 'Variant classification',
 	'http://edamontology.org/operation_3226': 'Variant prioritisation',
@@ -3114,23 +2863,20 @@ export const EDAMDict = {
 	'http://edamontology.org/operation_3267': 'Sequence coordinate conversion',
 	'http://edamontology.org/operation_3278': 'Document similarity calculation',
 	'http://edamontology.org/operation_3279': 'Document clustering',
-	'http://edamontology.org/operation_3280':
-		'Named-entity and concept recognition',
+	'http://edamontology.org/operation_3280': 'Named-entity and concept recognition',
 	'http://edamontology.org/operation_3282': 'ID mapping',
 	'http://edamontology.org/operation_3283': 'Anonymisation',
 	'http://edamontology.org/operation_3289': 'ID retrieval',
 	'http://edamontology.org/operation_3348': 'Sequence checksum generation',
 	'http://edamontology.org/operation_3349': 'Bibliography generation',
-	'http://edamontology.org/operation_3350':
-		'Protein quaternary structure prediction',
+	'http://edamontology.org/operation_3350': 'Protein quaternary structure prediction',
 	'http://edamontology.org/operation_3351': 'Molecular surface analysis',
 	'http://edamontology.org/operation_3352': 'Ontology comparison',
 	'http://edamontology.org/operation_3353': 'Ontology comparison',
 	'http://edamontology.org/operation_3357': 'Format detection',
 	'http://edamontology.org/operation_3359': 'Splitting',
 	'http://edamontology.org/operation_3429': 'Generation',
-	'http://edamontology.org/operation_3430':
-		'Nucleic acid sequence feature detection',
+	'http://edamontology.org/operation_3430': 'Nucleic acid sequence feature detection',
 	'http://edamontology.org/operation_3431': 'Deposition',
 	'http://edamontology.org/operation_3432': 'Clustering',
 	'http://edamontology.org/operation_3433': 'Assembly',
@@ -3152,25 +2898,20 @@ export const EDAMDict = {
 	'http://edamontology.org/operation_3455': 'Molecular replacement',
 	'http://edamontology.org/operation_3456': 'Rigid body refinement',
 	'http://edamontology.org/operation_3457': 'Single particle analysis',
-	'http://edamontology.org/operation_3458':
-		'Single particle alignment and classification',
+	'http://edamontology.org/operation_3458': 'Single particle alignment and classification',
 	'http://edamontology.org/operation_3459': 'Functional clustering',
 	'http://edamontology.org/operation_3460': 'Taxonomic classification',
 	'http://edamontology.org/operation_3461': 'Virulence prediction',
 	'http://edamontology.org/operation_3463': 'Expression correlation analysis',
 	'http://edamontology.org/operation_3465': 'Correlation',
-	'http://edamontology.org/operation_3469':
-		'RNA structure covariance model generation',
-	'http://edamontology.org/operation_3470':
-		'RNA secondary structure prediction (shape-based)',
-	'http://edamontology.org/operation_3471':
-		'Nucleic acid folding prediction (alignment-based)',
+	'http://edamontology.org/operation_3469': 'RNA structure covariance model generation',
+	'http://edamontology.org/operation_3470': 'RNA secondary structure prediction (shape-based)',
+	'http://edamontology.org/operation_3471': 'Nucleic acid folding prediction (alignment-based)',
 	'http://edamontology.org/operation_3472': 'k-mer counting',
 	'http://edamontology.org/operation_3478': 'Phylogenetic reconstruction',
 	'http://edamontology.org/operation_3480': 'Probabilistic data generation',
 	'http://edamontology.org/operation_3481': 'Probabilistic sequence generation',
-	'http://edamontology.org/operation_3482':
-		'Antimicrobial resistance prediction',
+	'http://edamontology.org/operation_3482': 'Antimicrobial resistance prediction',
 	'http://edamontology.org/operation_3501': 'Enrichment analysis',
 	'http://edamontology.org/operation_3502': 'Chemical similarity enrichment',
 	'http://edamontology.org/operation_3503': 'Incident curve plotting',
@@ -3186,16 +2927,14 @@ export const EDAMDict = {
 	'http://edamontology.org/operation_3563': 'RNA-seq read count analysis',
 	'http://edamontology.org/operation_3564': 'Chemical redundancy removal',
 	'http://edamontology.org/operation_3565': 'RNA-seq time series data analysis',
-	'http://edamontology.org/operation_3566':
-		'Simulated gene expression data generation',
+	'http://edamontology.org/operation_3566': 'Simulated gene expression data generation',
 	'http://edamontology.org/operation_3625': 'Relation extraction',
 	'http://edamontology.org/operation_3627': 'Mass spectra calibration',
 	'http://edamontology.org/operation_3628': 'Chromatographic alignment',
 	'http://edamontology.org/operation_3629': 'Deisotoping',
 	'http://edamontology.org/operation_3630': 'Protein quantification',
 	'http://edamontology.org/operation_3631': 'Peptide identification',
-	'http://edamontology.org/operation_3632':
-		'Isotopic distributions calculation',
+	'http://edamontology.org/operation_3632': 'Isotopic distributions calculation',
 	'http://edamontology.org/operation_3633': 'Retention time prediction',
 	'http://edamontology.org/operation_3634': 'Label-free quantification',
 	'http://edamontology.org/operation_3635': 'Labeled quantification',
@@ -3211,8 +2950,7 @@ export const EDAMDict = {
 	'http://edamontology.org/operation_3645': 'PTM identification',
 	'http://edamontology.org/operation_3646': 'Peptide database search',
 	'http://edamontology.org/operation_3647': 'Blind peptide database search',
-	'http://edamontology.org/operation_3648':
-		'Validation of peptide-spectrum matches',
+	'http://edamontology.org/operation_3648': 'Validation of peptide-spectrum matches',
 	'http://edamontology.org/operation_3649': 'Target-Decoy',
 	'http://edamontology.org/operation_3658': 'Statistical inference',
 	'http://edamontology.org/operation_3659': 'Regression analysis',
@@ -3234,10 +2972,8 @@ export const EDAMDict = {
 	'http://edamontology.org/operation_3715': 'Metabolic labeling',
 	'http://edamontology.org/operation_3730': 'Cross-assembly',
 	'http://edamontology.org/operation_3731': 'Sample comparison',
-	'http://edamontology.org/operation_3741':
-		'Differential protein expression profiling',
-	'http://edamontology.org/operation_3742':
-		'Differential gene expression analysis',
+	'http://edamontology.org/operation_3741': 'Differential protein expression profiling',
+	'http://edamontology.org/operation_3742': 'Differential gene expression analysis',
 	'http://edamontology.org/operation_3744': 'Multiple sample visualisation',
 	'http://edamontology.org/operation_3745': 'Ancestral reconstruction',
 	'http://edamontology.org/operation_3755': 'PTM localisation',
@@ -3245,8 +2981,7 @@ export const EDAMDict = {
 	'http://edamontology.org/operation_3761': 'Service discovery',
 	'http://edamontology.org/operation_3762': 'Service composition',
 	'http://edamontology.org/operation_3763': 'Service invocation',
-	'http://edamontology.org/operation_3766':
-		'Weighted correlation network analysis',
+	'http://edamontology.org/operation_3766': 'Weighted correlation network analysis',
 	'http://edamontology.org/operation_3767': 'Protein identification',
 	'http://edamontology.org/operation_3778': 'Text annotation',
 	'http://edamontology.org/operation_3791': 'Collapsing methods',
@@ -3344,8 +3079,7 @@ export const EDAMDict = {
 	'http://edamontology.org/topic_0135': 'Protein microarrays',
 	'http://edamontology.org/topic_0137': 'Protein hydropathy',
 	'http://edamontology.org/topic_0140': 'Protein targeting and localisation',
-	'http://edamontology.org/topic_0141':
-		'Protein cleavage sites and proteolysis',
+	'http://edamontology.org/topic_0141': 'Protein cleavage sites and proteolysis',
 	'http://edamontology.org/topic_0143': 'Protein structure comparison',
 	'http://edamontology.org/topic_0144': 'Protein residue interactions',
 	'http://edamontology.org/topic_0147': 'Protein-protein interactions',
@@ -3363,8 +3097,7 @@ export const EDAMDict = {
 	'http://edamontology.org/topic_0160': '"Sequence sites',
 	'http://edamontology.org/topic_0163': 'Sequence database search',
 	'http://edamontology.org/topic_0164': 'Sequence clustering',
-	'http://edamontology.org/topic_0166':
-		'Protein structural motifs and surfaces',
+	'http://edamontology.org/topic_0166': 'Protein structural motifs and surfaces',
 	'http://edamontology.org/topic_0167': 'Structural (3D) profiles',
 	'http://edamontology.org/topic_0172': 'Protein structure prediction',
 	'http://edamontology.org/topic_0173': 'Nucleic acid structure prediction',
@@ -3372,8 +3105,7 @@ export const EDAMDict = {
 	'http://edamontology.org/topic_0175': 'Homology modelling',
 	'http://edamontology.org/topic_0176': 'Molecular dynamics',
 	'http://edamontology.org/topic_0177': 'Molecular docking',
-	'http://edamontology.org/topic_0178':
-		'Protein secondary structure prediction',
+	'http://edamontology.org/topic_0178': 'Protein secondary structure prediction',
 	'http://edamontology.org/topic_0179': 'Protein tertiary structure prediction',
 	'http://edamontology.org/topic_0180': 'Protein fold recognition',
 	'http://edamontology.org/topic_0182': 'Sequence alignment',
@@ -3449,8 +3181,7 @@ export const EDAMDict = {
 	'http://edamontology.org/topic_0741': 'Protein sequence alignment',
 	'http://edamontology.org/topic_0747': 'Nucleic acid sites and features',
 	'http://edamontology.org/topic_0748': 'Protein sites and features',
-	'http://edamontology.org/topic_0749':
-		'Transcription factors and regulatory sites',
+	'http://edamontology.org/topic_0749': 'Transcription factors and regulatory sites',
 	'http://edamontology.org/topic_0751': 'Phosphorylation sites',
 	'http://edamontology.org/topic_0753': 'Metabolic pathways',
 	'http://edamontology.org/topic_0754': 'Signaling pathways',
@@ -3704,10 +3435,8 @@ export const EDAMDict = {
 	'http://edamontology.org/topic_3526': 'Protein-protein interactions',
 	'http://edamontology.org/topic_3527': 'Cellular process pathways',
 	'http://edamontology.org/topic_3528': 'Disease pathways',
-	'http://edamontology.org/topic_3529':
-		'Environmental information processing pathways',
-	'http://edamontology.org/topic_3530':
-		'Genetic information processing pathways',
+	'http://edamontology.org/topic_3529': 'Environmental information processing pathways',
+	'http://edamontology.org/topic_3530': 'Genetic information processing pathways',
 	'http://edamontology.org/topic_3531': 'Protein super-secondary structure',
 	'http://edamontology.org/topic_3533': 'Protein active sites',
 	'http://edamontology.org/topic_3534': 'Protein binding sites',
@@ -3717,8 +3446,7 @@ export const EDAMDict = {
 	'http://edamontology.org/topic_3538': 'Protein disordered structure',
 	'http://edamontology.org/topic_3539': 'Protein domains',
 	'http://edamontology.org/topic_3540': 'Protein key folding sites',
-	'http://edamontology.org/topic_3541':
-		'Protein post-translational modifications',
+	'http://edamontology.org/topic_3541': 'Protein post-translational modifications',
 	'http://edamontology.org/topic_3542': 'Protein secondary structure',
 	'http://edamontology.org/topic_3543': 'Protein sequence repeats',
 	'http://edamontology.org/topic_3544': 'Protein signal peptides',
@@ -3763,7 +3491,6 @@ export const EDAMDict = {
 	'http://edamontology.org/topic_3966': 'Vaccinology',
 	'http://edamontology.org/topic_3967': 'Immunomics',
 	'http://edamontology.org/topic_3974': 'Epistasis',
-	'http://www.geneontology.org/formats/oboInOwl#ObsoleteClass':
-		'Obsolete concept (EDAM)',
+	'http://www.geneontology.org/formats/oboInOwl#ObsoleteClass': 'Obsolete concept (EDAM)',
 	'http://www.w3.org/2002/07/owl#DeprecatedClass': 'DeprecatedClass',
 };

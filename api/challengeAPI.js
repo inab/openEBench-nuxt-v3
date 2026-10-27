@@ -1,11 +1,14 @@
-export async function challengeAPI(challengeID) {
-  return await useNuxtApp().$graphql("/graphql", {
-    method: "POST",
-    headers: {
-      Accept: "text/plain, */*",
-    },
-    body: JSON.stringify({
-      query: `
+// TEMPORARY: the Dataset field is `datalinks` in the new schema (test2) and `datalink` in the old one
+// (production). We try the new name and retry with the old one if the API rejects it.
+// TODO: remove the fallback (keep only `datalinks`) once the new schema is stable in every environment.
+const fetchChallenge = (challengeID, datalinkField) =>
+	useNuxtApp().$graphql('/graphql', {
+		method: 'POST',
+		headers: {
+			Accept: 'text/plain, */*',
+		},
+		body: JSON.stringify({
+			query: `
 					query ($id: String!) {
 						getChallenges(challengeFilters: { id: $id }) {
 							_id
@@ -20,7 +23,7 @@ export async function challengeAPI(challengeID) {
 							participant_datasets: datasets(datasetFilters: {type: "participant"}) {
 								_id
 								orig_id
-								datalink {
+								${datalinkField} {
 									inline_data
 									schema_url
 									uri
@@ -39,7 +42,7 @@ export async function challengeAPI(challengeID) {
 							assessment_datasets: datasets(datasetFilters: {type: "assessment"}) {
 								_id
 								orig_id
-								datalink {
+								${datalinkField} {
 									inline_data
 									schema_url
 									uri
@@ -62,7 +65,7 @@ export async function challengeAPI(challengeID) {
 						getDatasets(
 							datasetFilters: { challenge_id: $id, type: "aggregation" }
 						) {
-							datalink {
+							${datalinkField} {
 								inline_data
 							}
 							dates {
@@ -80,37 +83,44 @@ export async function challengeAPI(challengeID) {
 						}
 					}
 				`,
-      variables: {
-        id: challengeID,
-      },
-    }),
-  });
+			variables: {
+				id: challengeID,
+			},
+		}),
+	});
+
+export async function challengeAPI(challengeID) {
+	let response = await fetchChallenge(challengeID, 'datalinks');
+	// TODO: remove this retry together with the one in stores/community.js
+	if (response?.errors?.some((e) => /datalinks/.test(e.message ?? ''))) {
+		response = await fetchChallenge(challengeID, 'datalink');
+	}
+	return response;
 }
 
 export async function getGraphData(dataset) {
-  const datalink = dataset?.datalink ?? dataset?.datalinks?.[0];
+	const datalink = dataset?.datalink ?? dataset?.datalinks?.[0];
 
-  if (!datalink?.inline_data) {
-    return [];
-  }
+	if (!datalink?.inline_data) {
+		return [];
+	}
 
-  let parsedInlineData;
+	let parsedInlineData;
 
-  try {
-    parsedInlineData =
-      typeof datalink.inline_data === "string"
-        ? JSON.parse(datalink.inline_data)
-        : datalink.inline_data;
-  } catch (e) {
-    console.error("Error parsing inline_data:", e);
-    return [];
-  }
+	try {
+		parsedInlineData =
+			typeof datalink.inline_data === 'string'
+				? JSON.parse(datalink.inline_data)
+				: datalink.inline_data;
+	} catch (e) {
+		console.error('Error parsing inline_data:', e);
+		return [];
+	}
 
-  return parsedInlineData;
+	return parsedInlineData;
 }
 
-
 export default {
-  challengeAPI,
-  getGraphData,
+	challengeAPI,
+	getGraphData,
 };

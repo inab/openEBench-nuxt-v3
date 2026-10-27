@@ -1,0 +1,139 @@
+<template>
+	<div class="community-tools">
+		<div>
+			<span class="community-tools__title text-lg text-o dark:text-gray-400 text-primaryOeb-500">
+				Find the tools available for this community
+			</span>
+		</div>
+		<div
+			v-if="filteredRows.length > 0"
+			class="flex justify-content-end py-2.5 border-b border-gray-200 dark:border-gray-700"
+		>
+			<UInput
+				v-model="search"
+				color="neutral"
+				variant="outline"
+				icon="i-heroicons-magnifying-glass"
+				placeholder="Search ..."
+				class="input-search"
+			/>
+		</div>
+		<UTable
+			:columns="columns"
+			:data="filteredRows"
+			:ui="{
+				tr: 'hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer',
+				th: 'text-left rtl:text-right px-2.5 py-2.5 text-gray-900 dark:text-white font-semibold text-sm',
+				td: 'whitespace-nowrap px-3 py-3 text-sm',
+			}"
+		>
+			<template #name-cell="{ row }">
+				<NuxtLink
+					:to="`/tool/${row.original.registry_tool_id ? row.original.registry_tool_id.split(':')[1] : ''}`"
+					class="text-blue-600 dark:text-blue-400"
+				>
+					{{ row.original.name }}
+				</NuxtLink>
+			</template>
+		</UTable>
+		<div v-if="filteredRows.length > 0" class="flex flex-wrap justify-between items-center pt-2">
+			<div>
+				<span class="text-sm leading-5">
+					Showing
+					<span class="font-medium">{{ pageFrom }}</span>
+					to
+					<span class="font-medium">{{ pageTo }}</span>
+					of
+					<span class="font-medium">{{ totalPages }}</span>
+					results
+				</span>
+			</div>
+			<UPagination
+				v-model:page="page"
+				class="pagination"
+				:items-per-page="pageCount"
+				:total="totalPages"
+			/>
+		</div>
+	</div>
+</template>
+
+<script setup lang="ts">
+import { ref, computed } from 'vue';
+
+interface CommunityTool {
+	registry_tool_id?: string;
+	[key: string]: unknown;
+}
+
+const props = defineProps<{
+	tools: CommunityTool[];
+	communityId: string;
+}>();
+
+const page = ref(1);
+const pageCount = ref(15);
+const search = ref('');
+const pageFrom = computed(() => (page.value - 1) * pageCount.value + 1);
+const pageTo = computed(() => Math.min(page.value * pageCount.value, totalPages.value));
+let _total = 0;
+
+const columns = [
+	{
+		id: 'name',
+		accessorKey: 'name',
+		header: 'Name',
+		enableSorting: false,
+	},
+	{
+		id: 'status',
+		accessorKey: 'status',
+		header: 'Status',
+		enableSorting: false,
+	},
+	{
+		id: 'description',
+		accessorKey: 'description',
+		header: 'Description',
+		enableSorting: false,
+	},
+];
+const filteredRows = computed(() => {
+	if (!search.value) {
+		_total = props.tools.length;
+		return props.tools.slice((page.value - 1) * pageCount.value, page.value * pageCount.value);
+	}
+
+	const filteredSearcher = props.tools.filter((challenge) => {
+		return Object.values(challenge).some((value) => {
+			return String(value).toLowerCase().includes(search.value.toLowerCase());
+		});
+	});
+	_total = filteredSearcher.length;
+	return filteredSearcher.slice((page.value - 1) * pageCount.value, page.value * pageCount.value);
+});
+
+const totalPages = computed(() => {
+	return _total;
+});
+</script>
+<style scoped lang="scss">
+.community-tools {
+	&__title {
+		display: flex;
+		align-items: center;
+		color: #0b579f;
+		font-size: 18px;
+		font-weight: 600;
+	}
+}
+table {
+	a {
+		color: var(--color-primary-500);
+		text-decoration: none;
+		&:hover {
+			color: var(--color-primary-400);
+		}
+	}
+}
+</style>

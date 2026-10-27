@@ -1,30 +1,37 @@
-import { vi } from "vitest";
-import { createPinia, setActivePinia } from "pinia";
-import { useNuxtApp } from "#app";
-import { useRuntimeConfig } from "#imports";
-import { mockNuxtApp } from "./mocks/nuxtAppMock";
+import { vi } from 'vitest';
+import { createPinia, setActivePinia } from 'pinia';
+import { ref } from 'vue';
 
-// Mockear useNuxtApp para devolver el mock de $graphql
-vi.mock("#app", () => ({
-  useNuxtApp: () => mockNuxtApp,
-}));
+import { mockNuxtApp } from './mocks/nuxtAppMock';
 
-vi.mock("#imports", () => ({
-  definePageMeta: (_meta: any) => {},
-}));
+vi.mock('#app', async () => {
+	const actual = await vi.importActual('#app');
 
-vi.mock('#app', () => ({
-  useNuxtApp: () => ({
-    $auth: {
-      status: ref('authenticated'), // Simula un usuario autenticado
-      data: ref({ name: 'John Doe', oeb_roles: [] }), // Datos de usuario
-    },
-  }),
-}));
+	return {
+		...actual,
+		useNuxtApp: () => ({
+			...mockNuxtApp,
+			$auth: {
+				status: ref('authenticated'),
+				data: ref({
+					name: 'John Doe',
+					oeb_roles: [],
+				}),
+			},
+		}),
+	};
+});
 
-// Configura Pinia
+vi.mock('#imports', async () => {
+	const actual = await vi.importActual('#imports');
+
+	return {
+		...actual,
+		definePageMeta: (_meta: unknown) => {},
+	};
+});
+
 const pinia = createPinia();
 setActivePinia(pinia);
 
-// Exportar Pinia para uso en pruebas
 export { pinia };

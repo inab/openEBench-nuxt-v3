@@ -1,0 +1,248 @@
+<template>
+	<div class="bar-plot">
+		<div class="bar-description pb-4">
+			Line plots in OpenEBench illustrate trends and changes over time or across a continuous
+			variable. Each data point is connected by a line, revealing patterns, growth, or fluctuations
+			in performance. This visualization helps users understand how software behavior evolves under
+			different conditions or over time intervals, facilitating analysis of dynamic performance
+			characteristics.
+		</div>
+		<div class="w-100 pt-1">
+			<div v-if="isLoadingGraphBar" class="loader-container mt-5">
+				<img
+					src="~/assets/images/201805.OpenEBench.logo.Animated.0050secs.gif"
+					alt="Loader GIF"
+					class="loader"
+				/>
+			</div>
+			<div v-else>
+				<div class="row">
+					<div class="col-8">
+						<widget-element :key="widgetKey" :data="preparedBar" :type="type"></widget-element>
+					</div>
+					<div class="col-4">
+						<UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
+							<UFormGroup
+								v-for="participant in state.challenge_participants"
+								:key="participant.name"
+								name="tool"
+								class="form-group__block"
+							>
+								<div class="form-group__block__title">
+									{{ `Tool Name: ${participant.name}` }}
+								</div>
+								<div class="row">
+									<label for="x_value" class="form-label form-label-title">X Value</label>
+									<div
+										v-for="(p, indexX) in participant.x_value"
+										:key="indexX"
+										class="input-row col-4"
+									>
+										<div class="input-row-group pt-1">
+											<UInput
+												v-model="participant.x_value[indexX]"
+												class="form-control custom-entry-input"
+												autocomplete="off"
+											/>
+										</div>
+									</div>
+								</div>
+								<div class="row pt-3">
+									<label for="y_value" class="form-label form-label-title">Y Value</label>
+									<div
+										v-for="(py, indexY) in participant.y_value"
+										:key="indexY"
+										class="input-row col-4"
+									>
+										<div class="input-row-group pt-1">
+											<UInput
+												v-model="participant.y_value[indexY]"
+												class="form-control custom-entry-input"
+												autocomplete="off"
+											/>
+										</div>
+									</div>
+								</div>
+							</UFormGroup>
+							<div v-if="hasDataError" class="w-100">
+								<div class="alert alert-danger" role="alert">
+									{{ hasDataErrorMessage }}
+								</div>
+							</div>
+							<div class="form-footer pt-3 d-flex justify-content-end">
+								<UButton class="" type="submit"> Generate plot </UButton>
+							</div>
+						</UForm>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</template>
+
+<script setup lang="ts">
+import { onMounted, ref } from 'vue';
+import { array, object, safeParse } from 'valibot';
+import type { FormSubmitEvent } from '#ui/types';
+
+import demo_bar from './templates/LINEPLOT.json';
+const isLoadingGraphBar = ref(true);
+
+interface LinePlotParticipant {
+	name: string;
+	metric_id: string;
+	x_value: number[];
+	y_value: number[];
+	t_error: unknown;
+}
+interface LineFormParticipant extends Omit<LinePlotParticipant, 'x_value' | 'y_value'> {
+	x_value: string[];
+	y_value: string[];
+}
+const preparedBar = ref('');
+const initialValues = ref<LinePlotParticipant[]>([]);
+const type = ref<string>('line-plot');
+const hasDataError = ref(false);
+const hasDataErrorMessage = ref('');
+const widgetKey = ref(0);
+
+const state = ref({
+	challenge_participants: [] as LineFormParticipant[],
+});
+
+const schema = object({
+	challenge_participants: array(object({})),
+});
+
+getPreparedData();
+function getPreparedData() {
+	const bar = demo_bar;
+	const barVisualization = bar.inline_data.visualization;
+	const prepared = {
+		_id: bar._id,
+		dates: bar.dates,
+		inline_data: {
+			challenge_participants: [] as LinePlotParticipant[],
+			visualization: {
+				dates: barVisualization.dates,
+				type: barVisualization.type,
+				x_axis: barVisualization.x_axis,
+				y_axis: barVisualization.y_axis,
+			},
+		},
+	};
+	prepared.inline_data.challenge_participants = bar.inline_data.challenge_participants.map(
+		(participant) => {
+			const preparedParticipant = {
+				name: participant.name,
+				metric_id: participant.metric_id,
+				x_value: participant.x_value,
+				y_value: participant.y_value,
+				t_error: participant.t_error,
+			};
+			return preparedParticipant;
+		}
+	);
+
+	initialValues.value = JSON.parse(JSON.stringify(prepared.inline_data.challenge_participants));
+	state.value.challenge_participants = prepared.inline_data.challenge_participants.map(
+		(participant) => ({
+			...participant,
+			x_value: participant.x_value.map((x) => String(x)),
+			y_value: participant.y_value.map((y) => String(y)),
+		})
+	);
+	preparedBar.value = JSON.stringify(prepared);
+}
+
+function regeneratePlot(newData: LinePlotParticipant[]) {
+	const preparedObj = JSON.parse(preparedBar.value);
+	if (preparedObj.inline_data) {
+		preparedObj.inline_data.challenge_participants = newData;
+		preparedBar.value = JSON.stringify(preparedObj);
+	}
+
+	widgetKey.value++;
+}
+
+type Schema = import('valibot').InferOutput<typeof schema>;
+
+async function onSubmit(_event: FormSubmitEvent<Schema>) {
+	const result = safeParse(schema, state.value);
+	hasDataError.value = false;
+	hasDataErrorMessage.value = '';
+
+	if (result.success) {
+		const data = state.value.challenge_participants.map((item) => {
+			const xValues = item.x_value.map((x) => parseFloat(x));
+
+			const yValues = item.y_value.map((y) => parseFloat(y));
+
+			return {
+				name: item.name,
+				metric_id: item.metric_id,
+				x_value: xValues,
+				y_value: yValues,
+				t_error: item.t_error,
+			};
+		});
+
+		if (hasDataError.value) {
+			return;
+		}
+		regeneratePlot(data);
+	}
+}
+
+onMounted(async () => {
+	await import('@inb/oeb-widgets-graphs').then(() => {
+		isLoadingGraphBar.value = false;
+	});
+});
+</script>
+
+<style lang="scss" scoped>
+.input-row {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 20px;
+	&-group {
+		display: block;
+		align-items: center;
+		gap: 10px;
+		&__title {
+			font-weight: 500;
+			font-size: 13px;
+		}
+	}
+}
+.form-group__block {
+	font-size: 16px;
+	border: 1px solid #e5e7eb;
+	padding: 10px 14px 10px 10px;
+	border-radius: 5px;
+	margin-top: 2px !important;
+	box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 12px;
+	label {
+		font-size: 16px;
+	}
+	&__title {
+		font-weight: 700;
+		font-size: 16px;
+	}
+}
+.loader-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+	.loader {
+		max-height: 130px;
+	}
+}
+.form-label-title {
+	font-size: 14px !important;
+	text-decoration: underline;
+}
+</style>

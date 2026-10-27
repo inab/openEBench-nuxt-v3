@@ -1,0 +1,263 @@
+<template>
+	<div class="community-event-table">
+		<div class="community-event-table__border py-3.5 relative not-prose bg-white overflow-hidden">
+			<div class="justify-content-end flex py-3.5">
+				<UInput
+					v-model="search"
+					color="neutral"
+					variant="outline"
+					icon="i-heroicons-magnifying-glass"
+					placeholder="Search ..."
+					class="input-search"
+				/>
+			</div>
+
+			<!-- Checkbox in header to select/deselect all visible elements on the current page -->
+			<input type="checkbox" class="allChecks" :checked="isAllSelected" @change="toggleSelectAll" />
+			<UTable
+				v-model:selected="selected"
+				:data="filteredRows"
+				:columns="columns"
+				:ui="{
+					tr: 'hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer',
+					th: 'text-left rtl:text-right py-2.5 text-gray-900 dark:text-white font-semibold text-sm',
+					td: 'whitespace-nowrap py-3 text-sm',
+				}"
+			>
+				<template #checkbox-cell="{ row }">
+					<input
+						type="checkbox"
+						:checked="isSelected(row.original)"
+						@change="select(row.original)"
+					/>
+				</template>
+
+				<template #name-cell="{ row }">
+					<span :class="[isSelected(row.original) && 'text-primaryOeb-500 dark:text-primary-400']">
+						{{ row.original.name }}
+					</span>
+				</template>
+				<template #_id-cell="{ row }">
+					<NuxtLink
+						class="text-primary-500 dark:text-primary-400"
+						title="Go to challenge"
+						:to="getChallengeLink(row.original._id)"
+					>
+						{{ row.original.acronym }}
+					</NuxtLink>
+				</template>
+				<template #participant-cell="{ row }">
+					<NuxtLink
+						class="text-primary-500 dark:text-primary-400"
+						title="Go to participant"
+						:to="getChallengeLink(`${row.original._id}/participants`)"
+						@click="handleClick(row.original._id)"
+					>
+						{{ loadingRows.includes(row.original._id) ? 'Loading...' : 'Participant' }}
+					</NuxtLink>
+				</template>
+			</UTable>
+
+			<div class="flex flex-wrap justify-between items-center pt-2">
+				<div>
+					<span class="text-sm leading-5">
+						Showing
+						<span class="font-medium">{{ pageFrom }}</span>
+						to
+						<span class="font-medium">{{ pageTo }}</span>
+						of
+						<span class="font-medium">{{ _total }}</span>
+						results
+					</span>
+				</div>
+				<UPagination
+					v-model:page="page"
+					class="pagination"
+					:items-per-page="pageCount"
+					:total="_total"
+				/>
+			</div>
+		</div>
+	</div>
+</template>
+
+<script setup lang="ts">
+import { ref, computed, watch, onBeforeUnmount } from 'vue';
+import { useRoute } from 'vue-router';
+import type { ChallengeRow } from '~~/types/pages-types';
+
+const props = defineProps<{
+	eventChallenges?: Array<ChallengeRow>;
+	communityId: string;
+	filterArray: Array<string>;
+}>();
+
+const emit = defineEmits(['handleChangeChallengers']);
+
+const route = useRoute();
+
+const page = ref<number>(1);
+const pageCount = ref<number>(10);
+const search = ref<string>('');
+const pageFrom = computed(() => (Number(page.value) - 1) * Number(pageCount.value) + 1);
+const pageTo = computed(() =>
+	Math.min(Number(page.value) * Number(pageCount.value), Number(totalPages.value))
+);
+const selected = ref<ChallengeRow[]>([]);
+const columns = [
+	{ id: 'checkbox', header: '', enableSorting: false },
+	{ id: '_id', accessorKey: '_id', header: 'Acronym', enableSorting: false },
+	{ id: 'participant', header: 'Participant', enableSorting: false },
+	{ id: 'name', header: 'Name', enableSorting: false },
+];
+const allRows = ref(props.eventChallenges ?? []);
+const filteredData = computed(() => {
+	const filtered = search.value
+		? allRows.value.filter((challenge) =>
+				Object.values(challenge).some((value) =>
+					String(value).toLowerCase().includes(search.value.toLowerCase())
+				)
+			)
+		: allRows.value;
+
+	return filtered;
+});
+
+const _total = computed(() => filteredData.value.length);
+const filteredRows = computed(() =>
+	filteredData.value.slice(
+		(Number(page.value) - 1) * Number(pageCount.value),
+		Number(page.value) * Number(pageCount.value)
+	)
+);
+
+const totalPages = computed(() => {
+	return Math.ceil(Number(_total.value) / Number(pageCount.value));
+});
+
+// Builds the link for a challenge/participant row, swapping /projects/ -> /scientific/
+// and tagging the URL with ?from=projects when navigation originated from the projects section.
+function getChallengeLink(challengePath: string) {
+	const currentPath = route.path.replace('/projects/', '/scientific/');
+
+	const fromProjects = route.path.includes('/projects/');
+
+	if (fromProjects) {
+		return `${currentPath}/${challengePath}?from=projects`;
+	}
+
+	return `${currentPath}/${challengePath}`;
+}
+
+// Function for selecting/deselecting a single element
+function select(row: ChallengeRow) {
+	const index = selected.value.findIndex((item) => item._id === row._id);
+	if (index === -1) {
+		selected.value.push(row);
+	} else {
+		selected.value.splice(index, 1);
+	}
+}
+
+function isSelected(row: ChallengeRow) {
+	return selected.value.some((item) => item._id === row._id);
+}
+
+// Function to select/deselect all elements of the current page
+function toggleSelectAll() {
+	const currentPageRows = filteredRows.value;
+
+	if (isAllSelected.value) {
+		// If all items on the current page are selected, deselect all of them
+		selected.value = selected.value.filter(
+			(row) => !currentPageRows.some((currentRow) => currentRow._id === row._id)
+		);
+	} else {
+		// If not all are selected, select all items on the current page.
+		const newSelections = currentPageRows.filter(
+			(row) => !selected.value.some((selectedRow) => selectedRow._id === row._id)
+		);
+		selected.value.push(...newSelections);
+	}
+}
+
+// Computed to check if all items on the current page are selected
+const isAllSelected = computed(() => {
+	return filteredRows.value.every((row) =>
+		selected.value.some((selectedRow) => selectedRow._id === row._id)
+	);
+});
+
+// Participants loading
+const loadingRows = ref<string[]>([]);
+function handleClick(rowId: string) {
+	// Si ya está cargando, no hacer nada
+	if (!loadingRows.value.includes(rowId)) {
+		loadingRows.value.push(rowId);
+	}
+}
+
+// Observe the changes in the selected array to issue the change to the parent component.
+// Avoids emitting while the component is being torn down during navigation
+let isUnmounting = false;
+onBeforeUnmount(() => {
+	isUnmounting = true;
+});
+
+watch(
+	selected,
+	(newSelected) => {
+		if (isUnmounting) return;
+		emit('handleChangeChallengers', newSelected);
+	},
+	{ deep: true }
+);
+
+watch(
+	() => props.eventChallenges,
+	(newChallenges) => {
+		allRows.value = newChallenges ?? [];
+		selected.value = [];
+		page.value = 1;
+	}
+);
+</script>
+
+<style scoped lang="scss">
+.community-event-table {
+	border: none;
+
+	.input-search {
+		input {
+			box-shadow: none !important;
+
+			:focus {
+				border: 1px solid var(--color-primary-500);
+			}
+		}
+	}
+
+	table {
+		a {
+			color: var(--color-primary-500);
+			text-decoration: none;
+
+			&:hover {
+				color: var(--color-primary-400);
+			}
+		}
+	}
+}
+
+.form-checkbox:checked,
+.form-checkbox:indeterminate {
+	background-color: currentColor !important;
+}
+
+.allChecks {
+	position: absolute;
+	margin-top: 12px;
+	margin-left: 24px;
+	z-index: 100;
+}
+</style>

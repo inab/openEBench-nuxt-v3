@@ -1,0 +1,97 @@
+<template>
+	<div :class="nCols">
+		<div class="d-flex mb-4">
+			<HeaderAvatar :field="field" :field-name="title" :disabled-tooltip="true" />
+			<span id="title" class="text-body" style="color: #0b579f !important">
+				{{ title }}
+			</span>
+
+			<UButton
+				v-if="increasable"
+				color="neutral"
+				variant="ghost"
+				class="p-1.5 mx-2 rounded-full"
+				@click="addEntry"
+			>
+				<UIcon name="i-heroicons-plus-circle-20-solid" class="text-gray-500" />
+			</UButton>
+		</div>
+
+		<!--  -->
+		<div v-for="(item, index) in value" :key="item.id">
+			<CategoryAndTextFieldTopic
+				:id="item.id"
+				:item="item.term"
+				:index="index"
+				:field="field"
+				vocabulary-label="Vocabulary/Ontology"
+				:type-label="typeLabel"
+				text-label="Term"
+				:accepted-vocabularies="acceptedVocabularies"
+				class="mt-2 ml-3"
+				@remove="removeEntry(index)"
+				@change="changeEntry"
+			/>
+		</div>
+	</div>
+</template>
+<script setup lang="ts">
+import HeaderAvatar from '@/components/Observatory/evaluation/Metadata/HeaderAvatar.vue';
+import CategoryAndTextFieldTopic from './CategoryAndTextFieldTopic.vue';
+
+import { useMetadataStore } from '~~/stores/observatory/evaluation/metadata';
+
+const metadataStore = useMetadataStore();
+
+// PROPS
+const props = withDefaults(
+	defineProps<{
+		title: string;
+		field: string;
+		value: { id: number; term: { vocabulary: string; term: string; uri: string } }[];
+		nCols: string;
+		increasable?: boolean;
+		typeLabel?: string;
+		acceptedVocabularies?: string[];
+	}>(),
+	{
+		increasable: true,
+		typeLabel: 'topic',
+		acceptedVocabularies: () => ['EDAM', 'NA'],
+	}
+);
+
+// Methods
+const addEntry = () => {
+	const payload = {
+		field: props.field,
+		value: { term: '', uri: '', vocabulary: 'EDAM' },
+	};
+	metadataStore.addEntry(payload);
+};
+
+const removeEntry = (index: number) => {
+	const payload = {
+		field: props.field,
+		index,
+	};
+	metadataStore.removeEntry(payload);
+};
+
+const changeEntry = (initialPayload: { index: number; value: unknown }) => {
+	const payload = {
+		field: props.field,
+		index: initialPayload.index,
+		value: initialPayload.value,
+	};
+	console.log(payload);
+
+	metadataStore.changeEntry(payload);
+};
+</script>
+<style scoped>
+#title {
+	font-size: 1rem;
+	color: #0b579f !important;
+}
+</style>

@@ -1,193 +1,207 @@
 # openEBench-nuxt
 
-Make sure **npm** version is at least 8.x.x (recommended 10.x.x)
+OpenEBench web frontend, built with [Nuxt 4](https://nuxt.com) (Vue 3, Pinia, Nuxt UI), authenticated against Keycloak through [`@sidebase/nuxt-auth`](https://sidebase.io/nuxt-auth).
 
-## Auto Deployment
+## Requirements
 
-The Deployment is set up with Docker and GIT workflows.
+- Node.js `>=24.22.1 <25` and npm `>=12.2.1 <13` (see `engines` in [package.json](package.json))
 
-`docker-image-dev.yml`, `docker-image-dev2.yml`, `docker-image-prod.yml` contain the GIT workflow specifications, using `DOCKER_HUB_USER_NAME` and `DOCKER_HUB_ACCESS_TOKEN` as Docker Hub credentials.
-
-`Dockerfile.develop`, `Dockerfile.develop2` and `Dockerfile.production` contain the ENV variables and Build stage (nginx).
-
-### Production and Develop
-
-```yml
-name: Docker Image CI production
-
-on:
-  push:
-    branches:
-      - 'master'
-    tags:
-      - 'v[0-9].[0-9]+.[0-9]+'
-```
-
-The git workflow for building and pushing the Docker Image for <https://dev-openebench.bsc.es/> and <https://openebench.bsc.es/> is triggered by a push or pull_request to the `master` branch.
-
-Important: Only tagging a `master` branch with e.g. `v1.0.0` will set the `latest`tag on the docker image and therefore enable Auto Deployment.
-
-`dev-`and `prod`are built from the same (master) image, using different ENV variables.
-
-### Develop-2
-
-```yml
-name: Docker Image CI develop-2
-
-on:
-  push:
-    branches: [develop-2]
-  pull_request:
-    branches: [develop-2]
-```
-
-The git workflow for building and pushing the Docker Image for <https://dev2-openebench.bsc.es/> is triggered by a push or pull_request to the `develop-2` branch.
-
-### Docker compose
-
-The respective docker compose files for the oeb landscape can be found in this repo: <https://github.com/inab/oeb-docker-compose>
-
-## Build Setup
+## Getting started
 
 ```bash
-# install dependencies
-$ npm ci
+# install dependencies (also runs `nuxt prepare`)
+npm ci
 
-# serve with hot reload at localhost:3000
-$ npm run dev
+# create your local environment file and set NUXT_AUTH_SECRET
+cp .env.example .env
 
-# build for production and launch server
-$ npm run build
-$ npm run start
-
-# generate static project
-$ npm run generate
+# dev server with hot reload at http://localhost:3001
+npm run dev
 ```
 
-For detailed explanation on how things work, check out the [documentation](https://nuxtjs.org).
+### Useful scripts
 
-## Storybook
+| Command             | What it does                               |
+| ------------------- | ------------------------------------------ |
+| `npm run build`     | Production build into `.output/`           |
+| `npm run preview`   | Preview the production build               |
+| `npm test`          | Unit tests (Vitest)                        |
+| `npm run coverage`  | Tests with coverage                        |
+| `npm run lint`      | ESLint (`npm run lint:fix` to apply fixes) |
+| `npm run format`    | Prettier                                   |
+| `npm run typecheck` | `nuxt prepare` + `vue-tsc`                 |
 
-Storybook is an open source tool for building UI components and pages in isolation. It streamlines UI development, testing, and documentation.
+`npm run typecheck`, `npm run lint` (0 errors) and the unit tests all pass. Keep it that way: avoid `any` (`@typescript-eslint/no-explicit-any` is an error), and when you change a component prop, update every call site.
+
+## Authentication
+
+Login uses Keycloak (public client, PKCE) via NuxtAuth with the `authjs` provider. The handler lives in [server/api/auth/[...].ts](server/api/auth/[...].ts) and the module is configured in the `auth` block of [nuxt.config.ts](nuxt.config.ts).
+
+Relevant environment variables:
+
+| Variable                                                | Purpose                                                          |
+| ------------------------------------------------------- | ---------------------------------------------------------------- |
+| `NUXT_AUTH_SECRET`                                      | Signs and encrypts the session cookies. **Required at runtime.** |
+| `AUTH_ORIGIN` / `APP_BASE_URL`                          | Public origin of the app. Auth URLs are `<origin>/api/auth/...`. |
+| `KEYCLOAK_HOST`, `KEYCLOAK_REALM`, `KEYCLOAK_CLIENT_ID` | Keycloak server, realm and client.                               |
+
+### Authentication secret
+
+`NUXT_AUTH_SECRET` is only needed when the app runs (it is not needed to build the image). Generate one per environment with `openssl rand -hex 32` and never commit it.
+
+- Locally: put `NUXT_AUTH_SECRET=...` in a git-ignored `.env` (see [.env.example](.env.example)); the local compose files fall back to a dev-only value.
+- Deployed (test2, preprod, sandbox): add it to each service in the [oeb-docker-compose](https://github.com/inab/oeb-docker-compose) repo, reading a different value per environment from the VM's `.env`:
+
+  ```yaml
+  environment:
+    - NUXT_AUTH_SECRET=${AUTH_SECRET_TEST2}
+  ```
+
+  Set it on the VM **before** the new image is pulled, otherwise authentication fails in that environment. Changing the value signs all users out once.
+
+## Auto deployment
+
+Images are built by GitHub Actions workflows in [.github/workflows](.github/workflows), all using [Dockerfile.production](Dockerfile.production), and pushed to `ghcr.io/inab/openebench-nuxt-v3`:
+
+| Push to branch           | Workflow                                                       | Image tag  |
+| ------------------------ | -------------------------------------------------------------- | ---------- |
+| `main` (and any git tag) | [image-publishing.yml](.github/workflows/image-publishing.yml) | `:test2`   |
+| `preprod`                | [docker-preprod.yml](.github/workflows/docker-preprod.yml)     | `:preprod` |
+| `sandbox`                | [docker-sandbox.yml](.github/workflows/docker-sandbox.yml)     | `:sandbox` |
+
+The `main` workflow also runs the unit tests before building. On the VM, [Watchtower](https://containrrr.dev/watchtower/) detects the new tag and recreates the container.
+
+### Runtime configuration (test2, preprod, sandbox)
+
+The image is identical for every environment. URLs, Keycloak realm/client, etc. are **not** compiled in: the browser fetches `/config.json` before any API or Keycloak call, and the server reads the same file at start-up. The file is [config/config.json](config/config.json) (defaults = test2), located at `/app/config/config.json` in the container (override the path with `OEB_CONFIG_FILE`). To reconfigure an instance, bind-mount your own file read-only over it:
+
+```yaml
+volumes:
+  - ./config/preprod.json:/app/config/config.json:ro
+```
+
+or with `docker run`:
 
 ```bash
-# run storybook
-$ npm run storybook
-
-# build for production and launch server
-$ npm run build-storybook
-
-$ npx http-server ./path/to/build
+docker run --rm -ti -e NUXT_AUTH_SECRET=<secret> \
+  -v $PWD/preprod.json:/app/config/config.json:ro \
+  -p 3000:3000 ghcr.io/inab/openebench-nuxt-v3:preprod
 ```
 
-## Special Directories
+The same trick works for any file baked into the image, e.g. replacing the logo:
 
-You can create the following extra directories, some of which have special behaviors. Only `pages` is required; you can delete them if you don't want to use their functionality.
+```bash
+docker run --rm -ti -e NUXT_AUTH_SECRET=<secret> \
+  -v $PWD/my_logo.png:/app/.output/public/_nuxt/opeb_logo.k4Txqcx6.gif:ro \
+  -p 3000:3000 ghcr.io/inab/openebench-nuxt-v3:test2
+```
 
-### `assets`
+(the hash in the logo file name changes between builds; check `.output/public/_nuxt/`).
 
-The assets directory contains your uncompiled assets such as Stylus or Sass files, images, or fonts.
+#### Environment mapping
 
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/assets).
+| Environment   | Branch    | Image tag     | Config file mounted at `/app/config/config.json`                                                               |
+| ------------- | --------- | ------------- | -------------------------------------------------------------------------------------------------------------- |
+| Production    | `main`    | `:test2`      | [config/config.json](config/config.json) (built into the image, no mount needed)                               |
+| Preprod       | `preprod` | `:preprod`    | `preprod.json`: your own copy of [config/config.json](config/config.json) with preprod values, mounted over it |
+| Sandbox       | `sandbox` | `:sandbox`    | `sandbox.json`: your own copy of [config/config.json](config/config.json) with sandbox values, mounted over it |
+| Local compose | -         | built locally | [config/local.json](config/local.json)                                                                         |
+| Devci         | -         | built locally | [config/devci.json](config/devci.json) (via `OEB_CONFIG_FILE`)                                                 |
 
-### `components`
+Keep one file per environment next to the compose file on its VM, each with that environment's `BASE_URL`, `AUTH_ORIGIN`, Keycloak realm and API URLs.
 
-The components directory contains your Vue.js components. Components make up the different parts of your page and can be reused and imported into your pages, layouts and even other components.
+#### Applying a change to the config file
 
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/components).
+The browser gets the new values on the next page reload, but the server (login, staged API proxy) reads the file only at start-up, so restart the container after editing:
 
-### `layouts`
+```bash
+# docker compose (run in the folder with the compose file)
+docker compose restart app            # service name: app in this repo's docker-compose.yml
 
-Layouts are a great help when you want to change the look and feel of your Nuxt app, whether you want to include a sidebar or have distinct layouts for mobile and desktop.
+# plain docker
+docker restart <container-name>
 
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/layouts).
+# check what the running instance is using
+curl -s http://localhost:3000/config.json
+docker exec <container-name> cat /app/config/config.json
+```
 
-### `pages`
+If your editor saves by replacing the file and the container still shows the old content, recreate it instead: `docker compose up -d --force-recreate app`. Hard-reload the browser (Ctrl+Shift+R) if the page still looks stale. Keys are those of `runtimeConfig.public` in [nuxt.config.ts](nuxt.config.ts) (`BASE_URL`, `AUTH_ORIGIN`, `KEYCLOAK_HOST`, `KEYCLOAK_REALM`, `KEYCLOAK_CLIENT_ID`, `SCIENTIFIC_SERVICE_URL(_API)`, `MONITORING.baseURL`...); missing keys fall back to the built-in defaults, and a missing/invalid file falls back to all defaults. The file is public, so never put secrets in it: `NUXT_AUTH_SECRET` and the SMTP settings stay environment variables. Changes are picked up after restarting the container (see below). The docker compose files for the oeb landscape are in <https://github.com/inab/oeb-docker-compose>.
 
-This directory contains your application views and routes. Nuxt will read all the `*.vue` files inside this directory and setup Vue Router automatically.
+## Project structure
 
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/get-started/routing).
+| Directory              | Contents                                        |
+| ---------------------- | ----------------------------------------------- |
+| `app/`                 | Pages, components, layouts, plugins, middleware |
+| `server/`              | Nitro API routes (auth, staged data, email)     |
+| `stores/`              | Pinia stores                                    |
+| `types/`, `constants/` | Shared types and constants                      |
+| `tests/`               | Vitest unit tests                               |
 
-### `plugins`
+# Local development with Docker (devci)
 
-The plugins directory contains JavaScript plugins that you want to run before instantiating the root Vue.js Application. This is the place to add Vue plugins and to inject functions or constants. Every time you need to use `Vue.use()`, you should create a file in `plugins/` and add its path to plugins in `nuxt.config.js`.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/plugins).
-
-### `static`
-
-This directory contains your static files. Each file inside this directory is mapped to `/`.
-
-Example: `/static/robots.txt` is mapped as `/robots.txt`.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/static).
-
-### `store`
-
-This directory contains your Vuex store files. Creating a file in this directory automatically activates Vuex.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/store).
-
-# Local development CI deployment (for developers!!!)
-
-If you want to locally develop, you can use `docker compose`:
+[docker-compose.devci.yml](docker-compose.devci.yml) runs the dev server in a container with the repository mounted at `/app` (so edits are picked up by hot reload) and `node_modules` kept in a Docker volume.
 
 ```bash
 docker compose -f docker-compose.devci.yml up
 ```
 
-Then, the continuous integration server is available both at 3000 and 8080.
+Set `DEV_UID` and `DEV_GID` in your `.env` (see [.env.example](.env.example); get the values with `id -u` and `id -g`). The container then runs as your user, so files it creates (`.nuxt`, `node_modules`) are not owned by root. If they are missing, the container runs as root and you will hit permission errors; in that case fix the ownership with `sudo chown -R "$USER": .nuxt` and remove the `node-modules-volume` volume.
+
+- Nuxt is available at <http://localhost:3001>. Use this URL to log in: the auth origin is set to it.
+- An nginx proxy (see [nginx.conf.devci](nginx.conf.devci)) is available at <http://localhost:8080>.
+- `NUXT_AUTH_SECRET` is read from your environment or `.env`; otherwise a dev-only value is used.
 
 ## Adding new dependencies
 
-Once docker compose is up and running, and you want to add some dependencies to [package.json](package.json) and updated [package-lock.json](package-lock.json), you have to do next in a separated terminal:
+With docker compose running, run in a separate terminal:
 
 ```bash
-DEPENDENCIES=mynewdepency docker compose -f docker-compose.devci.yml run npm_install_deps
-```
-
-After that, you might need to restart it through
-
-```bash
+DEPENDENCIES=mynewdependency docker compose -f docker-compose.devci.yml run npm_install_deps
 docker compose -f docker-compose.devci.yml restart nuxt
 ```
 
-Have a look at the messages, because some mismatch between the dependencies of the new packages and the already recorded ones could break havoc.
+This updates [package.json](package.json) and [package-lock.json](package-lock.json). Check the output for peer dependency conflicts; if the new package breaks things, roll back both files and try another version.
 
-In those cases, you need to figure out the source of the problem, rollback both [package.json](package.json) and [package-lock.json](package-lock.json), and re-add the updated dependency.
-
-## Uninstall dependencies
-
-With the docker compose running. If you want to unistall some dependencies to [package.json](package.json) and updated [package-lock.json](package-lock.json), you have to do next in a separated terminal:
+## Uninstalling dependencies
 
 ```bash
-DEPENDENCIES=mydepency docker compose -f docker-compose.devci.yml run npm_uninstall_deps
-```
-
-After that, you might need to restart it through
-
-```bash
+DEPENDENCIES=mydependency docker compose -f docker-compose.devci.yml run npm_uninstall_deps
 docker compose -f docker-compose.devci.yml restart nuxt
 ```
 
 ## Running custom `npm run` commands
 
-Another usual issue is that the CI checks either on service or locally complain about styling. So, in order to run those checks locally you have to run:
+Any script from [package.json](package.json) can be run inside the container with `NPM_RUN`. By default it runs `lint:fix`:
 
 ```bash
+# check only
 NPM_RUN=lint docker compose -f docker-compose.devci.yml run npm_run
-```
 
-and to (blindly) apply the fixes:
-
-```bash
+# apply fixes
 docker compose -f docker-compose.devci.yml run npm_run
+
+# other scripts, e.g. the unit tests
+NPM_RUN="test -- --run" docker compose -f docker-compose.devci.yml run npm_run
 ```
 
-or
+## Known vulnerabilities
 
-```bash
-NPM_RUN=lintfix docker compose -f docker-compose.devci.yml run npm_run
-```
+Run `npm audit` with the Node.js and npm versions specified in [package.json](package.json) to check the current lockfile. Last checked 2026-10-26, it reports **6 high-severity package findings**, all propagated from one underlying transitive advisory:
 
-Any other command defined in [package.json](package.json), like `test:unit` can also be used.
+| Vulnerable package | Advisory                                                                                                          | Dependency path                                         |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| `node-forge` 1.4.0 | [GHSA-86w9-cpqp-85rv](https://github.com/advisories/GHSA-86w9-cpqp-85rv) (RSA PKCS#1 v1.5 signature verification) | `nuxt` / `@sidebase/nuxt-auth` > `nitropack` > `listhen` > `node-forge` |
+
+The six count is npm's affected-package entries (`nuxt`, `@nuxt/nitro-server`, `@sidebase/nuxt-auth`, `nitropack`, `listhen` and `node-forge`), not six separate advisories. `npm audit fix` updates compatible dependencies and clears the previously reported low-severity `serialize-javascript` finding, but cannot fix this high-severity issue: `listhen` already accepts `node-forge` `^1.4.0`, and 1.4.0 is currently the latest published version while still in the advisory's affected range.
+
+Do **not** use `npm audit fix --force`: npm proposes downgrading `@sidebase/nuxt-auth` to 0.3.2 (and Nuxt to 4.1.3), which are breaking, older releases and do not constitute a safe dependency update. Re-run `npm audit` after an upstream `node-forge` release outside the affected range or an upstream dependency change.
+
+## Outdated dependencies
+
+`npm outdated` (checked 2026-10-22) lists only these packages after updating the rest:
+
+| Package                  | Current       | Latest | Decision                                                                                                                                                                               |
+| ------------------------ | ------------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `typescript`             | 6.0.3         | 7.0.2  | **Stay on 6.x.** `@typescript-eslint/*` (pulled in by `@nuxt/eslint`) declares the peer range `>=4.8.4 <6.1.0`, so 7 is not supported yet. Revisit when typescript-eslint supports it. |
+| `vue-observe-visibility` | 2.0.0-alpha.1 | 1.0.0  | **Keep.** npm reports 1.0.0 as "latest" only because 2.0.0-alpha.1 is a prerelease; this is not a real update.                                                                         |
