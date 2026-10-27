@@ -38,9 +38,15 @@ function scrollToSection(id: string) {
 </script>
 
 <style scoped>
+.sidebar {
+  position: fixed;
+  top: 120px;
+  left: 12px;
+  z-index: 20;
+  width: calc(25vw - 24px);
+}
+
 .tool-sidebar {
-  position: sticky;
-  top: var(--tool-sticky-top, 90px);
   display: flex;
   justify-content: flex-end; /* empuja el <ul> hacia la derecha del col-3 */
 }

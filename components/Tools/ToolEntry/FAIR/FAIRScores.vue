@@ -131,14 +131,26 @@ const childColor = (key: string) => statusColor(raw(key));
 
 <style scoped>
 .fair-card {
-  width: 100%;
+  position: fixed;
+  top: 150px;
+  right: 12px;
+  z-index: 20;
+  width: calc(16.6667vw - 24px);
   max-width: 280px;
   background-color: #fff;
-  padding: 1rem 1.1rem;
-  position: sticky;
-  top: var(--tool-sticky-top, 90px); /* ajústalo a la altura de tu header */
-  max-height: calc(100vh - 150px);
+  padding: 0 1.1rem 1rem 1.1rem;
+  max-height: calc(100vh - 140px);
   overflow-y: auto;
+}
+
+@media (max-width: 991.98px) {
+  .fair-card {
+    position: static;
+    width: 100%;
+    max-width: none;
+    max-height: none;
+    overflow-y: visible;
+  }
 }
 
 .fair-title {

@@ -31,9 +31,8 @@
           </div>
 
           <div v-else-if="hasTool">
-            <div class="mb-4">
+            <div ref="entryIntroRef" class="mb-4">
               <EntryIntro
-                ref="entryIntroRef"
                 :name="tool.label || tool.name"
                 :description="tool.description || ''"
                 :type="tool.type"

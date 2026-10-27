@@ -71,15 +71,15 @@ const normalizedTypes = computed(() => {
 <style scoped>
 .tool-brief {
   position: fixed;
-  top: 64px;
+  top: 65px;
   left: 0;
   width: 100%;
-  z-index: 100;
+  z-index: 99;
   background: white;
 }
 
 .tool-brief__bar {
-  height: 56px;
+  height: 60px;
   border-bottom: 1px solid #dee2e6;
 }
 
