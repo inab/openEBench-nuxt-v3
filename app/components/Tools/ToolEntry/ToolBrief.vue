@@ -74,7 +74,7 @@ const normalizedTypes = computed(() => {
 }
 
 .tool-brief__bar {
-	height: 60px;
+	height: 65px;
 	border-bottom: 1px solid #dee2e6;
 }
 

@@ -127,7 +127,7 @@ const childColor = (key: string) => statusColor(raw(key));
 <style scoped>
 .fair-card {
 	position: fixed;
-	top: 150px;
+	top: 140px;
 	right: 12px;
 	z-index: 20;
 	width: calc(16.6667vw - 24px);

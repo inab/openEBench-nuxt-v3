@@ -84,6 +84,7 @@ const activeSectionId = ref<string | null>(null);
 
 const entryIntroRef = ref<HTMLElement | null>(null);
 const showToolBrief = ref(false);
+const toolContentTop = 140;
 
 let entryIntroObserver: IntersectionObserver | null = null;
 
@@ -192,7 +193,7 @@ function setupEntryIntroObserver() {
 		},
 		{
 			root: null,
-			rootMargin: '-64px 0px 0px 0px',
+			rootMargin: `-${toolContentTop}px 0px 0px 0px`,
 			threshold: 0,
 		}
 	);
@@ -201,7 +202,8 @@ function setupEntryIntroObserver() {
 }
 
 function updateActiveSection() {
-	const triggerLine = 100;
+	// Tolerancia para el desplazamiento suave y el redondeo de píxeles del navegador.
+	const triggerLine = toolContentTop + 8;
 	let current: string | null = null;
 
 	for (const section of sections.value) {
@@ -268,7 +270,7 @@ onBeforeUnmount(() => {
 }
 
 .tool-page {
-	--tool-sticky-top: 90px; /* altura de tu header + breadcrumbs */
+	--tool-sticky-top: 140px;
 }
 
 .tool-section {

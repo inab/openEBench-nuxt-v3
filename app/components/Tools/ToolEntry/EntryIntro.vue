@@ -1,5 +1,5 @@
 <template>
-	<UCard variant="outline py-2">
+	<UCard variant="outline" class="shadow-md" :ui="{ body: 'p-3' }">
 		<div class="entry-intro">
 			<div class="entry-intro-header">
 				<span class="entry-intro-name">{{ name }}</span>
