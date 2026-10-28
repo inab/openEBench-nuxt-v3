@@ -104,16 +104,10 @@ const normalizedTypes = computed(() => {
 	margin-left: 12px;
 }
 
-/* @media (max-width: 767.98px) {
-  .tool-brief {
-    display: none;
-  }
-} */
-
 @media (min-width: 1450px) {
 	.tool-brief__content {
-		padding-left: calc(50% - 702px);
-		padding-right: calc(50% - 702px);
+		padding-left: calc(50% - 630px);
+		padding-right: calc(50% - 630px);
 	}
 }
 </style>
