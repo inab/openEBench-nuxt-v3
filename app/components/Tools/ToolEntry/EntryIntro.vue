@@ -66,6 +66,7 @@ import { marked } from 'marked';
 import ChipType from '@/components/Tools/Search/Card/ChipType.vue';
 import LinkChipWImage from '@/components/Tools/Search/Card/LinkChipWImage.vue';
 import LinkChipWIcon from '@/components/Tools/Search/Card/LinkChipWIcon.vue';
+import { pickDescription } from '@/utils/toolDescription';
 
 type EntryValue = string | number | null | undefined | { term?: string };
 
@@ -75,7 +76,7 @@ interface Webpage {
 
 const props = defineProps<{
 	name: string;
-	description: string;
+	description: EntryValue | EntryValue[];
 	type: EntryValue | EntryValue[];
 	version: EntryValue | EntryValue[];
 	webpage: string | Webpage | Array<string | Webpage>;
@@ -117,7 +118,13 @@ const hiddenVersionCount = computed(() =>
 
 const isVersionsCollapsible = computed(() => cleanVersions.value.length > maxVisibleVersions);
 
-const renderedDescription = computed(() => (props.description ? marked(props.description) : ''));
+const descriptionText = computed(() =>
+	Array.isArray(props.description) ? pickDescription(props.description) : toText(props.description)
+);
+
+const renderedDescription = computed(() =>
+	descriptionText.value ? marked(descriptionText.value) : ''
+);
 </script>
 
 <style scoped>
