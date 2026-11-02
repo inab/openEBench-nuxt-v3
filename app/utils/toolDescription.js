@@ -202,6 +202,30 @@ export function pickDescription(description) {
 	return stripMarkdown(firstNonEmpty);
 }
 
+// Normalise a field that may arrive as an array, a plain value or nothing.
+function firstValue(value) {
+	const first = Array.isArray(value) ? value[0] : value;
+	return typeof first === 'string' ? first.trim() : '';
+}
+
+// Prefer the API's curated label, falling back to the first label or name.
+export function pickToolName(tool) {
+	return (
+		firstValue(tool?.preferred_label) ||
+		firstValue(tool?.label) ||
+		firstValue(tool?.name)
+	);
+}
+
+// Prefer the API's curated description, otherwise select from source entries.
+export function pickToolDescription(tool) {
+	const preferred = firstValue(tool?.preferred_description);
+	if (preferred) {
+		return plainDescription(preferred);
+	}
+	return pickDescription(tool?.description);
+}
+
 // Reduce a single description string to readable plain text: returned untouched
 // when it has no markup, otherwise the "Introduction"/"Overview" paragraph if
 // present, else the whole thing with its markup stripped. Use this for
