@@ -9,7 +9,7 @@
 
 			<div v-else>
 				<div v-for="tool in tools" :key="tool.id" class="mb-3">
-					<NuxtLink :to="`/tool/${encodeURIComponent(tool.name)}-${tool.id}`">
+					<NuxtLink :to="`/tool/${encodeURIComponent(tool.id)}`">
 						{{ tool.label || tool.name }}
 					</NuxtLink>
 				</div>
