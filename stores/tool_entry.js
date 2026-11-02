@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia';
-import { pickDescription } from '@/utils/toolDescription';
 
 //
 function availabilityItems(payload) {
@@ -9,44 +8,36 @@ function availabilityItems(payload) {
 	return Array.isArray(items) ? items : [];
 }
 
-function pickFirst(value) {
-	if (Array.isArray(value)) {
-		return pickFirst(value[0]);
+const LEGACY_GALAXY_FREIBURG_HOST = 'galaxy.bi.uni-freiburg.de';
+
+function fixGalaxyFreiburgUrl(url) {
+	let parsed;
+	try {
+		parsed = new URL(url);
+	} catch {
+		return url;
 	}
-	if (value && typeof value === 'object' && 'term' in value) {
-		return value.term || '';
-	}
-	return value != null ? value : '';
+
+	if (parsed.hostname.toLowerCase() !== LEGACY_GALAXY_FREIBURG_HOST) return url;
+
+	const toolId = parsed.searchParams.get('tool_id');
+	if (!toolId) return 'https://usegalaxy.eu/';
+
+	const segments = toolId.split('/').filter(Boolean);
+	const reposIndex = segments.indexOf('repos');
+	const shortId =
+		reposIndex !== -1 && segments.length > reposIndex + 3 ? segments[reposIndex + 3] : toolId;
+
+	return `https://usegalaxy.eu/root?tool_id=${encodeURIComponent(shortId)}`;
 }
 
-function normalizeStringArray(value) {
-	const values = Array.isArray(value) ? value : [value];
-	return values
-		.map((item) => pickFirst(item))
-		.filter((item) => item != null && String(item).trim() !== '')
-		.map((item) => String(item));
-}
-
-function normalizeToolEntry(tool) {
-	if (!tool) {
-		return {};
-	}
-
-	const webpage = pickFirst(tool.webpage) || pickFirst(tool.homepage);
-
+function normalizeTool(tool) {
+	if (!tool || !Array.isArray(tool.webpage)) return tool;
 	return {
 		...tool,
-		id: tool.id || tool._id || '',
-		name: pickFirst(tool.name),
-		label: pickFirst(tool.label) || pickFirst(tool.name),
-		description: Array.isArray(tool.description)
-			? pickDescription(tool.description)
-			: pickFirst(tool.description),
-		type: normalizeStringArray(tool.type),
-		version: normalizeStringArray(tool.version || tool.other_versions),
-		webpage: webpage ? String(webpage) : '',
-		sourcesLabels: tool.sourcesLabels || tool.sources_labels || {},
-		publications: tool.publications || tool.publication || [],
+		webpage: tool.webpage.map((webpage) =>
+			webpage?.term ? { ...webpage, term: fixGalaxyFreiburgUrl(webpage.term) } : webpage
+		),
 	};
 }
 
@@ -98,18 +89,21 @@ export const useToolEntryStore = defineStore('tool_entry', {
 
 			try {
 				// Prefer fetching by id if available, fall back to name
-				const query = payload.id ? `api/tools?id=${payload.id}` : `api/tools?name=${payload.name}`;
+				const query = payload.id
+					? `api/tools?id=${encodeURIComponent(payload.id)}&documentation_status=true`
+					: `api/tools?name=${encodeURIComponent(payload.name)}&documentation_status=true`;
 
 				const data = await $observatory(query, { method: 'GET' });
 
 				// Treat an empty array / missing payload / object lacking a label
 				// (the field the entry page relies on) as "tool not found".
-				const tool = normalizeToolEntry(Array.isArray(data) ? data[0] : data);
-				if (!tool?.label) {
+				const tool = Array.isArray(data) ? data[0] : data;
+
+				if (!tool || !tool.label) {
 					this.updateTool({});
 					return false;
 				}
-				this.updateTool(tool);
+				this.updateTool(normalizeTool(tool));
 				return true;
 			} catch (error) {
 				this.updateTool({});
@@ -126,13 +120,13 @@ export const useToolEntryStore = defineStore('tool_entry', {
 			const { $observatory } = useNuxtApp();
 
 			try {
-				const { data } = await $observatory(
-					`api/tool/id?name=${encodeURIComponent(name)}&source=${source}`,
+				const response = await $observatory(
+					`api/tool/id?name=${encodeURIComponent(name)}&source=${encodeURIComponent(source)}`,
 					{
 						method: 'GET',
 					}
 				);
-				return data?.id || null;
+				return response?.id || response?.data?.id || null;
 			} catch {
 				return null;
 			}
@@ -148,10 +142,11 @@ export const useToolEntryStore = defineStore('tool_entry', {
 			this.loadingSimilar = true;
 
 			try {
-				const { data } = await $observatory(`/similarity?tool_id=${toolId}`, {
+				const response = await $observatory(`/similarity?tool_id=${encodeURIComponent(toolId)}`, {
 					method: 'GET',
 				});
-				this.updateSimilarTools(data.similar || []);
+				const similar = response?.similar || response?.data?.similar || [];
+				this.updateSimilarTools(Array.isArray(similar) ? similar : []);
 			} catch {
 				this.updateSimilarTools([]);
 			} finally {
