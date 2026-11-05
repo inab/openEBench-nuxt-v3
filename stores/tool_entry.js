@@ -166,9 +166,9 @@ export const useToolEntryStore = defineStore('tool_entry', {
 
 			const requestKey = webpageList.join('|');
 			const ranges = [
-				{ key: 'week', endpoint: '/web-availability/week' },
-				{ key: 'month', endpoint: '/web-availability/month' },
-				{ key: 'sixMonths', endpoint: '/web-availability/6months' },
+				{ key: 'week', endpoint: '/api/web-availability/week' },
+				{ key: 'month', endpoint: '/api/web-availability/month' },
+				{ key: 'sixMonths', endpoint: '/api/web-availability/6months' },
 			];
 
 			this.resetWebAvailability();
@@ -183,10 +183,11 @@ export const useToolEntryStore = defineStore('tool_entry', {
 						const results = await Promise.all(
 							ranges.map(async ({ key, endpoint }) => {
 								try {
-									const { data } = await $observatory(endpoint, {
+									const response = await $observatory(endpoint, {
 										method: 'POST',
 										body: { url: webpage },
 									});
+									const data = availabilityItems(response);
 									return { key, data, error: null };
 								} catch (error) {
 									const is404 = error?.response?.status === 404;
@@ -212,8 +213,9 @@ export const useToolEntryStore = defineStore('tool_entry', {
 				if (selected) {
 					this.updateWebAvailabilityUrl(selected.webpage);
 					selected.results.forEach(({ key, data }) => {
-						this.updateWebAvailabilityRange(key, data);
+						this.updateWebAvailabilityRange({ key, data });
 					});
+					console.log('Web availability data retrieved for', selected.webpage);
 					return;
 				}
 
@@ -233,6 +235,46 @@ export const useToolEntryStore = defineStore('tool_entry', {
 					this.webAvailabilityLoading = false;
 				}
 			}
+		},
+
+		// Returns the latest weekly uptime status for each webpage.
+		async retrieveWebAvailabilityStatuses(webpages) {
+			const { $observatory } = useNuxtApp();
+			const webpageList = (Array.isArray(webpages) ? webpages : [webpages]).filter(Boolean);
+			
+			const entries =	await Promise.all(
+				webpageList.map(async (webpage) => {
+					try {
+						const response = await $observatory('/api/web-availability/week', {
+							method: 'POST',
+							body: { url: webpage },
+						});
+						const items = availabilityItems(response);
+						console.log(items);
+
+						if (!items.length) return [webpage, 'NODATA'];
+
+						const datedItems = items
+							.map((item) => ({ item, date: Date.parse(item?.date) }))
+							.filter(({ date }) => !Number.isNaN(date))
+							.sort((first, second) => first.date - second.date);
+						const latestItem = datedItems[datedItems.length - 1]?.item || items[0];
+
+						if (latestItem?.code == null) return [webpage, 'NODATA'];
+
+						const code = Number(latestItem?.code);
+						console.log('Dated latestItem', webpage, [
+							webpage,
+							code >= 200 && code < 400 ? 'UP' : 'DOWN',
+						]);
+
+						return [webpage, code >= 200 && code < 400 ? 'UP' : 'DOWN'];
+					} catch (error) {
+						return [webpage, error?.response?.status === 404 ? 'NODATA' : 'ERROR'];
+					}
+				})
+			)
+			return Object.fromEntries(entries);
 		},
 
 		async fetchCitations({ doi, pmid, title } = {}) {

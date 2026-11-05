@@ -1,6 +1,6 @@
 <template>
-	<div class="installation-instructions">
-		<h3 class="title-label">Installation Instructions</h3>
+	<div v-if="tabs.length" class="installation-instructions">
+		<h3  class="title-label">Installation</h3>
 
 		<div
 			v-if="tabs.length"
