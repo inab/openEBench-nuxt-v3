@@ -1,5 +1,5 @@
 <template>
-	<UTooltip v-if="!minimal" :text="link" :popper="{ placement: 'bottom' }">
+	<UTooltip v-if="!minimal" :text="link" :popper="{ placement: 'bottom' }" :delay-duration="0">
 		<button
 			type="button"
 			class="link-chip btn btn-light rounded-pill d-inline-flex align-items-center gap-1"
@@ -11,15 +11,17 @@
 		</button>
 	</UTooltip>
 
-	<button
-		v-else
-		type="button"
-		class="link-chip link-chip--minimal btn btn-light rounded-pill d-inline-flex align-items-center"
-		:class="{ 'link-chip--small': !big }"
-		@click="openLink"
-	>
-		<UIcon :name="icon" class="size-4" />
-	</button>
+	<UTooltip v-else :text="link" :popper="{ placement: 'bottom' }" :delay-duration="0">
+		<button
+			
+			type="button"
+			class="link-chip link-chip--minimal btn btn-light rounded-pill d-inline-flex align-items-center"
+			:class="{ 'link-chip--small': !big }"
+			@click="openLink"
+		>
+			<UIcon :name="icon" class="size-4" />
+		</button>
+	</UTooltip>
 </template>
 
 <script setup lang="ts">

@@ -1,5 +1,5 @@
 <template>
-	<UTooltip :text="link" :popper="{ placement: 'bottom' }">
+	<UTooltip :text="link" :popper="{ placement: 'bottom' }" :delay-duration="0">
 		<button
 			v-if="type !== 'other'"
 			type="button"

@@ -15,6 +15,7 @@
 							icon="mdi-web"
 							big
 							minimal
+							class="me-2"
 						/>
 
 						<LinkChipWImage
@@ -26,6 +27,7 @@
 							light
 							big
 							minimal
+							class="me-2"
 						/>
 
 						<div class="tool-brief__types">
