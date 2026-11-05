@@ -18,7 +18,7 @@
 		:class="{ 'link-chip--small': !big }"
 		@click="openLink"
 	>
-		<UIcon :name="iconName" class="size-3" />
+		<UIcon :name="icon" class="size-4" />
 	</button>
 </template>
 
@@ -59,6 +59,7 @@ function openLink() {
 }
 
 .link-chip--minimal {
-	padding: 0.35em 0.5em;
+	padding: 0.5em 0.9em;
+	
 }
 </style>
