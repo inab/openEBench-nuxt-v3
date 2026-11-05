@@ -1,5 +1,5 @@
 <template>
-	<div class="documentation-content">
+	<div class="container documentation-content">
 		<div v-if="documents.length" class="documentation-row">
 			<h3 class="documentation-row__label">Documents</h3>
 			<div class="documentation-row__items">
