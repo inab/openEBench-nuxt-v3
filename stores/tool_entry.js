@@ -215,7 +215,6 @@ export const useToolEntryStore = defineStore('tool_entry', {
 					selected.results.forEach(({ key, data }) => {
 						this.updateWebAvailabilityRange({ key, data });
 					});
-					console.log('Web availability data retrieved for', selected.webpage);
 					return;
 				}
 
@@ -250,7 +249,6 @@ export const useToolEntryStore = defineStore('tool_entry', {
 							body: { url: webpage },
 						});
 						const items = availabilityItems(response);
-						console.log(items);
 
 						if (!items.length) return [webpage, 'NODATA'];
 
@@ -263,11 +261,6 @@ export const useToolEntryStore = defineStore('tool_entry', {
 						if (latestItem?.code == null) return [webpage, 'NODATA'];
 
 						const code = Number(latestItem?.code);
-						console.log('Dated latestItem', webpage, [
-							webpage,
-							code >= 200 && code < 400 ? 'UP' : 'DOWN',
-						]);
-
 						return [webpage, code >= 200 && code < 400 ? 'UP' : 'DOWN'];
 					} catch (error) {
 						return [webpage, error?.response?.status === 404 ? 'NODATA' : 'ERROR'];
@@ -295,11 +288,11 @@ export const useToolEntryStore = defineStore('tool_entry', {
 			let data = null;
 			for (const body of attempts) {
 				try {
-					const response = await $observatory('/publication/citations', {
+					const response = await $observatory('/api/publication/citations', {
 						method: 'POST',
 						body: body,
 					});
-					data = response.data;
+					data = response;
 					break; // éxito, no seguir intentando
 				} catch {
 					// este identificador falló, probar el siguiente
