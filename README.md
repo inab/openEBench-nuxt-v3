@@ -146,6 +146,14 @@ If your editor saves by replacing the file and the container still shows the old
 docker compose -f docker-compose.devci.yml up
 ```
 
+DevCI reads public runtime settings from [config/devci.json](config/devci.json). Edit that file and reload the page to update browser-side settings; restart the `nuxt` service for server-side settings to take effect:
+
+```bash
+docker compose -f docker-compose.devci.yml restart nuxt
+```
+
+`AUTH_ORIGIN` is also set in `docker-compose.devci.yml` for Nuxt Auth. If the app origin changes, update it there too and recreate the `nuxt` service so the new environment value is applied.
+
 Set `DEV_UID` and `DEV_GID` in your `.env` (see [.env.example](.env.example); get the values with `id -u` and `id -g`). The container then runs as your user, so files it creates (`.nuxt`, `node_modules`) are not owned by root. If they are missing, the container runs as root and you will hit permission errors; in that case fix the ownership with `sudo chown -R "$USER": .nuxt` and remove the `node-modules-volume` volume.
 
 - Nuxt is available at <http://localhost:3001>. Use this URL to log in: the auth origin is set to it.
