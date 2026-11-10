@@ -58,6 +58,7 @@ function scrollToSection(id: string) {
 	width: 100%; /* dentro de ESE ancho, el link ocupa todo (para el fondo) */
 	padding: 8px 16px;
 	font-size: 1.05rem;
+	font-weight: 500;
 	text-align: left; /* el texto, a la izquierda dentro del item */
 	color: #000000de;
 	border-radius: 4px;
@@ -75,6 +76,5 @@ function scrollToSection(id: string) {
 .nav-link--active {
 	color: #0b579f;
 	background-color: rgba(11, 87, 159, 0.1);
-	font-weight: 500;
 }
 </style>
