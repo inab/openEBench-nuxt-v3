@@ -46,7 +46,7 @@ withDefaults(
 	align-items: center;
 	gap: 0.25rem;
 	margin: 0.25rem 0.25rem 0 0;
-	padding: 0.375rem 0.75rem;
+	padding: 0.3rem 0.35rem;
 	border-radius: 0.25rem;
 	background-color: #f1f3f5;
 	color: #343a40;

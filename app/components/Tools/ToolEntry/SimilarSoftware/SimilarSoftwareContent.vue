@@ -421,10 +421,10 @@ function nextPage() {
 	gap: 0.2rem;
 	padding: 0.15rem 0.4rem;
 	border-radius: 999px;
-	background-color: #e8f5e9;
-	color: #2e7d32;
+	background-color: #C2E2C3;
+	color: #2E7D32;
 	font-size: 0.7rem;
-	font-weight: 600;
+	font-weight: 700;
 	white-space: nowrap;
 }
 
@@ -432,7 +432,7 @@ function nextPage() {
 	display: -webkit-box;
 	margin-top: 0.25rem;
 	overflow: hidden;
-	color: #6c757d;
+	color: #00000099;
 	font-size: 0.875rem;
 	-webkit-box-orient: vertical;
 	-webkit-line-clamp: 6;
@@ -453,13 +453,18 @@ function nextPage() {
 }
 
 .similar-tags__toggle {
-	padding: 0.375rem 0.75rem;
-	border: 0;
-	border-radius: 999px;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.25rem;
+	margin: 0.25rem 0.25rem 0 0;
+	padding: 0.3rem 0.35rem;
+	border-radius: 0.25rem;
 	background-color: #f1f3f5;
 	color: #343a40;
-	font: inherit;
-	font-size: 0.875rem;
+	font-size: 0.8rem;
+	line-height: 1.25rem;
+	text-decoration: none;
+	white-space: nowrap;
 	cursor: pointer;
 }
 
