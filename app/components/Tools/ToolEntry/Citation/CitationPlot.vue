@@ -2,37 +2,57 @@
 	<div class="citation-plot">
 		<div class="plot-controls">
 			<div class="plot-buttons">
-				<button
+				<UTooltip
 					v-if="showCumulativeButton"
-					type="button"
-					class="plot-button"
-					:class="{ 'plot-button--active': cumulativeActive }"
-					:aria-pressed="cumulativeActive"
-					:title="cumulativeTooltip()"
-					@click="cumulativeActive = !cumulativeActive"
+					:text="cumulativeTooltip()"
+					:content="{ side: 'bottom', sideOffset: 6, align: 'start' }"
+					:delay-duration="8"
+					:ui="{
+						content: 'bg-gradient-to-b from-black/50 to-black/70 text-white ring-black/20',
+					}"
 				>
-					<UIcon
-						:name="cumulativeActive ? 'i-mdi-radiobox-marked' : 'i-mdi-radiobox-blank'"
-						aria-hidden="true"
-					/>
-					Cumulative
-				</button>
+					<UButton
+						type="button"
+						class="plot-button"
+						:class="{ 'plot-button--active': cumulativeActive }"
+						color="neutral"
+						:variant="cumulativeActive ? 'solid' : 'soft'"
+						:aria-pressed="cumulativeActive"
+						@click="cumulativeActive = !cumulativeActive"
+					>
+						<UIcon
+							:name="cumulativeActive ? 'i-mdi-radiobox-marked' : 'i-mdi-radiobox-blank'"
+							aria-hidden="true"
+						/>
+						Cumulative
+					</UButton>
+				</UTooltip>
 
-				<button
+				<UTooltip
 					v-if="dataTraces.length > 1"
-					type="button"
-					class="plot-button"
-					:class="{ 'plot-button--active': mergeActive }"
-					:aria-pressed="mergeActive"
-					:title="mergeTooltip()"
-					@click="mergeActive = !mergeActive"
+					:text="mergeTooltip()"
+					:content="{ side: 'bottom', sideOffset: 6, align: 'start' }"
+					:delay-duration="8"
+					:ui="{
+						content: 'bg-gradient-to-b from-black/50 to-black/70 text-white ring-black/20',
+					}"
 				>
-					<UIcon
-						:name="mergeActive ? 'i-mdi-radiobox-marked' : 'i-mdi-radiobox-blank'"
-						aria-hidden="true"
-					/>
-					Merge all publication counts
-				</button>
+					<UButton
+						type="button"
+						class="plot-button"
+						:class="{ 'plot-button--active': mergeActive }"
+						color="neutral"
+						:variant="mergeActive ? 'solid' : 'soft'"
+						:aria-pressed="mergeActive"
+						@click="mergeActive = !mergeActive"
+					>
+						<UIcon
+							:name="mergeActive ? 'i-mdi-radiobox-marked' : 'i-mdi-radiobox-blank'"
+							aria-hidden="true"
+						/>
+						Merge all publication counts
+					</UButton>
+				</UTooltip>
 			</div>
 
 			<p v-if="message" class="plot-message">
@@ -249,26 +269,27 @@ onBeforeUnmount(() => {
 .plot-buttons {
 	display: flex;
 	flex-wrap: wrap;
-	gap: 0.75rem;
+	gap: 1.25rem;
 }
 
 .plot-button {
-	display: inline-flex;
-	align-items: center;
-	gap: 0.25rem;
-	padding: 0.35rem 0.75rem;
-	border: 1px solid #dee2e6;
+	border: 0 !important;
 	border-radius: 999px;
-	background: #fff;
-	color: #343a40;
-	cursor: pointer;
-	font-size: 0.85rem;
+	background: #f3f4f6 !important;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.18);
 }
 
-.plot-button:hover,
+.plot-button:not(.plot-button--active):hover {
+	background: #e9ecef !important;
+}
+
 .plot-button--active {
-	border-color: #0b579f;
-	color: #0b579f;
+	background: #0b579f !important;
+	color: #ffffff !important;
+}
+
+.plot-button.plot-button--active:hover {
+	background: #1e64a7 !important;
 }
 
 .plot-button:focus-visible {
