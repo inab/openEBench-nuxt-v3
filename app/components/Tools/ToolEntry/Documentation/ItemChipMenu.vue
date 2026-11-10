@@ -1,5 +1,5 @@
 <template>
-	<span class="term-chip">
+	<span class="term-chip" :class="{ 'term-chip--with-menu': vocabulary === 'EDAM' }">
 		<span class="term-chip__text">{{ text }}</span>
 		<details v-if="vocabulary === 'EDAM'" ref="menu" class="term-chip__menu">
 			<summary class="term-chip__menu-toggle" aria-label="EDAM term options">
@@ -61,12 +61,16 @@ const edamBrowserUrl = computed(() => {
 	display: inline-flex;
 	align-items: center;
 	gap: 0.25rem;
-	padding: 0.375rem 0.375rem 0.375rem 0.75rem;
+	padding: 0.375rem 0.75rem;
 	border-radius: 999px;
 	background-color: #e0eaf3;
 	color: #0b579f;
 	font-size: 0.875rem;
 	font-weight: 500;
+}
+
+.term-chip--with-menu {
+	padding-right: 0.375rem;
 }
 
 .term-chip__menu {

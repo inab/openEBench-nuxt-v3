@@ -76,12 +76,11 @@ const normalizedTypes = computed(() => {
 }
 
 .tool-brief__bar {
-	height: 65px;
 	border-bottom: 1px solid #dee2e6;
 }
 
 .tool-brief__content {
-	height: 56px;
+	height: 65px;
 	display: flex;
 	align-items: center;
 	gap: 24px;
