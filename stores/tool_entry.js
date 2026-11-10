@@ -142,7 +142,7 @@ export const useToolEntryStore = defineStore('tool_entry', {
 			this.loadingSimilar = true;
 
 			try {
-				const response = await $observatory(`/similarity?tool_id=${encodeURIComponent(toolId)}`, {
+				const response = await $observatory(`/api/similarity?tool_id=${encodeURIComponent(toolId)}`, {
 					method: 'GET',
 				});
 				const similar = response?.similar || response?.data?.similar || [];

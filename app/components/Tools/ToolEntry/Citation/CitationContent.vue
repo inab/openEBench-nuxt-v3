@@ -147,8 +147,6 @@ const citations = computed(
 	() => toolEntryStore.Citations as Record<string, CitationResponse | null>
 );
 
-console.log(citations);
-
 const loadingCitations = computed(() => toolEntryStore.LoadingCitations as Record<string, boolean>);
 
 const dotColors = [
