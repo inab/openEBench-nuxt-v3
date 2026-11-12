@@ -3,7 +3,7 @@
 		<div class="tool-brief__bar">
 			<div class="container-fluid">
 				<div class="tool-brief__content">
-					<div class="tool-brief__name">
+					<div class="tool-brief__name ml-1">
 						{{ name }}
 					</div>
 
@@ -107,8 +107,8 @@ const normalizedTypes = computed(() => {
 
 @media (min-width: 1450px) {
 	.tool-brief__content {
-		padding-left: calc(50% - 630px);
-		padding-right: calc(50% - 630px);
+		padding-left: calc(50% - 730px);
+		padding-right: calc(50% - 730px);
 	}
 }
 </style>

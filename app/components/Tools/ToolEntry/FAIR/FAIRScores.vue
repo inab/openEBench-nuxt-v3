@@ -128,12 +128,11 @@ const childColor = (key: string) => statusColor(raw(key));
 .fair-card {
 	position: fixed;
 	top: 140px;
-	right: 12px;
 	z-index: 20;
 	width: calc(16.6667vw - 24px);
 	max-width: 280px;
 	background-color: #fff;
-	padding: 0 1.1rem 1rem 1.1rem;
+	padding: 0 1rem 1rem 0;
 	max-height: calc(100vh - 140px);
 	overflow-y: auto;
 }

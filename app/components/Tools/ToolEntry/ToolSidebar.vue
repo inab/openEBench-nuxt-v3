@@ -41,12 +41,12 @@ function scrollToSection(id: string) {
 	top: var(--tool-sticky-top, 120px);
 	left: 12px;
 	z-index: 20;
-	width: calc(25vw - 24px);
+	width: calc(20.833333vw - 24px);
 }
 
 .tool-sidebar {
 	display: flex;
-	justify-content: flex-end; /* empuja el <ul> hacia la derecha del col-3 */
+	justify-content: flex-end; /* alinea el menú al borde derecho de su espacio */
 }
 
 .nav {

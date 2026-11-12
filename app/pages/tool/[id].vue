@@ -13,14 +13,14 @@
 		/>
 
 		<div class="container-fluid">
-			<div class="row">
+			<div class="row tool-columns">
 				<!-- SideBar -->
-				<div class="col-12 col-lg-3 d-none d-lg-block">
+				<div class="col-12 col-lg-2 d-none d-lg-block">
 					<ToolSidebar v-if="hasTool" :items="visibleSections" :active-id="activeSectionId" />
 				</div>
 
 				<!-- Content -->
-				<div class="col-12 col-lg-7">
+				<div class="col-12 col-lg-7 tool-content">
 					<div v-if="loading">
 						<USkeleton class="h-96" />
 					</div>
@@ -331,6 +331,15 @@ function setupEntryIntroObserver() {
 function updateActiveSection() {
 	// Tolerancia para el desplazamiento suave y el redondeo de píxeles del navegador.
 	const triggerLine = toolContentTop + 8;
+	const lastSection = visibleSections.value[visibleSections.value.length - 1];
+	const isAtPageBottom =
+		window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+
+	if (isAtPageBottom && lastSection && document.getElementById(lastSection.id)) {
+		activeSectionId.value = lastSection.id;
+		return;
+	}
+
 	let current: string | null = null;
 
 	for (const section of visibleSections.value) {
@@ -397,7 +406,7 @@ onBeforeUnmount(() => {
 }
 
 .tool-page {
-	--tool-sticky-top: 140px;
+	--tool-sticky-top: 138px;
 }
 
 .tool-section {
@@ -409,6 +418,14 @@ onBeforeUnmount(() => {
 	.tool-layout {
 		grid-template-columns: 220px minmax(0, 1fr);
 		align-items: start;
+	}
+}
+
+@media (min-width: 992px) {
+	.tool-columns > div:first-child,
+	.tool-columns > div:last-child {
+		flex: 0 0 20.833333%;
+		width: 20.833333%;
 	}
 }
 </style>
