@@ -41,7 +41,7 @@
 							v-for="section in visibleSections"
 							:id="section.id"
 							:key="section.id"
-							class="tool-section card card-body mb-4"
+							class="tool-section card card-body p-4 mb-4"
 						>
 							<h2 class="h4 fw-bold mb-3">
 								{{ section.title }}
@@ -406,7 +406,7 @@ onBeforeUnmount(() => {
 }
 
 .tool-page {
-	--tool-sticky-top: 138px;
+	--tool-sticky-top: 140px;
 }
 
 .tool-section {

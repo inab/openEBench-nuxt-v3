@@ -1,10 +1,10 @@
 <template>
 	<div v-if="tabs.length" class="installation-instructions">
-		<h3  class="title-label">Installation</h3>
+		<h3 class="title-label">Installation</h3>
 
 		<div
 			v-if="tabs.length"
-			class="installation-tabs mt-3 container"
+			class="installation-tabs mt-3"
 			role="group"
 			aria-label="Installation methods"
 		>
@@ -15,6 +15,7 @@
 				class="w-full"
 				value-key="id"
 				variant="link"
+				:content="false"
 			>
 				<template #default="{ item }">
 					<span class="installation-tab-label" @click="selectTab($event, item.id)">
@@ -34,20 +35,20 @@
 						@animationend="clearRipple(ripple.key)"
 					/>
 				</template>
-
-				<template #content="{ item }">
-					<div class="installation-tab-panel my-3 mx-2">
-						<BiocondaInstall v-if="item.id === 'bioconda'" :name="toolName" />
-						<BioconductorInstall v-else-if="item.id === 'bioconductor'" :name="toolName" />
-						<SourceCode
-							v-else-if="item.id === 'source'"
-							:repositories="tool.repository"
-							:sources-labels="sourcesLabels"
-						/>
-						<DownloadBlock v-else-if="item.id === 'download'" :packages="tool.download" />
-					</div>
-				</template>
 			</UTabs>
+
+			<Transition name="installation-slide" mode="out-in">
+				<div v-if="activeTabId" :key="activeTabId" class="installation-tab-panel my-3 mx-2">
+					<BiocondaInstall v-if="activeTabId === 'bioconda'" :name="toolName" />
+					<BioconductorInstall v-else-if="activeTabId === 'bioconductor'" :name="toolName" />
+					<SourceCode
+						v-else-if="activeTabId === 'source'"
+						:repositories="tool.repository"
+						:sources-labels="sourcesLabels"
+					/>
+					<DownloadBlock v-else-if="activeTabId === 'download'" :packages="tool.download" />
+				</div>
+			</Transition>
 		</div>
 	</div>
 </template>
@@ -93,7 +94,6 @@ const tabsUi = {
 		'relative isolate flex-1 overflow-hidden rounded-none border-b-2 border-transparent p-0 text-[#495057] data-[state=active]:border-[#0b579f] data-[state=active]:font-semibold data-[state=active]:text-[#0b579f] hover:text-[#0b579f] focus-visible:outline-2 focus-visible:outline-[#0b579f] focus-visible:outline-offset-[-2px]',
 	indicator: 'hidden',
 	label: 'block w-full',
-	content: 'w-full min-w-0 rounded-none pt-1',
 };
 const ripple = ref<{
 	tabId: InstallationTab['id'];
@@ -227,6 +227,23 @@ function clearRipple(key: number) {
 	min-width: 0;
 }
 
+.installation-slide-enter-active,
+.installation-slide-leave-active {
+	transition:
+		transform 220ms ease,
+		opacity 220ms ease;
+}
+
+.installation-slide-enter-from {
+	transform: translateX(1rem);
+	opacity: 0;
+}
+
+.installation-slide-leave-to {
+	transform: translateX(-1rem);
+	opacity: 0;
+}
+
 @keyframes installation-tab-ripple {
 	to {
 		transform: translate(-50%, -50%) scale(1);
@@ -237,6 +254,11 @@ function clearRipple(key: number) {
 @media (prefers-reduced-motion: reduce) {
 	.installation-tab-ripple {
 		animation-duration: 1ms;
+	}
+
+	.installation-slide-enter-active,
+	.installation-slide-leave-active {
+		transition-duration: 1ms;
 	}
 }
 </style>

@@ -5,7 +5,7 @@
 				<h3 class="title-label">Galaxy</h3>
 			</div>
 		</div>
-		<div class="col-12 pt-1 ps-4 d-flex justify-content-start text-body-secondary mt-2">
+		<div class="col-12 pt-1 ml-5 d-flex justify-content-start mt-2">
 			<p class="mb-4 mt-2">
 				{{ toolName }} is available ready-to-use in
 				<a href="https://usegalaxy.eu/" target="_blank" rel="noopener noreferrer">

@@ -126,7 +126,7 @@ const operations = computed(() => validVocabularyEntries(tool.value?.operations 
 	grid-template-columns: minmax(130px, 1fr) minmax(0, 3fr);
 	align-items: center;
 	gap: 1rem;
-	padding: 0.875rem 0;
+	padding: 0.6rem 0.6rem;
 }
 
 .documentation-row + .documentation-row {
@@ -143,7 +143,7 @@ const operations = computed(() => validVocabularyEntries(tool.value?.operations 
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
-	gap: 0.75rem;
+	gap: 0.50rem;
 }
 
 .documentation-chip {
